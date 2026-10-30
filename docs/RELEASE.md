@@ -13,6 +13,7 @@ Every development milestone ships a playable web build to **https://veniceissink
 git tag m1 -m "M1 vertical slice"
 git push origin m1
 ```
+From a Claude session the tag push is blocked by the GitHub proxy; create the tag from GitHub → Releases → *Draft a new release* → new tag `m1` on `main` → Publish. Same workflow fires.
 `.github/workflows/itch.yml` runs lint, tests, build, stamps `dist/build.json` with tag/sha/date, and pushes `dist/` with butler to channel `html5-dev` (version label = tag). The game shows the tag in the footer (ui reads `build.json`).
 
 Manual push: Actions → "Release to itch.io" → Run workflow → pick a channel.
@@ -20,7 +21,7 @@ Manual push: Actions → "Release to itch.io" → Run workflow → pick a channe
 ## Milestone tags
 | Tag | Milestone | Channel |
 |---|---|---|
-| m0 | Foundation (headless sim passes; placeholder field) | html5-dev |
+| m0 | Foundation (full prototype port) · **shipped 30 Oct 2026** | html5-dev |
 | m1 | Vertical slice | html5-dev |
 | m2 | Companions & armoury | html5-dev |
 | m3 | Prestige | html5-dev |
