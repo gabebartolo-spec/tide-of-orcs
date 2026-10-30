@@ -60,6 +60,7 @@ cap = 2 + ranks        mend = 0.03 × mend × maxhp per second
 | 25 | 226 | 2,165 | 677 |
 
 ### Economy
+- Provoke (War Drums, Blood Banners): orc health ×1.3^drums and orc hit ×1.3^banners at spawn; starlight ×1.4^drums × 1.25^banners. Greedy sim with both maxed: first fall 12–18, run 2 at 24–33, run 3 at 36–39 (seeds 1–10).
 - Node price at purchase: `cost = round(base × growth^rank × 1.25^max(0, w − 10))` (wave-scaled since P-001; ×1 to wave 10, ×28.4 at 25, ×7,523 at 50).
 - `starMult = 1.15^glean × heart`. Heartwood: `heart = 1 + 0.12 × HW`, applied to damage, starlight, barricade HP and vanguard HP.
 - Offline: `rate = loot(w) × starMult × spawnMult / interval(w) × (0.25 + 0.2 roots)`, capped at 8 h, zero while fallen.

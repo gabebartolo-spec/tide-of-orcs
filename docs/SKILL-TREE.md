@@ -1,6 +1,6 @@
 # Skill Tree — node data
 
-Status: **Current** (v1.1). This table is generated from `docs/prototype.html` and mirrored exactly by `src/data/skillTree.ts` (tested: unique ids, parents exist, no cycles, coordinates in bounds, ≥ 40 px apart). Node ids are stable API: never rename; deprecate instead.
+Status: **Current** (v1.2). This table is generated from `docs/prototype.html` and mirrored exactly by `src/data/skillTree.ts` (tested: unique ids, parents exist, no cycles, coordinates in bounds, ≥ 40 px apart). Node ids are stable API: never rename; deprecate instead.
 
 Cost formula: `cost(rank) = base × growth^rank` (rank = ranks already owned). Costs are starlight, rounded.
 
@@ -31,6 +31,8 @@ Layout coordinates are for a 760×680 tree canvas, root bottom-centre at (380, 6
 | glean | Gleaning | Grove | root | 10 | 20 | 1.6 | 490 | 630 | +15% starlight from every orc. |
 | horde | Call the Horde | Grove | glean | 5 | 160 | 2.4 | 590 | 610 | +20% more orcs. More orcs, more starlight. More danger. |
 | roots | Dreaming Roots | Grove | glean | 5 | 200 | 2.2 | 600 | 660 | Earn more while away: +20% of your rate per rank. |
+| drums | War Drums | Grove | horde | 5 | 300 | 2.4 | 700 | 650 | Orcs have +30% health and drop +40% starlight per rank. |
+| banners | Blood Banners | Grove | horde | 5 | 300 | 2.4 | 735 | 610 | Orcs hit 30% harder and drop +25% starlight per rank. |
 | bounty | Warboss Bounty | Grove | horde | 3 | 800 | 3 | 690 | 590 | Warbosses drop double starlight per rank. |
 | timber | Seasoned Timber | Barricade | root | 10 | 25 | 1.6 | 270 | 630 | Barricade +25% health per rank. |
 | repair | Patient Hands | Barricade | timber | 5 | 90 | 2.0 | 170 | 610 | Barricade mends 1% of its health per second per rank. |
@@ -56,7 +58,9 @@ interface Stats {
   pierce: number;         // pierce
   crit: number;           // 0.08 × crit
   homing: boolean; fire: boolean;
-  starMult: number;       // 1.15^glean × heart
+  starMult: number;       // 1.15^glean × 1.4^drums × 1.25^banners × heart
+  orcHp: number;          // 1.3^drums     (orc health at spawn)
+  orcAtk: number;         // 1.3^banners   (orc hit at spawn)
   spawnMult: number;      // 1.2^horde
   offline: number;        // 0.25 + 0.2 × roots
   bounty: number;         // 1 + bounty
@@ -82,28 +86,6 @@ interface Stats {
 }
 // heart = 1 + 0.12 × heartwood
 ```
-
-## Proposed: Provoke nodes (DRAFT, 2026-10-30, awaiting director)
-Risk for reward: tougher orcs for more starlight, the way Shreddead keeps power growth stable. Both sit under Call the Horde in the Grove, next to Warboss Bounty.
-
-| id | Name | Branch | Parent | Max | Base | Growth | x | y | Effect |
-|---|---|---|---|---|---|---|---|---|---|
-| drums | War Drums | Grove | horde | 5 | 300 | 2.4 | 700 | 650 | Orcs have +30% health per rank and drop +40% starlight per rank. |
-| banners | Blood Banners | Grove | horde | 5 | 300 | 2.4 | 740 | 610 | Orcs hit +30% harder per rank and drop +25% starlight per rank. |
-
-New stats: `orcHp = 1.3^drums`, `orcAtk = 1.3^banners`, `starMult ×= 1.4^drums × 1.25^banners`. Applied at spawn in `step.ts`. Per arrow, War Drums nets +7.7% starlight per rank, and Blood Banners costs no extra arrows, only wall.
-
-Sim (greedy, 40 min, seeds 1–10, BALANCE v1.2). Greedy buys every rank because it always takes the cheapest node, so this is the worst case for a player who buys them blindly:
-
-| Variant | First fall | Run 2 | Run 3 |
-|---|---|---|---|
-| v1.2 without these nodes | 12–18 | 25–29 | 40–43 |
-| Proposed rates, all 10 ranks bought | 12–18 (unchanged) | 24–33 | 36–39 |
-| Richer loot (×1.5 / ×1.35) | 12–18 | 27–32 | 37–39 |
-
-They come in after the first fall, so run 1 is untouched. Bought blindly they cost about 4 waves in run 3 and widen run 2. The payoff only shows for a player who buys them when the wall is comfortable.
-
-Open question: in Shreddead the risk is a dial you can turn back down. Here ranks are permanent for the run. Making the dial work needs free rank lowering (no refund), plus a UI control and a save field for the "active rank" (schema change, so it needs your yes).
 
 ## Planned nodes (DRAFT, not in 1.0 data)
 - **Bow → Starfall** (after Moonbow): every 10th volley is a rain of 8 arrows across the plain.

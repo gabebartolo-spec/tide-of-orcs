@@ -37,6 +37,9 @@ export const SOURCES = {
   archerDmgFrac: 0.7, archerOffsetY: 90,
 } as const;
 
+/** Provoke nodes: tougher orcs for more starlight, per rank. */
+export const PROVOKE = { drumsHp: 1.3, drumsLoot: 1.4, bannersAtk: 1.3, bannersLoot: 1.25 } as const;
+
 export const PRESTIGE = { voluntaryWave: 12, heartPerHW: 0.12, waveOffset: 4, waveFactor: 0.75, killsPerHW: 400 } as const;
 export const OFFLINE = { base: 0.25, perRoot: 0.2, capSecs: 8 * 3600, minAwaySecs: 60 } as const;
 

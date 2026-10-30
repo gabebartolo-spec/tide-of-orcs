@@ -1,5 +1,5 @@
 import { NodeId } from '../data/skillTree';
-import { BARRICADE, OFFLINE, PLAYER, SOURCES, VANGUARD, heartMult } from '../data/balance';
+import { BARRICADE, OFFLINE, PLAYER, PROVOKE, SOURCES, VANGUARD, heartMult } from '../data/balance';
 
 export type Levels = Partial<Record<NodeId, number>>;
 
@@ -7,7 +7,7 @@ export type Levels = Partial<Record<NodeId, number>>;
 export interface Stats {
   dmg: number; fireRate: number; arrows: number; pierce: number; crit: number;
   homing: boolean; fire: boolean;
-  starMult: number; spawnMult: number; offline: number; bounty: number;
+  starMult: number; orcHp: number; orcAtk: number; spawnMult: number; offline: number; bounty: number;
   kin: number; wolf: number; archers: number; hawk: boolean; treant: boolean;
   knives: { rate: number; dmg: number } | null;
   storm: boolean; ballista: number;
@@ -30,7 +30,9 @@ export function deriveStats(lv: Levels, heartwood: number): Stats {
     crit: 0.08 * L('crit'),
     homing: L('moon') > 0,
     fire: L('fire') > 0,
-    starMult: Math.pow(1.15, L('glean')) * hm,
+    starMult: Math.pow(1.15, L('glean')) * Math.pow(PROVOKE.drumsLoot, L('drums')) * Math.pow(PROVOKE.bannersLoot, L('banners')) * hm,
+    orcHp: Math.pow(PROVOKE.drumsHp, L('drums')),
+    orcAtk: Math.pow(PROVOKE.bannersAtk, L('banners')),
     spawnMult: Math.pow(1.2, L('horde')),
     offline: OFFLINE.base + OFFLINE.perRoot * L('roots'),
     bounty: 1 + L('bounty'),

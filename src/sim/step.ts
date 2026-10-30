@@ -22,9 +22,9 @@ function spawnOrc(s: SimState): void {
   else if (r > 1 - bruteShare(w)) kind = 'brute';
   const o = s.orcs.alloc(); if (!o) return;
   const T = ORC_TYPES[kind];
-  const hp = waveHP(w) * T.hp;
+  const hp = waveHP(w) * T.hp * s.stats.orcHp;
   o.kind = kind; o.x = W + 24; o.y = 50 + s.rng.next() * (H - 100);
-  o.hp = hp; o.maxhp = hp; o.spd = T.speed * waveSpeedMult(w); o.r = T.radius; o.atk = hp * BARRICADE.orcAtkFrac;
+  o.hp = hp; o.maxhp = hp; o.spd = T.speed * waveSpeedMult(w); o.r = T.radius; o.atk = hp * BARRICADE.orcAtkFrac * s.stats.orcAtk;
   o.loot = waveLoot(w) * T.loot * (kind === 'boss' ? s.stats.bounty : 1);
   o.dead = false; o.burn = 0; o.hitT = 0; o.wob = s.rng.next() * 6.28; o.swingT = s.rng.next();
 }

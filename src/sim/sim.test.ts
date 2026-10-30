@@ -90,6 +90,14 @@ describe('tree', () => {
     expect(s.run.starlight).toBe(88);
     expect(s.stats.dmg).toBeCloseTo(11.25);
   });
+  it('provoke ranks toughen orcs and raise their starlight', () => {
+    const s = createState(1);
+    s.run.levels.drums = 2; s.run.levels.banners = 1;
+    const st = deriveStats(s.run.levels, s.meta.heartwood);
+    expect(st.orcHp).toBeCloseTo(1.69);
+    expect(st.orcAtk).toBeCloseTo(1.3);
+    expect(st.starMult).toBeCloseTo(1.96 * 1.25);
+  });
   it('node price scales with the wave past 10', () => {
     const s = createState(1);
     expect(costOf(s, NODE.sharp)).toBe(12);
