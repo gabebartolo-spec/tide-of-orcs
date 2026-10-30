@@ -69,7 +69,7 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-060 | Sprite-sheet loader with atlas JSON and vector fallback; draw actors from sheets when present | render | M2 | claude | done 47e4010 |
 | TB-068 | Tripo models + Cascadeur loops → sheets for orcs, elf, vanguard, companions (ART-STYLE §Asset pipeline) | art | 060 | gabe | todo |
 | TB-069 | ElevenLabs SFX set (14) + ambient bed, exported per ART-STYLE | audio | — | gabe | todo |
-| TB-061 | Parallax hills, day/night tint, bank lamplight | render | 018 | claude | doing |
+| TB-061 | Parallax hills, day/night tint, bank lamplight | render | 018 | claude | done 71d05f4 |
 | TB-062 | Audio engine: ambient loop, SFX map from events, ducking | audio | 019,069 | claude | done 09b60cf |
 | TB-063 | Music beds ×2, crossfade on Replant | audio | 062 | | todo |
 | TB-064 | Mobile layout, touch targets, pinch zoom on tree. M1 check (375×812): Learn and Replant buttons 33 px, tabs 39 px, Save now/Wipe 29 px (target 44); hint text says "move your pointer" (touch needs its own copy); field is 343×183 px | ui | 021 | claude | done ddc732d |
