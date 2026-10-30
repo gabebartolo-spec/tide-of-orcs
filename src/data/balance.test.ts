@@ -32,8 +32,8 @@ describe('economy', () => {
   });
   it('heartwood multiplier', () => { expect(heartMult(0)).toBe(1); expect(heartMult(10)).toBeCloseTo(2.2); });
   it('prestige gain never negative; grows with wave and kills', () => {
-    expect(prestigeGain(1, 0)).toBe(0);
-    expect(prestigeGain(4, 0)).toBe(0);
+    expect(prestigeGain(1, 0)).toBe(1); // a fall always pays out (rule 1)
+    expect(prestigeGain(4, 0)).toBe(1);
     expect(prestigeGain(12, 0)).toBe(6);
     expect(prestigeGain(12, 800)).toBe(8);
   });

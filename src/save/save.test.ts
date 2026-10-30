@@ -18,8 +18,16 @@ describe('save migration', () => {
 describe('v1 → v2', () => {
   it('drops retired node ids and keeps everything else', () => {
     const s = migrate(JSON.parse(JSON.stringify(v1)));
-    expect(s.version).toBe(2);
+    expect(s.version).toBe(3);
     expect(s.run.levels).toEqual({ root: 1, draw: 3 });
     expect(s.run.starlight).toBe(512); expect(s.meta.heartwood).toBe(4); expect(s.settings.volume).toBe(0.5);
+  });
+});
+
+describe('v2 → v3', () => {
+  it('drops Blood Banners and moves the spawn clock to grunts', () => {
+    const v2 = { version: 2, savedAt: 0, run: { ...freshRun(), foeT: undefined, spawnT: 0.4, levels: { root: 1, horde: 2, banners: 3 } }, meta: freshMeta(), settings: defaultSettings() };
+    const s = migrate(JSON.parse(JSON.stringify(v2)));
+    expect(s.version).toBe(3); expect(s.run.levels).toEqual({ root: 1, horde: 2 }); expect(s.run.foeT).toEqual({ grunt: 0.4 });
   });
 });

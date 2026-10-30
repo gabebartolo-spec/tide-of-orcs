@@ -1,5 +1,5 @@
 import { BARRICADE, FIELD, LOB, PLAYER, SOURCES, WAVE_LEN, waveHP, waveInterval, waveLoot, waveSpeedMult } from '../data/balance';
-import { BOSS, ORC_TYPES, OrcKind, bruteShare, runnerShare } from '../data/orcs';
+import { ORC_KINDS, ORC_TYPES, OrcKind } from '../data/orcs';
 import { EventBus } from './events';
 import { Orc, Projectile, SimState } from './state';
 import { damage, impact, lob, nearestOrc, shoot, volley } from './combat';
@@ -13,19 +13,14 @@ export const noInputs: Inputs = { aim: null };
 const H = FIELD.h, W = FIELD.w, BAR_X = FIELD.barX, BAR_W = FIELD.barW, ELF_X = FIELD.elfX;
 const dist = (ax: number, ay: number, bx: number, by: number): number => Math.hypot(ax - bx, ay - by);
 
-function spawnOrc(s: SimState): void {
-  const w = s.run.wave, r = s.rng.next();
-  let kind: OrcKind = 'grunt';
-  let bossLive = false; s.orcs.forEach((o) => { if (o.kind === 'boss') bossLive = true; });
-  if (w % BOSS.everyWaves === 0 && !bossLive && s.rng.next() < BOSS.rollChance) kind = 'boss';
-  else if (r < runnerShare(w)) kind = 'runner';
-  else if (r > 1 - bruteShare(w)) kind = 'brute';
+function spawnOrc(s: SimState, kind: OrcKind): void {
+  const w = s.run.wave, F = s.stats.foes[kind];
   const o = s.orcs.alloc(); if (!o) return;
   const T = ORC_TYPES[kind];
-  const hp = waveHP(w) * T.hp * s.stats.orcHp;
+  const hp = waveHP(w) * T.hp * F.hp;
   o.kind = kind; o.x = W + 24; o.y = 50 + s.rng.next() * (H - 100);
-  o.hp = hp; o.maxhp = hp; o.spd = T.speed * waveSpeedMult(w); o.r = T.radius; o.atk = hp * BARRICADE.orcAtkFrac * s.stats.orcAtk;
-  o.loot = waveLoot(w) * T.loot * (kind === 'boss' ? s.stats.bounty : 1);
+  o.hp = hp; o.maxhp = hp; o.spd = T.speed * waveSpeedMult(w); o.r = T.radius; o.atk = hp * BARRICADE.orcAtkFrac;
+  o.loot = waveLoot(w) * T.loot * F.loot * (kind === 'boss' ? s.stats.bounty : 1);
   o.dead = false; o.burn = 0; o.hitT = 0; o.wob = s.rng.next() * 6.28; o.swingT = s.rng.next();
 }
 
@@ -38,9 +33,16 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
   run.waveT += dt;
   if (run.waveT >= WAVE_LEN) { run.waveT -= WAVE_LEN; run.wave++; s.meta.bestWave = Math.max(s.meta.bestWave, run.wave); ev.push({ t: 'wave', wave: run.wave }); }
 
-  run.spawnT += dt;
-  const iv = waveInterval(run.wave) / st.spawnMult;
-  while (run.spawnT >= iv) { run.spawnT -= iv; spawnOrc(s); }
+  // each summoned kind marches on its own clock; the boss waits until the last one falls
+  let bossLive = false; s.orcs.forEach((o) => { if (o.kind === 'boss' && !o.dead) bossLive = true; });
+  for (const k of ORC_KINDS) {
+    const F = st.foes[k]; if (!F.on) continue;
+    const base = k === 'boss' ? ORC_TYPES.boss.every : waveInterval(run.wave) * ORC_TYPES[k].every;
+    const iv = base / F.spawn;
+    if (k === 'boss' && bossLive) continue;
+    run.foeT[k] = (run.foeT[k] ?? 0) + dt;
+    while ((run.foeT[k] ?? 0) >= iv) { run.foeT[k]! -= iv; spawnOrc(s, k); }
+  }
 
   barricadeRegen(s, dt);
   vanguardStep(s, ev, dt);
@@ -59,7 +61,7 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
     }
     if (o.x <= BAR_X + BAR_W + o.r) {
       o.x = BAR_X + BAR_W + o.r; o.swingT += dt;
-      if (o.swingT >= BARRICADE.orcSwing) { o.swingT = 0; barricadeHit(s, ev, o.atk, o.y); }
+      if (o.swingT >= BARRICADE.orcSwing) { o.swingT = 0; barricadeHit(s, ev, o.atk * BARRICADE.wallMult, o.y); }
       if (st.spikes > 0) damage(s, ev, o, st.dmg * st.spikes * dt);
       return;
     }

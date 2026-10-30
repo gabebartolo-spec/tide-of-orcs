@@ -6,7 +6,9 @@ export type NodeId =
   | 'root' | 'sharp' | 'draw' | 'crit' | 'multi' | 'pierce' | 'moon' | 'wide'
   | 'wolf' | 'fangs' | 'ranger' | 'warden' | 'hawk' | 'treant' | 'bond'
   | 'knives' | 'knifespd' | 'fire' | 'storm' | 'ballista' | 'bolt'
-  | 'glean' | 'horde' | 'bounty' | 'drums' | 'banners'
+  | 'glean' | 'horde' | 'bounty' | 'drums'
+  | 'runners' | 'runfury' | 'runswarm' | 'brutes' | 'brutefury' | 'bruteswarm'
+  | 'elites' | 'elitefury' | 'eliteswarm' | 'warboss' | 'bossfury' | 'bossswarm'
   | 'timber' | 'repair' | 'spikes' | 'bulwark'
   | 'muster' | 'shield' | 'drill' | 'ranks' | 'mend' | 'champion';
 
@@ -49,10 +51,21 @@ export const NODES: readonly SkillNode[] = [
   n('ballista', 'Ballista', 'Armoury', 'knifespd', 1, 3400, 1, 660, 430, 'A heavy bolt that punches through the whole line.'),
   n('bolt', 'Iron Bolts', 'Armoury', 'ballista', 5, 2000, 2.0, 710, 360, 'Ballista +50% damage per rank.'),
   n('glean', 'Gleaning', 'Grove', 'root', 10, 20, 1.6, 490, 630, '+15% starlight from every orc.'),
-  n('horde', 'Call the Horde', 'Grove', 'glean', 5, 160, 2.4, 590, 610, '+20% more orcs. More orcs, more starlight. More danger.'),
-  n('drums', 'War Drums', 'Grove', 'horde', 5, 300, 2.4, 700, 650, 'Orcs have +30% health and drop +40% starlight per rank.'),
-  n('banners', 'Blood Banners', 'Grove', 'horde', 5, 300, 2.4, 735, 610, 'Orcs hit 30% harder and drop +25% starlight per rank.'),
-  n('bounty', 'Warboss Bounty', 'Grove', 'horde', 3, 800, 3, 690, 590, 'Warbosses drop double starlight per rank.'),
+  n('horde', 'Call the Horde', 'Grove', 'glean', 5, 160, 2.4, 590, 610, 'Grunts march 20% more often per rank. More orcs, more starlight. More danger.'),
+  n('drums', 'War Drums', 'Grove', 'horde', 5, 300, 2.4, 700, 650, 'Grunts have +30% health and drop +40% starlight per rank.'),
+  n('runners', 'Goblin Runners', 'Grove', 'horde', 1, 120, 1, 410, 720, 'Small, fast orcs join the tide.'),
+  n('runfury', 'Runner Fury', 'Grove', 'runners', 5, 200, 2.4, 410, 790, 'Runners have +30% health and drop +40% starlight per rank.'),
+  n('runswarm', 'Runner Swarm', 'Grove', 'runners', 5, 200, 2.4, 410, 850, 'Runners march 20% more often per rank.'),
+  n('brutes', 'Brutes', 'Grove', 'runners', 1, 400, 1, 510, 720, 'Slow, hulking orcs join the tide.'),
+  n('brutefury', 'Brute Fury', 'Grove', 'brutes', 5, 600, 2.4, 510, 790, 'Brutes have +30% health and drop +40% starlight per rank.'),
+  n('bruteswarm', 'Brute Swarm', 'Grove', 'brutes', 5, 600, 2.4, 510, 850, 'Brutes march 20% more often per rank.'),
+  n('elites', 'Blackguard', 'Grove', 'brutes', 1, 1500, 1, 610, 720, 'Armoured elite orcs join the tide.'),
+  n('elitefury', 'Elite Fury', 'Grove', 'elites', 5, 2000, 2.4, 610, 790, 'Elites have +30% health and drop +40% starlight per rank.'),
+  n('eliteswarm', 'Elite Swarm', 'Grove', 'elites', 5, 2000, 2.4, 610, 850, 'Elites march 20% more often per rank.'),
+  n('warboss', 'Warboss', 'Grove', 'elites', 1, 5000, 1, 710, 720, 'A Warboss marches every 45 s, one at a time.'),
+  n('bossfury', 'Warboss Fury', 'Grove', 'warboss', 5, 6000, 2.4, 710, 790, 'Warbosses have +30% health and drop +40% starlight per rank.'),
+  n('bossswarm', 'Warboss Swarm', 'Grove', 'warboss', 5, 6000, 2.4, 710, 850, 'Warbosses march 20% more often per rank.'),
+  n('bounty', 'Warboss Bounty', 'Grove', 'warboss', 3, 8000, 3, 710, 900, 'Warbosses drop double starlight per rank.'),
   n('timber', 'Seasoned Timber', 'Barricade', 'root', 10, 25, 1.6, 270, 630, 'Barricade +25% health per rank.'),
   n('repair', 'Patient Hands', 'Barricade', 'timber', 5, 90, 2.0, 170, 610, 'Barricade mends 1% of its health per second per rank.'),
   n('spikes', 'Thornwall', 'Barricade', 'timber', 5, 150, 2.1, 190, 665, 'Orcs hacking at the wall take 20% of your arrow damage per second per rank.'),
@@ -67,8 +80,8 @@ export const NODES: readonly SkillNode[] = [
 
 export const NODE: Readonly<Record<NodeId, SkillNode>> = Object.fromEntries(NODES.map((x) => [x.id, x])) as Record<NodeId, SkillNode>;
 
-export const TREE_CANVAS = { w: 760, h: 680 } as const;
-/** Tree view: zoom range as multiples of fit-to-width, wheel step, px of movement before a press becomes a drag. */
-export const TREE_VIEW = { minZoom: 0.6, maxZoom: 2.5, wheelStep: 1.15, dragPx: 6, hitR: 20 } as const;
+export const TREE_CANVAS = { w: 760, h: 920 } as const;
+/** Tree view: opening zoom and focus (the root), zoom range as multiples of fit-to-width, wheel step, px of movement before a press becomes a drag. */
+export const TREE_VIEW = { startZoom: 1, focusX: 380, focusY: 600, minZoom: 0.6, maxZoom: 3, wheelStep: 1.15, dragPx: 6, hitR: 20 } as const;
 
 export const BRANCH_COLOR: Readonly<Record<Branch, string>> = { Bow: '#cdbdea', Companions: '#e2a85b', Armoury: '#c76f6f', Grove: '#9fc48f', Barricade: '#c9a06a', Vanguard: '#8fb7c9' };

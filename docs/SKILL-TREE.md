@@ -4,7 +4,7 @@ Status: **Current** (v1.2). This table is generated from `docs/prototype.html` a
 
 Cost formula: `cost(rank) = base × growth^rank` (rank = ranks already owned). Costs are starlight, rounded.
 
-Layout coordinates are for a 760×680 tree canvas, root bottom-centre at (380, 600). Six branches fan outward in the classic incremental shape: Bow up-left, Vanguard left, Barricade low-left, Companions up, Armoury up-right, Grove low-right. Branch colours in ART-STYLE.md.
+Layout coordinates are for a 760×920 tree canvas, root bottom-centre at (380, 600). Six branches fan outward in the classic incremental shape: Bow up-left, Vanguard left, Barricade low-left, Companions up, Armoury up-right, Grove low-right. Branch colours in ART-STYLE.md.
 
 | id | Name | Branch | Parent | Max | Base | Growth | x | y | Effect |
 |---|---|---|---|---|---|---|---|---|---|
@@ -30,10 +30,21 @@ Layout coordinates are for a 760×680 tree canvas, root bottom-centre at (380, 6
 | ballista | Ballista | Armoury | knifespd | 1 | 3400 | — | 660 | 430 | A heavy bolt that punches through the whole line. |
 | bolt | Iron Bolts | Armoury | ballista | 5 | 2000 | 2.0 | 710 | 360 | Ballista +50% damage per rank. |
 | glean | Gleaning | Grove | root | 10 | 20 | 1.6 | 490 | 630 | +15% starlight from every orc. |
-| horde | Call the Horde | Grove | glean | 5 | 160 | 2.4 | 590 | 610 | +20% more orcs. More orcs, more starlight. More danger. |
-| drums | War Drums | Grove | horde | 5 | 300 | 2.4 | 700 | 650 | Orcs have +30% health and drop +40% starlight per rank. |
-| banners | Blood Banners | Grove | horde | 5 | 300 | 2.4 | 735 | 610 | Orcs hit 30% harder and drop +25% starlight per rank. |
-| bounty | Warboss Bounty | Grove | horde | 3 | 800 | 3 | 690 | 590 | Warbosses drop double starlight per rank. |
+| horde | Call the Horde | Grove | glean | 5 | 160 | 2.4 | 590 | 610 | Grunts march 20% more often per rank. More orcs, more starlight. More danger. |
+| drums | War Drums | Grove | horde | 5 | 300 | 2.4 | 700 | 650 | Grunts have +30% health and drop +40% starlight per rank. |
+| runners | Goblin Runners | Grove | horde | 1 | 120 | — | 410 | 720 | Small, fast orcs join the tide. |
+| runfury | Runner Fury | Grove | runners | 5 | 200 | 2.4 | 410 | 790 | Runners have +30% health and drop +40% starlight per rank. |
+| runswarm | Runner Swarm | Grove | runners | 5 | 200 | 2.4 | 410 | 850 | Runners march 20% more often per rank. |
+| brutes | Brutes | Grove | runners | 1 | 400 | — | 510 | 720 | Slow, hulking orcs join the tide. |
+| brutefury | Brute Fury | Grove | brutes | 5 | 600 | 2.4 | 510 | 790 | Brutes have +30% health and drop +40% starlight per rank. |
+| bruteswarm | Brute Swarm | Grove | brutes | 5 | 600 | 2.4 | 510 | 850 | Brutes march 20% more often per rank. |
+| elites | Blackguard | Grove | brutes | 1 | 1500 | — | 610 | 720 | Armoured elite orcs join the tide. |
+| elitefury | Elite Fury | Grove | elites | 5 | 2000 | 2.4 | 610 | 790 | Elites have +30% health and drop +40% starlight per rank. |
+| eliteswarm | Elite Swarm | Grove | elites | 5 | 2000 | 2.4 | 610 | 850 | Elites march 20% more often per rank. |
+| warboss | Warboss | Grove | elites | 1 | 5000 | — | 710 | 720 | A Warboss marches every 45 s, one at a time. |
+| bossfury | Warboss Fury | Grove | warboss | 5 | 6000 | 2.4 | 710 | 790 | Warbosses have +30% health and drop +40% starlight per rank. |
+| bossswarm | Warboss Swarm | Grove | warboss | 5 | 6000 | 2.4 | 710 | 850 | Warbosses march 20% more often per rank. |
+| bounty | Warboss Bounty | Grove | warboss | 3 | 8000 | 3 | 710 | 900 | Warbosses drop double starlight per rank. |
 | timber | Seasoned Timber | Barricade | root | 10 | 25 | 1.6 | 270 | 630 | Barricade +25% health per rank. |
 | repair | Patient Hands | Barricade | timber | 5 | 90 | 2.0 | 170 | 610 | Barricade mends 1% of its health per second per rank. |
 | spikes | Thornwall | Barricade | timber | 5 | 150 | 2.1 | 190 | 665 | Orcs hacking at the wall take 20% of your arrow damage per second per rank. |
@@ -58,10 +69,9 @@ interface Stats {
   pierce: number;         // pierce
   crit: number;           // 0.08 × crit
   homing: boolean; fire: boolean;
-  starMult: number;       // 1.15^glean × 1.4^drums × 1.25^banners × heart
-  orcHp: number;          // 1.3^drums     (orc health at spawn)
-  orcAtk: number;         // 1.3^banners   (orc hit at spawn)
-  spawnMult: number;      // 1.2^horde
+  starMult: number;       // 1.15^glean × heart
+  foes: Record<OrcKind, { on; hp: 1.3^fury; loot: 1.4^fury; spawn: 1.2^swarm }>
+                          // grunt: always on, fury = drums, swarm = horde
   bounty: number;         // 1 + bounty
   kin: number;            // 1.2^bond × heart   (companions AND vanguard)
   wolf: number;           // wolf ? 6 × 1.4^fangs × kin : 0

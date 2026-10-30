@@ -1,5 +1,6 @@
 import { NodeId } from '../data/skillTree';
-import { BARRICADE, LOB, NODE_FX, PLAYER, PROVOKE, SOURCES, VANGUARD, heartMult } from '../data/balance';
+import { FOE_FX, OrcKind } from '../data/orcs';
+import { BARRICADE, LOB, NODE_FX, PLAYER, SOURCES, VANGUARD, heartMult } from '../data/balance';
 
 export type Levels = Partial<Record<NodeId, number>>;
 
@@ -7,7 +8,9 @@ export type Levels = Partial<Record<NodeId, number>>;
 export interface Stats {
   dmg: number; fireRate: number; lobCd: number; radius: number; arrows: number; pierce: number; crit: number;
   homing: boolean; fire: boolean;
-  starMult: number; orcHp: number; orcAtk: number; spawnMult: number; bounty: number;
+  starMult: number; bounty: number;
+  /** Per orc kind: summoned yet, and its Fury/Swarm multipliers. */
+  foes: Record<OrcKind, Foe>;
   kin: number; wolf: number; archers: number; hawk: boolean; treant: boolean;
   knives: { rate: number; dmg: number } | null;
   storm: boolean; ballista: number;
@@ -16,6 +19,17 @@ export interface Stats {
   // vanguard
   muster: boolean; vanCap: number; vanHp: number; vanDmg: number; vanMend: number; champion: boolean;
 }
+
+export interface Foe { on: boolean; hp: number; loot: number; spawn: number }
+
+/** Each kind's nodes: [summon (null = always marching), fury, swarm]. */
+const FOE_NODES: Record<OrcKind, [NodeId | null, NodeId, NodeId]> = {
+  grunt: [null, 'drums', 'horde'],
+  runner: ['runners', 'runfury', 'runswarm'],
+  brute: ['brutes', 'brutefury', 'bruteswarm'],
+  elite: ['elites', 'elitefury', 'eliteswarm'],
+  boss: ['warboss', 'bossfury', 'bossswarm'],
+};
 
 export function deriveStats(lv: Levels, heartwood: number): Stats {
   const L = (id: NodeId): number => lv[id] ?? 0;
@@ -32,10 +46,11 @@ export function deriveStats(lv: Levels, heartwood: number): Stats {
     crit: NODE_FX.critPerRank * L('crit'),
     homing: L('moon') > 0,
     fire: L('fire') > 0,
-    starMult: Math.pow(NODE_FX.gleanLoot, L('glean')) * Math.pow(PROVOKE.drumsLoot, L('drums')) * Math.pow(PROVOKE.bannersLoot, L('banners')) * hm,
-    orcHp: Math.pow(PROVOKE.drumsHp, L('drums')),
-    orcAtk: Math.pow(PROVOKE.bannersAtk, L('banners')),
-    spawnMult: Math.pow(NODE_FX.hordeSpawn, L('horde')),
+    starMult: Math.pow(NODE_FX.gleanLoot, L('glean')) * hm,
+    foes: Object.fromEntries(Object.entries(FOE_NODES).map(([k, [on, fury, swarm]]) => [k, {
+      on: on === null || L(on) > 0,
+      hp: Math.pow(FOE_FX.hp, L(fury)), loot: Math.pow(FOE_FX.loot, L(fury)), spawn: Math.pow(FOE_FX.spawn, L(swarm)),
+    }])) as Record<OrcKind, Foe>,
     bounty: 1 + L('bounty'),
     kin,
     wolf: L('wolf') ? SOURCES.wolf.base * Math.pow(NODE_FX.fangsDmg, L('fangs')) * kin : 0,

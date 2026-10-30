@@ -5,7 +5,7 @@ export const P = {
   plain: '#7c9676', plainPatch: '#86a07e', grass: 'rgba(239,230,210,.18)', groveSide: '#9fb391',
   timber: '#8a6a46', timberDark: '#7a5c3c', timberSplinter: '#4e3a28', timberBand: '#5a4634', sand: '#c9b78a',
   amber: '#e2a85b', rose: '#c76f6f', lilac: '#cdbdea',
-  orc: '#7f8f52', brute: '#6c7a44', boss: '#9a7a46', tusk: '#39412a',
+  orc: '#7f8f52', brute: '#6c7a44', elite: '#4f5a3a', boss: '#9a7a46', tusk: '#39412a',
   elfCloak: '#5f6f8a', archerCloak: '#8b9a7d', wolf: '#9aa3ad', bark: '#5a4634', knife: '#d9d4c3',
   treantTrunk: '#4e5e3f', treantLeaf: '#5f7d53', treantLeaf2: '#6f8f60', sage: '#8fa98a', grove: '#9fc48f',
   spear: '#8fb7c9', blade: '#cdbdea',

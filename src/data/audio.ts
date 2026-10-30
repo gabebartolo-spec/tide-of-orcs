@@ -40,7 +40,7 @@ export const CUES: Record<Cue, { gain: number; gap: number; duck?: boolean }> = 
 export function cueFor(e: SimEvent): Cue | null {
   switch (e.t) {
     case 'hit': return 'arrowHit';
-    case 'kill': return e.kind === 'boss' || e.kind === 'brute' ? 'bruteDeath' : 'orcDeath';
+    case 'kill': return e.kind === 'boss' || e.kind === 'brute' || e.kind === 'elite' ? 'bruteDeath' : 'orcDeath';
     case 'barricadeHit': return e.frac < AUDIO.creakFrac ? 'wallCreak' : 'wallThud';
     case 'barricadeFell': return 'wallFall';
     case 'vanguardRallied': return 'rallyHorn';

@@ -67,7 +67,7 @@ describe('simulation', () => {
     const { s } = run(2, 20 * 60);
     expect(s.run.fallen).toBe(true);
     expect(s.run.barHp).toBe(0);
-    expect(s.run.wave).toBeGreaterThanOrEqual(5); // a bare archer should hold a few waves, not fold instantly
+    expect(s.run.wave).toBeGreaterThanOrEqual(3); expect(s.run.wave).toBeLessThanOrEqual(4); // a bare run falls at wave 3–4 (TB-080)
   });
   it('a fallen run stops ticking', () => {
     const { s } = run(2, 20 * 60); const t = s.t; const ev = new EventBus();
@@ -107,13 +107,20 @@ describe('tree', () => {
     expect(s.run.starlight).toBe(88);
     expect(s.stats.dmg).toBeCloseTo(11.25);
   });
-  it('provoke ranks toughen orcs and raise their starlight', () => {
-    const s = createState(1);
-    s.run.levels.drums = 2; s.run.levels.banners = 1;
-    const st = deriveStats(s.run.levels, s.meta.heartwood);
-    expect(st.orcHp).toBeCloseTo(1.69);
-    expect(st.orcAtk).toBeCloseTo(1.3);
-    expect(st.starMult).toBeCloseTo(1.96 * 1.25);
+  it('fury ranks toughen one kind and raise its starlight; swarm speeds its spawns', () => {
+    const st = deriveStats({ root: 1, drums: 2, runners: 1, runswarm: 1 }, 0);
+    expect(st.foes.grunt.hp).toBeCloseTo(1.69); expect(st.foes.grunt.loot).toBeCloseTo(1.96);
+    expect(st.foes.runner.hp).toBe(1); expect(st.foes.runner.spawn).toBeCloseTo(1.2);
+    expect(st.foes.brute.on).toBe(false);
+  });
+  it('only grunts march until another kind is summoned', () => {
+    const kinds = (lv: Record<string, number>) => {
+      const s = createState(4); Object.assign(s.run.levels, lv); recompute(s); const ev = new EventBus(); const seen = new Set<string>();
+      for (let i = 0; i < 90 / STEP; i++) { step(s, STEP, aimed(s), ev); s.orcs.forEach((o) => { seen.add(o.kind); }); }
+      return seen;
+    };
+    expect([...kinds({})]).toEqual(['grunt']);
+    expect(kinds({ runners: 1, brutes: 1 }).has('runner')).toBe(true);
   });
   it('node price scales with the wave past 10', () => {
     const s = createState(1);
@@ -188,7 +195,7 @@ describe('kinship, bounty, horde (TB-039)', () => {
       let live = 0; s.orcs.forEach((o) => { if (!o.dead) live++; });
       return s.run.kills + live;
     };
-    expect(deriveStats({ root: 1, horde: 5 }, 0).spawnMult).toBeCloseTo(1.2 ** 5);
+    expect(deriveStats({ root: 1, horde: 5 }, 0).foes.grunt.spawn).toBeCloseTo(1.2 ** 5);
     expect(count(5)).toBeGreaterThan(count(0) * 1.5);
   });
 });

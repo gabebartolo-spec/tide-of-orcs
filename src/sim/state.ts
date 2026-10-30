@@ -22,7 +22,7 @@ export interface Vanguard {
 export interface RunState {
   wave: number; waveT: number; runTime: number; starlight: number; kills: number; levels: Levels;
   barHp: number; bulwarkUsed: boolean; fallen: boolean;
-  spawnT: number; stormT: number; shotT: number[]; knifeT: number; hawkT: number; treantT: number; ballT: number;
+  foeT: Partial<Record<OrcKind, number>>; stormT: number; shotT: number[]; knifeT: number; hawkT: number; treantT: number; ballT: number;
 }
 export interface MetaState { heartwood: number; lifetimeKills: number; bestWave: number; prestiges: number }
 
@@ -37,7 +37,7 @@ export interface SimState {
 
 export function freshRun(): RunState {
   return { wave: 1, waveT: 0, runTime: 0, starlight: 0, kills: 0, levels: { root: 1 }, barHp: -1, bulwarkUsed: false, fallen: false,
-    spawnT: 0, stormT: 0, shotT: [0, 0, 0], knifeT: 0, hawkT: 0, treantT: 0, ballT: 0 };
+    foeT: {}, stormT: 0, shotT: [0, 0, 0], knifeT: 0, hawkT: 0, treantT: 0, ballT: 0 };
 }
 export function freshMeta(): MetaState { return { heartwood: 0, lifetimeKills: 0, bestWave: 1, prestiges: 0 }; }
 

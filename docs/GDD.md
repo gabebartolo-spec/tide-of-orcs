@@ -43,15 +43,17 @@ The field hint reads: "Hold the barricade. Move your pointer over the field to a
 
 ## 4. Waves and orcs
 - Waves are timed: one every 24 s regardless of kills. `wave` is the only difficulty driver.
-- Spawn interval shrinks per wave (BALANCE.md), multiplied by Call the Horde.
+- At first only grunts march. Every other kind joins only when the player summons it with its Grove node (Goblin Runners → Brutes → Blackguard → Warboss). Summoning is the risk-for-reward lever: more danger, more starlight. Falling is fine and expected; it feeds the replant loop.
+- Every kind has its own spawn clock and two nodes: **Fury** (+30% health, +40% starlight per rank) and **Swarm** (spawns 20% more often per rank). Grunts' are War Drums and Call the Horde.
 - Spawn position: x = field width + 24, y uniform in [50, H−50]. Hard cap 160 live orcs.
 
-| Type | HP × | Speed | Loot × | Radius | Notes |
-|---|---|---|---|---|---|
-| Grunt | 1.0 | 48 | 1.0 | 12 | Baseline |
-| Runner | 0.55 | 78 | 0.7 | 9 | Share rises with wave to 35% |
-| Brute | 3.2 | 34 | 3.0 | 16 | Share rises with wave to 33%; the wall-breaker |
-| Warboss | 28 | 26 | 30 × Bounty | 24 | Waves divisible by 10, one at a time, 8% roll per spawn |
+| Type | HP × | Speed | Loot × | Radius | Spawns every | Unlock |
+|---|---|---|---|---|---|---|
+| Grunt | 1.0 | 48 | 1.0 | 12 | 1 × wave interval | always |
+| Runner (small, fast) | 0.55 | 78 | 0.7 | 9 | 1.5 × | Goblin Runners |
+| Brute (slow, strong) | 3.2 | 34 | 3.0 | 16 | 4 × | Brutes |
+| Elite | 8 | 42 | 8 | 14 | 10 × | Blackguard |
+| Warboss | 28 | 26 | 30 × Bounty | 24 | 45 s, one at a time | Warboss |
 
 Speed scales ×(1 + 0.008·wave). All orcs swing at the wall or a vanguard for 2.5% of their max HP per second.
 

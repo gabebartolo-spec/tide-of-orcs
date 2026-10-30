@@ -12,11 +12,12 @@ Two sections. `## Current` is what ships and is human-owned. `## Proposed` is wh
 ```
 hp(w)       = 10 × 1.17^(min(w,15)−1) × 1.30^max(0, w−15)   ramp from wave 15 (P-001)
 loot(w)     = 2  × 1.13^(w−1)
-interval(w) = max(0.3, 2.0 × 0.93^(w−1))   seconds between spawns, before Horde
+interval(w) = max(0.3, 2.0 × 0.93^(w−1))   seconds between grunt spawns; kind k every interval × every_k / 1.2^swarm_k (warboss: 45 s / 1.2^swarm, one alive)
 speed       = base × (1 + 0.008 w)
-atk         = 0.025 × maxhp                  per swing, one swing per second, vs wall or vanguard
+atk         = 0.025 × maxhp                  per swing, one swing per second, vs vanguard
+wall hit    = 10 × atk                        per swing vs the barricade (TB-080: bare run falls at wave 3–4, ~90 s)
 ```
-Type multipliers in GDD §4. Live orc cap 160.
+Type multipliers and unlocks in GDD §4. Per kind: Fury ×1.3^r health, ×1.4^r starlight; Swarm ×1.2^r spawn rate (grunts: War Drums, Call the Horde). Live orc cap 160.
 
 ### The elf's lob (TB-079)
 ```
@@ -70,12 +71,12 @@ cap = 2 + ranks        mend = 0.03 × mend × maxhp per second
 | 25 | 226 | 2,165 | 677 |
 
 ### Economy
-- Provoke (War Drums, Blood Banners): orc health ×1.3^drums and orc hit ×1.3^banners at spawn; starlight ×1.4^drums × 1.25^banners. Greedy sim with both maxed: first fall 12–18, run 2 at 24–33, run 3 at 36–39 (seeds 1–10).
+- Provoke is per kind now (TB-080, see Fury/Swarm above). Blood Banners retired.
 - Node price at purchase: `cost = round(base × growth^rank × 1.25^max(0, w − 10))` (wave-scaled since P-001; ×1 to wave 10, ×28.4 at 25, ×7,523 at 50).
 - `starMult = 1.15^glean × heart`. Heartwood: `heart = 1 + 0.12 × HW`, applied to damage, starlight, barricade HP and vanguard HP.
 
 ### Prestige
-- Forced on barricade fall; voluntary from wave 12. `HW = floor((w − 4) × 0.75) + floor(runKills / 400)`.
+- Forced on barricade fall; voluntary from wave 12. `HW = max(1, floor((w − 4) × 0.75) + floor(runKills / 400))`. The floor of 1 keeps rule 1 (a fall always pays out) now that runs fall at wave 3–4.
 
 ### Pacing targets (what the sim must hit)
 | Target | Value | Status (greedy policy, seeds 1–3) |
