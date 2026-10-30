@@ -75,7 +75,7 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-064 | Mobile layout, touch targets, pinch zoom on tree. M1 check (375×812): Learn and Replant buttons 33 px, tabs 39 px, Save now/Wipe 29 px (target 44); hint text says "move your pointer" (touch needs its own copy); field is 343×183 px | ui | 021 | claude | done ddc732d |
 | TB-065 | Settings tab: volume, reduced motion override, number format, export/import | ui | 008 | | todo |
 | TB-066 | Tree layout polish: curved branch lines, camera ease to selected | render | 021 | | todo |
-| TB-067 | Strings table audit; all copy via `strings.ts` | ui | — | | todo |
+| TB-067 | Strings table audit; all copy via `strings.ts` | ui | — | claude | done d26c4c5 |
 
 ## M5 — Ship
 | Id | Task | Area | Depends | Owner | Status |
