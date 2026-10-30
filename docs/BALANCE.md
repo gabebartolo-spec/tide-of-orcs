@@ -133,3 +133,42 @@ C1 drops Heartwood from barricade and vanguard HP and keeps it on player and com
 Finding: none of the four candidates, alone or together, reaches either target. The run is **bistable**: it either falls around wave 8–12, or it gets past that point and runs to wave 40–47. Starting a fresh run with 0 / 1 / 2 / 3 HW gives first falls of 7–9 / 9–45 / 45–46 / 41–47. One or two Heartwood flips a run from one outcome to the other. Past the hump, greedy maxes all 121 nodes by about wave 27 and coasts until orc HP overtakes it. So the snowball doesn't come from the size of the Heartwood bonus. It comes from the run having no pressure in the middle: income (`waveLoot` 1.13 per wave ÷ `waveInterval` 0.93) keeps pace with threat (`waveHP` 1.17 per wave ÷ 0.93). The candidates only move where the cliff sits by a wave or two. The `waveHP` diagnostic shows the same thing: steepening HP growth moves run 2 straight from 41 to 12, with nothing between.
 
 Recommendation: don't adopt any of the four as the P-001 fix. Of the candidates, C3 + C4 is the only one worth keeping on its own merits, because it makes the first fall consistent (wave 10 on all seeds). Even so, it misses 12–18 and does nothing for run 2. The real fix needs a mid-game lever that bends the curve smoothly instead of flipping it. Options to test next: a softer late `waveHP` ramp that kicks in at a wave (e.g. ×1.17 to wave 15, then ×1.20), `waveLoot` growth tied to that ramp, or node cost growth that stops the tree maxing by wave 27. A director decision is needed before that sweep.
+
+#### Mid-game lever sweep (2026-10-30, greedy, 25 min)
+Same harness. "Ramp K/R" means `waveHP` keeps ×1.17 per wave up to wave K, then grows ×R per wave. Seeds 1 / 2 / 3 unless noted.
+
+| Change | First fall wave | Run 2 falls at wave |
+|---|---|---|
+| C3 + C4 + wall 900 or 1200 | 11 / 11 / 11 | 49–50 |
+| C3 + C4 + ramp 15/1.20 to 18/1.22 (any wall 600–1200) | 10–11 | 40–45 |
+| C3 + C4 + node cost growth ×1.1 / ×1.2 / ×1.3 | 9–10 | 41–48 |
+| C3 + C4 + `waveLoot` growth 1.11 / 1.09 | 8–10 | 46–48 |
+| C3 + C4 + boss HP 28 → 14, or ~0 | 10 / 10 / 10 | 44–49 |
+| Ramp 15/1.30 | 9 / 7 / 8 | 34 / 31 / 33 |
+| Ramp 15/1.40 | 9 / 7 / 8 | 31 / 30 / 30 |
+| Player base damage 6 → 9 | 12 / 13 / 12 | 49 / 49 / 50 |
+| Damage 9 + ramp 15/1.50 | 12 / 13 / 12 | 29 / 29 / 29 |
+| Damage 9 + ramp 15/1.50, seeds 4–10 | 21 / 21 / 24 / 21 / 12 / 28 / 21 | 31 / 31 / 31 / 31 / 29 / 32 / 31 |
+| Damage 8 + ramp 15/1.50, seeds 1–10 | 12 / 10 / 21 / 21 / 11 / 11 / 11 / 12 / 21 / 12 | 28–31 |
+| Damage 7 + ramp 15/1.50, seeds 1–10 | 9 / 8 / 11 / 12 / 21 / 10 / 21 / 10 / 9 / 21 | 28–31 |
+
+What this shows:
+- **Run 2 is set by the maxed tree, not by economy.** Loot growth, node cost growth, wall HP and boss HP leave it at 41–50. Greedy maxes the tree whatever it earns, and the run falls once orc HP outgrows the full tree's damage. Only orc HP growth moves it.
+- **A steep ramp hits the run 2 target on every seed:** ×1.50 per wave after wave 15 puts run 2 at 28–32 on all ten seeds. The cost is that it becomes a hard ceiling. Over 60 minutes the falls go 12, 29, 33, 36, 38 (baseline: 9, 46, then about 38 and still climbing at minute 60). Heartwood grows linearly against ×1.50 per wave, so each replant buys about 2–3 more waves.
+- **The first-fall target isn't reliably reachable with these levers.** The first fall is bimodal at any base damage, landing at either wave 9–13 or wave 21–28 depending on seed, with nothing between. Damage 9 gets 12–13 on seeds 1–3 only by luck; seeds 4–10 mostly land at 21. Boss HP doesn't cause the jump (removing bosses changes nothing).
+
+Recommendation: adopt **ramp 15/1.50** only if a hard ceiling around wave 30–40 is the intended shape. If prestige should keep pushing waves outward, use a gentler ramp (1.30, run 2 at 31–34) and accept missing the ≤30 target. Don't adopt a base-damage change for the first fall until the bimodality is understood. The next step is tracing what kills run 1 at wave ~10 versus ~21 (rally timing, or the order greedy buys nodes in). Neither `## Current` nor code has changed.
+
+#### Proposal: run 2 half of P-001 (director picked the gentler ramp, 2026-10-30)
+```
+hp(w) = 10 × 1.17^(min(w,15) − 1) × 1.30^max(0, w − 15)
+```
+Waves 1–15 are unchanged. This deliberately misses the run 2 ≤ 30 target by a few waves, so prestige keeps pushing waves outward.
+
+| Greedy, ramp 15/1.30 | Seeds 1–10 |
+|---|---|
+| First fall wave | 9 / 7 / 8 / 9 / 10 / 7 / 8 / 9 / 8 / 8 (unchanged; the ramp starts after these) |
+| Run 2 falls at wave | 34 / 31 / 33 / 32 / 35 / 34 / 35 / 34 / 31 / 32 |
+| All falls in 60 min, seeds 1 / 2 / 3 | 9, 34, 40, 47 · 7, 31, 40, 46 · 8, 33, 40, 47 |
+
+The first-run half (wave 12–18) stays open until the bimodality is traced. Applying this needs `hp(w)` changed in `## Current` and `waveHP` in `src/data/balance.ts`, plus its pinned tests at waves 25 and 50. `vanBaseHp` also derives from `waveHP`, so vanguard HP scales with the ramp too; that needs a check before applying.
