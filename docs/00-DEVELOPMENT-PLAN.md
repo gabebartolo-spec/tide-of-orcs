@@ -58,7 +58,7 @@ Goal: a correct engine with the whole prototype ported.
 Goal: parity with the prototype, properly built.
 - ~~Remaining from the port: tree pan/zoom, River-id save migration.~~ Done (TB-021 ede6878, TB-028 ffe9c82; save schema now v2).
 - ~~Balance pass #0 (TB-025):~~ Done (P-001 resolved): first wall falls minute 5–7, wave 12–18; run 2 at wave 25–29.
-- **Open:** mobile layout check (full mobile work is TB-064 in M4).
+- ~~Mobile layout check~~ Done 31 Oct at 375×812: no horizontal scroll, tree draws and fits. One blocker, TB-078: the fallen overlay hides Replant. Touch targets and touch copy go to TB-064 (M4).
 **Done when:** a new player's first wall falls between minute 5 and 8, they understand why, and their second run is visibly stronger.
 
 ### M2 — Companions & armoury (week 4) · **done**

@@ -72,7 +72,7 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-061 | Parallax hills, day/night tint, bank lamplight | render | 018 | | todo |
 | TB-062 | Audio engine: ambient loop, SFX map from events, ducking | audio | 019,069 | claude | done 09b60cf |
 | TB-063 | Music beds ×2, crossfade on Replant | audio | 062 | | todo |
-| TB-064 | Mobile layout, touch targets, pinch zoom on tree | ui | 021 | | todo |
+| TB-064 | Mobile layout, touch targets, pinch zoom on tree. M1 check (375×812): Learn and Replant buttons 33 px, tabs 39 px, Save now/Wipe 29 px (target 44); hint text says "move your pointer" (touch needs its own copy); field is 343×183 px | ui | 021 | | todo |
 | TB-065 | Settings tab: volume, reduced motion override, number format, export/import | ui | 008 | | todo |
 | TB-066 | Tree layout polish: curved branch lines, camera ease to selected | render | 021 | | todo |
 | TB-067 | Strings table audit; all copy via `strings.ts` | ui | — | | todo |
@@ -88,6 +88,7 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-075 | Bug bash checklist run | qa | 072 | | todo |
 | TB-076 | Move 6 colour literals in src/render (rgba/hex) into palette tokens (rule 6) | render | | claude | done c189562 |
 | TB-077 | Move inline tree multipliers in sim/stats.ts (1.25, 1.15, 1.2, 1.4 …) into data/balance (rule 3) | sim/data | | claude | done c189562 |
+| TB-078 | Fallen overlay clips on phones: at 375 px the field is 183 px tall and the Replant button starts at its bottom edge, so it is unreachable (rule 1). Fit overlay to field height or move it out of the canvas box | ui | 027 | | todo |
 
 ## Icebox
 - Starfall, Owl, Mist, Lantern nodes (SKILL-TREE.md Planned).
