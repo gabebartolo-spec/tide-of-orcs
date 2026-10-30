@@ -57,7 +57,7 @@ Goal: a correct engine with the whole prototype ported.
 ### M1 — Vertical slice (weeks 2–3) · **in progress**
 Goal: parity with the prototype, properly built.
 - ~~Remaining from the port: tree pan/zoom, River-id save migration.~~ Done (TB-021 ede6878, TB-028 ffe9c82; save schema now v2).
-- **Open:** balance pass #0 (TB-025): resolve BALANCE.md P-001 so the first wall falls at wave 12–18 and the second run can fall by wave 30.
+- ~~Balance pass #0 (TB-025):~~ Done; first wall falls minute 5–7, wave 12–18. resolve BALANCE.md P-001 so the first wall falls at wave 12–18 and the second run can fall by wave 30.
 - **Open:** mobile layout check (full mobile work is TB-064 in M4).
 **Done when:** a new player's first wall falls between minute 5 and 8, they understand why, and their second run is visibly stronger.
 

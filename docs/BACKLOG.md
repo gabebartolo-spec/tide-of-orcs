@@ -36,7 +36,7 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-028 | Save migration: drop deprecated node ids (River `tide`,`current`,`flood`,`silt`; `roots`) from v1 saves | save | 008 | claude | done ffe9c82 |
 | TB-023 | Offline award: removed by director 2026-10-30, no offline progress | sim/ui | 008 | claude | won't do |
 | TB-024 | Autosave 20 s, beforeunload/pagehide | save | 008 | claude | done 4860f5b |
-| TB-025 | First-run flow check against BALANCE.md pacing targets; resolve P-001 | balance | 009,016 | claude | awaiting director (findings in BALANCE.md Proposed) |
+| TB-025 | First-run flow check against BALANCE.md pacing targets; resolve P-001 | balance | 009,016 | claude | done 00a6c38 |
 
 ## M2 — Companions & armoury
 | Id | Task | Area | Depends | Owner | Status |
