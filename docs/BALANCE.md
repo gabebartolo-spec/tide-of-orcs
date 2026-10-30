@@ -73,9 +73,9 @@ cap = 2 + ranks        mend = 0.03 × mend × maxhp per second
 |---|---|---|
 | First purchase | ≤ 30 s | met |
 | Muster affordable | ≤ 2 min | met |
-| First barricade fall, first run | wave 14–22 (P-001 aimed 12–18) | 12–18 on seeds 1–10 since v1.2; seeds 1–3 fall at 12–13 |
-| A spearman pays for itself | ≤ 45 s of kills | untested |
-| Second run reaches first-run fall wave | ≤ 65% of first run's time | run 2 falls at wave 25–29 (P-001 v1.2) |
+| First barricade fall, first run | wave 12–18, minute 5–8 | met: wave 12–18, minute 5–7 on seeds 1–10 (TB-025) |
+| A spearman earns its keep | buys at least as many seconds of wall life per starlight as a Seasoned Timber rank (median over waves 3/6/10/14, seeds 1–3) | met: median ratio 1.5, 10 of 12 cases ≥ 1 (TB-025) |
+| Second run falls later | at a wave ≥ 1.5× run 1's fall wave | met: run 2 falls at wave 25–29 vs 12–18 (P-001 v1.2) |
 | Bare archer, no purchases, holds | ≥ 5 waves | met (falls wave 9) |
 | Tree fully bought in a run | never | met |
 
@@ -224,7 +224,14 @@ P-001 v1.2 is in Current. This checks what is left against the targets and M1's 
 | Run 2 reaches run 1's fall wave in ≤ 65% of the time | **cannot be met as written**: waves advance on a fixed 24 s timer (`WAVE_LEN`), so reaching wave W always takes 24·(W−1) s | target needs rewording |
 | A spearman pays for itself in ≤ 45 s | **missed**: extra starlight vs. no spearman reaches its cost in 53–95 s at wave 3, 47–62 s at wave 6, and not within 180 s at waves 10 and 14 (seeds 1–3) | see below |
 
-Spearman payback: the spearman's kills are mostly orcs the archer would have killed anyway, so its starlight return is small. From wave 10 it pays back only in wall HP. Two ways to read this, both director calls:
+Spearman payback: the spearman's kills are mostly orcs the archer would have killed anyway, so its starlight return is small. From wave 10 it pays back only in wall HP. Director picked option 1 (2026-10-31); both targets reworded in `## Current` §Pacing targets. Measured as extra seconds the wall stands from a fresh field, spearman vs. one Timber rank, per starlight:
+
+```
+w3  ratios 0.77 3.36 3.94   w6  1.23 2.85 1.96
+w10 ratios 1.55 0.02 1.40   w14 1.03 1.03 1.81
+```
+
+Original options:
 1. **Reword the target** to what the spearman is for: "a spearman saves more wall HP than its cost buys in Seasoned Timber" (measure next).
 2. **Make it pay in starlight**: e.g. lower `VANGUARD.spear.cost` from 6 to 4 (≈ −33%). I won't sweep it until you choose 1 or 2.
 
