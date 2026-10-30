@@ -84,7 +84,7 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 |---|---|---|---|---|---|
 | TB-070 | Local telemetry export (JSON of run stats) for testers | app | 052 | claude | done f31ce6b |
 | TB-071 | Balance pass #2 from tester data | balance | 070 | gabe | todo |
-| TB-072 | Perf verification on phone; profile and fix | perf | M4 | | todo |
+| TB-072 | Perf verification on phone; profile and fix | perf | M4 | | dropped (mobile off roadmap, 31 Oct) |
 | TB-073 | Itch.io page copy, screenshots, HTML5 zip pipeline | release | 072 | gabe | todo |
 | TB-074 | Electron wrapper spike | release | 073 | | todo |
 | TB-075 | Bug bash checklist run | qa | 072 | | todo |
