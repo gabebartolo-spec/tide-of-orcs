@@ -1,12 +1,12 @@
-import { BARRICADE, FIELD, PLAYER, SOURCES, WAVE_LEN, waveHP, waveInterval, waveLoot, waveSpeedMult } from '../data/balance';
+import { BARRICADE, FIELD, LOB, PLAYER, SOURCES, WAVE_LEN, waveHP, waveInterval, waveLoot, waveSpeedMult } from '../data/balance';
 import { BOSS, ORC_TYPES, OrcKind, bruteShare, runnerShare } from '../data/orcs';
 import { EventBus } from './events';
 import { Orc, Projectile, SimState } from './state';
-import { damage, nearestOrc, shoot, volley } from './combat';
+import { damage, impact, lob, nearestOrc, shoot, volley } from './combat';
 import { barricadeHit, barricadeRegen } from './barricade';
 import { engagedVanguard, hurtVanguard, vanguardStep } from './vanguard';
 
-/** Player aim: the pointer's position on the field, or null when the player is not aiming (auto-target). */
+/** Player aim: the pointer's position on the field, or null when the player is not aiming. The elf only shoots while aimed. */
 export interface Inputs { aim: { x: number; y: number } | null }
 export const noInputs: Inputs = { aim: null };
 
@@ -69,19 +69,27 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
 
   // archers
   const shooters: [number, number][] = [[ELF_X, H / 2], [ELF_X - 10, H / 2 - SOURCES.archerOffsetY], [ELF_X - 10, H / 2 + SOURCES.archerOffsetY]];
-  for (let i = 0; i <= st.archers && i < 3; i++) {
+  // The elf: an arcing shot onto the aim circle, only while the player aims. The draw holds when ready; it never banks.
+  run.shotT[0] = Math.min(st.lobCd, (run.shotT[0] ?? 0) + dt);
+  if (run.shotT[0] >= st.lobCd && inputs.aim && inputs.aim.x > BAR_X + BAR_W) {
+    let { x, y } = inputs.aim;
+    // Moonbow: the circle settles onto the nearest orc near the aim point.
+    const home = st.homing ? nearestOrc(s, x, y, (o) => dist(o.x, o.y, x, y) < PLAYER.aimHomingRadius) : null;
+    if (home) { x = home.x; y = home.y; }
+    run.shotT[0] = 0; lob(s, ELF_X, H / 2, x, y);
+    // Split Shot: extra arrows land at random inside the circle.
+    for (let k = 1; k < st.arrows; k++) {
+      const a = s.rng.next() * 6.28, d = s.rng.next() * st.radius * LOB.splitSpread;
+      lob(s, ELF_X, H / 2, x + Math.cos(a) * d, y + Math.sin(a) * d);
+    }
+  }
+  // Rangers and wardens keep straight volleys at the nearest orc.
+  for (let i = 1; i <= st.archers && i < 3; i++) {
     run.shotT[i] = (run.shotT[i] ?? 0) + dt;
     if (run.shotT[i]! < 1 / st.fireRate) continue;
     const [sx, sy] = shooters[i]!;
-    if (i === 0 && inputs.aim && inputs.aim.x > BAR_X + BAR_W) {
-      // The player aims: arrows fly to the pointer. Moonbow still bends toward an orc near the aim point.
-      const a = inputs.aim;
-      const home = nearestOrc(s, a.x, a.y, (o) => dist(o.x, o.y, a.x, a.y) < PLAYER.aimHomingRadius);
-      run.shotT[i] = 0; volley(s, sx, sy, a.x, a.y, 1, home);
-      continue;
-    }
     const tg = nearestOrc(s, sx, sy);
-    if (tg) { run.shotT[i] = 0; volley(s, sx, sy, tg.x, tg.y, i === 0 ? 1 : SOURCES.archerDmgFrac * st.kin, tg); }
+    if (tg) { run.shotT[i] = 0; volley(s, sx, sy, tg.x, tg.y, SOURCES.archerDmgFrac * st.kin, tg); }
   }
   if (st.knives) { run.knifeT += dt; if (run.knifeT >= 1 / st.knives.rate) { const tg = nearestOrc(s, ELF_X, H / 2); if (tg) { run.knifeT = 0; shoot(s, 'knife', ELF_X, H / 2, Math.atan2(tg.y - H / 2, tg.x - ELF_X), SOURCES.knives.speed, st.knives.dmg, 0, tg); } } }
   if (st.ballista) { run.ballT += dt; if (run.ballT >= SOURCES.ballista.cd) { const tg = nearestOrc(s, ELF_X, H / 2); if (tg) { run.ballT = 0; shoot(s, 'bolt', ELF_X + 6, H / 2 - 40, Math.atan2(tg.y - H / 2 + 40, tg.x - ELF_X), SOURCES.ballista.speed, st.ballista, 99, null); } } }
@@ -130,6 +138,13 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
 
   // projectiles
   s.shots.forEach((a: Projectile) => {
+    if (a.kind === 'lob') {
+      // Flies a parabola to its landing point, strikes, then strikes again pulseGap later per Longshaft rank.
+      a.t += dt; const u = Math.min(1, a.t / LOB.flight);
+      a.x = a.sx + (a.tx - a.sx) * u; a.y = a.sy + (a.ty - a.sy) * u; a.h = LOB.arc * 4 * u * (1 - u);
+      if (a.t >= LOB.flight) { impact(s, ev, a); if (a.pierce-- > 0) a.t -= LOB.pulseGap; else s.shots.release(a); }
+      return;
+    }
     a.life -= dt;
     if (st.homing && a.kind === 'arrow' && a.target && a.target.live && !a.target.dead) {
       const ang = Math.atan2(a.target.y - a.y, a.target.x - a.x), cur = Math.atan2(a.vy, a.vx);

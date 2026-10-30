@@ -6,6 +6,16 @@ export const ORC_CAP = 160;
 export const STEP = 1 / 50;
 
 export const PLAYER = { baseDmg: 9, baseFireRate: 1.2, arrowSpeed: 520, critMult: 3, fanRad: 0.09, aimHomingRadius: 70 } as const;
+/** The elf's arcing shot: fired only while the player aims; lands on the aim circle and hits every orc inside it. */
+export const LOB = {
+  cd: 2.5,          // seconds between shots before Quick Draw
+  dmgMult: 3,       // × player damage, to every orc in the circle
+  radius: 40,       // circle radius before Wide Volley
+  flight: 0.7,      // seconds in the air
+  arc: 90,          // apex height, px
+  pulseGap: 0.35,   // seconds between repeat strikes (Longshaft)
+  splitSpread: 0.6, // Split Shot extra arrows land within this fraction of the radius
+} as const;
 
 export const BARRICADE = {
   baseHp: 400,
@@ -42,6 +52,7 @@ export const PROVOKE = { drumsHp: 1.3, drumsLoot: 1.4, bannersAtk: 1.3, bannersL
 /** Per-rank multipliers and flat effects of tree nodes (SKILL-TREE.md effect column). */
 export const NODE_FX = {
   sharpDmg: 1.25, moonDmg: 1.6, drawRate: 1.15, critPerRank: 0.08, gleanLoot: 1.15, hordeSpawn: 1.2, kinship: 1.2,
+  wideRadius: 1.2,
   fangsDmg: 1.4, knifeRate: 1.2, knifeDmg: 1.35, boltDmg: 1.5,
 } as const;
 

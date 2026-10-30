@@ -12,9 +12,10 @@ Layout coordinates are for a 760×680 tree canvas, root bottom-centre at (380, 6
 | sharp | Sharpened Tips | Bow | root | 10 | 12 | 1.55 | 280 | 480 | +25% arrow damage per rank. |
 | draw | Quick Draw | Bow | sharp | 8 | 30 | 1.7 | 200 | 420 | +15% draw speed per rank. |
 | crit | Keen Eye | Bow | sharp | 5 | 120 | 2.1 | 320 | 400 | +8% chance per rank to strike for triple damage. |
-| multi | Split Shot | Bow | draw | 3 | 220 | 4.2 | 140 | 350 | +1 arrow per volley. |
-| pierce | Longshaft | Bow | crit | 3 | 260 | 3.8 | 280 | 330 | Arrows pass through +1 orc per rank. |
-| moon | Moonbow | Bow | multi | 1 | 3200 | — | 90 | 270 | Arrows bend toward their quarry and deal +60% damage. |
+| multi | Split Shot | Bow | draw | 3 | 220 | 4.2 | 140 | 350 | +1 extra arrow lands inside the circle with each shot. |
+| pierce | Longshaft | Bow | crit | 3 | 260 | 3.8 | 280 | 330 | Each shot strikes the ground +1 more time per rank. |
+| wide | Wide Volley | Bow | sharp | 5 | 40 | 1.8 | 335 | 455 | Your arrow strikes a circle 20% wider per rank. |
+| moon | Moonbow | Bow | multi | 1 | 3200 | — | 90 | 270 | Your circle settles onto the nearest orc, and arrows deal +60% damage. |
 | wolf | Grey Wolf | Companions | root | 1 | 70 | — | 380 | 500 | A wolf runs the plain and savages the nearest orc. |
 | fangs | Fangs | Companions | wolf | 5 | 90 | 1.9 | 430 | 430 | Wolf bites +40% harder per rank. |
 | ranger | Ranger | Companions | wolf | 1 | 350 | — | 360 | 360 | A second archer joins you behind the wall. |

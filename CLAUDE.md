@@ -45,7 +45,7 @@ Run `npm run lint && npm run test` before every commit. Do not commit if either 
 ## Non-negotiable design rules
 
 1. **The only fail state is the barricade falling, and it always pays out Heartwood.** Nothing else reduces progress. A fallen run freezes and offers exactly one action: Replant.
-2. **Idle-friendly, aim-to-play.** The game must progress with zero input while it is open (auto-target). There is no offline progress: nothing accrues while the game is closed or the tab is hidden. Active play is *aiming* the bow with the pointer; the bow looses on its own cadence. There is no click-to-shoot and no tap bonus, ever.
+2. **Incremental, aim-to-play.** The elf shoots only while the player aims: the pointer over the plain places a strike circle, and the bow lobs an arcing arrow there on its own cadence (2.5 s before Quick Draw); everything in the circle takes damage. With no aim the elf holds fire; companions and vanguard always fight on their own. There is no offline progress: nothing accrues while the game is closed or the tab is hidden. There is no click-to-shoot and no tap bonus, ever.
 3. **Every number lives in `src/data/` or `docs/BALANCE.md` formulas.** No magic numbers in systems code.
 4. **Skill tree is data.** Nodes are declared in `src/data/skillTree.ts`, matching `docs/SKILL-TREE.md`. Systems read effects from the derived `Stats` object, never from node ids.
 5. **Save compatibility.** The save schema is versioned (`ARCHITECTURE.md` §Save). Add a migration for every schema change. Never break an existing save.

@@ -19,7 +19,7 @@ waves scale every 24 s  ←──── battlefield visibly grows ←──┘
 the barricade falls → run ends → Replant → Heartwood → next run grows faster
 ```
 
-**Core verb:** buy a node. **Core tension:** every starlight spent on the tree is starlight not spent on a spearman at the wall. **Core reward:** watch the field change. **Active play:** aim the bow with the pointer; it looses on its own. There is no click-to-shoot.
+**Core verb:** buy a node. **Core tension:** every starlight spent on the tree is starlight not spent on a spearman at the wall. **Core reward:** watch the field change. **Active play:** aim the bow with the pointer; it lobs an arcing arrow into the aim circle on its own cadence. With no aim the elf holds fire. There is no click-to-shoot.
 
 Session shape (first run, from the simulator):
 - Minute 0–1: lone archer. Orcs reach the wall almost immediately; the first Sharpened Tips rank lands within 30 s.
@@ -39,7 +39,7 @@ A timber palisade at x=150 (14 px wide) across the full field height. It has hea
 - Buying Seasoned Timber heals the wall by the amount of max HP it adds (growing the wall is new timber).
 - Screen shake on each hit scaled to damage fraction; splintered dark planks appear from the top as HP drops.
 
-The field hint reads: "Hold the barricade. Move your pointer over the field to aim the bow; it looses on its own. Rally vanguard with starlight to meet the tide in melee."
+The field hint reads: "Hold the barricade. Move your pointer over the field to aim the bow; it lobs an arrow into the circle on its own. Rally vanguard with starlight to meet the tide in melee."
 
 ## 4. Waves and orcs
 - Waves are timed: one every 24 s regardless of kills. `wave` is the only difficulty driver.
@@ -69,11 +69,10 @@ Design intent: vanguard are the *reactive* spend. The tree is the *investment* s
 
 ## 6. The player
 - Elf archer at (64, H/2). Fires a volley of `arrows` arrows in a 0.09-rad fan at 520 px/s on a fixed cadence (`fireRate`). The cadence never changes with input.
-- **Aiming is the active mechanic.** While the pointer is over the plain (right of the wall), the bow is *aimed*: each volley flies straight to the pointer. The cursor is hidden and a cream reticle with a faint dashed line from the bow shows the shot. On touch, hold a finger on the field to aim; lift to release. There is no click-to-shoot and no tap bonus: skill is choosing targets (lead the runner, pile on the brute hacking the wall), not clicking faster.
-- When not aimed (pointer off the field, over the grove side, tab hidden, or idle), the archer auto-targets the nearest live orc so the game still progresses with zero input.
-- Moonbow homing still works while aiming: an aimed arrow bends toward the nearest orc within 70 px of the reticle, so aiming near a knot of orcs is enough.
-- Ranger and Warden always auto-target; only the player's bow is aimed.
-- Damage, fire rate, pierce, crit (×3), homing (Moonbow), burn (Fire Arrows) all come from `Stats`. Aimed volleys deal the same damage as auto volleys (a bonus multiplier is a tunable in BALANCE.md if play-testing wants one).
+- **Aiming is the active mechanic.** While the pointer is over the plain (right of the wall), a strike circle (40 px radius) follows it. Every 2.5 s (faster with Quick Draw) the elf lobs one arrow in a high arc; it lands 0.7 s later on the circle's centre and strikes every orc inside the circle for 3× bow damage, each rolling its own crit and catching fire if Fire Arrows is owned. A cream ring around the circle fills as the bow draws; a dotted arc from the elf shows the flight. On touch, hold a finger on the field to aim; lift to release. There is no click-to-shoot and no tap bonus: skill is placing the circle (lead the pack, cover the brute at the wall), not clicking faster.
+- With no aim (pointer off the field, over the grove side, or idle) the elf holds fire. It is an incremental, not an idle: the bow needs the player.
+- Bow nodes reshape the lob: Wide Volley +20% radius per rank; Split Shot +1 extra arrow per rank landing at random inside the circle; Longshaft +1 repeat strike per rank, 0.35 s apart; Moonbow settles the circle on the nearest orc within 70 px and adds +60% damage.
+- Ranger and Warden always auto-target with straight volleys; only the elf's bow is aimed.
 
 ## 7. Companions
 All companion damage scales with Kinship (×1.2/rank) and Heartwood. Kinship also scales vanguard.

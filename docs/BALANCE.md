@@ -18,6 +18,15 @@ atk         = 0.025 × maxhp                  per swing, one swing per second, v
 ```
 Type multipliers in GDD §4. Live orc cap 160.
 
+### The elf's lob (TB-079)
+```
+lobCd   = 2.5 / 1.15^draw          seconds between shots; fires only while aimed
+radius  = 40 × 1.2^wide            strike circle, px
+dmg     = 3 × player dmg           to every orc within radius + orc radius
+flight  = 0.7 s, apex 90 px; Longshaft repeat strikes 0.35 s apart; Split Shot arrows land within 0.6 × radius
+```
+Rangers keep straight volleys at `baseFireRate` 1.2/s.
+
 | w | hp | loot | interval | grunt atk/s |
 |---|---|---|---|---|
 | 1 | 10 | 2 | 2.00 | 0.25 |
@@ -236,3 +245,6 @@ Original options:
 2. **Make it pay in starlight**: e.g. lower `VANGUARD.spear.cost` from 6 to 4 (≈ −33%). I won't sweep it until you choose 1 or 2.
 
 Proposed rewording for the run 2 row: "Run 2 falls at a wave ≥ 1.5× run 1's fall wave" (now 25–29 vs 12–18: met).
+
+### TB-079 lob: pacing check (open)
+Greedy sim, player model aims at the thickest crowd every step (`crowdAim`), 30 min, seeds 1–3: run 1 falls at minute 8 (seeds 2, 3) to 21 (seed 1); run 2 reaches wave 35 on all three. Targets were first fall 12–18, run 2 ≥ 1.5×. The model aims perfectly, so a human will land fewer orcs per circle. `LOB.dmgMult` 3 is the tuning lever; leave it until play-testing.

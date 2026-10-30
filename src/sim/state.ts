@@ -8,10 +8,12 @@ export interface Orc {
   live: boolean; kind: OrcKind; x: number; y: number; hp: number; maxhp: number; spd: number; r: number; loot: number; atk: number;
   dead: boolean; burn: number; hitT: number; wob: number; swingT: number;
 }
-export type ProjectileKind = 'arrow' | 'knife' | 'bolt';
+export type ProjectileKind = 'arrow' | 'knife' | 'bolt' | 'lob';
 export interface Projectile {
   live: boolean; kind: ProjectileKind; x: number; y: number; vx: number; vy: number; dmg: number; pierce: number; life: number;
   target: Orc | null; hit: Set<Orc>;
+  /** Lob only: launch and landing points, time aloft, height above ground, strike radius. */
+  sx: number; sy: number; tx: number; ty: number; t: number; h: number; r: number;
 }
 export interface Vanguard {
   live: boolean; type: VanType; x: number; y: number; tx: number; hp: number; maxhp: number; swingT: number; hitT: number;
@@ -40,7 +42,7 @@ export function freshRun(): RunState {
 export function freshMeta(): MetaState { return { heartwood: 0, lifetimeKills: 0, bestWave: 1, prestiges: 0 }; }
 
 const makeOrc = (): Orc => ({ live: false, kind: 'grunt', x: 0, y: 0, hp: 0, maxhp: 0, spd: 0, r: 0, loot: 0, atk: 0, dead: false, burn: 0, hitT: 0, wob: 0, swingT: 0 });
-const makeShot = (): Projectile => ({ live: false, kind: 'arrow', x: 0, y: 0, vx: 0, vy: 0, dmg: 0, pierce: 0, life: 0, target: null, hit: new Set() });
+const makeShot = (): Projectile => ({ live: false, kind: 'arrow', x: 0, y: 0, vx: 0, vy: 0, dmg: 0, pierce: 0, life: 0, target: null, hit: new Set(), sx: 0, sy: 0, tx: 0, ty: 0, t: 0, h: 0, r: 0 });
 const makeVan = (): Vanguard => ({ live: false, type: 'spear', x: 0, y: 0, tx: 0, hp: 0, maxhp: 0, swingT: 0, hitT: 0 });
 
 export function createState(seed = 1, run: RunState = freshRun(), meta: MetaState = freshMeta()): SimState {

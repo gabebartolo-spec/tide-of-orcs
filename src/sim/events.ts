@@ -2,6 +2,7 @@
 export type SimEvent =
   | { t: 'kill'; x: number; y: number; loot: number; kind: string }
   | { t: 'hit'; x: number; y: number; crit: boolean }
+  | { t: 'impact'; x: number; y: number; r: number }
   | { t: 'wave'; wave: number }
   | { t: 'storm'; pts: [number, number][] }
   | { t: 'hawkDive'; x: number; y: number }

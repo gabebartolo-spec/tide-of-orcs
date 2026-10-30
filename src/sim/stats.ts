@@ -1,11 +1,11 @@
 import { NodeId } from '../data/skillTree';
-import { BARRICADE, NODE_FX, PLAYER, PROVOKE, SOURCES, VANGUARD, heartMult } from '../data/balance';
+import { BARRICADE, LOB, NODE_FX, PLAYER, PROVOKE, SOURCES, VANGUARD, heartMult } from '../data/balance';
 
 export type Levels = Partial<Record<NodeId, number>>;
 
 /** Everything systems read. Derived from levels + heartwood; never read node ids elsewhere. */
 export interface Stats {
-  dmg: number; fireRate: number; arrows: number; pierce: number; crit: number;
+  dmg: number; fireRate: number; lobCd: number; radius: number; arrows: number; pierce: number; crit: number;
   homing: boolean; fire: boolean;
   starMult: number; orcHp: number; orcAtk: number; spawnMult: number; bounty: number;
   kin: number; wolf: number; archers: number; hawk: boolean; treant: boolean;
@@ -25,6 +25,8 @@ export function deriveStats(lv: Levels, heartwood: number): Stats {
   return {
     dmg: PLAYER.baseDmg * Math.pow(NODE_FX.sharpDmg, L('sharp')) * (L('moon') ? NODE_FX.moonDmg : 1) * hm,
     fireRate: PLAYER.baseFireRate * Math.pow(NODE_FX.drawRate, L('draw')),
+    lobCd: LOB.cd / Math.pow(NODE_FX.drawRate, L('draw')),
+    radius: LOB.radius * Math.pow(NODE_FX.wideRadius, L('wide')),
     arrows: 1 + L('multi'),
     pierce: L('pierce'),
     crit: NODE_FX.critPerRank * L('crit'),

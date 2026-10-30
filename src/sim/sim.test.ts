@@ -7,12 +7,20 @@ import { buy, canBuy, costOf } from './tree';
 import { NODE, NODES } from '../data/skillTree';
 import { STEP } from '../data/balance';
 import { canRally, rally } from './vanguard';
+import { crowdAim } from './combat';
 import { canReplant, replant } from './prestige';
 import { createRng } from './rng';
 
-const run = (seed: number, secs: number, inputs: Inputs = noInputs) => {
+/** A still, very tough orc at (x, y), for hit tests. */
+const spawnAt = (s: ReturnType<typeof createState>, x: number, y: number) => {
+  const o = s.orcs.alloc()!; Object.assign(o, { kind: 'grunt', x, y, hp: 1e6, maxhp: 1e6, spd: 0, r: 10, loot: 0, atk: 0, dead: false, burn: 0, hitT: 0, wob: 0, swingT: 0 });
+  return o;
+};
+/** Player model: aims at the thickest crowd every step. */
+const aimed = (s: ReturnType<typeof createState>): Inputs => ({ aim: crowdAim(s, s.stats.radius) });
+const run = (seed: number, secs: number, inputs?: Inputs) => {
   const s = createState(seed); const ev = new EventBus();
-  for (let i = 0; i < secs / STEP; i++) step(s, STEP, inputs, ev);
+  for (let i = 0; i < secs / STEP; i++) step(s, STEP, inputs ?? aimed(s), ev);
   return { s, ev };
 };
 
@@ -65,18 +73,27 @@ describe('simulation', () => {
     const { s } = run(2, 20 * 60); const t = s.t; const ev = new EventBus();
     step(s, STEP, noInputs, ev); expect(s.t).toBe(t);
   });
-  it('aiming sends the first volley toward the pointer, not the nearest orc', () => {
+  it('the arrow lands on the aim point and hits every orc in the circle', () => {
     const s = createState(5); const ev = new EventBus();
     s.run.shotT[0] = 10; // bow is ready
-    step(s, STEP, { aim: { x: 700, y: 60 } }, ev);
-    expect(s.shots.count).toBeGreaterThan(0);
-    let dir = 0; s.shots.forEach((a) => { dir = Math.atan2(a.vy, a.vx); });
-    expect(dir).toBeCloseTo(Math.atan2(60 - 240, 700 - 64), 1);
+    step(s, STEP, { aim: { x: 700, y: 200 } }, ev);
+    expect(s.shots.count).toBe(1);
+    let tx = 0, ty = 0; s.shots.forEach((a) => { tx = a.tx; ty = a.ty; });
+    expect([tx, ty]).toEqual([700, 200]);
+    s.orcs.forEach((o) => { o.dead = true; });
+    const near = spawnAt(s, 700 + s.stats.radius - 5, 200), mid = spawnAt(s, 700, 200), far = spawnAt(s, 700 + s.stats.radius + 40, 200);
+    for (let i = 0; i < 1 / STEP; i++) step(s, STEP, noInputs, ev);
+    expect(near.hp).toBeLessThan(near.maxhp); expect(mid.hp).toBeLessThan(mid.maxhp); expect(far.hp).toBe(far.maxhp);
+    expect(ev.drain().some((e) => e.t === 'impact')).toBe(true);
   });
-  it('aim behind the wall is ignored and no arrows fly without a target', () => {
+  it('the elf never shoots without aim, or with aim behind the wall', () => {
     const s = createState(5); const ev = new EventBus(); s.run.shotT[0] = 10;
-    step(s, STEP, { aim: { x: 100, y: 240 } }, ev);
+    step(s, STEP, noInputs, ev); step(s, STEP, { aim: { x: 100, y: 240 } }, ev);
     expect(s.shots.count).toBe(0);
+  });
+  it('Wide Volley widens the circle 20% per rank; Quick Draw shortens the draw', () => {
+    expect(deriveStats({ root: 1, wide: 2 }, 0).radius / deriveStats({ root: 1 }, 0).radius).toBeCloseTo(1.44);
+    expect(deriveStats({ root: 1, draw: 1 }, 0).lobCd).toBeCloseTo(2.5 / 1.15);
   });
 });
 
@@ -127,9 +144,9 @@ describe('vanguard', () => {
   it('spearmen keep the wall healthier over the first two minutes', () => {
     const a = run(9, 120);
     const s = createState(9); const ev = new EventBus(); s.run.starlight = 200; buy(s, ev, 'muster'); rally(s, ev, 'spear'); rally(s, ev, 'spear');
-    for (let i = 0; i < 120 / STEP; i++) step(s, STEP, noInputs, ev);
+    for (let i = 0; i < 120 / STEP; i++) step(s, STEP, aimed(s), ev);
     expect(s.run.barHp).toBeGreaterThanOrEqual(a.s.run.barHp);
-    expect(s.run.kills).toBeGreaterThan(a.s.run.kills);
+    expect(s.run.kills).toBeGreaterThanOrEqual(a.s.run.kills); // the aimed bow already clears early waves
   });
 });
 
@@ -167,7 +184,7 @@ describe('kinship, bounty, horde (TB-039)', () => {
   it('horde spawns more orcs', () => {
     const count = (horde: number) => {
       const s = createState(3); s.run.levels.horde = horde; recompute(s); const ev = new EventBus();
-      for (let i = 0; i < 60 / STEP; i++) step(s, STEP, noInputs, ev);
+      for (let i = 0; i < 60 / STEP; i++) step(s, STEP, aimed(s), ev);
       let live = 0; s.orcs.forEach((o) => { if (!o.dead) live++; });
       return s.run.kills + live;
     };

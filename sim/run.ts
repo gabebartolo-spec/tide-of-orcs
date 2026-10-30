@@ -6,7 +6,8 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { createState } from '../src/sim/state';
 import { EventBus } from '../src/sim/events';
-import { noInputs, step } from '../src/sim/step';
+import { step } from '../src/sim/step';
+import { crowdAim } from '../src/sim/combat';
 import { buy, canBuy, costOf } from '../src/sim/tree';
 import { canRally, rally } from '../src/sim/vanguard';
 import { canReplant, replant } from '../src/sim/prestige';
@@ -36,7 +37,7 @@ function decide(): void {
 
 const total = Math.round((minutes * 60) / STEP);
 for (let i = 0; i < total; i++) {
-  step(s, STEP, noInputs, ev);
+  step(s, STEP, { aim: crowdAim(s, s.stats.radius) }, ev); // player model: aims at the thickest crowd
   if (i % 25 === 0) decide();
   for (const e of ev.drain()) if (e.t === 'barricadeFell') fallWave = String(e.wave);
   if (i % Math.round(60 / STEP) === 0) {
