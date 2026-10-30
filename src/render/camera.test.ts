@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { TREE_CANVAS, TREE_VIEW } from '../data/skillTree';
-import { fitCamera, panBy, startCamera, toWorld, zoomAt } from './camera';
+import { centreOn, easeToward, fitCamera, panBy, startCamera, toWorld, zoomAt } from './camera';
 
 const VW = 380, VH = 460, FIT = VW / TREE_CANVAS.w;
 
@@ -29,5 +29,12 @@ describe('tree camera', () => {
     const far = panBy(c, -1e6, -1e6, VW, VH);
     expect(far.x).toBeCloseTo(TREE_CANVAS.w - VW / far.z); expect(far.y).toBeCloseTo(TREE_CANVAS.h - VH / far.z);
     const near = panBy(c, 1e6, 1e6, VW, VH); expect(near.x).toBeCloseTo(0); expect(near.y).toBeCloseTo(0);
+  });
+  it('centres a node and eases toward it', () => {
+    const c = startCamera(VW, VH), t = centreOn(c, 380, 600, VW, VH);
+    const [wx, wy] = toWorld(t, VW / 2, VH / 2);
+    expect(wx).toBeCloseTo(380); expect(wy).toBeCloseTo(600);
+    const half = easeToward({ x: 0, y: 0, z: 1 }, { x: 10, y: 20, z: 1 }, 0.5);
+    expect(half).toEqual({ x: 5, y: 10, z: 1 });
   });
 });

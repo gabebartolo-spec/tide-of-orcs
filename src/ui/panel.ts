@@ -43,7 +43,7 @@ export class Panel {
     tree.canvas.addEventListener('click', (e) => {
       const id = tree.hitTest(e.clientX, e.clientY); if (!id) return;
       if (tree.selected === id && canBuy(game.state, NODE[id])) this.buy(id);
-      tree.selected = id; this.renderDetail();
+      tree.select(id); this.renderDetail();
     });
     $('hw-title').textContent = STR.hwTitle;
     $('hw-tree').onclick = (e) => { const id = (e.target as HTMLElement).closest('button')?.dataset.hw as HwId | undefined; if (id && game.buyHw(id)) { this.toast(STR.hwBought(HW_NODE[id].name)); this.renderHw(); } };

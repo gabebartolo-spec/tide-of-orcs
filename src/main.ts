@@ -54,7 +54,7 @@ function frame(now: number): void {
   field.consume(events, game.state); panel.handleEvents(events); audio.consume(events);
   if (!document.hidden) field.draw(game.state, dt, game.aim);
   treeWrap.classList.toggle('burning', field.ceremony.burning);
-  hudT += dt; if (hudT > 0.15) { hudT = 0; panel.update(); tree.draw(game.state, game.state.t); }
+  hudT += dt; if (hudT > 0.15) { hudT = 0; panel.update(); tree.draw(game.state, game.state.t); } else if (tree.easing) tree.draw(game.state, game.state.t);
   saveT += dt; if (saveT > 20) { saveT = 0; game.save(); }
   requestAnimationFrame(frame);
 }

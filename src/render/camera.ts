@@ -34,6 +34,16 @@ export function zoomAt(c: Camera, sx: number, sy: number, k: number, vw: number,
   return clampCamera({ x: wx - sx / z, y: wy - sy / z, z }, vw, vh);
 }
 
+/** Camera at the same zoom with world point (wx, wy) in the centre of the view (clamped). */
+export function centreOn(c: Camera, wx: number, wy: number, vw: number, vh: number): Camera {
+  return clampCamera({ x: wx - vw / c.z / 2, y: wy - vh / c.z / 2, z: c.z }, vw, vh);
+}
+
+/** Move fraction k of the way from c to target. */
+export function easeToward(c: Camera, target: Camera, k: number): Camera {
+  return { x: c.x + (target.x - c.x) * k, y: c.y + (target.y - c.y) * k, z: c.z + (target.z - c.z) * k };
+}
+
 export function panBy(c: Camera, dx: number, dy: number, vw: number, vh: number): Camera {
   return clampCamera({ x: c.x - dx / c.z, y: c.y - dy / c.z, z: c.z }, vw, vh);
 }
