@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { AUDIO, CUES, cueFor } from './audio';
+import { AUDIO, CUES, MUSIC, cueFor, nextBed } from './audio';
 
 describe('audio cue map', () => {
   it('maps kills by orc kind', () => {
@@ -19,5 +19,14 @@ describe('audio cue map', () => {
   });
   it('ducks only on big moments', () => {
     expect(Object.entries(CUES).filter(([, c]) => c.duck).map(([k]) => k).sort()).toEqual(['bossRoar', 'rallyHorn', 'replant', 'wallFall']);
+  });
+  it('alternates the two music beds on Replant', () => {
+    expect(MUSIC).toHaveLength(2);
+    expect(nextBed('music-a')).toBe('music-b');
+    expect(nextBed('music-b')).toBe('music-a');
+  });
+  it('ducks music below its normal level and crossfades within the 4 s ceremony', () => {
+    expect(AUDIO.musicDuckGain).toBeLessThan(AUDIO.musicGain);
+    expect(AUDIO.crossfade).toBeLessThanOrEqual(4);
   });
 });

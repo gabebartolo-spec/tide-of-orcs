@@ -1,11 +1,14 @@
-/** Web Audio playback: ambient loop, SFX from sim events, ducking. Missing files are skipped silently. */
-import { AMBIENT, AUDIO, CUES, Cue, cueFor } from '../data/audio';
+/** Web Audio playback: ambient loop, two music beds crossfaded on Replant, SFX from sim events, ducking. Missing files are skipped silently. */
+import { AMBIENT, AUDIO, Bed, CUES, Cue, MUSIC, cueFor, nextBed } from '../data/audio';
 import type { SimEvent } from '../sim/events';
 
 export class AudioEngine {
   private ctx: AudioContext | null = null;
   private master!: GainNode;
   private amb!: GainNode;
+  private music!: GainNode;
+  private beds = new Map<Bed, GainNode>();
+  private bed: Bed = MUSIC[0];
   private bufs = new Map<string, AudioBuffer | null>();
   private lastAt = new Map<Cue, number>();
   private volume = 1;
@@ -19,13 +22,31 @@ export class AudioEngine {
     this.ctx = new AudioContext();
     this.master = this.ctx.createGain(); this.master.gain.value = this.volume; this.master.connect(this.ctx.destination);
     this.amb = this.ctx.createGain(); this.amb.gain.value = AUDIO.ambientGain; this.amb.connect(this.master);
+    this.music = this.ctx.createGain(); this.music.gain.value = AUDIO.musicGain; this.music.connect(this.master);
+    for (const b of MUSIC) {
+      const g = this.ctx.createGain(); g.gain.value = b === this.bed ? 1 : 0; g.connect(this.music); this.beds.set(b, g);
+      void this.load(b).then((buf) => { if (buf) this.loop(buf, g); });
+    }
     for (const c of Object.keys(CUES)) void this.load(c);
-    void this.load(AMBIENT).then((b) => { if (b) this.startAmbient(b); });
+    void this.load(AMBIENT).then((b) => { if (b) this.loop(b, this.amb); });
   }
 
   setVolume(v: number): void { this.volume = v; if (this.ctx) this.master.gain.value = v; }
 
-  consume(events: SimEvent[]): void { for (const e of events) { const c = cueFor(e); if (c) this.play(c); } }
+  consume(events: SimEvent[]): void {
+    for (const e of events) { if (e.t === 'replant') this.swapBed(); const c = cueFor(e); if (c) this.play(c); }
+  }
+
+  /** Crossfade to the next music bed. Both beds loop from unlock, so the swap is gain only. */
+  private swapBed(): void {
+    const ctx = this.ctx; if (!ctx) return;
+    const now = ctx.currentTime, next = nextBed(this.bed);
+    for (const [b, g] of this.beds) {
+      const p = g.gain; p.cancelScheduledValues(now); p.setValueAtTime(p.value, now);
+      p.linearRampToValueAtTime(b === next ? 1 : 0, now + AUDIO.crossfade);
+    }
+    this.bed = next;
+  }
 
   play(cue: Cue): void {
     const ctx = this.ctx; if (!ctx || ctx.state !== 'running') return;
@@ -41,12 +62,13 @@ export class AudioEngine {
   }
 
   private duck(now: number): void {
-    const p = this.amb.gain; p.cancelScheduledValues(now);
-    p.setValueAtTime(AUDIO.duckGain, now); p.linearRampToValueAtTime(AUDIO.ambientGain, now + AUDIO.duckRelease);
+    for (const [p, low, full] of [[this.amb.gain, AUDIO.duckGain, AUDIO.ambientGain], [this.music.gain, AUDIO.musicDuckGain, AUDIO.musicGain]] as const) {
+      p.cancelScheduledValues(now); p.setValueAtTime(low, now); p.linearRampToValueAtTime(full, now + AUDIO.duckRelease);
+    }
   }
 
-  private startAmbient(b: AudioBuffer): void {
-    const src = this.ctx!.createBufferSource(); src.buffer = b; src.loop = true; src.connect(this.amb); src.start();
+  private loop(b: AudioBuffer, out: GainNode): void {
+    const src = this.ctx!.createBufferSource(); src.buffer = b; src.loop = true; src.connect(out); src.start();
   }
 
   private async load(name: string): Promise<AudioBuffer | null> {
