@@ -212,3 +212,20 @@ hp(w)   = 10 × 1.17^(min(w,15) − 1) × 1.30^max(0, w − 15)     (ramp 15/1.3
 cost    = round(base × growth^rank × 1.25^max(0, w − 10))     (new: wave-scaled node cost, uncapped)
 ```
 Result on seeds 1–10: first fall 12–18 (target 12–18) and run 2 at 25–29 (target ≤ 30). The third run falls at 40–43. Costs reach ×9.3 at wave 20 and ×87 at wave 30. Waves 1–10 cost the same as today. Before applying: the UI must show the live cost (it already calls `costOf`); `vanBaseHp` follows the ramp; add pinned tests for the cost multiplier at waves 1, 10, 25 and 50.
+
+### TB-025 · First-run flow check (2026-10-31, greedy, 40 min, seeds 1–10)
+P-001 v1.2 is in Current. This checks what is left against the targets and M1's "first wall falls between minute 5 and 8".
+
+| Target | Result | Verdict |
+|---|---|---|
+| First fall, minute 5–8 (M1) | minute 5–7 on all 10 seeds (5: seeds 1,2,3,8; 6: 4,5,9; 7: 6,7,10) | met |
+| First fall, wave 12–18 | unchanged from P-001: 12–18 | met |
+| Run 2 length | falls at minute 15–20 (10–13 min long, ≈2× run 1); run 3 at minute 29–35 | longer each run, as intended |
+| Run 2 reaches run 1's fall wave in ≤ 65% of the time | **cannot be met as written**: waves advance on a fixed 24 s timer (`WAVE_LEN`), so reaching wave W always takes 24·(W−1) s | target needs rewording |
+| A spearman pays for itself in ≤ 45 s | **missed**: extra starlight vs. no spearman reaches its cost in 53–95 s at wave 3, 47–62 s at wave 6, and not within 180 s at waves 10 and 14 (seeds 1–3) | see below |
+
+Spearman payback: the spearman's kills are mostly orcs the archer would have killed anyway, so its starlight return is small. From wave 10 it pays back only in wall HP. Two ways to read this, both director calls:
+1. **Reword the target** to what the spearman is for: "a spearman saves more wall HP than its cost buys in Seasoned Timber" (measure next).
+2. **Make it pay in starlight**: e.g. lower `VANGUARD.spear.cost` from 6 to 4 (≈ −33%). I won't sweep it until you choose 1 or 2.
+
+Proposed rewording for the run 2 row: "Run 2 falls at a wave ≥ 1.5× run 1's fall wave" (now 25–29 vs 12–18: met).
