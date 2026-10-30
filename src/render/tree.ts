@@ -17,6 +17,8 @@ export class TreeRenderer {
   /** Where the camera is easing to after a selection; null once there or when the player pans or zooms. */
   private target: Camera | null = null;
   private lastDraw = 0;
+  /** Camera moved by pan or zoom since the last draw. */
+  private stale = false;
 
   constructor(readonly canvas: HTMLCanvasElement) {
     this.g = canvas.getContext('2d')!;
@@ -24,7 +26,7 @@ export class TreeRenderer {
     this.resize();
     canvas.addEventListener('wheel', (e) => {
       e.preventDefault(); this.target = null; const [sx, sy] = this.local(e);
-      this.cam = zoomAt(this.cam, sx, sy, e.deltaY < 0 ? TREE_VIEW.wheelStep : 1 / TREE_VIEW.wheelStep, this.vw, this.vh);
+      this.cam = zoomAt(this.cam, sx, sy, e.deltaY < 0 ? TREE_VIEW.wheelStep : 1 / TREE_VIEW.wheelStep, this.vw, this.vh); this.stale = true;
     }, { passive: false });
     canvas.addEventListener('pointerdown', (e) => {
       canvas.setPointerCapture(e.pointerId); this.pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
@@ -44,12 +46,12 @@ export class TreeRenderer {
       const other = (a === p ? b : a)!;
       const d0 = Math.hypot(p.x - other.x, p.y - other.y), d1 = Math.hypot(e.clientX - other.x, e.clientY - other.y);
       const [mx, my] = this.local({ clientX: (e.clientX + other.x) / 2, clientY: (e.clientY + other.y) / 2 });
-      if (d0 > 0) this.cam = zoomAt(this.cam, mx, my, d1 / d0, this.vw, this.vh);
+      if (d0 > 0) { this.cam = zoomAt(this.cam, mx, my, d1 / d0, this.vw, this.vh); this.stale = true; }
       this.dragged = true;
     } else {
       this.moved += Math.hypot(dx, dy);
       if (this.moved > TREE_VIEW.dragPx) { this.dragged = true; this.canvas.classList.add('dragging'); }
-      if (this.dragged) this.cam = panBy(this.cam, dx, dy, this.vw, this.vh);
+      if (this.dragged) { this.cam = panBy(this.cam, dx, dy, this.vw, this.vh); this.stale = true; }
     }
     p.x = e.clientX; p.y = e.clientY;
   }
@@ -67,8 +69,8 @@ export class TreeRenderer {
     this.cam = first ? startCamera(this.vw, this.vh) : clampCamera({ ...this.cam, z: this.cam.z * k }, this.vw, this.vh);
   }
 
-  /** True while the camera is still easing, so the caller should draw every frame. */
-  get easing(): boolean { return !!this.target; }
+  /** True while the camera is easing or was just panned/zoomed, so the caller should draw this frame. */
+  get live(): boolean { return !!this.target || this.stale; }
 
   /** Select a node and ease the camera to centre it (snaps under reduced motion). */
   select(id: NodeId): void {
@@ -86,6 +88,7 @@ export class TreeRenderer {
   }
 
   draw(s: SimState, t: number): void {
+    this.stale = false;
     if (this.target) {
       const now = performance.now(), dt = Math.min(0.1, (now - this.lastDraw) / 1000); this.lastDraw = now;
       this.cam = easeToward(this.cam, this.target, 1 - Math.exp(-dt * TREE_VIEW.easeRate));
