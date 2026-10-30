@@ -2,7 +2,7 @@
 
 Two sections. `## Current` is what ships and is human-owned. `## Proposed` is where agents put changes, each with the simulator output that justifies it. Nothing moves from Proposed to Current without Gabe's sign-off. `src/data/balance.ts` mirrors `## Current` and the tests pin the reference tables.
 
-## Current (v1.1)
+## Current (v1.2)
 
 ### Field
 - Logical size 900 × 480. Barricade at x = 150, 14 px wide. Elf at (64, 240). Vanguard stand at x = 194 in lanes H/2 ± 70k.
@@ -10,7 +10,7 @@ Two sections. `## Current` is what ships and is human-owned. `## Proposed` is wh
 
 ### Orc scaling (w = wave)
 ```
-hp(w)       = 10 × 1.17^(w−1)
+hp(w)       = 10 × 1.17^(min(w,15)−1) × 1.30^max(0, w−15)   ramp from wave 15 (P-001)
 loot(w)     = 2  × 1.13^(w−1)
 interval(w) = max(0.3, 2.0 × 0.93^(w−1))   seconds between spawns, before Horde
 speed       = base × (1 + 0.008 w)
@@ -21,12 +21,12 @@ Type multipliers in GDD §4. Live orc cap 160.
 | w | hp | loot | interval | grunt atk/s |
 |---|---|---|---|---|
 | 1 | 10 | 2 | 2.00 | 0.25 |
-| 10 | 40.9 | 6.0 | 1.04 | 1.02 |
-| 25 | 433 | 37.6 | 0.35 | 10.8 |
-| 50 | 21,933 | 795 | 0.30 | 548 |
+| 10 | 41.1 | 6.0 | 1.04 | 1.02 |
+| 25 | 1,242 | 37.6 | 0.35 | 31.0 |
+| 50 | 876,233 | 795 | 0.30 | 21,906 |
 
 ### Player and sources
-- Base damage 6, base fire rate 1.2 volleys/s, arrow speed 520, crit ×3. (v1.0 had 4 and 1.1; raised because the bare archer's 4.4 dps was below wave-1 incoming HP of 5 hp/s and the river had been hiding it.)
+- Base damage 9, base fire rate 1.2 volleys/s, arrow speed 520, crit ×3. (9 since P-001, 2026-10-30; v1.0 had 4 and 1.1; raised because the bare archer's 4.4 dps was below wave-1 incoming HP of 5 hp/s and the river had been hiding it.)
 - Burn: 35% of player dmg per second for 3 s (refreshes, no stack).
 - Storm: 4× dmg × kin per jump, 6 s cooldown, 5 targets, 140 px jump radius, seeks from 200 px past the wall.
 - Hawk: 2.5× dmg × kin, 4 s, 60 px radius. Treant: 3× dmg × kin, 3 s, 160 px from the wall.
@@ -60,6 +60,7 @@ cap = 2 + ranks        mend = 0.03 × mend × maxhp per second
 | 25 | 226 | 2,165 | 677 |
 
 ### Economy
+- Node price at purchase: `cost = round(base × growth^rank × 1.25^max(0, w − 10))` (wave-scaled since P-001; ×1 to wave 10, ×28.4 at 25, ×7,523 at 50).
 - `starMult = 1.15^glean × heart`. Heartwood: `heart = 1 + 0.12 × HW`, applied to damage, starlight, barricade HP and vanguard HP.
 - Offline: `rate = loot(w) × starMult × spawnMult / interval(w) × (0.25 + 0.2 roots)`, capped at 8 h, zero while fallen.
 
@@ -71,9 +72,9 @@ cap = 2 + ranks        mend = 0.03 × mend × maxhp per second
 |---|---|---|
 | First purchase | ≤ 30 s | met |
 | Muster affordable | ≤ 2 min | met |
-| First barricade fall, first run | wave 14–22 | **miss: wave 7–9 (~3 min)** |
+| First barricade fall, first run | wave 14–22 (P-001 aimed 12–18) | 12–18 on seeds 1–10 since v1.2; seeds 1–3 fall at 12–13 |
 | A spearman pays for itself | ≤ 45 s of kills | untested |
-| Second run reaches first-run fall wave | ≤ 65% of first run's time | met, too easily (see Proposed) |
+| Second run reaches first-run fall wave | ≤ 65% of first run's time | run 2 falls at wave 25–29 (P-001 v1.2) |
 | Bare archer, no purchases, holds | ≥ 5 waves | met (falls wave 9) |
 | Tree fully bought in a run | never | met |
 
@@ -204,7 +205,7 @@ Harness: greedy, 40 min, seeds 1–10, ramp 15/1.30 on `waveHP` in every row exc
 | 9 | 10 / 1.25, capped at w20 | 12–18 | 26–38 | no; the cap brings back the snowball |
 | 9 | 10 / 1.25, no ramp | 12–19 | 31–43 | no; needs the ramp too |
 
-#### Proposal: P-001 complete fix (awaiting director approval)
+#### Proposal: P-001 complete fix (approved and applied 2026-10-30, now in ## Current v1.2)
 ```
 baseDmg = 9                                                   (was 6)
 hp(w)   = 10 × 1.17^(min(w,15) − 1) × 1.30^max(0, w − 15)     (ramp 15/1.30, already picked)

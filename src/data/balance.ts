@@ -5,7 +5,7 @@ export const WAVE_LEN = 24;
 export const ORC_CAP = 160;
 export const STEP = 1 / 50;
 
-export const PLAYER = { baseDmg: 6, baseFireRate: 1.2, arrowSpeed: 520, critMult: 3, fanRad: 0.09, aimHomingRadius: 70 } as const;
+export const PLAYER = { baseDmg: 9, baseFireRate: 1.2, arrowSpeed: 520, critMult: 3, fanRad: 0.09, aimHomingRadius: 70 } as const;
 
 export const BARRICADE = {
   baseHp: 400,
@@ -40,7 +40,9 @@ export const SOURCES = {
 export const PRESTIGE = { voluntaryWave: 12, heartPerHW: 0.12, waveOffset: 4, waveFactor: 0.75, killsPerHW: 400 } as const;
 export const OFFLINE = { base: 0.25, perRoot: 0.2, capSecs: 8 * 3600, minAwaySecs: 60 } as const;
 
-export const waveHP = (w: number): number => 10 * Math.pow(1.17, w - 1);
+export const HP_RAMP = { from: 15, rate: 1.3 } as const;
+export const waveHP = (w: number): number =>
+  10 * Math.pow(1.17, Math.min(w, HP_RAMP.from) - 1) * Math.pow(HP_RAMP.rate, Math.max(0, w - HP_RAMP.from));
 export const waveLoot = (w: number): number => 2 * Math.pow(1.13, w - 1);
 export const waveInterval = (w: number): number => Math.max(0.3, 2.0 * Math.pow(0.93, w - 1));
 export const waveSpeedMult = (w: number): number => 1 + 0.008 * w;
@@ -48,6 +50,10 @@ export const heartMult = (heartwood: number): number => 1 + PRESTIGE.heartPerHW 
 
 export const prestigeGain = (wave: number, runKills: number): number =>
   Math.max(0, Math.floor((wave - PRESTIGE.waveOffset) * PRESTIGE.waveFactor) + Math.floor(runKills / PRESTIGE.killsPerHW));
+
+export const COST_WAVE = { from: 10, rate: 1.25 } as const;
+/** Multiplier on every node price, by the wave at purchase (P-001). */
+export const costWave = (w: number): number => Math.pow(COST_WAVE.rate, Math.max(0, w - COST_WAVE.from));
 
 export const nodeCost = (base: number, growth: number, rank: number): number =>
   base === 0 ? 0 : Math.round(base * Math.pow(growth, rank));

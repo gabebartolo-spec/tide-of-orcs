@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { heartMult, nodeCost, prestigeGain, vanBaseHp, vanCost, waveHP, waveInterval, waveLoot } from './balance';
+import { costWave, heartMult, nodeCost, prestigeGain, vanBaseHp, vanCost, waveHP, waveInterval, waveLoot } from './balance';
 import { BARRICADE } from './balance';
 
 // Reference table from docs/BALANCE.md. Change the doc first, then these.
@@ -7,8 +7,8 @@ describe('wave formulas', () => {
   it.each([
     [1, 10, 2, 2.0],
     [10, 40.9, 6.0, 1.04],
-    [25, 433, 37.6, 0.35],
-    [50, 21933, 795, 0.3],
+    [25, 1242, 37.6, 0.35],
+    [50, 876233, 795, 0.3],
   ])('wave %i → hp %f loot %f interval %f', (w, hp, loot, iv) => {
     expect(waveHP(w)).toBeCloseTo(hp, hp > 1000 ? -2 : hp > 100 ? -1 : 0);
     expect(waveLoot(w)).toBeCloseTo(loot, loot > 100 ? -1 : 0);
@@ -21,6 +21,14 @@ describe('economy', () => {
     expect(nodeCost(12, 1.55, 0)).toBe(12);
     expect(nodeCost(12, 1.55, 1)).toBe(19);
     expect(nodeCost(0, 1.8, 5)).toBe(0);
+  });
+  it.each([
+    [1, 1],
+    [10, 1],
+    [25, 28.42],
+    [50, 7523.16],
+  ])('node cost wave multiplier at wave %i is %f', (w, m) => {
+    expect(costWave(w)).toBeCloseTo(m, 2);
   });
   it('heartwood multiplier', () => { expect(heartMult(0)).toBe(1); expect(heartMult(10)).toBeCloseTo(2.2); });
   it('prestige gain never negative; grows with wave and kills', () => {

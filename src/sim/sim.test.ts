@@ -3,7 +3,7 @@ import { createState, freshRun, freshMeta } from './state';
 import { EventBus } from './events';
 import { Inputs, noInputs, step } from './step';
 import { deriveStats } from './stats';
-import { buy, canBuy } from './tree';
+import { buy, canBuy, costOf } from './tree';
 import { NODE, NODES } from '../data/skillTree';
 import { STEP } from '../data/balance';
 import { canRally, rally } from './vanguard';
@@ -88,7 +88,13 @@ describe('tree', () => {
     expect(buy(s, ev, 'draw')).toBe(false); // parent not owned
     expect(buy(s, ev, 'sharp')).toBe(true);
     expect(s.run.starlight).toBe(88);
-    expect(s.stats.dmg).toBeCloseTo(7.5);
+    expect(s.stats.dmg).toBeCloseTo(11.25);
+  });
+  it('node price scales with the wave past 10', () => {
+    const s = createState(1);
+    expect(costOf(s, NODE.sharp)).toBe(12);
+    s.run.wave = 12;
+    expect(costOf(s, NODE.sharp)).toBe(19); // 12 × 1.25² = 18.75
   });
   it('growing the wall heals the new timber', () => {
     const s = createState(1); const ev = new EventBus();
