@@ -5,6 +5,7 @@ import { barFrac } from '../sim/barricade';
 import { P } from './palette';
 import { FLAME, Particles } from './particles';
 import { fmt } from '../ui/format';
+import { STR } from '../data/strings';
 
 /** Seconds an impact ring lingers. */
 const IMPACT_LIFE = 0.3;
@@ -103,8 +104,8 @@ export class FieldRenderer {
     g.fillStyle = P.dim; g.fillRect(12, 10, 150, 10);
     g.fillStyle = frac > 0.5 ? P.wallBar : frac > 0.25 ? P.amber : P.rose; g.fillRect(12, 10, 150 * frac, 10);
     g.fillStyle = P.cream; g.font = '10px "Atkinson Hyperlegible", sans-serif'; g.textAlign = 'left';
-    g.fillText(`BARRICADE ${fmt(Math.max(0, s.run.barHp))} / ${fmt(s.stats.barMax)}`, 12, 32);
-    if (s.stats.muster) g.fillText(`VANGUARD ${s.vans.count} / ${s.stats.vanCap}`, 12, 46);
+    g.fillText(STR.barricadeHud(fmt(Math.max(0, s.run.barHp)), fmt(s.stats.barMax)), 12, 32);
+    if (s.stats.muster) g.fillText(STR.vanguardHud(s.vans.count, s.stats.vanCap), 12, 46);
     g.fillStyle = P.dim45; g.fillRect(0, H - 5, W, 5); g.fillStyle = P.amber; g.fillRect(0, H - 5, W * (s.run.waveT / WAVE_LEN), 5);
   }
 

@@ -31,5 +31,12 @@ export const STR = {
   replantReady: (best: number) => `Ready. Best wave ${best}.`,
   replanted: (hw: number) => `The grove is replanted. ${hw} Heartwood carried back.`,
   saved: 'Saved', wipe: 'Wipe save', wipeConfirm: 'Really wipe? click again', freshDawn: 'A fresh dawn.',
-  autosave: 'Autosaves every 20s',
+  autosave: 'Autosaves every 20s', saveNow: 'Save now',
+  starlightCost: (n: string) => `${n} starlight`,
+  barricadeHud: (hp: string, max: string) => `BARRICADE ${hp} / ${max}`,
+  vanguardHud: (n: number, cap: number) => `VANGUARD ${n} / ${cap}`,
+  replantGainK: 'Heartwood on replant', replantBtn: 'Replant',
+  replantEach: (pct: number) => `Each Heartwood: <strong>+${pct}% starlight</strong> and <strong>+${pct}% damage</strong>.`,
+  replantReset: 'Reset: skills, starlight, wave, vanguard and companions.',
+  replantKept: 'Kept: Heartwood, total slain, best wave.',
 } as const;

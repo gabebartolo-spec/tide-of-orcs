@@ -12,10 +12,10 @@
   <header>
     <h1>Tide of <em>Orcs</em></h1>
     <div class="stats">
-      <div class="stat"><span class="k">Starlight</span><span class="v amber" id="st-star">0</span></div>
-      <div class="stat"><span class="k">Wave</span><span class="v" id="st-wave">1</span></div>
-      <div class="stat"><span class="k">Slain</span><span class="v" id="st-kills">0</span></div>
-      <div class="stat"><span class="k">Heartwood</span><span class="v heart" id="st-heart">0</span></div>
+      <div class="stat"><span class="k" id="k-star"></span><span class="v amber" id="st-star">0</span></div>
+      <div class="stat"><span class="k" id="k-wave"></span><span class="v" id="st-wave">1</span></div>
+      <div class="stat"><span class="k" id="k-kills"></span><span class="v" id="st-kills">0</span></div>
+      <div class="stat"><span class="k" id="k-heart"></span><span class="v heart" id="st-heart">0</span></div>
     </div>
   </header>
   <div class="main">
@@ -50,14 +50,14 @@
         <div class="prestige">
           <h2 id="pr-title"></h2>
           <p id="pr-body"></p>
-          <div><div class="stat"><span class="k">Heartwood on replant</span></div><div class="big" id="pr-gain">0</div></div>
+          <div><div class="stat"><span class="k" id="pr-gain-k"></span></div><div class="big" id="pr-gain">0</div></div>
           <ul>
-            <li>Each Heartwood: <strong>+12% starlight</strong> and <strong>+12% damage</strong>.</li>
-            <li>Reset: skills, starlight, wave, vanguard and companions.</li>
-            <li>Kept: Heartwood, total slain, best wave.</li>
+            <li id="pr-each"></li>
+            <li id="pr-reset"></li>
+            <li id="pr-kept"></li>
             <li id="pr-req"></li>
           </ul>
-          <div class="row"><button class="buy" id="pr-btn" disabled>Replant</button></div>
+          <div class="row"><button class="buy" id="pr-btn" disabled></button></div>
         </div>
       </div>
       <div class="footer">

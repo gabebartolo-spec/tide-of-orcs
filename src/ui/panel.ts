@@ -21,7 +21,10 @@ export class Panel {
     // static copy
     $('hint').textContent = matchMedia('(pointer: coarse)').matches ? STR.hintTouch : STR.hint; $('tab-grove').textContent = STR.tabGrove; $('tab-prestige').textContent = STR.tabReplant;
     $('pr-title').textContent = STR.replantTitle; $('pr-body').textContent = STR.replantBody;
-    $('btn-save').textContent = 'Save now'; $('btn-reset').textContent = STR.wipe; $('autosave').textContent = STR.autosave;
+    $('btn-save').textContent = STR.saveNow;
+    $('k-star').textContent = STR.starlight; $('k-wave').textContent = STR.wave; $('k-kills').textContent = STR.slain; $('k-heart').textContent = STR.heartwood;
+    $('pr-gain-k').textContent = STR.replantGainK; $('pr-btn').textContent = STR.replantBtn;
+    $('pr-each').innerHTML = STR.replantEach(Math.round(PRESTIGE.heartPerHW * 100)); $('pr-reset').textContent = STR.replantReset; $('pr-kept').textContent = STR.replantKept; $('btn-reset').textContent = STR.wipe; $('autosave').textContent = STR.autosave;
     $('fallen-title').textContent = STR.fallenTitle; $('fallen-hw-k').textContent = STR.fallenHW; $('fallen-btn').textContent = STR.fallenBtn;
     $('dep-spear').querySelector('.n')!.textContent = STR.rallySpear; $('dep-blade').querySelector('.n')!.textContent = STR.rallyBlade;
     $('dep-boss').querySelector('.n')!.textContent = STR.summonBoss;
@@ -66,7 +69,7 @@ export class Panel {
     if (!s.stats.muster) { btn.disabled = true; c.textContent = STR.learnMuster; c.className = 'c dim'; return; }
     const full = s.vans.count >= s.stats.vanCap, cost = vanCost(type, s.run.wave);
     btn.disabled = !canRally(s, type);
-    c.textContent = full ? STR.lineFull : fmt(cost) + ' starlight'; c.className = 'c' + (btn.disabled ? ' dim' : '');
+    c.textContent = full ? STR.lineFull : STR.starlightCost(fmt(cost)); c.className = 'c' + (btn.disabled ? ' dim' : '');
   }
 
   handleEvents(events: ReturnType<GameController['events']['drain']>): void {
@@ -93,7 +96,7 @@ export class Panel {
       <div class="branch" style="color:${BRANCH_COLOR[n.branch]}">${n.branch}${n.parent ? ' · ' + STR.needs(NODE[n.parent].name) : ''}</div>
       <div class="name"><span>${n.name}</span><span style="font-size:13px;color:var(--cream-dim)">${n.max > 1 ? STR.rank(lvl, n.max) : lvl ? STR.learned : ''}</span></div>
       <div class="desc">${n.desc}</div>
-      <div class="row"><span style="font-variant-numeric:tabular-nums;color:var(--amber)">${maxed ? STR.fullyGrown : n.base === 0 ? '' : fmt(cost) + ' starlight'}</span>
+      <div class="row"><span style="font-variant-numeric:tabular-nums;color:var(--amber)">${maxed ? STR.fullyGrown : n.base === 0 ? '' : STR.starlightCost(fmt(cost))}</span>
       <button class="buy" id="buy-btn" ${canBuy(s, n) ? '' : 'disabled'}>${maxed ? STR.complete : !un ? STR.locked : lvl ? STR.improve : STR.learn}</button></div>`;
     $('buy-btn').onclick = () => this.buy(n.id);
   }
