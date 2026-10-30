@@ -69,4 +69,5 @@ header h1 em { color: var(--amber); font-style: italic; }
 .footer { display: flex; gap: 10px; flex-wrap: wrap; padding: 10px 14px; border-top: 1px solid var(--line); }
 @media (max-width: 860px) { .main { grid-template-columns: 1fr; } .treewrap { height: 380px; } }
 @media (max-width: 500px) { .fallen { gap: 4px; padding: 8px; justify-content: safe center; overflow-y: auto; } .fallen h2 { font-size: 22px; } .fallen p { font-size: 13px; } .fallen .big { font-size: 26px; line-height: 1.1; } }
+@media (pointer: coarse) { .buy, .ghost, .tabs button, .deploy { min-height: 44px; } .ghost { padding-inline: 14px; } }
 @media (prefers-reduced-motion: reduce) { .toast { transition: none; } }

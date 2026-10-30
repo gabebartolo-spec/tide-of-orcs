@@ -2,6 +2,7 @@
 export const STR = {
   title: 'Tide of Orcs',
   hint: 'Hold the barricade. Move your pointer over the field to aim the bow; it looses on its own. Rally vanguard with starlight to meet the tide in melee.',
+  hintTouch: 'Hold the barricade. Touch and hold the field to aim the bow; it looses on its own. Rally vanguard with starlight to meet the tide in melee.',
   barricade: 'Barricade', vanguard: 'Vanguard',
   rallySpear: 'Rally Spearman', rallyBlade: 'Rally Bladedancer', learnMuster: 'Learn Muster', lineFull: 'Line is full', lineFullToast: 'The line is full',
   takesField: (name: string) => `${name} takes the field`,
