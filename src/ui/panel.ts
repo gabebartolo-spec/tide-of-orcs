@@ -9,6 +9,8 @@ import { gain } from '../sim/prestige';
 import { bossesReady, canSummonBoss } from '../sim/boss';
 import { BOSS_WAVE } from '../data/bosses';
 import { NumberFormat, fmt, setNumberFormat } from './format';
+import { HW_NODE, HW_NODES, HwId } from '../data/heartwood';
+import { canBuyHw, hwAvailable, hwCost, hwRank } from '../sim/heartwood';
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string): T => document.getElementById(id) as T;
 const VAN_NAME: Record<VanType, string> = { spear: 'Spearman', blade: 'Bladedancer' };
@@ -43,14 +45,26 @@ export class Panel {
       if (tree.selected === id && canBuy(game.state, NODE[id])) this.buy(id);
       tree.selected = id; this.renderDetail();
     });
-    this.renderDetail();
+    $('hw-title').textContent = STR.hwTitle;
+    $('hw-tree').onclick = (e) => { const id = (e.target as HTMLElement).closest('button')?.dataset.hw as HwId | undefined; if (id && game.buyHw(id)) { this.toast(STR.hwBought(HW_NODE[id].name)); this.renderHw(); } };
+    this.renderDetail(); this.renderHw();
     if (game.state.run.fallen) this.showFallen();
+  }
+
+  /** Heartwood tree list on the Replant tab. Rebuilt on purchase and replant; update() refreshes the buttons. */
+  renderHw(): void {
+    const m = this.game.state.meta;
+    $('hw-tree').innerHTML = HW_NODES.map((n) => { const r = hwRank(m, n.id), c = hwCost(m, n.id); return `
+      <div class="hwnode"><div><div class="name">${n.name} <span class="desc">${STR.hwRank(r, n.costs.length)}</span></div><div class="desc">${n.desc}</div></div>
+      <button class="buy" data-hw="${n.id}" ${canBuyHw(m, n.id) ? '' : 'disabled'}>${c === null ? STR.complete : STR.hwCost(c)}</button></div>`; }).join('');
   }
 
   /** Called ~6 Hz. */
   update(): void {
     const s = this.game.state;
-    $('st-star').textContent = fmt(s.run.starlight); $('st-wave').textContent = String(s.run.wave); $('st-kills').textContent = fmt(s.meta.lifetimeKills); $('st-heart').textContent = String(s.meta.heartwood);
+    $('st-star').textContent = fmt(s.run.starlight); $('st-wave').textContent = String(s.run.wave); $('st-kills').textContent = fmt(s.meta.lifetimeKills); $('st-heart').textContent = STR.heartAvail(hwAvailable(s.meta), s.meta.heartwood);
+    $('hw-body').textContent = STR.hwBody(hwAvailable(s.meta));
+    for (const b of $('hw-tree').querySelectorAll<HTMLButtonElement>('button[data-hw]')) b.disabled = !canBuyHw(s.meta, b.dataset.hw as HwId);
     const g = gain(s), ok = s.run.wave >= PRESTIGE.voluntaryWave && g > 0 && !s.run.fallen;
     $('pr-gain').textContent = '+' + g; ($('pr-btn') as HTMLButtonElement).disabled = !ok;
     $('pr-req').textContent = ok ? STR.replantReady(s.meta.bestWave) : STR.replantFrom(PRESTIGE.voluntaryWave);
@@ -145,7 +159,7 @@ export class Panel {
     if (!this.importArmed) { this.importArmed = true; btn.textContent = STR.importConfirm; setTimeout(() => { this.importArmed = false; btn.textContent = STR.importBtn; }, 4000); return; }
     this.importArmed = false; btn.textContent = STR.importBtn;
     try { this.game.importSave(str); } catch { this.toast(STR.importBad); return; }
-    $('fallen').hidden = true; this.tree.selected = 'sharp'; this.syncSettings(); this.onSettings(); this.renderDetail();
+    $('fallen').hidden = true; this.tree.selected = 'sharp'; this.renderHw(); this.syncSettings(); this.onSettings(); this.renderDetail();
     if (this.game.state.run.fallen) this.showFallen();
     this.toast(STR.imported);
   }
@@ -157,13 +171,13 @@ export class Panel {
     $('fallen-hw').textContent = '+' + gain(this.game.state); $('fallen').hidden = false;
   }
   private doReplant(): void {
-    const hw = this.game.replant(); $('fallen').hidden = true; this.tree.selected = 'sharp'; this.renderDetail(); this.setTab('grove');
+    const hw = this.game.replant(); $('fallen').hidden = true; this.tree.selected = 'sharp'; this.renderDetail(); this.renderHw(); this.setTab('grove');
     this.toast(STR.replanted(hw));
   }
   private wipe(): void {
     const btn = $('btn-reset');
     if (!this.wipeArmed) { this.wipeArmed = true; btn.textContent = STR.wipeConfirm; setTimeout(() => { this.wipeArmed = false; btn.textContent = STR.wipe; }, 4000); return; }
-    this.game.wipe(); this.wipeArmed = false; btn.textContent = STR.wipe; $('fallen').hidden = true; this.tree.selected = 'sharp'; this.renderDetail(); this.toast(STR.freshDawn);
+    this.game.wipe(); this.wipeArmed = false; btn.textContent = STR.wipe; $('fallen').hidden = true; this.tree.selected = 'sharp'; this.renderDetail(); this.renderHw(); this.toast(STR.freshDawn);
   }
 
   toast(msg: string): void {

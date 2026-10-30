@@ -1,4 +1,5 @@
 import { OrcKind } from '../data/orcs';
+import { HwLevels } from '../data/heartwood';
 import { FIELD, ORC_CAP, VanType } from '../data/balance';
 import { Levels, Stats, deriveStats } from './stats';
 import { Pool } from './pool';
@@ -30,7 +31,8 @@ export interface RunState {
   bossDone: number; boss: { t: number; next: number; left: number } | null;
   foeT: Partial<Record<OrcKind, number>>; stormT: number; shotT: number[]; knifeT: number; hawkT: number; treantT: number; ballT: number;
 }
-export interface MetaState { heartwood: number; lifetimeKills: number; bestWave: number; prestiges: number }
+/** heartwood: all Heartwood ever earned (drives the passive bonus); hwLevels: Heartwood tree ranks bought with it. */
+export interface MetaState { heartwood: number; lifetimeKills: number; bestWave: number; prestiges: number; hwLevels: HwLevels }
 
 export interface SimState {
   tick: number; t: number;
@@ -45,7 +47,7 @@ export function freshRun(): RunState {
   return { wave: 1, waveT: 0, runTime: 0, starlight: 0, earned: 0, kills: 0, levels: { root: 1 }, barHp: -1, bulwarkUsed: false, fallen: false, bossDone: 0, boss: null,
     foeT: {}, stormT: 0, shotT: [0, 0, 0], knifeT: 0, hawkT: 0, treantT: 0, ballT: 0 };
 }
-export function freshMeta(): MetaState { return { heartwood: 0, lifetimeKills: 0, bestWave: 1, prestiges: 0 }; }
+export function freshMeta(): MetaState { return { heartwood: 0, lifetimeKills: 0, bestWave: 1, prestiges: 0, hwLevels: {} }; }
 
 const makeOrc = (): Orc => ({ live: false, kind: 'grunt', x: 0, y: 0, hp: 0, maxhp: 0, spd: 0, r: 0, loot: 0, atk: 0, dead: false, burn: 0, hitT: 0, wob: 0, swingT: 0, champ: false });
 const makeShot = (): Projectile => ({ live: false, kind: 'arrow', x: 0, y: 0, vx: 0, vy: 0, dmg: 0, pierce: 0, life: 0, target: null, hit: new Set(), sx: 0, sy: 0, tx: 0, ty: 0, t: 0, h: 0, r: 0 });
@@ -53,7 +55,7 @@ const makeVan = (): Vanguard => ({ live: false, type: 'spear', x: 0, y: 0, tx: 0
 
 export function createState(seed = 1, run: RunState = freshRun(), meta: MetaState = freshMeta()): SimState {
   const s: SimState = {
-    tick: 0, t: 0, rng: createRng(seed), run, meta, stats: deriveStats(run.levels, meta.heartwood),
+    tick: 0, t: 0, rng: createRng(seed), run, meta, stats: deriveStats(run.levels, meta.heartwood, meta.hwLevels),
     orcs: new Pool<Orc>(ORC_CAP, makeOrc), shots: new Pool<Projectile>(600, makeShot), vans: new Pool<Vanguard>(8, makeVan),
     wolf: { x: 260, y: FIELD.h / 2, tx: 260, ty: FIELD.h / 2, biteT: 0 },
     hawk: { x: 300, y: 100, a: 0 },
@@ -65,7 +67,7 @@ export function createState(seed = 1, run: RunState = freshRun(), meta: MetaStat
 /** Re-derive stats after a purchase or prestige. Growing the wall heals the new timber. */
 export function recompute(s: SimState): void {
   const before = s.stats.barMax;
-  s.stats = deriveStats(s.run.levels, s.meta.heartwood);
+  s.stats = deriveStats(s.run.levels, s.meta.heartwood, s.meta.hwLevels);
   if (s.stats.barMax > before) s.run.barHp += s.stats.barMax - before;
   s.run.barHp = Math.min(s.run.barHp, s.stats.barMax);
 }

@@ -66,6 +66,11 @@ header h1 em { color: var(--amber); font-style: italic; }
 .prestige p { margin: 0; color: var(--cream-dim); max-width: 60ch; }
 .prestige .big { font-family: var(--display); font-size: 34px; color: var(--rose); font-weight: 700; }
 .prestige ul { margin: 0; padding-left: 18px; color: var(--cream-dim); }
+.hwtree { display: flex; flex-direction: column; gap: 8px; }
+.hwnode { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 10px; border-radius: 6px; background: var(--ink-2); }
+.hwnode .name { font-weight: 700; }
+.hwnode .buy { white-space: nowrap; }
+.hwnode .desc { color: var(--cream-dim); font-size: 13px; }
 .set { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .set select, .set input, .settings textarea { font: inherit; color: var(--cream); background: var(--ink); border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; }
 .set input[type=range] { flex: 0 1 200px; padding: 0; accent-color: var(--amber); }

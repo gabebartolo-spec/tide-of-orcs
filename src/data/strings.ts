@@ -46,4 +46,9 @@ export const STR = {
   replantEach: (pct: number) => `Each Heartwood: <strong>+${pct}% starlight</strong> and <strong>+${pct}% damage</strong>.`,
   replantReset: 'Reset: skills, starlight, wave, vanguard and companions.',
   replantKept: 'Kept: Heartwood, total slain, best wave.',
+  hwTitle: 'Heartwood tree',
+  hwBody: (avail: number) => `Spend Heartwood on gifts that last every run. Spending never lowers your Heartwood bonus. ${avail} to spend.`,
+  hwCost: (n: number) => `${n} Heartwood`, hwRank: (l: number, m: number) => (m > 1 ? `rank ${l} / ${m}` : l ? 'learned' : ''),
+  hwBought: (name: string) => `${name} takes root`,
+  heartAvail: (avail: number, total: number) => (avail === total ? String(total) : `${avail} / ${total}`),
 } as const;

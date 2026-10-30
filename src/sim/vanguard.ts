@@ -12,15 +12,21 @@ export function canRally(s: SimState, type: VanType): boolean {
 
 export function rally(s: SimState, ev: EventBus, type: VanType): boolean {
   if (!canRally(s, type)) return false;
-  const v = s.vans.alloc(); if (!v) return false;
+  const v = placeVanguard(s, type); if (!v) return false;
   s.run.starlight -= vanCost(type, s.run.wave);
+  ev.push({ t: 'vanguardRallied', type, x: v.x, y: v.y });
+  return true;
+}
+
+/** Put a vanguard on the field at no cost and regardless of the line cap (rally, Standing Orders). */
+export function placeVanguard(s: SimState, type: VanType): Vanguard | null {
+  const v = s.vans.alloc(); if (!v) return null;
   const lane = s.vans.count - 1;
   const hp = vanBaseHp(type, s.run.wave) * s.stats.vanHp;
   v.type = type; v.x = FIELD.barX + 10; v.tx = FIELD.barX + VANGUARD.standX;
   v.y = FIELD.h / 2 + (lane % 2 ? 1 : -1) * Math.ceil(lane / 2) * VANGUARD.laneGap;
   v.hp = hp; v.maxhp = hp; v.swingT = 0; v.hitT = 0;
-  ev.push({ t: 'vanguardRallied', type, x: v.x, y: v.y });
-  return true;
+  return v;
 }
 
 export function vanguardStep(s: SimState, ev: EventBus, dt: number): void {

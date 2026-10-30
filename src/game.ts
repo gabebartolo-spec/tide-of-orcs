@@ -10,6 +10,8 @@ import { SimState, createState, freshMeta, freshRun } from './sim/state';
 import { Inputs, step } from './sim/step';
 import { buy } from './sim/tree';
 import { summonBoss } from './sim/boss';
+import { buyHw } from './sim/heartwood';
+import { HwId } from './data/heartwood';
 import { rally } from './sim/vanguard';
 import { Save, defaultSettings, CURRENT_VERSION } from './save/schema';
 import { clearSave, exportSave, importSave, readSave, writeSave } from './save/storage';
@@ -40,6 +42,7 @@ export class GameController {
   clearAim(): void { this.aim = null; }
   buy(id: NodeId): boolean { return buy(this.state, this.events, id); }
   rally(type: VanType): boolean { return rally(this.state, this.events, type); }
+  buyHw(id: HwId): boolean { const ok = buyHw(this.state, this.events, id); if (ok) this.save(); return ok; }
   summonBoss(): boolean { return summonBoss(this.state, this.events); }
   canReplant(): boolean { return canReplant(this.state); }
   replant(): number { const hw = replant(this.state, this.events); this.save(); return hw; }

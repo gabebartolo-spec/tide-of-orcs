@@ -90,8 +90,8 @@ cap = 2 + ranks        mend = 0.03 × mend × maxhp per second
 | Bare archer, no purchases, holds | ≥ 5 waves | met (falls wave 9) |
 | Tree fully bought in a run | never | met |
 
-## Heartwood tree (M3, DRAFT)
-Spent in Heartwood, never reset. Costs in HW.
+## Heartwood tree (M3, built TB-053)
+Bought with Heartwood, never reset. Costs in HW. Spending does not lower the passive `heart` bonus: `heart` counts all Heartwood earned, and the tree spends from `available = earned − spent`. The header shows `available / earned` once anything is spent. Early Dawn's skipped boss waves are not owed (`bossDone` starts at `floor(startWave / 10)`). Standing Orders spearmen are placed free, ignoring Muster and the line cap.
 
 | id | Name | Max | Cost | Effect |
 |---|---|---|---|---|
@@ -99,7 +99,7 @@ Spent in Heartwood, never reset. Costs in HW.
 | hw_wolf | Old Friend | 1 | 3 | Start with Grey Wolf |
 | hw_timber | Stout Timber | 3 | 4, 8, 16 | Barricade base HP +25% |
 | hw_orders | Standing Orders | 2 | 5, 12 | Start each run with one Spearman (two at rank 2) |
-| hw_boss | Warlords | 1 | 15 | Warboss can appear on waves divisible by 5 |
+| ~~hw_boss~~ | ~~Warlords~~ | | | Not built: the marching Warboss was retired by boss waves (TB-081). Needs a director replacement. |
 
 ## Simulator (`npm run balance`)
 Lives in `sim/run.ts`. Runs `src/sim/` headless at 50 steps/s and decides every 0.5 s with a policy:
