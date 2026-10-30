@@ -7,11 +7,25 @@ export type Cue =
 
 export const AMBIENT = 'ambient';
 
+/** Music beds, alternated each run; Replant crossfades to the next. Files: public/audio/<bed>.ogg|.mp3. */
+export const MUSIC = ['music-a', 'music-b'] as const;
+export type Bed = (typeof MUSIC)[number];
+
+/** Boss-wave track: plays from its start on `bossStart`, fades back to the run's bed on `bossEnd` or Replant. */
+export const BOSS_BED = 'music-boss';
+
+/** Bed that follows `bed` on Replant. */
+export function nextBed(bed: Bed): Bed { return bed === 'music-a' ? 'music-b' : 'music-a'; }
+
 export const AUDIO = {
   sfxGain: 0.8,
   ambientGain: 0.35,
   duckGain: 0.12,       // ambient level while a ducking cue plays
   duckRelease: 1.6,     // seconds back to full ambient
+  musicGain: 0.3,
+  musicDuckGain: 0.1,   // music level while a ducking cue plays
+  crossfade: 4,         // seconds to swap music beds on Replant
+  bossFade: 1.5,        // seconds into / out of the boss track
   pitchJitter: 0.06,    // ± playbackRate spread so repeats don't machine-gun
   creakFrac: 0.5,       // a hit that leaves the wall below this fraction creaks instead of thuds
 } as const;

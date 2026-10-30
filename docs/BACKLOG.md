@@ -73,7 +73,7 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-069 | ElevenLabs SFX set (14) + ambient bed, exported per ART-STYLE | audio | — | gabe | todo |
 | TB-061 | Parallax hills, day/night tint, bank lamplight | render | 018 | claude | done 71d05f4 |
 | TB-062 | Audio engine: ambient loop, SFX map from events, ducking | audio | 019,069 | claude | done 09b60cf |
-| TB-063 | Music beds ×2, crossfade on Replant | audio | 062 | | todo |
+| TB-063 | Music beds ×2, crossfade on Replant, boss-wave track (Suno MP3s in `public/audio/`) | audio | 062 | claude | done (PR #9) |
 | TB-064 | Mobile layout, touch targets, pinch zoom on tree. M1 check (375×812): Learn and Replant buttons 33 px, tabs 39 px, Save now/Wipe 29 px (target 44); hint text says "move your pointer" (touch needs its own copy); field is 343×183 px | ui | 021 | claude | done ddc732d |
 | TB-065 | Settings tab: volume, reduced motion override, number format, export/import | ui | 008 | claude | done 0ed4259 |
 | TB-066 | Tree layout polish: curved branch lines, camera ease to selected | render | 021 | claude | done e4d999a |
