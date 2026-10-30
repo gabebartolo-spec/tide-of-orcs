@@ -7,9 +7,12 @@ import { FLAME, Particles } from './particles';
 import { fmt } from '../ui/format';
 import { STR } from '../data/strings';
 import { Ceremony } from './ceremony';
+import { Sprites } from './sprites';
 
 /** Seconds an impact ring lingers. */
 const IMPACT_LIFE = 0.3;
+/** Radius the elf and vanguard sprites are sized against (their vector bodies span ~12 units). */
+const ACTOR_R = 12;
 const W = FIELD.w, H = FIELD.h, BAR_X = FIELD.barX, BAR_W = FIELD.barW, ELF_X = FIELD.elfX;
 
 export class FieldRenderer {
@@ -20,6 +23,9 @@ export class FieldRenderer {
   private impacts: { x: number; y: number; r: number; life: number }[] = [];
   reducedMotion = false;
   readonly ceremony = new Ceremony();
+  readonly sprites = new Sprites();
+  /** Animation clock for sprite frames. */
+  private clock = 0;
 
   constructor(private canvas: HTMLCanvasElement) {
     this.g = canvas.getContext('2d')!;
@@ -55,7 +61,7 @@ export class FieldRenderer {
 
   draw(s: SimState, dt: number, aim: { x: number; y: number } | null = null): void {
     const g = this.g;
-    this.fx.update(dt);
+    this.fx.update(dt); this.clock += dt;
     for (let i = this.storms.length - 1; i >= 0; i--) { this.storms[i]!.life -= dt; if (this.storms[i]!.life <= 0) this.storms.splice(i, 1); }
     for (let i = this.impacts.length - 1; i >= 0; i--) { this.impacts[i]!.life -= dt; if (this.impacts[i]!.life <= 0) this.impacts.splice(i, 1); }
     if (this.shake > 0) this.shake = Math.max(0, this.shake - dt * 3);
@@ -137,19 +143,27 @@ export class FieldRenderer {
     const g = this.g; g.save(); g.translate(o.x, o.y);
     const bob = this.reducedMotion ? 0 : Math.sin(o.wob) * 1.5;
     g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, o.r * 0.9, o.r * 0.9, o.r * 0.35, 0, 0, 6.28); g.fill();
+    if (this.sprites.draw(g, `orc.${o.kind}`, this.clock + o.wob, 0, o.r * 0.9, o.r, o.hitT > 0)) { this.orcBars(o, 0); g.restore(); return; }
     g.fillStyle = o.hitT > 0 ? P.cream : o.kind === 'boss' ? P.boss : o.kind === 'elite' ? P.elite : o.kind === 'brute' ? P.brute : P.orc;
     g.beginPath(); g.ellipse(0, bob, o.r, o.r * 1.05, 0, 0, 6.28); g.fill();
     g.fillStyle = P.tusk; g.fillRect(-o.r * 0.55, bob - o.r * 0.15, o.r * 0.32, o.r * 0.22); g.fillRect(o.r * 0.2, bob - o.r * 0.15, o.r * 0.32, o.r * 0.22);
     g.fillStyle = P.cream; g.fillRect(-o.r * 0.42, bob + o.r * 0.3, o.r * 0.14, o.r * 0.3); g.fillRect(o.r * 0.28, bob + o.r * 0.3, o.r * 0.14, o.r * 0.3);
     if (o.kind === 'boss') { g.fillStyle = P.amber; g.beginPath(); g.moveTo(-o.r * 0.8, -o.r * 0.7); g.lineTo(-o.r * 0.4, -o.r * 1.4); g.lineTo(0, -o.r * 0.8); g.lineTo(o.r * 0.4, -o.r * 1.4); g.lineTo(o.r * 0.8, -o.r * 0.7); g.closePath(); g.fill(); }
+    this.orcBars(o, bob);
+    g.restore();
+  }
+
+  /** Burn glow and health bar, shared by the vector and sprite orc. */
+  private orcBars(o: Orc, bob: number): void {
+    const g = this.g;
     if (o.burn > 0) { g.fillStyle = P.burnGlow; g.beginPath(); g.arc(0, bob - 4, o.r * 0.7, 0, 6.28); g.fill(); }
     if (o.hp < o.maxhp) { g.fillStyle = P.dim; g.fillRect(-o.r, -o.r - 8, o.r * 2, 3); g.fillStyle = P.rose; g.fillRect(-o.r, -o.r - 8, o.r * 2 * Math.max(0, o.hp / o.maxhp), 3); }
-    g.restore();
   }
 
   private elf(x: number, y: number, dim: boolean): void {
     const g = this.g; g.save(); g.translate(x, y); if (dim) g.globalAlpha = 0.85;
     g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 16, 12, 4, 0, 0, 6.28); g.fill();
+    if (this.sprites.draw(g, dim ? 'archer' : 'elf', this.clock, 0, 16, ACTOR_R)) { g.restore(); return; }
     g.fillStyle = dim ? P.archerCloak : P.elfCloak; g.beginPath(); g.moveTo(-9, 14); g.lineTo(9, 14); g.lineTo(5, -6); g.lineTo(-5, -6); g.closePath(); g.fill();
     g.fillStyle = P.lilac; g.beginPath(); g.arc(0, -12, 7, 0, 6.28); g.fill();
     g.strokeStyle = P.cream; g.lineWidth = 2; g.beginPath(); g.arc(12, 0, 16, -1.3, 1.3); g.stroke();
@@ -160,13 +174,19 @@ export class FieldRenderer {
   private van(v: Vanguard): void {
     const g = this.g, T = VANGUARD[v.type]; g.save(); g.translate(v.x, v.y);
     g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 16, 12, 4, 0, 0, 6.28); g.fill();
+    if (this.sprites.draw(g, `van.${v.type}`, this.clock, 0, 16, ACTOR_R, v.hitT > 0)) { this.vanBar(v); g.restore(); return; }
     g.fillStyle = v.hitT > 0 ? P.cream : v.type === 'spear' ? P.spear : P.blade; g.beginPath(); g.moveTo(-9, 14); g.lineTo(9, 14); g.lineTo(6, -6); g.lineTo(-6, -6); g.closePath(); g.fill();
     g.fillStyle = P.lilac; g.beginPath(); g.arc(0, -12, 7, 0, 6.28); g.fill();
     g.strokeStyle = P.cream; g.lineWidth = 2; g.beginPath();
     if (T.cleave) { g.moveTo(8, -4); g.lineTo(26, -14); g.moveTo(8, 4); g.lineTo(26, 14); } else { g.moveTo(6, 8); g.lineTo(30, -8); }
     g.stroke();
     if (v.type === 'spear') { g.fillStyle = P.timber; g.beginPath(); g.arc(-10, 2, 7, 0, 6.28); g.fill(); }
-    if (v.hp < v.maxhp) { g.fillStyle = P.dim; g.fillRect(-12, -26, 24, 3); g.fillStyle = P.spear; g.fillRect(-12, -26, 24 * Math.max(0, v.hp / v.maxhp), 3); }
+    this.vanBar(v);
     g.restore();
+  }
+
+  private vanBar(v: Vanguard): void {
+    const g = this.g;
+    if (v.hp < v.maxhp) { g.fillStyle = P.dim; g.fillRect(-12, -26, 24, 3); g.fillStyle = P.spear; g.fillRect(-12, -26, 24 * Math.max(0, v.hp / v.maxhp), 3); }
   }
 }

@@ -36,6 +36,7 @@ window.addEventListener('resize', () => field.resize());
 const treeWrap = document.querySelector('.treewrap') as HTMLElement;
 const skipCeremony = (): void => { if (field.ceremony.active) field.ceremony.skip(); };
 fieldCanvas.addEventListener('pointerdown', skipCeremony); addEventListener('keydown', skipCeremony);
+void field.sprites.load();
 // dev-only handle for checking render work in the browser
 if (import.meta.env.DEV) Object.assign(window, { __tide: { game, field } });
 
