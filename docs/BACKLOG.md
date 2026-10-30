@@ -29,7 +29,7 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-018 | `render/field.ts`: plain, barricade with splinters, elf, orcs, vanguard, projectiles, HUD bars, shake | render | 012 | claude | done 4860f5b (first pass; TB-060 polishes) |
 | TB-019 | `render/particles.ts` + floating text from events | render | 015 | claude | done 4860f5b |
 | TB-020 | Tree canvas: draw, select, buy, affordable pulse, legend | render/ui | 003,005 | claude | done 4860f5b |
-| TB-021 | Tree pan (drag) and zoom (wheel/pinch) | render | 020 | | todo |
+| TB-021 | Tree pan (drag) and zoom (wheel/pinch) | render | 020 | claude | done ede6878 |
 | TB-022 | Detail card, buy button, toasts, HUD numbers, `format.ts` | ui | 020 | claude | done 4860f5b |
 | TB-026 | Rally bar: Spearman/Bladedancer buttons with cost, full/unaffordable states | ui | 016 | claude | done 4860f5b |
 | TB-027 | Fallen overlay: summary, Heartwood, Replant button; forced replant flow | ui | 013 | claude | done 4860f5b |
