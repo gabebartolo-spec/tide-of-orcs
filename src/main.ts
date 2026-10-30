@@ -5,12 +5,18 @@ import { FieldRenderer } from './render/field';
 import { TreeRenderer } from './render/tree';
 import { Panel } from './ui/panel';
 import { fmt } from './ui/format';
+import { AudioEngine } from './audio/engine';
 
 const game = new GameController();
 const fieldCanvas = document.getElementById('game') as HTMLCanvasElement;
 const field = new FieldRenderer(fieldCanvas);
 const tree = new TreeRenderer(document.getElementById('tree') as HTMLCanvasElement);
 const panel = new Panel(game, tree);
+const audio = new AudioEngine();
+audio.setVolume(game.settings.volume);
+// Browsers block audio until the first gesture.
+addEventListener('pointerdown', () => audio.unlock(), { capture: true });
+addEventListener('keydown', () => audio.unlock(), { capture: true });
 
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 const applyMotion = () => { field.reducedMotion = game.settings.reducedMotion ?? reduced.matches; tree.reducedMotion = field.reducedMotion; };
@@ -38,7 +44,7 @@ function frame(now: number): void {
   acc += dt;
   while (acc >= STEP) { game.tick(STEP); acc -= STEP; }
   const events = game.events.drain();
-  field.consume(events, game.state); panel.handleEvents(events);
+  field.consume(events, game.state); panel.handleEvents(events); audio.consume(events);
   if (!document.hidden) field.draw(game.state, dt, game.aim);
   hudT += dt; if (hudT > 0.15) { hudT = 0; panel.update(); tree.draw(game.state, game.state.t); }
   saveT += dt; if (saveT > 20) { saveT = 0; game.save(); }
