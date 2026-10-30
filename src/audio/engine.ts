@@ -1,5 +1,5 @@
-/** Web Audio playback: ambient loop, two music beds crossfaded on Replant, SFX from sim events, ducking. Missing files are skipped silently. */
-import { AMBIENT, AUDIO, Bed, CUES, Cue, MUSIC, cueFor, nextBed } from '../data/audio';
+/** Web Audio playback: ambient loop, two music beds crossfaded on Replant, a boss track on boss waves, SFX from sim events, ducking. Missing files are skipped silently. */
+import { AMBIENT, AUDIO, BOSS_BED, Bed, CUES, Cue, MUSIC, cueFor, nextBed } from '../data/audio';
 import type { SimEvent } from '../sim/events';
 
 export class AudioEngine {
@@ -9,6 +9,8 @@ export class AudioEngine {
   private music!: GainNode;
   private beds = new Map<Bed, GainNode>();
   private bed: Bed = MUSIC[0];
+  private boss!: GainNode;
+  private bossSrc: AudioBufferSourceNode | null = null;
   private bufs = new Map<string, AudioBuffer | null>();
   private lastAt = new Map<Cue, number>();
   private volume = 1;
@@ -27,6 +29,8 @@ export class AudioEngine {
       const g = this.ctx.createGain(); g.gain.value = b === this.bed ? 1 : 0; g.connect(this.music); this.beds.set(b, g);
       void this.load(b).then((buf) => { if (buf) this.loop(buf, g); });
     }
+    this.boss = this.ctx.createGain(); this.boss.gain.value = 0; this.boss.connect(this.music);
+    void this.load(BOSS_BED);
     for (const c of Object.keys(CUES)) void this.load(c);
     void this.load(AMBIENT).then((b) => { if (b) this.loop(b, this.amb); });
   }
@@ -34,17 +38,40 @@ export class AudioEngine {
   setVolume(v: number): void { this.volume = v; if (this.ctx) this.master.gain.value = v; }
 
   consume(events: SimEvent[]): void {
-    for (const e of events) { if (e.t === 'replant') this.swapBed(); const c = cueFor(e); if (c) this.play(c); }
+    for (const e of events) {
+      if (e.t === 'replant') { this.endBoss(); this.swapBed(); }
+      else if (e.t === 'bossStart') this.startBoss();
+      else if (e.t === 'bossEnd') this.endBoss();
+      const c = cueFor(e); if (c) this.play(c);
+    }
+  }
+
+  private ramp(p: AudioParam, to: number, secs: number): void {
+    const now = this.ctx!.currentTime; p.cancelScheduledValues(now); p.setValueAtTime(p.value, now); p.linearRampToValueAtTime(to, now + secs);
+  }
+
+  /** Boss track from its first bar; the run's bed fades out under it. */
+  private startBoss(): void {
+    const ctx = this.ctx, buf = this.bufs.get(BOSS_BED); if (!ctx || !buf) return;
+    this.bossSrc?.stop();
+    const src = ctx.createBufferSource(); src.buffer = buf; src.loop = true; src.connect(this.boss); src.start();
+    this.bossSrc = src;
+    this.ramp(this.boss.gain, 1, AUDIO.bossFade);
+    this.ramp(this.beds.get(this.bed)!.gain, 0, AUDIO.bossFade);
+  }
+
+  private endBoss(): void {
+    const ctx = this.ctx, src = this.bossSrc; if (!ctx || !src) return;
+    this.ramp(this.boss.gain, 0, AUDIO.bossFade);
+    this.ramp(this.beds.get(this.bed)!.gain, 1, AUDIO.bossFade);
+    src.stop(ctx.currentTime + AUDIO.bossFade); this.bossSrc = null;
   }
 
   /** Crossfade to the next music bed. Both beds loop from unlock, so the swap is gain only. */
   private swapBed(): void {
     const ctx = this.ctx; if (!ctx) return;
-    const now = ctx.currentTime, next = nextBed(this.bed);
-    for (const [b, g] of this.beds) {
-      const p = g.gain; p.cancelScheduledValues(now); p.setValueAtTime(p.value, now);
-      p.linearRampToValueAtTime(b === next ? 1 : 0, now + AUDIO.crossfade);
-    }
+    const next = nextBed(this.bed);
+    for (const [b, g] of this.beds) this.ramp(g.gain, b === next ? 1 : 0, AUDIO.crossfade);
     this.bed = next;
   }
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { AUDIO, CUES, MUSIC, cueFor, nextBed } from './audio';
+import { AUDIO, BOSS_BED, CUES, MUSIC, cueFor, nextBed } from './audio';
 
 describe('audio cue map', () => {
   it('maps kills by orc kind', () => {
@@ -28,5 +28,9 @@ describe('audio cue map', () => {
   it('ducks music below its normal level and crossfades within the 4 s ceremony', () => {
     expect(AUDIO.musicDuckGain).toBeLessThan(AUDIO.musicGain);
     expect(AUDIO.crossfade).toBeLessThanOrEqual(4);
+  });
+  it('keeps the boss track apart from the alternating beds and fades in faster than Replant', () => {
+    expect(MUSIC).not.toContain(BOSS_BED);
+    expect(AUDIO.bossFade).toBeLessThan(AUDIO.crossfade);
   });
 });
