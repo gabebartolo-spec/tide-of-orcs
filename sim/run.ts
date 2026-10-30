@@ -21,7 +21,7 @@ const arg = (k: string, d: string) => { const i = args.indexOf(`--${k}`); return
 const minutes = Number(arg('minutes', '30')), policy = arg('policy', 'greedy') as Policy, seed = Number(arg('seed', '1')), quiet = args.includes('--quiet');
 
 const s = createState(seed); const ev = new EventBus();
-const rows: string[] = []; let falls = 0, fallWave = '-', lastKills = 0;
+const rows: string[] = []; let falls = 0, fallWave = '-', lastKills = 0; const fallWaves: number[] = [], fallMins: number[] = [];
 
 /** Keep the wall: rally when it's under the threshold and we can afford it. */
 function rallyIfLow(st: SimState, bus: EventBus, at: number): void {
@@ -72,7 +72,7 @@ const total = Math.round((minutes * 60) / STEP);
 for (let i = 0; i < total; i++) {
   step(s, STEP, { aim: crowdAim(s, s.stats.radius) }, ev); // player model: aims at the thickest crowd
   if (i % 25 === 0) decide();
-  for (const e of ev.drain()) if (e.t === 'barricadeFell' && fallWave === '-') fallWave = String(e.wave);
+  for (const e of ev.drain()) if (e.t === 'barricadeFell') { if (fallWave === '-') fallWave = String(e.wave); fallWaves.push(e.wave); fallMins.push(Math.round(e.runTime / 6) / 10); }
   if (i % Math.round(60 / STEP) === 0) {
     const m = Math.round(i * STEP / 60);
     const owned = Object.values(s.run.levels).reduce((a, b) => a + (b ?? 0), 0) - 1;
@@ -82,7 +82,7 @@ for (let i = 0; i < total; i++) {
 }
 
 const header = `# Balance run · policy=${policy} seed=${seed} minutes=${minutes}\n\n| min | wave | starlight | kills/min | kills | wall | vanguard | nodes | HW | falls |\n|---|---|---|---|---|---|---|---|---|---|\n`;
-const summary = `\nFirst fall at wave ${fallWave}. Replants: ${falls}. Heartwood: ${s.meta.heartwood}. Best wave: ${s.meta.bestWave}.\n`;
+const summary = `\nFirst fall at wave ${fallWave}. Replants: ${falls}. Heartwood: ${s.meta.heartwood}. Best wave: ${s.meta.bestWave}.\nFalls (wave@run minutes): ${fallWaves.map((w, i) => `${w}@${fallMins[i]}`).join(' ')}\n`;
 const report = header + rows.join('\n') + '\n' + summary;
 console.log(report);
 if (!quiet) {

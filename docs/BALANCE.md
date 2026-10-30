@@ -84,10 +84,10 @@ cap = 2 + ranks        mend = 0.03 × mend × maxhp per second
 |---|---|---|
 | First purchase | ≤ 30 s | met |
 | Muster affordable | ≤ 2 min | met |
-| First barricade fall, first run | wave 12–18, minute 5–8 | met: wave 12–18, minute 5–7 on seeds 1–10 (TB-025) |
-| A spearman earns its keep | buys at least as many seconds of wall life per starlight as a Seasoned Timber rank (median over waves 3/6/10/14, seeds 1–3) | met: median ratio 1.5, 10 of 12 cases ≥ 1 (TB-025) |
-| Second run falls later | at a wave ≥ 1.5× run 1's fall wave | met: run 2 falls at wave 25–29 vs 12–18 (P-001 v1.2) |
-| Bare archer, no purchases, holds | ≥ 5 waves | met (falls wave 9) |
+| First barricade fall, first run | wave 4–6, minute 1.5–2.5 (TB-080 `wallMult` 10: early runs are short on purpose; director, 2026-10-31) | met: wave 5, minute 1.6–1.8 (greedy and dps, seeds 1–3, TB-054) |
+| A spearman earns its keep | buys at least as many seconds of wall life per starlight as a Seasoned Timber rank (median over waves 3/6/10/14, seeds 1–3) | re-measure: last met before TB-080 (median ratio 1.5, TB-025) |
+| Breakout | a run passes wave 15 within 15 min of total play | met: greedy after 4–6 short runs (6–12 min), that run falls at wave 24–26 (TB-054) |
+| Bare archer, no purchases, holds | ≥ 4 waves | met (falls wave 4–5) |
 | Tree fully bought in a run | never | met |
 
 ## Heartwood tree (M3, built TB-053)
@@ -106,7 +106,7 @@ Lives in `sim/run.ts`. Runs `src/sim/` headless at 50 steps/s and decides every 
 - **greedy**: rally a spearman (bladedancer if owned) when the wall is under 50%; otherwise buy the cheapest affordable node.
 - **wall**: like greedy but rallies at 90% and weights Barricade/Vanguard nodes at half cost.
 - **nobuy**: never spends. Measures the bare archer.
-- **dps** (TB-040, built): every 15 s, trial the 6 cheapest affordable nodes over a 120 s lookahead (save-like restart, empty field) and buy the best Δ earned ÷ cost. 30 min, seeds 1–3: Heartwood 26/55/53 vs greedy 22/23/27; first fall wave 26/35/35 vs 24/25/26.
+- **dps** (TB-040, built): every 15 s, trial the 6 cheapest affordable nodes over a 120 s lookahead (save-like restart, empty field) and buy the best Δ earned ÷ cost. 30 min, seeds 1–3: Heartwood 26/55/53 vs greedy 22/23/27; last fall wave 26/35/35 vs 24/25/26 (pre-TB-054 report; see TB-054 for every fall).
 
 Report columns per minute: wave, starlight, kills/min, kills, wall %, vanguard count, nodes owned, HW, falls. Summary line gives first fall wave, replants, Heartwood, best wave. Writes `sim/out/<policy>-<date>.md` unless `--quiet`. CI runs 30 minutes of greedy as a smoke test.
 
@@ -251,7 +251,7 @@ Proposed rewording for the run 2 row: "Run 2 falls at a wave ≥ 1.5× run 1's f
 ### TB-079 lob: pacing check (open)
 Greedy sim, player model aims at the thickest crowd every step (`crowdAim`), 30 min, seeds 1–3: run 1 falls at minute 8 (seeds 2, 3) to 21 (seed 1); run 2 reaches wave 35 on all three. Targets were first fall 12–18, run 2 ≥ 1.5×. The model aims perfectly, so a human will land fewer orcs per circle. `LOB.dmgMult` 3 is the tuning lever; leave it until play-testing.
 
-### TB-054 · Balance pass #1 (2026-10-31, open: needs a director decision)
+### TB-054 · Balance pass #1 (2026-10-31, closed: director kept `wallMult` 10 and chose new pacing targets, now in §Pacing targets)
 The sim summary used to print the *last* fall as "First fall"; fixed in `sim/run.ts`. The 30-min "first fall 26/35/35" figures under §Simulator were last falls.
 
 With main as it is (8791ac2), every run 1 falls in under 2 minutes:
@@ -279,4 +279,4 @@ Options:
 2. **Keep 10 and rewrite the targets**: first fall about wave 5, minute 2. This matches TB-080's intent.
 3. **wallMult 2**: first fall 18–19, at the top edge of the target.
 
-Neither `## Current` nor code has changed. Run 2 and the dps comparison need re-measuring after the choice.
+Decision: keep 10. Measured falls over 40 min, seeds 1–3 (wave@run minutes): greedy 5@1.6 … 24–26@9–10, 35–36@14; dps 5@1.6 … 20–26@8–10, 35@14; nobuy 4–5@1.5–1.9 every run. Over 40 min dps no longer beats greedy (Heartwood 52–66 vs 60–68).
