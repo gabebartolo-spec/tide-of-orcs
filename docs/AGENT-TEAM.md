@@ -41,7 +41,7 @@ Render and UI agents build against these from M0 using a stub state (`sim/fixtur
 
 ## Suggested prompts
 **Balance agent, M1 kickoff (first job after M0)**
-> You are the `balance` agent. Read CLAUDE.md and docs/BALANCE.md. Resolve P-001: test each candidate in `## Proposed` one at a time with `npm run balance --policy greedy --minutes 25 --seed N` for seeds 1–3, record first-fall wave and second-run fall wave, and write the comparison table under P-001. Recommend one change. Do not edit `## Current`.
+> You are the `balance` agent. Read CLAUDE.md and docs/BALANCE.md. Resolve P-001: test each candidate in `## Proposed` one at a time with `npm run balance -- --policy greedy --minutes 25 --seed N --quiet` for seeds 1–3, record first-fall wave and second-run fall wave, and write the comparison table under P-001. Recommend one change. Do not edit `## Current`.
 
 **Render agent, M1**
 > You are the `render` agent. Read CLAUDE.md, docs/ARCHITECTURE.md, docs/ART-STYLE.md. Claim TB-021 (tree pan/zoom) in docs/BACKLOG.md: drag to pan, wheel/pinch to zoom, hit-test in logical space, camera ease to the selected node. Keep render/tree.ts free of sim mutation. Open docs/prototype.html for the intended look.
