@@ -40,11 +40,14 @@ Render and UI agents build against these from M0 using a stub state (`sim/fixtur
 - When blocked for more than ~15 minutes, stop and write what you tried in the backlog row.
 
 ## Suggested prompts
-**Sim agent, M1 kickoff**
-> You are the `sim` agent. Read CLAUDE.md, docs/ARCHITECTURE.md, docs/BALANCE.md, docs/SKILL-TREE.md. Claim TB-011 through TB-016 in docs/BACKLOG.md. Implement in order, one branch per row, tests beside code, formulas only from data/balance.ts. Run `npm run balance` after TB-016 and paste the report in the PR.
+**Balance agent, M1 kickoff (first job after M0)**
+> You are the `balance` agent. Read CLAUDE.md and docs/BALANCE.md. Resolve P-001: test each candidate in `## Proposed` one at a time with `npm run balance --policy greedy --minutes 25 --seed N` for seeds 1–3, record first-fall wave and second-run fall wave, and write the comparison table under P-001. Recommend one change. Do not edit `## Current`.
 
-**Render agent, M1 kickoff**
-> You are the `render` agent. Read CLAUDE.md, docs/ARCHITECTURE.md, docs/ART-STYLE.md. Build render/field.ts and sprites.ts against sim/fixtures/midgame.ts. Palette via palette.ts only. Claim TB-018, TB-019. Open docs/prototype.html for the intended look; don't copy its code.
+**Render agent, M1**
+> You are the `render` agent. Read CLAUDE.md, docs/ARCHITECTURE.md, docs/ART-STYLE.md. Claim TB-021 (tree pan/zoom) in docs/BACKLOG.md: drag to pan, wheel/pinch to zoom, hit-test in logical space, camera ease to the selected node. Keep render/tree.ts free of sim mutation. Open docs/prototype.html for the intended look.
+
+**Save agent, M1**
+> You are the `save` agent. Claim TB-028: write migration 1→2 that drops deprecated River node ids from `run.levels`, add a v1 fixture with those ids under `test/fixtures/`, and bump CURRENT_VERSION. Then TB-023: credit offline starlight on `visibilitychange` as well as on load.
 
 **Balance agent, M3**
-> You are the `balance` agent. Run greedy, dps and river policies for 60 sim-minutes each. Compare against BALANCE.md pacing targets. Write findings and proposed constants under `## Proposed` with report links. Do not edit `## Current`.
+> You are the `balance` agent. Run greedy, wall, nobuy and dps policies for 60 sim-minutes each. Compare against BALANCE.md pacing targets. Write findings and proposed constants under `## Proposed` with report links. Do not edit `## Current`.
