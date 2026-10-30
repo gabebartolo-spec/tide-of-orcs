@@ -88,6 +88,6 @@ interface Stats {
 - **Companions → Owl** (after Warden): marks a brute; marked orcs take +50% damage.
 - **Barricade → Gatehouse** (after Deep Roots): the wall gains a second segment with its own health; the run ends only when both fall.
 - **Vanguard → Standard Bearer** (after Bladedancer): a banner unit that doesn't fight but gives vanguard in its lane +25% damage and mend.
-- **Grove → Lantern** (after Roots): doubles the active-tap bonus.
+- **Grove → Lantern** (after Roots): aimed volleys deal +25% while the reticle rests on an orc for more than a second (rewards steady aim).
 
 Add to the table only when a BALANCE.md sim run shows where they land in the purchase order.

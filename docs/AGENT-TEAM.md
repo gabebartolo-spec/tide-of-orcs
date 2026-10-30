@@ -19,7 +19,7 @@ One agent per role per session. `lead` is optional for small sessions; then Gabe
 These are frozen after M0 unless lead approves:
 - `SimState` and `Stats` shapes (ARCHITECTURE.md).
 - `SimEvent` union in `sim/events.ts`.
-- `GameController` methods: `buy(id)`, `replant()`, `tap(x,y)`, `save()`, `wipe()`, `exportSave()`, `importSave(str)`.
+- `GameController` methods: `buy(id)`, `rally(type)`, `replant()`, `setAim(x,y)`, `clearAim()`, `save()`, `wipe()`, `exportSave()`, `importSave(str)`.
 - Node ids in SKILL-TREE.md.
 
 Render and UI agents build against these from M0 using a stub state (`sim/fixtures/midgame.ts`: wave 18, wolf+ranger+knives owned, 60 orcs). Sim agents build the real thing. Integration is a lead task at the end of each milestone.
