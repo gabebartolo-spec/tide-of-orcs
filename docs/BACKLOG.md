@@ -33,7 +33,7 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-022 | Detail card, buy button, toasts, HUD numbers, `format.ts` | ui | 020 | claude | done 4860f5b |
 | TB-026 | Rally bar: Spearman/Bladedancer buttons with cost, full/unaffordable states | ui | 016 | claude | done 4860f5b |
 | TB-027 | Fallen overlay: summary, Heartwood, Replant button; forced replant flow | ui | 013 | claude | done 4860f5b |
-| TB-028 | Save migration: drop deprecated node ids (River `tide`,`current`,`flood`,`silt`; `roots`) from v1 saves | save | 008 | | todo |
+| TB-028 | Save migration: drop deprecated node ids (River `tide`,`current`,`flood`,`silt`; `roots`) from v1 saves | save | 008 | claude | done ffe9c82 |
 | TB-023 | Offline award: removed by director 2026-10-30, no offline progress | sim/ui | 008 | claude | won't do |
 | TB-024 | Autosave 20 s, beforeunload/pagehide | save | 008 | claude | done 4860f5b |
 | TB-025 | First-run flow check against BALANCE.md pacing targets; resolve P-001 | balance | 009,016 | gabe | todo |
