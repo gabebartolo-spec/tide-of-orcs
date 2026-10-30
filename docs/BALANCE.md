@@ -101,7 +101,7 @@ Status measured 31 Oct 2026 at 8791ac2, seed 1, 25 min, player model `crowdAim` 
 | First purchase | ≤ 30 s | met: 16 s (greedy) |
 | Muster affordable | ≤ 2 min | met: 50 starlight earned by 56 s (greedy never buys it in run 1) |
 | First barricade fall, first run | wave 4–6, minute 1.5–2.5 (TB-080 `wallMult` 10: early runs are short on purpose; director, 2026-10-31) | met: wave 5, minute 1.6–1.8 (greedy and dps, seeds 1–3, TB-054) |
-| A spearman earns its keep | buys at least as many seconds of wall life per starlight as a Seasoned Timber rank (median over waves 3/6/10/14, seeds 1–3) | re-measure: last met before TB-080 (median ratio 1.5, TB-025) |
+| A spearman earns its keep | buys at least as many seconds of wall life per starlight as a Seasoned Timber rank (median over waves 3/6/10/14, seeds 1–3) | met, barely: median ratio 1.06, 7 of 12 cases ≥ 1 at `wallMult` 10 (`sim/spearman.ts`, TB-086); was 1.5 before TB-080 |
 | Breakout | a run passes wave 15 within 15 min of total play | met: greedy after 4–6 short runs (6–12 min), that run falls at wave 24–26 (TB-054) |
 | Bare archer, no purchases, holds | ≥ 4 waves | met (falls wave 4–5) |
 | Tree fully bought in a run | never | met: 117 of 156 buyable ranks at most (greedy run 5) |
