@@ -250,3 +250,33 @@ Proposed rewording for the run 2 row: "Run 2 falls at a wave ≥ 1.5× run 1's f
 
 ### TB-079 lob: pacing check (open)
 Greedy sim, player model aims at the thickest crowd every step (`crowdAim`), 30 min, seeds 1–3: run 1 falls at minute 8 (seeds 2, 3) to 21 (seed 1); run 2 reaches wave 35 on all three. Targets were first fall 12–18, run 2 ≥ 1.5×. The model aims perfectly, so a human will land fewer orcs per circle. `LOB.dmgMult` 3 is the tuning lever; leave it until play-testing.
+
+### TB-054 · Balance pass #1 (2026-10-31, open: needs a director decision)
+The sim summary used to print the *last* fall as "First fall"; fixed in `sim/run.ts`. The 30-min "first fall 26/35/35" figures under §Simulator were last falls.
+
+With main as it is (8791ac2), every run 1 falls in under 2 minutes:
+
+| Policy | Seeds | First fall wave | Target |
+|---|---|---|---|
+| greedy | 1–3 | 5, 5, 5 | 12–18, minute 5–8 |
+| dps | 1–10 | wave 4–6, all by minute 2 | 12–18 |
+| nobuy | 1–3 | 4, 4, 4 | ≥ 5 |
+
+Over 40 min, dps doesn't beat greedy any more (Heartwood 52–66 vs 60–68): the early falls hand both the same short runs.
+
+Bisect (greedy, seed 1): TB-079 (16e3060) is at no fall through wave 15. TB-080 (4ed98fb) is at wave 5. The cause is `ORC.wallMult: 10`, set on purpose in TB-080 so "a bare run falls at wave 3–4". That contradicts the bare-archer (≥ 5) and first-fall (12–18) targets. Sweep (greedy, seeds 1–3, first fall; nobuy seed 1):
+
+| wallMult | greedy first fall | nobuy |
+|---|---|---|
+| 10 (now) | 5, 5, 5 | 4 |
+| 6 | 6, 5, 5 | 5 |
+| 4 | 8, 7, 8 | 6 |
+| 3 | 18, 10, 18 | 7 |
+| 2 | 19, 18, 18 | 9 |
+
+Options:
+1. **wallMult 3**: first fall 10–18 and bare archer 7. Closest to the targets, with spread on seed 2.
+2. **Keep 10 and rewrite the targets**: first fall about wave 5, minute 2. This matches TB-080's intent.
+3. **wallMult 2**: first fall 18–19, at the top edge of the target.
+
+Neither `## Current` nor code has changed. Run 2 and the dps comparison need re-measuring after the choice.

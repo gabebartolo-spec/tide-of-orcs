@@ -72,7 +72,7 @@ const total = Math.round((minutes * 60) / STEP);
 for (let i = 0; i < total; i++) {
   step(s, STEP, { aim: crowdAim(s, s.stats.radius) }, ev); // player model: aims at the thickest crowd
   if (i % 25 === 0) decide();
-  for (const e of ev.drain()) if (e.t === 'barricadeFell') fallWave = String(e.wave);
+  for (const e of ev.drain()) if (e.t === 'barricadeFell' && fallWave === '-') fallWave = String(e.wave);
   if (i % Math.round(60 / STEP) === 0) {
     const m = Math.round(i * STEP / 60);
     const owned = Object.values(s.run.levels).reduce((a, b) => a + (b ?? 0), 0) - 1;
