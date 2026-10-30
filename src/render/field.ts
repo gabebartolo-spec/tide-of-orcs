@@ -3,7 +3,7 @@ import { SimEvent } from '../sim/events';
 import { Orc, SimState, Vanguard } from '../sim/state';
 import { barFrac } from '../sim/barricade';
 import { P } from './palette';
-import { Particles } from './particles';
+import { FLAME, Particles } from './particles';
 import { fmt } from '../ui/format';
 
 const W = FIELD.w, H = FIELD.h, BAR_X = FIELD.barX, BAR_W = FIELD.barW, ELF_X = FIELD.elfX;
@@ -84,7 +84,7 @@ export class FieldRenderer {
     if (s.stats.wolf) { const w = s.wolf; g.save(); g.translate(w.x, w.y); g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 8, 12, 4, 0, 0, 6.28); g.fill(); g.fillStyle = P.wolf; g.beginPath(); g.ellipse(0, 0, 13, 7, 0, 0, 6.28); g.fill(); g.beginPath(); g.arc(11, -4, 5, 0, 6.28); g.fill(); g.restore(); }
 
     const vans: Vanguard[] = []; s.vans.forEach((v) => vans.push(v)); vans.sort((a, b) => a.y - b.y).forEach((v) => this.van(v));
-    const orcs: Orc[] = []; s.orcs.forEach((o) => { if (!o.dead) orcs.push(o); }); orcs.sort((a, b) => a.y - b.y).forEach((o) => this.orc(o));
+    const orcs: Orc[] = []; s.orcs.forEach((o) => { if (!o.dead) orcs.push(o); }); orcs.sort((a, b) => a.y - b.y).forEach((o) => { this.orc(o); if (o.burn > 0 && !this.reducedMotion && Math.random() < FLAME.rate * dt) this.fx.flame(o.x, o.y, P.amber); });
 
     s.shots.forEach((a) => { const l = a.kind === 'bolt' ? 22 : a.kind === 'knife' ? 8 : 14; const n = Math.hypot(a.vx, a.vy); g.strokeStyle = a.kind === 'bolt' ? P.bark : a.kind === 'knife' ? P.knife : P.cream; g.lineWidth = a.kind === 'bolt' ? 3 : 1.5; g.beginPath(); g.moveTo(a.x, a.y); g.lineTo(a.x - (a.vx / n) * l, a.y - (a.vy / n) * l); g.stroke(); });
     for (const st of this.storms) { g.globalAlpha = st.life / 0.35; g.strokeStyle = P.lilac; g.lineWidth = 2; g.beginPath(); st.pts.forEach((p, i) => (i ? g.lineTo(p[0] + (Math.random() - 0.5) * 6, p[1] + (Math.random() - 0.5) * 6) : g.moveTo(p[0], p[1]))); g.stroke(); g.globalAlpha = 1; }

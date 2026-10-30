@@ -1,5 +1,8 @@
 /** Render-side particles and floating text, fed by sim events. Never touches sim state. */
 interface Part { x: number; y: number; vx: number; vy: number; life: number; c: string; r: number }
+/** Flames off a burning orc, per the prototype: ~15 sparks/s rising 40 px/s, 0.4 s life. */
+export const FLAME = { rate: 15, rise: 40, drift: 20, life: 0.4, size: 2, lift: 6 } as const;
+
 interface Txt { x: number; y: number; s: string; c: string; life: number }
 
 export class Particles {
@@ -11,6 +14,11 @@ export class Particles {
       const a = Math.random() * 6.28, v = sp * (0.3 + Math.random());
       this.parts.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: 0.5 + Math.random() * 0.4, c, r: 1.5 + Math.random() * 2 });
     }
+  }
+  /** One rising spark; call at FLAME.rate per second per burning orc. */
+  flame(x: number, y: number, c: string): void {
+    if (this.parts.length >= 800) return;
+    this.parts.push({ x, y: y - FLAME.lift, vx: (Math.random() - 0.5) * FLAME.drift, vy: -FLAME.rise, life: FLAME.life, c, r: FLAME.size });
   }
   text(x: number, y: number, s: string, c: string): void { if (this.texts.length < 120) this.texts.push({ x, y, s, c, life: 0.9 }); }
 
