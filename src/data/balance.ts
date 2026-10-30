@@ -39,6 +39,7 @@ export const SOURCES = {
 
 /** Provoke nodes: tougher orcs for more starlight, per rank. */
 export const PROVOKE = { drumsHp: 1.3, drumsLoot: 1.4, bannersAtk: 1.3, bannersLoot: 1.25 } as const;
+/** Per-rank multipliers and flat effects of tree nodes (SKILL-TREE.md effect column). */export const NODE_FX = {  sharpDmg: 1.25, moonDmg: 1.6, drawRate: 1.15, critPerRank: 0.08, gleanLoot: 1.15, hordeSpawn: 1.2, kinship: 1.2,  fangsDmg: 1.4, knifeRate: 1.2, knifeDmg: 1.35, boltDmg: 1.5,} as const;
 
 export const PRESTIGE = { voluntaryWave: 12, heartPerHW: 0.12, waveOffset: 4, waveFactor: 0.75, killsPerHW: 400 } as const;
 

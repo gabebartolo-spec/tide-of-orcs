@@ -10,5 +10,7 @@ export const P = {
   treantTrunk: '#4e5e3f', treantLeaf: '#5f7d53', treantLeaf2: '#6f8f60', sage: '#8fa98a', grove: '#9fc48f',
   spear: '#8fb7c9', blade: '#cdbdea',
   aimLine: 'rgba(239,230,210,.25)',
+  wallBar: '#c9a06a', nodeOwned: '#2b3448', nodeLabelLocked: '#6b7383',
+  wallShade: 'rgba(20,26,36,.3)', burnGlow: 'rgba(226,168,91,.5)',
   shadow: 'rgba(20,26,36,.25)', dim: 'rgba(27,33,48,.6)', dim45: 'rgba(27,33,48,.45)',
 } as const;

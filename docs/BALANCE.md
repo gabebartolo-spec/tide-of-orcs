@@ -32,6 +32,7 @@ Type multipliers in GDD §4. Live orc cap 160.
 - Hawk: 2.5× dmg × kin, 4 s, 60 px radius. Treant: 3× dmg × kin, 3 s, 160 px from the wall.
 - Ballista: 40 × 1.5^bolt × kin every 4 s, infinite pierce. Knives: 5 × 1.35^nimble × kin every 1.4 s ÷ 1.2^nimble.
 - Aimed volleys: same damage as auto volleys; Moonbow homing radius around the reticle 70 px. (A tunable `aimMult` can be introduced here if testing shows aiming needs a reward beyond target choice.)
+- Node multipliers (`NODE_FX` in `src/data/balance.ts`): Sharpen ×1.25^r dmg, Moonbow ×1.6 dmg, Quick Draw ×1.15^r fire rate, Keen Eye +0.08 crit per rank, Gleaning ×1.15^r starlight, Call the Horde ×1.2^r spawns, Kinship ×1.2^r companion and vanguard dmg, Fangs ×1.4^r wolf dmg.
 
 ### Barricade
 ```

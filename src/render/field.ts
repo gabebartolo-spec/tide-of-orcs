@@ -64,7 +64,7 @@ export class FieldRenderer {
 
     // barricade
     const frac = barFrac(s);
-    g.fillStyle = 'rgba(20,26,36,.3)'; g.fillRect(BAR_X + 4, 0, BAR_W + 4, H);
+    g.fillStyle = P.wallShade; g.fillRect(BAR_X + 4, 0, BAR_W + 4, H);
     for (let y = 0; y < H; y += 18) {
       const alive = y / H < frac || Math.random() < frac;
       g.fillStyle = alive ? (y % 36 ? P.timber : P.timberDark) : P.timberSplinter;
@@ -87,7 +87,7 @@ export class FieldRenderer {
     const orcs: Orc[] = []; s.orcs.forEach((o) => { if (!o.dead) orcs.push(o); }); orcs.sort((a, b) => a.y - b.y).forEach((o) => this.orc(o));
 
     s.shots.forEach((a) => { const l = a.kind === 'bolt' ? 22 : a.kind === 'knife' ? 8 : 14; const n = Math.hypot(a.vx, a.vy); g.strokeStyle = a.kind === 'bolt' ? P.bark : a.kind === 'knife' ? P.knife : P.cream; g.lineWidth = a.kind === 'bolt' ? 3 : 1.5; g.beginPath(); g.moveTo(a.x, a.y); g.lineTo(a.x - (a.vx / n) * l, a.y - (a.vy / n) * l); g.stroke(); });
-    for (const st of this.storms) { g.strokeStyle = `rgba(205,189,234,${st.life / 0.35})`; g.lineWidth = 2; g.beginPath(); st.pts.forEach((p, i) => (i ? g.lineTo(p[0] + (Math.random() - 0.5) * 6, p[1] + (Math.random() - 0.5) * 6) : g.moveTo(p[0], p[1]))); g.stroke(); }
+    for (const st of this.storms) { g.globalAlpha = st.life / 0.35; g.strokeStyle = P.lilac; g.lineWidth = 2; g.beginPath(); st.pts.forEach((p, i) => (i ? g.lineTo(p[0] + (Math.random() - 0.5) * 6, p[1] + (Math.random() - 0.5) * 6) : g.moveTo(p[0], p[1]))); g.stroke(); g.globalAlpha = 1; }
     if (s.stats.hawk) { const h = s.hawk; g.save(); g.translate(h.x, h.y); g.fillStyle = P.bark; g.beginPath(); g.moveTo(-12, 0); g.lineTo(0, -3); g.lineTo(12, 0); g.lineTo(0, 3); g.closePath(); g.fill(); g.restore(); }
 
     this.fx.draw(g);
@@ -95,7 +95,7 @@ export class FieldRenderer {
     // HUD overlays (no shake)
     g.setTransform(sx, 0, 0, sy, 0, 0);
     g.fillStyle = P.dim; g.fillRect(12, 10, 150, 10);
-    g.fillStyle = frac > 0.5 ? '#c9a06a' : frac > 0.25 ? P.amber : P.rose; g.fillRect(12, 10, 150 * frac, 10);
+    g.fillStyle = frac > 0.5 ? P.wallBar : frac > 0.25 ? P.amber : P.rose; g.fillRect(12, 10, 150 * frac, 10);
     g.fillStyle = P.cream; g.font = '10px "Atkinson Hyperlegible", sans-serif'; g.textAlign = 'left';
     g.fillText(`BARRICADE ${fmt(Math.max(0, s.run.barHp))} / ${fmt(s.stats.barMax)}`, 12, 32);
     if (s.stats.muster) g.fillText(`VANGUARD ${s.vans.count} / ${s.stats.vanCap}`, 12, 46);
@@ -118,7 +118,7 @@ export class FieldRenderer {
     g.fillStyle = P.tusk; g.fillRect(-o.r * 0.55, bob - o.r * 0.15, o.r * 0.32, o.r * 0.22); g.fillRect(o.r * 0.2, bob - o.r * 0.15, o.r * 0.32, o.r * 0.22);
     g.fillStyle = P.cream; g.fillRect(-o.r * 0.42, bob + o.r * 0.3, o.r * 0.14, o.r * 0.3); g.fillRect(o.r * 0.28, bob + o.r * 0.3, o.r * 0.14, o.r * 0.3);
     if (o.kind === 'boss') { g.fillStyle = P.amber; g.beginPath(); g.moveTo(-o.r * 0.8, -o.r * 0.7); g.lineTo(-o.r * 0.4, -o.r * 1.4); g.lineTo(0, -o.r * 0.8); g.lineTo(o.r * 0.4, -o.r * 1.4); g.lineTo(o.r * 0.8, -o.r * 0.7); g.closePath(); g.fill(); }
-    if (o.burn > 0) { g.fillStyle = 'rgba(226,168,91,.5)'; g.beginPath(); g.arc(0, bob - 4, o.r * 0.7, 0, 6.28); g.fill(); }
+    if (o.burn > 0) { g.fillStyle = P.burnGlow; g.beginPath(); g.arc(0, bob - 4, o.r * 0.7, 0, 6.28); g.fill(); }
     if (o.hp < o.maxhp) { g.fillStyle = P.dim; g.fillRect(-o.r, -o.r - 8, o.r * 2, 3); g.fillStyle = P.rose; g.fillRect(-o.r, -o.r - 8, o.r * 2 * Math.max(0, o.hp / o.maxhp), 3); }
     g.restore();
   }

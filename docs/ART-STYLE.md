@@ -26,6 +26,9 @@ Status: **Current** (v1.1). References: Thronefall (soft pastoral low-poly, crea
 | moss | #7f8f52 | Grunt skin; brute #6c7a44; boss #9a7a46; tusks/eyes #39412a |
 | wolf | #9aa3ad | Wolf |
 | bark | #5a4634 | Hawk, ballista, bolts |
+| wallBar | #c9a06a | Wall bar above 50%, Barricade branch |
+| nodeOwned, nodeLabelLocked | #2b3448, #6b7383 | Tree: bought-not-maxed node fill, locked node label |
+| wallShade, burnGlow | ink 30%, amber 50% | Barricade shadow strip, burning orc glow |
 
 Branch colours: Bow = lilac, Companions = amber, Armoury = rose, Grove = #9fc48f, Barricade = #c9a06a, Vanguard = #8fb7c9.
 
