@@ -51,36 +51,36 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-037 | Ballista + bolt render | sim/render | 015 | claude | done 4860f5b (ported in M0) |
 | TB-038 | Moonbow homing | sim | 014 | claude | done 4860f5b (ported in M0) |
 | TB-039 | Kinship/Bounty/Horde wiring + tests | sim | 005 | claude | done a2e391d |
-| TB-040 | Sim policy `dps` (lookahead) | sim | 009 | | todo |
+| TB-040 | Sim policy `dps` (lookahead) | sim | 009 | claude | done b96cd93 |
 
 ## M3 — Prestige
 | Id | Task | Area | Depends | Owner | Status |
 |---|---|---|---|---|---|
 | TB-050 | `prestige.ts` gain + forced/voluntary replant + tests | sim | 005 | claude | done 4860f5b |
-| TB-051 | Replant ceremony (burn, seed, dawn) for both forced and voluntary replant; reduced-motion path | ui/render | 050 | | todo |
+| TB-051 | Replant ceremony (burn, seed, dawn) for both forced and voluntary replant; reduced-motion path | ui/render | 050 | claude | done 5fcc939 |
 | TB-052 | Run summary screen | ui | 050 | claude | done 4bd58c9 |
-| TB-053 | Heartwood tree data + stats + UI | data/sim/ui | 050 | | todo |
+| TB-053 | Heartwood tree data + stats + UI | data/sim/ui | 050 | claude | done dd09286 |
 | TB-054 | Balance pass #1: hit BALANCE.md pacing targets; write Proposed | balance | 040,053 | | todo |
-| TB-055 | Save schema v3 (hwLevels) + migration fixture test | save | 053,028 | | todo |
+| TB-055 | Save schema v6 (meta.hwLevels) + migration fixture test | save | 053,028 | claude | done dd09286 |
 
 ## M4 — Presentation
 | Id | Task | Area | Depends | Owner | Status |
 |---|---|---|---|---|---|
-| TB-060 | Sprite-sheet loader with atlas JSON and vector fallback; draw actors from sheets when present | render | M2 | | todo |
+| TB-060 | Sprite-sheet loader with atlas JSON and vector fallback; draw actors from sheets when present | render | M2 | claude | done 47e4010 |
 | TB-068 | Tripo models + Cascadeur loops → sheets for orcs, elf, vanguard, companions (ART-STYLE §Asset pipeline) | art | 060 | gabe | todo |
 | TB-069 | ElevenLabs SFX set (14) + ambient bed, exported per ART-STYLE | audio | — | gabe | todo |
-| TB-061 | Parallax hills, day/night tint, bank lamplight | render | 018 | | todo |
+| TB-061 | Parallax hills, day/night tint, bank lamplight | render | 018 | claude | done 71d05f4 |
 | TB-062 | Audio engine: ambient loop, SFX map from events, ducking | audio | 019,069 | claude | done 09b60cf |
 | TB-063 | Music beds ×2, crossfade on Replant | audio | 062 | | todo |
 | TB-064 | Mobile layout, touch targets, pinch zoom on tree. M1 check (375×812): Learn and Replant buttons 33 px, tabs 39 px, Save now/Wipe 29 px (target 44); hint text says "move your pointer" (touch needs its own copy); field is 343×183 px | ui | 021 | claude | done ddc732d |
 | TB-065 | Settings tab: volume, reduced motion override, number format, export/import | ui | 008 | claude | done 0ed4259 |
-| TB-066 | Tree layout polish: curved branch lines, camera ease to selected | render | 021 | | todo |
+| TB-066 | Tree layout polish: curved branch lines, camera ease to selected | render | 021 | claude | done e4d999a |
 | TB-067 | Strings table audit; all copy via `strings.ts` | ui | — | claude | done d26c4c5 |
 
 ## M5 — Ship
 | Id | Task | Area | Depends | Owner | Status |
 |---|---|---|---|---|---|
-| TB-070 | Local telemetry export (JSON of run stats) for testers | app | 052 | | todo |
+| TB-070 | Local telemetry export (JSON of run stats) for testers | app | 052 | claude | done f31ce6b |
 | TB-071 | Balance pass #2 from tester data | balance | 070 | gabe | todo |
 | TB-072 | Perf verification on phone; profile and fix | perf | M4 | | todo |
 | TB-073 | Itch.io page copy, screenshots, HTML5 zip pipeline | release | 072 | gabe | todo |

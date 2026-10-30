@@ -54,7 +54,7 @@ Goal: a correct engine with the whole prototype ported.
 - Headless `sim/` runner that plays N minutes with a scripted buy policy and prints a report.
 **Done when:** `npm run balance` prints wave-reached and starlight curves for a 30-minute auto-run. *(Met. M0 also absorbed most of M1 because the port was mechanical.)*
 
-### M1 — Vertical slice (weeks 2–3) · **in progress**
+### M1 — Vertical slice (weeks 2–3) · **done** (TB-078 9bfcc0e cleared the last blocker)
 Goal: parity with the prototype, properly built.
 - ~~Remaining from the port: tree pan/zoom, River-id save migration.~~ Done (TB-021 ede6878, TB-028 ffe9c82; save schema now v2).
 - ~~Balance pass #0 (TB-025):~~ Done (P-001 resolved): first wall falls minute 5–7, wave 12–18; run 2 at wave 25–29.
@@ -68,14 +68,14 @@ Goal: parity with the prototype, properly built.
 *(Met: all ported in M0; flame particles TB-035 e221d10, Kinship/Bounty/Horde tests TB-039 a2e391d. Rule-break fixes TB-076/077 c189562. Sim `dps` policy TB-040 carried to M3.)*
 **Done when:** every node in SKILL-TREE.md is implemented and visibly does something.
 
-### M3 — Prestige (week 5) · next
+### M3 — Prestige (week 5) · **in progress** (run summary done, TB-052)
 - Replant ceremony (grove burns, seed falls) for both the forced and the voluntary path.
-- Heartwood tree (BALANCE.md §Heartwood); needs save schema v3 (TB-055).
+- Heartwood tree (BALANCE.md §Heartwood); needs save schema v6 (TB-055; saves reached v5 via TB-080, TB-081, TB-052).
 - Run summary screen (waves, slain, starlight/min, time).
 - Balance pass #1 via the simulator: first prestige at 30–45 min, second at ~35 min of a fresh run.
 **Done when:** three consecutive prestige runs each feel faster than the last.
 
-### M4 — Presentation (weeks 6–7) · audio engine done (TB-062)
+### M4 — Presentation (weeks 6–7) · in progress: audio engine (TB-062), mobile (TB-064), settings (TB-065) done
 - Final art: Tripo models → Cascadeur animation → sprite sheets for orcs, elf, vanguard, companions (ART-STYLE.md §Asset pipeline); vector draws remain the fallback. Wall weathering, parallax hills, day/night tinting.
 - Audio: ElevenLabs SFX and ambient bed, two music beds, ducking on wall fall and boss.
 - Tree layout polish: branch curves, bloom on affordable nodes, camera easing.

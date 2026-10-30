@@ -1,10 +1,11 @@
 import { NodeId } from '../data/skillTree';
+import { HW_FX, HwLevels } from '../data/heartwood';
 import { FOE_FX, OrcKind } from '../data/orcs';
 import { BARRICADE, LOB, NODE_FX, PLAYER, SOURCES, VANGUARD, heartMult } from '../data/balance';
 
 export type Levels = Partial<Record<NodeId, number>>;
 
-/** Everything systems read. Derived from levels + heartwood; never read node ids elsewhere. */
+/** Everything systems read. Derived from levels + heartwood + Heartwood tree; never read node ids elsewhere. */
 export interface Stats {
   dmg: number; fireRate: number; lobCd: number; radius: number; arrows: number; pierce: number; crit: number;
   homing: boolean; fire: boolean;
@@ -30,7 +31,7 @@ const FOE_NODES: Partial<Record<OrcKind, [NodeId | null, NodeId, NodeId]>> = {
   elite: ['elites', 'elitefury', 'eliteswarm'],
 };
 
-export function deriveStats(lv: Levels, heartwood: number): Stats {
+export function deriveStats(lv: Levels, heartwood: number, hw: HwLevels = {}): Stats {
   const L = (id: NodeId): number => lv[id] ?? 0;
   const hm = heartMult(heartwood);
   const kin = Math.pow(NODE_FX.kinship, L('bond')) * hm;
@@ -58,7 +59,7 @@ export function deriveStats(lv: Levels, heartwood: number): Stats {
     knives: L('knives') ? { rate: Math.pow(NODE_FX.knifeRate, L('knifespd')) / SOURCES.knives.cd, dmg: SOURCES.knives.base * Math.pow(NODE_FX.knifeDmg, L('knifespd')) * kin } : null,
     storm: L('storm') > 0,
     ballista: L('ballista') ? SOURCES.ballista.base * Math.pow(NODE_FX.boltDmg, L('bolt')) * kin : 0,
-    barMax: BARRICADE.baseHp * Math.pow(BARRICADE.timberMult, L('timber')) * hm,
+    barMax: BARRICADE.baseHp * (1 + HW_FX.timberPerRank * (hw.hw_timber ?? 0)) * Math.pow(BARRICADE.timberMult, L('timber')) * hm,
     barRegen: BARRICADE.regenPerRank * L('repair'),
     spikes: BARRICADE.spikesPerRank * L('spikes'),
     bulwark: L('bulwark') > 0,

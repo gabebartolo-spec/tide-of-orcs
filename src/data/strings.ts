@@ -36,6 +36,7 @@ export const STR = {
   setVolume: 'Volume', setMotion: 'Motion', setNumbers: 'Numbers',
   motionSystem: 'Follow system', motionFull: 'Full', motionReduced: 'Reduced',
   numShort: 'Short (1.25M)', numSci: 'Scientific (1.25e6)',
+  setTel: 'Playtest data', telHint: 'Each finished run is logged on this device only. Download the file and send it to the developer if you are testing.', telBtn: 'Download run log', telNone: 'No finished runs yet', telSaved: (n: number) => `Saved ${n} run${n === 1 ? '' : 's'}`,
   setSave: 'Save transfer', exportBtn: 'Export', importBtn: 'Import', exportHint: 'Export puts your save in the box below; copy it to keep or move it. Paste a save there and press Import to load it.',
   exported: 'Save copied', importConfirm: 'Import replaces this grove. Press again', imported: 'Save imported', importBad: 'That save could not be read',
   autosave: 'Autosaves every 20s', saveNow: 'Save now',
@@ -46,4 +47,9 @@ export const STR = {
   replantEach: (pct: number) => `Each Heartwood: <strong>+${pct}% starlight</strong> and <strong>+${pct}% damage</strong>.`,
   replantReset: 'Reset: skills, starlight, wave, vanguard and companions.',
   replantKept: 'Kept: Heartwood, total slain, best wave.',
+  hwTitle: 'Heartwood tree',
+  hwBody: (avail: number) => `Spend Heartwood on gifts that last every run. Spending never lowers your Heartwood bonus. ${avail} to spend.`,
+  hwCost: (n: number) => `${n} Heartwood`, hwRank: (l: number, m: number) => (m > 1 ? `rank ${l} / ${m}` : l ? 'learned' : ''),
+  hwBought: (name: string) => `${name} takes root`,
+  heartAvail: (avail: number, total: number) => (avail === total ? String(total) : `${avail} / ${total}`),
 } as const;

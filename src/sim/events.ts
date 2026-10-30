@@ -18,6 +18,7 @@ export type SimEvent =
   | { t: 'vanguardHit'; x: number; y: number }
   | { t: 'vanguardFell'; type: string; x: number; y: number }
   | { t: 'bought'; id: string; firstRank: boolean }
+  | { t: 'hwBought'; id: string }
   | { t: 'replant'; heartwood: number; forced: boolean };
 
 export class EventBus {

@@ -1,5 +1,5 @@
 import { BRANCH_COLOR, NODE, NODES, NodeId, TREE_VIEW } from '../data/skillTree';
-import { Camera, clampCamera, startCamera, panBy, toWorld, zoomAt } from './camera';
+import { Camera, centreOn, clampCamera, easeToward, startCamera, panBy, toWorld, zoomAt } from './camera';
 import { SimState } from '../sim/state';
 import { canBuy, rankOf, unlocked } from '../sim/tree';
 import { P } from './palette';
@@ -14,17 +14,21 @@ export class TreeRenderer {
   private pts = new Map<number, { x: number; y: number }>();
   private moved = 0;
   private dragged = false;
+  /** Where the camera is easing to after a selection; null once there or when the player pans or zooms. */
+  private target: Camera | null = null;
+  private lastDraw = 0;
 
   constructor(readonly canvas: HTMLCanvasElement) {
     this.g = canvas.getContext('2d')!;
     new ResizeObserver(() => this.resize()).observe(canvas);
     this.resize();
     canvas.addEventListener('wheel', (e) => {
-      e.preventDefault(); const [sx, sy] = this.local(e);
+      e.preventDefault(); this.target = null; const [sx, sy] = this.local(e);
       this.cam = zoomAt(this.cam, sx, sy, e.deltaY < 0 ? TREE_VIEW.wheelStep : 1 / TREE_VIEW.wheelStep, this.vw, this.vh);
     }, { passive: false });
     canvas.addEventListener('pointerdown', (e) => {
       canvas.setPointerCapture(e.pointerId); this.pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      this.target = null;
       if (this.pts.size === 1) { this.moved = 0; this.dragged = false; }
     });
     canvas.addEventListener('pointermove', (e) => this.onMove(e));
@@ -63,6 +67,16 @@ export class TreeRenderer {
     this.cam = first ? startCamera(this.vw, this.vh) : clampCamera({ ...this.cam, z: this.cam.z * k }, this.vw, this.vh);
   }
 
+  /** True while the camera is still easing, so the caller should draw every frame. */
+  get easing(): boolean { return !!this.target; }
+
+  /** Select a node and ease the camera to centre it (snaps under reduced motion). */
+  select(id: NodeId): void {
+    this.selected = id;
+    const n = NODE[id], t = centreOn(this.cam, n.x, n.y, this.vw, this.vh);
+    if (this.reducedMotion) { this.cam = t; this.target = null; } else { this.target = t; this.lastDraw = performance.now(); }
+  }
+
   /** Node under the pointer, or null. A press that turned into a drag never selects. */
   hitTest(clientX: number, clientY: number): NodeId | null {
     if (this.dragged) { this.dragged = false; return null; }
@@ -72,11 +86,16 @@ export class TreeRenderer {
   }
 
   draw(s: SimState, t: number): void {
+    if (this.target) {
+      const now = performance.now(), dt = Math.min(0.1, (now - this.lastDraw) / 1000); this.lastDraw = now;
+      this.cam = easeToward(this.cam, this.target, 1 - Math.exp(-dt * TREE_VIEW.easeRate));
+      if (Math.abs(this.cam.x - this.target.x) + Math.abs(this.cam.y - this.target.y) < 0.5) { this.cam = this.target; this.target = null; }
+    }
     const c = this.g, k = this.dpr, z = this.cam.z * k;
     c.setTransform(k, 0, 0, k, 0, 0); c.clearRect(0, 0, this.vw, this.vh);
     c.setTransform(z, 0, 0, z, -this.cam.x * z, -this.cam.y * z);
     c.lineWidth = 2;
-    for (const n of NODES) if (n.parent) { const p = NODE[n.parent]; const un = unlocked(s, n); c.strokeStyle = un ? BRANCH_COLOR[n.branch] : P.line; c.globalAlpha = un ? 0.6 : 0.5; c.beginPath(); c.moveTo(p.x, p.y); c.lineTo(n.x, n.y); c.stroke(); }
+    for (const n of NODES) if (n.parent) { const p = NODE[n.parent]; const un = unlocked(s, n); c.strokeStyle = un ? BRANCH_COLOR[n.branch] : P.line; c.globalAlpha = un ? 0.6 : 0.5; c.beginPath(); c.moveTo(p.x, p.y); c.quadraticCurveTo((p.x + n.x) / 2 - (n.y - p.y) * TREE_VIEW.bow, (p.y + n.y) / 2 + (n.x - p.x) * TREE_VIEW.bow, n.x, n.y); c.stroke(); }
     c.globalAlpha = 1;
     for (const n of NODES) {
       const lvl = rankOf(s, n.id), col = BRANCH_COLOR[n.branch], un = unlocked(s, n), maxed = lvl >= n.max, r = n.id === 'root' ? 16 : 13;

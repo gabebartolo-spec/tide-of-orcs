@@ -90,8 +90,8 @@ cap = 2 + ranks        mend = 0.03 × mend × maxhp per second
 | Bare archer, no purchases, holds | ≥ 5 waves | met (falls wave 9) |
 | Tree fully bought in a run | never | met |
 
-## Heartwood tree (M3, DRAFT)
-Spent in Heartwood, never reset. Costs in HW.
+## Heartwood tree (M3, built TB-053)
+Bought with Heartwood, never reset. Costs in HW. Spending does not lower the passive `heart` bonus: `heart` counts all Heartwood earned, and the tree spends from `available = earned − spent`. The header shows `available / earned` once anything is spent. Early Dawn's skipped boss waves are not owed (`bossDone` starts at `floor(startWave / 10)`). Standing Orders spearmen are placed free, ignoring Muster and the line cap.
 
 | id | Name | Max | Cost | Effect |
 |---|---|---|---|---|
@@ -99,14 +99,14 @@ Spent in Heartwood, never reset. Costs in HW.
 | hw_wolf | Old Friend | 1 | 3 | Start with Grey Wolf |
 | hw_timber | Stout Timber | 3 | 4, 8, 16 | Barricade base HP +25% |
 | hw_orders | Standing Orders | 2 | 5, 12 | Start each run with one Spearman (two at rank 2) |
-| hw_boss | Warlords | 1 | 15 | Warboss can appear on waves divisible by 5 |
+| ~~hw_boss~~ | ~~Warlords~~ | | | Not built: the marching Warboss was retired by boss waves (TB-081). Needs a director replacement. |
 
 ## Simulator (`npm run balance`)
 Lives in `sim/run.ts`. Runs `src/sim/` headless at 50 steps/s and decides every 0.5 s with a policy:
 - **greedy**: rally a spearman (bladedancer if owned) when the wall is under 50%; otherwise buy the cheapest affordable node.
 - **wall**: like greedy but rallies at 90% and weights Barricade/Vanguard nodes at half cost.
 - **nobuy**: never spends. Measures the bare archer.
-- **dps** (TB-040): buy the node with best Δ starlight/min ÷ cost over a 2-minute lookahead.
+- **dps** (TB-040, built): every 15 s, trial the 6 cheapest affordable nodes over a 120 s lookahead (save-like restart, empty field) and buy the best Δ earned ÷ cost. 30 min, seeds 1–3: Heartwood 26/55/53 vs greedy 22/23/27; first fall wave 26/35/35 vs 24/25/26.
 
 Report columns per minute: wave, starlight, kills/min, kills, wall %, vanguard count, nodes owned, HW, falls. Summary line gives first fall wave, replants, Heartwood, best wave. Writes `sim/out/<policy>-<date>.md` unless `--quiet`. CI runs 30 minutes of greedy as a smoke test.
 

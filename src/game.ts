@@ -10,9 +10,13 @@ import { SimState, createState, freshMeta, freshRun } from './sim/state';
 import { Inputs, step } from './sim/step';
 import { buy } from './sim/tree';
 import { summonBoss } from './sim/boss';
+import { buyHw } from './sim/heartwood';
+import { HwId } from './data/heartwood';
 import { rally } from './sim/vanguard';
 import { Save, defaultSettings, CURRENT_VERSION } from './save/schema';
 import { clearSave, exportSave, importSave, readSave, writeSave } from './save/storage';
+import { appendTelemetry, readTelemetry, runRecord, telemetryJson } from './save/telemetry';
+import { gain } from './sim/prestige';
 
 export class GameController {
   state: SimState;
@@ -40,9 +44,12 @@ export class GameController {
   clearAim(): void { this.aim = null; }
   buy(id: NodeId): boolean { return buy(this.state, this.events, id); }
   rally(type: VanType): boolean { return rally(this.state, this.events, type); }
+  buyHw(id: HwId): boolean { const ok = buyHw(this.state, this.events, id); if (ok) this.save(); return ok; }
   summonBoss(): boolean { return summonBoss(this.state, this.events); }
   canReplant(): boolean { return canReplant(this.state); }
-  replant(): number { const hw = replant(this.state, this.events); this.save(); return hw; }
+  replant(): number { const rec = runRecord(this.state, gain(this.state)); const hw = replant(this.state, this.events); appendTelemetry({ ...rec, heartwoodGained: hw, heartwoodTotal: this.state.meta.heartwood }); this.save(); return hw; }
+  /** Finished-run records as an export file (TB-070). */
+  telemetry(): { json: string; runs: number } { const runs = readTelemetry(); return { json: telemetryJson(runs), runs: runs.length }; }
 
   toSave(): Save { return { version: CURRENT_VERSION, savedAt: Date.now(), run: this.state.run, meta: this.state.meta, settings: this.settings }; }
   save(): boolean { return writeSave(this.toSave()); }

@@ -32,6 +32,13 @@ fieldCanvas.addEventListener('pointerdown', setAim);
 fieldCanvas.addEventListener('pointerleave', () => game.clearAim());
 fieldCanvas.addEventListener('pointerup', (e) => { if (e.pointerType !== 'mouse') game.clearAim(); });
 window.addEventListener('resize', () => field.resize());
+// any press or key skips the replant ceremony
+const treeWrap = document.querySelector('.treewrap') as HTMLElement;
+const skipCeremony = (): void => { if (field.ceremony.active) field.ceremony.skip(); };
+fieldCanvas.addEventListener('pointerdown', skipCeremony); addEventListener('keydown', skipCeremony);
+void field.sprites.load();
+// dev-only handle for checking render work in the browser
+if (import.meta.env.DEV) Object.assign(window, { __tide: { game, field } });
 
 // build stamp (written by the itch workflow)
 fetch('./build.json').then((r) => (r.ok ? r.json() : null)).then((b) => { if (b) document.getElementById('build')!.textContent = `${b.tag} · ${b.sha}`; }).catch(() => {});
@@ -40,11 +47,14 @@ let last = performance.now(), acc = 0, hudT = 0, saveT = 0;
 function frame(now: number): void {
   const dt = Math.min(0.25, (now - last) / 1000); last = now;
   acc += dt;
+  // the field holds still while the replant ceremony plays
+  if (field.ceremony.active) acc = 0;
   while (acc >= STEP) { game.tick(STEP); acc -= STEP; }
   const events = game.events.drain();
   field.consume(events, game.state); panel.handleEvents(events); audio.consume(events);
   if (!document.hidden) field.draw(game.state, dt, game.aim);
-  hudT += dt; if (hudT > 0.15) { hudT = 0; panel.update(); tree.draw(game.state, game.state.t); }
+  treeWrap.classList.toggle('burning', field.ceremony.burning);
+  hudT += dt; if (hudT > 0.15) { hudT = 0; panel.update(); tree.draw(game.state, game.state.t); } else if (tree.easing) tree.draw(game.state, game.state.t);
   saveT += dt; if (saveT > 20) { saveT = 0; game.save(); }
   requestAnimationFrame(frame);
 }

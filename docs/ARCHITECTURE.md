@@ -48,7 +48,7 @@ tide-of-orcs/
       style.css         the stylesheet (tokens mirror render/palette.ts)
     game.ts             GameController: the only caller into sim/ — tick, aim, buy, rally, replant, save/export/import/wipe
     save/
-      schema.ts         SaveV1 type, CURRENT_VERSION
+      schema.ts         SaveV6 type, CURRENT_VERSION, retired-id lists
       migrate.ts        migrations[v] = (old) => new
       storage.ts        localStorage with try/catch; export/import as base64 JSON
     audio/              (M4) Web Audio: ambient loop, sfx map, music ducking
@@ -79,7 +79,7 @@ interface SimState {
   run: { wave; waveT; runTime; starlight; kills; levels: Partial<Record<NodeId, number>>;
          barHp; bulwarkUsed; fallen;                       // barricade state
          spawnT; stormT; shotT: number[]; knifeT; hawkT; treantT; ballT };
-  meta: { heartwood; lifetimeKills; bestWave; prestiges };  // + hwLevels in schema v2
+  meta: { heartwood; lifetimeKills; bestWave; prestiges; hwLevels };  // hwLevels since v6
   orcs: Pool<Orc>; shots: Pool<Projectile>; vans: Pool<Vanguard>;   // object pools with free lists (SoA if the profiler asks)
   wolf: { x; y; tx; ty; biteT }; hawk: { x; y; a };
   stats: Stats;                                // recomputed on buy/prestige only (recompute() also heals new timber)
@@ -91,7 +91,8 @@ Pools expose `alloc()/free(i)` and `forEachLive(fn)`. Nothing in `sim/` holds ob
 `SimEvent` union in `sim/events.ts`: `kill`, `hit`, `wave`, `storm`, `hawkDive`, `treantStamp`, `bite`, `barricadeHit` (with damage fraction, drives shake), `barricadeRegrow`, `barricadeFell` (with the run summary), `vanguardRallied`, `vanguardHit`, `vanguardFell`, `bought`, `replant` (with `forced`). Render turns these into particles, floating text, shake and toasts; audio turns them into SFX. Sim never knows about either.
 
 ## Save
-- `SaveV2 = { version: 2, savedAt: number, run, meta, settings }`. v1 → v2 (TB-028) drops retired node ids (`RETIRED_NODE_IDS` in `save/schema.ts`) from `run.levels`; fixture in `src/save/fixtures/v1.ts`. Pools are **not** saved; a load starts with an empty field (orcs respawn within seconds; this is fine and avoids serialising 160 orcs).
+- `SaveV6 = { version: 6, savedAt: number, run, meta, settings }`. Pools are **not** saved; a load starts with an empty field (orcs respawn within seconds; this avoids serialising 160 orcs).
+- History: v1→v2 (TB-028) drops retired node ids (`RETIRED_NODE_IDS`), fixture `src/save/fixtures/v1.ts`; v2→v3 (TB-080) retires Blood Banners and splits the spawn clock per orc kind; v3→v4 (TB-081) retires the Warboss nodes for boss waves; v4→v5 (TB-052) adds `run.earned`; v5→v6 (TB-055) adds `meta.hwLevels` (empty).
 - `migrate.ts` runs `while (save.version < CURRENT) save = migrations[save.version](save)`. Every schema bump adds a migration and a test with a fixture of the previous version.
 - Export: `btoa(JSON.stringify(save))` to clipboard; import parses, migrates, validates with a small schema check, then replaces state.
 

@@ -8,6 +8,7 @@ export const P = {
   orc: '#7f8f52', brute: '#6c7a44', elite: '#4f5a3a', boss: '#9a7a46', tusk: '#39412a',
   elfCloak: '#5f6f8a', archerCloak: '#8b9a7d', wolf: '#9aa3ad', bark: '#5a4634', knife: '#d9d4c3',
   treantTrunk: '#4e5e3f', treantLeaf: '#5f7d53', treantLeaf2: '#6f8f60', sage: '#8fa98a', grove: '#9fc48f',
+  hillFar: '#5a7058', hillNear: '#4f644d', plainDusk: '#5f6f72', lamp: 'rgba(226,168,91,.2)', lampClear: 'rgba(226,168,91,0)',
   spear: '#8fb7c9', blade: '#cdbdea',
   aimLine: 'rgba(239,230,210,.25)',
   aimFill: 'rgba(239,230,210,.08)',

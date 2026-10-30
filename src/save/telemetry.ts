@@ -1,0 +1,42 @@
+/**
+ * Local telemetry for testers (TB-070): one record per finished run, kept in its own localStorage key (not part of
+ * the save schema) and exported as a JSON file from Settings. Nothing leaves the machine unless the tester sends it.
+ */
+import { SimState } from '../sim/state';
+
+export const TELEMETRY_KEY = 'tide-of-orcs-telemetry';
+/** Oldest runs drop off past this many. */
+export const TELEMETRY_CAP = 500;
+
+export interface RunRecord {
+  at: string; run: number; forced: boolean; wave: number; seconds: number; kills: number;
+  earned: number; starlightPerMin: number; heartwoodGained: number; heartwoodTotal: number;
+  ranks: number; vanguardsOnField: number; hwLevels: Record<string, number>;
+}
+
+/** Snapshot of the run that is ending; call before replant resets it. */
+export function runRecord(s: SimState, heartwoodGained: number, now = new Date()): RunRecord {
+  const r = s.run, mins = r.runTime / 60;
+  return {
+    at: now.toISOString(), run: s.meta.prestiges + 1, forced: r.fallen, wave: r.wave, seconds: Math.round(r.runTime), kills: r.kills,
+    earned: Math.round(r.earned), starlightPerMin: mins > 0 ? Math.round(r.earned / mins) : 0,
+    heartwoodGained, heartwoodTotal: s.meta.heartwood + heartwoodGained,
+    ranks: Object.values(r.levels).reduce((a, b) => a + (b ?? 0), 0), vanguardsOnField: s.vans.count, hwLevels: { ...s.meta.hwLevels },
+  };
+}
+
+type Store = Pick<Storage, 'getItem' | 'setItem'>;
+const store = (): Store | null => { try { return globalThis.localStorage ?? null; } catch { return null; } };
+
+export function readTelemetry(st: Store | null = store()): RunRecord[] {
+  try { const v: unknown = JSON.parse(st?.getItem(TELEMETRY_KEY) ?? '[]'); return Array.isArray(v) ? (v as RunRecord[]) : []; } catch { return []; }
+}
+
+export function appendTelemetry(rec: RunRecord, st: Store | null = store()): void {
+  const all = [...readTelemetry(st), rec].slice(-TELEMETRY_CAP);
+  try { st?.setItem(TELEMETRY_KEY, JSON.stringify(all)); } catch { /* storage full: drop it */ }
+}
+
+/** The export file's contents. */
+export const telemetryJson = (runs: RunRecord[], build = import.meta.env.MODE): string =>
+  JSON.stringify({ game: 'tide-of-orcs', build, exportedAt: new Date().toISOString(), runs }, null, 2);

@@ -6,9 +6,14 @@ import { P } from './palette';
 import { FLAME, Particles } from './particles';
 import { fmt } from '../ui/format';
 import { STR } from '../data/strings';
+import { Ceremony } from './ceremony';
+import { Sprites } from './sprites';
+import { SKY, dusk } from '../data/presentation';
 
 /** Seconds an impact ring lingers. */
 const IMPACT_LIFE = 0.3;
+/** Radius the elf and vanguard sprites are sized against (their vector bodies span ~12 units). */
+const ACTOR_R = 12;
 const W = FIELD.w, H = FIELD.h, BAR_X = FIELD.barX, BAR_W = FIELD.barW, ELF_X = FIELD.elfX;
 
 export class FieldRenderer {
@@ -18,6 +23,10 @@ export class FieldRenderer {
   private storms: { pts: [number, number][]; life: number }[] = [];
   private impacts: { x: number; y: number; r: number; life: number }[] = [];
   reducedMotion = false;
+  readonly ceremony = new Ceremony();
+  readonly sprites = new Sprites();
+  /** Animation clock for sprite frames. */
+  private clock = 0;
 
   constructor(private canvas: HTMLCanvasElement) {
     this.g = canvas.getContext('2d')!;
@@ -45,6 +54,7 @@ export class FieldRenderer {
         case 'barricadeRegrow': this.fx.burst(BAR_X, H / 2, P.grove, 40, 160); break;
         case 'vanguardRallied': this.fx.burst(e.x + 20, e.y, P.cream, 8, 60); break;
         case 'vanguardFell': this.fx.burst(e.x, e.y, P.spear, 14, 100); break;
+        case 'replant': this.ceremony.start(this.reducedMotion); break;
         default: break;
       }
     }
@@ -52,7 +62,7 @@ export class FieldRenderer {
 
   draw(s: SimState, dt: number, aim: { x: number; y: number } | null = null): void {
     const g = this.g;
-    this.fx.update(dt);
+    this.fx.update(dt); this.clock += dt;
     for (let i = this.storms.length - 1; i >= 0; i--) { this.storms[i]!.life -= dt; if (this.storms[i]!.life <= 0) this.storms.splice(i, 1); }
     for (let i = this.impacts.length - 1; i >= 0; i--) { this.impacts[i]!.life -= dt; if (this.impacts[i]!.life <= 0) this.impacts.splice(i, 1); }
     if (this.shake > 0) this.shake = Math.max(0, this.shake - dt * 3);
@@ -66,7 +76,11 @@ export class FieldRenderer {
     g.fillStyle = P.plainPatch; for (let i = 0; i < 40; i++) { const x = (i * 97 + 31) % W, y = (i * 61 + 17) % H; g.fillRect(x, y, 26, 14); }
     g.strokeStyle = P.grass; g.lineWidth = 1;
     for (let i = 0; i < 60; i++) { const x = (i * 143 + 11) % W, y = (i * 83 + 7) % H; if (x < BAR_X + 20) continue; g.beginPath(); g.moveTo(x, y + 4); g.lineTo(x + 2, y - 3); g.moveTo(x + 4, y + 4); g.lineTo(x + 6, y - 2); g.stroke(); }
+    const n = dusk(this.clock);
+    g.globalAlpha = SKY.duskAlpha * n; g.fillStyle = P.plainDusk; g.fillRect(BAR_X, -10, W - BAR_X + 10, H + 20); g.globalAlpha = 1;
+    this.hills();
     g.fillStyle = P.groveSide; g.fillRect(-10, -10, BAR_X + 10, H + 20);
+    if (n > 0.01) { const lg = g.createRadialGradient(ELF_X, H / 2, 0, ELF_X, H / 2, SKY.lampR); lg.addColorStop(0, P.lamp); lg.addColorStop(1, P.lampClear); g.globalAlpha = n; g.fillStyle = lg; g.fillRect(ELF_X - SKY.lampR, H / 2 - SKY.lampR, SKY.lampR * 2, SKY.lampR * 2); g.globalAlpha = 1; }
 
     // barricade
     const frac = barFrac(s);
@@ -107,6 +121,18 @@ export class FieldRenderer {
     g.fillText(STR.barricadeHud(fmt(Math.max(0, s.run.barHp)), fmt(s.stats.barMax)), 12, 32);
     if (s.stats.muster) g.fillText(STR.vanguardHud(s.vans.count, s.stats.vanCap), 12, 46);
     g.fillStyle = P.dim45; g.fillRect(0, H - 5, W, 5); g.fillStyle = P.amber; g.fillRect(0, H - 5, W * (s.run.waveT / WAVE_LEN), 5);
+    this.ceremony.draw(g, dt);
+  }
+
+  /** Two bands of distant hills along the far edge, drifting slowly (still under reduced motion). */
+  private hills(): void {
+    const g = this.g;
+    SKY.hills.forEach((b, i) => {
+      const off = this.reducedMotion ? 0 : (this.clock * b.speed) % b.w;
+      g.fillStyle = i ? P.hillNear : P.hillFar; g.beginPath(); g.moveTo(BAR_X, b.y);
+      for (let k = 0, x = BAR_X - off; x <= W + b.w; k++, x += b.w / 2) g.quadraticCurveTo(x + b.w / 4, b.y + (k % 2 ? b.h * 0.6 : b.h), x + b.w / 2, b.y + b.h * 0.3);
+      g.lineTo(W + 10, b.y + b.h * 0.3); g.lineTo(W + 10, -10); g.lineTo(BAR_X, -10); g.closePath(); g.fill();
+    });
   }
 
   /** Aim circle: dotted flight arc from the elf, the strike circle, and a ring that fills as the bow draws. */
@@ -133,19 +159,27 @@ export class FieldRenderer {
     const g = this.g; g.save(); g.translate(o.x, o.y);
     const bob = this.reducedMotion ? 0 : Math.sin(o.wob) * 1.5;
     g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, o.r * 0.9, o.r * 0.9, o.r * 0.35, 0, 0, 6.28); g.fill();
+    if (this.sprites.draw(g, `orc.${o.kind}`, this.clock + o.wob, 0, o.r * 0.9, o.r, o.hitT > 0)) { this.orcBars(o, 0); g.restore(); return; }
     g.fillStyle = o.hitT > 0 ? P.cream : o.kind === 'boss' ? P.boss : o.kind === 'elite' ? P.elite : o.kind === 'brute' ? P.brute : P.orc;
     g.beginPath(); g.ellipse(0, bob, o.r, o.r * 1.05, 0, 0, 6.28); g.fill();
     g.fillStyle = P.tusk; g.fillRect(-o.r * 0.55, bob - o.r * 0.15, o.r * 0.32, o.r * 0.22); g.fillRect(o.r * 0.2, bob - o.r * 0.15, o.r * 0.32, o.r * 0.22);
     g.fillStyle = P.cream; g.fillRect(-o.r * 0.42, bob + o.r * 0.3, o.r * 0.14, o.r * 0.3); g.fillRect(o.r * 0.28, bob + o.r * 0.3, o.r * 0.14, o.r * 0.3);
     if (o.kind === 'boss') { g.fillStyle = P.amber; g.beginPath(); g.moveTo(-o.r * 0.8, -o.r * 0.7); g.lineTo(-o.r * 0.4, -o.r * 1.4); g.lineTo(0, -o.r * 0.8); g.lineTo(o.r * 0.4, -o.r * 1.4); g.lineTo(o.r * 0.8, -o.r * 0.7); g.closePath(); g.fill(); }
+    this.orcBars(o, bob);
+    g.restore();
+  }
+
+  /** Burn glow and health bar, shared by the vector and sprite orc. */
+  private orcBars(o: Orc, bob: number): void {
+    const g = this.g;
     if (o.burn > 0) { g.fillStyle = P.burnGlow; g.beginPath(); g.arc(0, bob - 4, o.r * 0.7, 0, 6.28); g.fill(); }
     if (o.hp < o.maxhp) { g.fillStyle = P.dim; g.fillRect(-o.r, -o.r - 8, o.r * 2, 3); g.fillStyle = P.rose; g.fillRect(-o.r, -o.r - 8, o.r * 2 * Math.max(0, o.hp / o.maxhp), 3); }
-    g.restore();
   }
 
   private elf(x: number, y: number, dim: boolean): void {
     const g = this.g; g.save(); g.translate(x, y); if (dim) g.globalAlpha = 0.85;
     g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 16, 12, 4, 0, 0, 6.28); g.fill();
+    if (this.sprites.draw(g, dim ? 'archer' : 'elf', this.clock, 0, 16, ACTOR_R)) { g.restore(); return; }
     g.fillStyle = dim ? P.archerCloak : P.elfCloak; g.beginPath(); g.moveTo(-9, 14); g.lineTo(9, 14); g.lineTo(5, -6); g.lineTo(-5, -6); g.closePath(); g.fill();
     g.fillStyle = P.lilac; g.beginPath(); g.arc(0, -12, 7, 0, 6.28); g.fill();
     g.strokeStyle = P.cream; g.lineWidth = 2; g.beginPath(); g.arc(12, 0, 16, -1.3, 1.3); g.stroke();
@@ -156,13 +190,19 @@ export class FieldRenderer {
   private van(v: Vanguard): void {
     const g = this.g, T = VANGUARD[v.type]; g.save(); g.translate(v.x, v.y);
     g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 16, 12, 4, 0, 0, 6.28); g.fill();
+    if (this.sprites.draw(g, `van.${v.type}`, this.clock, 0, 16, ACTOR_R, v.hitT > 0)) { this.vanBar(v); g.restore(); return; }
     g.fillStyle = v.hitT > 0 ? P.cream : v.type === 'spear' ? P.spear : P.blade; g.beginPath(); g.moveTo(-9, 14); g.lineTo(9, 14); g.lineTo(6, -6); g.lineTo(-6, -6); g.closePath(); g.fill();
     g.fillStyle = P.lilac; g.beginPath(); g.arc(0, -12, 7, 0, 6.28); g.fill();
     g.strokeStyle = P.cream; g.lineWidth = 2; g.beginPath();
     if (T.cleave) { g.moveTo(8, -4); g.lineTo(26, -14); g.moveTo(8, 4); g.lineTo(26, 14); } else { g.moveTo(6, 8); g.lineTo(30, -8); }
     g.stroke();
     if (v.type === 'spear') { g.fillStyle = P.timber; g.beginPath(); g.arc(-10, 2, 7, 0, 6.28); g.fill(); }
-    if (v.hp < v.maxhp) { g.fillStyle = P.dim; g.fillRect(-12, -26, 24, 3); g.fillStyle = P.spear; g.fillRect(-12, -26, 24 * Math.max(0, v.hp / v.maxhp), 3); }
+    this.vanBar(v);
     g.restore();
+  }
+
+  private vanBar(v: Vanguard): void {
+    const g = this.g;
+    if (v.hp < v.maxhp) { g.fillStyle = P.dim; g.fillRect(-12, -26, 24, 3); g.fillStyle = P.spear; g.fillRect(-12, -26, 24 * Math.max(0, v.hp / v.maxhp), 3); }
   }
 }

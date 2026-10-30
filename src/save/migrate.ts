@@ -26,6 +26,8 @@ export const migrations: Record<number, (s: AnySave) => AnySave> = {
   },
   // v4 to v5: run.earned (starlight earned this run) for the run summary; old runs start counting from 0
   4: (s) => ({ ...s, version: 5, run: { ...(s.run as object), earned: 0 } }),
+  // v5 to v6: meta.hwLevels, the Heartwood tree (TB-055); nothing bought yet
+  5: (s) => ({ ...s, version: 6, meta: { ...(s.meta as object), hwLevels: {} } }),
 };
 
 export function migrate(raw: unknown): Save {
