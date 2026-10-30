@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { HW_NODES } from '../data/heartwood';
-import { BOSS_WAVE } from '../data/bosses';
+import { BOSS_SCRIPT, BOSS_WAVE } from '../data/bosses';
+import { waveLoot } from '../data/balance';
 import { EventBus } from './events';
 import { buyHw, canBuyHw, hwAvailable, hwSpent } from './heartwood';
-import { bossesReady } from './boss';
+import { bossStep, bossesReady } from './boss';
 import { replant } from './prestige';
 import { createState, freshMeta, freshRun } from './state';
 
@@ -36,5 +37,11 @@ describe('Heartwood tree (TB-053)', () => {
     expect(s.run.wave).toBe(11); expect(s.run.levels.wolf).toBe(1); expect(s.stats.wolf).toBeGreaterThan(0);
     expect(s.vans.count).toBe(2); expect(s.run.barHp).toBeCloseTo(s.stats.barMax);
     expect(bossesReady(s)).toBe(0); expect(s.run.bossDone).toBe(Math.floor(11 / BOSS_WAVE.every));
+  });
+  it('Warlords raises the boss wave clear bonus 50% per rank', () => {
+    const s = withHw(100, { hw_boss: 2 }), ev = new EventBus(); s.run.wave = 10;
+    s.run.boss = { t: 59, next: BOSS_SCRIPT.length, left: 0 }; bossStep(s, ev, 0.1);
+    const end = ev.drain().find((e) => e.t === 'bossEnd');
+    expect(end).toMatchObject({ cleared: true }); expect(end && 'loot' in end ? end.loot : 0).toBeCloseTo(BOSS_WAVE.clearLoot * waveLoot(10) * s.stats.starMult * 2);
   });
 });
