@@ -6,6 +6,7 @@ import { P } from './palette';
 import { FLAME, Particles } from './particles';
 import { fmt } from '../ui/format';
 import { STR } from '../data/strings';
+import { Ceremony } from './ceremony';
 
 /** Seconds an impact ring lingers. */
 const IMPACT_LIFE = 0.3;
@@ -18,6 +19,7 @@ export class FieldRenderer {
   private storms: { pts: [number, number][]; life: number }[] = [];
   private impacts: { x: number; y: number; r: number; life: number }[] = [];
   reducedMotion = false;
+  readonly ceremony = new Ceremony();
 
   constructor(private canvas: HTMLCanvasElement) {
     this.g = canvas.getContext('2d')!;
@@ -45,6 +47,7 @@ export class FieldRenderer {
         case 'barricadeRegrow': this.fx.burst(BAR_X, H / 2, P.grove, 40, 160); break;
         case 'vanguardRallied': this.fx.burst(e.x + 20, e.y, P.cream, 8, 60); break;
         case 'vanguardFell': this.fx.burst(e.x, e.y, P.spear, 14, 100); break;
+        case 'replant': this.ceremony.start(this.reducedMotion); break;
         default: break;
       }
     }
@@ -107,6 +110,7 @@ export class FieldRenderer {
     g.fillText(STR.barricadeHud(fmt(Math.max(0, s.run.barHp)), fmt(s.stats.barMax)), 12, 32);
     if (s.stats.muster) g.fillText(STR.vanguardHud(s.vans.count, s.stats.vanCap), 12, 46);
     g.fillStyle = P.dim45; g.fillRect(0, H - 5, W, 5); g.fillStyle = P.amber; g.fillRect(0, H - 5, W * (s.run.waveT / WAVE_LEN), 5);
+    this.ceremony.draw(g, dt);
   }
 
   /** Aim circle: dotted flight arc from the elf, the strike circle, and a ring that fills as the bow draws. */

@@ -66,6 +66,8 @@ header h1 em { color: var(--amber); font-style: italic; }
 .prestige p { margin: 0; color: var(--cream-dim); max-width: 60ch; }
 .prestige .big { font-family: var(--display); font-size: 34px; color: var(--rose); font-weight: 700; }
 .prestige ul { margin: 0; padding-left: 18px; color: var(--cream-dim); }
+.treewrap { transition: filter .6s; }
+.treewrap.burning { filter: grayscale(1) brightness(.6); }
 .hwtree { display: flex; flex-direction: column; gap: 8px; }
 .hwnode { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 10px; border-radius: 6px; background: var(--ink-2); }
 .hwnode .name { font-weight: 700; }
