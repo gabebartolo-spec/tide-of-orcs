@@ -72,7 +72,7 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-061 | Parallax hills, day/night tint, bank lamplight | render | 018 | | todo |
 | TB-062 | Audio engine: ambient loop, SFX map from events, ducking | audio | 019,069 | claude | done 09b60cf |
 | TB-063 | Music beds ×2, crossfade on Replant | audio | 062 | | todo |
-| TB-064 | Mobile layout, touch targets, pinch zoom on tree. M1 check (375×812): Learn and Replant buttons 33 px, tabs 39 px, Save now/Wipe 29 px (target 44); hint text says "move your pointer" (touch needs its own copy); field is 343×183 px | ui | 021 | | todo |
+| TB-064 | Mobile layout, touch targets, pinch zoom on tree. M1 check (375×812): Learn and Replant buttons 33 px, tabs 39 px, Save now/Wipe 29 px (target 44); hint text says "move your pointer" (touch needs its own copy); field is 343×183 px | ui | 021 | claude | done ddc732d |
 | TB-065 | Settings tab: volume, reduced motion override, number format, export/import | ui | 008 | | todo |
 | TB-066 | Tree layout polish: curved branch lines, camera ease to selected | render | 021 | | todo |
 | TB-067 | Strings table audit; all copy via `strings.ts` | ui | — | | todo |
