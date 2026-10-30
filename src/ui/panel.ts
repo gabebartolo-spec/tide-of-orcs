@@ -139,6 +139,13 @@ export class Panel {
       navigator.clipboard?.writeText(blob).then(() => this.toast(STR.exported), () => {});
     };
     $('btn-import').onclick = () => this.importSave();
+    $('set-tel-k').textContent = STR.setTel; $('set-tel-hint').textContent = STR.telHint; $('btn-telemetry').textContent = STR.telBtn;
+    $('btn-telemetry').onclick = () => {
+      const { json, runs } = this.game.telemetry(); if (!runs) { this.toast(STR.telNone); return; }
+      const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([json], { type: 'application/json' }));
+      a.download = `tide-of-orcs-runs-${new Date().toISOString().slice(0, 10)}.json`; a.click(); URL.revokeObjectURL(a.href);
+      this.toast(STR.telSaved(runs));
+    };
   }
 
   /** Reflect game.settings in the controls and the number formatter. */

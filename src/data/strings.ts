@@ -36,6 +36,7 @@ export const STR = {
   setVolume: 'Volume', setMotion: 'Motion', setNumbers: 'Numbers',
   motionSystem: 'Follow system', motionFull: 'Full', motionReduced: 'Reduced',
   numShort: 'Short (1.25M)', numSci: 'Scientific (1.25e6)',
+  setTel: 'Playtest data', telHint: 'Each finished run is logged on this device only. Download the file and send it to the developer if you are testing.', telBtn: 'Download run log', telNone: 'No finished runs yet', telSaved: (n: number) => `Saved ${n} run${n === 1 ? '' : 's'}`,
   setSave: 'Save transfer', exportBtn: 'Export', importBtn: 'Import', exportHint: 'Export puts your save in the box below; copy it to keep or move it. Paste a save there and press Import to load it.',
   exported: 'Save copied', importConfirm: 'Import replaces this grove. Press again', imported: 'Save imported', importBad: 'That save could not be read',
   autosave: 'Autosaves every 20s', saveNow: 'Save now',
