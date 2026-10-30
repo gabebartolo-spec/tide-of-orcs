@@ -1,5 +1,5 @@
 import { BRANCH_COLOR, NODE, NODES, NodeId, TREE_VIEW } from '../data/skillTree';
-import { Camera, clampCamera, fitCamera, panBy, toWorld, zoomAt } from './camera';
+import { Camera, clampCamera, startCamera, panBy, toWorld, zoomAt } from './camera';
 import { SimState } from '../sim/state';
 import { canBuy, rankOf, unlocked } from '../sim/tree';
 import { P } from './palette';
@@ -60,7 +60,7 @@ export class TreeRenderer {
     this.vw = r.width; this.vh = r.height; this.dpr = devicePixelRatio || 1;
     this.canvas.width = Math.round(r.width * this.dpr); this.canvas.height = Math.round(r.height * this.dpr);
     // Keep the same framing when the panel resizes: scale zoom with width.
-    this.cam = first ? fitCamera(this.vw, this.vh) : clampCamera({ ...this.cam, z: this.cam.z * k }, this.vw, this.vh);
+    this.cam = first ? startCamera(this.vw, this.vh) : clampCamera({ ...this.cam, z: this.cam.z * k }, this.vw, this.vh);
   }
 
   /** Node under the pointer, or null. A press that turned into a drag never selects. */

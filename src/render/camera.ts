@@ -5,6 +5,12 @@ export interface Camera { x: number; y: number; z: number }
 
 export const toWorld = (c: Camera, sx: number, sy: number): [number, number] => [c.x + sx / c.z, c.y + sy / c.z];
 
+/** Opening view: at least TREE_VIEW.startZoom world px per screen px, centred on the root, so labels stay readable in a narrow panel. */
+export function startCamera(vw: number, vh: number): Camera {
+  const z = Math.max(vw / TREE_CANVAS.w, TREE_VIEW.startZoom);
+  return clampCamera({ x: TREE_VIEW.focusX - vw / z / 2, y: TREE_VIEW.focusY - vh / z / 2, z }, vw, vh);
+}
+
 /** Fit the tree's width to the viewport; a tree shorter than the view is centred. */
 export function fitCamera(vw: number, vh: number): Camera {
   return clampCamera({ x: 0, y: 0, z: vw / TREE_CANVAS.w }, vw, vh);

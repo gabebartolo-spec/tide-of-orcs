@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { TREE_CANVAS, TREE_VIEW } from '../data/skillTree';
-import { fitCamera, panBy, toWorld, zoomAt } from './camera';
+import { fitCamera, panBy, startCamera, toWorld, zoomAt } from './camera';
 
 const VW = 380, VH = 460, FIT = VW / TREE_CANVAS.w;
 
@@ -8,6 +8,10 @@ describe('tree camera', () => {
   it('fits width and centres a short tree vertically', () => {
     const c = fitCamera(VW, VH);
     expect(c.z).toBeCloseTo(FIT); expect(c.x).toBeCloseTo(0); expect(c.y).toBeCloseTo(-(VH / FIT - TREE_CANVAS.h) / 2);
+  });
+  it('opens at 1:1 on the root when the panel is narrower than the tree', () => {
+    const c = startCamera(VW, VH);
+    expect(c.z).toBe(TREE_VIEW.startZoom); expect(toWorld(c, VW / 2, VH / 2)).toEqual([TREE_VIEW.focusX, TREE_VIEW.focusY]);
   });
   it('zoom keeps the point under the cursor fixed', () => {
     const c = zoomAt(fitCamera(VW, VH), 190, 230, 2, VW, VH), before = toWorld(c, 200, 150);
