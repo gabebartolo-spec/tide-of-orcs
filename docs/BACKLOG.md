@@ -51,7 +51,7 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-037 | Ballista + bolt render | sim/render | 015 | claude | done 4860f5b (ported in M0) |
 | TB-038 | Moonbow homing | sim | 014 | claude | done 4860f5b (ported in M0) |
 | TB-039 | Kinship/Bounty/Horde wiring + tests | sim | 005 | claude | done a2e391d |
-| TB-040 | Sim policy `dps` (lookahead) | sim | 009 | claude | doing |
+| TB-040 | Sim policy `dps` (lookahead) | sim | 009 | claude | done b96cd93 |
 
 ## M3 — Prestige
 | Id | Task | Area | Depends | Owner | Status |
