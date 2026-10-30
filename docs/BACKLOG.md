@@ -46,7 +46,7 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-032 | Hawk circle + dive + burst | sim/render | 015 | claude | done 4860f5b (ported in M0) |
 | TB-033 | Treant stamp | sim/render | 015 | claude | done 4860f5b (ported in M0) |
 | TB-034 | Throwing knives | sim/render | 015 | claude | done 4860f5b (ported in M0) |
-| TB-035 | Fire arrows burn + flame particles | sim/render | 015 | | todo (burn ported in 4860f5b; flame particles missing, orange glow only) |
+| TB-035 | Fire arrows burn + flame particles | sim/render | 015 | | done e221d10 |
 | TB-036 | Storm Glade chain + lilac polyline | sim/render | 015 | claude | done 4860f5b (ported in M0) |
 | TB-037 | Ballista + bolt render | sim/render | 015 | claude | done 4860f5b (ported in M0) |
 | TB-038 | Moonbow homing | sim | 014 | claude | done 4860f5b (ported in M0) |
