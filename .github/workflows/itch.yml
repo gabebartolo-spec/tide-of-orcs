@@ -1,0 +1,38 @@
+name: Release to itch.io
+# Fires on milestone tags: m0, m1, m2 ... and on release tags v1.0.0 etc.
+on:
+  push:
+    tags: ['m[0-9]*', 'v*']
+  workflow_dispatch:
+    inputs:
+      channel:
+        description: itch.io channel (html5, html5-dev)
+        default: html5-dev
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: itch
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - run: npm run lint && npm test
+      - run: npm run build
+      - name: Stamp build
+        run: |
+          echo "{\"tag\":\"${GITHUB_REF_NAME}\",\"sha\":\"${GITHUB_SHA::7}\",\"date\":\"$(date -u +%Y-%m-%d)\"}" > dist/build.json
+      - name: Install butler
+        run: |
+          curl -L -o butler.zip https://broth.itch.zone/butler/linux-amd64/LATEST/archive/default
+          unzip butler.zip && chmod +x butler && ./butler -V
+      - name: Push to itch.io
+        env:
+          BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+          ITCH_TARGET: veniceissinking/elves-vs-orcs   # https://veniceissinking.itch.io/elves-vs-orcs
+        run: |
+          CHANNEL="${{ github.event.inputs.channel }}"
+          if [ -z "$CHANNEL" ]; then
+            case "${GITHUB_REF_NAME}" in v*) CHANNEL=html5 ;; *) CHANNEL=html5-dev ;; esac
+          fi
+          ./butler push dist "${ITCH_TARGET}:${CHANNEL}" --userversion "${GITHUB_REF_NAME}"

@@ -1,0 +1,57 @@
+/**
+ * GameController: the only thing allowed to call into sim/ from the UI.
+ * Owns the SimState, the event bus, and save/load.
+ */
+import { VanType } from './data/balance';
+import { NodeId } from './data/skillTree';
+import { EventBus } from './sim/events';
+import { canReplant, offlineAward, replant } from './sim/prestige';
+import { SimState, createState, freshMeta, freshRun } from './sim/state';
+import { Inputs, step } from './sim/step';
+import { buy } from './sim/tree';
+import { rally } from './sim/vanguard';
+import { Save, defaultSettings, CURRENT_VERSION } from './save/schema';
+import { clearSave, exportSave, importSave, readSave, writeSave } from './save/storage';
+
+export class GameController {
+  state: SimState;
+  readonly events = new EventBus();
+  settings = defaultSettings();
+  private pendingTaps: { x: number; y: number }[] = [];
+
+  constructor(seed = (Date.now() % 2147483647) | 0) {
+    const save = readSave();
+    if (save) {
+      this.settings = { ...defaultSettings(), ...save.settings };
+      this.state = createState(seed, { ...freshRun(), ...save.run }, { ...freshMeta(), ...save.meta });
+      const away = (Date.now() - save.savedAt) / 1000;
+      const gained = offlineAward(this.state, away);
+      if (gained > 0) this.offlineGain = gained;
+    } else {
+      this.state = createState(seed);
+    }
+  }
+  offlineGain = 0;
+
+  tick(dt: number): void {
+    const inputs: Inputs = { taps: this.pendingTaps };
+    step(this.state, dt, inputs, this.events);
+    this.pendingTaps = [];
+  }
+
+  tap(x: number, y: number): void { if (!this.state.run.fallen) this.pendingTaps.push({ x, y }); }
+  buy(id: NodeId): boolean { return buy(this.state, this.events, id); }
+  rally(type: VanType): boolean { return rally(this.state, this.events, type); }
+  canReplant(): boolean { return canReplant(this.state); }
+  replant(): number { const hw = replant(this.state, this.events); this.save(); return hw; }
+
+  toSave(): Save { return { version: CURRENT_VERSION, savedAt: Date.now(), run: this.state.run, meta: this.state.meta, settings: this.settings }; }
+  save(): boolean { return writeSave(this.toSave()); }
+  exportSave(): string { return exportSave(this.toSave()); }
+  importSave(str: string): void {
+    const s = importSave(str);
+    this.state = createState(1, { ...freshRun(), ...s.run }, { ...freshMeta(), ...s.meta });
+    this.settings = { ...defaultSettings(), ...s.settings }; this.save();
+  }
+  wipe(): void { clearSave(); this.state = createState(1); }
+}

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tide of Orcs</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,500;0,700;1,500&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<link rel="stylesheet" href="/src/ui/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Tide of <em>Orcs</em></h1>
+    <div class="stats">
+      <div class="stat"><span class="k">Starlight</span><span class="v amber" id="st-star">0</span></div>
+      <div class="stat"><span class="k">Wave</span><span class="v" id="st-wave">1</span></div>
+      <div class="stat"><span class="k">Slain</span><span class="v" id="st-kills">0</span></div>
+      <div class="stat"><span class="k">Heartwood</span><span class="v heart" id="st-heart">0</span></div>
+    </div>
+  </header>
+  <div class="main">
+    <div>
+      <div class="field">
+        <canvas id="game"></canvas>
+        <div class="toast" id="toast"></div>
+        <div class="fallen" id="fallen" hidden>
+          <h2 id="fallen-title"></h2>
+          <p id="fallen-sum"></p>
+          <div><div class="stat"><span class="k" id="fallen-hw-k"></span></div><div class="big" id="fallen-hw">0</div></div>
+          <button class="buy" id="fallen-btn"></button>
+        </div>
+      </div>
+      <div class="rally">
+        <div class="hint" id="hint"></div>
+        <button class="deploy" id="dep-spear"><span class="n"></span><span class="c"></span></button>
+        <button class="deploy" id="dep-blade" hidden><span class="n"></span><span class="c"></span></button>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="tabs" role="tablist">
+        <button role="tab" id="tab-grove" aria-selected="true"></button>
+        <button role="tab" id="tab-prestige" aria-selected="false"></button>
+      </div>
+      <div class="tab" id="pane-grove">
+        <div class="treewrap"><canvas id="tree"></canvas></div>
+        <div class="detail" id="detail"></div>
+      </div>
+      <div class="tab" id="pane-prestige" hidden>
+        <div class="prestige">
+          <h2 id="pr-title"></h2>
+          <p id="pr-body"></p>
+          <div><div class="stat"><span class="k">Heartwood on replant</span></div><div class="big" id="pr-gain">0</div></div>
+          <ul>
+            <li>Each Heartwood: <strong>+12% starlight</strong> and <strong>+12% damage</strong>.</li>
+            <li>Reset: skills, starlight, wave, vanguard and companions.</li>
+            <li>Kept: Heartwood, total slain, best wave.</li>
+            <li id="pr-req"></li>
+          </ul>
+          <div class="row"><button class="buy" id="pr-btn" disabled>Replant</button></div>
+        </div>
+      </div>
+      <div class="footer">
+        <button class="ghost" id="btn-save"></button>
+        <button class="ghost" id="btn-reset"></button>
+        <span class="auto" id="autosave"></span>
+        <span class="auto" id="build"></span>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="module" src="/src/main.ts"></script>
+</body>
+</html>

@@ -1,0 +1,599 @@
+<title>Tide of Orcs</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,500;0,700;1,500&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Layout: battlefield canvas on the left with a rally bar beneath it, a tabbed grove panel (skill tree / replant) on the right; stacks on phones. */
+:root {
+  --ink: #1b2130; --ink-2: #242d3f; --ink-3: #30394d; --line: #3e4a60;
+  --cream: #efe6d2; --cream-dim: #b9b09c;
+  --sage: #8fa98a; --sage-deep: #6b8468;
+  --amber: #e2a85b; --rose: #c76f6f; --lilac: #cdbdea; --moss: #7f8f52; --timber: #8a6a46;
+  --display: "Spectral", Georgia, serif;
+  --body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body { margin: 0; background: var(--ink); color: var(--cream); font-family: var(--body); font-size: 14px; }
+* { box-sizing: border-box; }
+button { font: inherit; color: inherit; cursor: pointer; }
+.wrap { display: flex; flex-direction: column; min-height: 100%; padding-block: 10px 16px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); gap: 12px; }
+header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px 22px; }
+header h1 { font-family: var(--display); font-weight: 500; font-size: 26px; margin: 0; letter-spacing: .01em; }
+header h1 em { color: var(--amber); font-style: italic; }
+.stats { display: flex; flex-wrap: wrap; gap: 8px 18px; font-variant-numeric: tabular-nums; margin-left: auto; }
+.stat { display: flex; align-items: baseline; gap: 6px; }
+.stat .k { font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: var(--cream-dim); }
+.stat .v { font-family: var(--display); font-size: 20px; font-weight: 700; }
+.stat .v.amber { color: var(--amber); } .stat .v.heart { color: var(--rose); }
+.main { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 14px; align-items: start; }
+.field { position: relative; width: 100%; aspect-ratio: 15 / 8; max-width: 100%; border-radius: 10px; overflow: hidden; background: var(--sage-deep); outline: 1px solid var(--line); }
+.field canvas { width: 100%; height: 100%; display: block; cursor: crosshair; touch-action: manipulation; }
+.toast { position: absolute; left: 50%; top: 12px; transform: translateX(-50%); background: color-mix(in srgb, var(--ink) 85%, transparent); border: 1px solid var(--line); padding: 6px 14px; border-radius: 999px; font-size: 13px; pointer-events: none; opacity: 0; transition: opacity .3s; white-space: nowrap; }
+.toast.on { opacity: 1; }
+.fallen { position: absolute; inset: 0; background: color-mix(in srgb, var(--ink) 82%, transparent); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; text-align: center; padding: 20px; }
+.fallen h2 { font-family: var(--display); font-weight: 500; font-size: 30px; margin: 0; }
+.fallen p { margin: 0; color: var(--cream-dim); max-width: 44ch; line-height: 1.45; }
+.fallen .big { font-family: var(--display); font-size: 40px; color: var(--rose); font-weight: 700; }
+.rally { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 8px; }
+.rally .hint { font-size: 12px; color: var(--cream-dim); flex: 1 1 200px; min-width: 0; }
+.deploy { background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; min-width: 150px; }
+.deploy:hover:not(:disabled) { border-color: var(--amber); }
+.deploy:disabled { opacity: .5; cursor: default; }
+.deploy .n { font-weight: 700; } .deploy .c { font-size: 12px; color: var(--amber); font-variant-numeric: tabular-nums; }
+.deploy .c.dim { color: var(--cream-dim); }
+.panel { background: var(--ink-2); border: 1px solid var(--line); border-radius: 10px; min-width: 0; display: flex; flex-direction: column; }
+.tabs { display: flex; border-bottom: 1px solid var(--line); }
+.tabs button { flex: 1; background: none; border: 0; padding: 11px 8px; color: var(--cream-dim); font-size: 12px; text-transform: uppercase; letter-spacing: .12em; border-bottom: 2px solid transparent; }
+.tabs button[aria-selected="true"] { color: var(--cream); border-bottom-color: var(--amber); }
+.tabs button:focus-visible, .buy:focus-visible, .ghost:focus-visible, .deploy:focus-visible { outline: 2px solid var(--amber); outline-offset: -2px; }
+.tab { display: flex; flex-direction: column; }
+.treewrap { position: relative; height: 460px; overflow: auto; background: radial-gradient(ellipse at 50% 100%, #2b3448 0%, var(--ink-2) 70%); }
+#tree { display: block; cursor: pointer; width: 100%; height: auto; }
+.detail { border-top: 1px solid var(--line); padding: 12px 14px; min-height: 128px; display: flex; flex-direction: column; gap: 6px; }
+.detail .name { font-family: var(--display); font-size: 18px; font-weight: 700; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.detail .branch { font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: var(--cream-dim); }
+.detail .desc { line-height: 1.4; }
+.detail .row, .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 4px; }
+.buy { background: var(--amber); color: var(--ink); border: 0; border-radius: 6px; padding: 8px 14px; font-weight: 700; }
+.buy:disabled { background: var(--ink-3); color: var(--cream-dim); cursor: default; }
+.ghost { background: none; border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px; font-size: 12px; color: var(--cream-dim); }
+.ghost:hover { color: var(--cream); border-color: var(--cream-dim); }
+.prestige { padding: 16px 14px; display: flex; flex-direction: column; gap: 12px; line-height: 1.45; }
+.prestige h2 { font-family: var(--display); font-weight: 500; font-size: 22px; margin: 0; }
+.prestige p { margin: 0; color: var(--cream-dim); max-width: 60ch; }
+.prestige .big { font-family: var(--display); font-size: 34px; color: var(--rose); font-weight: 700; }
+.prestige ul { margin: 0; padding-left: 18px; color: var(--cream-dim); }
+.footer { display: flex; gap: 10px; flex-wrap: wrap; padding: 10px 14px; border-top: 1px solid var(--line); }
+@media (max-width: 860px) { .main { grid-template-columns: 1fr; } .treewrap { height: 380px; } }
+@media (prefers-reduced-motion: reduce) { .toast { transition: none; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Tide of <em>Orcs</em></h1>
+    <div class="stats">
+      <div class="stat"><span class="k">Starlight</span><span class="v amber" id="st-star">0</span></div>
+      <div class="stat"><span class="k">Wave</span><span class="v" id="st-wave">1</span></div>
+      <div class="stat"><span class="k">Slain</span><span class="v" id="st-kills">0</span></div>
+      <div class="stat"><span class="k">Heartwood</span><span class="v heart" id="st-heart">0</span></div>
+    </div>
+  </header>
+
+  <div class="main">
+    <div>
+      <div class="field">
+        <canvas id="game"></canvas>
+        <div class="toast" id="toast"></div>
+        <div class="fallen" id="fallen" hidden>
+          <h2>The barricade has fallen</h2>
+          <p id="fallen-sum"></p>
+          <div><div class="stat"><span class="k">Heartwood carried back</span></div><div class="big" id="fallen-hw">0</div></div>
+          <button class="buy" id="fallen-btn">Replant the grove</button>
+        </div>
+      </div>
+      <div class="rally">
+        <div class="hint">Hold the barricade. Rally vanguard with starlight to meet the tide in melee; tap the field to loose an extra volley.</div>
+        <button class="deploy" id="dep-spear"><span class="n">Rally Spearman</span><span class="c" id="dep-spear-c">—</span></button>
+        <button class="deploy" id="dep-blade" hidden><span class="n">Rally Bladedancer</span><span class="c" id="dep-blade-c">—</span></button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="tabs" role="tablist">
+        <button role="tab" id="tab-grove" aria-selected="true">The Grove</button>
+        <button role="tab" id="tab-prestige" aria-selected="false">Replant</button>
+      </div>
+      <div class="tab" id="pane-grove">
+        <div class="treewrap"><canvas id="tree" width="760" height="680"></canvas></div>
+        <div class="detail" id="detail"></div>
+      </div>
+      <div class="tab" id="pane-prestige" hidden>
+        <div class="prestige">
+          <h2>Replant the Grove</h2>
+          <p>Burn the grove down to a seed and grow it again. Every Heartwood you carry back makes starlight fall faster and arrows bite harder, forever. If the barricade falls, the grove replants itself.</p>
+          <div><div class="stat"><span class="k">Heartwood on replant</span></div><div class="big" id="pr-gain">0</div></div>
+          <ul>
+            <li>Each Heartwood: <strong>+12% starlight</strong> and <strong>+12% damage</strong>.</li>
+            <li>Reset: skills, starlight, wave, vanguard and companions.</li>
+            <li>Kept: Heartwood, total slain, best wave.</li>
+            <li id="pr-req">Voluntary replant from wave 12.</li>
+          </ul>
+          <div class="row"><button class="buy" id="pr-btn" disabled>Replant</button></div>
+        </div>
+      </div>
+      <div class="footer">
+        <button class="ghost" id="btn-save">Save now</button>
+        <button class="ghost" id="btn-reset">Wipe save</button>
+        <span style="margin-left:auto;align-self:center;font-size:12px;color:var(--cream-dim)">Autosaves every 20s</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+'use strict';
+const SAVE_KEY = 'tide-of-orcs-v2';
+const $ = id => document.getElementById(id);
+
+/* ---------- Skill tree ---------- */
+const NODES = [
+  { id:'root', name:'Waking', branch:'Grove', x:380, y:600, max:1, cost:0, desc:'An elf, a bow, a wall of timber, an endless tide. Begin.', parent:null },
+  // Bow
+  { id:'sharp', name:'Sharpened Tips', branch:'Bow', parent:'root', x:280, y:480, max:10, cost:12, growth:1.55, desc:'+25% arrow damage per rank.' },
+  { id:'draw', name:'Quick Draw', branch:'Bow', parent:'sharp', x:200, y:420, max:8, cost:30, growth:1.7, desc:'+15% draw speed per rank.' },
+  { id:'crit', name:'Keen Eye', branch:'Bow', parent:'sharp', x:320, y:400, max:5, cost:120, growth:2.1, desc:'+8% chance per rank to strike for triple damage.' },
+  { id:'multi', name:'Split Shot', branch:'Bow', parent:'draw', x:140, y:350, max:3, cost:220, growth:4.2, desc:'+1 arrow per volley.' },
+  { id:'pierce', name:'Longshaft', branch:'Bow', parent:'crit', x:280, y:330, max:3, cost:260, growth:3.8, desc:'Arrows pass through +1 orc per rank.' },
+  { id:'moon', name:'Moonbow', branch:'Bow', parent:'multi', x:90, y:270, max:1, cost:3200, desc:'Arrows bend toward their quarry and deal +60% damage.' },
+  // Companions
+  { id:'wolf', name:'Grey Wolf', branch:'Companions', parent:'root', x:380, y:500, max:1, cost:70, desc:'A wolf runs the plain and savages the nearest orc.' },
+  { id:'fangs', name:'Fangs', branch:'Companions', parent:'wolf', x:430, y:430, max:5, cost:90, growth:1.9, desc:'Wolf bites +40% harder per rank.' },
+  { id:'ranger', name:'Ranger', branch:'Companions', parent:'wolf', x:360, y:360, max:1, cost:350, desc:'A second archer joins you behind the wall.' },
+  { id:'warden', name:'Warden', branch:'Companions', parent:'ranger', x:370, y:280, max:1, cost:2800, desc:'A third archer, veteran of older wars.' },
+  { id:'hawk', name:'Hawk', branch:'Companions', parent:'fangs', x:470, y:350, max:1, cost:900, desc:'A hawk dives on the thickest knot of orcs every few seconds.' },
+  { id:'treant', name:'Treant', branch:'Companions', parent:'hawk', x:500, y:270, max:1, cost:1400, desc:'An old treant roots itself before the wall and stamps the ground.' },
+  { id:'bond', name:'Kinship', branch:'Companions', parent:'ranger', x:290, y:240, max:5, cost:500, growth:2.2, desc:'All companions and vanguard +20% damage per rank.' },
+  // Armoury
+  { id:'knives', name:'Throwing Knives', branch:'Armoury', parent:'root', x:490, y:520, max:1, cost:100, desc:'A knife flies at the nearest orc every 1.4 s.' },
+  { id:'knifespd', name:'Nimble Wrist', branch:'Armoury', parent:'knives', x:570, y:470, max:5, cost:140, growth:1.9, desc:'Knives fly 20% faster per rank and hit harder.' },
+  { id:'fire', name:'Fire Arrows', branch:'Armoury', parent:'knives', x:550, y:390, max:1, cost:450, desc:'Arrows set orcs alight, burning for a few seconds.' },
+  { id:'storm', name:'Storm Glade', branch:'Armoury', parent:'fire', x:630, y:330, max:1, cost:1700, desc:'Lightning leaps between up to 5 orcs every 6 s.' },
+  { id:'ballista', name:'Ballista', branch:'Armoury', parent:'knifespd', x:660, y:430, max:1, cost:3400, desc:'A heavy bolt that punches through the whole line.' },
+  { id:'bolt', name:'Iron Bolts', branch:'Armoury', parent:'ballista', x:710, y:360, max:5, cost:2000, growth:2.0, desc:'Ballista +50% damage per rank.' },
+  // Grove
+  { id:'glean', name:'Gleaning', branch:'Grove', parent:'root', x:490, y:630, max:10, cost:20, growth:1.6, desc:'+15% starlight from every orc.' },
+  { id:'horde', name:'Call the Horde', branch:'Grove', parent:'glean', x:590, y:610, max:5, cost:160, growth:2.4, desc:'+20% more orcs. More orcs, more starlight. More danger.' },
+  { id:'roots', name:'Dreaming Roots', branch:'Grove', parent:'glean', x:600, y:660, max:5, cost:200, growth:2.2, desc:'Earn more while away: +20% of your rate per rank.' },
+  { id:'bounty', name:'Warboss Bounty', branch:'Grove', parent:'horde', x:690, y:590, max:3, cost:800, growth:3, desc:'Warbosses drop double starlight per rank.' },
+  // Barricade
+  { id:'timber', name:'Seasoned Timber', branch:'Barricade', parent:'root', x:270, y:630, max:10, cost:25, growth:1.6, desc:'Barricade +25% health per rank.' },
+  { id:'repair', name:'Patient Hands', branch:'Barricade', parent:'timber', x:170, y:610, max:5, cost:90, growth:2.0, desc:'Barricade mends 1% of its health per second per rank.' },
+  { id:'spikes', name:'Thornwall', branch:'Barricade', parent:'timber', x:190, y:665, max:5, cost:150, growth:2.1, desc:'Orcs hacking at the wall take 20% of your arrow damage per second per rank.' },
+  { id:'bulwark', name:'Deep Roots', branch:'Barricade', parent:'repair', x:80, y:585, max:1, cost:2400, desc:'Once per run, a falling barricade regrows to half health.' },
+  // Vanguard
+  { id:'muster', name:'Muster', branch:'Vanguard', parent:'root', x:250, y:555, max:1, cost:50, desc:'Rally spearmen with starlight. They hold the line until they fall. Up to 2 at once.' },
+  { id:'shield', name:'Shieldwall', branch:'Vanguard', parent:'muster', x:160, y:535, max:5, cost:110, growth:1.9, desc:'Vanguard +30% health per rank.' },
+  { id:'drill', name:'Spear Drill', branch:'Vanguard', parent:'muster', x:150, y:475, max:5, cost:130, growth:1.9, desc:'Vanguard +30% damage per rank.' },
+  { id:'ranks', name:'Close Ranks', branch:'Vanguard', parent:'shield', x:80, y:525, max:3, cost:400, growth:2.6, desc:'+1 vanguard may stand at once.' },
+  { id:'mend', name:'Field Mending', branch:'Vanguard', parent:'drill', x:90, y:455, max:3, cost:350, growth:2.4, desc:'Vanguard recover 3% health per second per rank.' },
+  { id:'champion', name:'Bladedancer', branch:'Vanguard', parent:'ranks', x:60, y:400, max:1, cost:2200, desc:'Rally bladedancers: costlier, faster, their strikes cleave every orc in reach.' },
+];
+const NODE = Object.fromEntries(NODES.map(n => [n.id, n]));
+const BRANCH_COLOR = { Bow:'#cdbdea', Companions:'#e2a85b', Armoury:'#c76f6f', Grove:'#9fc48f', Barricade:'#c9a06a', Vanguard:'#8fb7c9' };
+const nodeCost = (n, lvl) => n.cost === 0 ? 0 : Math.round(n.cost * Math.pow(n.growth || 1.8, lvl));
+
+/* ---------- State ---------- */
+let S;
+function fresh() {
+  return { star:0, heart:0, wave:1, waveT:0, kills:0, runKills:0, lv:{ root:1 }, storm:0, lastSave:Date.now(), prestiges:0, bestWave:1, barHp:null, bulwarkUsed:false, fallen:false, runTime:0 };
+}
+const derived = {};
+function compute() {
+  const L = id => S.lv[id] || 0;
+  const hm = 1 + 0.12 * S.heart;
+  derived.dmg = 6 * Math.pow(1.25, L('sharp')) * (L('moon') ? 1.6 : 1) * hm;
+  derived.fireRate = 1.2 * Math.pow(1.15, L('draw'));
+  derived.arrows = 1 + L('multi'); derived.pierce = L('pierce'); derived.crit = 0.08 * L('crit');
+  derived.homing = !!L('moon'); derived.fire = !!L('fire');
+  derived.starMult = Math.pow(1.15, L('glean')) * hm;
+  derived.spawnMult = Math.pow(1.2, L('horde'));
+  derived.offline = 0.25 + 0.2 * L('roots');
+  derived.bounty = 1 + L('bounty');
+  derived.kin = Math.pow(1.2, L('bond')) * hm;
+  derived.wolf = L('wolf') ? 6 * Math.pow(1.4, L('fangs')) * derived.kin : 0;
+  derived.archers = L('ranger') + L('warden');
+  derived.hawk = !!L('hawk'); derived.treant = !!L('treant');
+  derived.knives = L('knives') ? { rate: Math.pow(1.2, L('knifespd')) / 1.4, dmg: 5 * Math.pow(1.35, L('knifespd')) * derived.kin } : null;
+  derived.storm = !!L('storm');
+  derived.ballista = L('ballista') ? 40 * Math.pow(1.5, L('bolt')) * derived.kin : 0;
+  // barricade
+  derived.barMax = 400 * Math.pow(1.25, L('timber')) * hm;
+  derived.barRegen = 0.01 * L('repair');
+  derived.spikes = 0.2 * L('spikes');
+  derived.bulwark = !!L('bulwark');
+  // vanguard
+  derived.muster = !!L('muster');
+  derived.vanCap = derived.muster ? 2 + L('ranks') : 0;
+  derived.vanHp = Math.pow(1.3, L('shield')) * hm;
+  derived.vanDmg = Math.pow(1.3, L('drill')) * derived.kin;
+  derived.vanMend = 0.03 * L('mend');
+  derived.champion = !!L('champion');
+  if (S.barHp == null) S.barHp = derived.barMax;
+  S.barHp = Math.min(S.barHp, derived.barMax);
+}
+const waveHP = w => 10 * Math.pow(1.17, w - 1);
+const waveLoot = w => 2 * Math.pow(1.13, w - 1);
+const waveInterval = w => Math.max(0.3, 2.0 * Math.pow(0.93, w - 1));
+const WAVE_LEN = 24;
+const prestigeGain = () => Math.max(0, Math.floor((S.wave - 4) * 0.75) + Math.floor(S.runKills / 400));
+const VAN = {
+  spear: { name:'Spearman', cost: w => 6 * waveLoot(w), hp: w => 5 * waveHP(w), dmg: 1.6, cd: 0.8, reach: 28, cleave: false, color:'#8fb7c9' },
+  blade: { name:'Bladedancer', cost: w => 18 * waveLoot(w), hp: w => 4 * waveHP(w), dmg: 1.4, cd: 0.45, reach: 34, cleave: true, color:'#cdbdea' },
+};
+
+/* ---------- Formatting ---------- */
+function fmt(n) {
+  if (n < 1000) return Math.floor(n).toString();
+  const u = ['K','M','B','T','Qa','Qi']; let i = -1;
+  while (n >= 1000 && i < u.length - 1) { n /= 1000; i++; }
+  return n.toFixed(n < 10 ? 2 : n < 100 ? 1 : 0) + u[i];
+}
+
+/* ---------- Save / load ---------- */
+function save() { try { S.lastSave = Date.now(); localStorage.setItem(SAVE_KEY, JSON.stringify(S)); } catch (e) {} }
+function load() {
+  let s = null;
+  try { const raw = localStorage.getItem(SAVE_KEY); if (raw) s = JSON.parse(raw); } catch (e) {}
+  S = Object.assign(fresh(), s || {});
+  S.lv = Object.assign({ root:1 }, S.lv);
+  compute();
+  if (s && s.lastSave && !S.fallen) {
+    const away = Math.min((Date.now() - s.lastSave) / 1000, 8 * 3600);
+    if (away > 60) {
+      const rate = waveLoot(S.wave) * derived.starMult * derived.spawnMult / waveInterval(S.wave) * derived.offline;
+      const gain = Math.floor(rate * away);
+      if (gain > 0) { S.star += gain; toast(`While you were away the grove gathered ${fmt(gain)} starlight`); }
+    }
+  }
+}
+
+/* ---------- Game world ---------- */
+const W = 900, H = 480, BAR_X = 150, BAR_W = 14, ELF_X = 64;
+const orcs = [], arrows = [], parts = [], texts = [], vans = [];
+let t = 0, spawnT = 0, shotT = [0, 0, 0], knifeT = 0, hawkT = 0, treantT = 0, ballT = 0, stormFlash = [], shake = 0;
+const wolf = { x: 260, y: H / 2, tx: 260, ty: H / 2, biteT: 0 };
+const hawk = { x: 300, y: 100, a: 0 };
+
+function spawnOrc() {
+  const w = S.wave, r = Math.random();
+  let kind = 'grunt';
+  if (w % 10 === 0 && !orcs.some(o => o.kind === 'boss') && Math.random() < 0.08) kind = 'boss';
+  else if (r < 0.15 + Math.min(0.2, w * 0.01)) kind = 'runner';
+  else if (r > 0.82 - Math.min(0.15, w * 0.005)) kind = 'brute';
+  const hp = waveHP(w) * (kind === 'brute' ? 3.2 : kind === 'runner' ? 0.55 : kind === 'boss' ? 28 : 1);
+  orcs.push({ kind, x: W + 24, y: 50 + Math.random() * (H - 100), hp, maxhp: hp,
+    spd: (kind === 'runner' ? 78 : kind === 'brute' ? 34 : kind === 'boss' ? 26 : 48) * (1 + w * 0.008),
+    r: kind === 'brute' ? 16 : kind === 'runner' ? 9 : kind === 'boss' ? 24 : 12,
+    atk: hp * 0.025,            // damage per second to wall or vanguard
+    loot: waveLoot(w) * (kind === 'brute' ? 3 : kind === 'runner' ? 0.7 : kind === 'boss' ? 30 * derived.bounty : 1),
+    burn: 0, hitT: 0, wob: Math.random() * 6.28, dead: false, engaged: null, swingT: Math.random() });
+}
+function nearestOrc(x, y, filter) {
+  let best = null, bd = Infinity;
+  for (const o of orcs) { if (o.dead || (filter && !filter(o))) continue; const d = (o.x - x) ** 2 + (o.y - y) ** 2; if (d < bd) { bd = d; best = o; } }
+  return best;
+}
+function addText(x, y, s, c) { texts.push({ x, y, s, c, life: 0.9 }); }
+function burst(x, y, c, n, sp) { for (let i = 0; i < n; i++) { const a = Math.random() * 6.28, v = sp * (0.3 + Math.random()); parts.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: 0.5 + Math.random() * 0.4, c, r: 1.5 + Math.random() * 2 }); } }
+function damage(o, amt) { if (o.dead) return; o.hp -= amt; o.hitT = 0.12; if (o.hp <= 0) kill(o); }
+function kill(o) {
+  if (o.dead) return; o.dead = true;
+  const loot = o.loot * derived.starMult;
+  S.kills++; S.runKills++; S.star += loot;
+  addText(o.x, o.y - 14, '+' + fmt(loot), '#e2a85b'); burst(o.x, o.y, '#7f8f52', 10, 90);
+  if (o.kind === 'boss') toast('A Warboss falls. The tide hesitates.');
+}
+function fireVolley(sx, sy, target, mult) {
+  const n = derived.arrows;
+  for (let i = 0; i < n; i++) {
+    const ang = Math.atan2(target.y - sy, target.x - sx) + (i - (n - 1) / 2) * 0.09;
+    arrows.push({ x: sx, y: sy, vx: Math.cos(ang) * 520, vy: Math.sin(ang) * 520, dmg: derived.dmg * mult, pierce: derived.pierce, hit: new Set(), target, kind: 'arrow', life: 2.2 });
+  }
+}
+function deploy(type) {
+  const T = VAN[type]; if (!derived.muster || (type === 'blade' && !derived.champion)) return;
+  if (vans.length >= derived.vanCap) { toast('The line is full'); return; }
+  const cost = T.cost(S.wave); if (S.star < cost) return;
+  S.star -= cost;
+  const lane = vans.length; const y = H / 2 + (lane % 2 ? 1 : -1) * Math.ceil(lane / 2) * 70;
+  const hp = T.hp(S.wave) * derived.vanHp;
+  vans.push({ type, x: BAR_X + 10, y, tx: BAR_X + 44, hp, maxhp: hp, swingT: 0, hitT: 0 });
+  burst(BAR_X + 30, y, '#efe6d2', 8, 60); toast(`${T.name} takes the field`);
+}
+function barricadeHit(amt) {
+  S.barHp -= amt; shake = Math.min(1, shake + amt / derived.barMax * 4);
+  if (S.barHp <= 0) {
+    if (derived.bulwark && !S.bulwarkUsed) { S.bulwarkUsed = true; S.barHp = derived.barMax * 0.5; toast('Deep roots: the barricade regrows!'); burst(BAR_X, H / 2, '#9fc48f', 40, 160); return; }
+    S.barHp = 0; fall();
+  }
+}
+function fall() {
+  S.fallen = true; S.bestWave = Math.max(S.bestWave, S.wave);
+  const hw = prestigeGain();
+  $('fallen-sum').textContent = `Wave ${S.wave} · ${fmt(S.runKills)} orcs slain · ${Math.floor(S.runTime / 60)} min held`;
+  $('fallen-hw').textContent = '+' + hw; $('fallen').hidden = false; save();
+}
+function replant() {
+  const gain = prestigeGain();
+  const keep = { heart: S.heart + gain, kills: S.kills, prestiges: S.prestiges + 1, bestWave: Math.max(S.bestWave, S.wave) };
+  S = Object.assign(fresh(), keep); compute();
+  orcs.length = 0; arrows.length = 0; vans.length = 0; selected = 'sharp'; renderDetail(); setTab('grove'); save();
+  $('fallen').hidden = true;
+  toast(`The grove is replanted. ${gain} Heartwood carried back.`);
+}
+
+function update(dt) {
+  if (S.fallen) return;
+  t += dt; S.waveT += dt; S.runTime += dt;
+  if (S.waveT >= WAVE_LEN) { S.waveT = 0; S.wave++; S.bestWave = Math.max(S.bestWave, S.wave); toast(`Wave ${S.wave}`); }
+  spawnT += dt;
+  const iv = waveInterval(S.wave) / derived.spawnMult;
+  while (spawnT >= iv) { spawnT -= iv; if (orcs.length < 160) spawnOrc(); }
+  if (shake > 0) shake = Math.max(0, shake - dt * 3);
+  // barricade regen
+  if (derived.barRegen && S.barHp < derived.barMax) S.barHp = Math.min(derived.barMax, S.barHp + derived.barMax * derived.barRegen * dt);
+  // vanguard
+  for (const v of vans) {
+    if (v.x < v.tx) v.x = Math.min(v.tx, v.x + 60 * dt);
+    if (v.hitT > 0) v.hitT -= dt;
+    if (derived.vanMend && v.hp < v.maxhp) v.hp = Math.min(v.maxhp, v.hp + v.maxhp * derived.vanMend * dt);
+    const T = VAN[v.type]; v.swingT += dt;
+    if (v.swingT >= T.cd) {
+      let hitAny = false;
+      for (const o of orcs) { if (o.dead) continue; if (Math.hypot(o.x - v.x, o.y - v.y) < T.reach + o.r) { damage(o, derived.dmg * T.dmg * derived.vanDmg); burst(o.x, o.y, '#efe6d2', 2, 50); hitAny = true; if (!T.cleave) break; } }
+      if (hitAny) v.swingT = 0;
+    }
+  }
+  // orcs
+  for (const o of orcs) {
+    if (o.dead) continue;
+    o.wob += dt * 8;
+    if (o.burn > 0) { o.burn -= dt; o.hp -= derived.dmg * 0.35 * dt; if (o.hp <= 0) { kill(o); continue; } if (Math.random() < 0.25) parts.push({ x: o.x, y: o.y - 6, vx: (Math.random() - .5) * 20, vy: -40, life: 0.4, c: '#e2a85b', r: 2 }); }
+    if (o.hitT > 0) o.hitT -= dt;
+    // engage vanguard?
+    let eng = null;
+    for (const v of vans) if (Math.hypot(v.x - o.x, v.y - o.y) < o.r + 18) { eng = v; break; }
+    if (eng) {
+      o.swingT += dt; if (o.swingT >= 1) { o.swingT = 0; eng.hp -= o.atk; eng.hitT = 0.12; if (eng.hp <= 0) { burst(eng.x, eng.y, '#8fb7c9', 14, 100); toast(`A ${VAN[eng.type].name.toLowerCase()} falls`); vans.splice(vans.indexOf(eng), 1); } }
+      continue;
+    }
+    if (o.x <= BAR_X + BAR_W + o.r) {
+      o.x = BAR_X + BAR_W + o.r; o.swingT += dt;
+      if (o.swingT >= 1) { o.swingT = 0; barricadeHit(o.atk); burst(BAR_X + BAR_W, o.y, '#8a6a46', 3, 60); if (S.fallen) return; }
+      if (derived.spikes) damage(o, derived.dmg * derived.spikes * dt);
+      continue;
+    }
+    o.x -= o.spd * dt;
+  }
+  // archers
+  const shooters = [{ x: ELF_X, y: H / 2 }, { x: ELF_X - 10, y: H / 2 - 90 }, { x: ELF_X - 10, y: H / 2 + 90 }];
+  for (let i = 0; i <= derived.archers; i++) {
+    shotT[i] += dt;
+    if (shotT[i] >= 1 / derived.fireRate) { const tg = nearestOrc(shooters[i].x, shooters[i].y); if (tg) { shotT[i] = 0; fireVolley(shooters[i].x, shooters[i].y, tg, i === 0 ? 1 : 0.7 * derived.kin); } }
+  }
+  if (derived.knives) { knifeT += dt; if (knifeT >= 1 / derived.knives.rate) { const tg = nearestOrc(ELF_X, H / 2); if (tg) { knifeT = 0; const a = Math.atan2(tg.y - H / 2, tg.x - ELF_X); arrows.push({ x: ELF_X, y: H / 2, vx: Math.cos(a) * 640, vy: Math.sin(a) * 640, dmg: derived.knives.dmg, pierce: 0, hit: new Set(), target: tg, kind: 'knife', life: 2 }); } } }
+  if (derived.ballista) { ballT += dt; if (ballT >= 4) { const tg = nearestOrc(ELF_X, H / 2); if (tg) { ballT = 0; const a = Math.atan2(tg.y - H / 2 + 40, tg.x - ELF_X); arrows.push({ x: ELF_X + 6, y: H / 2 - 40, vx: Math.cos(a) * 760, vy: Math.sin(a) * 760, dmg: derived.ballista, pierce: 99, hit: new Set(), kind: 'bolt', life: 2 }); } } }
+  if (derived.storm) { S.storm += dt; if (S.storm >= 6) { S.storm = 0; let cur = nearestOrc(BAR_X + 200, H / 2), chain = [], seen = new Set();
+      while (cur && chain.length < 5) { const c = cur; chain.push(c); seen.add(c); damage(c, derived.dmg * 4 * derived.kin); cur = nearestOrc(c.x, c.y, o => !seen.has(o) && Math.hypot(o.x - c.x, o.y - c.y) < 140); }
+      if (chain.length) stormFlash.push({ pts: chain.map(o => [o.x, o.y]), life: 0.35 }); } }
+  if (derived.wolf) { const tg = nearestOrc(wolf.x, wolf.y, o => o.x < W - 40); if (tg) { wolf.tx = tg.x; wolf.ty = tg.y; }
+    const dx = wolf.tx - wolf.x, dy = wolf.ty - wolf.y, d = Math.hypot(dx, dy); if (d > 2) { wolf.x += dx / d * Math.min(d, 210 * dt); wolf.y += dy / d * Math.min(d, 210 * dt); }
+    wolf.biteT += dt; if (tg && d < 22 && wolf.biteT > 0.5) { wolf.biteT = 0; damage(tg, derived.wolf); burst(tg.x, tg.y, '#efe6d2', 3, 50); } }
+  if (derived.hawk) { hawk.a += dt * 1.6; hawkT += dt; const cx = 330, cy = H / 2; hawk.x = cx + Math.cos(hawk.a) * 120; hawk.y = cy + Math.sin(hawk.a * 1.3) * 100;
+    if (hawkT >= 4) { hawkT = 0; let best = null, bn = -1; for (const o of orcs) { if (o.dead) continue; let n = 0; for (const p of orcs) if (!p.dead && Math.hypot(p.x - o.x, p.y - o.y) < 60) n++; if (n > bn) { bn = n; best = o; } }
+      if (best) { for (const p of orcs) if (!p.dead && Math.hypot(p.x - best.x, p.y - best.y) < 60) damage(p, derived.dmg * 2.5 * derived.kin); burst(best.x, best.y, '#efe6d2', 14, 120); hawk.x = best.x; hawk.y = best.y - 30; } } }
+  if (derived.treant) { treantT += dt; if (treantT >= 3) { treantT = 0; let any = false; for (const o of orcs) if (!o.dead && o.x < BAR_X + 160) { damage(o, derived.dmg * 3 * derived.kin); any = true; } if (any) { burst(BAR_X + 50, H / 2 + 30, '#8fa98a', 16, 140); shake = Math.min(1, shake + 0.2); } } }
+  // arrows
+  for (const a of arrows) {
+    a.life -= dt;
+    if (derived.homing && a.kind === 'arrow' && a.target && !a.target.dead) { const ang = Math.atan2(a.target.y - a.y, a.target.x - a.x), cur = Math.atan2(a.vy, a.vx); let d = ang - cur; d = Math.atan2(Math.sin(d), Math.cos(d)); const na = cur + d * Math.min(1, 6 * dt); a.vx = Math.cos(na) * 520; a.vy = Math.sin(na) * 520; }
+    a.x += a.vx * dt; a.y += a.vy * dt;
+    for (const o of orcs) { if (o.dead || a.hit.has(o)) continue; if (Math.hypot(o.x - a.x, o.y - a.y) < o.r + 4) { a.hit.add(o); let d = a.dmg; const c = a.kind === 'arrow' && Math.random() < derived.crit; if (c) { d *= 3; addText(o.x, o.y - 22, 'crit', '#efe6d2'); } damage(o, d); if (derived.fire && a.kind === 'arrow') o.burn = 3; burst(o.x, o.y, '#efe6d2', 2, 60); if (a.pierce-- <= 0) { a.life = 0; break; } } }
+  }
+  for (let i = orcs.length - 1; i >= 0; i--) if (orcs[i].dead) orcs.splice(i, 1);
+  for (let i = arrows.length - 1; i >= 0; i--) { const a = arrows[i]; if (a.life <= 0 || a.x > W + 30 || a.y < -30 || a.y > H + 30) arrows.splice(i, 1); }
+  for (let i = parts.length - 1; i >= 0; i--) { const p = parts[i]; p.life -= dt; p.x += p.vx * dt; p.y += p.vy * dt; p.vx *= 0.96; if (p.life <= 0) parts.splice(i, 1); }
+  for (let i = texts.length - 1; i >= 0; i--) { const x = texts[i]; x.life -= dt; x.y -= 28 * dt; if (x.life <= 0) texts.splice(i, 1); }
+  for (let i = stormFlash.length - 1; i >= 0; i--) { stormFlash[i].life -= dt; if (stormFlash[i].life <= 0) stormFlash.splice(i, 1); }
+}
+
+/* ---------- Drawing ---------- */
+const gc = $('game'), g = gc.getContext('2d');
+function sizeCanvas() { const dpr = Math.min(2, window.devicePixelRatio || 1); const r = gc.getBoundingClientRect(); gc.width = Math.round(r.width * dpr); gc.height = Math.round(r.height * dpr); }
+function drawOrc(o) {
+  g.save(); g.translate(o.x, o.y);
+  const bob = Math.sin(o.wob) * 1.5;
+  g.fillStyle = 'rgba(20,26,36,.25)'; g.beginPath(); g.ellipse(0, o.r * 0.9, o.r * 0.9, o.r * 0.35, 0, 0, 6.28); g.fill();
+  g.fillStyle = o.hitT > 0 ? '#efe6d2' : o.kind === 'boss' ? '#9a7a46' : o.kind === 'brute' ? '#6c7a44' : '#7f8f52';
+  g.beginPath(); g.ellipse(0, bob, o.r, o.r * 1.05, 0, 0, 6.28); g.fill();
+  g.fillStyle = '#39412a'; g.fillRect(-o.r * 0.55, bob - o.r * 0.15, o.r * 0.32, o.r * 0.22); g.fillRect(o.r * 0.2, bob - o.r * 0.15, o.r * 0.32, o.r * 0.22);
+  g.fillStyle = '#efe6d2'; g.fillRect(-o.r * 0.42, bob + o.r * 0.3, o.r * 0.14, o.r * 0.3); g.fillRect(o.r * 0.28, bob + o.r * 0.3, o.r * 0.14, o.r * 0.3);
+  if (o.kind === 'boss') { g.fillStyle = '#e2a85b'; g.beginPath(); g.moveTo(-o.r * .8, -o.r * .7); g.lineTo(-o.r * .4, -o.r * 1.4); g.lineTo(0, -o.r * .8); g.lineTo(o.r * .4, -o.r * 1.4); g.lineTo(o.r * .8, -o.r * .7); g.closePath(); g.fill(); }
+  if (o.burn > 0) { g.fillStyle = 'rgba(226,168,91,.5)'; g.beginPath(); g.arc(0, bob - 4, o.r * 0.7, 0, 6.28); g.fill(); }
+  if (o.hp < o.maxhp) { g.fillStyle = 'rgba(27,33,48,.6)'; g.fillRect(-o.r, -o.r - 8, o.r * 2, 3); g.fillStyle = '#c76f6f'; g.fillRect(-o.r, -o.r - 8, o.r * 2 * Math.max(0, o.hp / o.maxhp), 3); }
+  g.restore();
+}
+function drawElf(x, y, dim) {
+  g.save(); g.translate(x, y); if (dim) g.globalAlpha = 0.85;
+  g.fillStyle = 'rgba(20,26,36,.25)'; g.beginPath(); g.ellipse(0, 16, 12, 4, 0, 0, 6.28); g.fill();
+  g.fillStyle = dim ? '#8b9a7d' : '#5f6f8a'; g.beginPath(); g.moveTo(-9, 14); g.lineTo(9, 14); g.lineTo(5, -6); g.lineTo(-5, -6); g.closePath(); g.fill();
+  g.fillStyle = '#cdbdea'; g.beginPath(); g.arc(0, -12, 7, 0, 6.28); g.fill();
+  g.strokeStyle = '#efe6d2'; g.lineWidth = 2; g.beginPath(); g.arc(12, 0, 16, -1.3, 1.3); g.stroke();
+  g.beginPath(); g.moveTo(16, -15); g.lineTo(16, 15); g.lineWidth = 1; g.stroke();
+  g.restore();
+}
+function drawVan(v) {
+  const T = VAN[v.type];
+  g.save(); g.translate(v.x, v.y);
+  g.fillStyle = 'rgba(20,26,36,.25)'; g.beginPath(); g.ellipse(0, 16, 12, 4, 0, 0, 6.28); g.fill();
+  g.fillStyle = v.hitT > 0 ? '#efe6d2' : T.color; g.beginPath(); g.moveTo(-9, 14); g.lineTo(9, 14); g.lineTo(6, -6); g.lineTo(-6, -6); g.closePath(); g.fill();
+  g.fillStyle = '#cdbdea'; g.beginPath(); g.arc(0, -12, 7, 0, 6.28); g.fill();
+  g.strokeStyle = '#efe6d2'; g.lineWidth = 2; g.beginPath();
+  if (T.cleave) { g.moveTo(8, -4); g.lineTo(26, -14); g.moveTo(8, 4); g.lineTo(26, 14); } else { g.moveTo(6, 8); g.lineTo(30, -8); }
+  g.stroke();
+  if (v.type === 'spear') { g.fillStyle = '#8a6a46'; g.beginPath(); g.arc(-10, 2, 7, 0, 6.28); g.fill(); }
+  if (v.hp < v.maxhp) { g.fillStyle = 'rgba(27,33,48,.6)'; g.fillRect(-12, -26, 24, 3); g.fillStyle = '#8fb7c9'; g.fillRect(-12, -26, 24 * Math.max(0, v.hp / v.maxhp), 3); }
+  g.restore();
+}
+function render() {
+  const sx = gc.width / W, sy = gc.height / H;
+  const shx = shake ? (Math.random() - .5) * 6 * shake : 0, shy = shake ? (Math.random() - .5) * 4 * shake : 0;
+  g.setTransform(sx, 0, 0, sy, shx * sx, shy * sy);
+  g.fillStyle = '#7c9676'; g.fillRect(-10, -10, W + 20, H + 20);
+  g.fillStyle = '#86a07e'; for (let i = 0; i < 40; i++) { const x = (i * 97 + 31) % W, y = (i * 61 + 17) % H; g.fillRect(x, y, 26, 14); }
+  g.strokeStyle = 'rgba(239,230,210,.18)'; g.lineWidth = 1;
+  for (let i = 0; i < 60; i++) { const x = (i * 143 + 11) % W, y = (i * 83 + 7) % H; if (x < BAR_X + 20) continue; g.beginPath(); g.moveTo(x, y + 4); g.lineTo(x + 2, y - 3); g.moveTo(x + 4, y + 4); g.lineTo(x + 6, y - 2); g.stroke(); }
+  // grove side
+  g.fillStyle = '#9fb391'; g.fillRect(-10, -10, BAR_X + 10, H + 20);
+  // barricade
+  const frac = Math.max(0, S.barHp / derived.barMax);
+  g.fillStyle = 'rgba(20,26,36,.3)'; g.fillRect(BAR_X + 4, 0, BAR_W + 4, H);
+  for (let y = 0; y < H; y += 18) {
+    const alive = (y / H) < frac || Math.random() < frac; // splinter the top as hp drops
+    g.fillStyle = alive ? (y % 36 ? '#8a6a46' : '#7a5c3c') : '#4e3a28';
+    g.fillRect(BAR_X, y, BAR_W, 16);
+    g.fillStyle = '#5a4634'; g.fillRect(BAR_X + 2, y - 2, BAR_W - 4, 3);
+  }
+  g.fillStyle = '#c9b78a'; g.fillRect(BAR_X - 3, 0, 3, H);
+  if (derived.spikes) { g.fillStyle = '#efe6d2'; for (let y = 8; y < H; y += 24) { g.beginPath(); g.moveTo(BAR_X + BAR_W, y); g.lineTo(BAR_X + BAR_W + 9, y + 4); g.lineTo(BAR_X + BAR_W, y + 8); g.closePath(); g.fill(); } }
+  // treant
+  if (derived.treant) { g.fillStyle = '#4e5e3f'; g.fillRect(BAR_X + 40, H / 2 + 10, 14, 34); g.fillStyle = '#5f7d53'; g.beginPath(); g.arc(BAR_X + 47, H / 2 + 2, 22, 0, 6.28); g.fill(); g.fillStyle = '#6f8f60'; g.beginPath(); g.arc(BAR_X + 40, H / 2 - 6, 14, 0, 6.28); g.fill(); }
+  drawElf(ELF_X, H / 2, false);
+  if (derived.archers >= 1) drawElf(ELF_X - 10, H / 2 - 90, true);
+  if (derived.archers >= 2) drawElf(ELF_X - 10, H / 2 + 90, true);
+  if (derived.ballista) { g.fillStyle = '#5a4634'; g.fillRect(ELF_X - 10, H / 2 - 48, 30, 10); g.fillStyle = '#efe6d2'; g.fillRect(ELF_X + 10, H / 2 - 45, 22, 3); }
+  if (derived.wolf) { g.save(); g.translate(wolf.x, wolf.y); g.fillStyle = 'rgba(20,26,36,.25)'; g.beginPath(); g.ellipse(0, 8, 12, 4, 0, 0, 6.28); g.fill(); g.fillStyle = '#9aa3ad'; g.beginPath(); g.ellipse(0, 0, 13, 7, 0, 0, 6.28); g.fill(); g.beginPath(); g.arc(11, -4, 5, 0, 6.28); g.fill(); g.restore(); }
+  [...vans].sort((a, b) => a.y - b.y).forEach(drawVan);
+  orcs.slice().sort((a, b) => a.y - b.y).forEach(drawOrc);
+  for (const a of arrows) { const l = a.kind === 'bolt' ? 22 : a.kind === 'knife' ? 8 : 14; const n = Math.hypot(a.vx, a.vy); g.strokeStyle = a.kind === 'bolt' ? '#5a4634' : a.kind === 'knife' ? '#d9d4c3' : '#efe6d2'; g.lineWidth = a.kind === 'bolt' ? 3 : 1.5; g.beginPath(); g.moveTo(a.x, a.y); g.lineTo(a.x - a.vx / n * l, a.y - a.vy / n * l); g.stroke(); }
+  for (const s of stormFlash) { g.strokeStyle = `rgba(205,189,234,${s.life / 0.35})`; g.lineWidth = 2; g.beginPath(); s.pts.forEach((p, i) => i ? g.lineTo(p[0] + (Math.random() - .5) * 6, p[1] + (Math.random() - .5) * 6) : g.moveTo(p[0], p[1])); g.stroke(); }
+  if (derived.hawk) { g.save(); g.translate(hawk.x, hawk.y); g.fillStyle = '#5a4634'; g.beginPath(); g.moveTo(-12, 0); g.lineTo(0, -3); g.lineTo(12, 0); g.lineTo(0, 3); g.closePath(); g.fill(); g.restore(); }
+  for (const p of parts) { g.globalAlpha = Math.max(0, p.life); g.fillStyle = p.c; g.fillRect(p.x, p.y, p.r, p.r); }
+  g.globalAlpha = 1;
+  g.font = '700 12px "Atkinson Hyperlegible", sans-serif'; g.textAlign = 'center';
+  for (const x of texts) { g.globalAlpha = Math.min(1, x.life * 1.5); g.fillStyle = x.c; g.fillText(x.s, x.x, x.y); }
+  g.globalAlpha = 1;
+  g.setTransform(sx, 0, 0, sy, 0, 0);
+  // barricade health bar (top left) & wave bar (bottom)
+  g.fillStyle = 'rgba(27,33,48,.6)'; g.fillRect(12, 10, 150, 10);
+  g.fillStyle = frac > 0.5 ? '#c9a06a' : frac > 0.25 ? '#e2a85b' : '#c76f6f'; g.fillRect(12, 10, 150 * frac, 10);
+  g.fillStyle = '#efe6d2'; g.font = '10px "Atkinson Hyperlegible", sans-serif'; g.textAlign = 'left'; g.fillText('BARRICADE ' + fmt(Math.max(0, S.barHp)) + ' / ' + fmt(derived.barMax), 12, 32);
+  if (derived.muster) g.fillText('VANGUARD ' + vans.length + ' / ' + derived.vanCap, 12, 46);
+  g.fillStyle = 'rgba(27,33,48,.45)'; g.fillRect(0, H - 5, W, 5); g.fillStyle = '#e2a85b'; g.fillRect(0, H - 5, W * (S.waveT / WAVE_LEN), 5);
+}
+gc.addEventListener('pointerdown', e => {
+  if (S.fallen) return;
+  const r = gc.getBoundingClientRect(); const x = (e.clientX - r.left) / r.width * W, y = (e.clientY - r.top) / r.height * H;
+  const tg = nearestOrc(x, y) || { x, y }; fireVolley(ELF_X, H / 2, tg, 1.5); burst(x, y, '#efe6d2', 4, 40);
+});
+$('dep-spear').onclick = () => deploy('spear');
+$('dep-blade').onclick = () => deploy('blade');
+$('fallen-btn').onclick = replant;
+
+/* ---------- Tree panel ---------- */
+const tc = $('tree'), tg2 = tc.getContext('2d');
+let selected = 'sharp';
+const canBuy = n => { const lvl = S.lv[n.id] || 0; return lvl < n.max && (!n.parent || (S.lv[n.parent] || 0) > 0) && S.star >= nodeCost(n, lvl); };
+const unlocked = n => !n.parent || (S.lv[n.parent] || 0) > 0;
+function drawTree() {
+  const c = tg2; c.clearRect(0, 0, tc.width, tc.height);
+  c.lineWidth = 2;
+  for (const n of NODES) if (n.parent) { const p = NODE[n.parent]; c.strokeStyle = unlocked(n) ? BRANCH_COLOR[n.branch] : '#3e4a60'; c.globalAlpha = unlocked(n) ? 0.6 : 0.5; c.beginPath(); c.moveTo(p.x, p.y); c.lineTo(n.x, n.y); c.stroke(); }
+  c.globalAlpha = 1;
+  for (const n of NODES) {
+    const lvl = S.lv[n.id] || 0, col = BRANCH_COLOR[n.branch], un = unlocked(n), maxed = lvl >= n.max;
+    const r = n.id === 'root' ? 16 : 13;
+    c.beginPath(); c.arc(n.x, n.y, r, 0, 6.28);
+    c.fillStyle = maxed ? col : lvl > 0 ? '#2b3448' : '#1b2130'; c.fill();
+    c.lineWidth = n.id === selected ? 3 : 2; c.strokeStyle = un ? col : '#3e4a60'; c.stroke();
+    if (lvl > 0 && !maxed) { c.beginPath(); c.arc(n.x, n.y, r, -1.571, -1.571 + 6.283 * lvl / n.max); c.strokeStyle = col; c.lineWidth = 4; c.stroke(); }
+    if (canBuy(n)) { c.beginPath(); c.arc(n.x, n.y, r + 5, 0, 6.28); c.strokeStyle = '#e2a85b'; c.lineWidth = 1; c.globalAlpha = 0.5 + 0.5 * Math.sin(t * 4); c.stroke(); c.globalAlpha = 1; }
+    c.fillStyle = un ? '#efe6d2' : '#6b7383'; c.font = '11px "Atkinson Hyperlegible", sans-serif'; c.textAlign = 'center'; c.fillText(n.name, n.x, n.y + r + 13);
+    if (n.max > 1) { c.fillStyle = maxed ? '#1b2130' : '#efe6d2'; c.font = '700 10px "Atkinson Hyperlegible", sans-serif'; c.fillText(lvl + '/' + n.max, n.x, n.y + 4); }
+  }
+  let lx = 14; c.font = '10px "Atkinson Hyperlegible", sans-serif'; c.textAlign = 'left';
+  for (const k in BRANCH_COLOR) { c.fillStyle = BRANCH_COLOR[k]; c.fillRect(lx, 14, 8, 8); c.fillStyle = '#b9b09c'; c.fillText(k.toUpperCase(), lx + 12, 22); lx += c.measureText(k.toUpperCase()).width + 30; }
+}
+tc.addEventListener('click', e => {
+  const r = tc.getBoundingClientRect(); const x = (e.clientX - r.left) / r.width * tc.width, y = (e.clientY - r.top) / r.height * tc.height;
+  for (const n of NODES) if (Math.hypot(n.x - x, n.y - y) < 20) { if (selected === n.id && canBuy(n)) buy(n); selected = n.id; renderDetail(); return; }
+});
+function buy(n) {
+  if (!canBuy(n)) return;
+  const lvl = S.lv[n.id] || 0; S.star -= nodeCost(n, lvl); S.lv[n.id] = lvl + 1;
+  const before = derived.barMax; compute();
+  if (n.id === 'timber') S.barHp += derived.barMax - before;  // growing the wall heals the new timber
+  renderDetail();
+  if (lvl === 0 && n.id !== 'sharp') toast(`${n.name} joins the grove`);
+}
+function renderDetail() {
+  const n = NODE[selected], lvl = S.lv[n.id] || 0, cost = nodeCost(n, lvl), maxed = lvl >= n.max, un = unlocked(n);
+  $('detail').innerHTML = `
+    <div class="branch" style="color:${BRANCH_COLOR[n.branch]}">${n.branch}${n.parent ? ' · needs ' + NODE[n.parent].name : ''}</div>
+    <div class="name"><span>${n.name}</span><span style="font-size:13px;color:var(--cream-dim)">${n.max > 1 ? 'rank ' + lvl + ' / ' + n.max : lvl ? 'learned' : ''}</span></div>
+    <div class="desc">${n.desc}</div>
+    <div class="row"><span style="font-variant-numeric:tabular-nums;color:var(--amber)">${maxed ? 'Fully grown' : n.cost === 0 ? '' : fmt(cost) + ' starlight'}</span>
+    <button class="buy" id="buy-btn" ${canBuy(n) ? '' : 'disabled'}>${maxed ? 'Complete' : !un ? 'Locked' : lvl ? 'Improve' : 'Learn'}</button></div>`;
+  const b = $('buy-btn'); if (b) b.onclick = () => buy(n);
+}
+
+/* ---------- HUD, tabs, prestige ---------- */
+function toast(msg) { const el = $('toast'); el.textContent = msg; el.classList.add('on'); clearTimeout(el._t); el._t = setTimeout(() => el.classList.remove('on'), 2600); }
+let hudT = 0;
+function hud() {
+  $('st-star').textContent = fmt(S.star); $('st-wave').textContent = S.wave; $('st-kills').textContent = fmt(S.kills); $('st-heart').textContent = S.heart;
+  const gain = prestigeGain(), ok = S.wave >= 12 && gain > 0 && !S.fallen;
+  $('pr-gain').textContent = '+' + gain; $('pr-btn').disabled = !ok; $('pr-req').textContent = ok ? 'Ready. Best wave ' + S.bestWave + '.' : 'Voluntary replant from wave 12.';
+  const b = $('buy-btn'); if (b) b.disabled = !canBuy(NODE[selected]);
+  // rally buttons
+  const sp = $('dep-spear'), spc = $('dep-spear-c');
+  if (!derived.muster) { sp.disabled = true; spc.textContent = 'Learn Muster'; spc.className = 'c dim'; }
+  else { const c = VAN.spear.cost(S.wave), full = vans.length >= derived.vanCap; sp.disabled = S.fallen || full || S.star < c; spc.textContent = full ? 'Line is full' : fmt(c) + ' starlight'; spc.className = 'c' + (full || S.star < c ? ' dim' : ''); }
+  const bl = $('dep-blade'), blc = $('dep-blade-c'); bl.hidden = !derived.champion;
+  if (derived.champion) { const c = VAN.blade.cost(S.wave), full = vans.length >= derived.vanCap; bl.disabled = S.fallen || full || S.star < c; blc.textContent = full ? 'Line is full' : fmt(c) + ' starlight'; blc.className = 'c' + (full || S.star < c ? ' dim' : ''); }
+}
+$('tab-grove').onclick = () => setTab('grove'); $('tab-prestige').onclick = () => setTab('prestige');
+function setTab(k) { $('pane-grove').hidden = k !== 'grove'; $('pane-prestige').hidden = k !== 'prestige'; $('tab-grove').setAttribute('aria-selected', k === 'grove'); $('tab-prestige').setAttribute('aria-selected', k === 'prestige'); }
+$('pr-btn').onclick = () => { if (S.wave >= 12 && prestigeGain() > 0 && !S.fallen) replant(); };
+$('btn-save').onclick = () => { save(); toast('Saved'); };
+let wipeArmed = false;
+$('btn-reset').onclick = () => {
+  if (!wipeArmed) { wipeArmed = true; $('btn-reset').textContent = 'Really wipe? click again'; setTimeout(() => { wipeArmed = false; $('btn-reset').textContent = 'Wipe save'; }, 4000); return; }
+  try { localStorage.removeItem(SAVE_KEY); } catch (e) {}
+  S = fresh(); compute(); orcs.length = 0; arrows.length = 0; vans.length = 0; selected = 'sharp'; renderDetail(); $('fallen').hidden = true; wipeArmed = false; $('btn-reset').textContent = 'Wipe save'; toast('A fresh dawn.');
+};
+
+/* ---------- Boot ---------- */
+function start(hot) {
+  load();
+  if (hot && hot.S) { S = Object.assign(fresh(), hot.S); compute(); }
+  if (S.fallen) fall();
+  try { window.claude?.hot?.snapshot?.(() => ({ S })); } catch (e) {}
+  sizeCanvas(); window.addEventListener('resize', sizeCanvas);
+  renderDetail();
+  let last = performance.now(), saveT = 0;
+  function frame(now) {
+    let dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (!document.hidden) { update(dt); render(); }
+    hudT += dt; if (hudT > 0.15) { hudT = 0; hud(); drawTree(); }
+    saveT += dt; if (saveT > 20) { saveT = 0; save(); }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+  window.addEventListener('beforeunload', save);
+}
+window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});
+})();
+</script>
