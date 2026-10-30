@@ -1,6 +1,11 @@
 const UNITS = ['K', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp'];
 
-export function fmt(n: number, mode: 'short' | 'sci' = 'short'): string {
+export type NumberFormat = 'short' | 'sci';
+let current: NumberFormat = 'short';
+/** The player's number format (Settings); fmt uses it unless a mode is passed. */
+export const setNumberFormat = (m: NumberFormat): void => { current = m; };
+
+export function fmt(n: number, mode: NumberFormat = current): string {
   if (!Number.isFinite(n)) return '∞';
   if (n < 1000) return Math.floor(n).toString();
   if (mode === 'sci') return n.toExponential(2).replace('+', '');

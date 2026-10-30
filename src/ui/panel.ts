@@ -8,7 +8,7 @@ import { canRally } from '../sim/vanguard';
 import { gain } from '../sim/prestige';
 import { bossesReady, canSummonBoss } from '../sim/boss';
 import { BOSS_WAVE } from '../data/bosses';
-import { fmt } from './format';
+import { NumberFormat, fmt, setNumberFormat } from './format';
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string): T => document.getElementById(id) as T;
 const VAN_NAME: Record<VanType, string> = { spear: 'Spearman', blade: 'Bladedancer' };
@@ -29,7 +29,9 @@ export class Panel {
     $('dep-spear').querySelector('.n')!.textContent = STR.rallySpear; $('dep-blade').querySelector('.n')!.textContent = STR.rallyBlade;
     $('dep-boss').querySelector('.n')!.textContent = STR.summonBoss;
 
-    $('tab-grove').onclick = () => this.setTab('grove'); $('tab-prestige').onclick = () => this.setTab('prestige');
+    $('tab-settings').textContent = STR.tabSettings;
+    $('tab-grove').onclick = () => this.setTab('grove'); $('tab-prestige').onclick = () => this.setTab('prestige'); $('tab-settings').onclick = () => this.setTab('settings');
+    this.initSettings();
     $('dep-spear').onclick = () => this.rally('spear'); $('dep-blade').onclick = () => this.rally('blade');
     $('dep-boss').onclick = () => { game.summonBoss(); };
     $('pr-btn').onclick = () => { if (game.canReplant() && !game.state.run.fallen) this.doReplant(); };
@@ -101,9 +103,51 @@ export class Panel {
     $('buy-btn').onclick = () => this.buy(n.id);
   }
 
-  setTab(k: 'grove' | 'prestige'): void {
-    $('pane-grove').hidden = k !== 'grove'; $('pane-prestige').hidden = k !== 'prestige';
-    $('tab-grove').setAttribute('aria-selected', String(k === 'grove')); $('tab-prestige').setAttribute('aria-selected', String(k === 'prestige'));
+  setTab(k: 'grove' | 'prestige' | 'settings'): void {
+    for (const t of ['grove', 'prestige', 'settings'] as const) { $('pane-' + t).hidden = k !== t; $('tab-' + t).setAttribute('aria-selected', String(k === t)); }
+  }
+
+  /** Called after any settings change so main.ts can apply volume and motion. */
+  onSettings: () => void = () => {};
+
+  private initSettings(): void {
+    $('set-vol-k').textContent = STR.setVolume; $('set-motion-k').textContent = STR.setMotion; $('set-num-k').textContent = STR.setNumbers;
+    const mo = $<HTMLSelectElement>('set-motion').options; mo[0]!.text = STR.motionSystem; mo[1]!.text = STR.motionFull; mo[2]!.text = STR.motionReduced;
+    const no = $<HTMLSelectElement>('set-num').options; no[0]!.text = STR.numShort; no[1]!.text = STR.numSci;
+    $('set-save-k').textContent = STR.setSave; $('set-save-hint').textContent = STR.exportHint;
+    $('btn-export').textContent = STR.exportBtn; $('btn-import').textContent = STR.importBtn;
+    this.syncSettings();
+    $<HTMLInputElement>('set-vol').oninput = (e) => { this.game.settings.volume = Number((e.target as HTMLInputElement).value); this.settingsChanged(); };
+    $<HTMLSelectElement>('set-motion').onchange = (e) => { const v = (e.target as HTMLSelectElement).value; this.game.settings.reducedMotion = v === 'sys' ? null : v === 'reduced'; this.settingsChanged(); };
+    $<HTMLSelectElement>('set-num').onchange = (e) => { this.game.settings.numberFormat = (e.target as HTMLSelectElement).value as NumberFormat; this.settingsChanged(); };
+    $('btn-export').onclick = () => {
+      const blob = this.game.exportSave(), box = $<HTMLTextAreaElement>('set-blob'); box.value = blob; box.select();
+      navigator.clipboard?.writeText(blob).then(() => this.toast(STR.exported), () => {});
+    };
+    $('btn-import').onclick = () => this.importSave();
+  }
+
+  /** Reflect game.settings in the controls and the number formatter. */
+  private syncSettings(): void {
+    const set = this.game.settings;
+    $<HTMLInputElement>('set-vol').value = String(set.volume);
+    $<HTMLSelectElement>('set-motion').value = set.reducedMotion === null ? 'sys' : set.reducedMotion ? 'reduced' : 'full';
+    $<HTMLSelectElement>('set-num').value = set.numberFormat;
+    setNumberFormat(set.numberFormat);
+  }
+
+  private settingsChanged(): void { this.syncSettings(); this.onSettings(); this.game.save(); this.renderDetail(); }
+
+  private importArmed = false;
+  private importSave(): void {
+    const btn = $('btn-import'), str = $<HTMLTextAreaElement>('set-blob').value;
+    if (!str.trim()) return;
+    if (!this.importArmed) { this.importArmed = true; btn.textContent = STR.importConfirm; setTimeout(() => { this.importArmed = false; btn.textContent = STR.importBtn; }, 4000); return; }
+    this.importArmed = false; btn.textContent = STR.importBtn;
+    try { this.game.importSave(str); } catch { this.toast(STR.importBad); return; }
+    $('fallen').hidden = true; this.tree.selected = 'sharp'; this.syncSettings(); this.onSettings(); this.renderDetail();
+    if (this.game.state.run.fallen) this.showFallen();
+    this.toast(STR.imported);
   }
 
   private showFallen(): void {

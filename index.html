@@ -41,6 +41,7 @@
       <div class="tabs" role="tablist">
         <button role="tab" id="tab-grove" aria-selected="true"></button>
         <button role="tab" id="tab-prestige" aria-selected="false"></button>
+        <button role="tab" id="tab-settings" aria-selected="false"></button>
       </div>
       <div class="tab" id="pane-grove">
         <div class="treewrap"><canvas id="tree"></canvas></div>
@@ -58,6 +59,17 @@
             <li id="pr-req"></li>
           </ul>
           <div class="row"><button class="buy" id="pr-btn" disabled></button></div>
+        </div>
+      </div>
+      <div class="tab" id="pane-settings" hidden>
+        <div class="prestige settings">
+          <label class="set"><span id="set-vol-k"></span><input type="range" id="set-vol" min="0" max="1" step="0.05"></label>
+          <label class="set"><span id="set-motion-k"></span><select id="set-motion"><option value="sys"></option><option value="full"></option><option value="reduced"></option></select></label>
+          <label class="set"><span id="set-num-k"></span><select id="set-num"><option value="short"></option><option value="sci"></option></select></label>
+          <h2 id="set-save-k"></h2>
+          <p id="set-save-hint"></p>
+          <textarea id="set-blob" rows="4" spellcheck="false"></textarea>
+          <div class="row"><button class="ghost" id="btn-export"></button><button class="ghost" id="btn-import"></button></div>
         </div>
       </div>
       <div class="footer">

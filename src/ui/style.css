@@ -66,8 +66,13 @@ header h1 em { color: var(--amber); font-style: italic; }
 .prestige p { margin: 0; color: var(--cream-dim); max-width: 60ch; }
 .prestige .big { font-family: var(--display); font-size: 34px; color: var(--rose); font-weight: 700; }
 .prestige ul { margin: 0; padding-left: 18px; color: var(--cream-dim); }
+.set { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.set select, .set input, .settings textarea { font: inherit; color: var(--cream); background: var(--ink); border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; }
+.set input[type=range] { flex: 0 1 200px; padding: 0; accent-color: var(--amber); }
+.settings textarea { width: 100%; font-size: 11px; resize: vertical; word-break: break-all; }
+.settings .row { justify-content: flex-start; }
 .footer { display: flex; gap: 10px; flex-wrap: wrap; padding: 10px 14px; border-top: 1px solid var(--line); }
 @media (max-width: 860px) { .main { grid-template-columns: 1fr; } .treewrap { height: 380px; } }
 @media (max-width: 500px) { .fallen { gap: 4px; padding: 8px; justify-content: safe center; overflow-y: auto; } .fallen h2 { font-size: 22px; } .fallen p { font-size: 13px; } .fallen .big { font-size: 26px; line-height: 1.1; } }
-@media (pointer: coarse) { .buy, .ghost, .tabs button, .deploy { min-height: 44px; } .ghost { padding-inline: 14px; } }
+@media (pointer: coarse) { .buy, .ghost, .tabs button, .deploy, .set select { min-height: 44px; } .ghost { padding-inline: 14px; } }
 @media (prefers-reduced-motion: reduce) { .toast { transition: none; } }
