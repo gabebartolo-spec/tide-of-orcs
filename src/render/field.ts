@@ -8,6 +8,7 @@ import { fmt } from '../ui/format';
 import { STR } from '../data/strings';
 import { Ceremony } from './ceremony';
 import { Sprites } from './sprites';
+import { SKY, dusk } from '../data/presentation';
 
 /** Seconds an impact ring lingers. */
 const IMPACT_LIFE = 0.3;
@@ -75,7 +76,11 @@ export class FieldRenderer {
     g.fillStyle = P.plainPatch; for (let i = 0; i < 40; i++) { const x = (i * 97 + 31) % W, y = (i * 61 + 17) % H; g.fillRect(x, y, 26, 14); }
     g.strokeStyle = P.grass; g.lineWidth = 1;
     for (let i = 0; i < 60; i++) { const x = (i * 143 + 11) % W, y = (i * 83 + 7) % H; if (x < BAR_X + 20) continue; g.beginPath(); g.moveTo(x, y + 4); g.lineTo(x + 2, y - 3); g.moveTo(x + 4, y + 4); g.lineTo(x + 6, y - 2); g.stroke(); }
+    const n = dusk(this.clock);
+    g.globalAlpha = SKY.duskAlpha * n; g.fillStyle = P.plainDusk; g.fillRect(BAR_X, -10, W - BAR_X + 10, H + 20); g.globalAlpha = 1;
+    this.hills();
     g.fillStyle = P.groveSide; g.fillRect(-10, -10, BAR_X + 10, H + 20);
+    if (n > 0.01) { const lg = g.createRadialGradient(ELF_X, H / 2, 0, ELF_X, H / 2, SKY.lampR); lg.addColorStop(0, P.lamp); lg.addColorStop(1, P.lampClear); g.globalAlpha = n; g.fillStyle = lg; g.fillRect(ELF_X - SKY.lampR, H / 2 - SKY.lampR, SKY.lampR * 2, SKY.lampR * 2); g.globalAlpha = 1; }
 
     // barricade
     const frac = barFrac(s);
@@ -117,6 +122,17 @@ export class FieldRenderer {
     if (s.stats.muster) g.fillText(STR.vanguardHud(s.vans.count, s.stats.vanCap), 12, 46);
     g.fillStyle = P.dim45; g.fillRect(0, H - 5, W, 5); g.fillStyle = P.amber; g.fillRect(0, H - 5, W * (s.run.waveT / WAVE_LEN), 5);
     this.ceremony.draw(g, dt);
+  }
+
+  /** Two bands of distant hills along the far edge, drifting slowly (still under reduced motion). */
+  private hills(): void {
+    const g = this.g;
+    SKY.hills.forEach((b, i) => {
+      const off = this.reducedMotion ? 0 : (this.clock * b.speed) % b.w;
+      g.fillStyle = i ? P.hillNear : P.hillFar; g.beginPath(); g.moveTo(BAR_X, b.y);
+      for (let k = 0, x = BAR_X - off; x <= W + b.w; k++, x += b.w / 2) g.quadraticCurveTo(x + b.w / 4, b.y + (k % 2 ? b.h * 0.6 : b.h), x + b.w / 2, b.y + b.h * 0.3);
+      g.lineTo(W + 10, b.y + b.h * 0.3); g.lineTo(W + 10, -10); g.lineTo(BAR_X, -10); g.closePath(); g.fill();
+    });
   }
 
   /** Aim circle: dotted flight arc from the elf, the strike circle, and a ring that fills as the bow draws. */
