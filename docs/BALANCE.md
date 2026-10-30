@@ -172,3 +172,15 @@ Waves 1–15 are unchanged. This deliberately misses the run 2 ≤ 30 target by 
 | All falls in 60 min, seeds 1 / 2 / 3 | 9, 34, 40, 47 · 7, 31, 40, 46 · 8, 33, 40, 47 |
 
 The first-run half (wave 12–18) stays open until the bimodality is traced. Applying this needs `hp(w)` changed in `## Current` and `waveHP` in `src/data/balance.ts`, plus its pinned tests at waves 25 and 50. `vanBaseHp` also derives from `waveHP`, so vanguard HP scales with the ramp too; that needs a check before applying.
+
+#### First-fall bimodality trace (2026-10-30)
+A per-12 s trace of run 1 (base damage 9, seeds 1 and 4) shows one shared crisis at wave 12: live orcs jump from ~18 to ~30 and 10–18 of them reach the wall. Seed 1 had 41 starlight banked, rallied one spear, and fell at wave 12. Seed 4 had 219, rallied two, held at 3% wall, then took off: starlight went 219 → 870 by wave 21 → 3.9M by wave 45, and the full tree was bought by wave 26. Past wave 12, kills feed damage faster than `waveHP` grows. So the run has a tipping point, not a slope: it either breaks at the wave-12 surge or snowballs.
+
+Tests on seeds 1–10 (first fall wave, run 2 wave):
+
+| Change | First falls (seeds 1–10) | What it shows |
+|---|---|---|
+| Greedy saves starlight for a rally below 80% wall, damage 6–9 | Still split; damage 9 gives 12 / 12 / 12 / 16 / 13 / 15 / 12 / 12 / 45 / 15 | Not a policy artifact; rally margin only moves which seeds tip over |
+| Damage 8–10 × ramp K10–13 / R1.25–1.30 (12 combos) | Always 10–13 or 31–37, never 14–30 | An earlier ramp lowers the upper mode but doesn't close the gap |
+
+Conclusion: the 12–18 first-fall target isn't reachable by tuning one curve. Once a run survives the wave-12 surge, its kills feed damage faster than `waveHP` grows. Closing the gap needs that feedback weakened inside waves 12–20: for example node costs that grow with wave reached, or starlight per kill that falls off relative to `waveHP` in that window. Either one is a new formula, not a re-tune, so it needs a director decision first. With today's formulas, damage 8 keeps the first fall mostly at 10–12, with 3 of 10 seeds tipping over.
