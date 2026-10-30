@@ -58,6 +58,14 @@ Rules: semantic colours (amber = money, timber = the wall, rose = permanent/dang
 - Replant: tree desaturates, amber particles rise, one seed falls, field fades up through a #e2a85b-tinted overlay. ≤ 4 s.
 - Reduced motion: no bob, no pulse, no shake; replant becomes a 300 ms cross-fade.
 
+## Asset pipeline (tools Gabe has: Tripo, Cascadeur, ElevenLabs)
+Vector draws stay the baseline so the game is always playable without assets. M4 may upgrade actors to **pre-rendered sprite sheets** on top of the same palette:
+- **Tripo** generates the 3D models (orc grunt/runner/brute/warboss, elf, spearman, bladedancer, wolf, hawk, treant). Prompt with the palette hexes and "soft low-poly toy-board, flat shading, no outlines". One model per actor; variants by tint in-engine, not by new models.
+- **Cascadeur** animates them: walk, attack, hit, death; vanguard idle/stance; wall-hack swing. Loops of 8–12 frames at 12 fps.
+- Render to sheets with an orthographic camera at the field's ~20° top-down tilt, 64 px tall for grunts, scaled by `radius`, flat 25% ink shadow added in-engine. PNG sheets under `public/sprites/`, atlas JSON beside them, loaded lazily with vector fallback.
+- Sheet budget: ≤ 2 MB total for 1.0 so the itch build stays snappy.
+- **ElevenLabs** produces the audio: sound-effects generation for the ~14 SFX (arrow loose, knife, bolt, orc hit, orc death, brute death, boss roar, wall thud, wall creak, wall fall, rally horn, vanguard death, node bought, replant), and an ambient wind-and-grove bed. Export 44.1 kHz OGG + MP3 fallback, normalised to −16 LUFS, under `public/audio/`. No voice lines in 1.0.
+
 ## M4 presentation additions
 - Parallax: two bands of distant hills (sageDeep darkened) scrolling very slowly.
 - Day/night: a 10-minute cycle tinting the plain between day (#7c9676) and dusk (#5f6f72) with lamplight on the bank at night (amber radial, 20% alpha).

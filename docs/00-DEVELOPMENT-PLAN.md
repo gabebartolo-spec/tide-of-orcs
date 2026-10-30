@@ -75,8 +75,8 @@ Goal: parity with the prototype, properly built.
 **Done when:** three consecutive prestige runs each feel faster than the last.
 
 ### M4 — Presentation (weeks 6–7)
-- Final art: orc silhouettes, elf and companions, wall weathering, parallax hills, day/night cycle tinting.
-- Audio (ambient, SFX, music beds, ducking on flood/boss).
+- Final art: Tripo models → Cascadeur animation → sprite sheets for orcs, elf, vanguard, companions (ART-STYLE.md §Asset pipeline); vector draws remain the fallback. Wall weathering, parallax hills, day/night tinting.
+- Audio: ElevenLabs SFX and ambient bed, two music beds, ducking on wall fall and boss.
 - Tree layout polish: branch curves, bloom on affordable nodes, camera easing.
 - Mobile layout and touch targets.
 - Settings, reduced-motion path, number formats.

@@ -66,9 +66,11 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 ## M4 — Presentation
 | Id | Task | Area | Depends | Owner | Status |
 |---|---|---|---|---|---|
-| TB-060 | Final orc/elf/companion vector art pass per ART-STYLE | render | M2 | | todo |
+| TB-060 | Sprite-sheet loader with atlas JSON and vector fallback; draw actors from sheets when present | render | M2 | | todo |
+| TB-068 | Tripo models + Cascadeur loops → sheets for orcs, elf, vanguard, companions (ART-STYLE §Asset pipeline) | art | 060 | gabe | todo |
+| TB-069 | ElevenLabs SFX set (14) + ambient bed, exported per ART-STYLE | audio | — | gabe | todo |
 | TB-061 | Parallax hills, day/night tint, bank lamplight | render | 018 | | todo |
-| TB-062 | Audio engine: ambient loop, SFX map from events, ducking | audio | 019 | | todo |
+| TB-062 | Audio engine: ambient loop, SFX map from events, ducking | audio | 019,069 | | todo |
 | TB-063 | Music beds ×2, crossfade on Replant | audio | 062 | | todo |
 | TB-064 | Mobile layout, touch targets, pinch zoom on tree | ui | 021 | | todo |
 | TB-065 | Settings tab: volume, reduced motion override, number format, export/import | ui | 008 | | todo |

@@ -26,6 +26,9 @@ Priority when things disagree: the prototype's *behaviour* (what the player sees
 - No runtime dependencies beyond what `docs/ARCHITECTURE.md` lists. Ask before adding one.
 - Target: desktop and mobile browsers. Itch.io / static hosting first; Steam (Electron) later.
 
+## External tools Gabe has
+- **Tripo** (3D model generation), **Cascadeur** (animation), **ElevenLabs** (SFX/ambient). M4 presentation uses them per `docs/ART-STYLE.md` §Asset pipeline. Agents do not call these; they consume exported sheets and audio files placed under `public/`.
+
 ## Commands
 
 ```
