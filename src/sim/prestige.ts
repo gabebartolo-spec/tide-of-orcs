@@ -1,4 +1,4 @@
-import { OFFLINE, PRESTIGE, prestigeGain, waveInterval, waveLoot } from '../data/balance';
+import { PRESTIGE, prestigeGain } from '../data/balance';
 import { EventBus } from './events';
 import { SimState, freshRun, recompute } from './state';
 
@@ -17,14 +17,3 @@ export function replant(s: SimState, ev: EventBus): number {
   return hw;
 }
 
-/** Starlight earned while away. Pure; caller passes seconds. Nothing accrues while fallen. */
-export function offlineAward(s: SimState, secondsAway: number): number {
-  if (s.run.fallen) return 0;
-  const away = Math.min(secondsAway, OFFLINE.capSecs);
-  if (away < OFFLINE.minAwaySecs) return 0;
-  const perOrc = waveLoot(s.run.wave) * s.stats.starMult;
-  const rate = (perOrc * s.stats.spawnMult) / waveInterval(s.run.wave) * s.stats.offline;
-  const g = Math.floor(rate * away);
-  s.run.starlight += g;
-  return g;
-}

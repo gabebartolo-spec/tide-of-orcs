@@ -7,7 +7,7 @@ import { buy, canBuy, costOf } from './tree';
 import { NODE, NODES } from '../data/skillTree';
 import { STEP } from '../data/balance';
 import { canRally, rally } from './vanguard';
-import { canReplant, offlineAward, replant } from './prestige';
+import { canReplant, replant } from './prestige';
 import { createRng } from './rng';
 
 const run = (seed: number, secs: number, inputs: Inputs = noInputs) => {
@@ -146,12 +146,5 @@ describe('prestige', () => {
     const s = createState(1, { ...freshRun(), wave: 11 }, freshMeta());
     expect(canReplant(s)).toBe(false);
     s.run.wave = 12; expect(canReplant(s)).toBe(true);
-  });
-  it('offline award respects cap and minimum, and nothing while fallen', () => {
-    const s = createState(1);
-    expect(offlineAward(s, 30)).toBe(0);
-    const a = offlineAward(s, 3600); expect(a).toBeGreaterThan(0);
-    const s2 = createState(1); expect(offlineAward(s2, 100 * 3600)).toBe(offlineAward(createState(1), 8 * 3600));
-    const s3 = createState(1); s3.run.fallen = true; expect(offlineAward(s3, 3600)).toBe(0);
   });
 });

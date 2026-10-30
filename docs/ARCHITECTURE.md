@@ -35,7 +35,7 @@ tide-of-orcs/
                         archers, knives, ballista, storm, wolf, hawk, treant, projectiles, cleanup
       events.ts         ring buffer of SimEvent for render/audio (kill, crit, flood, wave, boss)
       tree.ts           rankOf(), costOf(), unlocked(), canBuy(), buy()
-      prestige.ts       gain(), canReplant() (forced when fallen, voluntary from wave 12), replant(), offlineAward()
+      prestige.ts       gain(), canReplant() (forced when fallen, voluntary from wave 12), replant()
     render/
       palette.ts        colour tokens (ART-STYLE.md)
       field.ts          draws the battlefield from SimState
@@ -68,7 +68,7 @@ function frame(now) {
   requestAnimationFrame(frame);
 }
 ```
-- When the tab is hidden, rAF pauses; on return the 0.25 s clamp means at most 12 steps run, and the gap is credited through `offlineAward` on the next load (TB-023 extends this to `visibilitychange`). While `run.fallen` is true, `step` returns immediately.
+- When the tab is hidden, rAF pauses; on return the 0.25 s clamp means at most 12 steps run. The gap is not credited: there is no offline progress. While `run.fallen` is true, `step` returns immediately.
 - Autosave every 20 s and on `beforeunload`/`pagehide`.
 
 ## SimState (sketch)
@@ -106,7 +106,7 @@ Pools expose `alloc()/free(i)` and `forEachLive(fn)`. Nothing in `sim/` holds ob
 Plain DOM, no framework. `ui/panel.ts` renders the detail card with template strings and owns the rally bar and the fallen overlay; buttons dispatch intents to `GameController` (`buy(id)`, `rally(type)`, `replant()`, `setAim(x, y)` / `clearAim()`, `save()`, `exportSave()`, `importSave(str)`, `wipe()`), which is the only thing allowed to call into `sim/`. `[hidden] { display: none !important }` is in `style.css` because the standalone build has no host reset.
 
 ## Testing
-- `src/**/*.test.ts`: formula pins (BALANCE.md reference tables), `deriveStats` changes for every node at max rank, tree buy rules, timber heals the wall, vanguard cap/unlock, spearmen keep the wall healthier, the bare archer falls (≥ 5 waves), a fallen run stops ticking, forced and voluntary replant, offline award caps, migration fixtures.
+- `src/**/*.test.ts`: formula pins (BALANCE.md reference tables), `deriveStats` changes for every node at max rank, tree buy rules, timber heals the wall, vanguard cap/unlock, spearmen keep the wall healthier, the bare archer falls (≥ 5 waves), a fallen run stops ticking, forced and voluntary replant, migration fixtures.
 - Determinism test: two sims with same seed and scripted inputs produce identical `starlight` and `kills` after 10,000 ticks.
 - `sim/` runner is also a smoke test in CI (30 sim-minutes must complete in < 5 s real time).
 

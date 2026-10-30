@@ -47,7 +47,7 @@ Render and UI agents build against these from M0 using a stub state (`sim/fixtur
 > You are the `render` agent. Read CLAUDE.md, docs/ARCHITECTURE.md, docs/ART-STYLE.md. Claim TB-021 (tree pan/zoom) in docs/BACKLOG.md: drag to pan, wheel/pinch to zoom, hit-test in logical space, camera ease to the selected node. Keep render/tree.ts free of sim mutation. Open docs/prototype.html for the intended look.
 
 **Save agent, M1**
-> You are the `save` agent. Claim TB-028: write migration 1→2 that drops deprecated River node ids from `run.levels`, add a v1 fixture with those ids under `test/fixtures/`, and bump CURRENT_VERSION. Then TB-023: credit offline starlight on `visibilitychange` as well as on load.
+> You are the `save` agent. Claim TB-028: write migration 1→2 that drops deprecated River node ids from `run.levels`, add a v1 fixture with those ids under `test/fixtures/`, and bump CURRENT_VERSION.
 
 **Balance agent, M3**
 > You are the `balance` agent. Run greedy, wall, nobuy and dps policies for 60 sim-minutes each. Compare against BALANCE.md pacing targets. Write findings and proposed constants under `## Proposed` with report links. Do not edit `## Current`.

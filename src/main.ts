@@ -1,10 +1,8 @@
 import { FIELD, STEP } from './data/balance';
-import { STR } from './data/strings';
 import { GameController } from './game';
 import { FieldRenderer } from './render/field';
 import { TreeRenderer } from './render/tree';
 import { Panel } from './ui/panel';
-import { fmt } from './ui/format';
 import { AudioEngine } from './audio/engine';
 
 const game = new GameController();
@@ -22,7 +20,6 @@ const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 const applyMotion = () => { field.reducedMotion = game.settings.reducedMotion ?? reduced.matches; tree.reducedMotion = field.reducedMotion; };
 applyMotion(); reduced.addEventListener('change', applyMotion);
 
-if (game.offlineGain > 0) panel.toast(STR.away(fmt(game.offlineGain)));
 
 // Aiming: the bow follows the pointer while it is over the field. No clicking; the bow looses on its own.
 const setAim = (e: PointerEvent): void => {

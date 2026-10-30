@@ -5,7 +5,7 @@
 import { VanType } from './data/balance';
 import { NodeId } from './data/skillTree';
 import { EventBus } from './sim/events';
-import { canReplant, offlineAward, replant } from './sim/prestige';
+import { canReplant, replant } from './sim/prestige';
 import { SimState, createState, freshMeta, freshRun } from './sim/state';
 import { Inputs, step } from './sim/step';
 import { buy } from './sim/tree';
@@ -25,14 +25,10 @@ export class GameController {
     if (save) {
       this.settings = { ...defaultSettings(), ...save.settings };
       this.state = createState(seed, { ...freshRun(), ...save.run }, { ...freshMeta(), ...save.meta });
-      const away = (Date.now() - save.savedAt) / 1000;
-      const gained = offlineAward(this.state, away);
-      if (gained > 0) this.offlineGain = gained;
     } else {
       this.state = createState(seed);
     }
   }
-  offlineGain = 0;
 
   tick(dt: number): void {
     const inputs: Inputs = { aim: this.state.run.fallen ? null : this.aim };

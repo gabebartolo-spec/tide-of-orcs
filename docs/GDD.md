@@ -35,7 +35,7 @@ A timber palisade at x=150 (14 px wide) across the full field height. It has hea
 - `barMax = 200 × 1.25^Seasoned Timber × heart` (BALANCE.md has the current base; the prototype ships 400).
 - Orcs reaching `x ≤ barX + barW + r` stop and swing once per second for `atk = orcAtkFrac × maxhp` (0.025). Damage scales with waves exactly as orc HP does, so the wall's relative pressure comes from *how many* orcs leak, not from a separate curve.
 - **Patient Hands** mends 1% of max per second per rank. **Thornwall** damages anyone hacking the wall for 20% of player damage per second per rank. **Deep Roots** regrows the wall to 50% once per run the moment it would fall.
-- **Fallen:** when HP hits 0 the sim freezes, the field shows "The barricade has fallen" with wave, slain, minutes held and Heartwood carried back, and a single button: *Replant the grove*. Nothing else is interactable. Starlight does not accrue offline while fallen.
+- **Fallen:** when HP hits 0 the sim freezes, the field shows "The barricade has fallen" with wave, slain, minutes held and Heartwood carried back, and a single button: *Replant the grove*. Nothing else is interactable.
 - Buying Seasoned Timber heals the wall by the amount of max HP it adds (growing the wall is new timber).
 - Screen shake on each hit scaled to damage fraction; splintered dark planks appear from the top as HP drops.
 
@@ -97,7 +97,7 @@ All companion damage scales with Kinship (×1.2/rank) and Heartwood. Kinship als
 ## 9. Economy
 - **Starlight**: the only run currency. Earned per kill: `loot(wave, type) × starMult`, `starMult = 1.15^Gleaning × heart`.
 - Spent on tree nodes (geometric cost per rank) and on vanguard (linear in wave loot).
-- **Offline**: on load, `rate = loot(wave) × starMult × spawnMult / interval(wave) × (0.25 + 0.2 × Dreaming Roots)`, capped at 8 h, zero while fallen. Shown as a toast.
+- **No offline progress**: nothing accrues while the game is closed or the tab is hidden.
 - Early nodes cost 12–50 so the first purchase happens within 30 s and Muster within two minutes.
 
 ## 10. Prestige — Replant the Grove

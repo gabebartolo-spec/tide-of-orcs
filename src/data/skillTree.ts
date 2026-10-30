@@ -6,7 +6,7 @@ export type NodeId =
   | 'root' | 'sharp' | 'draw' | 'crit' | 'multi' | 'pierce' | 'moon'
   | 'wolf' | 'fangs' | 'ranger' | 'warden' | 'hawk' | 'treant' | 'bond'
   | 'knives' | 'knifespd' | 'fire' | 'storm' | 'ballista' | 'bolt'
-  | 'glean' | 'horde' | 'roots' | 'bounty' | 'drums' | 'banners'
+  | 'glean' | 'horde' | 'bounty' | 'drums' | 'banners'
   | 'timber' | 'repair' | 'spikes' | 'bulwark'
   | 'muster' | 'shield' | 'drill' | 'ranks' | 'mend' | 'champion';
 
@@ -49,7 +49,6 @@ export const NODES: readonly SkillNode[] = [
   n('bolt', 'Iron Bolts', 'Armoury', 'ballista', 5, 2000, 2.0, 710, 360, 'Ballista +50% damage per rank.'),
   n('glean', 'Gleaning', 'Grove', 'root', 10, 20, 1.6, 490, 630, '+15% starlight from every orc.'),
   n('horde', 'Call the Horde', 'Grove', 'glean', 5, 160, 2.4, 590, 610, '+20% more orcs. More orcs, more starlight. More danger.'),
-  n('roots', 'Dreaming Roots', 'Grove', 'glean', 5, 200, 2.2, 600, 660, 'Earn more while away: +20% of your rate per rank.'),
   n('drums', 'War Drums', 'Grove', 'horde', 5, 300, 2.4, 700, 650, 'Orcs have +30% health and drop +40% starlight per rank.'),
   n('banners', 'Blood Banners', 'Grove', 'horde', 5, 300, 2.4, 735, 610, 'Orcs hit 30% harder and drop +25% starlight per rank.'),
   n('bounty', 'Warboss Bounty', 'Grove', 'horde', 3, 800, 3, 690, 590, 'Warbosses drop double starlight per rank.'),

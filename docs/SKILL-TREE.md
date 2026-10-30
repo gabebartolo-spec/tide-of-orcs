@@ -30,7 +30,6 @@ Layout coordinates are for a 760×680 tree canvas, root bottom-centre at (380, 6
 | bolt | Iron Bolts | Armoury | ballista | 5 | 2000 | 2.0 | 710 | 360 | Ballista +50% damage per rank. |
 | glean | Gleaning | Grove | root | 10 | 20 | 1.6 | 490 | 630 | +15% starlight from every orc. |
 | horde | Call the Horde | Grove | glean | 5 | 160 | 2.4 | 590 | 610 | +20% more orcs. More orcs, more starlight. More danger. |
-| roots | Dreaming Roots | Grove | glean | 5 | 200 | 2.2 | 600 | 660 | Earn more while away: +20% of your rate per rank. |
 | drums | War Drums | Grove | horde | 5 | 300 | 2.4 | 700 | 650 | Orcs have +30% health and drop +40% starlight per rank. |
 | banners | Blood Banners | Grove | horde | 5 | 300 | 2.4 | 735 | 610 | Orcs hit 30% harder and drop +25% starlight per rank. |
 | bounty | Warboss Bounty | Grove | horde | 3 | 800 | 3 | 690 | 590 | Warbosses drop double starlight per rank. |
@@ -62,7 +61,6 @@ interface Stats {
   orcHp: number;          // 1.3^drums     (orc health at spawn)
   orcAtk: number;         // 1.3^banners   (orc hit at spawn)
   spawnMult: number;      // 1.2^horde
-  offline: number;        // 0.25 + 0.2 × roots
   bounty: number;         // 1 + bounty
   kin: number;            // 1.2^bond × heart   (companions AND vanguard)
   wolf: number;           // wolf ? 6 × 1.4^fangs × kin : 0

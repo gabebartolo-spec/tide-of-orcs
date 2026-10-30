@@ -1,5 +1,5 @@
 import { NodeId } from '../data/skillTree';
-import { BARRICADE, OFFLINE, PLAYER, PROVOKE, SOURCES, VANGUARD, heartMult } from '../data/balance';
+import { BARRICADE, PLAYER, PROVOKE, SOURCES, VANGUARD, heartMult } from '../data/balance';
 
 export type Levels = Partial<Record<NodeId, number>>;
 
@@ -7,7 +7,7 @@ export type Levels = Partial<Record<NodeId, number>>;
 export interface Stats {
   dmg: number; fireRate: number; arrows: number; pierce: number; crit: number;
   homing: boolean; fire: boolean;
-  starMult: number; orcHp: number; orcAtk: number; spawnMult: number; offline: number; bounty: number;
+  starMult: number; orcHp: number; orcAtk: number; spawnMult: number; bounty: number;
   kin: number; wolf: number; archers: number; hawk: boolean; treant: boolean;
   knives: { rate: number; dmg: number } | null;
   storm: boolean; ballista: number;
@@ -34,7 +34,6 @@ export function deriveStats(lv: Levels, heartwood: number): Stats {
     orcHp: Math.pow(PROVOKE.drumsHp, L('drums')),
     orcAtk: Math.pow(PROVOKE.bannersAtk, L('banners')),
     spawnMult: Math.pow(1.2, L('horde')),
-    offline: OFFLINE.base + OFFLINE.perRoot * L('roots'),
     bounty: 1 + L('bounty'),
     kin,
     wolf: L('wolf') ? SOURCES.wolf.base * Math.pow(1.4, L('fangs')) * kin : 0,

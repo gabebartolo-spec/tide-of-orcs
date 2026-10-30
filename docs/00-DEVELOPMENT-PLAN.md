@@ -29,7 +29,7 @@ The single-file prototype (`docs/prototype.html`) proves the loop. The plan belo
 - Companions: wolf, ranger, warden, hawk, treant.
 - Weapons: knives, fire arrows, storm, ballista, moonbow.
 - Prestige (Replant), forced and voluntary, with Heartwood plus six permanent Heartwood upgrades (a small second tree).
-- Offline progress, autosave, save import/export.
+- Autosave, save import/export (no offline progress).
 - Settings: audio volume, reduced motion, number format.
 - Audio: ambient wind-and-grove loop, ~14 SFX (incl. wall hits, rally, fall), 2 music beds.
 - Mobile layout.
@@ -56,7 +56,7 @@ Goal: a correct engine with the whole prototype ported.
 
 ### M1 — Vertical slice (weeks 2–3)
 Goal: parity with the prototype, properly built.
-- Remaining from the port: tree pan/zoom, offline on `visibilitychange`, River-id save migration.
+- Remaining from the port: tree pan/zoom, River-id save migration.
 - Balance pass #0: resolve BALANCE.md P-001 so the first wall falls at wave 12–18 and the second run can fall by wave 30.
 - Mobile layout check.
 **Done when:** a new player's first wall falls between minute 5 and 8, they understand why, and their second run is visibly stronger.

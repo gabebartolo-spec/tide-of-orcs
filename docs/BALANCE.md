@@ -63,7 +63,6 @@ cap = 2 + ranks        mend = 0.03 × mend × maxhp per second
 - Provoke (War Drums, Blood Banners): orc health ×1.3^drums and orc hit ×1.3^banners at spawn; starlight ×1.4^drums × 1.25^banners. Greedy sim with both maxed: first fall 12–18, run 2 at 24–33, run 3 at 36–39 (seeds 1–10).
 - Node price at purchase: `cost = round(base × growth^rank × 1.25^max(0, w − 10))` (wave-scaled since P-001; ×1 to wave 10, ×28.4 at 25, ×7,523 at 50).
 - `starMult = 1.15^glean × heart`. Heartwood: `heart = 1 + 0.12 × HW`, applied to damage, starlight, barricade HP and vanguard HP.
-- Offline: `rate = loot(w) × starMult × spawnMult / interval(w) × (0.25 + 0.2 roots)`, capped at 8 h, zero while fallen.
 
 ### Prestige
 - Forced on barricade fall; voluntary from wave 12. `HW = floor((w − 4) × 0.75) + floor(runKills / 400)`.
@@ -88,7 +87,6 @@ Spent in Heartwood, never reset. Costs in HW.
 | hw_wolf | Old Friend | 1 | 3 | Start with Grey Wolf |
 | hw_timber | Stout Timber | 3 | 4, 8, 16 | Barricade base HP +25% |
 | hw_orders | Standing Orders | 2 | 5, 12 | Start each run with one Spearman (two at rank 2) |
-| hw_sleep | Long Sleep | 2 | 5, 12 | Offline cap +4 h |
 | hw_boss | Warlords | 1 | 15 | Warboss can appear on waves divisible by 5 |
 
 ## Simulator (`npm run balance`)

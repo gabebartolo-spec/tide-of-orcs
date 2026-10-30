@@ -19,7 +19,6 @@ export const STR = {
   joins: (name: string) => `${name} joins the grove`,
   waveN: (w: number) => `Wave ${w}`,
   bossFalls: 'A Warboss falls. The tide hesitates.',
-  away: (s: string) => `While you were away the grove gathered ${s} starlight`,
   replantTitle: 'Replant the Grove',
   replantBody: 'Burn the grove down to a seed and grow it again. Every Heartwood you carry back makes starlight fall faster and arrows bite harder, forever. If the barricade falls, the grove replants itself.',
   replantFrom: (w: number) => `Voluntary replant from wave ${w}.`,
