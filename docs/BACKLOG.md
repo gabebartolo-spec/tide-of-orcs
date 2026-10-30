@@ -86,8 +86,8 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-073 | Itch.io page copy, screenshots, HTML5 zip pipeline | release | 072 | gabe | todo |
 | TB-074 | Electron wrapper spike | release | 073 | | todo |
 | TB-075 | Bug bash checklist run | qa | 072 | | todo |
-| TB-076 | Move 6 colour literals in src/render (rgba/hex) into palette tokens (rule 6) | render | | | todo |
-| TB-077 | Move inline tree multipliers in sim/stats.ts (1.25, 1.15, 1.2, 1.4 …) into data/balance (rule 3) | sim/data | | | todo |
+| TB-076 | Move 6 colour literals in src/render (rgba/hex) into palette tokens (rule 6) | render | | claude | done c189562 |
+| TB-077 | Move inline tree multipliers in sim/stats.ts (1.25, 1.15, 1.2, 1.4 …) into data/balance (rule 3) | sim/data | | claude | done c189562 |
 
 ## Icebox
 - Starfall, Owl, Mist, Lantern nodes (SKILL-TREE.md Planned).
