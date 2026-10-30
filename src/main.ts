@@ -38,7 +38,7 @@ const skipCeremony = (): void => { if (field.ceremony.active) field.ceremony.ski
 fieldCanvas.addEventListener('pointerdown', skipCeremony); addEventListener('keydown', skipCeremony);
 void field.sprites.load();
 // dev-only handle for checking render work in the browser
-if (import.meta.env.DEV) Object.assign(window, { __tide: { game, field } });
+if (import.meta.env.DEV) Object.assign(window, { __tide: { game, field, tree } });
 
 // build stamp (written by the itch workflow)
 fetch('./build.json').then((r) => (r.ok ? r.json() : null)).then((b) => { if (b) document.getElementById('build')!.textContent = `${b.tag} · ${b.sha}`; }).catch(() => {});
@@ -54,7 +54,7 @@ function frame(now: number): void {
   field.consume(events, game.state); panel.handleEvents(events); audio.consume(events);
   if (!document.hidden) field.draw(game.state, dt, game.aim);
   treeWrap.classList.toggle('burning', field.ceremony.burning);
-  hudT += dt; if (hudT > 0.15) { hudT = 0; panel.update(); tree.draw(game.state, game.state.t); } else if (tree.easing) tree.draw(game.state, game.state.t);
+  hudT += dt; if (hudT > 0.15) { hudT = 0; panel.update(); tree.draw(game.state, game.state.t); } else if (tree.live) tree.draw(game.state, game.state.t);
   saveT += dt; if (saveT > 20) { saveT = 0; game.save(); }
   requestAnimationFrame(frame);
 }
