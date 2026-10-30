@@ -112,3 +112,24 @@ Candidates to test (one at a time, same seeds):
 4. Barricade base 400 → 600 and Seasoned Timber 1.25 → 1.2.
 
 Target after change: first fall wave 12–18 on seeds 1–3; second run falls by wave 30.
+
+#### Results (2026-10-30, greedy, 25 min, seeds 1 / 2 / 3)
+Measured with a harness identical to `sim/run.ts` greedy that records each fall (the report's "First fall at wave" line actually prints the *last* fall). "Run 2" is the wave the second run fell at; every run 2 fell before minute 25 (at 19–24 min).
+
+| Change | First fall wave | HW from run 1 | Run 2 falls at wave | Meets target? |
+|---|---|---|---|---|
+| Baseline | 9 / 7 / 8 | 3 / 2 / 3 | 46 / 45 / 45 | no |
+| C1 heart +8%, dmg + starlight only | 9 / 7 / 8 | 3 / 2 / 3 | 43 / 41 / 45 | no |
+| C2 Horde +10% orc atk/rank | 9 / 7 / 8 | 3 / 2 / 3 | 43 / 45 / 45 | no |
+| C3 brute base 0.12 below wave 8 | 10 / 8 / 10 | 4 / 3 / 4 | 46 / 46 / 47 | no |
+| C4 wall 600, Timber ×1.2 | 12 / 8 / 9 | 6 / 3 / 3 | 49 / 41 / 46 | no |
+| C3 + C4 | 10 / 10 / 10 | 4 / 4 / 4 | 47 / 47 / 47 | no |
+| C1 + C2 + C3 + C4 | 10 / 10 / 10 | 4 / 4 / 4 | 41 / 45 / 41 | no |
+| All four + `waveHP` growth 1.17 → 1.19 (diagnostic) | 9 / 9 / 10 | 3 / 3 / 4 | 12 / 41 / 40 | no |
+| All four + `waveHP` growth 1.17 → 1.21 (diagnostic) | 9 / 8 / 9 | 3 / 3 / 3 | 12 / 12 / 12 | no |
+
+C1 drops Heartwood from barricade and vanguard HP and keeps it on player and companion damage (`kin`).
+
+Finding: none of the four candidates, alone or together, reaches either target. The run is **bistable**: it either falls around wave 8–12, or it gets past that point and runs to wave 40–47. Starting a fresh run with 0 / 1 / 2 / 3 HW gives first falls of 7–9 / 9–45 / 45–46 / 41–47. One or two Heartwood flips a run from one outcome to the other. Past the hump, greedy maxes all 121 nodes by about wave 27 and coasts until orc HP overtakes it. So the snowball doesn't come from the size of the Heartwood bonus. It comes from the run having no pressure in the middle: income (`waveLoot` 1.13 per wave ÷ `waveInterval` 0.93) keeps pace with threat (`waveHP` 1.17 per wave ÷ 0.93). The candidates only move where the cliff sits by a wave or two. The `waveHP` diagnostic shows the same thing: steepening HP growth moves run 2 straight from 41 to 12, with nothing between.
+
+Recommendation: don't adopt any of the four as the P-001 fix. Of the candidates, C3 + C4 is the only one worth keeping on its own merits, because it makes the first fall consistent (wave 10 on all seeds). Even so, it misses 12–18 and does nothing for run 2. The real fix needs a mid-game lever that bends the curve smoothly instead of flipping it. Options to test next: a softer late `waveHP` ramp that kicks in at a wave (e.g. ×1.17 to wave 15, then ×1.20), `waveLoot` growth tied to that ramp, or node cost growth that stops the tree maxing by wave 27. A director decision is needed before that sweep.
