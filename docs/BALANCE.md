@@ -13,7 +13,7 @@ Two sections. `## Current` is what ships and is human-owned. `## Proposed` is wh
 hp(w)       = 10 × 1.17^(min(w,15)−1) × 1.30^max(0, w−15)   ramp from wave 15 (P-001)
 loot(w)     = 2  × 1.13^(w−1)
 interval(w) = max(0.3, 2.0 × 0.93^(w−1))   seconds between grunt spawns; kind k every interval × every_k / 1.2^swarm_k; paused during a boss wave
-boss wave: unlocks every 10 waves, 60 s script, clear bonus = 40 × waveLoot(w) × starMult
+boss wave: unlocks every 10 waves, 60 s script, clear bonus = 40 × waveLoot(w) × starMult × (1 + 0.5 × hw_boss rank)
 speed       = base × (1 + 0.008 w)
 atk         = 0.025 × maxhp                  per swing, one swing per second, vs vanguard
 wall hit    = 10 × atk                        per swing vs the barricade (TB-080: bare run falls at wave 3–4, ~90 s)
@@ -99,7 +99,7 @@ Bought with Heartwood, never reset. Costs in HW. Spending does not lower the pas
 | hw_wolf | Old Friend | 1 | 3 | Start with Grey Wolf |
 | hw_timber | Stout Timber | 3 | 4, 8, 16 | Barricade base HP +25% |
 | hw_orders | Standing Orders | 2 | 5, 12 | Start each run with one Spearman (two at rank 2) |
-| ~~hw_boss~~ | ~~Warlords~~ | | | Not built: the marching Warboss was retired by boss waves (TB-081). Needs a director replacement. |
+| hw_boss | Warlords | 3 | 6, 12, 24 | Boss wave clear bonus +50% per rank (director chose the effect 2026-10-31; numbers proposed, unplaytested) |
 
 ## Simulator (`npm run balance`)
 Lives in `sim/run.ts`. Runs `src/sim/` headless at 50 steps/s and decides every 0.5 s with a policy:
