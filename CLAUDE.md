@@ -24,7 +24,7 @@ Priority when things disagree: the docs (GDD, BALANCE, SKILL-TREE, ARCHITECTURE)
 - TypeScript, strict mode. Vite for dev/build. Vitest for tests.
 - Rendering: HTML5 Canvas 2D (no engine). Pixel-free vector shapes, DPR aware.
 - No runtime dependencies beyond what `docs/ARCHITECTURE.md` lists. Ask before adding one.
-- Target: desktop and mobile browsers. Itch.io / static hosting first; Steam (Electron) later.
+- Target: desktop browsers (mobile port later, once the PC web build is done). Itch.io / static hosting first; Steam (Electron) later.
 
 ## External tools Gabe has
 - **Tripo** (3D model generation), **Cascadeur** (animation), **ElevenLabs** (SFX/ambient). M4 presentation uses them per `docs/ART-STYLE.md` §Asset pipeline. Agents do not call these; they consume exported sheets and audio files placed under `public/` (not created yet; the sprite and audio loaders fall back silently until files land).
@@ -50,7 +50,7 @@ Run `npm run lint && npm run test` before every commit. Do not commit if either 
 4. **Skill tree is data.** Nodes are declared in `src/data/skillTree.ts`, matching `docs/SKILL-TREE.md`. Systems read effects from the derived `Stats` object, never from node ids.
 5. **Save compatibility.** The save schema is versioned (`ARCHITECTURE.md` §Save). Add a migration for every schema change. Never break an existing save.
 6. **Palette through tokens.** Colours come from `src/render/palette.ts`. No hex literals in render code.
-7. **Performance budget.** 60 fps on a 2020 mid-range phone with 160 orcs on screen (`ORC_CAP`). Simulation is fixed-step and independent of render.
+7. **Performance budget.** 60 fps in a desktop browser on a mid-range PC with 160 orcs on screen (`ORC_CAP`). Simulation is fixed-step and independent of render.
 
 ## Code conventions
 

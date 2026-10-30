@@ -116,7 +116,7 @@ All companion damage scales with Kinship (×1.2/rank) and Heartwood. Kinship als
 - **Field:** 15:8 canvas. Top-left: barricade health bar (timber → amber → rose as it drops) with numbers, and vanguard count once Muster is owned. Bottom: wave timer bar. Toast at top. Fallen overlay covers the field when the wall is down.
 - **Rally bar** under the field: the hint line plus Rally Spearman and (after the node) Rally Bladedancer buttons showing cost, and the *Summon the boss wave* button (waiting count, then a countdown and orcs left while it runs).
 - **Grove panel:** tabs The Grove / Replant / Settings. The tree is a 760×920 logical canvas shown in a 460 px tall view (380 px on narrow screens) with pan/zoom (TB-021); it opens at 1:1 on Waking (TB-082), branches are curved and the camera eases to the selected node (TB-066). Detail card below with branch, prerequisite, rank, description, cost and a single Learn/Improve button. Affordable nodes pulse amber. Click selects; click again buys. The Replant tab holds voluntary Replant and the Heartwood tree; Settings holds volume, motion, number format, save export/import and the playtest run log download (TB-070).
-- **Mobile:** panel stacks under the field; tree view 380 px tall; touch targets ≥ 44 px on coarse pointers (TB-064).
+- **Mobile:** panel stacks under the field; tree view 380 px tall; touch targets ≥ 44 px on coarse pointers (TB-064). Mobile is off the roadmap until the PC web build is done; this layout is kept, not extended.
 - All copy through `src/data/strings.ts`.
 
 ## 12. Onboarding (no tutorial)

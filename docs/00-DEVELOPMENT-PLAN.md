@@ -32,7 +32,6 @@ The single-file prototype (`docs/prototype.html`) proves the loop. The plan belo
 - Autosave, save import/export (no offline progress).
 - Settings: audio volume, reduced motion, number format.
 - Audio: ambient wind-and-grove loop, 16 SFX cues (`src/data/audio.ts`, incl. wall hits, rally, fall), 2 music beds.
-- Mobile layout.
 
 ### Out of scope for 1.0 (candidates for 1.x)
 - Multiple maps / biomes.
@@ -80,7 +79,6 @@ Goal: parity with the prototype, properly built.
 - Final art: Tripo models → Cascadeur animation → sprite sheets for orcs, elf, vanguard, companions (ART-STYLE.md §Asset pipeline); vector draws remain the fallback. Wall weathering, parallax hills, day/night tinting.
 - Audio: ElevenLabs SFX and ambient bed, two music beds, ducking on wall fall and boss.
 - Tree layout polish: branch curves, bloom on affordable nodes, camera easing.
-- Mobile layout and touch targets.
 - Settings, reduced-motion path, number formats.
 **Done when:** a 60-second trailer can be captured without placeholder art.
 
@@ -88,7 +86,9 @@ Goal: parity with the prototype, properly built.
 - Balance pass #2 with telemetry from testers (local JSON export, no server; export built).
 - Save import/export, version migration test suite.
 - Itch.io page, web build, Electron wrapper spike for Steam.
-- Bug bash, performance budget verified on phone.
+- Bug bash, performance budget verified in a desktop browser.
+
+Mobile is out of the roadmap (director, 31 Oct): the web build ships for PC first; a mobile port comes after it is perfect on PC. TB-064/TB-078 layout work stays in the code.
 **Done when:** build is public on itch.
 
 ## 5. Definition of done (any task)
