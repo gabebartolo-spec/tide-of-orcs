@@ -184,3 +184,30 @@ Tests on seeds 1–10 (first fall wave, run 2 wave):
 | Damage 8–10 × ramp K10–13 / R1.25–1.30 (12 combos) | Always 10–13 or 31–37, never 14–30 | An earlier ramp lowers the upper mode but doesn't close the gap |
 
 Conclusion: the 12–18 first-fall target isn't reachable by tuning one curve. Once a run survives the wave-12 surge, its kills feed damage faster than `waveHP` grows. Closing the gap needs that feedback weakened inside waves 12–20: for example node costs that grow with wave reached, or starlight per kill that falls off relative to `waveHP` in that window. Either one is a new formula, not a re-tune, so it needs a director decision first. With today's formulas, damage 8 keeps the first fall mostly at 10–12, with 3 of 10 seeds tipping over.
+
+#### Wave-scaled node cost sweep (2026-10-30, director picked this lever)
+Candidate formula: every node's cost is multiplied by the wave at the time of purchase.
+```
+cost(node, rank, w) = round(base × growth^rank × CWR^max(0, w − CW0))
+```
+Harness: greedy, 40 min, seeds 1–10, ramp 15/1.30 on `waveHP` in every row except "no ramp". Cells are first fall / run 2 fall per seed. Before this change, no combination ever put a first fall between 14 and 30.
+
+| Damage | CW0 / CWR | First falls (seeds 1–10) | Run 2 falls | Meets both? |
+|---|---|---|---|---|
+| 6 | none (ramp only) | 9 7 8 9 10 7 8 9 8 8 | 31–35 | no |
+| 8 | 10 / 1.08 | 12 10 21 21 11 11 11 12 21 11 | 35–39 | no |
+| 8 | 12 / 1.15 | 12 10 21 21 11 11 11 12 22 12 | 34–39 | no |
+| 8 | 10 / 1.20 | 12 10 17 17 11 11 11 12 14 11 | 23–31 | no (first fall) |
+| 9 | 10 / 1.15 | 12 13 12 18 18 18 17 12 17 19 | 31–39 | no (run 2) |
+| **9** | **10 / 1.25** | **12 13 12 14 15 18 17 12 15 18** | **25–29** | **yes, all 10 seeds** |
+| 10 | 10 / 1.25 | 15 13 17 17 18 18 17 18 18 13 | 25–31 | 9 of 10 |
+| 9 | 10 / 1.25, capped at w20 | 12–18 | 26–38 | no; the cap brings back the snowball |
+| 9 | 10 / 1.25, no ramp | 12–19 | 31–43 | no; needs the ramp too |
+
+#### Proposal: P-001 complete fix (awaiting director approval)
+```
+baseDmg = 9                                                   (was 6)
+hp(w)   = 10 × 1.17^(min(w,15) − 1) × 1.30^max(0, w − 15)     (ramp 15/1.30, already picked)
+cost    = round(base × growth^rank × 1.25^max(0, w − 10))     (new: wave-scaled node cost, uncapped)
+```
+Result on seeds 1–10: first fall 12–18 (target 12–18) and run 2 at 25–29 (target ≤ 30). The third run falls at 40–43. Costs reach ×9.3 at wave 20 and ×87 at wave 30. Waves 1–10 cost the same as today. Before applying: the UI must show the live cost (it already calls `costOf`); `vanBaseHp` follows the ramp; add pinned tests for the cost multiplier at waves 1, 10, 25 and 50.
