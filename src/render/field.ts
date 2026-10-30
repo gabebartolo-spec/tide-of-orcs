@@ -45,7 +45,7 @@ export class FieldRenderer {
     }
   }
 
-  draw(s: SimState, dt: number): void {
+  draw(s: SimState, dt: number, aim: { x: number; y: number } | null = null): void {
     const g = this.g;
     this.fx.update(dt);
     for (let i = this.storms.length - 1; i >= 0; i--) { this.storms[i]!.life -= dt; if (this.storms[i]!.life <= 0) this.storms.splice(i, 1); }
@@ -77,6 +77,7 @@ export class FieldRenderer {
     if (s.stats.treant) { g.fillStyle = P.treantTrunk; g.fillRect(BAR_X + 40, H / 2 + 10, 14, 34); g.fillStyle = P.treantLeaf; g.beginPath(); g.arc(BAR_X + 47, H / 2 + 2, 22, 0, 6.28); g.fill(); g.fillStyle = P.treantLeaf2; g.beginPath(); g.arc(BAR_X + 40, H / 2 - 6, 14, 0, 6.28); g.fill(); }
 
     this.elf(ELF_X, H / 2, false);
+    if (aim && aim.x > BAR_X + BAR_W && !s.run.fallen) this.reticle(aim.x, aim.y);
     if (s.stats.archers >= 1) this.elf(ELF_X - 10, H / 2 - 90, true);
     if (s.stats.archers >= 2) this.elf(ELF_X - 10, H / 2 + 90, true);
     if (s.stats.ballista) { g.fillStyle = P.bark; g.fillRect(ELF_X - 10, H / 2 - 48, 30, 10); g.fillStyle = P.cream; g.fillRect(ELF_X + 10, H / 2 - 45, 22, 3); }
@@ -99,6 +100,13 @@ export class FieldRenderer {
     g.fillText(`BARRICADE ${fmt(Math.max(0, s.run.barHp))} / ${fmt(s.stats.barMax)}`, 12, 32);
     if (s.stats.muster) g.fillText(`VANGUARD ${s.vans.count} / ${s.stats.vanCap}`, 12, 46);
     g.fillStyle = P.dim45; g.fillRect(0, H - 5, W, 5); g.fillStyle = P.amber; g.fillRect(0, H - 5, W * (s.run.waveT / WAVE_LEN), 5);
+  }
+
+  private reticle(x: number, y: number): void {
+    const g = this.g;
+    g.strokeStyle = P.aimLine; g.lineWidth = 1; g.setLineDash([4, 6]); g.beginPath(); g.moveTo(ELF_X + 16, H / 2); g.lineTo(x, y); g.stroke(); g.setLineDash([]);
+    g.strokeStyle = P.cream; g.lineWidth = 1.5; g.beginPath(); g.arc(x, y, 9, 0, 6.28); g.stroke();
+    g.beginPath(); g.moveTo(x - 14, y); g.lineTo(x - 5, y); g.moveTo(x + 5, y); g.lineTo(x + 14, y); g.moveTo(x, y - 14); g.lineTo(x, y - 5); g.moveTo(x, y + 5); g.lineTo(x, y + 14); g.stroke();
   }
 
   private orc(o: Orc): void {

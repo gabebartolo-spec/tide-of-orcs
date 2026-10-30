@@ -9,5 +9,6 @@ export const P = {
   elfCloak: '#5f6f8a', archerCloak: '#8b9a7d', wolf: '#9aa3ad', bark: '#5a4634', knife: '#d9d4c3',
   treantTrunk: '#4e5e3f', treantLeaf: '#5f7d53', treantLeaf2: '#6f8f60', sage: '#8fa98a', grove: '#9fc48f',
   spear: '#8fb7c9', blade: '#cdbdea',
+  aimLine: 'rgba(239,230,210,.25)',
   shadow: 'rgba(20,26,36,.25)', dim: 'rgba(27,33,48,.6)', dim45: 'rgba(27,33,48,.45)',
 } as const;

@@ -25,7 +25,7 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-014 | Player auto-target + volley (arrows, fan, pierce, crit) | sim | 012 | claude | done 4860f5b |
 | TB-015 | Arrow–orc collision, damage, kill, loot grant | sim | 014 | claude | done 4860f5b |
 | TB-016 | Vanguard: rally, walk to lane, engage, swing, cleave, mend, death | sim | 013 | claude | done 4860f5b |
-| TB-017 | Active tap volley input path | ui/sim | 014 | claude | done 4860f5b |
+| TB-017 | Pointer aiming: bow follows the pointer, auto-target fallback, reticle; no click-to-shoot | ui/sim/render | 014 | claude | done |
 | TB-018 | `render/field.ts`: plain, barricade with splinters, elf, orcs, vanguard, projectiles, HUD bars, shake | render | 012 | claude | done 4860f5b (first pass; TB-060 polishes) |
 | TB-019 | `render/particles.ts` + floating text from events | render | 015 | claude | done 4860f5b |
 | TB-020 | Tree canvas: draw, select, buy, affordable pulse, legend | render/ui | 003,005 | claude | done 4860f5b |

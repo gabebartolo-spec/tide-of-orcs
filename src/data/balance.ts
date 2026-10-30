@@ -5,7 +5,7 @@ export const WAVE_LEN = 24;
 export const ORC_CAP = 160;
 export const STEP = 1 / 50;
 
-export const PLAYER = { baseDmg: 6, baseFireRate: 1.2, arrowSpeed: 520, critMult: 3, tapMult: 1.5, fanRad: 0.09 } as const;
+export const PLAYER = { baseDmg: 6, baseFireRate: 1.2, arrowSpeed: 520, critMult: 3, fanRad: 0.09, aimHomingRadius: 70 } as const;
 
 export const BARRICADE = {
   baseHp: 400,

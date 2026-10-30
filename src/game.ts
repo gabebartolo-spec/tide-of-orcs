@@ -17,7 +17,8 @@ export class GameController {
   state: SimState;
   readonly events = new EventBus();
   settings = defaultSettings();
-  private pendingTaps: { x: number; y: number }[] = [];
+  /** Current pointer aim on the field in logical coordinates, or null. Set by the UI every frame it changes. */
+  aim: { x: number; y: number } | null = null;
 
   constructor(seed = (Date.now() % 2147483647) | 0) {
     const save = readSave();
@@ -34,12 +35,12 @@ export class GameController {
   offlineGain = 0;
 
   tick(dt: number): void {
-    const inputs: Inputs = { taps: this.pendingTaps };
+    const inputs: Inputs = { aim: this.state.run.fallen ? null : this.aim };
     step(this.state, dt, inputs, this.events);
-    this.pendingTaps = [];
   }
 
-  tap(x: number, y: number): void { if (!this.state.run.fallen) this.pendingTaps.push({ x, y }); }
+  setAim(x: number, y: number): void { this.aim = { x, y }; }
+  clearAim(): void { this.aim = null; }
   buy(id: NodeId): boolean { return buy(this.state, this.events, id); }
   rally(type: VanType): boolean { return rally(this.state, this.events, type); }
   canReplant(): boolean { return canReplant(this.state); }

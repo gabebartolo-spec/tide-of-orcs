@@ -18,10 +18,15 @@ applyMotion(); reduced.addEventListener('change', applyMotion);
 
 if (game.offlineGain > 0) panel.toast(STR.away(fmt(game.offlineGain)));
 
-fieldCanvas.addEventListener('pointerdown', (e) => {
+// Aiming: the bow follows the pointer while it is over the field. No clicking; the bow looses on its own.
+const setAim = (e: PointerEvent): void => {
   const r = fieldCanvas.getBoundingClientRect();
-  game.tap(((e.clientX - r.left) / r.width) * FIELD.w, ((e.clientY - r.top) / r.height) * FIELD.h);
-});
+  game.setAim(((e.clientX - r.left) / r.width) * FIELD.w, ((e.clientY - r.top) / r.height) * FIELD.h);
+};
+fieldCanvas.addEventListener('pointermove', setAim);
+fieldCanvas.addEventListener('pointerdown', setAim);
+fieldCanvas.addEventListener('pointerleave', () => game.clearAim());
+fieldCanvas.addEventListener('pointerup', (e) => { if (e.pointerType !== 'mouse') game.clearAim(); });
 window.addEventListener('resize', () => field.resize());
 
 // build stamp (written by the itch workflow)
@@ -34,7 +39,7 @@ function frame(now: number): void {
   while (acc >= STEP) { game.tick(STEP); acc -= STEP; }
   const events = game.events.drain();
   field.consume(events, game.state); panel.handleEvents(events);
-  if (!document.hidden) field.draw(game.state, dt);
+  if (!document.hidden) field.draw(game.state, dt, game.aim);
   hudT += dt; if (hudT > 0.15) { hudT = 0; panel.update(); tree.draw(game.state, game.state.t); }
   saveT += dt; if (saveT > 20) { saveT = 0; game.save(); }
   requestAnimationFrame(frame);

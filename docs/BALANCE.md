@@ -31,7 +31,7 @@ Type multipliers in GDD §4. Live orc cap 160.
 - Storm: 4× dmg × kin per jump, 6 s cooldown, 5 targets, 140 px jump radius, seeks from 200 px past the wall.
 - Hawk: 2.5× dmg × kin, 4 s, 60 px radius. Treant: 3× dmg × kin, 3 s, 160 px from the wall.
 - Ballista: 40 × 1.5^bolt × kin every 4 s, infinite pierce. Knives: 5 × 1.35^nimble × kin every 1.4 s ÷ 1.2^nimble.
-- Active tap: 1.5× damage volley, no cooldown.
+- Aimed volleys: same damage as auto volleys; Moonbow homing radius around the reticle 70 px. (A tunable `aimMult` can be introduced here if testing shows aiming needs a reward beyond target choice.)
 
 ### Barricade
 ```

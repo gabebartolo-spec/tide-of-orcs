@@ -19,7 +19,7 @@ waves scale every 24 s  ←──── battlefield visibly grows ←──┘
 the barricade falls → run ends → Replant → Heartwood → next run grows faster
 ```
 
-**Core verb:** buy a node. **Core tension:** every starlight spent on the tree is starlight not spent on a spearman at the wall. **Core reward:** watch the field change.
+**Core verb:** buy a node. **Core tension:** every starlight spent on the tree is starlight not spent on a spearman at the wall. **Core reward:** watch the field change. **Active play:** aim the bow with the pointer; it looses on its own. There is no click-to-shoot.
 
 Session shape (first run, from the simulator):
 - Minute 0–1: lone archer. Orcs reach the wall almost immediately; the first Sharpened Tips rank lands within 30 s.
@@ -39,7 +39,7 @@ A timber palisade at x=150 (14 px wide) across the full field height. It has hea
 - Buying Seasoned Timber heals the wall by the amount of max HP it adds (growing the wall is new timber).
 - Screen shake on each hit scaled to damage fraction; splintered dark planks appear from the top as HP drops.
 
-The field hint reads: "Hold the barricade. Rally vanguard with starlight to meet the tide in melee; tap the field to loose an extra volley."
+The field hint reads: "Hold the barricade. Move your pointer over the field to aim the bow; it looses on its own. Rally vanguard with starlight to meet the tide in melee."
 
 ## 4. Waves and orcs
 - Waves are timed: one every 24 s regardless of kills. `wave` is the only difficulty driver.
@@ -68,9 +68,12 @@ Orcs within `r + 18` px of a vanguard engage it instead of advancing, swinging o
 Design intent: vanguard are the *reactive* spend. The tree is the *investment* spend. A good player rallies when the wall dips under half, and buys nodes when it's quiet.
 
 ## 6. The player
-- Elf archer at (64, H/2). Auto-targets nearest live orc. Fires a volley of `arrows` arrows in a 0.09-rad fan at 520 px/s.
-- Damage, fire rate, pierce, crit (×3), homing (Moonbow), burn (Fire Arrows) all come from `Stats`.
-- **Active bonus:** tapping/clicking the field fires an extra volley toward the nearest orc at 1.5× damage. No cooldown; never required; disabled while fallen.
+- Elf archer at (64, H/2). Fires a volley of `arrows` arrows in a 0.09-rad fan at 520 px/s on a fixed cadence (`fireRate`). The cadence never changes with input.
+- **Aiming is the active mechanic.** While the pointer is over the plain (right of the wall), the bow is *aimed*: each volley flies straight to the pointer. The cursor is hidden and a cream reticle with a faint dashed line from the bow shows the shot. On touch, hold a finger on the field to aim; lift to release. There is no click-to-shoot and no tap bonus: skill is choosing targets (lead the runner, pile on the brute hacking the wall), not clicking faster.
+- When not aimed (pointer off the field, over the grove side, tab hidden, or idle), the archer auto-targets the nearest live orc so the game still progresses with zero input.
+- Moonbow homing still works while aiming: an aimed arrow bends toward the nearest orc within 70 px of the reticle, so aiming near a knot of orcs is enough.
+- Ranger and Warden always auto-target; only the player's bow is aimed.
+- Damage, fire rate, pierce, crit (×3), homing (Moonbow), burn (Fire Arrows) all come from `Stats`. Aimed volleys deal the same damage as auto volleys (a bonus multiplier is a tunable in BALANCE.md if play-testing wants one).
 
 ## 7. Companions
 All companion damage scales with Kinship (×1.2/rank) and Heartwood. Kinship also scales vanguard.
@@ -115,7 +118,7 @@ All companion damage scales with Kinship (×1.2/rank) and Heartwood. Kinship als
 - All copy through `src/data/strings.ts`.
 
 ## 12. Onboarding (no tutorial)
-- First 10 s: orcs reach the wall and the health bar ticks. The hint line says what to do about it.
+- First 10 s: the player's pointer drifts onto the field, a reticle appears and the arrows follow it; the hint line confirms it. Orcs reach the wall and the health bar ticks.
 - Sharpened Tips is pre-selected and affordable at 12 starlight. Muster is 50 and sits right next to the root.
 - First purchase of any new node fires a toast ("Grey Wolf joins the grove"); first rally fires "Spearman takes the field".
 - The Replant tab is visible from the start and says "Voluntary replant from wave 12", so the long goal is in view before the first fall explains the short one.

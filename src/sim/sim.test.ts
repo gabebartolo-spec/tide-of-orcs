@@ -65,10 +65,18 @@ describe('simulation', () => {
     const { s } = run(2, 20 * 60); const t = s.t; const ev = new EventBus();
     step(s, STEP, noInputs, ev); expect(s.t).toBe(t);
   });
-  it('tap input fires a volley', () => {
+  it('aiming sends the first volley toward the pointer, not the nearest orc', () => {
     const s = createState(5); const ev = new EventBus();
-    step(s, STEP, { taps: [{ x: 500, y: 240 }] }, ev);
+    s.run.shotT[0] = 10; // bow is ready
+    step(s, STEP, { aim: { x: 700, y: 60 } }, ev);
     expect(s.shots.count).toBeGreaterThan(0);
+    let dir = 0; s.shots.forEach((a) => { dir = Math.atan2(a.vy, a.vx); });
+    expect(dir).toBeCloseTo(Math.atan2(60 - 240, 700 - 64), 1);
+  });
+  it('aim behind the wall is ignored and no arrows fly without a target', () => {
+    const s = createState(5); const ev = new EventBus(); s.run.shotT[0] = 10;
+    step(s, STEP, { aim: { x: 100, y: 240 } }, ev);
+    expect(s.shots.count).toBe(0);
   });
 });
 

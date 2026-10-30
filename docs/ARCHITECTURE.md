@@ -31,7 +31,7 @@ tide-of-orcs/
       combat.ts         nearestOrc(), damage(), kill(), shoot(), volley()
       barricade.ts      barricadeHit() state machine (damaged → Deep Roots → fallen), regen
       vanguard.ts       canRally(), rally(), vanguardStep(), engagedVanguard(), hurtVanguard()
-      step.ts           one tick: waves, spawn, taps, wall regen, vanguard, orcs (engage → wall → advance),
+      step.ts           one tick: waves, spawn, wall regen, vanguard, orcs (engage → wall → advance),
                         archers, knives, ballista, storm, wolf, hawk, treant, projectiles, cleanup
       events.ts         ring buffer of SimEvent for render/audio (kill, crit, flood, wave, boss)
       tree.ts           rankOf(), costOf(), unlocked(), canBuy(), buy()
@@ -46,7 +46,7 @@ tide-of-orcs/
       panel.ts          tabs, detail card, rally bar, fallen overlay, prestige tab, toasts, HUD numbers
       format.ts         number formatting (K/M/B, scientific option)
       style.css         the stylesheet (tokens mirror render/palette.ts)
-    game.ts             GameController: the only caller into sim/ — tick, tap, buy, rally, replant, save/export/import/wipe
+    game.ts             GameController: the only caller into sim/ — tick, aim, buy, rally, replant, save/export/import/wipe
     save/
       schema.ts         SaveV1 type, CURRENT_VERSION
       migrate.ts        migrations[v] = (old) => new
@@ -103,7 +103,7 @@ Pools expose `alloc()/free(i)` and `forEachLive(fn)`. Nothing in `sim/` holds ob
 - Reduced motion: `matchMedia('(prefers-reduced-motion)')` read once; render modules check `motion.reduced`.
 
 ## UI
-Plain DOM, no framework. `ui/panel.ts` renders the detail card with template strings and owns the rally bar and the fallen overlay; buttons dispatch intents to `GameController` (`buy(id)`, `rally(type)`, `replant()`, `tap(x, y)`, `save()`, `exportSave()`, `importSave(str)`, `wipe()`), which is the only thing allowed to call into `sim/`. `[hidden] { display: none !important }` is in `style.css` because the standalone build has no host reset.
+Plain DOM, no framework. `ui/panel.ts` renders the detail card with template strings and owns the rally bar and the fallen overlay; buttons dispatch intents to `GameController` (`buy(id)`, `rally(type)`, `replant()`, `setAim(x, y)` / `clearAim()`, `save()`, `exportSave()`, `importSave(str)`, `wipe()`), which is the only thing allowed to call into `sim/`. `[hidden] { display: none !important }` is in `style.css` because the standalone build has no host reset.
 
 ## Testing
 - `src/**/*.test.ts`: formula pins (BALANCE.md reference tables), `deriveStats` changes for every node at max rank, tree buy rules, timber heals the wall, vanguard cap/unlock, spearmen keep the wall healthier, the bare archer falls (≥ 5 waves), a fallen run stops ticking, forced and voluntary replant, offline award caps, migration fixtures.

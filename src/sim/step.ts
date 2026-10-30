@@ -6,8 +6,9 @@ import { damage, nearestOrc, shoot, volley } from './combat';
 import { barricadeHit, barricadeRegen } from './barricade';
 import { engagedVanguard, hurtVanguard, vanguardStep } from './vanguard';
 
-export interface Inputs { taps: { x: number; y: number }[] }
-export const noInputs: Inputs = { taps: [] };
+/** Player aim: the pointer's position on the field, or null when the player is not aiming (auto-target). */
+export interface Inputs { aim: { x: number; y: number } | null }
+export const noInputs: Inputs = { aim: null };
 
 const H = FIELD.h, W = FIELD.w, BAR_X = FIELD.barX, BAR_W = FIELD.barW, ELF_X = FIELD.elfX;
 const dist = (ax: number, ay: number, bx: number, by: number): number => Math.hypot(ax - bx, ay - by);
@@ -41,8 +42,6 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
   const iv = waveInterval(run.wave) / st.spawnMult;
   while (run.spawnT >= iv) { run.spawnT -= iv; spawnOrc(s); }
 
-  for (const tp of inputs.taps) { const tg = nearestOrc(s, tp.x, tp.y); volley(s, ELF_X, H / 2, tg ? tg.x : tp.x, tg ? tg.y : tp.y, PLAYER.tapMult, tg); }
-
   barricadeRegen(s, dt);
   vanguardStep(s, ev, dt);
 
@@ -72,11 +71,17 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
   const shooters: [number, number][] = [[ELF_X, H / 2], [ELF_X - 10, H / 2 - SOURCES.archerOffsetY], [ELF_X - 10, H / 2 + SOURCES.archerOffsetY]];
   for (let i = 0; i <= st.archers && i < 3; i++) {
     run.shotT[i] = (run.shotT[i] ?? 0) + dt;
-    if (run.shotT[i]! >= 1 / st.fireRate) {
-      const [sx, sy] = shooters[i]!;
-      const tg = nearestOrc(s, sx, sy);
-      if (tg) { run.shotT[i] = 0; volley(s, sx, sy, tg.x, tg.y, i === 0 ? 1 : SOURCES.archerDmgFrac * st.kin, tg); }
+    if (run.shotT[i]! < 1 / st.fireRate) continue;
+    const [sx, sy] = shooters[i]!;
+    if (i === 0 && inputs.aim && inputs.aim.x > BAR_X + BAR_W) {
+      // The player aims: arrows fly to the pointer. Moonbow still bends toward an orc near the aim point.
+      const a = inputs.aim;
+      const home = nearestOrc(s, a.x, a.y, (o) => dist(o.x, o.y, a.x, a.y) < PLAYER.aimHomingRadius);
+      run.shotT[i] = 0; volley(s, sx, sy, a.x, a.y, 1, home);
+      continue;
     }
+    const tg = nearestOrc(s, sx, sy);
+    if (tg) { run.shotT[i] = 0; volley(s, sx, sy, tg.x, tg.y, i === 0 ? 1 : SOURCES.archerDmgFrac * st.kin, tg); }
   }
   if (st.knives) { run.knifeT += dt; if (run.knifeT >= 1 / st.knives.rate) { const tg = nearestOrc(s, ELF_X, H / 2); if (tg) { run.knifeT = 0; shoot(s, 'knife', ELF_X, H / 2, Math.atan2(tg.y - H / 2, tg.x - ELF_X), SOURCES.knives.speed, st.knives.dmg, 0, tg); } } }
   if (st.ballista) { run.ballT += dt; if (run.ballT >= SOURCES.ballista.cd) { const tg = nearestOrc(s, ELF_X, H / 2); if (tg) { run.ballT = 0; shoot(s, 'bolt', ELF_X + 6, H / 2 - 40, Math.atan2(tg.y - H / 2 + 40, tg.x - ELF_X), SOURCES.ballista.speed, st.ballista, 99, null); } } }

@@ -28,7 +28,7 @@ header h1 em { color: var(--amber); font-style: italic; }
 .stat .v.amber { color: var(--amber); } .stat .v.heart { color: var(--rose); }
 .main { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 14px; align-items: start; }
 .field { position: relative; width: 100%; aspect-ratio: 15 / 8; max-width: 100%; border-radius: 10px; overflow: hidden; background: var(--sage-deep); outline: 1px solid var(--line); }
-.field canvas { width: 100%; height: 100%; display: block; cursor: crosshair; touch-action: manipulation; }
+.field canvas { width: 100%; height: 100%; display: block; cursor: none; touch-action: none; }
 .toast { position: absolute; left: 50%; top: 12px; transform: translateX(-50%); background: color-mix(in srgb, var(--ink) 85%, transparent); border: 1px solid var(--line); padding: 6px 14px; border-radius: 999px; font-size: 13px; pointer-events: none; opacity: 0; transition: opacity .3s; white-space: nowrap; }
 .toast.on { opacity: 1; }
 .fallen { position: absolute; inset: 0; background: color-mix(in srgb, var(--ink) 82%, transparent); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; text-align: center; padding: 20px; }
@@ -93,7 +93,7 @@ header h1 em { color: var(--amber); font-style: italic; }
         </div>
       </div>
       <div class="rally">
-        <div class="hint">Hold the barricade. Rally vanguard with starlight to meet the tide in melee; tap the field to loose an extra volley.</div>
+        <div class="hint">Hold the barricade. Move your pointer over the field to aim the bow; it looses on its own. Rally vanguard with starlight to meet the tide in melee.</div>
         <button class="deploy" id="dep-spear"><span class="n">Rally Spearman</span><span class="c" id="dep-spear-c">—</span></button>
         <button class="deploy" id="dep-blade" hidden><span class="n">Rally Bladedancer</span><span class="c" id="dep-blade-c">—</span></button>
       </div>
@@ -263,6 +263,7 @@ function load() {
 const W = 900, H = 480, BAR_X = 150, BAR_W = 14, ELF_X = 64;
 const orcs = [], arrows = [], parts = [], texts = [], vans = [];
 let t = 0, spawnT = 0, shotT = [0, 0, 0], knifeT = 0, hawkT = 0, treantT = 0, ballT = 0, stormFlash = [], shake = 0;
+const aim = { x: 0, y: 0, active: false };
 const wolf = { x: 260, y: H / 2, tx: 260, ty: H / 2, biteT: 0 };
 const hawk = { x: 300, y: 100, a: 0 };
 
@@ -299,7 +300,7 @@ function fireVolley(sx, sy, target, mult) {
   const n = derived.arrows;
   for (let i = 0; i < n; i++) {
     const ang = Math.atan2(target.y - sy, target.x - sx) + (i - (n - 1) / 2) * 0.09;
-    arrows.push({ x: sx, y: sy, vx: Math.cos(ang) * 520, vy: Math.sin(ang) * 520, dmg: derived.dmg * mult, pierce: derived.pierce, hit: new Set(), target, kind: 'arrow', life: 2.2 });
+    arrows.push({ x: sx, y: sy, vx: Math.cos(ang) * 520, vy: Math.sin(ang) * 520, dmg: derived.dmg * mult, pierce: derived.pierce, hit: new Set(), target: target.homeTo !== undefined ? target.homeTo : target, kind: 'arrow', life: 2.2 });
   }
 }
 function deploy(type) {
@@ -381,7 +382,13 @@ function update(dt) {
   const shooters = [{ x: ELF_X, y: H / 2 }, { x: ELF_X - 10, y: H / 2 - 90 }, { x: ELF_X - 10, y: H / 2 + 90 }];
   for (let i = 0; i <= derived.archers; i++) {
     shotT[i] += dt;
-    if (shotT[i] >= 1 / derived.fireRate) { const tg = nearestOrc(shooters[i].x, shooters[i].y); if (tg) { shotT[i] = 0; fireVolley(shooters[i].x, shooters[i].y, tg, i === 0 ? 1 : 0.7 * derived.kin); } }
+    if (shotT[i] < 1 / derived.fireRate) continue;
+    if (i === 0 && aim.active) {
+      // The player aims: arrows go where the pointer is. Moonbow still bends toward an orc near the aim point.
+      shotT[i] = 0; fireVolley(ELF_X, H / 2, { x: aim.x, y: aim.y, dead: false, homeTo: nearestOrc(aim.x, aim.y, o => Math.hypot(o.x - aim.x, o.y - aim.y) < 70) }, 1);
+      continue;
+    }
+    const tg = nearestOrc(shooters[i].x, shooters[i].y); if (tg) { shotT[i] = 0; fireVolley(shooters[i].x, shooters[i].y, tg, i === 0 ? 1 : 0.7 * derived.kin); }
   }
   if (derived.knives) { knifeT += dt; if (knifeT >= 1 / derived.knives.rate) { const tg = nearestOrc(ELF_X, H / 2); if (tg) { knifeT = 0; const a = Math.atan2(tg.y - H / 2, tg.x - ELF_X); arrows.push({ x: ELF_X, y: H / 2, vx: Math.cos(a) * 640, vy: Math.sin(a) * 640, dmg: derived.knives.dmg, pierce: 0, hit: new Set(), target: tg, kind: 'knife', life: 2 }); } } }
   if (derived.ballista) { ballT += dt; if (ballT >= 4) { const tg = nearestOrc(ELF_X, H / 2); if (tg) { ballT = 0; const a = Math.atan2(tg.y - H / 2 + 40, tg.x - ELF_X); arrows.push({ x: ELF_X + 6, y: H / 2 - 40, vx: Math.cos(a) * 760, vy: Math.sin(a) * 760, dmg: derived.ballista, pierce: 99, hit: new Set(), kind: 'bolt', life: 2 }); } } }
@@ -471,6 +478,11 @@ function render() {
   // treant
   if (derived.treant) { g.fillStyle = '#4e5e3f'; g.fillRect(BAR_X + 40, H / 2 + 10, 14, 34); g.fillStyle = '#5f7d53'; g.beginPath(); g.arc(BAR_X + 47, H / 2 + 2, 22, 0, 6.28); g.fill(); g.fillStyle = '#6f8f60'; g.beginPath(); g.arc(BAR_X + 40, H / 2 - 6, 14, 0, 6.28); g.fill(); }
   drawElf(ELF_X, H / 2, false);
+  if (aim.active && !S.fallen) {
+    g.strokeStyle = 'rgba(239,230,210,.25)'; g.lineWidth = 1; g.setLineDash([4, 6]); g.beginPath(); g.moveTo(ELF_X + 16, H / 2); g.lineTo(aim.x, aim.y); g.stroke(); g.setLineDash([]);
+    g.strokeStyle = '#efe6d2'; g.lineWidth = 1.5; g.beginPath(); g.arc(aim.x, aim.y, 9, 0, 6.28); g.stroke();
+    g.beginPath(); g.moveTo(aim.x - 14, aim.y); g.lineTo(aim.x - 5, aim.y); g.moveTo(aim.x + 5, aim.y); g.lineTo(aim.x + 14, aim.y); g.moveTo(aim.x, aim.y - 14); g.lineTo(aim.x, aim.y - 5); g.moveTo(aim.x, aim.y + 5); g.lineTo(aim.x, aim.y + 14); g.stroke();
+  }
   if (derived.archers >= 1) drawElf(ELF_X - 10, H / 2 - 90, true);
   if (derived.archers >= 2) drawElf(ELF_X - 10, H / 2 + 90, true);
   if (derived.ballista) { g.fillStyle = '#5a4634'; g.fillRect(ELF_X - 10, H / 2 - 48, 30, 10); g.fillStyle = '#efe6d2'; g.fillRect(ELF_X + 10, H / 2 - 45, 22, 3); }
@@ -493,11 +505,11 @@ function render() {
   if (derived.muster) g.fillText('VANGUARD ' + vans.length + ' / ' + derived.vanCap, 12, 46);
   g.fillStyle = 'rgba(27,33,48,.45)'; g.fillRect(0, H - 5, W, 5); g.fillStyle = '#e2a85b'; g.fillRect(0, H - 5, W * (S.waveT / WAVE_LEN), 5);
 }
-gc.addEventListener('pointerdown', e => {
-  if (S.fallen) return;
-  const r = gc.getBoundingClientRect(); const x = (e.clientX - r.left) / r.width * W, y = (e.clientY - r.top) / r.height * H;
-  const tg = nearestOrc(x, y) || { x, y }; fireVolley(ELF_X, H / 2, tg, 1.5); burst(x, y, '#efe6d2', 4, 40);
-});
+function setAim(e) { const r = gc.getBoundingClientRect(); aim.x = (e.clientX - r.left) / r.width * W; aim.y = (e.clientY - r.top) / r.height * H; aim.active = aim.x > BAR_X + BAR_W; }
+gc.addEventListener('pointermove', setAim);
+gc.addEventListener('pointerdown', setAim);
+gc.addEventListener('pointerleave', () => { aim.active = false; });
+gc.addEventListener('pointerup', e => { if (e.pointerType !== 'mouse') aim.active = false; });
 $('dep-spear').onclick = () => deploy('spear');
 $('dep-blade').onclick = () => deploy('blade');
 $('fallen-btn').onclick = replant;

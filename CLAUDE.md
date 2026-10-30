@@ -45,7 +45,7 @@ Run `npm run lint && npm run test` before every commit. Do not commit if either 
 ## Non-negotiable design rules
 
 1. **The only fail state is the barricade falling, and it always pays out Heartwood.** Nothing else reduces progress. A fallen run freezes and offers exactly one action: Replant.
-2. **Idle-friendly.** The game must progress with zero input, and award offline starlight on return. Active play (tapping the field) is a bonus, never a requirement.
+2. **Idle-friendly, aim-to-play.** The game must progress with zero input (auto-target) and award offline starlight on return. Active play is *aiming* the bow with the pointer; the bow looses on its own cadence. There is no click-to-shoot and no tap bonus, ever.
 3. **Every number lives in `src/data/` or `docs/BALANCE.md` formulas.** No magic numbers in systems code.
 4. **Skill tree is data.** Nodes are declared in `src/data/skillTree.ts`, matching `docs/SKILL-TREE.md`. Systems read effects from the derived `Stats` object, never from node ids.
 5. **Save compatibility.** The save schema is versioned (`ARCHITECTURE.md` §Save). Add a migration for every schema change. Never break an existing save.
@@ -56,7 +56,7 @@ Run `npm run lint && npm run test` before every commit. Do not commit if either 
 
 - `src/sim/` is pure: no DOM, no canvas, no `Date.now()`. It takes `dt` and a seeded RNG. This is what tests and the balance simulator run.
 - `src/render/` reads sim state and draws. It never mutates sim state.
-- `src/ui/` is the DOM panel (tree, rally bar, fallen overlay, prestige, settings). It dispatches intents (`buy`, `rally`, `replant`, `tap`) to `GameController` in `src/game.ts`, which is the only caller into `src/sim/`.
+- `src/ui/` is the DOM panel (tree, rally bar, fallen overlay, prestige, settings). It dispatches intents (`buy`, `rally`, `replant`, `setAim`) to `GameController` in `src/game.ts`, which is the only caller into `src/sim/`.
 - One file per entity type or system. Named exports. No default exports.
 - Tests live beside the code as `*.test.ts`. Every formula in `BALANCE.md` has a test pinning its value at waves 1, 10, 25, 50.
 - Commit messages: `area: what changed` (`sim: add silt drowning`, `tree: moonbow homing`). Reference the backlog id (`TB-012`).

@@ -40,6 +40,7 @@ Rules: semantic colours (amber = money, timber = the wall, rose = permanent/dang
 - Barricade: 14 px column of alternating planks with dark cross-bands, sand edge on the grove side, cream spike triangles on the plain side once Thornwall is owned.
 - Wolf: grey ellipse + head circle. Hawk: a bark-coloured diamond. Treant: stacked green circles on a trunk.
 - Arrows are 14 px cream lines; knives 8 px pale; ballista bolt 22 px bark, 3 px wide.
+- Aim reticle: 9 px cream ring with four 9 px ticks, and a dashed 25% cream line from the bow tip to the reticle. The OS cursor is hidden over the field (`cursor: none`). Nothing is drawn when the pointer is over the grove side.
 
 ## Typography
 - Display: **Spectral** (serif, 500/700, italic for the title's "Orcs"). Headings, big numbers.
