@@ -153,6 +153,7 @@ export class Panel {
   private showFallen(): void {
     const r = this.game.state.run;
     $('fallen-sum').textContent = STR.fallenSummary(r.wave, fmt(r.kills), Math.floor(r.runTime / 60));
+    $('fallen-rate').textContent = STR.fallenRate(fmt(r.earned / Math.max(1, r.runTime / 60)), this.game.state.meta.bestWave);
     $('fallen-hw').textContent = '+' + gain(this.game.state); $('fallen').hidden = false;
   }
   private doReplant(): void {

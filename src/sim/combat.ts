@@ -16,7 +16,7 @@ export function kill(s: SimState, ev: EventBus, o: Orc): void {
   if (o.dead) return;
   o.dead = true;
   const loot = o.loot * s.stats.starMult;
-  s.run.kills++; s.meta.lifetimeKills++; s.run.starlight += loot;
+  s.run.kills++; s.meta.lifetimeKills++; s.run.starlight += loot; s.run.earned += loot;
   if (o.champ && s.run.boss) s.run.boss.left--;
   ev.push({ t: 'kill', x: o.x, y: o.y, loot, kind: o.kind });
 }

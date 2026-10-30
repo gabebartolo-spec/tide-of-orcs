@@ -24,6 +24,8 @@ export const migrations: Record<number, (s: AnySave) => AnySave> = {
     if (run.foeT) { const foeT = { ...run.foeT }; delete foeT.boss; run.foeT = foeT; }
     return { ...s, version: 4, run: { ...run, bossDone: 0, boss: null } };
   },
+  // v4 to v5: run.earned (starlight earned this run) for the run summary; old runs start counting from 0
+  4: (s) => ({ ...s, version: 5, run: { ...(s.run as object), earned: 0 } }),
 };
 
 export function migrate(raw: unknown): Save {

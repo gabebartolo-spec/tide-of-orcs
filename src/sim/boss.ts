@@ -29,7 +29,7 @@ export function bossStep(s: SimState, ev: EventBus, dt: number): void {
   const cleared = b.left <= 0;
   if (!cleared && b.t < BOSS_WAVE.secs) return;
   const loot = cleared ? BOSS_WAVE.clearLoot * waveLoot(s.run.wave) * s.stats.starMult : 0;
-  s.run.starlight += loot; s.run.boss = null;
+  s.run.starlight += loot; s.run.earned += loot; s.run.boss = null;
   // stragglers of a failed challenge keep marching as ordinary orcs
   s.orcs.forEach((o) => { o.champ = false; });
   ev.push({ t: 'bossEnd', cleared, loot });

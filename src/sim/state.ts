@@ -23,6 +23,8 @@ export interface Vanguard {
 
 export interface RunState {
   wave: number; waveT: number; runTime: number; starlight: number; kills: number; levels: Levels;
+  /** Starlight earned this run (never spent down); feeds the run summary's starlight per minute. */
+  earned: number;
   barHp: number; bulwarkUsed: boolean; fallen: boolean;
   /** Boss waves summoned this run, and the one running now (t: seconds in, next: script index, left: its orcs not yet slain). */
   bossDone: number; boss: { t: number; next: number; left: number } | null;
@@ -40,7 +42,7 @@ export interface SimState {
 }
 
 export function freshRun(): RunState {
-  return { wave: 1, waveT: 0, runTime: 0, starlight: 0, kills: 0, levels: { root: 1 }, barHp: -1, bulwarkUsed: false, fallen: false, bossDone: 0, boss: null,
+  return { wave: 1, waveT: 0, runTime: 0, starlight: 0, earned: 0, kills: 0, levels: { root: 1 }, barHp: -1, bulwarkUsed: false, fallen: false, bossDone: 0, boss: null,
     foeT: {}, stormT: 0, shotT: [0, 0, 0], knifeT: 0, hawkT: 0, treantT: 0, ballT: 0 };
 }
 export function freshMeta(): MetaState { return { heartwood: 0, lifetimeKills: 0, bestWave: 1, prestiges: 0 }; }
