@@ -89,7 +89,7 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-076 | Move 6 colour literals in src/render (rgba/hex) into palette tokens (rule 6) | render | | claude | done c189562 |
 | TB-077 | Move inline tree multipliers in sim/stats.ts (1.25, 1.15, 1.2, 1.4 …) into data/balance (rule 3) | sim/data | | claude | done c189562 |
 | TB-078 | Fallen overlay clips on phones: at 375 px the field is 183 px tall and the Replant button starts at its bottom edge, so it is unreachable (rule 1). Fit overlay to field height or move it out of the canvas box | ui | 027 | | todo |
-| TB-079 | Aiming redesign: arcing lob every 2.5 s into a 40 px strike circle, all orcs inside hit; no fire without aim; Wide Volley node; Split Shot, Longshaft, Moonbow re-skinned | sim/render | | claude | doing |
+| TB-079 | Aiming redesign: arcing lob every 2.5 s into a 40 px strike circle, all orcs inside hit; no fire without aim; Wide Volley node; Split Shot, Longshaft, Moonbow re-skinned | sim/render | | claude | done 16e3060 |
 
 ## Icebox
 - Starfall, Owl, Mist, Lantern nodes (SKILL-TREE.md Planned).
