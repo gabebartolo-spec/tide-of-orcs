@@ -61,7 +61,7 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-052 | Run summary screen | ui | 050 | claude | done 4bd58c9 |
 | TB-053 | Heartwood tree data + stats + UI | data/sim/ui | 050 | claude | done dd09286 |
 | TB-054 | Balance pass #1: hit BALANCE.md pacing targets; write Proposed | balance | 040,053 | claude | done 1185a3a |
-| TB-085 | Re-run dps vs greedy after TB-080/TB-054 | balance | 054 | claude | done |
+| TB-085 | Re-run dps vs greedy after TB-080/TB-054 | balance | 054 | claude | done 0ea2a6f |
 | TB-055 | Save schema v6 (meta.hwLevels) + migration fixture test | save | 053,028 | claude | done dd09286 |
 
 ## M4 — Presentation
