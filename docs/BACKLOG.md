@@ -57,7 +57,7 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | Id | Task | Area | Depends | Owner | Status |
 |---|---|---|---|---|---|
 | TB-050 | `prestige.ts` gain + forced/voluntary replant + tests | sim | 005 | claude | done 4860f5b |
-| TB-051 | Replant ceremony (burn, seed, dawn) for both forced and voluntary replant; reduced-motion path | ui/render | 050 | claude | doing |
+| TB-051 | Replant ceremony (burn, seed, dawn) for both forced and voluntary replant; reduced-motion path | ui/render | 050 | claude | done 5fcc939 |
 | TB-052 | Run summary screen | ui | 050 | claude | done 4bd58c9 |
 | TB-053 | Heartwood tree data + stats + UI | data/sim/ui | 050 | claude | done dd09286 |
 | TB-054 | Balance pass #1: hit BALANCE.md pacing targets; write Proposed | balance | 040,053 | | todo |
