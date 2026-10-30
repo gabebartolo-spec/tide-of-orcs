@@ -91,7 +91,7 @@ Pools expose `alloc()/free(i)` and `forEachLive(fn)`. Nothing in `sim/` holds ob
 `SimEvent` union in `sim/events.ts`: `kill`, `hit`, `wave`, `storm`, `hawkDive`, `treantStamp`, `bite`, `barricadeHit` (with damage fraction, drives shake), `barricadeRegrow`, `barricadeFell` (with the run summary), `vanguardRallied`, `vanguardHit`, `vanguardFell`, `bought`, `replant` (with `forced`). Render turns these into particles, floating text, shake and toasts; audio turns them into SFX. Sim never knows about either.
 
 ## Save
-- `SaveV1 = { version: 1, savedAt: number, run, meta, settings }`. Pools are **not** saved; a load starts with an empty field (orcs respawn within seconds; this is fine and avoids serialising 160 orcs).
+- `SaveV2 = { version: 2, savedAt: number, run, meta, settings }`. v1 → v2 (TB-028) drops retired node ids (`RETIRED_NODE_IDS` in `save/schema.ts`) from `run.levels`; fixture in `src/save/fixtures/v1.ts`. Pools are **not** saved; a load starts with an empty field (orcs respawn within seconds; this is fine and avoids serialising 160 orcs).
 - `migrate.ts` runs `while (save.version < CURRENT) save = migrations[save.version](save)`. Every schema bump adds a migration and a test with a fixture of the previous version.
 - Export: `btoa(JSON.stringify(save))` to clipboard; import parses, migrates, validates with a small schema check, then replaces state.
 

@@ -61,7 +61,7 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-052 | Run summary screen | ui | 050 | | todo |
 | TB-053 | Heartwood tree data + stats + UI | data/sim/ui | 050 | | todo |
 | TB-054 | Balance pass #1: hit BALANCE.md pacing targets; write Proposed | balance | 040,053 | | todo |
-| TB-055 | Save schema v2 (hwLevels) + migration fixture test | save | 053,028 | | todo |
+| TB-055 | Save schema v3 (hwLevels) + migration fixture test | save | 053,028 | | todo |
 
 ## M4 — Presentation
 | Id | Task | Area | Depends | Owner | Status |

@@ -1,10 +1,18 @@
-import { CURRENT_VERSION, Save } from './schema';
+import { CURRENT_VERSION, RETIRED_NODE_IDS, Save } from './schema';
 
 type AnySave = { version: number } & Record<string, unknown>;
 
 /** migrations[v] upgrades a save at version v to v+1. Add one for every schema bump. */
 export const migrations: Record<number, (s: AnySave) => AnySave> = {
-  // 1: (s) => ({ ...s, version: 2, meta: { ...(s.meta as object), hwLevels: {} } }),
+  1: (s) => {
+    const run = { ...(s.run as { levels?: Record<string, number> }) };
+    if (run.levels) {
+      const levels = { ...run.levels };
+      for (const id of RETIRED_NODE_IDS) delete levels[id];
+      run.levels = levels;
+    }
+    return { ...s, version: 2, run };
+  },
 };
 
 export function migrate(raw: unknown): Save {
