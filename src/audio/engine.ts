@@ -72,12 +72,15 @@ export class AudioEngine {
   }
 
   private async load(name: string): Promise<AudioBuffer | null> {
-    const ext = new Audio().canPlayType('audio/ogg; codecs=vorbis') ? 'ogg' : 'mp3';
+    // OGG first where supported, then MP3 (Suno music exports MP3 only).
+    const exts = new Audio().canPlayType('audio/ogg; codecs=vorbis') ? ['ogg', 'mp3'] : ['mp3'];
     let buf: AudioBuffer | null = null;
-    try {
-      const r = await fetch(`${this.base}${name}.${ext}`);
-      if (r.ok) buf = await this.ctx!.decodeAudioData(await r.arrayBuffer());
-    } catch { buf = null; }
+    for (const ext of exts) {
+      try {
+        const r = await fetch(`${this.base}${name}.${ext}`);
+        if (r.ok) { buf = await this.ctx!.decodeAudioData(await r.arrayBuffer()); break; }
+      } catch { buf = null; }
+    }
     this.bufs.set(name, buf);
     return buf;
   }
