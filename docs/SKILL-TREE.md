@@ -83,6 +83,28 @@ interface Stats {
 // heart = 1 + 0.12 × heartwood
 ```
 
+## Proposed: Provoke nodes (DRAFT, 2026-10-30, awaiting director)
+Risk for reward: tougher orcs for more starlight, the way Shreddead keeps power growth stable. Both sit under Call the Horde in the Grove, next to Warboss Bounty.
+
+| id | Name | Branch | Parent | Max | Base | Growth | x | y | Effect |
+|---|---|---|---|---|---|---|---|---|---|
+| drums | War Drums | Grove | horde | 5 | 300 | 2.4 | 700 | 650 | Orcs have +30% health per rank and drop +40% starlight per rank. |
+| banners | Blood Banners | Grove | horde | 5 | 300 | 2.4 | 740 | 610 | Orcs hit +30% harder per rank and drop +25% starlight per rank. |
+
+New stats: `orcHp = 1.3^drums`, `orcAtk = 1.3^banners`, `starMult ×= 1.4^drums × 1.25^banners`. Applied at spawn in `step.ts`. Per arrow, War Drums nets +7.7% starlight per rank, and Blood Banners costs no extra arrows, only wall.
+
+Sim (greedy, 40 min, seeds 1–10, BALANCE v1.2). Greedy buys every rank because it always takes the cheapest node, so this is the worst case for a player who buys them blindly:
+
+| Variant | First fall | Run 2 | Run 3 |
+|---|---|---|---|
+| v1.2 without these nodes | 12–18 | 25–29 | 40–43 |
+| Proposed rates, all 10 ranks bought | 12–18 (unchanged) | 24–33 | 36–39 |
+| Richer loot (×1.5 / ×1.35) | 12–18 | 27–32 | 37–39 |
+
+They come in after the first fall, so run 1 is untouched. Bought blindly they cost about 4 waves in run 3 and widen run 2. The payoff only shows for a player who buys them when the wall is comfortable.
+
+Open question: in Shreddead the risk is a dial you can turn back down. Here ranks are permanent for the run. Making the dial work needs free rank lowering (no refund), plus a UI control and a save field for the "active rank" (schema change, so it needs your yes).
+
 ## Planned nodes (DRAFT, not in 1.0 data)
 - **Bow → Starfall** (after Moonbow): every 10th volley is a rain of 8 arrows across the plain.
 - **Companions → Owl** (after Warden): marks a brute; marked orcs take +50% damage.
