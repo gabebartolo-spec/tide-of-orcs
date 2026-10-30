@@ -122,7 +122,7 @@ Lives in `sim/run.ts`. Runs `src/sim/` headless at 50 steps/s and decides every 
 - **greedy**: rally a spearman (bladedancer if owned) when the wall is under 50%; otherwise buy the cheapest affordable node.
 - **wall**: like greedy but rallies at 90% and weights Barricade/Vanguard nodes at half cost.
 - **nobuy**: never spends. Measures the bare archer.
-- **dps** (TB-040, built): every 15 s, trial the 6 cheapest affordable nodes over a 120 s lookahead (save-like restart, empty field) and buy the best Δ earned ÷ cost. 30 min, seeds 1–3: Heartwood 26/55/53 vs greedy 22/23/27; last fall wave 26/35/35 vs 24/25/26 (pre-TB-054 report; see TB-054 for every fall; dps re-run is TB-085).
+- **dps** (TB-040, built): every 15 s, trial the 6 cheapest affordable nodes over a 120 s lookahead (save-like restart, empty field) and buy the best Δ earned ÷ cost. Re-run TB-085 (wallMult 10, 30 min, seeds 1–3): Heartwood 26/55/53 vs greedy 22/23/27; best wave 30/35/35 vs 33/28/26. All six first fall at wave 5 by minute 1.8; dps breaks out at minute 10/7.6/7.6 of run time vs greedy 9.2/9.7/10.3, and on seeds 2–3 reaches the wave-35 ceiling inside 30 min. Same Heartwood as the pre-TB-054 figures: those were already at wallMult 10, only the "first fall" label was wrong.
 
 Report columns per minute: wave, starlight, kills/min, kills, wall %, vanguard count, nodes owned, HW, falls. Summary line gives the first fall wave, every fall wave in order (`Falls:`), replants, Heartwood, best wave. (Before TB-084 the "First fall" field printed the last fall.) Writes `sim/out/<policy>-<date>.md` unless `--quiet`. CI runs 30 minutes of greedy as a smoke test.
 
