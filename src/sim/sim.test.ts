@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { createState, freshRun, freshMeta } from './state';
+import { createState, freshRun, freshMeta, recompute } from './state';
 import { EventBus } from './events';
 import { Inputs, noInputs, step } from './step';
 import { deriveStats } from './stats';
@@ -146,5 +146,32 @@ describe('prestige', () => {
     const s = createState(1, { ...freshRun(), wave: 11 }, freshMeta());
     expect(canReplant(s)).toBe(false);
     s.run.wave = 12; expect(canReplant(s)).toBe(true);
+  });
+});
+
+describe('kinship, bounty, horde (TB-039)', () => {
+  const comp = { root: 1, ranger: 1, wolf: 1, knives: 1, ballista: 1, muster: 1 };
+  it('kinship scales every companion and the vanguard by 1.2 per rank', () => {
+    const a = deriveStats(comp, 0), b = deriveStats({ ...comp, bond: 3 }, 0), k = 1.2 ** 3;
+    expect(b.kin / a.kin).toBeCloseTo(k);
+    expect(b.wolf / a.wolf).toBeCloseTo(k);
+    expect(b.knives!.dmg / a.knives!.dmg).toBeCloseTo(k);
+    expect(b.ballista / a.ballista).toBeCloseTo(k);
+    expect(b.vanDmg / a.vanDmg).toBeCloseTo(k);
+    expect(b.dmg).toBeCloseTo(a.dmg);
+  });
+  it('bounty multiplies warboss starlight only', () => {
+    expect(deriveStats({ root: 1 }, 0).bounty).toBe(1);
+    expect(deriveStats({ root: 1, bounty: 2 }, 0).bounty).toBe(3);
+  });
+  it('horde spawns more orcs', () => {
+    const count = (horde: number) => {
+      const s = createState(3); s.run.levels.horde = horde; recompute(s); const ev = new EventBus();
+      for (let i = 0; i < 60 / STEP; i++) step(s, STEP, noInputs, ev);
+      let live = 0; s.orcs.forEach((o) => { if (!o.dead) live++; });
+      return s.run.kills + live;
+    };
+    expect(deriveStats({ root: 1, horde: 5 }, 0).spawnMult).toBeCloseTo(1.2 ** 5);
+    expect(count(5)).toBeGreaterThan(count(0) * 1.5);
   });
 });

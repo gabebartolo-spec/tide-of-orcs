@@ -41,16 +41,16 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 ## M2 — Companions & armoury
 | Id | Task | Area | Depends | Owner | Status |
 |---|---|---|---|---|---|
-| TB-030 | Wolf AI + bite + render | sim/render | 015 | | todo |
-| TB-031 | Ranger/Warden archers | sim/render | 014 | | todo |
-| TB-032 | Hawk circle + dive + burst | sim/render | 015 | | todo |
-| TB-033 | Treant stamp | sim/render | 015 | | todo |
-| TB-034 | Throwing knives | sim/render | 015 | | todo |
-| TB-035 | Fire arrows burn + flame particles | sim/render | 015 | | todo |
-| TB-036 | Storm Glade chain + lilac polyline | sim/render | 015 | | todo |
-| TB-037 | Ballista + bolt render | sim/render | 015 | | todo |
-| TB-038 | Moonbow homing | sim | 014 | | todo |
-| TB-039 | Kinship/Bounty/Horde wiring + tests | sim | 005 | | todo |
+| TB-030 | Wolf AI + bite + render | sim/render | 015 | claude | done 4860f5b (ported in M0) |
+| TB-031 | Ranger/Warden archers | sim/render | 014 | claude | done 4860f5b (ported in M0) |
+| TB-032 | Hawk circle + dive + burst | sim/render | 015 | claude | done 4860f5b (ported in M0) |
+| TB-033 | Treant stamp | sim/render | 015 | claude | done 4860f5b (ported in M0) |
+| TB-034 | Throwing knives | sim/render | 015 | claude | done 4860f5b (ported in M0) |
+| TB-035 | Fire arrows burn + flame particles | sim/render | 015 | | todo (burn ported in 4860f5b; flame particles missing, orange glow only) |
+| TB-036 | Storm Glade chain + lilac polyline | sim/render | 015 | claude | done 4860f5b (ported in M0) |
+| TB-037 | Ballista + bolt render | sim/render | 015 | claude | done 4860f5b (ported in M0) |
+| TB-038 | Moonbow homing | sim | 014 | claude | done 4860f5b (ported in M0) |
+| TB-039 | Kinship/Bounty/Horde wiring + tests | sim | 005 | claude | in progress |
 | TB-040 | Sim policy `dps` (lookahead) | sim | 009 | | todo |
 
 ## M3 — Prestige
@@ -86,6 +86,8 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-073 | Itch.io page copy, screenshots, HTML5 zip pipeline | release | 072 | gabe | todo |
 | TB-074 | Electron wrapper spike | release | 073 | | todo |
 | TB-075 | Bug bash checklist run | qa | 072 | | todo |
+| TB-076 | Move 6 colour literals in src/render (rgba/hex) into palette tokens (rule 6) | render | | | todo |
+| TB-077 | Move inline tree multipliers in sim/stats.ts (1.25, 1.15, 1.2, 1.4 …) into data/balance (rule 3) | sim/data | | | todo |
 
 ## Icebox
 - Starfall, Owl, Mist, Lantern nodes (SKILL-TREE.md Planned).
