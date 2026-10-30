@@ -1,6 +1,6 @@
 # Architecture
 
-Status: **Current** (v1.1). Module boundaries are binding; internal details are guidance. The M0 code follows this layout; `src/render/tree.ts` pan/zoom is still to come; `src/audio/engine.ts` plays cues from `src/data/audio.ts` and skips missing files.
+Status: **Current** (v1.1). Module boundaries are binding; internal details are guidance. The M0 code follows this layout; `src/render/tree.ts` pans and zooms through `src/render/camera.ts`; `src/audio/engine.ts` plays cues from `src/data/audio.ts` and skips missing files.
 
 ## Principles
 1. Simulation is pure and deterministic given `(save, seed, inputs, dt)`. Rendering and UI are observers.

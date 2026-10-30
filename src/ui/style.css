@@ -48,8 +48,9 @@ header h1 em { color: var(--amber); font-style: italic; }
 .tabs button[aria-selected="true"] { color: var(--cream); border-bottom-color: var(--amber); }
 .tabs button:focus-visible, .buy:focus-visible, .ghost:focus-visible, .deploy:focus-visible { outline: 2px solid var(--amber); outline-offset: -2px; }
 .tab { display: flex; flex-direction: column; }
-.treewrap { position: relative; height: 460px; overflow: auto; background: radial-gradient(ellipse at 50% 100%, #2b3448 0%, var(--ink-2) 70%); }
-#tree { display: block; cursor: pointer; width: 100%; height: auto; }
+.treewrap { position: relative; height: 460px; overflow: hidden; background: radial-gradient(ellipse at 50% 100%, #2b3448 0%, var(--ink-2) 70%); }
+#tree { position: absolute; inset: 0; display: block; cursor: grab; width: 100%; height: 100%; touch-action: none; }
+#tree.dragging { cursor: grabbing; }
 .detail { border-top: 1px solid var(--line); padding: 12px 14px; min-height: 128px; display: flex; flex-direction: column; gap: 6px; }
 .detail .name { font-family: var(--display); font-size: 18px; font-weight: 700; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
 .detail .branch { font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: var(--cream-dim); }

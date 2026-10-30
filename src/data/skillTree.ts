@@ -68,5 +68,7 @@ export const NODES: readonly SkillNode[] = [
 export const NODE: Readonly<Record<NodeId, SkillNode>> = Object.fromEntries(NODES.map((x) => [x.id, x])) as Record<NodeId, SkillNode>;
 
 export const TREE_CANVAS = { w: 760, h: 680 } as const;
+/** Tree view: zoom range as multiples of fit-to-width, wheel step, px of movement before a press becomes a drag. */
+export const TREE_VIEW = { minZoom: 0.6, maxZoom: 2.5, wheelStep: 1.15, dragPx: 6, hitR: 20 } as const;
 
 export const BRANCH_COLOR: Readonly<Record<Branch, string>> = { Bow: '#cdbdea', Companions: '#e2a85b', Armoury: '#c76f6f', Grove: '#9fc48f', Barricade: '#c9a06a', Vanguard: '#8fb7c9' };
