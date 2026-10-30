@@ -1,8 +1,8 @@
 # Skill Tree — node data
 
-Status: **Current** (v1.2). This table is generated from `docs/prototype.html` and mirrored exactly by `src/data/skillTree.ts` (tested: unique ids, parents exist, no cycles, coordinates in bounds, ≥ 40 px apart). Node ids are stable API: never rename; deprecate instead.
+Status: **Current** (v1.3, 43 nodes, checked against the code 31 Oct 2026). Started from `docs/prototype.html` and since changed (Wide Volley, War Drums and the summon/Fury/Swarm nodes added; Dreaming Roots, Blood Banners and the Warboss nodes retired; see GDD §14). Mirrored exactly by `src/data/skillTree.ts` (tested: unique ids, parents exist, no cycles, coordinates in bounds, ≥ 40 px apart). Node ids are stable API: never rename; deprecate instead.
 
-Cost formula: `cost(rank) = base × growth^rank` (rank = ranks already owned). Costs are starlight, rounded.
+Cost formula: `cost(rank, w) = round(base × growth^rank × 1.25^max(0, w − 10))` (rank = ranks already owned, w = wave at purchase; the wave factor is P-001, BALANCE.md §Economy). Costs are starlight.
 
 Layout coordinates are for a 760×920 tree canvas, root bottom-centre at (380, 600). Six branches fan outward in the classic incremental shape: Bow up-left, Vanguard left, Barricade low-left, Companions up, Armoury up-right, Grove low-right. Branch colours in ART-STYLE.md.
 
@@ -53,21 +53,31 @@ Layout coordinates are for a 760×920 tree canvas, root bottom-centre at (380, 6
 | champion | Bladedancer | Vanguard | ranks | 1 | 2200 | — | 60 | 400 | Rally bladedancers: costlier, faster, their strikes cleave every orc in reach. |
 
 ## Deprecated ids (reserved, never reuse)
-`tide`, `current`, `flood`, `silt` — the River branch from v1.0. A save containing them is migrated by dropping the keys.
+Lists live in `src/save/schema.ts`; each migration drops the keys from `run.levels`.
+
+| Ids | What | Dropped by |
+|---|---|---|
+| `tide`, `current`, `flood`, `silt` | River branch (v1.0) | v1→v2 (`RETIRED_NODE_IDS`, TB-028) |
+| `roots` | Dreaming Roots (offline progress removed, ab74ac8) | v1→v2 (`RETIRED_NODE_IDS`) |
+| `banners` | Blood Banners (Provoke, 193c2cc; retired by TB-080) | v2→v3 (`RETIRED_V3`) |
+| `warboss`, `bossfury`, `bossswarm`, `bounty` | Warboss summon, Fury, Swarm and Warboss Bounty (replaced by boss waves, TB-081) | v3→v4 (`RETIRED_V4`) |
 
 ## Derived `Stats` (what systems actually read)
 
 ```ts
 interface Stats {
-  dmg: number;            // 6 × 1.25^sharp × (moon ? 1.6 : 1) × heart
-  fireRate: number;       // 1.2 × 1.15^draw  (volleys / s)
-  arrows: number;         // 1 + multi
-  pierce: number;         // pierce
+  dmg: number;            // 9 × 1.25^sharp × (moon ? 1.6 : 1) × heart
+  fireRate: number;       // 1.2 × 1.15^draw  (ranger/warden volleys / s; the elf lobs)
+  lobCd: number;          // 2.5 / 1.15^draw  (seconds between the elf's lobs)
+  radius: number;         // 40 × 1.2^wide    (strike circle, px)
+  arrows: number;         // 1 + multi        (lobs per shot; arrows per ranger volley)
+  pierce: number;         // pierce           (extra lob strikes; ranger arrow pierce)
   crit: number;           // 0.08 × crit
   homing: boolean; fire: boolean;
   starMult: number;       // 1.15^glean × heart
   foes: Record<OrcKind, { on; hp: 1.3^fury; loot: 1.4^fury; spawn: 1.2^swarm }>
                           // grunt: always on, fury = drums, swarm = horde
+                          // runner/brute/elite: on = runners/brutes/elites; boss: always off (boss waves only)
   kin: number;            // 1.2^bond × heart   (companions AND vanguard)
   wolf: number;           // wolf ? 6 × 1.4^fangs × kin : 0
   archers: number;        // ranger + warden
@@ -76,7 +86,7 @@ interface Stats {
   storm: boolean;
   ballista: number;       // ballista ? 40 × 1.5^bolt × kin : 0
   // barricade
-  barMax: number;         // 400 × 1.25^timber × heart
+  barMax: number;         // 400 × (1 + 0.25 × hw_timber) × 1.25^timber × heart
   barRegen: number;       // 0.01 × repair     (fraction of max per second)
   spikes: number;         // 0.2 × spikes      (fraction of dmg per second to attackers)
   bulwark: boolean;       // Deep Roots owned
@@ -88,14 +98,15 @@ interface Stats {
   vanMend: number;        // 0.03 × mend
   champion: boolean;      // Bladedancer rally unlocked
 }
-// heart = 1 + 0.12 × heartwood
+// heart = 1 + 0.12 × heartwood (all earned); hw_timber = Stout Timber rank
+// deriveStats(levels, heartwood, hwLevels) in src/sim/stats.ts
 ```
 
 ## Planned nodes (DRAFT, not in 1.0 data)
-- **Bow → Starfall** (after Moonbow): every 10th volley is a rain of 8 arrows across the plain.
+- **Bow → Starfall** (after Moonbow): every 10th lob is a rain of 8 arrows across the plain.
 - **Companions → Owl** (after Warden): marks a brute; marked orcs take +50% damage.
 - **Barricade → Gatehouse** (after Deep Roots): the wall gains a second segment with its own health; the run ends only when both fall.
 - **Vanguard → Standard Bearer** (after Bladedancer): a banner unit that doesn't fight but gives vanguard in its lane +25% damage and mend.
-- **Grove → Lantern** (after Roots): aimed volleys deal +25% while the reticle rests on an orc for more than a second (rewards steady aim).
+- **Grove → Lantern** (after Gleaning): lobs deal +25% while the strike circle rests on an orc for more than a second (rewards steady aim).
 
 Add to the table only when a BALANCE.md sim run shows where they land in the purchase order.

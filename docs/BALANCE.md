@@ -27,27 +27,41 @@ radius  = 40 × 1.2^wide            strike circle, px
 dmg     = 3 × player dmg           to every orc within radius + orc radius
 flight  = 0.7 s, apex 90 px; Longshaft repeat strikes 0.35 s apart; Split Shot arrows land within 0.6 × radius
 ```
-Rangers keep straight volleys at `baseFireRate` 1.2/s.
+Rangers and Wardens keep straight volleys at `fireRate = 1.2 × 1.15^draw` per second, with `arrows` (Split Shot) in the fan, `pierce` (Longshaft), crit and Moonbow steering.
 
-| w | hp | loot | interval | grunt atk/s |
-|---|---|---|---|---|
-| 1 | 10 | 2 | 2.00 | 0.25 |
-| 10 | 41.1 | 6.0 | 1.04 | 1.02 |
-| 25 | 1,242 | 37.6 | 0.35 | 31.0 |
-| 50 | 876,233 | 795 | 0.30 | 21,906 |
+| w | hp | loot | interval | grunt atk/s (vs vanguard) | grunt wall hit/s (×10) |
+|---|---|---|---|---|---|
+| 1 | 10 | 2 | 2.00 | 0.25 | 2.5 |
+| 10 | 41.1 | 6.0 | 1.04 | 1.03 | 10.3 |
+| 25 | 1,242 | 37.6 | 0.35 | 31.0 | 310 |
+| 50 | 876,233 | 797.8 | 0.30 | 21,906 | 219,058 |
 
 ### Player and sources
-- Base damage 9, base fire rate 1.2 volleys/s, arrow speed 520, crit ×3. (9 since P-001, 2026-10-30; v1.0 had 4 and 1.1; raised because the bare archer's 4.4 dps was below wave-1 incoming HP of 5 hp/s and the river had been hiding it.)
+- Base damage 9, base fire rate 1.2 volleys/s (rangers/wardens only; the elf lobs), arrow speed 520, crit ×3. (9 since P-001, 2026-10-30; v1.0 had 4 and 1.1; raised because the bare archer's 4.4 dps was below wave-1 incoming HP of 5 hp/s and the river had been hiding it.)
 - Burn: 35% of player dmg per second for 3 s (refreshes, no stack).
 - Storm: 4× dmg × kin per jump, 6 s cooldown, 5 targets, 140 px jump radius, seeks from 200 px past the wall.
 - Hawk: 2.5× dmg × kin, 4 s, 60 px radius. Treant: 3× dmg × kin, 3 s, 160 px from the wall.
 - Ballista: 40 × 1.5^bolt × kin every 4 s, infinite pierce. Knives: 5 × 1.35^nimble × kin every 1.4 s ÷ 1.2^nimble.
-- Aimed volleys: same damage as auto volleys; Moonbow homing radius around the reticle 70 px. (A tunable `aimMult` can be introduced here if testing shows aiming needs a reward beyond target choice.)
-- Node multipliers (`NODE_FX` in `src/data/balance.ts`): Sharpen ×1.25^r dmg, Moonbow ×1.6 dmg, Quick Draw ×1.15^r fire rate, Keen Eye +0.08 crit per rank, Gleaning ×1.15^r starlight, Call the Horde ×1.2^r spawns, Kinship ×1.2^r companion and vanguard dmg, Fangs ×1.4^r wolf dmg.
+- Moonbow: the strike circle settles on the nearest orc within 70 px of the aim point (`aimHomingRadius`). The lob's reward for aiming is `LOB.dmgMult` 3 to every orc in the circle.
+- Node multipliers (`NODE_FX` in `src/data/balance.ts`): Sharpen ×1.25^r dmg, Moonbow ×1.6 dmg, Quick Draw ×1.15^r fire rate and ÷1.15^r lob cooldown, Wide Volley ×1.2^r radius, Keen Eye +0.08 crit per rank, Gleaning ×1.15^r starlight, Kinship ×1.2^r companion and vanguard dmg, Fangs ×1.4^r wolf dmg, Nimble Wrist ×1.2^r knife rate and ×1.35^r knife dmg, Iron Bolts ×1.5^r ballista dmg. Per-kind Fury/Swarm (incl. War Drums and Call the Horde for grunts) are `FOE_FX` in `src/data/orcs.ts`: ×1.3^r hp, ×1.4^r loot, ×1.2^r spawn rate.
+
+#### Other constants in `src/data/` (reference, not previously listed)
+| Constant | Value | File |
+|---|---|---|
+| `PLAYER.fanRad` | 0.09 rad between ranger arrows | balance.ts |
+| `SOURCES.wolf` | base 6, bite every 0.5 s, speed 210 px/s, reach 22 px | balance.ts |
+| `SOURCES.archerDmgFrac`, `archerOffsetY` | 0.7 × player dmg × kin; 90 px above/below the elf | balance.ts |
+| `SOURCES.knives.speed`, `ballista.speed` | 640, 760 px/s | balance.ts |
+| `VANGUARD.walkSpeed`, `engageRange` | 60 px/s; orcs within r + 18 px engage a vanguard | balance.ts |
+| `ORC_TYPES` | hp/speed/loot/radius/spawn multiples per kind (GDD §4) | orcs.ts |
+| `BOSS_WAVE`, `BOSS_SCRIPT` | every 10 waves, 60 s, clear loot 40 × waveLoot; 8 mini-waves, 28 orcs | bosses.ts |
+| `HW_FX` | Early Dawn +2 waves/rank, Stout Timber +0.25/rank, Warlords +0.5/rank | heartwood.ts |
+| `SKY` (render only) | 600 s day cycle, dusk alpha 0.85, two hill bands, lamp radius 150 | presentation.ts |
+| `AUDIO`, `CUES` (audio only) | gains, ducking, per-cue throttles | audio.ts |
 
 ### Barricade
 ```
-barMax   = 400 × 1.25^timber × heart
+barMax   = 400 × (1 + 0.25 × hw_timber) × 1.25^timber × heart
 regen    = 0.01 × repair × barMax per second
 spikes   = 0.2 × spikes × dmg per second to each orc hacking the wall
 Deep Roots: once per run, regrow to 0.5 × barMax instead of falling
@@ -69,7 +83,7 @@ cap = 2 + ranks        mend = 0.03 × mend × maxhp per second
 |---|---|---|---|
 | 1 | 12 | 50 | 36 |
 | 10 | 36 | 205 | 108 |
-| 25 | 226 | 2,165 | 677 |
+| 25 | 226 | 6,209 | 677 |
 
 ### Economy
 - Provoke is per kind now (TB-080, see Fury/Swarm above). Blood Banners retired.
@@ -80,15 +94,17 @@ cap = 2 + ranks        mend = 0.03 × mend × maxhp per second
 - Forced on barricade fall; voluntary from wave 12. `HW = max(1, floor((w − 4) × 0.75) + floor(runKills / 400))`. The floor of 1 keeps rule 1 (a fall always pays out) now that runs fall at wave 3–4.
 
 ### Pacing targets (what the sim must hit)
-| Target | Value | Status (greedy policy, seeds 1–3) |
+Status measured 31 Oct 2026 at 8791ac2, seed 1, 25 min, player model `crowdAim` (except "no aim"). Greedy falls: waves 5, 5, 7, 5, 24 (minutes 1.6, 3.3, 5.8, 7.6, 16.9). Nobuy falls: wave 4 at 1.5 min, then waves 5–6 every ~2 min (13 falls). No aim at all: falls at wave 2–3 every ~0.8 min.
+
+| Target | Value | Status |
 |---|---|---|
-| First purchase | ≤ 30 s | met |
-| Muster affordable | ≤ 2 min | met |
-| First barricade fall, first run | wave 12–18, minute 5–8 | met: wave 12–18, minute 5–7 on seeds 1–10 (TB-025) |
-| A spearman earns its keep | buys at least as many seconds of wall life per starlight as a Seasoned Timber rank (median over waves 3/6/10/14, seeds 1–3) | met: median ratio 1.5, 10 of 12 cases ≥ 1 (TB-025) |
-| Second run falls later | at a wave ≥ 1.5× run 1's fall wave | met: run 2 falls at wave 25–29 vs 12–18 (P-001 v1.2) |
-| Bare archer, no purchases, holds | ≥ 5 waves | met (falls wave 9) |
-| Tree fully bought in a run | never | met |
+| First purchase | ≤ 30 s | met: 16 s (greedy) |
+| Muster affordable | ≤ 2 min | met: 50 starlight earned by 56 s (greedy never buys it in run 1) |
+| First barricade fall, first run | wave 12–18, minute 5–8 | **superseded by TB-080 (wall ×10); TB-054 resets these.** Measured: wave 5 at minute 1.6 |
+| A spearman earns its keep | buys at least as many seconds of wall life per starlight as a Seasoned Timber rank (median over waves 3/6/10/14, seeds 1–3) | met before TB-080 (median ratio 1.5, TB-025); not re-measured |
+| Second run falls later | at a wave ≥ 1.5× run 1's fall wave | **superseded by TB-080 (wall ×10); TB-054 resets these.** Measured: run 2 falls at wave 5 (run 1: 5) |
+| Bare archer, no purchases, holds | ≥ 5 waves | **superseded by TB-080 (wall ×10); TB-054 resets these.** Measured: nobuy falls wave 4; no aim falls wave 2–3 |
+| Tree fully bought in a run | never | met: 117 of 156 buyable ranks at most (greedy run 5) |
 
 ## Heartwood tree (M3, built TB-053)
 Bought with Heartwood, never reset. Costs in HW. Spending does not lower the passive `heart` bonus: `heart` counts all Heartwood earned, and the tree spends from `available = earned − spent`. The header shows `available / earned` once anything is spent. Early Dawn's skipped boss waves are not owed (`bossDone` starts at `floor(startWave / 10)`). Standing Orders spearmen are placed free, ignoring Muster and the line cap.
@@ -106,9 +122,9 @@ Lives in `sim/run.ts`. Runs `src/sim/` headless at 50 steps/s and decides every 
 - **greedy**: rally a spearman (bladedancer if owned) when the wall is under 50%; otherwise buy the cheapest affordable node.
 - **wall**: like greedy but rallies at 90% and weights Barricade/Vanguard nodes at half cost.
 - **nobuy**: never spends. Measures the bare archer.
-- **dps** (TB-040, built): every 15 s, trial the 6 cheapest affordable nodes over a 120 s lookahead (save-like restart, empty field) and buy the best Δ earned ÷ cost. 30 min, seeds 1–3: Heartwood 26/55/53 vs greedy 22/23/27; first fall wave 26/35/35 vs 24/25/26.
+- **dps** (TB-040, built): every 15 s, trial the 6 cheapest affordable nodes over a 120 s lookahead (save-like restart, empty field) and buy the best Δ earned ÷ cost. 30 min, seeds 1–3: Heartwood 26/55/53 vs greedy 22/23/27; first fall wave 26/35/35 vs 24/25/26. *(Pre-TB-080, and the "first fall" figures came from the old summary bug that printed the last fall: needs a re-run, TB-085.)*
 
-Report columns per minute: wave, starlight, kills/min, kills, wall %, vanguard count, nodes owned, HW, falls. Summary line gives first fall wave, replants, Heartwood, best wave. Writes `sim/out/<policy>-<date>.md` unless `--quiet`. CI runs 30 minutes of greedy as a smoke test.
+Report columns per minute: wave, starlight, kills/min, kills, wall %, vanguard count, nodes owned, HW, falls. Summary line gives the first fall wave, every fall wave in order (`Falls:`), replants, Heartwood, best wave. (Before TB-084 the "First fall" field printed the last fall.) Writes `sim/out/<policy>-<date>.md` unless `--quiet`. CI runs 30 minutes of greedy as a smoke test.
 
 ## Proposed
 
@@ -248,5 +264,5 @@ Original options:
 
 Proposed rewording for the run 2 row: "Run 2 falls at a wave ≥ 1.5× run 1's fall wave" (now 25–29 vs 12–18: met).
 
-### TB-079 lob: pacing check (open)
+### TB-079 lob: pacing check (open; pre-TB-080, needs a re-run under TB-054)
 Greedy sim, player model aims at the thickest crowd every step (`crowdAim`), 30 min, seeds 1–3: run 1 falls at minute 8 (seeds 2, 3) to 21 (seed 1); run 2 reaches wave 35 on all three. Targets were first fall 12–18, run 2 ≥ 1.5×. The model aims perfectly, so a human will land fewer orcs per circle. `LOB.dmgMult` 3 is the tuning lever; leave it until play-testing.

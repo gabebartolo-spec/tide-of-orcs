@@ -22,11 +22,13 @@ Manual push: Actions → "Release to itch.io" → Run workflow → pick a channe
 | Tag | Milestone | Channel |
 |---|---|---|
 | m0 | Foundation (full prototype port) · **shipped 30 Oct 2026** | html5-dev |
-| m1 | Vertical slice | html5-dev |
+| m1 | Vertical slice · **shipped 30 Oct 2026** (53b391d; predates the TB-078 Replant fix 9bfcc0e, so phones can lose the Replant button in this build) | html5-dev |
 | m2 | Companions & armoury | html5-dev |
 | m3 | Prestige | html5-dev |
 | m4 | Presentation | html5-dev |
 | v1.0.0 | Ship | html5 |
+
+M2 and M3 work (enemy summons, boss waves, Heartwood tree, ceremony) and most of M4 (settings, sky, tree polish, audio engine) are on `main` but untagged. Recommendation: tag the next release `m3` once TB-054 (balance pass #1) lands; it will carry M2–M4 work together.
 
 The itch page's "development log" gets a short post per milestone: what's new, what to test, where to leave feedback. Draft it from `docs/log/` for that milestone.
 
