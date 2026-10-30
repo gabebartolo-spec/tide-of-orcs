@@ -50,7 +50,7 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-036 | Storm Glade chain + lilac polyline | sim/render | 015 | claude | done 4860f5b (ported in M0) |
 | TB-037 | Ballista + bolt render | sim/render | 015 | claude | done 4860f5b (ported in M0) |
 | TB-038 | Moonbow homing | sim | 014 | claude | done 4860f5b (ported in M0) |
-| TB-039 | Kinship/Bounty/Horde wiring + tests | sim | 005 | claude | in progress |
+| TB-039 | Kinship/Bounty/Horde wiring + tests | sim | 005 | claude | done a2e391d |
 | TB-040 | Sim policy `dps` (lookahead) | sim | 009 | | todo |
 
 ## M3 — Prestige
