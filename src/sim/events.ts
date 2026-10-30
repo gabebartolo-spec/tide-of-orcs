@@ -4,6 +4,9 @@ export type SimEvent =
   | { t: 'hit'; x: number; y: number; crit: boolean }
   | { t: 'impact'; x: number; y: number; r: number }
   | { t: 'wave'; wave: number }
+  | { t: 'bossReady' }
+  | { t: 'bossStart' }
+  | { t: 'bossEnd'; cleared: boolean; loot: number }
   | { t: 'storm'; pts: [number, number][] }
   | { t: 'hawkDive'; x: number; y: number }
   | { t: 'treantStamp'; x: number; y: number }

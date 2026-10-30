@@ -1,4 +1,4 @@
-import { CURRENT_VERSION, RETIRED_NODE_IDS, RETIRED_V3, Save } from './schema';
+import { CURRENT_VERSION, RETIRED_NODE_IDS, RETIRED_V3, RETIRED_V4, Save } from './schema';
 
 type AnySave = { version: number } & Record<string, unknown>;
 
@@ -17,6 +17,12 @@ export const migrations: Record<number, (s: AnySave) => AnySave> = {
     const { spawnT, ...run } = s.run as { spawnT?: number; levels?: Record<string, number> };
     if (run.levels) { const levels = { ...run.levels }; for (const id of RETIRED_V3) delete levels[id]; run.levels = levels; }
     return { ...s, version: 3, run: { ...run, foeT: { grunt: spawnT ?? 0 } } };
+  },
+  3: (s) => {
+    const run = { ...(s.run as { levels?: Record<string, number>; foeT?: Record<string, number> }) };
+    if (run.levels) { const levels = { ...run.levels }; for (const id of RETIRED_V4) delete levels[id]; run.levels = levels; }
+    if (run.foeT) { const foeT = { ...run.foeT }; delete foeT.boss; run.foeT = foeT; }
+    return { ...s, version: 4, run: { ...run, bossDone: 0, boss: null } };
   },
 };
 

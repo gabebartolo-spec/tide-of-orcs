@@ -2,7 +2,7 @@
 export type OrcKind = 'grunt' | 'runner' | 'brute' | 'elite' | 'boss';
 export const ORC_KINDS: readonly OrcKind[] = ['grunt', 'runner', 'brute', 'elite', 'boss'];
 
-/** every: seconds between spawns as a multiple of the wave's grunt interval (boss: fixed seconds, one alive at a time). */
+/** every: seconds between spawns as a multiple of the wave's grunt interval (the Warboss comes only with a boss wave, see bosses.ts). */
 export interface OrcType { kind: OrcKind; hp: number; speed: number; loot: number; radius: number; every: number }
 
 export const ORC_TYPES: Readonly<Record<OrcKind, OrcType>> = {
@@ -10,7 +10,7 @@ export const ORC_TYPES: Readonly<Record<OrcKind, OrcType>> = {
   runner: { kind: 'runner', hp: 0.55, speed: 78, loot: 0.7, radius: 9, every: 1.5 },
   brute: { kind: 'brute', hp: 3.2, speed: 34, loot: 3.0, radius: 16, every: 4 },
   elite: { kind: 'elite', hp: 8, speed: 42, loot: 8, radius: 14, every: 10 },
-  boss: { kind: 'boss', hp: 28, speed: 26, loot: 30, radius: 24, every: 45 },
+  boss: { kind: 'boss', hp: 28, speed: 26, loot: 30, radius: 24, every: 0 }, // marches only in a boss wave
 };
 
 /** Per rank of a kind's two nodes: Fury (health and starlight) and Swarm (spawn rate). */

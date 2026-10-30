@@ -6,9 +6,9 @@ export type NodeId =
   | 'root' | 'sharp' | 'draw' | 'crit' | 'multi' | 'pierce' | 'moon' | 'wide'
   | 'wolf' | 'fangs' | 'ranger' | 'warden' | 'hawk' | 'treant' | 'bond'
   | 'knives' | 'knifespd' | 'fire' | 'storm' | 'ballista' | 'bolt'
-  | 'glean' | 'horde' | 'bounty' | 'drums'
+  | 'glean' | 'horde' | 'drums'
   | 'runners' | 'runfury' | 'runswarm' | 'brutes' | 'brutefury' | 'bruteswarm'
-  | 'elites' | 'elitefury' | 'eliteswarm' | 'warboss' | 'bossfury' | 'bossswarm'
+  | 'elites' | 'elitefury' | 'eliteswarm'
   | 'timber' | 'repair' | 'spikes' | 'bulwark'
   | 'muster' | 'shield' | 'drill' | 'ranks' | 'mend' | 'champion';
 
@@ -62,10 +62,6 @@ export const NODES: readonly SkillNode[] = [
   n('elites', 'Blackguard', 'Grove', 'brutes', 1, 1500, 1, 610, 720, 'Armoured elite orcs join the tide.'),
   n('elitefury', 'Elite Fury', 'Grove', 'elites', 5, 2000, 2.4, 610, 790, 'Elites have +30% health and drop +40% starlight per rank.'),
   n('eliteswarm', 'Elite Swarm', 'Grove', 'elites', 5, 2000, 2.4, 610, 850, 'Elites march 20% more often per rank.'),
-  n('warboss', 'Warboss', 'Grove', 'elites', 1, 5000, 1, 710, 720, 'A Warboss marches every 45 s, one at a time.'),
-  n('bossfury', 'Warboss Fury', 'Grove', 'warboss', 5, 6000, 2.4, 710, 790, 'Warbosses have +30% health and drop +40% starlight per rank.'),
-  n('bossswarm', 'Warboss Swarm', 'Grove', 'warboss', 5, 6000, 2.4, 710, 850, 'Warbosses march 20% more often per rank.'),
-  n('bounty', 'Warboss Bounty', 'Grove', 'warboss', 3, 8000, 3, 710, 900, 'Warbosses drop double starlight per rank.'),
   n('timber', 'Seasoned Timber', 'Barricade', 'root', 10, 25, 1.6, 270, 630, 'Barricade +25% health per rank.'),
   n('repair', 'Patient Hands', 'Barricade', 'timber', 5, 90, 2.0, 170, 610, 'Barricade mends 1% of its health per second per rank.'),
   n('spikes', 'Thornwall', 'Barricade', 'timber', 5, 150, 2.1, 190, 665, 'Orcs hacking at the wall take 20% of your arrow damage per second per rank.'),

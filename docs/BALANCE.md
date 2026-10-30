@@ -12,7 +12,8 @@ Two sections. `## Current` is what ships and is human-owned. `## Proposed` is wh
 ```
 hp(w)       = 10 × 1.17^(min(w,15)−1) × 1.30^max(0, w−15)   ramp from wave 15 (P-001)
 loot(w)     = 2  × 1.13^(w−1)
-interval(w) = max(0.3, 2.0 × 0.93^(w−1))   seconds between grunt spawns; kind k every interval × every_k / 1.2^swarm_k (warboss: 45 s / 1.2^swarm, one alive)
+interval(w) = max(0.3, 2.0 × 0.93^(w−1))   seconds between grunt spawns; kind k every interval × every_k / 1.2^swarm_k; paused during a boss wave
+boss wave: unlocks every 10 waves, 60 s script, clear bonus = 40 × waveLoot(w) × starMult
 speed       = base × (1 + 0.008 w)
 atk         = 0.025 × maxhp                  per swing, one swing per second, vs vanguard
 wall hit    = 10 × atk                        per swing vs the barricade (TB-080: bare run falls at wave 3–4, ~90 s)

@@ -5,7 +5,10 @@ import { Inputs, noInputs, step } from './step';
 import { deriveStats } from './stats';
 import { buy, canBuy, costOf } from './tree';
 import { NODE, NODES } from '../data/skillTree';
-import { STEP } from '../data/balance';
+import { FIELD, STEP, waveLoot } from '../data/balance';
+import { BOSS_WAVE } from '../data/bosses';
+import { bossesReady, summonBoss } from './boss';
+import { damage } from './combat';
 import { canRally, rally } from './vanguard';
 import { crowdAim } from './combat';
 import { canReplant, replant } from './prestige';
@@ -13,7 +16,7 @@ import { createRng } from './rng';
 
 /** A still, very tough orc at (x, y), for hit tests. */
 const spawnAt = (s: ReturnType<typeof createState>, x: number, y: number) => {
-  const o = s.orcs.alloc()!; Object.assign(o, { kind: 'grunt', x, y, hp: 1e6, maxhp: 1e6, spd: 0, r: 10, loot: 0, atk: 0, dead: false, burn: 0, hitT: 0, wob: 0, swingT: 0 });
+  const o = s.orcs.alloc()!; Object.assign(o, { kind: 'grunt', x, y, hp: 1e6, maxhp: 1e6, spd: 0, r: 10, loot: 0, atk: 0, dead: false, burn: 0, hitT: 0, wob: 0, swingT: 0, champ: false });
   return o;
 };
 /** Player model: aims at the thickest crowd every step. */
@@ -173,7 +176,7 @@ describe('prestige', () => {
   });
 });
 
-describe('kinship, bounty, horde (TB-039)', () => {
+describe('kinship, horde (TB-039)', () => {
   const comp = { root: 1, ranger: 1, wolf: 1, knives: 1, ballista: 1, muster: 1 };
   it('kinship scales every companion and the vanguard by 1.2 per rank', () => {
     const a = deriveStats(comp, 0), b = deriveStats({ ...comp, bond: 3 }, 0), k = 1.2 ** 3;
@@ -184,10 +187,6 @@ describe('kinship, bounty, horde (TB-039)', () => {
     expect(b.vanDmg / a.vanDmg).toBeCloseTo(k);
     expect(b.dmg).toBeCloseTo(a.dmg);
   });
-  it('bounty multiplies warboss starlight only', () => {
-    expect(deriveStats({ root: 1 }, 0).bounty).toBe(1);
-    expect(deriveStats({ root: 1, bounty: 2 }, 0).bounty).toBe(3);
-  });
   it('horde spawns more orcs', () => {
     const count = (horde: number) => {
       const s = createState(3); s.run.levels.horde = horde; recompute(s); const ev = new EventBus();
@@ -197,5 +196,37 @@ describe('kinship, bounty, horde (TB-039)', () => {
     };
     expect(deriveStats({ root: 1, horde: 5 }, 0).foes.grunt.spawn).toBeCloseTo(1.2 ** 5);
     expect(count(5)).toBeGreaterThan(count(0) * 1.5);
+  });
+});
+
+describe('boss waves (TB-081)', () => {
+  const at = (wave: number) => { const s = createState(6); s.run.wave = wave; s.stats.barMax = s.run.barHp = 1e9; return s; }; // a wall that never falls
+  it('one unlocks every 10 waves and waits to be summoned', () => {
+    expect(bossesReady(at(9))).toBe(0); expect(bossesReady(at(10))).toBe(1); expect(bossesReady(at(23))).toBe(2);
+    const s = at(10), ev = new EventBus();
+    for (let i = 0; i < 5 / STEP; i++) step(s, STEP, noInputs, ev);
+    expect(s.run.boss).toBeNull();
+    expect(summonBoss(s, ev)).toBe(true); expect(summonBoss(s, ev)).toBe(false);
+    expect(bossesReady(s)).toBe(0);
+  });
+  it('plays its script for 60 s with regular marching paused, and the Warboss marches only in it', () => {
+    const s = at(10), ev = new EventBus(); summonBoss(s, ev);
+    const kinds = new Set<string>(); let champs = 0;
+    for (let i = 0; i < 30 / STEP; i++) { step(s, STEP, noInputs, ev); s.orcs.forEach((o) => { kinds.add(o.kind); if (!o.champ) champs = -1e9; }); }
+    expect(kinds.has('boss')).toBe(true); expect(champs).toBe(0);
+    for (let i = 0; i < 31 / STEP && !s.run.fallen; i++) step(s, STEP, noInputs, ev);
+    expect(s.run.boss).toBeNull();
+    const end = ev.drain().find((e) => e.t === 'bossEnd'); expect(end).toMatchObject({ t: 'bossEnd', cleared: false, loot: 0 });
+    const plain = at(10); for (let i = 0; i < 60 / STEP; i++) { step(plain, STEP, aimed(plain), new EventBus()); plain.orcs.forEach((o) => { expect(o.kind).not.toBe('boss'); }); }
+  });
+  it('clearing every orc in time pays a starlight bounty', () => {
+    const s = at(10), ev = new EventBus(); summonBoss(s, ev);
+    let paid = 0;
+    for (let i = 0; i < 60 / STEP && s.run.boss; i++) {
+      step(s, STEP, noInputs, ev);
+      s.orcs.forEach((o) => { if (!o.dead && o.champ && o.x < FIELD.w - 40) damage(s, ev, o, 1e9); });
+      for (const e of ev.drain()) if (e.t === 'bossEnd') { expect(e.cleared).toBe(true); paid = e.loot; }
+    }
+    expect(paid).toBeCloseTo(BOSS_WAVE.clearLoot * waveLoot(s.run.wave) * s.stats.starMult);
   });
 });

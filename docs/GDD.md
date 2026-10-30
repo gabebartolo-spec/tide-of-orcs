@@ -43,7 +43,8 @@ The field hint reads: "Hold the barricade. Move your pointer over the field to a
 
 ## 4. Waves and orcs
 - Waves are timed: one every 24 s regardless of kills. `wave` is the only difficulty driver.
-- At first only grunts march. Every other kind joins only when the player summons it with its Grove node (Goblin Runners → Brutes → Blackguard → Warboss). Summoning is the risk-for-reward lever: more danger, more starlight. Falling is fine and expected; it feeds the replant loop.
+- At first only grunts march. Every other kind joins only when the player summons it with its Grove node (Goblin Runners → Brutes → Blackguard). Summoning is the risk-for-reward lever: more danger, more starlight. Falling is fine and expected; it feeds the replant loop.
+- **Boss waves (TB-081).** Every 10 waves (wave 10, 20, 30 …) a boss wave unlocks and waits; nothing happens until the player presses *Summon the boss wave*. It is a 60 s challenge: regular marching pauses and a fixed script of mini-waves marches in (a shield line, edge flankers, rams, a wedge, the Warboss with two Blackguard, a scatter, a last push; `src/data/bosses.ts`). Slay every one before the minute ends and it pays 40 × the wave's loot in starlight; otherwise the stragglers keep marching as ordinary orcs and regular marching resumes. Unsummoned boss waves stack. The Warboss marches only in boss waves.
 - Every kind has its own spawn clock and two nodes: **Fury** (+30% health, +40% starlight per rank) and **Swarm** (spawns 20% more often per rank). Grunts' are War Drums and Call the Horde.
 - Spawn position: x = field width + 24, y uniform in [50, H−50]. Hard cap 160 live orcs.
 
@@ -53,7 +54,7 @@ The field hint reads: "Hold the barricade. Move your pointer over the field to a
 | Runner (small, fast) | 0.55 | 78 | 0.7 | 9 | 1.5 × | Goblin Runners |
 | Brute (slow, strong) | 3.2 | 34 | 3.0 | 16 | 4 × | Brutes |
 | Elite | 8 | 42 | 8 | 14 | 10 × | Blackguard |
-| Warboss | 28 | 26 | 30 × Bounty | 24 | 45 s, one at a time | Warboss |
+| Warboss | 28 | 26 | 30 | 24 | only in a boss wave | — |
 
 Speed scales ×(1 + 0.008·wave). All orcs swing at the wall or a vanguard for 2.5% of their max HP per second.
 

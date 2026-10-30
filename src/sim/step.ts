@@ -4,6 +4,8 @@ import { EventBus } from './events';
 import { Orc, Projectile, SimState } from './state';
 import { damage, impact, lob, nearestOrc, shoot, volley } from './combat';
 import { barricadeHit, barricadeRegen } from './barricade';
+import { bossStep } from './boss';
+import { BOSS_WAVE } from '../data/bosses';
 import { engagedVanguard, hurtVanguard, vanguardStep } from './vanguard';
 
 /** Player aim: the pointer's position on the field, or null when the player is not aiming. The elf only shoots while aimed. */
@@ -13,15 +15,17 @@ export const noInputs: Inputs = { aim: null };
 const H = FIELD.h, W = FIELD.w, BAR_X = FIELD.barX, BAR_W = FIELD.barW, ELF_X = FIELD.elfX;
 const dist = (ax: number, ay: number, bx: number, by: number): number => Math.hypot(ax - bx, ay - by);
 
-function spawnOrc(s: SimState, kind: OrcKind): void {
+/** March one orc in from the right edge, at height y (random if omitted). Returns false when the field is full. */
+export function spawnOrc(s: SimState, kind: OrcKind, y?: number, champ = false): boolean {
   const w = s.run.wave, F = s.stats.foes[kind];
-  const o = s.orcs.alloc(); if (!o) return;
+  const o = s.orcs.alloc(); if (!o) { if (champ && s.run.boss) s.run.boss.left--; return false; }
   const T = ORC_TYPES[kind];
   const hp = waveHP(w) * T.hp * F.hp;
-  o.kind = kind; o.x = W + 24; o.y = 50 + s.rng.next() * (H - 100);
+  o.kind = kind; o.x = W + 24; o.y = y ?? 50 + s.rng.next() * (H - 100);
   o.hp = hp; o.maxhp = hp; o.spd = T.speed * waveSpeedMult(w); o.r = T.radius; o.atk = hp * BARRICADE.orcAtkFrac;
-  o.loot = waveLoot(w) * T.loot * F.loot * (kind === 'boss' ? s.stats.bounty : 1);
-  o.dead = false; o.burn = 0; o.hitT = 0; o.wob = s.rng.next() * 6.28; o.swingT = s.rng.next();
+  o.loot = waveLoot(w) * T.loot * F.loot;
+  o.dead = false; o.burn = 0; o.hitT = 0; o.wob = s.rng.next() * 6.28; o.swingT = s.rng.next(); o.champ = champ;
+  return true;
 }
 
 /* ---------- one fixed step ---------- */
@@ -31,15 +35,13 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
   s.tick++; s.t += dt; run.runTime += dt;
 
   run.waveT += dt;
-  if (run.waveT >= WAVE_LEN) { run.waveT -= WAVE_LEN; run.wave++; s.meta.bestWave = Math.max(s.meta.bestWave, run.wave); ev.push({ t: 'wave', wave: run.wave }); }
+  if (run.waveT >= WAVE_LEN) { run.waveT -= WAVE_LEN; run.wave++; s.meta.bestWave = Math.max(s.meta.bestWave, run.wave); ev.push({ t: 'wave', wave: run.wave }); if (run.wave % BOSS_WAVE.every === 0) ev.push({ t: 'bossReady' }); }
 
-  // each summoned kind marches on its own clock; the boss waits until the last one falls
-  let bossLive = false; s.orcs.forEach((o) => { if (o.kind === 'boss' && !o.dead) bossLive = true; });
+  // each summoned kind marches on its own clock; a boss wave pauses them all and plays its script instead
+  bossStep(s, ev, dt);
   for (const k of ORC_KINDS) {
-    const F = st.foes[k]; if (!F.on) continue;
-    const base = k === 'boss' ? ORC_TYPES.boss.every : waveInterval(run.wave) * ORC_TYPES[k].every;
-    const iv = base / F.spawn;
-    if (k === 'boss' && bossLive) continue;
+    const F = st.foes[k]; if (!F.on || run.boss) continue;
+    const iv = waveInterval(run.wave) * ORC_TYPES[k].every / F.spawn;
     run.foeT[k] = (run.foeT[k] ?? 0) + dt;
     while ((run.foeT[k] ?? 0) >= iv) { run.foeT[k]! -= iv; spawnOrc(s, k); }
   }

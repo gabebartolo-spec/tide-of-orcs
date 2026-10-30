@@ -8,8 +8,8 @@ export type Levels = Partial<Record<NodeId, number>>;
 export interface Stats {
   dmg: number; fireRate: number; lobCd: number; radius: number; arrows: number; pierce: number; crit: number;
   homing: boolean; fire: boolean;
-  starMult: number; bounty: number;
-  /** Per orc kind: summoned yet, and its Fury/Swarm multipliers. */
+  starMult: number;
+  /** Per orc kind: summoned yet, and its Fury/Swarm multipliers. The Warboss never marches; he comes only with a boss wave. */
   foes: Record<OrcKind, Foe>;
   kin: number; wolf: number; archers: number; hawk: boolean; treant: boolean;
   knives: { rate: number; dmg: number } | null;
@@ -23,12 +23,11 @@ export interface Stats {
 export interface Foe { on: boolean; hp: number; loot: number; spawn: number }
 
 /** Each kind's nodes: [summon (null = always marching), fury, swarm]. */
-const FOE_NODES: Record<OrcKind, [NodeId | null, NodeId, NodeId]> = {
+const FOE_NODES: Partial<Record<OrcKind, [NodeId | null, NodeId, NodeId]>> = {
   grunt: [null, 'drums', 'horde'],
   runner: ['runners', 'runfury', 'runswarm'],
   brute: ['brutes', 'brutefury', 'bruteswarm'],
   elite: ['elites', 'elitefury', 'eliteswarm'],
-  boss: ['warboss', 'bossfury', 'bossswarm'],
 };
 
 export function deriveStats(lv: Levels, heartwood: number): Stats {
@@ -47,11 +46,10 @@ export function deriveStats(lv: Levels, heartwood: number): Stats {
     homing: L('moon') > 0,
     fire: L('fire') > 0,
     starMult: Math.pow(NODE_FX.gleanLoot, L('glean')) * hm,
-    foes: Object.fromEntries(Object.entries(FOE_NODES).map(([k, [on, fury, swarm]]) => [k, {
+    foes: { boss: { on: false, hp: 1, loot: 1, spawn: 1 }, ...Object.fromEntries(Object.entries(FOE_NODES).map(([k, [on, fury, swarm]]) => [k, {
       on: on === null || L(on) > 0,
       hp: Math.pow(FOE_FX.hp, L(fury)), loot: Math.pow(FOE_FX.loot, L(fury)), spawn: Math.pow(FOE_FX.spawn, L(swarm)),
-    }])) as Record<OrcKind, Foe>,
-    bounty: 1 + L('bounty'),
+    }])) } as Record<OrcKind, Foe>,
     kin,
     wolf: L('wolf') ? SOURCES.wolf.base * Math.pow(NODE_FX.fangsDmg, L('fangs')) * kin : 0,
     archers: L('ranger') + L('warden'),

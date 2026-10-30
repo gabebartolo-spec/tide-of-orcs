@@ -1,20 +1,22 @@
 import { MetaState, RunState } from '../sim/state';
 
-export const CURRENT_VERSION = 3;
+export const CURRENT_VERSION = 4;
 
 /** Node ids removed from the tree; v1 to v2 drops them from saved levels. */
 export const RETIRED_NODE_IDS = ['tide', 'current', 'flood', 'silt', 'roots'] as const;
 /** v2 to v3: Blood Banners retired; one spawn clock became one per orc kind. */
 export const RETIRED_V3 = ['banners'] as const;
+/** v3 to v4: the Warboss summon and its nodes give way to boss waves (TB-081). */
+export const RETIRED_V4 = ['warboss', 'bossfury', 'bossswarm', 'bounty'] as const;
 
-export interface SaveV3 {
-  version: 3;
+export interface SaveV4 {
+  version: 4;
   savedAt: number;
   run: RunState;
   meta: MetaState;
   settings: { volume: number; reducedMotion: boolean | null; numberFormat: 'short' | 'sci' };
 }
 /** v1 had the same shape but could hold retired node ids in run.levels. */
-export type Save = SaveV3;
+export type Save = SaveV4;
 
-export const defaultSettings = (): SaveV3['settings'] => ({ volume: 0.7, reducedMotion: null, numberFormat: 'short' });
+export const defaultSettings = (): SaveV4['settings'] => ({ volume: 0.7, reducedMotion: null, numberFormat: 'short' });

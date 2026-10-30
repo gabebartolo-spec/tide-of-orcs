@@ -6,6 +6,8 @@ import { TreeRenderer } from '../render/tree';
 import { canBuy, costOf, rankOf, unlocked } from '../sim/tree';
 import { canRally } from '../sim/vanguard';
 import { gain } from '../sim/prestige';
+import { bossesReady, canSummonBoss } from '../sim/boss';
+import { BOSS_WAVE } from '../data/bosses';
 import { fmt } from './format';
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string): T => document.getElementById(id) as T;
@@ -22,9 +24,11 @@ export class Panel {
     $('btn-save').textContent = 'Save now'; $('btn-reset').textContent = STR.wipe; $('autosave').textContent = STR.autosave;
     $('fallen-title').textContent = STR.fallenTitle; $('fallen-hw-k').textContent = STR.fallenHW; $('fallen-btn').textContent = STR.fallenBtn;
     $('dep-spear').querySelector('.n')!.textContent = STR.rallySpear; $('dep-blade').querySelector('.n')!.textContent = STR.rallyBlade;
+    $('dep-boss').querySelector('.n')!.textContent = STR.summonBoss;
 
     $('tab-grove').onclick = () => this.setTab('grove'); $('tab-prestige').onclick = () => this.setTab('prestige');
     $('dep-spear').onclick = () => this.rally('spear'); $('dep-blade').onclick = () => this.rally('blade');
+    $('dep-boss').onclick = () => { game.summonBoss(); };
     $('pr-btn').onclick = () => { if (game.canReplant() && !game.state.run.fallen) this.doReplant(); };
     $('fallen-btn').onclick = () => this.doReplant();
     $('btn-save').onclick = () => { game.save(); this.toast(STR.saved); };
@@ -47,6 +51,14 @@ export class Panel {
     $('pr-req').textContent = ok ? STR.replantReady(s.meta.bestWave) : STR.replantFrom(PRESTIGE.voluntaryWave);
     const b = document.getElementById('buy-btn') as HTMLButtonElement | null; if (b) b.disabled = !canBuy(s, NODE[this.tree.selected]);
     this.rallyButton('spear', $('dep-spear')); const bl = $('dep-blade'); bl.hidden = !s.stats.champion; if (s.stats.champion) this.rallyButton('blade', bl);
+    this.bossButton();
+  }
+
+  private bossButton(): void {
+    const s = this.game.state, el = $('dep-boss') as HTMLButtonElement, b = s.run.boss, n = bossesReady(s);
+    el.hidden = !b && n <= 0; el.disabled = !canSummonBoss(s);
+    el.querySelector('.n')!.textContent = b ? STR.bossRunning : STR.summonBoss;
+    el.querySelector('.c')!.textContent = b ? STR.bossLeft(Math.ceil(BOSS_WAVE.secs - b.t), b.left) : STR.bossReadyN(n);
   }
 
   private rallyButton(type: VanType, el: HTMLElement): void {
@@ -61,6 +73,9 @@ export class Panel {
     for (const e of events) {
       if (e.t === 'wave') this.toast(STR.waveN(e.wave));
       else if (e.t === 'kill' && e.kind === 'boss') this.toast(STR.bossFalls);
+      else if (e.t === 'bossReady') this.toast(STR.bossReady);
+      else if (e.t === 'bossStart') this.toast(STR.bossStart);
+      else if (e.t === 'bossEnd') this.toast(e.cleared ? STR.bossCleared(fmt(e.loot)) : STR.bossFailed);
       else if (e.t === 'bought' && e.firstRank && e.id !== 'sharp') this.toast(STR.joins(NODE[e.id as keyof typeof NODE].name));
       else if (e.t === 'vanguardRallied') this.toast(STR.takesField(VAN_NAME[e.type as VanType]));
       else if (e.t === 'vanguardFell') this.toast(STR.vanFalls(VAN_NAME[e.type as VanType]));

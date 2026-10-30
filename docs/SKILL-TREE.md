@@ -41,10 +41,6 @@ Layout coordinates are for a 760×920 tree canvas, root bottom-centre at (380, 6
 | elites | Blackguard | Grove | brutes | 1 | 1500 | — | 610 | 720 | Armoured elite orcs join the tide. |
 | elitefury | Elite Fury | Grove | elites | 5 | 2000 | 2.4 | 610 | 790 | Elites have +30% health and drop +40% starlight per rank. |
 | eliteswarm | Elite Swarm | Grove | elites | 5 | 2000 | 2.4 | 610 | 850 | Elites march 20% more often per rank. |
-| warboss | Warboss | Grove | elites | 1 | 5000 | — | 710 | 720 | A Warboss marches every 45 s, one at a time. |
-| bossfury | Warboss Fury | Grove | warboss | 5 | 6000 | 2.4 | 710 | 790 | Warbosses have +30% health and drop +40% starlight per rank. |
-| bossswarm | Warboss Swarm | Grove | warboss | 5 | 6000 | 2.4 | 710 | 850 | Warbosses march 20% more often per rank. |
-| bounty | Warboss Bounty | Grove | warboss | 3 | 8000 | 3 | 710 | 900 | Warbosses drop double starlight per rank. |
 | timber | Seasoned Timber | Barricade | root | 10 | 25 | 1.6 | 270 | 630 | Barricade +25% health per rank. |
 | repair | Patient Hands | Barricade | timber | 5 | 90 | 2.0 | 170 | 610 | Barricade mends 1% of its health per second per rank. |
 | spikes | Thornwall | Barricade | timber | 5 | 150 | 2.1 | 190 | 665 | Orcs hacking at the wall take 20% of your arrow damage per second per rank. |
@@ -72,7 +68,6 @@ interface Stats {
   starMult: number;       // 1.15^glean × heart
   foes: Record<OrcKind, { on; hp: 1.3^fury; loot: 1.4^fury; spawn: 1.2^swarm }>
                           // grunt: always on, fury = drums, swarm = horde
-  bounty: number;         // 1 + bounty
   kin: number;            // 1.2^bond × heart   (companions AND vanguard)
   wolf: number;           // wolf ? 6 × 1.4^fangs × kin : 0
   archers: number;        // ranger + warden
