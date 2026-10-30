@@ -2,7 +2,7 @@
 
 **Version 1.3 · 31 Oct 2026 · Owner: Gabe**
 
-v1.1 replaced the river (no fail state) with a barricade that can fall, forced Replant on a fall, and starlight-bought melee vanguard. v1.2 recorded M2 done and offline progress removed. v1.3 (31 Oct, evening) syncs with the code: M1 and M2 done, M3 done except balance pass #1 (TB-054), M4 done except music and assets. `docs/prototype.html` (published as the Tide of Orcs artifact) is the original concept for tone and the core loop; mechanics have diverged since (GDD §14), and the docs now win over it.
+v1.1 replaced the river (no fail state) with a barricade that can fall, forced Replant on a fall, and starlight-bought melee vanguard. v1.2 recorded M2 done and offline progress removed. v1.3 (31 Oct, evening) syncs with the code: M1 and M2 done, M3 done except balance pass #1 (TB-054), M4 done except music and assets. `docs/prototype.html` is the original concept for tone and the core loop; mechanics have diverged since (GDD §14), and the docs now win over it. The Tide of Orcs artifact on claude.ai no longer shows the prototype: since 31 Oct it is a single-file build of `main` (3a6fbf6), refreshed on request, for quick play in Claude without itch.
 
 ## 1. Vision
 
