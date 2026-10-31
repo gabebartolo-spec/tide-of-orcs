@@ -10,6 +10,7 @@ import { fmt } from '../ui/format';
 import { STR } from '../data/strings';
 import { Ceremony } from './ceremony';
 import { Sprites } from './sprites';
+import { Ground } from './ground';
 import { SKY, VFX, dusk } from '../data/presentation';
 
 const IMPACT_LIFE = VFX.impactLife;
@@ -29,6 +30,7 @@ export class FieldRenderer {
   reducedMotion = false;
   readonly ceremony = new Ceremony();
   readonly sprites = new Sprites();
+  private ground = new Ground();
   /** Animation clock for sprite frames. */
   private clock = 0;
   /** Reused draw-order buffers and wind-up scratch (no per-frame allocation). */
@@ -114,10 +116,7 @@ export class FieldRenderer {
     g.setTransform(sx, 0, 0, sy, shx * sx, shy * sy);
 
     // plain
-    g.fillStyle = P.plain; g.fillRect(-10, -10, W + 20, H + 20);
-    g.fillStyle = P.plainPatch; for (let i = 0; i < 40; i++) { const x = (i * 97 + 31) % W, y = (i * 61 + 17) % H; g.fillRect(x, y, 26, 14); }
-    g.strokeStyle = P.grass; g.lineWidth = 1;
-    for (let i = 0; i < 60; i++) { const x = (i * 143 + 11) % W, y = (i * 83 + 7) % H; if (x < BAR_X + 20) continue; g.beginPath(); g.moveTo(x, y + 4); g.lineTo(x + 2, y - 3); g.moveTo(x + 4, y + 4); g.lineTo(x + 6, y - 2); g.stroke(); }
+    this.ground.draw(g, this.canvas.width, this.canvas.height);
     const n = dusk(this.clock);
     g.globalAlpha = SKY.duskAlpha * n; g.fillStyle = P.plainDusk; g.fillRect(BAR_X, -10, W - BAR_X + 10, H + 20); g.globalAlpha = 1;
     this.hills();

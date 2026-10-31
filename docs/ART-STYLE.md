@@ -29,7 +29,10 @@ Status: **Current** (v1.3, checked against `src/render/palette.ts` and `src/data
 | wallBar | #c9a06a | Wall bar above 50%, Barricade branch |
 | nodeOwned, nodeLabelLocked | #2b3448, #6b7383 | Tree: bought-not-maxed node fill, locked node label |
 | wallShade, burnGlow | ink 30%, amber 50% | Barricade shadow strip, burning orc glow |
-| plain, plainPatch, grass | #7c9676, #86a07e, cream 18% | Field base, field patches, grass strokes |
+| plain, plainPatch | #7c9676, #86a07e | Field base, legacy patch tone |
+| plainLush, plainWorn, plainBare | #728d6c, #8e9a72, #a09c80 | Ground (TB-098): lusher grass drifts, worn dry grass, barren earth core |
+| tuft, tuftLight | #5e7858, #a3b993 | Grass tuft blades (dark, sunlit) |
+| rock, rockLight | #8f9597, #b7bbb6 | Small rocks and pebbles, their top highlight |
 | plainDusk | #5f6f72 | Dusk tint over the plain |
 | hillFar, hillNear | #5a7058, #4f644d | Parallax hill bands |
 | lamp, lampClear | amber 20%, amber 0% | Lamplight on the grove bank at night |
@@ -56,6 +59,13 @@ Rules: semantic colours (amber = money, timber = the wall, rose = permanent/dang
 - Wolf: grey ellipse + head circle. Hawk: a bark-coloured diamond. Treant: stacked green circles on a trunk.
 - Arrows are 14 px cream lines; knives 8 px pale; ballista bolt 22 px bark, 3 px wide.
 - Strike circle (TB-079): a disc of radius `stats.radius` (40 px Ã— 1.2^Wide Volley) filled `aimFill` and outlined `aimLine`, with a cream ring that fills clockwise from the top as the bow draws; a dotted `aimLine` arc from the elf traces the lob's flight. In flight a lob is a short shaft along its arc with a ground shadow; on landing a cream ring flashes at the circle. The OS cursor is hidden over the field (`cursor: none`). Nothing is drawn when the pointer is over the grove side or the wall has fallen.
+
+## Ground (TB-098)
+The plain reads as natural, calm grassland, not a flat board. Layout is seeded (`GROUND.seed`, `src/data/presentation.ts`) and painted once to an offscreen canvas in `src/render/ground.ts`, repainted only when the canvas size or DPR changes, then blitted each frame (no per-frame decoration cost). A strip `GROUND.wallGap` wide in front of the wall stays clear.
+- Layers, bottom up: plain base; lusher drifts (`plainLush`); worn dry-grass patches (`plainWorn`) with a smaller barren-earth core (`plainBare`); rocks; tufts. Patches are clusters of squashed ellipses (same soft-ellipse language as the actors) feathered by a few stacked low-alpha passes, so edges are soft without a blur filter.
+- Tufts: 4–7 curved blades fanning from one root, mostly `tuft` with about a third `tuftLight`; some grouped in clumps, some single. Kept low-contrast so orcs, blood, VFX and the strike circle read on top.
+- Rocks: flat-ink shadow offset down-right, `rock` body, `rockLight` top-left highlight, 0–3 pebbles beside each; half sit on worn patches, where ground is thin.
+- The dusk tint and hills still draw over the ground each frame.
 
 ## Typography
 - Display: **Spectral** (serif, 500/700, italic for the title's "Orcs"). Headings, big numbers.

@@ -2,7 +2,8 @@
 export const P = {
   ink: '#1b2130', ink2: '#242d3f', ink3: '#30394d', line: '#3e4a60',
   cream: '#efe6d2', creamDim: '#b9b09c',
-  plain: '#7c9676', plainPatch: '#86a07e', grass: 'rgba(239,230,210,.18)', groveSide: '#9fb391',
+  plain: '#7c9676', plainPatch: '#86a07e', plainLush: '#728d6c', plainWorn: '#8e9a72', plainBare: '#a09c80',
+  tuft: '#5e7858', tuftLight: '#a3b993', rock: '#8f9597', rockLight: '#b7bbb6', groveSide: '#9fb391',
   timber: '#8a6a46', timberDark: '#7a5c3c', timberSplinter: '#4e3a28', timberBand: '#5a4634', sand: '#c9b78a',
   amber: '#e2a85b', rose: '#c76f6f', lilac: '#cdbdea',
   orc: '#7f8f52', brute: '#6c7a44', elite: '#4f5a3a', boss: '#9a7a46', tusk: '#39412a',
