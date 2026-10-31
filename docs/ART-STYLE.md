@@ -14,7 +14,10 @@ Status: **Current** (v1.3, checked against `src/render/palette.ts` and `src/data
 | sage | #8fa98a | Plain highlight patches |
 | sageDeep | #6b8468 | Plain base (field is #7c9676 / #86a07e patches) |
 | groveSide | #9fb391 | The grove behind the wall |
-| sand | #c9b78a | Wall's inner edge |
+| sand | #c9b78a | Wall's inner edge, fireball dust ring |
+| ember | #ffb061 | Fireball body, ember sparks, cooling puffs (TB-127) |
+| fireCore | #fff1c8 | Fireball pale core, strike flash |
+| fireGlow | rgba(242,118,58,.55) | Fireball halo (shadow blur) |
 | timber / timberDark | #8a6a46 / #7a5c3c | Barricade planks (alternating) |
 | timberSplinter | #4e3a28 | Broken planks shown from the top as HP drops |
 | timberBand | #5a4634 | Cross-bands on the wall, bark, hawk, bolts |
@@ -116,6 +119,15 @@ Each enchanted arrow must be told apart at a glance, by colour and by shape, and
 
 Burning and chilled orcs are tinted on their own body, never with a shape laid over them: sprites tint only the frame's own pixels (`Sprites.draw` tint, `source-atop` on a scratch canvas) plus a `drop-shadow` rim of `rimBlur` 6; vector orcs fill their body shape again in the tint. Shading stays visible under the colour. The lob takes the colour of the first enchantment owned (fire, frost, shock, Rebound, in that order).
 
+## Shaman fireball VFX (TB-127)
+The shaman's ranged attack is a lobbed fireball, not an arrow: round, glowing, trailing. Sizes in `VFX.fireball`, flight in `FIREBALL` (orcs.ts). Damage is TB-087.
+
+- **In flight**: an `fire` disc (r 6) with an `ember` body and an off-centre `fireCore` highlight, halo `fireGlow` blur 14; a comet tail of 6 shrinking, fading ghosts behind it; embers (30/s) peel off and fall; a squashed shadow slides along the ground under the arc so the height reads.
+- **Cast**: 8 embers burst from the staff tip in a ±0.6 rad cone toward the target plus 4 flames, timed with the throw frame of `orc.shaman.attack`.
+- **Strike**: a `fireCore` flash puff (0.9 r, 0.12 s), then 7 fire puffs rise (45 px/s, 0.4 s) and cool from core to ember to fire as they fade; a `sand` dust ring runs out to 1.6 r; 20 embers and 10 fire squares fountain up (±1.1 rad of straight up); 24 flames and a `firePatch` scorch (1.4 s); screen shake 0.08.
+- No ring-inside-a-disc: the first two versions read as a bullseye; the shockwave is dust-coloured and outside the fire for that reason.
+- Reduced motion: the strike draws in full but the screen does not shake (`reducedMotion` zeroes `shake` at draw time, as for every other hit).
+
 ## Loot VFX (TB-105)
 
 Numbers in `LOOT_VFX` (`src/data/presentation.ts`), colours per rarity: common cream, rare spear blue, epic lilac, legendary star gold, mythic rose. Common drops glint; rarer drops stand a light column fading over its life (1 / 1.5 / 2 / 3 s), epic with motes spiralling up, legendary and mythic with a lit ground ellipse and ring. Mythic holds the field 0.5 s, runs it at 0.6x for 0.5 s and flickers a rose screen edge. Equipping glows the bow 1 s in the item colour and flashes the worn card; a new set tier rings the elf with leaves for 2 s. Reduced motion keeps beams, glows and colour flashes and drops motes, pulse, spin, the edge and slow-motion.
@@ -127,7 +139,7 @@ Vector draws stay the baseline so the game is always playable without assets. M4
 - Render to sheets with `scripts/build_sprites.ps1` (in that skill): orthographic camera at the field's 20° top-down tilt, 512 px frames, then `pack_sprites.py` crops each loop to its frames' union, scales to 110 px per metre, mirrors orcs (they march screen-left) and packs one WebP sheet (`public/sprites/sheet.webp`) with `atlas.json` beside it. Walks keep 33 frames at 30 fps; attacks every second frame at 15 fps. Flat ink shadow added in-engine.
 - Atlas (TB-060, `src/render/sprites.ts`): `public/sprites/atlas.json` = `{ image, anims: { key: { frames: [[x,y,w,h]…], fps, ax, ay, hPerR } } }`. Keys: `orc.grunt|runner|brute|elite|boss`, `elf`, `archer`, `van.spear|blade`; each key is the walk loop and `<key>.attack` the attack loop. `drawActor` picks the loop from `src/render/actorState.ts` (orcs swing at the wall or a vanguard; vanguard walk to their stand, swing with an orc in reach, otherwise idle on the walk's frame 0); a missing loop borrows the other. Shipped (TB-068): `orc.grunt` + `.attack`, `van.spear` + `.attack`, `van.blade.attack`, `orc.berserker` + `.attack`, `orc.shaman` + `.attack`, `elf` + `.attack`. The elf never walks, so `elf` is its idle loop (Standing Idle 03 Examine, every 3rd frame at 10 fps) and plays in the walk slot; `elf.attack` (Standing Draw Arrow, 16 frames) does not free-run: `field.ts` scrubs it with the bow's charge (`shotT / lobCd`, via `Sprites.duration`) so the string reaches full draw as the lob leaves, in both motion settings. (ax, ay) is the foot anchor as a fraction of the frame; drawn height = hPerR × actor radius (elf/vanguard radius 12). Any missing key, or no atlas, draws the vector actor.
 - Sheet budget: ≤ 2 MB total for 1.0 so the itch build stays snappy (TB-068 first sheet: 869 KB).
-- **ElevenLabs** produces the audio: sound-effects generation for the 16 cues in `src/data/audio.ts` `CUES` (`loose`, `arrowHit`, `knife`, `ignite`, `orcHit`, `orcDeath`, `bruteDeath`, `bossRoar`, `wallThud`, `wallCreak`, `wallFall`, `rallyHorn`, `replant`, `click`, `bought`, `denied`), and an ambient wind-and-grove bed (`ambient`). File names are the cue names. Export 44.1 kHz OGG + MP3 fallback, normalised to −16 LUFS, under `public/audio/` (silence trimmed; a limiter holds peaks at −1 dBFS, so the most transient cues, `ignite` and the wall hits, sit 1–3 LU under). No voice lines in 1.0. **Suno** makes the two music beds (`music-a` grove, `music-b` dusk, TB-063) and the boss-wave track (`music-boss`, plays from its start on a boss wave, 1.5 s fades): instrumental, 2–3 min, loopable; MP3 alone is fine (the loader falls back from OGG to MP3).
+- **ElevenLabs** produces the audio: sound-effects generation for the 16 cues in `src/data/audio.ts` `CUES` (`loose`, `arrowHit`, `knife`, `ignite`, `orcHit`, `orcDeath`, `bruteDeath`, `bossRoar`, `wallThud`, `wallCreak`, `wallFall`, `rallyHorn`, `replant`, `click`, `bought`, `denied`; TB-127 adds `fireballCast` (a whoosh of flame leaving a staff) and `fireballHit` (a soft fiery thump with crackle)), and an ambient wind-and-grove bed (`ambient`). File names are the cue names. Export 44.1 kHz OGG + MP3 fallback, normalised to −16 LUFS, under `public/audio/` (silence trimmed; a limiter holds peaks at −1 dBFS, so the most transient cues, `ignite` and the wall hits, sit 1–3 LU under). No voice lines in 1.0. **Suno** makes the two music beds (`music-a` grove, `music-b` dusk, TB-063) and the boss-wave track (`music-boss`, plays from its start on a boss wave, 1.5 s fades): instrumental, 2–3 min, loopable; MP3 alone is fine (the loader falls back from OGG to MP3).
 
 ## M4 presentation additions
 - Parallax: two bands of distant hills (sageDeep darkened) scrolling very slowly.
