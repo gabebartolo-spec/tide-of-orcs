@@ -5,11 +5,13 @@ productName: "Let's Hunt Some Orc!"
 directories:
   output: release
 files:
-  - desktop/**
+  - desktop/main.cjs
   - dist/**
   - package.json
   - "!dist/**/*.map"
 win:
   target: dir
+  # the director's art (TB-120); electron-builder converts the 512 px PNG to the exe's .ico
+  icon: desktop/icon.png
 # the game text is English only; other Chromium locales add ~48 MB
 electronLanguages: [en-US]
