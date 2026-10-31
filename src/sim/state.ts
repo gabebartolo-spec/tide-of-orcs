@@ -50,7 +50,7 @@ export interface RunState {
   /** Boss waves summoned this run, and the one running now (t: seconds in, next: script index, left: its orcs not yet slain). */
   bossDone: number; boss: { t: number; next: number; left: number } | null;
   foeT: Partial<Record<OrcKind, number>>; stormT: number; shotT: number[]; knifeT: number; hawkT: number; treantT: number; ballT: number;
-  /** Lobs loosed this run, for Starfall's every-10th count. Optional: older saves lack it. */
+  /** Unused since TB-111 (Starfall rolls per shot); older saves may still carry it. */
   lobN?: number;
   /** Items dropped this run by rarity, and a copy of the best one, for the Replant summary (TB-103). Optional: older saves lack them. */
   found?: Partial<Record<Rarity, number>>; best?: Item;
