@@ -64,7 +64,7 @@ export const ARROWS = {
   starfall: { arrows: 8, r: 26, height: 260, flight: 0.6, stagger: 0.08 },
 } as const;
 
-/** Per-type shot nodes (TB-103). Fire, frost, shock, Rebound and Moonbow each roll per shot: `chance0` once owned, + `chancePerRank` per Quiver rank.
+/** Per-type shot nodes (TB-111). Fire, frost, shock, Rebound and Moonbow each roll per shot: `chance0` once owned, + `chancePerRank` per Quiver rank.
  *  Starfall rolls its own `starChance0` + `starChancePerRank`. Damage nodes multiply by `dmg` per rank. */
 export const SHOT_FX = {
   chance0: 0.25, chancePerRank: 0.15, starChance0: 0.1, starChancePerRank: 0.05,
@@ -73,7 +73,7 @@ export const SHOT_FX = {
   knivesPerRank: 1, boltRootSecs: 0.3, windlass: 0.9,
 } as const;
 
-/** Per-unit nodes (TB-103) for companions and vanguard: damage ×dmg, rate ×rate, crit chance +critPerRank (a crit deals critMult0 + critxPerRank × Crit-damage rank), move speed ×spd, per rank. */
+/** Per-unit nodes (TB-111) for companions and vanguard: damage ×dmg, rate ×rate, crit chance +critPerRank (a crit deals critMult0 + critxPerRank × Crit-damage rank), move speed ×spd, per rank. */
 export const UNIT_FX = { dmg: 1.3, rate: 1.15, critPerRank: 0.05, critMult0: 2, critxPerRank: 0.5, spd: 1.15 } as const;
 /** The elf's crits: PLAYER.critMult + deadlyPerRank × Deadly Aim rank. */
 export const ELF_FX = { deadlyPerRank: 0.5 } as const;

@@ -18,14 +18,14 @@ export function nearestOrc(s: SimState, x: number, y: number, filter?: (o: Orc) 
   return best;
 }
 
-/** Enchantment bits a shot carries (TB-103): each owned type rolls its own chance per shot. */
+/** Enchantment bits a shot carries (TB-111): each owned type rolls its own chance per shot. */
 export const FX = { FIRE: 1, FROST: 2, SHOCK: 4, BOUNCE: 8, MOON: 16, ALL: 31 } as const;
 export function rollFx(s: SimState): number {
   const st = s.stats, r = (p: number): boolean => p > 0 && s.rng.next() < p;
   return (r(st.fireP) ? FX.FIRE : 0) | (r(st.frostP) ? FX.FROST : 0) | (r(st.shockP) ? FX.SHOCK : 0) | (r(st.rebP) ? FX.BOUNCE : 0) | (r(st.moonP) ? FX.MOON : 0);
 }
 
-/** A companion or vanguard strike: rolls the unit's own crit (TB-103). */
+/** A companion or vanguard strike: rolls the unit's own crit (TB-111). */
 export const unitHit = (s: SimState, u: UnitFx, d: number): number => (u.crit > 0 && s.rng.next() < u.crit ? d * u.critMult : d);
 
 export function kill(s: SimState, ev: EventBus, o: Orc): void {
@@ -101,7 +101,7 @@ export function lob(s: SimState, sx: number, sy: number, tx: number, ty: number,
 }
 
 /** Strike every live orc inside the lob's circle. Each orc rolls its own crit; fire, frost and Thunderclap mark them all.
- *  Only the enchantments the shot rolled (p.fx, TB-103) apply; with no fx given every owned one does.
+ *  Only the enchantments the shot rolled (p.fx, TB-111) apply; with no fx given every owned one does.
  *  Moonveil: a moon shot always crits at 4 pieces (a rolled crit still wins) and leaves a Moonwell at 6.
  *  Emberwright 6: fire lobs leave Cinderground.
  *  `first` (a lob's first strike, not a Longshaft repeat or a Starfall arrow) also looses Shock Arrows and Rebound. */

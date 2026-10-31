@@ -91,7 +91,7 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
   run.shotT[0] = Math.min(st.lobCd, (run.shotT[0] ?? 0) + dt);
   if (run.shotT[0] >= st.lobCd && inputs.aim && inputs.aim.x > BAR_X + BAR_W) {
     let { x, y } = inputs.aim;
-    // Each owned enchantment rolls its chance (TB-103). A moon shot's circle settles onto the nearest orc near the aim point.
+    // Each owned enchantment rolls its chance (TB-111). A moon shot's circle settles onto the nearest orc near the aim point.
     const fx = rollFx(s), moonShot = st.homing && (fx & FX.MOON) > 0;
     const home = moonShot ? nearestOrc(s, x, y, (o) => dist(o.x, o.y, x, y) < st.homeR) : null;
     if (home) { x = home.x; y = home.y; }
