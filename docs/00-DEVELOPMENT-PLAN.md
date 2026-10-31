@@ -75,14 +75,15 @@ Goal: parity with the prototype, properly built.
 - ~~Balance pass #1 via the simulator (TB-054):~~ Done 1185a3a: re-set the pacing targets for the wall ×10 design, then tune; original aim was first prestige at 30–45 min, second at ~35 min of a fresh run. Measured now: greedy breaks out after 4–6 short runs (6–12 min), reaches the wave-35 ceiling around 14 min run time.
 **Done when:** three consecutive prestige runs each feel faster than the last.
 
-### M4 — Presentation (weeks 6–7) · **done except TB-063** (music beds), **TB-068** (sprite sheets, Gabe) and **TB-069** (ElevenLabs SFX, Gabe). Done: sprite loader TB-060, parallax/day-dusk TB-061, audio engine TB-062, mobile TB-064, settings TB-065, tree polish TB-066, strings TB-067, field ground TB-098 (tufts, rocks, worn patches).
-- Final art: Tripo models → Cascadeur animation → sprite sheets for orcs, elf, vanguard, companions (ART-STYLE.md §Asset pipeline); vector draws remain the fallback. Wall weathering, parallax hills, day/night tinting, natural ground (ART-STYLE �Ground).
+### M4 — Presentation (weeks 6–7) · **done except TB-068** (sprite sheets, Gabe) and **TB-069** (ElevenLabs SFX, Gabe; set approved 30 Oct, files not in `public/` yet). Done: sprite loader TB-060, parallax/day-dusk TB-061, audio engine TB-062, music beds TB-063 (PR #9), mobile TB-064, settings TB-065, tree polish TB-066, strings TB-067, attack and hit VFX TB-088, field ground TB-098 (tufts, rocks, worn patches).
+TB-068 status: ten models rigged; approved clips so far are grunt walk and attack, bladedancer attack, spearman attack. TB-087 (berserker, war drummer, shaman, wolf rider in game) waits on the director's design for behaviour, stats and wave mix.
+- Final art: Tripo models → Cascadeur animation → sprite sheets for orcs, elf, vanguard, companions (ART-STYLE.md §Asset pipeline); vector draws remain the fallback. Wall weathering, parallax hills, day/night tinting, natural ground (ART-STYLE §Ground).
 - Audio: ElevenLabs SFX and ambient bed, two music beds, ducking on wall fall and boss.
 - Tree layout polish: branch curves, bloom on affordable nodes, camera easing.
 - Settings, reduced-motion path, number formats.
 **Done when:** a 60-second trailer can be captured without placeholder art.
 
-### M4.5 — Arrow arsenal (TB-089) · **in progress**
+### M4.5 — Arrow arsenal (TB-089) · **built** (e82b2f5, on main); P-002 numbers still proposed
 Six new nodes (43 → 49) giving the elf's lob distinct elemental arrows, each with its own VFX and ElevenLabs SFX. Numbers are proposals (BALANCE.md §Proposed P-002) until the director approves.
 
 | Node | Branch, after | Ranks | What it does |
@@ -98,11 +99,17 @@ Fire Arrows gains a strike flame VFX and SFX. Every effect is render-pooled VFX 
 Spend: director gave a written yes with no cap on ElevenLabs credits for these SFX (31 Oct); first pass 7 cues × 2 takes, about 233 credits.
 **Done when:** all six nodes buy and work in game, VFX and SFX play, tests cover each effect, the director has approved the numbers.
 
+### M4.6 — Loot (TB-090–097, sets and mythics next) · **open PRs, merge on hold** (director)
+Orcs drop gear; six worn slots, a satchel, affixes, sets and mythic powers feed `Stats`. Save v7.
+- L0 data and rolls: TB-090–093 (PR #12). L1 drops and satchel: TB-094 (PR #13), TB-095 (PR #14), TB-096 (PR #16). L2 glyph icons: TB-097 (PR #18). Each PR stacks on the one before.
+- Next: set engine (7 sets, 2/4/6-piece effects on the field) as TB-099, mythic powers as TB-100. TB-098 is taken by the field ground.
+**Done when:** the stack merges and drops, sets and mythics all work in game.
+
 ### M5 — Ship (week 8) · local telemetry done (TB-070 f31ce6b)
-- Balance pass #2 with telemetry from testers (local JSON export, no server; export built).
-- Save import/export, version migration test suite.
-- Itch.io page, web build, Electron wrapper spike for Steam.
-- Bug bash, performance budget verified in a desktop browser.
+- Balance pass #2 with telemetry from testers (TB-071; local JSON export, no server; export built).
+- Save import/export (done in TB-065), version migration test suite.
+- Itch.io page and web build (TB-073), Electron wrapper spike for Steam (TB-074).
+- Bug bash (TB-075), performance budget verified in a desktop browser.
 
 Mobile is out of the roadmap (director, 31 Oct): the web build ships for PC first; a mobile port comes after it is perfect on PC. TB-064/TB-078 layout work stays in the code.
 **Done when:** build is public on itch.
