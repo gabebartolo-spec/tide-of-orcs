@@ -13,7 +13,7 @@ Two sections. `## Current` is what ships and is human-owned. `## Proposed` is wh
 hp(w)       = 10 × 1.17^(min(w,15)−1) × 1.30^max(0, w−15)   ramp from wave 15 (P-001)
 loot(w)     = 2  × 1.13^(w−1)
 interval(w) = max(0.3, 2.0 × 0.93^(w−1))   seconds between grunt spawns; kind k every interval × every_k / 1.2^swarm_k; paused during a boss wave
-boss wave: unlocks every 10 waves, 60 s script, clear bonus = 40 × waveLoot(w) × starMult × (1 + 0.5 × hw_boss rank)
+boss wave: unlocks every 50 waves, 60 s script, clear bonus = 40 × waveLoot(w) × starMult × (1 + 0.5 × hw_boss rank)
 speed       = base × (1 + 0.008 w)
 atk         = 0.025 × maxhp                  per swing, one swing per second, vs vanguard
 wall hit    = 10 × atk                        per swing vs the barricade (TB-080: bare run falls at wave 3–4, ~90 s)
@@ -54,7 +54,7 @@ Rangers and Wardens keep straight volleys at `fireRate = 1.2 × 1.15^draw` per s
 | `SOURCES.knives.speed`, `ballista.speed` | 640, 760 px/s | balance.ts |
 | `VANGUARD.walkSpeed`, `engageRange` | 60 px/s; orcs within r + 18 px engage a vanguard | balance.ts |
 | `ORC_TYPES` | hp/speed/loot/radius/spawn multiples per kind (GDD §4) | orcs.ts |
-| `BOSS_WAVE`, `BOSS_SCRIPT` | every 10 waves, 60 s, clear loot 40 × waveLoot; 8 mini-waves, 28 orcs | bosses.ts |
+| `BOSS_WAVE`, `BOSS_SCRIPT` | every 50 waves, 60 s, clear loot 40 × waveLoot; 8 mini-waves, 28 orcs | bosses.ts |
 | `HW_FX` | Early Dawn +2 waves/rank, Stout Timber +0.25/rank, Warlords +0.5/rank | heartwood.ts |
 | `SKY` (render only) | 600 s day cycle, dusk alpha 0.85, two hill bands, lamp radius 150 | presentation.ts |
 | `AUDIO`, `CUES` (audio only) | gains, ducking, per-cue throttles | audio.ts |
@@ -107,7 +107,7 @@ Status measured 31 Oct 2026 at 8791ac2, seed 1, 25 min, player model `crowdAim` 
 | Tree fully bought in a run | never | met: 117 of 156 buyable ranks at most (greedy run 5) |
 
 ## Heartwood tree (M3, built TB-053)
-Bought with Heartwood, never reset. Costs in HW. Spending does not lower the passive `heart` bonus: `heart` counts all Heartwood earned, and the tree spends from `available = earned − spent`. The header shows `available / earned` once anything is spent. Early Dawn's skipped boss waves are not owed (`bossDone` starts at `floor(startWave / 10)`). Standing Orders spearmen are placed free, ignoring Muster and the line cap.
+Bought with Heartwood, never reset. Costs in HW. Spending does not lower the passive `heart` bonus: `heart` counts all Heartwood earned, and the tree spends from `available = earned − spent`. The header shows `available / earned` once anything is spent. Early Dawn's skipped boss waves are not owed (`bossDone` starts at `floor(startWave / BOSS_WAVE.every)`). Standing Orders spearmen are placed free, ignoring Muster and the line cap.
 
 | id | Name | Max | Cost | Effect |
 |---|---|---|---|---|
@@ -310,7 +310,7 @@ Decision: keep 10. Measured falls over 40 min, seeds 1–3 (wave@run minutes): g
 
 ### Loot (TB-091, from the Loot Expansion Design; data in `src/data/lootTables.ts`, not yet live)
 - P(drop) = min(0.6, 0.008 · lootTier^1.5 · (1 + itemFind)). lootTier: grunt 1, runner 2, brute 3, elite 4, boss 5.
-- Rarity weights normal/boss: common 70/0, rare 25/40, epic 4.5/40, legendary 0.5/17, mythic 0/3. Each weight × (1+luck)^rank × (1 + 0.15(lootTier−1))^rank, rank 0–4.
+- Rarity weights normal/boss: common 70.47/0, rare 25/45.1, epic 4.5/45, legendary 0.03/9, mythic 0/0.9 (P-108; boss column is the simmed 40/40/8/0.8 rescaled to sum 100). Each weight × (1+luck)^rank × (1 + 0.15(lootTier−1))^rank, rank 0–4.
 - Affixes per rarity 1/2/3/4/4; ranges × (1 + 0.03 · ilvl). Item level = wave, capped at 20 + 10 × prestiges. Commons stop after prestige 3, rares after 8.
 - Pity: legendary weight +10% per boss without one; mythic guaranteed by the 25th boss without one.
 - Sets: 2/4/6-piece bonus +20/50/100% to the set's stat (Rootwarden 15/40/80%).
@@ -331,10 +331,10 @@ Evidence: `npm run balance` (greedy, seed 1, 30 min) vs the tb-110 base: first f
 Reroll one affix of a worn item: cost = max(1, round(2 × 2^n × rerollMult)), n = rerolls already on that item (`REROLL` in lootTables). Costs 2, 4, 8, 16, 32…; with Glimmerwork 1, 2, 5, 10, 19. The new affix is a different id, keeps the item's arrow rule, value rolled at the item's ilvl.
 Evidence: none yet; the greedy runner never rerolls. Tuning is TB-107.
 
-### P-108 · Loot pacing: rarer bosses and rarer top drops (2026-11-01, TB-108)
-Director (1 Nov): make bosses rarer; "candidate C looks okay, just make it like 20% slower". Proposed (G):
+### P-108 · Loot pacing: rarer bosses and rarer top drops (2026-11-01, TB-108) · applied
+Director (1 Nov): make bosses rarer; "candidate C looks okay, just make it like 20% slower"; approved "Yes, apply P-108" (1 Nov). Applied (G), now in Current and the data:
 - `BOSS_WAVE.every` 10 → 50 (bosses.ts). A boss wave unlocks at wave 50, 100 …; runs fall near wave 85, so this is one boss per late run, about 1.9 per hour of play.
-- `RARITY.weights` (lootTables.ts), normal / boss: legendary 0.5 / 17 → 0.03 / 8; mythic 0 / 3 → 0 / 0.8. Others unchanged. Mythic pity stays 25 bosses (the "never past boss 25" cap).
+- `RARITY.weights` (lootTables.ts), normal / boss: legendary 0.5 / 17 → 0.03 / 9; mythic 0 / 3 → 0 / 0.9; common 70 → 70.47, boss rare/epic 40 → 45.1/45, so each column sums to 100 (same ratios as the simmed 40/40/8/0.8). Mythic pity stays 25 bosses (the "never past boss 25" cap).
 
 Evidence: `npm run balance -- --minutes 1500 --seed N --quiet --tune …` (25 sim-hours, greedy buys, every boss summoned at once, set-chasing equip). Times are play time since a fresh save.
 

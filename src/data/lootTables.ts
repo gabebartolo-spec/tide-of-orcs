@@ -3,7 +3,7 @@ import { Rarity, Slot } from './loot';
 
 /** Rarity weights (normal / boss) and affix counts. Each weight is shifted by (1+luck)^rank and (1 + tierShift·(lootTier−1))^rank. */
 export const RARITY = {
-  weights: { common: [70, 0], rare: [25, 40], epic: [4.5, 40], legendary: [0.5, 17], mythic: [0, 3] } as Record<Rarity, [number, number]>,
+  weights: { common: [70.47, 0], rare: [25, 45.1], epic: [4.5, 45], legendary: [0.03, 9], mythic: [0, 0.9] } as Record<Rarity, [number, number]>,
   affixes: { common: 1, rare: 2, epic: 3, legendary: 4, mythic: 4 } as Record<Rarity, number>,
   tierShift: 0.15,
 } as const;
