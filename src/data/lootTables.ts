@@ -47,7 +47,7 @@ export const BASES: readonly BaseDef[] = [
 export interface StatLine { stat: string; op: 'mul' | 'add'; value: number }
 /** Set bonuses at 2, 4 and 6 pieces worn. */
 export interface SetDef { id: string; name: string; bonus: Record<2 | 4 | 6, StatLine[]> }
-/** Set effect numbers (TB-098, BALANCE ## Proposed P-098). Field distances are in field px (~20 px per metre). */
+/** Set effect numbers (TB-099, BALANCE ## Proposed P-099). Field distances are in field px (~20 px per metre). */
 export const SET_FX = {
   knifeRate: 0.25, bleedAmp: 0.3, bleedSecs: 3, fanEvery: 3, fanKnives: 5, fanRad: 0.18,
   burn: 0.3, burnSpread: 2, spreadReach: 90, cinderSecs: 4, slow: 0.25,
@@ -74,7 +74,7 @@ export const SETS: readonly SetDef[] = [
   { id: 'rootwarden', name: 'Rootwarden', bonus: { 2: [mul('barMax', F.barMax)], 4: [on('barRegen', F.barRegen)], 6: [on('freeRally')] } },
 ];
 
-/** Mythics: one power and one cost each (powers wired in TB-099). */
+/** Mythics: one power and one cost each (powers wired in TB-100). */
 export interface MythicDef { id: string; name: string; slot: Slot; power: string; cost: string }
 export const MYTHICS: readonly MythicDef[] = [
   { id: 'last-knife', name: 'The Last Knife', slot: 'bracer', power: 'knives crit twice', cost: 'knife rate -20%' },

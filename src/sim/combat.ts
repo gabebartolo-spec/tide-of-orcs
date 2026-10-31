@@ -45,7 +45,7 @@ function dropLoot(s: SimState, ev: EventBus, o: Orc): void {
 /** Set-bonus damage taken: bleeding (Nightknife 4) and pinned (Siegebreaker 6) orcs take more from every source. */
 export const takenMult = (s: SimState, o: Orc): number => (o.bleed > 0 ? 1 + s.stats.bleedAmp : 1) * (o.pin > 0 ? SET_FX.pinMult : 1);
 
-/** Leave a patch of ground (TB-098); silently skipped when the zone pool is full. */
+/** Leave a patch of ground (TB-099); silently skipped when the zone pool is full. */
 export function addZone(s: SimState, kind: Zone['kind'], x: number, y: number, r: number, life: number): void {
   const z = s.zones.alloc(); if (!z) return;
   z.kind = kind; z.x = x; z.y = y; z.r = r; z.life = life;

@@ -3,7 +3,7 @@ import { EventBus } from './events';
 import { Orc, SimState, Vanguard } from './state';
 import { damage } from './combat';
 
-/** Starlight a rally costs now: nothing while Rootwarden's free window is open (TB-098). */
+/** Starlight a rally costs now: nothing while Rootwarden's free window is open (TB-099). */
 export const rallyCost = (s: SimState, type: VanType): number => (s.freeRallyT > 0 ? 0 : vanCost(type, s.run.wave));
 
 export function canRally(s: SimState, type: VanType): boolean {

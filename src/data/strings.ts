@@ -42,7 +42,7 @@ export const STR = {
   lootFound: (name: string) => `${name} found`,
   pinned: 'pinned', freeRally: 'Free rally!',
   setsWorn: 'Sets', setProgress: (name: string, n: number) => `${name} ${n}/6`,
-  /** Set bonus lines at 2, 4 and 6 pieces (TB-098). */
+  /** Set bonus lines at 2, 4 and 6 pieces (TB-099). */
   setFx: {
     nightknife: ['+25% knife throw rate', 'Knives make orcs bleed; bleeding orcs take +30% damage from everything', 'Every third throw is a Fan: 5 knives in a cone'],
     emberwright: ['+30% burn damage', 'A burning orc that dies passes its flames to 2 neighbours', 'Fire arrows leave Cinderground for 4 s: orcs on it burn and walk 25% slower'],

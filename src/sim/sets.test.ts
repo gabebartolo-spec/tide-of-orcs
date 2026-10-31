@@ -19,7 +19,7 @@ const wearing = (set: string, n: number, levels: Levels = {}): SimState => {
 };
 const orcAt = (s: SimState, x: number, y: number) => { spawnOrc(s, 'grunt', y); let o = null as ReturnType<typeof s.orcs.alloc>; s.orcs.forEach((q) => { if (q.y === y) o = q; }); o!.x = x; return o!; };
 
-describe('set bonuses (TB-098)', () => {
+describe('set bonuses (TB-099)', () => {
   it('tiers turn on at 2, 4 and 6 pieces only', () => {
     expect(wearing('nightknife', 1, { knives: 1 }).stats.knives!.rate).toBeCloseTo(createState(1, { ...freshRun(), levels: { root: 1, knives: 1 } }).stats.knives!.rate);
     expect(wearing('nightknife', 3).stats.bleedAmp).toBe(0);

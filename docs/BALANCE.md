@@ -304,6 +304,6 @@ Decision: keep 10. Measured falls over 40 min, seeds 1–3 (wave@run minutes): g
 - Pity: legendary weight +10% per boss without one; mythic guaranteed by the 25th boss without one.
 - Sets: 2/4/6-piece bonus +20/50/100% to the set's stat (Rootwarden 15/40/80%).
 
-### P-098 · Set bonus numbers (2026-10-31, TB-098)
+### P-099 · Set bonus numbers (2026-10-31, TB-099)
 All in `SET_FX`. Nightknife: knives +25% rate / bleed 3 s, +30% taken / every 3rd throw fans 5 knives. Emberwright: burn +30% / burn spreads to 2 within 90 px / fire lobs leave Cinderground 4 s (burn, 25% slow). Stormcaller: +1 chain / chain reach +50% / killing link rebounds up to 3, storm +30% rate. Siegebreaker: ballista +25% rate / first bolt hit +50% and shoved 30 px / last bolt hit pinned 2 s, takes ×2. Moonveil: lob +25% with Moonbow / moon shots always crit ×1.5 / Moonwell 3 s heals wall 2%/s. Packlord: companions +20% dmg / +25% speed while an orc is within 220 px of the wall / +1 wolf, treants root 1.5 s. Rootwarden: wall +15% / +0.5%/s regen / once per run, wall below 25% makes rallies free for 10 s.
 Evidence: `npm run balance` (default greedy) output identical to the tb-097 base (first fall wave 5, best wave 31): greedy runs rarely complete a set. Per-set tuning is TB-107.

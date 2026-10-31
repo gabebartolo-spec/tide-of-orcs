@@ -12,7 +12,7 @@ import { EquipPolicy } from './loot';
 export interface Orc {
   live: boolean; kind: OrcKind; x: number; y: number; hp: number; maxhp: number; spd: number; r: number; loot: number; atk: number;
   dead: boolean; burn: number; hitT: number; wob: number; swingT: number;
-  /** Set-bonus timers in seconds (TB-098): bleeding takes more damage, slowed walks slower, pinned/rooted stand still. */
+  /** Set-bonus timers in seconds (TB-099): bleeding takes more damage, slowed walks slower, pinned/rooted stand still. */
   bleed: number; slow: number; pin: number; root: number;
   /** Marched in a boss wave: the challenge is cleared when none are left. */
   champ: boolean;
@@ -24,7 +24,7 @@ export interface Projectile {
   /** Lob only: launch and landing points, time aloft, height above ground, strike radius. */
   sx: number; sy: number; tx: number; ty: number; t: number; h: number; r: number;
 }
-/** A patch of ground left by a set bonus (TB-098): Cinderground burns and slows, a Moonwell slows and mends the wall. */
+/** A patch of ground left by a set bonus (TB-099): Cinderground burns and slows, a Moonwell slows and mends the wall. */
 export interface Zone { live: boolean; kind: 'cinder' | 'moonwell'; x: number; y: number; r: number; life: number }
 export interface Wolf { x: number; y: number; tx: number; ty: number; biteT: number }
 export interface Vanguard {
@@ -57,7 +57,7 @@ export interface SimState {
   pack: Wolf[];
   hawk: { x: number; y: number; a: number };
   zones: Pool<Zone>;
-  /** Run-only set state, not saved (TB-098): knives thrown toward the next Fan, Rootwarden's free-rally window and whether it was spent. */
+  /** Run-only set state, not saved (TB-099): knives thrown toward the next Fan, Rootwarden's free-rally window and whether it was spent. */
   knifeN: number; freeRallyT: number; freeRallyUsed: boolean;
 }
 

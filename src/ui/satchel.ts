@@ -23,7 +23,7 @@ export const affixText = (a: Item['affixes'][number]): string => {
   return `${v} ${STR.statName[d.stat] ?? d.stat}`;
 };
 
-/** A set's name, pieces worn, and its three bonus lines; the earned ones are lit (TB-098). */
+/** A set's name, pieces worn, and its three bonus lines; the earned ones are lit (TB-099). */
 const setBlock = (id: string, n: number): string => {
   const name = SETS.find((x) => x.id === id)?.name ?? id, fx = STR.setFx[id] ?? ['', '', ''];
   return `<div class="set"><div class="k">${STR.setProgress(name, n)}</div>${([2, 4, 6] as const).map((t, i) => `<div class="tier${n >= t ? ' on' : ''}">${t} · ${fx[i]}</div>`).join('')}</div>`;
