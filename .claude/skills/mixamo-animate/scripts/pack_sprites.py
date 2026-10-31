@@ -15,6 +15,8 @@ ANIMS = {
     "van.spear": (30, False, "van.spear", 3.0),
     "van.spear.attack": (15, False, "van.spear", 3.0),
     "van.blade.attack": (15, False, "van.blade.attack", 3.0),
+    "orc.berserker": (30, True, "orc.berserker", 2.4),
+    "orc.berserker.attack": (15, True, "orc.berserker", 2.4),
 }
 anchors = json.load(open(os.path.join(src, "anchors.json"), encoding="utf-8-sig"))
 
