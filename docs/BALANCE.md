@@ -328,3 +328,12 @@ Evidence: `npm run balance` (greedy, seed 1, 30 min) vs the tb-110 base: first f
 ### P-102 · Glimmer reroll (2026-11-01, TB-102)
 Reroll one affix of a worn item: cost = max(1, round(2 × 2^n × rerollMult)), n = rerolls already on that item (`REROLL` in lootTables). Costs 2, 4, 8, 16, 32…; with Glimmerwork 1, 2, 5, 10, 19. The new affix is a different id, keeps the item's arrow rule, value rolled at the item's ilvl.
 Evidence: none yet; the greedy runner never rerolls. Tuning is TB-107.
+
+### P-103 · Per-type upgrade nodes (2026-11-01, TB-103)
+Design from the director (1 Nov): see SKILL-TREE §Per-type upgrade nodes. Numbers in `SHOT_FX`, `UNIT_FX`, `ELF_FX` (`src/data/balance.ts`).
+- Enchantment chance per shot: 0.25 on unlock + 0.15 per Quiver rank, capped at 1 (fire, frost, shock, rebound, moon). Starfall 0.1 + 0.05 per Wishing Star rank (replaces "every 10th lob"). Thunderclap stuns only on shots that roll shock.
+- Shot damage nodes ×1.3^r (Kindling burn, Static zap, Hard Rebound, Starsteel, Keen Knives); Moonsilver ×1.2^r on the Moonbow's ×1.6, which now applies to moon shots only.
+- Effects: Wildfire +1 s burn, Thunderclap +0.25 s stun per rank past 1 (max 3), Moonpull homing reach ×(1 + 0.25r), Meteor Shower +2 arrows, Knife Fan +1 knife per throw, Pinning Bolts root every orc a bolt passes 0.3 s per rank, Windlass reload ×0.9^r. Nimble Wrist is rate only now (its ×1.35 damage moved to Keen Knives at ×1.3).
+- Units: damage ×1.3^r (Fangs keeps ×1.4, Spear Drill ×1.3 now spearmen only), rate ×1.15^r, crit +0.05 per rank at ×2 + 0.5 per Crit-damage rank, move speed ×1.15^r (wolf, spearman, bladedancer). Rangers and Wardens crit by their own nodes, no longer Keen Eye. Deadly Aim: elf crit ×3 + 0.5 per rank.
+- Costs (starlight base, growth): shot nodes 150–7000 near their unlock's cost (SKILL-TREE table); unit nodes damage ×1.2, rate ×1.4, crit ×1.6, crit damage ×2, speed ×1 of the unit's unlock cost, growth 1.9–2.0.
+Evidence: `npm run balance` (greedy, seed 1, 30 min) vs origin/main 2f4dd10: first four falls identical (waves 5, 5, 7, 5); fifth fall wave 20 @ 8 min → 18 @ 7 min, then a sixth run to wave 35 @ 13.7 min; replants 5 → 6, Heartwood 18 → 48, best wave 37 → 35. The 48 extra nodes give the greedy buyer cheap power, so later runs climb faster. Per-node tuning is TB-107.

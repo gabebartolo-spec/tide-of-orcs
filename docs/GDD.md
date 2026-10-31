@@ -63,8 +63,8 @@ Vanguard are not tree nodes. **Muster** unlocks the rally bar under the field; e
 
 | Unit | Unlock | Cost | HP | Damage per swing | Swing | Reach | Notes |
 |---|---|---|---|---|---|---|---|
-| Spearman | Muster | 6 × loot(wave) | 5 × waveHP(wave) × 1.3^Shieldwall × heart | 1.6 × player dmg × 1.3^Spear Drill × Kinship | 0.8 s | 28 | One target |
-| Bladedancer | Bladedancer node | 18 × loot(wave) | 4 × waveHP(wave) × 1.3^Shieldwall × heart | 1.4 × player dmg × 1.3^Spear Drill × Kinship | 0.45 s | 34 | Cleaves every orc in reach |
+| Spearman | Muster | 6 × loot(wave) | 5 × waveHP(wave) × 1.3^Shieldwall × heart | 1.6 × player dmg × 1.3^Spear Drill × Kinship (crit, rate and speed nodes, SKILL-TREE TB-103) | 0.8 s | 28 | One target |
+| Bladedancer | Bladedancer node | 18 × loot(wave) | 4 × waveHP(wave) × 1.3^Shieldwall × heart | 1.4 × player dmg × 1.3^Blade Drill × Kinship | 0.45 s | 34 | Cleaves every orc in reach |
 
 Orcs within `r + 18` px of a vanguard engage it instead of advancing, swinging once per second for `atk`. **Field Mending** heals vanguard 3%/s per rank. Rally costs scale with wave, so a late reinforcement is a real decision. Both buttons show cost, grey out when unaffordable or the line is full ("Line is full"), and say "Learn Muster" before the node is owned.
 
@@ -72,10 +72,10 @@ Design intent: vanguard are the *reactive* spend. The tree is the *investment* s
 
 ## 6. The player
 - Elf archer at (64, H/2). The elf only lobs (below); the draw (`lobCd`) never changes with input and holds when ready rather than banking shots.
-- **Aiming is the active mechanic.** While the pointer is over the plain (right of the wall), a strike circle (40 px radius) follows it. Every 2.5 s (faster with Quick Draw) the elf lobs one arrow in a high arc; it lands 0.7 s later on the circle's centre and strikes every orc inside the circle for 3× bow damage, each rolling its own crit and catching fire if Fire Arrows is owned. A cream ring around the circle fills as the bow draws; a dotted arc from the elf shows the flight. On touch, hold a finger on the field to aim; lift to release. There is no click-to-shoot and no tap bonus: skill is placing the circle (lead the pack, cover the brute at the wall), not clicking faster.
+- **Aiming is the active mechanic.** While the pointer is over the plain (right of the wall), a strike circle (40 px radius) follows it. Every 2.5 s (faster with Quick Draw) the elf lobs one arrow in a high arc; it lands 0.7 s later on the circle's centre and strikes every orc inside the circle for 3× bow damage, each rolling its own crit. Each owned enchantment (fire, frost, shock, rebound, moon) rolls its own chance per shot, 25% on unlock and +15% per Quiver rank (TB-103); Starfall rolls 10% per shot, +5% per Wishing Star rank. A cream ring around the circle fills as the bow draws; a dotted arc from the elf shows the flight. On touch, hold a finger on the field to aim; lift to release. There is no click-to-shoot and no tap bonus: skill is placing the circle (lead the pack, cover the brute at the wall), not clicking faster.
 - With no aim (pointer off the field, over the grove side, or idle) the elf holds fire. It is an incremental, not an idle: the bow needs the player.
-- Bow nodes reshape the lob: Wide Volley +20% radius per rank; Split Shot +1 extra arrow per rank landing at random inside the circle; Longshaft +1 repeat strike per rank, 0.35 s apart; Moonbow settles the circle on the nearest orc within 70 px and adds +60% damage.
-- Ranger and Warden always auto-target with straight volleys (a 0.09-rad fan at 520 px/s, `fireRate` = 1.2 × 1.15^Quick Draw per second); only the elf's bow is aimed. Bow nodes also carry over to their volleys: Split Shot adds arrows to the fan, Longshaft adds pierce, Keen Eye crits, and Moonbow steers their arrows toward the target (6 rad/s).
+- Bow nodes reshape the lob: Wide Volley +20% radius per rank; Split Shot +1 extra arrow per rank landing at random inside the circle; Longshaft +1 repeat strike per rank, 0.35 s apart; a moon shot settles the circle on the nearest orc within 70 px (Moonpull +25% per rank) and strikes +60% harder (Moonsilver +20% per rank).
+- Ranger and Warden always auto-target with straight volleys (a 0.09-rad fan at 520 px/s, `fireRate` = 1.2 × 1.15^Quick Draw per second); only the elf's bow is aimed. Bow nodes also carry over to their volleys: Split Shot adds arrows to the fan, Longshaft adds pierce, and Moonbow steers their arrows toward the target (6 rad/s). Each archer has its own damage, rate, crit chance and crit damage nodes (TB-103); fire on a volley arrow rolls Fire's chance.
 
 ## 7. Companions
 All companion damage scales with Kinship (×1.2/rank) and Heartwood. Kinship also scales vanguard.
@@ -90,11 +90,11 @@ All companion damage scales with Kinship (×1.2/rank) and Heartwood. Kinship als
 ## 8. Armoury
 | Weapon | Node | Behaviour |
 |---|---|---|
-| Throwing Knives | knives | Auto-throw at nearest orc every 1.4 s ÷ 1.2^Nimble; damage 5 × 1.35^Nimble |
-| Fire Arrows | fire | Player arrows apply 3 s burn at 35% player damage per second |
+| Throwing Knives | knives | Auto-throw at nearest orc every 1.4 s ÷ 1.2^Nimble, +1 knife per Knife Fan rank; damage 5 × 1.3^Keen Knives |
+| Fire Arrows | fire | Shots that roll fire (25% + 15% per Fire Quiver rank) apply a 3 s burn (+1 s per Wildfire rank) at 35% player damage per second (×1.3 per Kindling rank) |
 | Storm Glade | storm | Every 6 s, chain lightning from the orc nearest 200 px past the wall, up to 5 orcs within 140 px, 4× player damage each |
 | Ballista | ballista | Every 4 s, a bolt at 760 px/s with infinite pierce, 40 × 1.5^Iron Bolts |
-| Moonbow | moon | The aim circle settles on the nearest orc within 70 px of the aim point; +60% damage; ranger/warden arrows steer toward their target (6 rad/s) |
+| Moonbow | moon | Moon shots (25% + 15% per Moon Quiver rank): the aim circle settles on the nearest orc within 70 px of the aim point, +60% damage; ranger/warden arrows steer toward their target (6 rad/s) |
 
 ## 9. Economy
 - **Starlight**: the only run currency. Earned per kill: `loot(wave, type) × starMult`, `starMult = 1.15^Gleaning × heart`.
