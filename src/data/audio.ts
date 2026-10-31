@@ -4,7 +4,8 @@ import type { SimEvent } from '../sim/events';
 export type Cue =
   | 'loose' | 'arrowHit' | 'knife' | 'ignite' | 'orcHit' | 'orcDeath' | 'bruteDeath' | 'bossRoar'
   | 'wallThud' | 'wallCreak' | 'wallFall' | 'rallyHorn' | 'replant' | 'click' | 'bought' | 'denied'
-  | 'fireArrow' | 'bounce' | 'shock' | 'stun' | 'frost' | 'shatter' | 'starfall';
+  | 'fireArrow' | 'bounce' | 'shock' | 'stun' | 'frost' | 'shatter' | 'starfall'
+  | 'lootDrop' | 'lootRare' | 'lootEpic' | 'lootLegendary' | 'lootMythic' | 'equip' | 'salvage' | 'reroll' | 'setRise';
 
 export const AMBIENT = 'ambient';
 
@@ -57,7 +58,20 @@ export const CUES: Record<Cue, { gain: number; gap: number; duck?: boolean }> = 
   frost: { gain: 0.5, gap: 0.2 },
   shatter: { gain: 0.6, gap: 0.12 },
   starfall: { gain: 0.8, gap: 1 },
+  // Loot (TB-106, ElevenLabs): a drop chimes by rarity, satchel actions from the UI
+  lootDrop: { gain: 0.35, gap: 0.15 },
+  lootRare: { gain: 0.5, gap: 0.2 },
+  lootEpic: { gain: 0.65, gap: 0.3 },
+  lootLegendary: { gain: 0.8, gap: 0.5, duck: true },
+  lootMythic: { gain: 1, gap: 1, duck: true },
+  equip: { gain: 0.6, gap: 0.05 },
+  salvage: { gain: 0.55, gap: 0.05 },
+  reroll: { gain: 0.55, gap: 0.05 },
+  setRise: { gain: 0.8, gap: 0.5, duck: true },
 };
+
+/** Drop chime per rarity; a common one is the quiet tick. */
+export const LOOT_CUE: Record<string, Cue> = { common: 'lootDrop', rare: 'lootRare', epic: 'lootEpic', legendary: 'lootLegendary', mythic: 'lootMythic' };
 
 /** Pure mapping from one sim event to the cue it plays, or null. */
 export function cueFor(e: SimEvent): Cue | null {
@@ -80,6 +94,7 @@ export function cueFor(e: SimEvent): Cue | null {
     case 'chill': return 'frost';
     case 'shatter': return 'shatter';
     case 'starfall': return 'starfall';
+    case 'loot': return e.kept ? LOOT_CUE[e.rarity] ?? 'lootDrop' : null;
     case 'replant': return 'replant';
     default: return null;
   }
