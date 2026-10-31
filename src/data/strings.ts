@@ -19,6 +19,7 @@ export const STR = {
   needs: (parent: string) => `needs ${parent}`,
   rank: (l: number, m: number) => `rank ${l} / ${m}`,
   learned: 'learned',
+  treeLabel: (name: string) => `Skill tree, ${name} selected. Tab to move, Enter to learn.`,
   joins: (name: string) => `${name} joins the grove`,
   waveN: (w: number) => `Wave ${w}`,
   bossFalls: 'A Warboss falls. The tide hesitates.',

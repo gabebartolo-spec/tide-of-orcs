@@ -121,7 +121,7 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-112 | Tree tooltip says "needs <parent>" even when the parent is owned (`ui/panel.ts`); show it only while the parent is unowned | ui | 075 | | todo |
 | TB-113 | Perf: rerun QA J1 in a visible browser (160 orcs); the hidden-pane run showed 4–6% of frames over 16.7 ms with draw spikes up to 330 ms. Profile and fix if they reproduce | perf | 075 | claude | done (QA run 2: no spikes in visible rAF frames; still untested on a mid-range PC) |
 | TB-114 | Loot: affixes that scale a feature the player does not own (Packbond without the wolf, Thorns without Spikes) roll and do nothing; decide whether to reroll, gate or label them | loot | 075 | | todo |
-| TB-116 | Tree keyboard access (QA B5): the tree canvas takes no focus or keys. Make nodes reachable by Tab or arrows and buyable by Enter (GDD §13) | ui | 075 | | todo |
+| TB-116 | Tree keyboard access (QA B5): the tree canvas takes no focus or keys. Make nodes reachable by Tab or arrows and buyable by Enter (GDD §13) | ui | 075 | claude | done (HASH) |
 | TB-117 | Tree: the branch legend (BOW, COMPANIONS …) is drawn over node labels at the top of the tree (QA run 2) | ui | 075 | | todo |
 | TB-101 | Loot L4: Spoils branch (7 Grove nodes) and 6 Heartwood loot lines (Far Sight, Fortune's Favour, Deep Satchel, Warboss Tithe, Heirloom, Glimmerwork) with requirements; save v9 adds the Heirloom uid. Numbers P-101 | sim | 110 | claude | done (9e8b756) |
 | TB-102 | Loot L5: spend Glimmer to reroll one affix on a worn item; cost doubles per reroll on that item, Glimmerwork ×0.6. Numbers P-102 | sim | 101 | claude | done (4d924fe) |

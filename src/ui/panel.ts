@@ -4,6 +4,7 @@ import { STR } from '../data/strings';
 import type { Cue } from '../data/audio';
 import { GameController } from '../game';
 import { TreeRenderer } from '../render/tree';
+import { stepNode, tabOrder } from '../render/treeNav';
 import { canBuy, costOf, rankOf, unlocked } from '../sim/tree';
 import { canRally, rallyCost } from '../sim/vanguard';
 import { gain } from '../sim/prestige';
@@ -51,6 +52,12 @@ export class Panel {
       // A second click on the selected node buys it (the buy plays `bought`), or is denied.
       if (tree.selected === id) { if (canBuy(game.state, NODE[id])) this.buy(id); else this.onCue('denied'); } else this.onCue('click');
       tree.select(id); this.renderDetail();
+    });
+    // Keyboard (GDD §13, TB-116): Tab walks the nodes branch by branch and leaves the tree at either end; Enter or Space buys.
+    const order = tabOrder();
+    tree.canvas.addEventListener('keydown', (e) => {
+      if (e.key === 'Tab') { const id = stepNode(order, tree.selected, e.shiftKey ? -1 : 1); if (!id) return; e.preventDefault(); this.onCue('click'); tree.select(id); this.renderDetail(); }
+      else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); const id = tree.selected; if (canBuy(game.state, NODE[id])) this.buy(id); else this.onCue('denied'); }
     });
     $('hw-title').textContent = STR.hwTitle;
     $('hw-tree').onclick = (e) => { const id = (e.target as HTMLElement).closest('button')?.dataset.hw as HwId | undefined; if (id && game.buyHw(id)) { this.toast(STR.hwBought(HW_NODE[id].name)); this.renderHw(); } };
@@ -124,6 +131,7 @@ export class Panel {
       <div class="row"><span style="font-variant-numeric:tabular-nums;color:var(--amber)">${maxed ? STR.fullyGrown : n.base === 0 ? '' : STR.starlightCost(fmt(cost))}</span>
       <button class="buy" id="buy-btn" ${canBuy(s, n) ? '' : 'disabled'}>${maxed ? STR.complete : !un ? STR.locked : lvl ? STR.improve : STR.learn}</button></div>`;
     $('buy-btn').onclick = () => this.buy(n.id);
+    this.tree.canvas.setAttribute('aria-label', STR.treeLabel(n.name));
   }
 
   setTab(k: 'grove' | 'satchel' | 'prestige' | 'settings'): void {
