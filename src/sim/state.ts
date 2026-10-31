@@ -1,6 +1,6 @@
 import { OrcKind } from '../data/orcs';
 import { HwLevels } from '../data/heartwood';
-import { LootMeta, freshLoot } from '../data/loot';
+import { Item, LootMeta, Rarity, freshLoot } from '../data/loot';
 import { SET_FX } from '../data/lootTables';
 import { FIELD, ORC_CAP, VanType } from '../data/balance';
 import { Levels, Stats, deriveStats } from './stats';
@@ -50,6 +50,8 @@ export interface RunState {
   foeT: Partial<Record<OrcKind, number>>; stormT: number; shotT: number[]; knifeT: number; hawkT: number; treantT: number; ballT: number;
   /** Lobs loosed this run, for Starfall's every-10th count. Optional: older saves lack it. */
   lobN?: number;
+  /** Items dropped this run by rarity, and a copy of the best one, for the Replant summary (TB-103). Optional: older saves lack them. */
+  found?: Partial<Record<Rarity, number>>; best?: Item;
 }
 /** heartwood: all Heartwood ever earned (drives the passive bonus); hwLevels: Heartwood tree ranks bought with it. */
 export interface MetaState { heartwood: number; lifetimeKills: number; bestWave: number; prestiges: number; hwLevels: HwLevels; loot: LootMeta }

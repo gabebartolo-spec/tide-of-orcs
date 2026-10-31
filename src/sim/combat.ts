@@ -3,7 +3,7 @@ import { EventBus } from './events';
 import { Orc, ProjectileKind, SimState, Zone, recompute } from './state';
 import { rollDrop } from './lootRoll';
 import { SPOILS_FX } from '../data/lootTables';
-import { pickUp } from './loot';
+import { noteDrop, pickUp } from './loot';
 import { lootMods } from './gear';
 import { MYTHIC_FX, SET_FX } from '../data/lootTables';
 
@@ -54,6 +54,7 @@ function dropLoot(s: SimState, ev: EventBus, o: Orc): void {
   for (let i = 0; i < rolls; i++) {
     const it = rollDrop(s.lootRng, l, o.kind, s.run.wave, s.meta.prestiges, mods);
     if (!it) continue;
+    noteDrop(s.run, it);
     pickUp(l, it, s.lootPolicy, st.satchelCap, st);
     ev.push({ t: 'loot', x: o.x, y: o.y, uid: it.uid, rarity: it.rarity, kept: l.items.includes(it) });
   }

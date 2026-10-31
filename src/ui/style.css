@@ -111,3 +111,4 @@ header h1 em { color: var(--amber); font-style: italic; }
 .sets .set, .itemdetail .set { margin: 6px 0; }
 .set .tier { color: var(--cream-dim); opacity: .55; font-size: 12px; line-height: 1.35; }
 .set .tier.on { color: var(--amber); opacity: 1; }
+.fallen .best { color: var(--rar); font-weight: 700; }

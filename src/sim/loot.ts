@@ -46,6 +46,13 @@ export function salvage(l: LootMeta, uid: string, fx: SalvageFx = NO_FX): boolea
  * Take a new item. greedy: equip if it beats the slot, salvage the loser (never set pieces or mythics).
  * hoarder: keep everything, equip upgrades, salvage the weakest unequipped item only when the satchel is full.
  */
+/** Count a drop for the run summary and keep a copy if it beats the run's best: higher rarity first, then item score (TB-103). */
+export function noteDrop(run: { found?: Partial<Record<Rarity, number>>; best?: Item }, it: Item): void {
+  const f = (run.found ??= {}); f[it.rarity] = (f[it.rarity] ?? 0) + 1;
+  const b = run.best, d = b ? RARITIES.indexOf(it.rarity) - RARITIES.indexOf(b.rarity) : 1;
+  if (d > 0 || (d === 0 && itemScore(it) > itemScore(b!))) run.best = structuredClone(it);
+}
+
 export function pickUp(l: LootMeta, it: Item, policy: EquipPolicy, cap: number = SATCHEL.base, fx: SalvageFx = NO_FX): void {
   l.items.push(it);
   const cur = l.items.find((x) => x.uid === l.equipped[it.slot]);
