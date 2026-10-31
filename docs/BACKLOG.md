@@ -106,3 +106,4 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-091 | Loot L0: affix pool, 24 base types, 7 sets, 8 mythics in `data/loot.ts`; formula tests | data | 090 | claude | done (tb-090-loot) |
 | TB-092 | Loot L0: `lootTier` per orc kind; seeded drop, rarity, affix and pity rolls, property-tested | sim | 091 | claude | done (tb-090-loot) |
 | TB-093 | Loot L0: `sim/loot.ts` greedy/hoarder equip policies; loot columns in `npm run balance` | sim | 092 | claude | done (tb-090-loot) |
+| TB-094 | Loot L1: kills roll drops on `lootRng` (own stream), `loot` event, player pick-up (empty slots only, loot filter), worn affixes + set bonuses into Stats via `sim/gear.ts` | sim | 093 | claude | done (tb-094-drops) |

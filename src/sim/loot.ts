@@ -1,8 +1,9 @@
-/** Satchel and equip logic (TB-093). Pure. Gear stats feed Stats in TB-094+. */
+/** Satchel and equip logic (TB-093/094). Pure. Set pieces and mythics are never auto-salvaged. */
 import { Item, LootMeta, RARITIES, SLOTS } from '../data/loot';
 import { SATCHEL } from '../data/lootTables';
 
-export type EquipPolicy = 'greedy' | 'hoarder';
+/** player: wear into empty slots only, the player swaps by hand; greedy/hoarder are balance-runner policies. */
+export type EquipPolicy = 'player' | 'greedy' | 'hoarder';
 
 /** Rough power: affix values summed, mythics and set pieces weighted up. Used by policies and the balance runner only. */
 export const itemScore = (it: Item): number =>
@@ -29,12 +30,13 @@ export function salvage(l: LootMeta, uid: string): boolean {
 export function pickUp(l: LootMeta, it: Item, policy: EquipPolicy, cap: number = SATCHEL.base): void {
   l.items.push(it);
   const cur = l.items.find((x) => x.uid === l.equipped[it.slot]);
-  const better = !cur || itemScore(it) > itemScore(cur);
+  if (policy === 'player' && it.rarity !== 'mythic' && !it.set && RARITIES.indexOf(it.rarity) < RARITIES.indexOf(l.lootFilter.minRarity)) { l.items.pop(); l.glimmer += salvageGlimmer(it); return; }
+  const better = !cur || (policy !== 'player' && itemScore(it) > itemScore(cur));
   if (better) l.equipped[it.slot] = it.uid;
   const loser = better ? cur : it;
   if (policy === 'greedy' && loser && !loser.set && !loser.mythic) salvage(l, loser.uid);
   while (l.items.length > cap) {
-    const spare = l.items.filter((x) => !Object.values(l.equipped).includes(x.uid) && !x.locked).sort((a, b) => itemScore(a) - itemScore(b))[0];
+    const spare = l.items.filter((x) => !Object.values(l.equipped).includes(x.uid) && !x.locked && !x.set && !x.mythic).sort((a, b) => itemScore(a) - itemScore(b))[0];
     if (!spare || !salvage(l, spare.uid)) break;
   }
 }

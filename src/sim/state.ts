@@ -5,6 +5,8 @@ import { FIELD, ORC_CAP, VanType } from '../data/balance';
 import { Levels, Stats, deriveStats } from './stats';
 import { Pool } from './pool';
 import { Rng, createRng } from './rng';
+import { applyGear } from './gear';
+import { EquipPolicy } from './loot';
 
 export interface Orc {
   live: boolean; kind: OrcKind; x: number; y: number; hp: number; maxhp: number; spd: number; r: number; loot: number; atk: number;
@@ -38,6 +40,10 @@ export interface MetaState { heartwood: number; lifetimeKills: number; bestWave:
 export interface SimState {
   tick: number; t: number;
   rng: Rng;
+  /** Loot rolls use their own stream so drops never shift combat randomness. */
+  lootRng: Rng;
+  /** How pick-ups are equipped: the player by hand, or a balance-runner policy. Not saved. */
+  lootPolicy: EquipPolicy;
   run: RunState; meta: MetaState; stats: Stats;
   orcs: Pool<Orc>; shots: Pool<Projectile>; vans: Pool<Vanguard>;
   wolf: { x: number; y: number; tx: number; ty: number; biteT: number };
@@ -56,7 +62,7 @@ const makeVan = (): Vanguard => ({ live: false, type: 'spear', x: 0, y: 0, tx: 0
 
 export function createState(seed = 1, run: RunState = freshRun(), meta: MetaState = freshMeta()): SimState {
   const s: SimState = {
-    tick: 0, t: 0, rng: createRng(seed), run, meta, stats: deriveStats(run.levels, meta.heartwood, meta.hwLevels),
+    tick: 0, t: 0, rng: createRng(seed), lootRng: createRng(seed * 31 + 7), lootPolicy: 'player', run, meta, stats: applyGear(deriveStats(run.levels, meta.heartwood, meta.hwLevels), meta.loot),
     orcs: new Pool<Orc>(ORC_CAP, makeOrc), shots: new Pool<Projectile>(600, makeShot), vans: new Pool<Vanguard>(8, makeVan),
     wolf: { x: 260, y: FIELD.h / 2, tx: 260, ty: FIELD.h / 2, biteT: 0 },
     hawk: { x: 300, y: 100, a: 0 },
@@ -68,7 +74,7 @@ export function createState(seed = 1, run: RunState = freshRun(), meta: MetaStat
 /** Re-derive stats after a purchase or prestige. Growing the wall heals the new timber. */
 export function recompute(s: SimState): void {
   const before = s.stats.barMax;
-  s.stats = deriveStats(s.run.levels, s.meta.heartwood, s.meta.hwLevels);
+  s.stats = applyGear(deriveStats(s.run.levels, s.meta.heartwood, s.meta.hwLevels), s.meta.loot);
   if (s.stats.barMax > before) s.run.barHp += s.stats.barMax - before;
   s.run.barHp = Math.min(s.run.barHp, s.stats.barMax);
 }

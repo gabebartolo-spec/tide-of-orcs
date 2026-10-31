@@ -1,6 +1,8 @@
 /** Sim → render/audio events. Sim pushes; observers drain once per frame. */
 export type SimEvent =
   | { t: 'kill'; x: number; y: number; loot: number; kind: string }
+  /** An item dropped (TB-094); `kept` is false when the loot filter salvaged it on the spot. */
+  | { t: 'loot'; x: number; y: number; uid: string; rarity: string; kept: boolean }
   /** `src` says what struck (lob, arrow, knife, bolt) so render can pick the impact. */
   | { t: 'hit'; x: number; y: number; crit: boolean; src: string }
   /** An orc's swing lands on the wall or a vanguard; (tx, ty) is where. Render-only (TB-088). */

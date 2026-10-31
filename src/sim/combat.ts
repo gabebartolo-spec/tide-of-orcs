@@ -1,6 +1,9 @@
 import { LOB, PLAYER, SOURCES } from '../data/balance';
 import { EventBus } from './events';
-import { Orc, ProjectileKind, SimState } from './state';
+import { Orc, ProjectileKind, SimState, recompute } from './state';
+import { rollDrop } from './lootRoll';
+import { pickUp } from './loot';
+import { lootMods } from './gear';
 
 export function nearestOrc(s: SimState, x: number, y: number, filter?: (o: Orc) => boolean): Orc | null {
   let best: Orc | null = null, bd = Infinity;
@@ -19,6 +22,17 @@ export function kill(s: SimState, ev: EventBus, o: Orc): void {
   s.run.kills++; s.meta.lifetimeKills++; s.run.starlight += loot; s.run.earned += loot;
   if (o.champ && s.run.boss) s.run.boss.left--;
   ev.push({ t: 'kill', x: o.x, y: o.y, loot, kind: o.kind });
+  dropLoot(s, ev, o);
+}
+
+/** Roll this kill's drop (TB-094) and pick it up; re-derive stats if what is worn changed. */
+function dropLoot(s: SimState, ev: EventBus, o: Orc): void {
+  const l = s.meta.loot, it = rollDrop(s.lootRng, l, o.kind, s.run.wave, s.meta.prestiges, lootMods(l));
+  if (!it) return;
+  const worn = JSON.stringify(l.equipped);
+  pickUp(l, it, s.lootPolicy);
+  ev.push({ t: 'loot', x: o.x, y: o.y, uid: it.uid, rarity: it.rarity, kept: l.items.includes(it) });
+  if (JSON.stringify(l.equipped) !== worn) recompute(s);
 }
 
 export function damage(s: SimState, ev: EventBus, o: Orc, amt: number): void {
