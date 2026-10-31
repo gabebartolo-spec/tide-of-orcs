@@ -1,4 +1,4 @@
-# A Lot of Orcs — Development Plan (repo: tide-of-orcs)
+# Let's Hunt Some Orc! — Development Plan (repo: tide-of-orcs)
 
 **Version 1.4 · 1 Nov 2026 · Owner: Gabe**
 
@@ -109,7 +109,7 @@ Orcs drop gear; six worn slots, a satchel, affixes, sets and mythic powers feed 
 
 ### M4.7 — Tree and voice (1 Nov) · **done except TB-112, TB-117**
 - Per-type upgrade nodes TB-111 (PR #31): 48 new nodes, tree 56 → 104.
-- Rename pass in the elf's voice TB-115 (PR #35): every node, Heartwood line, set and mythic renamed; currency Teeth and Grudge; game title **A Lot of Orcs**. Ids and saves unchanged.
+- Rename pass in the elf's voice TB-115 (PR #35): every node, Heartwood line, set and mythic renamed; currency Teeth and Grudge; game title **A Lot of Orcs** (renamed **Let's Hunt Some Orc!** 1 Nov). Ids and saves unchanged.
 - Tree keyboard access TB-116 (PR #38).
 - Open: TB-117 branch legend over node labels (PR #39 open), TB-112 tooltip says "needs" for an owned parent.
 

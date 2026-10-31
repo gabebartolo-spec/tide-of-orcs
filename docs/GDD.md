@@ -1,4 +1,4 @@
-# A Lot of Orcs — Game Design Document (repo: tide-of-orcs)
+# Let's Hunt Some Orc! — Game Design Document (repo: tide-of-orcs)
 
 Status: **Current** (v1.3, synced with the code 31 Oct 2026). Core-loop sections (§2–§5) are human-owned; ask before changing. `docs/prototype.html` is the original concept for tone, look and the core loop; its mechanics are historical (see §14).
 
