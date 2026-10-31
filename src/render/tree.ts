@@ -1,4 +1,4 @@
-import { BRANCH_COLOR, NODE, NODES, NodeId, TREE_VIEW } from '../data/skillTree';
+import { BRANCH_COLOR, BRANCH_LABEL, NODE, NODES, NodeId, TREE_VIEW } from '../data/skillTree';
 import { Camera, centreOn, clampCamera, easeToward, startCamera, panBy, toWorld, zoomAt } from './camera';
 import { SimState } from '../sim/state';
 import { canBuy, rankOf, unlocked } from '../sim/tree';
@@ -36,6 +36,8 @@ export class TreeRenderer {
     canvas.addEventListener('pointermove', (e) => this.onMove(e));
     const end = (e: PointerEvent): void => { this.pts.delete(e.pointerId); if (!this.pts.size) canvas.classList.remove('dragging'); };
     canvas.addEventListener('pointerup', end); canvas.addEventListener('pointercancel', end);
+    // Keyboard focus shows a ring on the selected node (TB-116), so redraw when it comes or goes.
+    canvas.addEventListener('focus', () => { this.stale = true; }); canvas.addEventListener('blur', () => { this.stale = true; });
   }
 
   private onMove(e: PointerEvent): void {
@@ -82,7 +84,8 @@ export class TreeRenderer {
   /** Node under the pointer, or null. A press that turned into a drag never selects. */
   hitTest(clientX: number, clientY: number): NodeId | null {
     if (this.dragged) { this.dragged = false; return null; }
-    const [x, y] = toWorld(this.cam, ...this.local({ clientX, clientY }));
+    const [sx, sy] = this.local({ clientX, clientY }); if (sy < TREE_VIEW.legendH) return null; // the legend strip covers what is under it
+    const [x, y] = toWorld(this.cam, sx, sy);
     for (const n of NODES) if (Math.hypot(n.x - x, n.y - y) < TREE_VIEW.hitR) return n.id;
     return null;
   }
@@ -100,6 +103,7 @@ export class TreeRenderer {
     c.lineWidth = 2;
     for (const n of NODES) if (n.parent) { const p = NODE[n.parent]; const un = unlocked(s, n); c.strokeStyle = un ? BRANCH_COLOR[n.branch] : P.line; c.globalAlpha = un ? 0.6 : 0.5; c.beginPath(); c.moveTo(p.x, p.y); c.quadraticCurveTo((p.x + n.x) / 2 - (n.y - p.y) * TREE_VIEW.bow, (p.y + n.y) / 2 + (n.x - p.x) * TREE_VIEW.bow, n.x, n.y); c.stroke(); }
     c.globalAlpha = 1;
+    const keyFocus = this.canvas.matches(':focus-visible');
     for (const n of NODES) {
       const lvl = rankOf(s, n.id), col = BRANCH_COLOR[n.branch], un = unlocked(s, n), maxed = lvl >= n.max, r = n.id === 'root' ? 16 : 13;
       c.beginPath(); c.arc(n.x, n.y, r, 0, 6.28);
@@ -107,11 +111,13 @@ export class TreeRenderer {
       c.lineWidth = n.id === this.selected ? 3 : 2; c.strokeStyle = un ? col : P.line; c.stroke();
       if (lvl > 0 && !maxed) { c.beginPath(); c.arc(n.x, n.y, r, -1.571, -1.571 + (6.283 * lvl) / n.max); c.strokeStyle = col; c.lineWidth = 4; c.stroke(); }
       if (canBuy(s, n)) { c.beginPath(); c.arc(n.x, n.y, r + 5, 0, 6.28); c.strokeStyle = P.amber; c.lineWidth = 1; c.globalAlpha = this.reducedMotion ? 0.8 : 0.5 + 0.5 * Math.sin(t * 4); c.stroke(); c.globalAlpha = 1; }
+      if (keyFocus && n.id === this.selected) { c.beginPath(); c.arc(n.x, n.y, r + 9, 0, 6.28); c.strokeStyle = P.cream; c.lineWidth = 2; c.setLineDash([4, 3]); c.stroke(); c.setLineDash([]); }
       c.fillStyle = un ? P.cream : P.nodeLabelLocked; c.font = '11px "Atkinson Hyperlegible", sans-serif'; c.textAlign = 'center'; c.fillText(n.name, n.x, n.y + r + 13);
       if (n.max > 1) { c.fillStyle = maxed ? P.ink : P.cream; c.font = '700 10px "Atkinson Hyperlegible", sans-serif'; c.fillText(`${lvl}/${n.max}`, n.x, n.y + 4); }
     }
-    c.setTransform(k, 0, 0, k, 0, 0); // legend stays in screen space
+    c.setTransform(k, 0, 0, k, 0, 0); // legend stays in screen space, on its own strip so nodes pan under it, not through it (TB-117)
+    c.fillStyle = P.ink2; c.fillRect(0, 0, this.vw, TREE_VIEW.legendH); c.fillStyle = P.line; c.fillRect(0, TREE_VIEW.legendH - 1, this.vw, 1);
     let lx = 14; c.font = '10px "Atkinson Hyperlegible", sans-serif'; c.textAlign = 'left';
-    for (const k of Object.keys(BRANCH_COLOR) as (keyof typeof BRANCH_COLOR)[]) { c.fillStyle = BRANCH_COLOR[k]; c.fillRect(lx, 14, 8, 8); c.fillStyle = P.creamDim; const label = k.toUpperCase(); c.fillText(label, lx + 12, 22); lx += c.measureText(label).width + 30; }
+    for (const k of Object.keys(BRANCH_COLOR) as (keyof typeof BRANCH_COLOR)[]) { c.fillStyle = BRANCH_COLOR[k]; c.fillRect(lx, 14, 8, 8); c.fillStyle = P.creamDim; const label = BRANCH_LABEL[k].toUpperCase(); c.fillText(label, lx + 12, 22); lx += c.measureText(label).width + 30; }
   }
 }

@@ -20,6 +20,7 @@ const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 const applyMotion = () => { field.reducedMotion = game.settings.reducedMotion ?? reduced.matches; tree.reducedMotion = field.reducedMotion; };
 applyMotion(); reduced.addEventListener('change', applyMotion);
 panel.onSettings = () => { audio.setVolume(game.settings.volume); applyMotion(); };
+panel.onCue = (c) => audio.play(c);
 
 
 // Aiming: the bow follows the pointer while it is over the field. No clicking; the bow looses on its own.
@@ -46,12 +47,13 @@ fetch('./build.json').then((r) => (r.ok ? r.json() : null)).then((b) => { if (b)
 let last = performance.now(), acc = 0, hudT = 0, saveT = 0;
 function frame(now: number): void {
   const dt = Math.min(0.25, (now - last) / 1000); last = now;
-  acc += dt;
+  // a mythic drop briefly holds, then slows the field (TB-105)
+  acc += dt * field.timeScale;
   // the field holds still while the replant ceremony plays
   if (field.ceremony.active) acc = 0;
   while (acc >= STEP) { game.tick(STEP); acc -= STEP; }
   const events = game.events.drain();
-  field.consume(events, game.state); panel.handleEvents(events); audio.consume(events);
+  game.noteEvents(events); field.consume(events, game.state); panel.handleEvents(events); audio.consume(events);
   if (!document.hidden) field.draw(game.state, dt, game.aim);
   treeWrap.classList.toggle('burning', field.ceremony.burning);
   hudT += dt; if (hudT > 0.15) { hudT = 0; panel.update(); tree.draw(game.state, game.state.t); } else if (tree.live) tree.draw(game.state, game.state.t);

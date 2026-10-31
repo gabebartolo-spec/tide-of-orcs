@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Tide of Orcs</title>
+<title>A Lot of Orcs</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,500;0,700;1,500&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
 <link rel="stylesheet" href="/src/ui/style.css">
 </head>
 <body>
 <div class="wrap">
   <header>
-    <h1>Tide of <em>Orcs</em></h1>
+    <h1>A Lot of <em>Orcs</em></h1>
     <div class="stats">
       <div class="stat"><span class="k" id="k-star"></span><span class="v amber" id="st-star">0</span></div>
       <div class="stat"><span class="k" id="k-wave"></span><span class="v" id="st-wave">1</span></div>
@@ -27,6 +27,7 @@
           <h2 id="fallen-title"></h2>
           <p id="fallen-sum"></p>
           <p id="fallen-rate"></p>
+          <p id="fallen-loot"></p>
           <div><div class="stat"><span class="k" id="fallen-hw-k"></span></div><div class="big" id="fallen-hw">0</div></div>
           <button class="buy" id="fallen-btn"></button>
         </div>
@@ -41,12 +42,24 @@
     <div class="panel">
       <div class="tabs" role="tablist">
         <button role="tab" id="tab-grove" aria-selected="true"></button>
+        <button role="tab" id="tab-satchel" aria-selected="false"></button>
         <button role="tab" id="tab-prestige" aria-selected="false"></button>
         <button role="tab" id="tab-settings" aria-selected="false"></button>
       </div>
       <div class="tab" id="pane-grove">
-        <div class="treewrap"><canvas id="tree"></canvas></div>
-        <div class="detail" id="detail"></div>
+        <div class="treewrap"><canvas id="tree" tabindex="0"></canvas></div>
+        <div class="detail" id="detail" aria-live="polite"></div>
+      </div>
+      <div class="tab" id="pane-satchel" hidden>
+        <div class="prestige satchel">
+          <h2 id="sat-title"></h2>
+          <div class="stat"><span class="k" id="sat-worn-k"></span></div>
+          <div class="items worn" id="sat-worn"></div>
+        <div id="sat-sets" class="sets"></div>
+          <div class="itemdetail" id="sat-detail"></div>
+          <div class="satbar"><span class="k" id="sat-count"></span><label class="set"><span id="sat-filter-k"></span><select id="sat-filter"></select></label></div>
+          <div class="items" id="sat-grid"></div>
+        </div>
       </div>
       <div class="tab" id="pane-prestige" hidden>
         <div class="prestige">

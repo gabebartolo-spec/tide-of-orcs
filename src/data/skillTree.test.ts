@@ -28,8 +28,8 @@ describe('skill tree data', () => {
       expect(Math.hypot(a.x - b.x, a.y - b.y), `${a.id} vs ${b.id}`).toBeGreaterThanOrEqual(40);
     }
   });
-  it('has six branches with the root in Grove', () => {
-    expect(new Set(NODES.map((n) => n.branch)).size).toBe(6);
+  it('has seven branches with the root in Grove', () => {
+    expect(new Set(NODES.map((n) => n.branch)).size).toBe(7);
     expect(NODE.root.branch).toBe('Grove');
   });
 });

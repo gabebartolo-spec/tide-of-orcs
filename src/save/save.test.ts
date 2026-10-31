@@ -53,6 +53,31 @@ describe('v5 → v6', () => {
   it('adds an empty Heartwood tree and keeps Heartwood', () => {
     const meta: Partial<ReturnType<typeof freshMeta>> = { ...freshMeta(), heartwood: 9 }; delete meta.hwLevels;
     const s = migrate(JSON.parse(JSON.stringify({ version: 5, savedAt: 0, run: freshRun(), meta, settings: defaultSettings() })));
-    expect(s.version).toBe(6); expect(s.meta.hwLevels).toEqual({}); expect(s.meta.heartwood).toBe(9);
+    expect(s.version).toBe(CURRENT_VERSION); expect(s.meta.hwLevels).toEqual({}); expect(s.meta.heartwood).toBe(9);
+  });
+});
+
+describe('v6 → v7', () => {
+  it('adds empty loot state and keeps the tree', () => {
+    const meta: Partial<ReturnType<typeof freshMeta>> = { ...freshMeta(), heartwood: 5 }; delete meta.loot;
+    const s = migrate(JSON.parse(JSON.stringify({ version: 6, savedAt: 0, run: freshRun(), meta, settings: defaultSettings() })));
+    expect(s.version).toBe(CURRENT_VERSION); expect(s.meta.loot).toEqual(freshMeta().loot); expect(s.meta.heartwood).toBe(5);
+  });
+});
+
+describe('v7 → v8', () => {
+  it('adds the once-per-run gear state to the saved run, unspent', () => {
+    const run: Partial<ReturnType<typeof freshRun>> = { ...freshRun(), wave: 12 }; delete run.thunder; delete run.splinterUsed; delete run.freeRallyUsed;
+    const s = migrate(JSON.parse(JSON.stringify({ version: 7, savedAt: 0, run, meta: freshMeta(), settings: defaultSettings() })));
+    expect(s.version).toBe(CURRENT_VERSION); expect(s.run.wave).toBe(12);
+    expect(s.run.thunder).toBe(0); expect(s.run.splinterUsed).toBe(false); expect(s.run.freeRallyUsed).toBe(false);
+  });
+});
+
+describe('v8 → v9', () => {
+  it('adds the Heirloom slot, empty, and keeps the satchel', () => {
+    const meta = freshMeta(); const loot: Partial<typeof meta.loot> = { ...meta.loot, glimmer: 7 }; delete loot.heirloom;
+    const s = migrate(JSON.parse(JSON.stringify({ version: 8, savedAt: 0, run: freshRun(), meta: { ...meta, loot }, settings: defaultSettings() })));
+    expect(s.version).toBe(CURRENT_VERSION); expect(s.meta.loot.heirloom).toBeNull(); expect(s.meta.loot.glimmer).toBe(7);
   });
 });

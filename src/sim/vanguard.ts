@@ -1,19 +1,22 @@
 import { FIELD, VANGUARD, VanType, vanBaseHp, vanCost } from '../data/balance';
 import { EventBus } from './events';
 import { Orc, SimState, Vanguard } from './state';
-import { damage } from './combat';
+import { damage, unitHit } from './combat';
+
+/** Starlight a rally costs now: nothing while Rootwarden's free window is open (TB-099). */
+export const rallyCost = (s: SimState, type: VanType): number => (s.freeRallyT > 0 ? 0 : vanCost(type, s.run.wave));
 
 export function canRally(s: SimState, type: VanType): boolean {
   if (s.run.fallen || !s.stats.muster) return false;
   if (type === 'blade' && !s.stats.champion) return false;
   if (s.vans.count >= s.stats.vanCap) return false;
-  return s.run.starlight >= vanCost(type, s.run.wave);
+  return s.run.starlight >= rallyCost(s, type);
 }
 
 export function rally(s: SimState, ev: EventBus, type: VanType): boolean {
   if (!canRally(s, type)) return false;
   const v = placeVanguard(s, type); if (!v) return false;
-  s.run.starlight -= vanCost(type, s.run.wave);
+  s.run.starlight -= rallyCost(s, type);
   ev.push({ t: 'vanguardRallied', type, x: v.x, y: v.y });
   return true;
 }
@@ -32,15 +35,20 @@ export function placeVanguard(s: SimState, type: VanType): Vanguard | null {
 export function vanguardStep(s: SimState, ev: EventBus, dt: number): void {
   const st = s.stats;
   s.vans.forEach((v: Vanguard) => {
-    if (v.x < v.tx) v.x = Math.min(v.tx, v.x + VANGUARD.walkSpeed * dt);
+    const U = st.units[v.type];
+    if (v.x < v.tx) v.x = Math.min(v.tx, v.x + VANGUARD.walkSpeed * U.spd * dt);
     if (v.hitT > 0) v.hitT -= dt;
     if (st.vanMend > 0 && v.hp < v.maxhp) v.hp = Math.min(v.maxhp, v.hp + v.maxhp * st.vanMend * dt);
-    const T = VANGUARD[v.type]; v.swingT += dt;
+    const T = VANGUARD[v.type]; v.swingT += dt * U.rate;
     if (v.swingT < T.cd) return;
     let hitAny = false;
     s.orcs.forEach((o: Orc) => {
       if (o.dead || (hitAny && !T.cleave)) return;
-      if (Math.hypot(o.x - v.x, o.y - v.y) < T.reach + o.r) { damage(s, ev, o, st.dmg * T.dmg * st.vanDmg); hitAny = true; }
+      if (Math.hypot(o.x - v.x, o.y - v.y) < T.reach + o.r) {
+        if (!hitAny) ev.push({ t: 'vanStrike', type: v.type, x: v.x, y: v.y, tx: o.x, ty: o.y });
+        ev.push({ t: 'bleed', x: o.x, y: o.y, r: o.r });
+        damage(s, ev, o, unitHit(s, U, st.dmg * T.dmg * st.vanDmg * U.dmg)); hitAny = true;
+      }
     });
     if (hitAny) v.swingT = 0;
   });

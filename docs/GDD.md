@@ -1,11 +1,13 @@
-# Tide of Orcs — Game Design Document
+# A Lot of Orcs — Game Design Document (repo: tide-of-orcs)
 
 Status: **Current** (v1.3, synced with the code 31 Oct 2026). Core-loop sections (§2–§5) are human-owned; ask before changing. `docs/prototype.html` is the original concept for tone, look and the core loop; its mechanics are historical (see §14).
 
 ## 1. Fantasy and tone
 You are the last warden of a grove on the western edge of a wide plain. Between you and the orc tide stands a timber barricade. The tide comes from the east, forever, and one day the wall will fall. That day isn't a loss. The grove burns down to a seed, you carry back Heartwood, and the next wall stands longer.
 
-Mood words: patient, verdant, lamplit, unhurried. A siege you will eventually lose and learn from. Never gritty, never grimdark. Orcs are weather.
+Mood words: patient, verdant, lamplit, unhurried.
+
+**Voice (TB-115, director's rename pass, 1 Nov 2026).** Every name is the elf's commentary on the orcs: dry, unimpressed, has done this before. Names are short plain words said out loud; no adjective + noun, no fantasy vocabulary, and the name never repeats the tooltip. The name is the joke; the description stays plain and factual (the manual). Mix shapes (one word, a question, a sentence, running gags like Lads and Management) so the tree reads as one person talking. Player-facing vocabulary: Teeth (currency orcs drop; code `starlight`), Grudge (prestige currency; code `heartwood`), Burn It Down (prestige; code `replant`), the Fence (code `barricade`), the Lads (code `vanguard`): a Lad (`spear`) and a Show-off (`blade`); orcs: Grunt, Little One (`runner`), Lump (`brute`), Fancy One (`elite`), Management (`boss`). Code ids and save fields keep the old names. A siege you will eventually lose and learn from. Never gritty, never grimdark. Orcs are weather.
 
 ## 2. Core loop
 
@@ -35,7 +37,7 @@ A timber palisade at x=150 (14 px wide) across the full field height. It has hea
 - `barMax = 400 × (1 + 0.25 × Stout Timber) × 1.25^Seasoned Timber × heart` (BALANCE.md owns the numbers).
 - Orcs reaching `x ≤ barX + barW + r` stop and swing once per second. Each swing at the wall deals `wallMult × atk` = 10 × 0.025 × maxhp (TB-080: a bare run falls at wave 3–5). Damage scales with waves exactly as orc HP does, so the wall's relative pressure comes from *how many* orcs leak, not from a separate curve.
 - **Patient Hands** mends 1% of max per second per rank. **Thornwall** damages anyone hacking the wall for 20% of player damage per second per rank. **Deep Roots** regrows the wall to 50% once per run the moment it would fall.
-- **Fallen:** when HP hits 0 the sim freezes, the field shows "The barricade has fallen" with wave, slain, minutes held and Heartwood carried back, and a single button: *Replant the grove*. Replant is the only *run* action: the tree, the rally bar and boss summoning are closed. The Heartwood tree (Replant tab) and Settings stay usable while fallen, by design.
+- **Fallen:** when HP hits 0 the sim freezes, the field shows "The barricade has fallen" with wave, slain, minutes held, items found by rarity with the best drop of the run (TB-103) and Heartwood carried back, and a single button: *Replant the grove*. Replant is the only *run* action: the tree, the rally bar and boss summoning are closed. The Heartwood tree (Replant tab) and Settings stay usable while fallen, by design.
 - Buying Seasoned Timber heals the wall by the amount of max HP it adds (growing the wall is new timber).
 - Screen shake on each hit scaled to damage fraction; splintered dark planks appear from the top as HP drops.
 
@@ -43,18 +45,18 @@ The field hint (`STR.hint`) reads: "Hold the barricade. Move your pointer over t
 
 ## 4. Waves and orcs
 - Waves are timed: one every 24 s regardless of kills. `wave` is the only difficulty driver.
-- At first only grunts march. Every other kind joins only when the player summons it with its Grove node (Goblin Runners → Brutes → Blackguard). Summoning is the risk-for-reward lever: more danger, more starlight. Falling is fine and expected; it feeds the replant loop.
-- **Boss waves (TB-081).** Every 10 waves (wave 10, 20, 30 …) a boss wave unlocks and waits; nothing happens until the player presses *Summon the boss wave*. It is a 60 s challenge: regular marching pauses and a fixed script of mini-waves marches in (a shield line, edge flankers, rams, a wedge, the Warboss with two Blackguard, a scatter, a last push; `src/data/bosses.ts`). Slay every one before the minute ends and it pays 40 × the wave's loot in starlight; otherwise the stragglers keep marching as ordinary orcs and regular marching resumes. Unsummoned boss waves stack. The Warboss marches only in boss waves.
-- Every kind has its own spawn clock and two nodes: **Fury** (+30% health, +40% starlight per rank) and **Swarm** (spawns 20% more often per rank). Grunts' are War Drums and Call the Horde.
+- At first only grunts march. Every other kind joins only when the player summons it with its Grove node (Little Ones → Lumps → Fancy Ones). Summoning is the risk-for-reward lever: more danger, more starlight. Falling is fine and expected; it feeds the replant loop.
+- **Boss waves (TB-081).** Every 10 waves (wave 10, 20, 30 …) a boss wave unlocks and waits; nothing happens until the player presses *Summon the boss wave*. It is a 60 s challenge: regular marching pauses and a fixed script of mini-waves marches in (a shield line, edge flankers, rams, a wedge, Management with two Fancy Ones, a scatter, a last push; `src/data/bosses.ts`). Slay every one before the minute ends and it pays 40 × the wave's loot in starlight; otherwise the stragglers keep marching as ordinary orcs and regular marching resumes. Unsummoned boss waves stack. Management marches only in boss waves.
+- Every kind has its own spawn clock and two nodes: **Fury** (+30% health, +40% starlight per rank) and **Swarm** (spawns 20% more often per rank). Grunts' are Eat Something and Bring Friends.
 - Spawn position: x = field width + 24, y uniform in [50, H−50]. Hard cap 160 live orcs.
 
 | Type | HP × | Speed | Loot × | Radius | Spawns every | Unlock |
 |---|---|---|---|---|---|---|
 | Grunt | 1.0 | 48 | 1.0 | 12 | 1 × wave interval | always |
-| Runner (small, fast) | 0.55 | 78 | 0.7 | 9 | 1.5 × | Goblin Runners |
-| Brute (slow, strong) | 3.2 | 34 | 3.0 | 16 | 4 × | Brutes |
-| Elite | 8 | 42 | 8 | 14 | 10 × | Blackguard |
-| Warboss | 28 | 26 | 30 | 24 | only in a boss wave | — |
+| Little One (runner: small, fast) | 0.55 | 78 | 0.7 | 9 | 1.5 × | Little Ones |
+| Lump (brute: slow, strong) | 3.2 | 34 | 3.0 | 16 | 4 × | Lumps |
+| Fancy One (elite, armoured) | 8 | 42 | 8 | 14 | 10 × | Fancy Ones |
+| Management (boss) | 28 | 26 | 30 | 24 | only in a boss wave | — |
 
 Speed scales ×(1 + 0.008·wave). All orcs swing once per second: a vanguard takes 2.5% of the orc's max HP, the wall takes 10× that (25%).
 
@@ -63,8 +65,8 @@ Vanguard are not tree nodes. **Muster** unlocks the rally bar under the field; e
 
 | Unit | Unlock | Cost | HP | Damage per swing | Swing | Reach | Notes |
 |---|---|---|---|---|---|---|---|
-| Spearman | Muster | 6 × loot(wave) | 5 × waveHP(wave) × 1.3^Shieldwall × heart | 1.6 × player dmg × 1.3^Spear Drill × Kinship | 0.8 s | 28 | One target |
-| Bladedancer | Bladedancer node | 18 × loot(wave) | 4 × waveHP(wave) × 1.3^Shieldwall × heart | 1.4 × player dmg × 1.3^Spear Drill × Kinship | 0.45 s | 34 | Cleaves every orc in reach |
+| Spearman | Muster | 6 × loot(wave) | 5 × waveHP(wave) × 1.3^Shieldwall × heart | 1.6 × player dmg × 1.3^Spear Drill × Kinship (crit, rate and speed nodes, SKILL-TREE TB-111) | 0.8 s | 28 | One target |
+| Bladedancer | Bladedancer node | 18 × loot(wave) | 4 × waveHP(wave) × 1.3^Shieldwall × heart | 1.4 × player dmg × 1.3^Blade Drill × Kinship | 0.45 s | 34 | Cleaves every orc in reach |
 
 Orcs within `r + 18` px of a vanguard engage it instead of advancing, swinging once per second for `atk`. **Field Mending** heals vanguard 3%/s per rank. Rally costs scale with wave, so a late reinforcement is a real decision. Both buttons show cost, grey out when unaffordable or the line is full ("Line is full"), and say "Learn Muster" before the node is owned.
 
@@ -72,10 +74,10 @@ Design intent: vanguard are the *reactive* spend. The tree is the *investment* s
 
 ## 6. The player
 - Elf archer at (64, H/2). The elf only lobs (below); the draw (`lobCd`) never changes with input and holds when ready rather than banking shots.
-- **Aiming is the active mechanic.** While the pointer is over the plain (right of the wall), a strike circle (40 px radius) follows it. Every 2.5 s (faster with Quick Draw) the elf lobs one arrow in a high arc; it lands 0.7 s later on the circle's centre and strikes every orc inside the circle for 3× bow damage, each rolling its own crit and catching fire if Fire Arrows is owned. A cream ring around the circle fills as the bow draws; a dotted arc from the elf shows the flight. On touch, hold a finger on the field to aim; lift to release. There is no click-to-shoot and no tap bonus: skill is placing the circle (lead the pack, cover the brute at the wall), not clicking faster.
+- **Aiming is the active mechanic.** While the pointer is over the plain (right of the wall), a strike circle (40 px radius) follows it. Every 2.5 s (faster with Quick Draw) the elf lobs one arrow in a high arc; it lands 0.7 s later on the circle's centre and strikes every orc inside the circle for 3× bow damage, each rolling its own crit. Each owned enchantment (fire, frost, shock, rebound, moon) rolls its own chance per shot, 25% on unlock and +15% per Quiver rank (TB-111); Starfall rolls 10% per shot, +5% per Wishing Star rank. A cream ring around the circle fills as the bow draws; a dotted arc from the elf shows the flight. On touch, hold a finger on the field to aim; lift to release. There is no click-to-shoot and no tap bonus: skill is placing the circle (lead the pack, cover the brute at the wall), not clicking faster.
 - With no aim (pointer off the field, over the grove side, or idle) the elf holds fire. It is an incremental, not an idle: the bow needs the player.
-- Bow nodes reshape the lob: Wide Volley +20% radius per rank; Split Shot +1 extra arrow per rank landing at random inside the circle; Longshaft +1 repeat strike per rank, 0.35 s apart; Moonbow settles the circle on the nearest orc within 70 px and adds +60% damage.
-- Ranger and Warden always auto-target with straight volleys (a 0.09-rad fan at 520 px/s, `fireRate` = 1.2 × 1.15^Quick Draw per second); only the elf's bow is aimed. Bow nodes also carry over to their volleys: Split Shot adds arrows to the fan, Longshaft adds pierce, Keen Eye crits, and Moonbow steers their arrows toward the target (6 rad/s).
+- Bow nodes reshape the lob: Wide Volley +20% radius per rank; Split Shot +1 extra arrow per rank landing at random inside the circle; Longshaft +1 repeat strike per rank, 0.35 s apart; a moon shot settles the circle on the nearest orc within 70 px (Moonpull +25% per rank) and strikes +60% harder (Moonsilver +20% per rank).
+- Ranger and Warden always auto-target with straight volleys (a 0.09-rad fan at 520 px/s, `fireRate` = 1.2 × 1.15^Quick Draw per second); only the elf's bow is aimed. Bow nodes also carry over to their volleys: Split Shot adds arrows to the fan, Longshaft adds pierce, and Moonbow steers their arrows toward the target (6 rad/s). Each archer has its own damage, rate, crit chance and crit damage nodes (TB-111); fire on a volley arrow rolls Fire's chance.
 
 ## 7. Companions
 All companion damage scales with Kinship (×1.2/rank) and Heartwood. Kinship also scales vanguard.
@@ -90,11 +92,11 @@ All companion damage scales with Kinship (×1.2/rank) and Heartwood. Kinship als
 ## 8. Armoury
 | Weapon | Node | Behaviour |
 |---|---|---|
-| Throwing Knives | knives | Auto-throw at nearest orc every 1.4 s ÷ 1.2^Nimble; damage 5 × 1.35^Nimble |
-| Fire Arrows | fire | Player arrows apply 3 s burn at 35% player damage per second |
+| Throwing Knives | knives | Auto-throw at nearest orc every 1.4 s ÷ 1.2^Nimble, +1 knife per Knife Fan rank; damage 5 × 1.3^Keen Knives |
+| Fire Arrows | fire | Shots that roll fire (25% + 15% per Fire Quiver rank) apply a 3 s burn (+1 s per Wildfire rank) at 35% player damage per second (×1.3 per Kindling rank) |
 | Storm Glade | storm | Every 6 s, chain lightning from the orc nearest 200 px past the wall, up to 5 orcs within 140 px, 4× player damage each |
 | Ballista | ballista | Every 4 s, a bolt at 760 px/s with infinite pierce, 40 × 1.5^Iron Bolts |
-| Moonbow | moon | The aim circle settles on the nearest orc within 70 px of the aim point; +60% damage; ranger/warden arrows steer toward their target (6 rad/s) |
+| Moonbow | moon | Moon shots (25% + 15% per Moon Quiver rank): the aim circle settles on the nearest orc within 70 px of the aim point, +60% damage; ranger/warden arrows steer toward their target (6 rad/s) |
 
 ## 9. Economy
 - **Starlight**: the only run currency. Earned per kill: `loot(wave, type) × starMult`, `starMult = 1.15^Gleaning × heart`.
@@ -128,7 +130,7 @@ All companion damage scales with Kinship (×1.2/rank) and Heartwood. Kinship als
 ## 13. Accessibility
 - Reduced motion: no screen shake, no bob, no pulse; replant ceremony becomes a 300 ms cross-fade.
 - Colour never carries meaning alone: orc types differ in size and marking; the wall shows splinters as well as a colour shift; node states use fill + ring + text.
-- Everything in the panel is keyboard reachable; tree nodes focusable in tab order by branch (TB-064).
+- Everything in the panel is keyboard reachable; tree nodes focusable in tab order by branch (TB-064, TB-116): the tree canvas is one tab stop, Tab and Shift+Tab step through the nodes (the root, then each branch in legend order, parents before children) and leave the tree past either end, Enter or Space learns the selected node, and a dashed ring marks it while focus came from the keyboard.
 
 ## 14. Divergences from the prototype
 `docs/prototype.html` is frozen as the original concept. These mechanics have deliberately changed since; the docs and code win over the prototype.

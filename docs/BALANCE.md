@@ -106,16 +106,22 @@ Status measured 31 Oct 2026 at 8791ac2, seed 1, 25 min, player model `crowdAim` 
 | Bare archer, no purchases, holds | ≥ 4 waves | met (falls wave 4–5) |
 | Tree fully bought in a run | never | met: 117 of 156 buyable ranks at most (greedy run 5) |
 
-## Heartwood tree (M3, built TB-053)
-Bought with Heartwood, never reset. Costs in HW. Spending does not lower the passive `heart` bonus: `heart` counts all Heartwood earned, and the tree spends from `available = earned − spent`. The header shows `available / earned` once anything is spent. Early Dawn's skipped boss waves are not owed (`bossDone` starts at `floor(startWave / 10)`). Standing Orders spearmen are placed free, ignoring Muster and the line cap.
+## Heartwood tree (M3, built TB-053; shown to the player as Grudges, TB-112)
+Bought with Heartwood, never reset. Costs in HW. Spending does not lower the passive `heart` bonus: `heart` counts all Heartwood earned, and the tree spends from `available = earned − spent`. The header shows `available / earned` once anything is spent. Skip the Boring Bit's skipped boss waves are not owed (`bossDone` starts at `floor(startWave / 10)`). Standby Lad lads are placed free, ignoring Muster and the line cap.
 
 | id | Name | Max | Cost | Effect |
 |---|---|---|---|---|
-| hw_dawn | Early Dawn | 5 | 2, 4, 8, 14, 22 | Start each run at wave +2 |
-| hw_wolf | Old Friend | 1 | 3 | Start with Grey Wolf |
-| hw_timber | Stout Timber | 3 | 4, 8, 16 | Barricade base HP +25% |
-| hw_orders | Standing Orders | 2 | 5, 12 | Start each run with one Spearman (two at rank 2) |
-| hw_boss | Warlords | 3 | 6, 12, 24 | Boss wave clear bonus +50% per rank (director chose the effect 2026-10-31; numbers proposed, unplaytested) |
+| hw_dawn | Skip the Boring Bit | 5 | 2, 4, 8, 14, 22 | Start each run at wave +2 |
+| hw_wolf | Dog Comes Too | 1 | 3 | Start with the dog (A Dog) |
+| hw_timber | Better Fence | 3 | 4, 8, 16 | Fence base HP +25% |
+| hw_orders | Standby Lad | 2 | 5, 12 | Start each run with one lad (two at rank 2) |
+| hw_boss | Management Bonus | 3 | 6, 12, 24 | Boss wave clear bonus +50% per rank (director chose the effect 2026-10-31; numbers proposed, unplaytested) |
+| hw_find | Magpie | 3 | 2, 5, 12 | Item Find +15 / 35 / 60% total (TB-101, P-101) |
+| hw_fortune | Knock on Wood | 3 | 3, 8, 20 | Luck +10 / 25 / 45% total |
+| hw_satchel | Bigger Bag | 1 | 4 | Satchel holds 80. Needs Magpie 1 |
+| hw_tithe | Severance | 1 | 10 | Bosses always drop 2 items. Needs Magpie 2, Fortune 1 |
+| hw_heirloom | Keeping That | 1 | 15 | One worn item gains +5 ilvl each Replant, past the cap; affixes rescale. Needs Fortune 2 |
+| hw_glimmer | Haggling | 1 | 6 | Salvage +1 Glimmer; reroll cost ×0.6 (TB-102). Needs Bigger Bag |
 
 ## Simulator (`npm run balance`)
 Lives in `sim/run.ts`. Runs `src/sim/` headless at 50 steps/s and decides every 0.5 s with a policy:
@@ -127,6 +133,9 @@ Lives in `sim/run.ts`. Runs `src/sim/` headless at 50 steps/s and decides every 
 Report columns per minute: wave, starlight, kills/min, kills, wall %, vanguard count, nodes owned, HW, falls. Summary line gives the first fall wave, every fall wave in order (`Falls:`), replants, Heartwood, best wave. (Before TB-084 the "First fall" field printed the last fall.) Writes `sim/out/<policy>-<date>.md` unless `--quiet`. CI runs 30 minutes of greedy as a smoke test.
 
 ## Proposed
+
+### P-002 · Arrow arsenal numbers (TB-089, 2026-10-31, from the director's mechanics; not yet simmed)
+All in `ARROWS` (`src/data/balance.ts`). Rebound: jump 120, falloff 0.6 per bounce, bolt speed 420, hops 1 + rank. Shock: 3 targets, 0.3 × lob dmg, jump 90. Thunderclap: 0.5 s. Frost: 3 s, slow 0.2 + 0.05 × (rank − 1). Shatter: radius 50, 1.0 × dmg × 1.4^(rank − 1). Starfall: every 10th lob, 8 arrows, r 26, 0.6 s fall, 0.08 s stagger, lob damage each; each aims where its orc will be on landing, held no closer than the wall's face. Costs in SKILL-TREE.md. Sim run pending.
 
 ### P-001 · First-run fall is too early; second run snowballs (2026-10-30, from M0 bring-up)
 Evidence: `npm run balance --policy greedy --minutes 20` seeds 1–3: first fall at wave 7–9 with 2–3 HW; the second run then reaches wave 42–44 with the wall never under 100% and 120 nodes bought.
@@ -296,3 +305,35 @@ Options:
 3. **wallMult 2**: first fall 18–19, at the top edge of the target.
 
 Decision: keep 10. Measured falls over 40 min, seeds 1–3 (wave@run minutes): greedy 5@1.6 … 24–26@9–10, 35–36@14; dps 5@1.6 … 20–26@8–10, 35@14; nobuy 4–5@1.5–1.9 every run. Over 40 min dps no longer beats greedy (Heartwood 52–66 vs 60–68).
+
+### Loot (TB-091, from the Loot Expansion Design; data in `src/data/lootTables.ts`, not yet live)
+- P(drop) = min(0.6, 0.008 · lootTier^1.5 · (1 + itemFind)). lootTier: grunt 1, runner 2, brute 3, elite 4, boss 5.
+- Rarity weights normal/boss: common 70/0, rare 25/40, epic 4.5/40, legendary 0.5/17, mythic 0/3. Each weight × (1+luck)^rank × (1 + 0.15(lootTier−1))^rank, rank 0–4.
+- Affixes per rarity 1/2/3/4/4; ranges × (1 + 0.03 · ilvl). Item level = wave, capped at 20 + 10 × prestiges. Commons stop after prestige 3, rares after 8. Affixes roll only for features the player owns (TB-114, `AFFIX_NEEDS`): Kinship needs any companion; Packbond the wolf, Talons the hawk, Roots the treant, Blades the knives, Ballistae the ballista, Thorns the spikes, Banner/Mail/Mending the vanguard (Muster), Elitebane elites marching; fire, storm and moon affixes need that arrow.
+- Pity: legendary weight +10% per boss without one; mythic guaranteed by the 25th boss without one.
+- Sets: 2/4/6-piece bonus +20/50/100% to the set's stat (Handyman 15/40/80%).
+
+### P-099 · Set bonus numbers (2026-10-31, TB-099)
+All in `SET_FX`. Sharp Things: knives +25% rate / bleed 3 s, +30% taken / every 3rd throw fans 5 knives. Too Warm: burn +30% / burn spreads to 2 within 90 px / fire lobs leave Cinderground 4 s (burn, 25% slow). Bad Weather: +1 chain / chain reach +50% / killing link rebounds up to 3, storm +30% rate. Heavy Lifting: ballista +25% rate / first bolt hit +50% and shoved 30 px / last bolt hit pinned 2 s, takes ×2. Night Shift: lob +25% with Moonbow / moon shots always crit ×1.5 / Moonwell 3 s heals wall 2%/s. Dog People: companions +20% dmg / +25% speed while an orc is within 220 px of the wall / +1 wolf, treants root 1.5 s. Handyman: wall +15% / +0.5%/s regen / once per run, wall below 25% makes rallies free for 10 s.
+Evidence: `npm run balance` (default greedy) output identical to the tb-097 base (first fall wave 5, best wave 31): greedy runs rarely complete a set. Per-set tuning is TB-107.
+
+### P-100 · Mythic power numbers (2026-11-01, TB-100)
+All in `MYTHIC_FX`. That Knife Again: a knife that hits turns back, pierces all on the way home. Never Goes Out: burn never ends, +10% burn damage per second burning. Saving It Up: each storm stores a charge; at 10 the next lob hits every orc for ×3. Tent Pegs: a bolt's 3rd hit drives a stake (r 10, 8 s) that holds the first orc to touch it. Worth It?: with the Moonbow draw ×0.5 cooldown, each shot costs 2% wall, skipped below 10% wall. Old Dog: companions +25% damage per 15 s of the run, max 4 stacks. Spare Fence: once per run the fallen wall stands again at 30%; that run pays ×0.5 Heartwood (floor `PRESTIGE.minGain`). Raincoat: every 100 starlight from kills strikes the highest-HP orc for ×5 damage, 1 s cooldown; Item Find +15%.
+Evidence: `npm run balance` unchanged (greedy runs gear mythics too rarely to show). Per-mythic tuning is TB-107.
+
+### P-101 · Spoils branch and Heartwood loot lines (2026-11-01, TB-101)
+Numbers in `SPOILS_FX` (lootTables) and `HW_FX` (heartwood). Spoils costs 120 / 150 / 200 / 600 / 900 / 4000 / 6000 starlight; Hunter +5% crit (crit stays ×3, gear crit works without it, director 2026-11-01); Scavenger salvage ×1.5; Trophy every 10th wave; Sharp Eyes +10% Item Find; Hoard +1 rarity tier capped at legendary; Resonance +1 set piece; Echo ×1.25. Heartwood lines as in the table above, 6 lines and 10 ranks, 106 HW to buy all.
+Evidence: `npm run balance` (greedy, seed 1, 30 min) vs the tb-110 base: first four falls identical (waves 5, 5, 7, 5); fifth fall wave 26 → 20, Heartwood 25 → 18, best wave 31 → 37. The runner now has Spoils nodes in its pool (Hunter's Eye is a cheap crit pick) and the report does not name purchases, so which node moved the curve is unmeasured. Tuning against drop rates is TB-107.
+
+### P-102 · Glimmer reroll (2026-11-01, TB-102)
+Reroll one affix of a worn item: cost = max(1, round(2 × 2^n × rerollMult)), n = rerolls already on that item (`REROLL` in lootTables). Costs 2, 4, 8, 16, 32…; with Haggling 1, 2, 5, 10, 19. The new affix is a different id, keeps the item's arrow rule and the feature gate, value rolled at the item's ilvl.
+Evidence: none yet; the greedy runner never rerolls. Tuning is TB-107.
+
+### P-111 · Per-type upgrade nodes (2026-11-01, TB-111)
+Design from the director (1 Nov): see SKILL-TREE §Per-type upgrade nodes. Numbers in `SHOT_FX`, `UNIT_FX`, `ELF_FX` (`src/data/balance.ts`).
+- Enchantment chance per shot: 0.25 on unlock + 0.15 per Quiver rank, capped at 1 (fire, frost, shock, rebound, moon). Starfall 0.1 + 0.05 per Wishing Star rank (replaces "every 10th lob"). Thunderclap stuns only on shots that roll shock.
+- Shot damage nodes ×1.3^r (Kindling burn, Static zap, Hard Rebound, Starsteel, Keen Knives); Moonsilver ×1.2^r on the Moonbow's ×1.6, which now applies to moon shots only.
+- Effects: Wildfire +1 s burn, Thunderclap +0.25 s stun per rank past 1 (max 3), Moonpull homing reach ×(1 + 0.25r), Meteor Shower +2 arrows, Knife Fan +1 knife per throw, Pinning Bolts root every orc a bolt passes 0.3 s per rank, Windlass reload ×0.9^r. Nimble Wrist is rate only now (its ×1.35 damage moved to Keen Knives at ×1.3).
+- Units: damage ×1.3^r (Fangs keeps ×1.4, Spear Drill ×1.3 now spearmen only), rate ×1.15^r, crit +0.05 per rank at ×2 + 0.5 per Crit-damage rank, move speed ×1.15^r (wolf, spearman, bladedancer). Rangers and Wardens crit by their own nodes, no longer Keen Eye. Deadly Aim: elf crit ×3 + 0.5 per rank.
+- Costs (starlight base, growth): shot nodes 150–7000 near their unlock's cost (SKILL-TREE table); unit nodes damage ×1.2, rate ×1.4, crit ×1.6, crit damage ×2, speed ×1 of the unit's unlock cost, growth 1.9–2.0.
+Evidence: `npm run balance` (greedy, seed 1, 30 min) vs origin/main 2f4dd10: first four falls identical (waves 5, 5, 7, 5); fifth fall wave 20 @ 8 min → 18 @ 7 min, then a sixth run to wave 35 @ 13.7 min; replants 5 → 6, Heartwood 18 → 48, best wave 37 → 35. The 48 extra nodes give the greedy buyer cheap power, so later runs climb faster. Per-node tuning is TB-107.

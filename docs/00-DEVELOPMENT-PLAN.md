@@ -1,8 +1,8 @@
-# Tide of Orcs — Development Plan
+# A Lot of Orcs — Development Plan (repo: tide-of-orcs)
 
-**Version 1.3 · 31 Oct 2026 · Owner: Gabe**
+**Version 1.4 · 1 Nov 2026 · Owner: Gabe**
 
-v1.1 replaced the river (no fail state) with a barricade that can fall, forced Replant on a fall, and starlight-bought melee vanguard. v1.2 recorded M2 done and offline progress removed. v1.3 (31 Oct, evening) syncs with the code: M1 and M2 done, M3 done (TB-054 closed: `wallMult` 10 kept, targets reset; TB-085, TB-086 re-runs), M4 done except music and assets. `docs/prototype.html` (published as the Tide of Orcs artifact) is the original concept for tone and the core loop; mechanics have diverged since (GDD §14), and the docs now win over it.
+v1.1 replaced the river (no fail state) with a barricade that can fall, forced Replant on a fall, and starlight-bought melee vanguard. v1.2 recorded M2 done and offline progress removed. v1.3 (31 Oct, evening) syncs with the code: M1 and M2 done, M3 done (TB-054 closed: `wallMult` 10 kept, targets reset; TB-085, TB-086 re-runs), M4 done except music and assets. v1.4 (1 Nov) syncs again: the arrow arsenal and the whole loot stack are on main, the tree grew to 104 nodes, the game is titled A Lot of Orcs (TB-115), and the M5 bug bash has run twice. `docs/prototype.html` (published as the Tide of Orcs artifact) is the original concept for tone and the core loop; mechanics have diverged since (GDD §14), and the docs now win over it.
 
 ## 1. Vision
 
@@ -75,18 +75,49 @@ Goal: parity with the prototype, properly built.
 - ~~Balance pass #1 via the simulator (TB-054):~~ Done 1185a3a: re-set the pacing targets for the wall ×10 design, then tune; original aim was first prestige at 30–45 min, second at ~35 min of a fresh run. Measured now: greedy breaks out after 4–6 short runs (6–12 min), reaches the wave-35 ceiling around 14 min run time.
 **Done when:** three consecutive prestige runs each feel faster than the last.
 
-### M4 — Presentation (weeks 6–7) · **done except TB-063** (music beds), **TB-068** (sprite sheets, Gabe) and **TB-069** (ElevenLabs SFX, Gabe). Done: sprite loader TB-060, parallax/day-dusk TB-061, audio engine TB-062, mobile TB-064, settings TB-065, tree polish TB-066, strings TB-067.
-- Final art: Tripo models → Cascadeur animation → sprite sheets for orcs, elf, vanguard, companions (ART-STYLE.md §Asset pipeline); vector draws remain the fallback. Wall weathering, parallax hills, day/night tinting.
+### M4 — Presentation (weeks 6–7) · **done except TB-068** (sprite sheets, Gabe). Done: ElevenLabs SFX and ambient bed TB-069, sprite loader TB-060, parallax/day-dusk TB-061, audio engine TB-062, music beds TB-063 (PR #9), mobile TB-064, settings TB-065, tree polish TB-066, strings TB-067, attack and hit VFX TB-088, field ground TB-098 (tufts, rocks, worn patches).
+TB-068 status: ten models rigged; approved clips so far are grunt walk and attack, bladedancer attack, spearman attack. TB-087 (berserker, war drummer, shaman, wolf rider in game) waits on the director's design for behaviour, stats and wave mix.
+- Final art: Tripo models → Cascadeur animation → sprite sheets for orcs, elf, vanguard, companions (ART-STYLE.md §Asset pipeline); vector draws remain the fallback. Wall weathering, parallax hills, day/night tinting, natural ground (ART-STYLE §Ground).
 - Audio: ElevenLabs SFX and ambient bed, two music beds, ducking on wall fall and boss.
 - Tree layout polish: branch curves, bloom on affordable nodes, camera easing.
 - Settings, reduced-motion path, number formats.
 **Done when:** a 60-second trailer can be captured without placeholder art.
 
-### M5 — Ship (week 8) · local telemetry done (TB-070 f31ce6b)
-- Balance pass #2 with telemetry from testers (local JSON export, no server; export built).
-- Save import/export, version migration test suite.
-- Itch.io page, web build, Electron wrapper spike for Steam.
-- Bug bash, performance budget verified in a desktop browser.
+### M4.5 — Arrow arsenal (TB-089) · **done** (PR #15, c069ff1); P-002 numbers still proposed and not yet simmed
+Six new nodes (43 → 49) giving the elf's lob distinct elemental arrows, each with its own VFX and ElevenLabs SFX. Numbers are proposals (BALANCE.md §Proposed P-002) until the director approves.
+
+| Node | Branch, after | Ranks | What it does |
+|---|---|---|---|
+| Rebound (`bounce`) | Bow, Longshaft | 4 | A magic bolt leaps from the strike to the nearest orc within 120, then on: 2 bounces at rank 1, +1 per rank. Each bounce deals 60% of the last. |
+| Starfall (`starfall`) | Bow, Moonbow | 1 | Every 10th lob also rains 8 arrows straight down on random orcs across the plain. |
+| Frost Arrows (`frost`) | Armoury, Fire Arrows | 5 | Struck orcs are chilled 3 s: march and swing slowed 20% at rank 1, +5% per rank (40% at rank 5). |
+| Shatter (`shatter`) | Armoury, Frost Arrows | 5 | A chilled orc that dies bursts, hitting orcs within 50 for 100% lob damage, ×1.4 per rank. |
+| Shock Arrows (`shock`) | Armoury, Storm Glade | 1 | Lightning jumps from the strike to 3 orcs outside the circle (within 90) for 30% damage. |
+| Thunderclap (`stun`) | Armoury, Shock Arrows | 1 | Struck orcs are stunned 0.5 s (no move, no swing). |
+
+Fire Arrows gains a strike flame VFX and SFX. Every effect is render-pooled VFX plus one SFX cue: fire, bounce, shock, stun, frost, shatter, starfall.
+Spend: director gave a written yes with no cap on ElevenLabs credits for these SFX (31 Oct); first pass 7 cues × 2 takes, about 233 credits.
+**Done when:** all six nodes buy and work in game, VFX and SFX play, tests cover each effect, the director has approved the numbers.
+
+### M4.6 — Loot (TB-090–107) · **done**, all merged 31 Oct–1 Nov; P-100–P-102 numbers proposed
+Orcs drop gear; six worn slots, a satchel, affixes, sets and mythic powers feed `Stats`. Save v9.
+- L0 data and rolls TB-090–093 (PR #12). L1 drops and satchel TB-094–096 (PRs #13, #14, #16). L2 glyph icons TB-097 (PR #18).
+- L3 set engine TB-099 (PR #21) and mythic powers TB-100 (PR #22); save v8 keeps once-per-run gear state TB-110 (PR #23).
+- L4 Spoils branch and Heartwood loot lines TB-101 (PR #25, save v9). L5 Glimmer reroll TB-102 (PR #29). L6 loot line in the run summary TB-103 (PR #30). L8 loot VFX TB-105 (PR #34). L9 loot telemetry TB-107 (PR #36).
+- TB-114: affixes for features the player does not own no longer roll (director: gate them, 1 Nov).
+**Done when:** drops, sets and mythics all work in game. *(Met; numbers wait on the director.)*
+
+### M4.7 — Tree and voice (1 Nov) · **done except TB-112, TB-117**
+- Per-type upgrade nodes TB-111 (PR #31): 48 new nodes, tree 56 → 104.
+- Rename pass in the elf's voice TB-115 (PR #35): every node, Heartwood line, set and mythic renamed; currency Teeth and Grudge; game title **A Lot of Orcs**. Ids and saves unchanged.
+- Tree keyboard access TB-116 (PR #38).
+- Open: TB-117 branch legend over node labels (PR #39 open), TB-112 tooltip says "needs" for an owned parent.
+
+### M5 — Ship (week 8) · local telemetry done (TB-070 f31ce6b, loot events TB-107); bug bash run twice
+- Balance pass #2 with telemetry from testers (TB-071; local JSON export, no server; export built).
+- Save import/export (done in TB-065), version migration test suite.
+- Itch.io page and web build (TB-073), Electron wrapper spike for Steam (TB-074, done: `npm run desktop`; fonts TB-118 and packaging TB-119 remain).
+- Bug bash (TB-075, `docs/QA-CHECKLIST.md`): runs 1 and 2 done (PRs #33, #37); their bugs became TB-112–117. Performance: no frame spikes in a visible browser with 160 orcs (TB-113); still untested on a mid-range PC.
 
 Mobile is out of the roadmap (director, 31 Oct): the web build ships for PC first; a mobile port comes after it is perfect on PC. TB-064/TB-078 layout work stays in the code.
 **Done when:** build is public on itch.

@@ -47,7 +47,7 @@ header h1 em { color: var(--amber); font-style: italic; }
 .tabs { display: flex; border-bottom: 1px solid var(--line); }
 .tabs button { flex: 1; background: none; border: 0; padding: 11px 8px; color: var(--cream-dim); font-size: 12px; text-transform: uppercase; letter-spacing: .12em; border-bottom: 2px solid transparent; }
 .tabs button[aria-selected="true"] { color: var(--cream); border-bottom-color: var(--amber); }
-.tabs button:focus-visible, .buy:focus-visible, .ghost:focus-visible, .deploy:focus-visible { outline: 2px solid var(--amber); outline-offset: -2px; }
+.tabs button:focus-visible, .buy:focus-visible, .ghost:focus-visible, .deploy:focus-visible, #tree:focus-visible { outline: 2px solid var(--amber); outline-offset: -2px; }
 .tab { display: flex; flex-direction: column; }
 .treewrap { position: relative; height: 460px; overflow: hidden; background: radial-gradient(ellipse at 50% 100%, #2b3448 0%, var(--ink-2) 70%); }
 #tree { position: absolute; inset: 0; display: block; cursor: grab; width: 100%; height: 100%; touch-action: none; }
@@ -83,3 +83,39 @@ header h1 em { color: var(--amber); font-style: italic; }
 @media (max-width: 500px) { .fallen { gap: 4px; padding: 8px; justify-content: safe center; overflow-y: auto; } .fallen h2 { font-size: 20px; } .fallen p { font-size: 12px; line-height: 1.3; } .fallen .big { font-size: 26px; line-height: 1.1; } }
 @media (pointer: coarse) { .buy, .ghost, .tabs button, .deploy, .set select { min-height: 44px; } .ghost { padding-inline: 14px; } }
 @media (prefers-reduced-motion: reduce) { .toast { transition: none; } }
+.items { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 6px; margin: 4px 0 12px; }
+.item { background: var(--ink-2); border: 1px solid var(--line); border-left: 3px solid var(--rar, var(--line)); border-radius: 6px; padding: 5px 7px; display: flex; flex-direction: row; align-items: center; gap: 7px; gap: 1px; color: var(--cream); font: inherit; text-align: left; cursor: pointer; min-height: 44px; }
+.item.empty { opacity: .45; cursor: default; }
+.item.sel { outline: 2px solid var(--rar, var(--cream)); }
+.item .slot { font-size: 10px; text-transform: uppercase; letter-spacing: .1em; color: var(--cream-dim); }
+.item .nm { font-size: 12px; line-height: 1.2; }
+.itemdetail { min-height: 96px; margin-bottom: 10px; }
+.itemdetail .name { font-family: var(--display); font-size: 18px; color: var(--rar, var(--cream)); }
+.itemdetail .affixes { margin: 6px 0; padding-left: 18px; }
+.r-common { --rar: var(--cream-dim); } .r-rare { --rar: var(--sage); } .r-epic { --rar: var(--lilac); } .r-legendary { --rar: var(--amber); } .r-mythic { --rar: var(--rose); }
+.satbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px; font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: var(--cream-dim); }
+.itemdetail .row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 8px; }
+/* Glyph frames (TB-097): colour from --rar, and a frame shape per rarity: common plain, rare solid, epic double, legendary square-cornered, mythic glowing */
+.item .txt { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; min-width: 0; }
+.glyph { flex: none; width: 30px; height: 30px; display: grid; place-items: center; color: var(--rar, var(--cream-dim)); background: var(--ink); border: 1px solid color-mix(in srgb, var(--rar, var(--line)) 45%, transparent); border-radius: 6px; }
+.glyph svg { width: 22px; height: 22px; }
+.glyph.none { opacity: .5; border-style: dashed; }
+.glyph.r-rare { border: 1.5px solid var(--rar); }
+.glyph.r-epic { border: 3px double var(--rar); }
+.glyph.r-legendary { border: 2px solid var(--rar); border-radius: 0; }
+.glyph.r-mythic { border: 2px solid var(--rar); box-shadow: 0 0 8px color-mix(in srgb, var(--rar) 70%, transparent); }
+.glyph.big { width: 44px; height: 44px; } .glyph.big svg { width: 32px; height: 32px; }
+.itemdetail .head { display: flex; align-items: center; gap: 10px; }
+
+/* set bonuses (TB-099): earned tiers lit, the rest dimmed */
+.sets .set, .itemdetail .set { margin: 6px 0; }
+.set .tier { color: var(--cream-dim); opacity: .55; font-size: 12px; line-height: 1.35; }
+.set .tier.on { color: var(--amber); opacity: 1; }
+.fallen .best { color: var(--rar); font-weight: 700; }
+/* Loot moments (TB-105): colour fades only, so they stay under reduced motion */
+@keyframes rar-flash { from { box-shadow: 0 0 0 2px var(--rar), 0 0 14px var(--rar); } }
+.item.flash { animation: rar-flash 0.9s ease-out; }
+@keyframes count-flash { from { color: var(--amber); } }
+#sat-count.flash { animation: count-flash 0.8s ease-out; }
+@keyframes line-in { from { opacity: 0.15; color: var(--amber); } }
+.affixes li.flash { animation: line-in 0.6s ease-out; }
