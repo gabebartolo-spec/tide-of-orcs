@@ -19,6 +19,11 @@ export interface Stats {
   barMax: number; barRegen: number; spikes: number; bulwark: boolean;
   // vanguard
   muster: boolean; vanCap: number; vanHp: number; vanDmg: number; vanMend: number; champion: boolean;
+  // set bonuses (TB-098): 0 = off; numbers from SET_FX, applied by applyGear
+  bleedAmp: number; knifeFan: number; burn: number; burnSpread: number; cinder: number;
+  chain: number; chainJump: number; rebound: number; stormCd: number;
+  ballCd: number; boltShove: number; boltPin: number; moonCrit: number; moonwell: number;
+  petDmg: number; petHaste: number; extraWolves: number; treantRoot: number; freeRally: number;
 }
 
 export interface Foe { on: boolean; hp: number; loot: number; spawn: number }
@@ -69,5 +74,9 @@ export function deriveStats(lv: Levels, heartwood: number, hw: HwLevels = {}): S
     vanDmg: Math.pow(VANGUARD.dmgPerDrill, L('drill')) * kin,
     vanMend: VANGUARD.mendPerRank * L('mend'),
     champion: L('champion') > 0,
+    bleedAmp: 0, knifeFan: 0, burn: 1, burnSpread: 0, cinder: 0,
+    chain: SOURCES.storm.targets, chainJump: SOURCES.storm.jump, rebound: 0, stormCd: SOURCES.storm.cd,
+    ballCd: SOURCES.ballista.cd, boltShove: 0, boltPin: 0, moonCrit: 0, moonwell: 0,
+    petDmg: 1, petHaste: 0, extraWolves: 0, treantRoot: 0, freeRally: 0,
   };
 }

@@ -14,7 +14,7 @@ describe('gear in play (TB-094)', () => {
     pieces.forEach((p) => pickUp(l, p, 'player'));
     const base = createState(1).stats, s = createState(1, freshRun(), meta).stats;
     expect(s.dmg).toBeCloseTo(base.dmg * 1.2);
-    expect(s.wolf).toBe(base.wolf * 1.2); // 2-piece Packlord; wolf is 0 until bought
+    expect(s.petDmg).toBeCloseTo(base.petDmg * 1.2); // 2-piece Packlord: companion damage
   });
   it('the player policy never swaps a worn item and filters below minRarity', () => {
     const l = freshLoot(); l.lootFilter.minRarity = 'rare';

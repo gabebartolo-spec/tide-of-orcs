@@ -1,9 +1,10 @@
 import { LOB, PLAYER, SOURCES } from '../data/balance';
 import { EventBus } from './events';
-import { Orc, ProjectileKind, SimState, recompute } from './state';
+import { Orc, ProjectileKind, SimState, Zone, recompute } from './state';
 import { rollDrop } from './lootRoll';
 import { pickUp } from './loot';
 import { lootMods } from './gear';
+import { SET_FX } from '../data/lootTables';
 
 export function nearestOrc(s: SimState, x: number, y: number, filter?: (o: Orc) => boolean): Orc | null {
   let best: Orc | null = null, bd = Infinity;
@@ -22,6 +23,12 @@ export function kill(s: SimState, ev: EventBus, o: Orc): void {
   s.run.kills++; s.meta.lifetimeKills++; s.run.starlight += loot; s.run.earned += loot;
   if (o.champ && s.run.boss) s.run.boss.left--;
   ev.push({ t: 'kill', x: o.x, y: o.y, loot, kind: o.kind });
+  // Emberwright 4: a burning orc's flames pass to its nearest neighbours
+  if (o.burn > 0) for (let i = 0; i < s.stats.burnSpread; i++) {
+    const n = nearestOrc(s, o.x, o.y, (q) => q.burn <= 0 && (q.x - o.x) ** 2 + (q.y - o.y) ** 2 < SET_FX.spreadReach ** 2);
+    if (!n) break;
+    n.burn = SOURCES.burnSecs; ev.push({ t: 'burnSpread', x: o.x, y: o.y, tx: n.x, ty: n.y });
+  }
   dropLoot(s, ev, o);
 }
 
@@ -35,9 +42,18 @@ function dropLoot(s: SimState, ev: EventBus, o: Orc): void {
   if (JSON.stringify(l.equipped) !== worn) recompute(s);
 }
 
+/** Set-bonus damage taken: bleeding (Nightknife 4) and pinned (Siegebreaker 6) orcs take more from every source. */
+export const takenMult = (s: SimState, o: Orc): number => (o.bleed > 0 ? 1 + s.stats.bleedAmp : 1) * (o.pin > 0 ? SET_FX.pinMult : 1);
+
+/** Leave a patch of ground (TB-098); silently skipped when the zone pool is full. */
+export function addZone(s: SimState, kind: Zone['kind'], x: number, y: number, r: number, life: number): void {
+  const z = s.zones.alloc(); if (!z) return;
+  z.kind = kind; z.x = x; z.y = y; z.r = r; z.life = life;
+}
+
 export function damage(s: SimState, ev: EventBus, o: Orc, amt: number): void {
   if (o.dead) return;
-  o.hp -= amt; o.hitT = 0.12;
+  o.hp -= amt * takenMult(s, o); o.hitT = 0.12;
   if (o.hp <= 0) kill(s, ev, o);
 }
 
@@ -54,17 +70,23 @@ export function lob(s: SimState, sx: number, sy: number, tx: number, ty: number)
   p.r = s.stats.radius; p.dmg = s.stats.dmg * LOB.dmgMult; p.pierce = s.stats.pierce; p.life = Infinity; p.target = null; p.hit.clear();
 }
 
-/** Strike every live orc inside the lob's circle. Each orc rolls its own crit; fire arrows set them all alight. */
+/**
+ * Strike every live orc inside the lob's circle. Each orc rolls its own crit; fire arrows set them all alight.
+ * Moonveil: with the Moonbow owned every lob is a moon shot, which always crits at 4 pieces (a rolled crit still wins) and leaves a Moonwell at 6.
+ * Emberwright 6: fire lobs leave Cinderground.
+ */
 export function impact(s: SimState, ev: EventBus, p: { tx: number; ty: number; r: number; dmg: number }): void {
-  const st = s.stats;
+  const st = s.stats, moon = st.homing && st.moonCrit > 0;
   s.orcs.forEach((o) => {
     if (o.dead || (o.x - p.tx) ** 2 + (o.y - p.ty) ** 2 > (p.r + o.r) ** 2) return;
     const crit = s.rng.next() < st.crit;
-    ev.push({ t: 'hit', x: o.x, y: o.y, crit, src: 'lob' });
-    damage(s, ev, o, crit ? p.dmg * PLAYER.critMult : p.dmg);
+    ev.push({ t: 'hit', x: o.x, y: o.y, crit: crit || moon, src: 'lob' });
+    damage(s, ev, o, p.dmg * (crit ? PLAYER.critMult : moon ? SET_FX.moonCritMult : 1));
     if (st.fire) o.burn = SOURCES.burnSecs;
   });
   ev.push({ t: 'impact', x: p.tx, y: p.ty, r: p.r });
+  if (st.fire && st.cinder) addZone(s, 'cinder', p.tx, p.ty, p.r, SET_FX.cinderSecs);
+  if (st.homing && st.moonwell) addZone(s, 'moonwell', p.tx, p.ty, p.r, SET_FX.wellSecs);
 }
 
 /** Where a player would drop the circle: the orc with the most others inside radius r. A player model for tests and the balance sim; the game itself never aims for the player. */

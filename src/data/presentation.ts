@@ -39,5 +39,5 @@ export const VFX = {
   /** Existing bursts (count, speed), kept as they were before TB-088. */
   kill: [10, 90], hit: [2, 60], bite: [3, 50], hawk: [14, 120], treant: [16, 140], impact: [6, 70],
   regrow: [40, 160], rally: [8, 60], vanFell: [14, 100],
-  treantShake: 0.2, impactLife: 0.3, stormLife: 0.35, textLife: 0.9, textRise: 28,
+  treantShake: 0.2, impactLife: 0.3, stormLife: 0.35, zoneFade: 0.6, zoneSquash: 0.45, textLife: 0.9, textRise: 28,
 } as const;

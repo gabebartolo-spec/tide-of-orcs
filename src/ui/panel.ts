@@ -1,10 +1,10 @@
-import { PRESTIGE, VanType, vanCost } from '../data/balance';
+import { PRESTIGE, VanType } from '../data/balance';
 import { BRANCH_COLOR, NODE } from '../data/skillTree';
 import { STR } from '../data/strings';
 import { GameController } from '../game';
 import { TreeRenderer } from '../render/tree';
 import { canBuy, costOf, rankOf, unlocked } from '../sim/tree';
-import { canRally } from '../sim/vanguard';
+import { canRally, rallyCost } from '../sim/vanguard';
 import { gain } from '../sim/prestige';
 import { bossesReady, canSummonBoss } from '../sim/boss';
 import { BOSS_WAVE } from '../data/bosses';
@@ -88,7 +88,7 @@ export class Panel {
   private rallyButton(type: VanType, el: HTMLElement): void {
     const s = this.game.state, c = el.querySelector('.c')!, btn = el as HTMLButtonElement;
     if (!s.stats.muster) { btn.disabled = true; c.textContent = STR.learnMuster; c.className = 'c dim'; return; }
-    const full = s.vans.count >= s.stats.vanCap, cost = vanCost(type, s.run.wave);
+    const full = s.vans.count >= s.stats.vanCap, cost = rallyCost(s, type);
     btn.disabled = !canRally(s, type);
     c.textContent = full ? STR.lineFull : STR.starlightCost(fmt(cost)); c.className = 'c' + (btn.disabled ? ' dim' : '');
   }

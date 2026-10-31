@@ -1,6 +1,7 @@
 import { OrcKind } from '../data/orcs';
 import { HwLevels } from '../data/heartwood';
 import { LootMeta, freshLoot } from '../data/loot';
+import { SET_FX } from '../data/lootTables';
 import { FIELD, ORC_CAP, VanType } from '../data/balance';
 import { Levels, Stats, deriveStats } from './stats';
 import { Pool } from './pool';
@@ -11,6 +12,8 @@ import { EquipPolicy } from './loot';
 export interface Orc {
   live: boolean; kind: OrcKind; x: number; y: number; hp: number; maxhp: number; spd: number; r: number; loot: number; atk: number;
   dead: boolean; burn: number; hitT: number; wob: number; swingT: number;
+  /** Set-bonus timers in seconds (TB-098): bleeding takes more damage, slowed walks slower, pinned/rooted stand still. */
+  bleed: number; slow: number; pin: number; root: number;
   /** Marched in a boss wave: the challenge is cleared when none are left. */
   champ: boolean;
 }
@@ -21,6 +24,9 @@ export interface Projectile {
   /** Lob only: launch and landing points, time aloft, height above ground, strike radius. */
   sx: number; sy: number; tx: number; ty: number; t: number; h: number; r: number;
 }
+/** A patch of ground left by a set bonus (TB-098): Cinderground burns and slows, a Moonwell slows and mends the wall. */
+export interface Zone { live: boolean; kind: 'cinder' | 'moonwell'; x: number; y: number; r: number; life: number }
+export interface Wolf { x: number; y: number; tx: number; ty: number; biteT: number }
 export interface Vanguard {
   live: boolean; type: VanType; x: number; y: number; tx: number; hp: number; maxhp: number; swingT: number; hitT: number;
 }
@@ -46,8 +52,13 @@ export interface SimState {
   lootPolicy: EquipPolicy;
   run: RunState; meta: MetaState; stats: Stats;
   orcs: Pool<Orc>; shots: Pool<Projectile>; vans: Pool<Vanguard>;
-  wolf: { x: number; y: number; tx: number; ty: number; biteT: number };
+  wolf: Wolf;
+  /** Packlord's extra wolves, grown to stats.extraWolves on demand. */
+  pack: Wolf[];
   hawk: { x: number; y: number; a: number };
+  zones: Pool<Zone>;
+  /** Run-only set state, not saved (TB-098): knives thrown toward the next Fan, Rootwarden's free-rally window and whether it was spent. */
+  knifeN: number; freeRallyT: number; freeRallyUsed: boolean;
 }
 
 export function freshRun(): RunState {
@@ -56,8 +67,9 @@ export function freshRun(): RunState {
 }
 export function freshMeta(): MetaState { return { heartwood: 0, lifetimeKills: 0, bestWave: 1, prestiges: 0, hwLevels: {}, loot: freshLoot() }; }
 
-const makeOrc = (): Orc => ({ live: false, kind: 'grunt', x: 0, y: 0, hp: 0, maxhp: 0, spd: 0, r: 0, loot: 0, atk: 0, dead: false, burn: 0, hitT: 0, wob: 0, swingT: 0, champ: false });
+const makeOrc = (): Orc => ({ live: false, kind: 'grunt', x: 0, y: 0, hp: 0, maxhp: 0, spd: 0, r: 0, loot: 0, atk: 0, dead: false, burn: 0, hitT: 0, wob: 0, swingT: 0, champ: false, bleed: 0, slow: 0, pin: 0, root: 0 });
 const makeShot = (): Projectile => ({ live: false, kind: 'arrow', x: 0, y: 0, vx: 0, vy: 0, dmg: 0, pierce: 0, life: 0, target: null, hit: new Set(), sx: 0, sy: 0, tx: 0, ty: 0, t: 0, h: 0, r: 0 });
+const makeZone = (): Zone => ({ live: false, kind: 'cinder', x: 0, y: 0, r: 0, life: 0 });
 const makeVan = (): Vanguard => ({ live: false, type: 'spear', x: 0, y: 0, tx: 0, hp: 0, maxhp: 0, swingT: 0, hitT: 0 });
 
 export function createState(seed = 1, run: RunState = freshRun(), meta: MetaState = freshMeta()): SimState {
@@ -65,7 +77,10 @@ export function createState(seed = 1, run: RunState = freshRun(), meta: MetaStat
     tick: 0, t: 0, rng: createRng(seed), lootRng: createRng(seed * 31 + 7), lootPolicy: 'player', run, meta, stats: applyGear(deriveStats(run.levels, meta.heartwood, meta.hwLevels), meta.loot),
     orcs: new Pool<Orc>(ORC_CAP, makeOrc), shots: new Pool<Projectile>(600, makeShot), vans: new Pool<Vanguard>(8, makeVan),
     wolf: { x: 260, y: FIELD.h / 2, tx: 260, ty: FIELD.h / 2, biteT: 0 },
+    pack: [],
     hawk: { x: 300, y: 100, a: 0 },
+    zones: new Pool<Zone>(SET_FX.zoneCap, makeZone),
+    knifeN: 0, freeRallyT: 0, freeRallyUsed: false,
   };
   if (s.run.barHp < 0) s.run.barHp = s.stats.barMax;
   return s;

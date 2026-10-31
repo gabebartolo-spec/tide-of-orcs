@@ -5,6 +5,7 @@ import { STR } from '../data/strings';
 import { GameController } from '../game';
 import { glyph } from './glyphs';
 import { itemScore, salvageGlimmer } from '../sim/loot';
+import { setCounts } from '../sim/gear';
 
 const $ = (id: string): HTMLElement => document.getElementById(id)!;
 
@@ -20,6 +21,12 @@ export const affixText = (a: Item['affixes'][number]): string => {
   if (!d) return a.id;
   const v = d.op === 'mul' || d.stat === 'crit' || d.stat === 'itemFind' || d.stat === 'luck' ? `+${(a.value * 100).toFixed(1)}%` : `+${a.value.toFixed(2)}`;
   return `${v} ${STR.statName[d.stat] ?? d.stat}`;
+};
+
+/** A set's name, pieces worn, and its three bonus lines; the earned ones are lit (TB-098). */
+const setBlock = (id: string, n: number): string => {
+  const name = SETS.find((x) => x.id === id)?.name ?? id, fx = STR.setFx[id] ?? ['', '', ''];
+  return `<div class="set"><div class="k">${STR.setProgress(name, n)}</div>${([2, 4, 6] as const).map((t, i) => `<div class="tier${n >= t ? ' on' : ''}">${t} · ${fx[i]}</div>`).join('')}</div>`;
 };
 
 export class SatchelPane {
@@ -63,6 +70,8 @@ export class SatchelPane {
       ? `<button class="item r-${it.rarity}${it.uid === this.selected ? ' sel' : ''}" data-uid="${it.uid}" title="${itemName(it)}">${glyph(slot, it)}<span class="txt"><span class="slot">${STR.slotName[slot]}${it.locked ? STR.lockedMark : ''}</span><span class="nm">${itemName(it)}</span></span></button>`
       : `<div class="item empty">${glyph(slot)}<span class="txt"><span class="slot">${STR.slotName[slot]}</span></span></div>`;
     $('sat-worn').innerHTML = SLOTS.map((s) => cell(s, l.items.find((i) => i.uid === l.equipped[s]))).join('');
+    const sets = Object.entries(setCounts(l));
+    $('sat-sets').innerHTML = sets.length ? `<div class="k">${STR.setsWorn}</div>${sets.map(([id, n]) => setBlock(id, n)).join('')}` : '';
     const spare = l.items.filter((i) => !worn.has(i.uid));
     $('sat-count').textContent = STR.satchelCount(spare.length, SATCHEL.base, l.glimmer);
     $('sat-grid').innerHTML = spare.length ? spare.map((i) => cell(i.slot, i)).join('') : `<div class="desc">${STR.satchelEmpty}</div>`;
@@ -78,7 +87,7 @@ export class SatchelPane {
     const cmp = cur && cur.uid !== it.uid ? `<div class="desc">${STR.satchelVs(itemName(cur), Math.round((itemScore(it) - itemScore(cur)) * 100))}</div>` : '';
     $('sat-detail').innerHTML = `<div class="head">${glyph(it.slot, it, true)}<div class="name r-${it.rarity}">${itemName(it)}</div></div>
       <div class="desc">${STR.rarityName[it.rarity]} · ${STR.slotName[it.slot]} · ${STR.itemLevel(it.ilvl)}</div>
-      <ul class="affixes">${lines}</ul>${myth ? `<div class="desc">${STR.mythicLine(myth.power, myth.cost)}</div>` : ''}${cmp}
+      <ul class="affixes">${lines}</ul>${it.set ? setBlock(it.set, setCounts(l)[it.set] ?? 0) : ''}${myth ? `<div class="desc">${STR.mythicLine(myth.power, myth.cost)}</div>` : ''}${cmp}
       <div class="row">${worn ? `<span class="desc">${STR.satchelWornNow}</span>` : `<button class="buy" data-act="equip">${STR.equip}</button>`}
       <button class="buy" data-act="lock">${it.locked ? STR.unlock : STR.lock}</button>
       <button class="buy" data-act="salvage"${worn || it.locked ? ' disabled' : ''}>${STR.salvageFor(salvageGlimmer(it))}</button></div>`;

@@ -40,6 +40,18 @@ export const STR = {
   satchelFilter: 'Keep', filterAtLeast: (r: string) => `${r} and up`, satchelWornNow: 'Worn',
   equip: 'Wear', lock: 'Lock', unlock: 'Unlock', lockedMark: ' · locked', salvageFor: (g: number) => `Salvage +${g} Glimmer`,
   lootFound: (name: string) => `${name} found`,
+  pinned: 'pinned', freeRally: 'Free rally!',
+  setsWorn: 'Sets', setProgress: (name: string, n: number) => `${name} ${n}/6`,
+  /** Set bonus lines at 2, 4 and 6 pieces (TB-098). */
+  setFx: {
+    nightknife: ['+25% knife throw rate', 'Knives make orcs bleed; bleeding orcs take +30% damage from everything', 'Every third throw is a Fan: 5 knives in a cone'],
+    emberwright: ['+30% burn damage', 'A burning orc that dies passes its flames to 2 neighbours', 'Fire arrows leave Cinderground for 4 s: orcs on it burn and walk 25% slower'],
+    stormcaller: ['+1 storm chain', 'Storm chains reach 50% farther', 'Lightning that kills strikes again from the corpse (up to 3 times); storms come 30% faster'],
+    siegebreaker: ['+25% ballista fire rate', "A bolt's first orc takes +50% and is knocked back", 'The last orc a bolt passes through is pinned for 2 s and takes double damage'],
+    moonveil: ['Moon shots draw 25% faster', 'Moon shots always crit (×1.5)', 'Each moon shot leaves a Moonwell for 3 s: it mends the wall 2%/s and slows orcs inside'],
+    packlord: ['+20% companion damage', 'Companions strike 25% faster while orcs are near the wall', 'A second wolf joins the hunt; treants root the orcs they hit'],
+    rootwarden: ['+15% wall health', 'The wall regrows 0.5%/s', 'Once per run, when the wall drops below 25%, rallies are free for 10 s'],
+  } as Record<string, [string, string, string]>,
   itemLevel: (n: number) => `item level ${n}`, mythicLine: (power: string, cost: string) => `Power: ${power}. Cost: ${cost}.`,
   slotName: { bow: 'Bow', quiver: 'Quiver', bracer: 'Bracer', cloak: 'Cloak', boots: 'Boots', charm: 'Charm' } as Record<string, string>,
   rarityName: { common: 'Common', rare: 'Rare', epic: 'Epic', legendary: 'Legendary', mythic: 'Mythic' } as Record<string, string>,

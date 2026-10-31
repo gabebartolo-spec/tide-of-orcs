@@ -15,5 +15,7 @@ export const P = {
   aimFill: 'rgba(239,230,210,.08)',
   wallBar: '#c9a06a', nodeOwned: '#2b3448', nodeLabelLocked: '#6b7383',
   wallShade: 'rgba(20,26,36,.3)', burnGlow: 'rgba(226,168,91,.5)',
+  // set-bonus ground (TB-098): Cinderground and Moonwells
+  cinder: 'rgba(226,168,91,.22)', cinderEdge: 'rgba(199,111,111,.45)', moonwell: 'rgba(205,189,234,.2)', moonwellEdge: 'rgba(205,189,234,.6)',
   shadow: 'rgba(20,26,36,.25)', dim: 'rgba(27,33,48,.6)', dim45: 'rgba(27,33,48,.45)',
 } as const;

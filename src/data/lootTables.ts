@@ -47,13 +47,31 @@ export const BASES: readonly BaseDef[] = [
 export interface StatLine { stat: string; op: 'mul' | 'add'; value: number }
 /** Set bonuses at 2, 4 and 6 pieces worn. */
 export interface SetDef { id: string; name: string; bonus: Record<2 | 4 | 6, StatLine[]> }
-const S = (id: string, name: string, stat: string, v: [number, number, number]): SetDef =>
-  ({ id, name, bonus: { 2: [{ stat, op: 'mul', value: v[0] }], 4: [{ stat, op: 'mul', value: v[1] }], 6: [{ stat, op: 'mul', value: v[2] }] } });
+/** Set effect numbers (TB-098, BALANCE ## Proposed P-098). Field distances are in field px (~20 px per metre). */
+export const SET_FX = {
+  knifeRate: 0.25, bleedAmp: 0.3, bleedSecs: 3, fanEvery: 3, fanKnives: 5, fanRad: 0.18,
+  burn: 0.3, burnSpread: 2, spreadReach: 90, cinderSecs: 4, slow: 0.25,
+  chain: 1, chainReach: 0.5, rebound: 3, stormRate: 0.3,
+  ballRate: 0.25, boltFirst: 0.5, boltShove: 30, pinSecs: 2, pinMult: 2,
+  moonRate: 0.25, moonCritMult: 1.5, wellSecs: 3, wellHeal: 0.02,
+  petDmg: 0.2, petHaste: 0.25, nearWall: 220, extraWolves: 1, rootSecs: 1.5,
+  barMax: 0.15, barRegen: 0.005, freeRallyBelow: 0.25, freeRallySecs: 10,
+  /** Most Cinderground patches and Moonwells alive at once. */
+  zoneCap: 48,
+} as const;
+
+const F = SET_FX;
+const on = (stat: string, value = 1): StatLine => ({ stat, op: 'add', value });
+const mul = (stat: string, value: number): StatLine => ({ stat, op: 'mul', value });
+/** Each line names the Stats field it changes; systems read those fields, never set ids. */
 export const SETS: readonly SetDef[] = [
-  S('nightknife', 'Nightknife', 'knifeDmg', [0.2, 0.5, 1]), S('emberwright', 'Emberwright', 'fireDmg', [0.2, 0.5, 1]),
-  S('stormcaller', 'Stormcaller', 'stormDmg', [0.2, 0.5, 1]), S('siegebreaker', 'Siegebreaker', 'ballista', [0.2, 0.5, 1]),
-  S('moonveil', 'Moonveil', 'homingDmg', [0.2, 0.5, 1]), S('packlord', 'Packlord', 'wolf', [0.2, 0.5, 1]),
-  S('rootwarden', 'Rootwarden', 'barMax', [0.15, 0.4, 0.8]),
+  { id: 'nightknife', name: 'Nightknife', bonus: { 2: [mul('knifeRate', F.knifeRate)], 4: [on('bleedAmp', F.bleedAmp)], 6: [on('knifeFan')] } },
+  { id: 'emberwright', name: 'Emberwright', bonus: { 2: [mul('burn', F.burn)], 4: [on('burnSpread', F.burnSpread)], 6: [on('cinder')] } },
+  { id: 'stormcaller', name: 'Stormcaller', bonus: { 2: [on('chain', F.chain)], 4: [mul('chainJump', F.chainReach)], 6: [on('rebound', F.rebound), mul('stormRate', F.stormRate)] } },
+  { id: 'siegebreaker', name: 'Siegebreaker', bonus: { 2: [mul('ballRate', F.ballRate)], 4: [on('boltShove')], 6: [on('boltPin')] } },
+  { id: 'moonveil', name: 'Moonveil', bonus: { 2: [mul('moonRate', F.moonRate)], 4: [on('moonCrit')], 6: [on('moonwell')] } },
+  { id: 'packlord', name: 'Packlord', bonus: { 2: [mul('petDmg', F.petDmg)], 4: [on('petHaste', F.petHaste)], 6: [on('extraWolves', F.extraWolves), on('treantRoot')] } },
+  { id: 'rootwarden', name: 'Rootwarden', bonus: { 2: [mul('barMax', F.barMax)], 4: [on('barRegen', F.barRegen)], 6: [on('freeRally')] } },
 ];
 
 /** Mythics: one power and one cost each (powers wired in TB-099). */
