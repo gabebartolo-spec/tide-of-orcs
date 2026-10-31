@@ -6,6 +6,11 @@ describe('audio cue map', () => {
     expect(cueFor({ t: 'kill', x: 0, y: 0, loot: 1, kind: 'grunt' })).toBe('orcDeath');
     expect(cueFor({ t: 'kill', x: 0, y: 0, loot: 1, kind: 'brute' })).toBe('bruteDeath');
   });
+  it('chimes a kept drop by rarity and stays quiet for an auto-salvaged one (TB-106)', () => {
+    const drop = (rarity: string, kept = true) => cueFor({ t: 'loot', x: 0, y: 0, uid: 'i1', rarity, kept });
+    expect(drop('common')).toBe('lootDrop'); expect(drop('epic')).toBe('lootEpic'); expect(drop('mythic')).toBe('lootMythic');
+    expect(drop('rare', false)).toBeNull();
+  });
   it('creaks below the creak fraction, thuds above', () => {
     expect(cueFor({ t: 'barricadeHit', y: 0, amount: 1, frac: AUDIO.creakFrac - 0.01 })).toBe('wallCreak');
     expect(cueFor({ t: 'barricadeHit', y: 0, amount: 1, frac: 0.9 })).toBe('wallThud');
@@ -23,8 +28,13 @@ describe('audio cue map', () => {
     expect(cueFor({ t: 'ignite' })).toBe('ignite');
     expect(cueFor({ t: 'bossStart' })).toBe('bossRoar');
   });
+  it('maps the shaman fireball to its cast and hit cues without ducking (TB-127)', () => {
+    expect(cueFor({ t: 'fireballCast', x: 0, y: 0, tx: 1, ty: 1 })).toBe('fireballCast');
+    expect(cueFor({ t: 'fireballStrike', x: 0, y: 0, r: 24 })).toBe('fireballHit');
+    expect(CUES.fireballCast.duck).toBeUndefined();
+  });
   it('ducks only on big moments', () => {
-    expect(Object.entries(CUES).filter(([, c]) => c.duck).map(([k]) => k).sort()).toEqual(['bossRoar', 'rallyHorn', 'replant', 'wallFall']);
+    expect(Object.entries(CUES).filter(([, c]) => c.duck).map(([k]) => k).sort()).toEqual(['bossRoar', 'lootLegendary', 'lootMythic', 'rallyHorn', 'replant', 'setRise', 'wallFall']);
   });
   it('alternates the two music beds on Replant', () => {
     expect(MUSIC).toHaveLength(2);

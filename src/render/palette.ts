@@ -13,6 +13,8 @@ export const P = {
   frost: '#bfe3ee', frostGlow: 'rgba(191,227,238,.45)', spark: '#f4eaa6', arcane: '#9b6bd6', arcaneCore: '#ece8ff',
   fire: '#f2763a', fireTint: 'rgba(242,118,58,.5)', firePatch: 'rgba(242,118,58,.28)', frostTint: 'rgba(150,215,240,.6)', frostPatch: 'rgba(191,227,238,.35)',
   sparkGlow: 'rgba(244,234,166,.65)', arcaneGlow: 'rgba(155,107,214,.45)', starGold: '#ffd36b',
+  /** Shaman fireball (TB-127): ember body, pale core, halo. */
+  ember: '#ffb061', fireCore: '#fff1c8', fireGlow: 'rgba(242,118,58,.55)',
   spear: '#8fb7c9', blade: '#cdbdea',
   bloodOrc: '#7a4a2c', bloodElf: '#6e3a44',
   aimLine: 'rgba(239,230,210,.25)',

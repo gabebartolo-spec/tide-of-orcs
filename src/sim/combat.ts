@@ -1,4 +1,5 @@
 import { ARROWS, FIELD, LOB, PLAYER } from '../data/balance';
+import { FIREBALL } from '../data/orcs';
 import { EventBus } from './events';
 import { Orc, ProjectileKind, SimState, Zone, recompute } from './state';
 import { UnitFx } from './stats';
@@ -99,6 +100,15 @@ export function lob(s: SimState, sx: number, sy: number, tx: number, ty: number,
   const p = s.shots.alloc(); if (!p) return;
   p.kind = 'lob'; p.sx = p.x = sx; p.sy = p.y = sy; p.tx = tx; p.ty = ty; p.t = 0; p.h = 0; p.vx = p.vy = 0;
   p.r = s.stats.radius; p.dmg = s.stats.dmg * LOB.dmgMult * (s.stats.homing && fx & FX.MOON ? s.stats.moonMult : 1); p.fx = fx; p.pierce = s.stats.pierce; p.life = Infinity; p.target = null; p.hit.clear();
+}
+
+/** Orc shaman (TB-127): a fireball lobbed from the staff at (sx, sy) onto (tx, ty). Flies like the elf's lob on FIREBALL's
+ *  timings and lands as a `fireballStrike`; it deals no damage until TB-087 gives the shaman its numbers. */
+export function castFireball(s: SimState, ev: EventBus, sx: number, sy: number, tx: number, ty: number): void {
+  const p = s.shots.alloc(); if (!p) return;
+  p.kind = 'fireball'; p.sx = p.x = sx; p.sy = p.y = sy; p.tx = tx; p.ty = ty; p.t = 0; p.h = 0; p.vx = p.vy = 0;
+  p.r = FIREBALL.radius; p.dmg = 0; p.fx = 0; p.crit = 0; p.critX = 1; p.pierce = 0; p.life = Infinity; p.target = null; p.hit.clear(); p.back = false;
+  ev.push({ t: 'fireballCast', x: sx, y: sy, tx, ty });
 }
 
 /** Strike every live orc inside the lob's circle. Each orc rolls its own crit; fire, frost and Thunderclap mark them all.

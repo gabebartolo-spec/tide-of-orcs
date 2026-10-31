@@ -154,6 +154,9 @@ for spec in filter(None, os.environ.get("OFFS", "").split(";")):
     qo = Euler(e).to_quaternion(); pb = tgt.pose.bones[bn]
     for f in range(f0, f1 + 1):
         sc.frame_set(f); pb.rotation_quaternion = pb.rotation_quaternion @ qo; pb.keyframe_insert("rotation_quaternion", frame=f)
+def _unscale(pb):  # pb.matrix = ... also writes location/scale; those channels are not keyed, so the residue would leak into later ops and compound (arms exploded)
+    pb.scale = (1, 1, 1)
+    if pb.name != "mixamorig:Hips": pb.location = (0, 0, 0)
 for spec in filter(None, os.environ.get("WOFFS", "").split(";")):  # world-axis rotation about the bone head
     bn, e = spec.rsplit(":", 1); ax, ay, az, deg = [float(v) for v in e.split(",")]; pb = tgt.pose.bones[bn]
     R = Matrix.Rotation(math.radians(deg), 4, (ax, ay, az))
@@ -161,7 +164,7 @@ for spec in filter(None, os.environ.get("WOFFS", "").split(";")):  # world-axis 
         sc.frame_set(f); bpy.context.view_layer.update()
         wm = tgt.matrix_world @ pb.matrix; t = wm.translation.copy()
         nm = Matrix.Translation(t) @ R @ Matrix.Translation(-t) @ wm
-        pb.matrix = tgt.matrix_world.inverted() @ nm; bpy.context.view_layer.update()
+        pb.matrix = tgt.matrix_world.inverted() @ nm; _unscale(pb); bpy.context.view_layer.update()
         pb.keyframe_insert("rotation_quaternion", frame=f)
 for spec in filter(None, os.environ.get("ARMSET", "").split(";")):  # Side:side,fwd = turn the upper arm so its MEAN direction matches a reference clip's (ELBOW probe angles), keeping the swing about it
     s, e = spec.split(":"); sd, fw = (math.radians(float(v)) for v in e.split(",")); B = tgt.pose.bones; W = tgt.matrix_world; pb = B[f"mixamorig:{s}Arm"]
@@ -171,7 +174,7 @@ for spec in filter(None, os.environ.get("ARMSET", "").split(";")):  # Side:side,
     R = m.normalized().rotation_difference(Vector((math.tan(sd), -math.tan(fw), -1)).normalized()).to_matrix().to_4x4()
     for f in range(f0, f1 + 1):
         sc.frame_set(f); bpy.context.view_layer.update()
-        wm = W @ pb.matrix; t = wm.translation.copy(); pb.matrix = W.inverted() @ (Matrix.Translation(t) @ R @ Matrix.Translation(-t) @ wm); bpy.context.view_layer.update()
+        wm = W @ pb.matrix; t = wm.translation.copy(); pb.matrix = W.inverted() @ (Matrix.Translation(t) @ R @ Matrix.Translation(-t) @ wm); _unscale(pb); bpy.context.view_layer.update()
         pb.keyframe_insert("rotation_quaternion", frame=f)
 for spec in filter(None, os.environ.get("ELBOWSET", "").split(";")):  # Side:deg = set the elbow bend to deg on every frame, about its own hinge axis (copy a reference clip's bend)
     s, deg = spec.split(":"); B = tgt.pose.bones; W = tgt.matrix_world; pb = B[f"mixamorig:{s}ForeArm"]
@@ -179,7 +182,15 @@ for spec in filter(None, os.environ.get("ELBOWSET", "").split(";")):  # Side:deg
         sc.frame_set(f); bpy.context.view_layer.update()
         a, e, h = (W @ B[f"mixamorig:{s}{k}"].head for k in ("Arm", "ForeArm", "Hand"))
         ax = (e - a).cross(h - e).normalized(); R = Matrix.Rotation(math.radians(float(deg)) - (e - a).angle(h - e), 4, ax)
-        wm = W @ pb.matrix; pb.matrix = W.inverted() @ (Matrix.Translation(e) @ R @ Matrix.Translation(-e) @ wm); bpy.context.view_layer.update()
+        wm = W @ pb.matrix; pb.matrix = W.inverted() @ (Matrix.Translation(e) @ R @ Matrix.Translation(-e) @ wm); _unscale(pb); bpy.context.view_layer.update()
+        pb.keyframe_insert("rotation_quaternion", frame=f)
+for spec in filter(None, os.environ.get("ELBOWSHIFT", "").split(";")):  # Side:deg = add deg to the clip's elbow bend on every frame (negative = straighter), keeping its swing
+    s, deg = spec.split(":"); B = tgt.pose.bones; W = tgt.matrix_world; pb = B[f"mixamorig:{s}ForeArm"]
+    for f in range(f0, f1 + 1):
+        sc.frame_set(f); bpy.context.view_layer.update()
+        a, e, h = (W @ B[f"mixamorig:{s}{k}"].head for k in ("Arm", "ForeArm", "Hand"))
+        ax = (e - a).cross(h - e).normalized(); R = Matrix.Rotation(math.radians(float(deg)), 4, ax)
+        wm = W @ pb.matrix; pb.matrix = W.inverted() @ (Matrix.Translation(e) @ R @ Matrix.Translation(-e) @ wm); _unscale(pb); bpy.context.view_layer.update()
         pb.keyframe_insert("rotation_quaternion", frame=f)
 for spec in filter(None, os.environ.get("ARMTWIST", "").split(";")):  # Side:side,fwd = twist the upper arm about its own axis so the MEAN forearm direction faces the reference's (the elbow hinges in the right plane)
     s, e = spec.split(":"); sd, fw = (math.radians(float(v)) for v in e.split(",")); B = tgt.pose.bones; W = tgt.matrix_world; pb = B[f"mixamorig:{s}Arm"]
@@ -190,7 +201,7 @@ for spec in filter(None, os.environ.get("ARMTWIST", "").split(";")):  # Side:sid
     ang = math.atan2(p.cross(q).dot(u), p.dot(q)); print("ARMTWIST", s, round(math.degrees(ang), 1))
     for f in range(f0, f1 + 1):
         sc.frame_set(f); bpy.context.view_layer.update(); t = W @ pb.head; ax = ((W @ B[f"mixamorig:{s}ForeArm"].head) - t).normalized()
-        wm = W @ pb.matrix; pb.matrix = W.inverted() @ (Matrix.Translation(t) @ Matrix.Rotation(ang, 4, ax) @ Matrix.Translation(-t) @ wm); bpy.context.view_layer.update()
+        wm = W @ pb.matrix; pb.matrix = W.inverted() @ (Matrix.Translation(t) @ Matrix.Rotation(ang, 4, ax) @ Matrix.Translation(-t) @ wm); _unscale(pb); bpy.context.view_layer.update()
         pb.keyframe_insert("rotation_quaternion", frame=f)
 if os.environ.get("ELBOW"): _armprint(tgt, "tgt")
 for spec in filter(None, os.environ.get("ABD", "").split(";")):  # world-Y abduction scaled by how far the bone hangs down
@@ -200,7 +211,7 @@ for spec in filter(None, os.environ.get("ABD", "").split(";")):  # world-Y abduc
         wm = tgt.matrix_world @ pb.matrix; t = wm.translation.copy()
         d = ((tgt.matrix_world @ pb.tail) - t).normalized(); k = max(0.0, -d.z)
         R = Matrix.Rotation(math.radians(float(deg) * k), 4, [float(v) for v in os.environ.get("ABDAX", "0,1,0").split(",")])
-        pb.matrix = tgt.matrix_world.inverted() @ (Matrix.Translation(t) @ R @ Matrix.Translation(-t) @ wm); bpy.context.view_layer.update()
+        pb.matrix = tgt.matrix_world.inverted() @ (Matrix.Translation(t) @ R @ Matrix.Translation(-t) @ wm); _unscale(pb); bpy.context.view_layer.update()
         pb.keyframe_insert("rotation_quaternion", frame=f)
 if os.environ.get("POSEOUT"):  # path;frame;bones = save these bones' local rotations at one clip frame (e.g. a guard pose), then exit
     import json; p, fr, bl = os.environ["POSEOUT"].split(";")
@@ -289,14 +300,17 @@ if os.environ.get("BOWALIGN"):  # each frame turn the bow hand so the bow stands
     # back for the arrow there is no arrow line, so the bow keeps facing the target like a real archer's
     w = bpy.data.objects["wpn_bow"]; ax = Vector(w["bow_ax"]); bk = Vector(w["bow_back"]); pb = tgt.pose.bones["mixamorig:LeftHand"]
     P = lambda n: tgt.matrix_world @ tgt.pose.bones["mixamorig:" + n].head
-    n = int(os.environ["BOWALIGN"]); sc.frame_set(f1 if n < 0 else f0 + n); bpy.context.view_layer.update()
-    ar = (P("LeftHand") - P("RightHand")).normalized(); u = Vector((0, 0, 1)); u = (u - ar * u.dot(ar)).normalized()
+    if os.environ["BOWALIGN"] == "up":  # no draw in this clip (idle): bow upright, back facing the way the elf faces (-Y, INPLACE)
+        ar, u = Vector((0, -1, 0)), Vector((0, 0, 1))
+    else:
+        n = int(os.environ["BOWALIGN"]); sc.frame_set(f1 if n < 0 else f0 + n); bpy.context.view_layer.update()
+        ar = (P("LeftHand") - P("RightHand")).normalized(); u = Vector((0, 0, 1)); u = (u - ar * u.dot(ar)).normalized()
     for f in range(f0, f1 + 1):
         sc.frame_set(f); bpy.context.view_layer.update(); M3 = w.matrix_world.to_3x3()
         d = (M3 @ ax).normalized(); b = (M3 @ bk); b = (b - d * b.dot(d)).normalized()
         R =(Matrix((u, ar, u.cross(ar))).transposed() @ Matrix((d, b, d.cross(b))).transposed().inverted()).to_4x4()
         wm = tgt.matrix_world @ pb.matrix; t = wm.translation.copy()
-        pb.matrix = tgt.matrix_world.inverted() @ (Matrix.Translation(t) @ R @ Matrix.Translation(-t) @ wm); bpy.context.view_layer.update()
+        pb.matrix = tgt.matrix_world.inverted() @ (Matrix.Translation(t) @ R @ Matrix.Translation(-t) @ wm); _unscale(pb); bpy.context.view_layer.update()
         pb.keyframe_insert("rotation_quaternion", frame=f)
 print("ANIM frames", f0, f1)
 if os.environ.get("QUIVER"):  # quiver on the back (Spine2) with arrows, and a nocked arrow from the draw fingers to the bow
@@ -327,20 +341,39 @@ if os.environ.get("QUIVER"):  # quiver on the back (Spine2) with arrows, and a n
     ub = [v.y for v in BV if abs(v.x - mid.x) < 0.06 and abs(v.z - (sx.z - 0.08)) < 0.04]; back = max(ub)  # upper back (cloak on the shoulder blades), not the flared hem
     qa = Vector(map(float, os.environ.get("QOFF", "0,0,0").split(",")))
     print("QBACK", round(back, 3)); qc = Vector((mid.x, back + 0.045 + float(os.environ.get("QCLR", "0.0")), mid.z)) + qa  # QCLR m clear of the upper-back cloak (radius 4.5 cm)
-    Q = cyl("prop_quiver", 0.045, 0.4, LEA, 14); Q.matrix_world = Matrix.Translation(qc - ax_ * 0.2) @ Vector((0, 0, 1)).rotation_difference(ax_).to_matrix().to_4x4()
+    QL = float(os.environ.get("QLEN", "0.4")); Q = cyl("prop_quiver", 0.045, QL, LEA, 14); Q.matrix_world = Matrix.Translation(qc - ax_ * QL / 2) @ Vector((0, 0, 1)).rotation_difference(ax_).to_matrix().to_4x4()
+    if os.environ.get("QFLOAT"):  # magic floating quiver (director, 2026-11-01): hangs in the air where the draw hand reaches at frame
+        # ARROWF, mouth pointing along the hand's exit path (frames ARROWF -> ARROWF+4), so the arrow slides out along the hand's own
+        # travel and never crosses the forearm or head. QFLOAT=dx,dy,dz world offset (m) of the mouth; it bobs QBOB m, one cycle per loop.
+        rh_ = tgt.pose.bones["mixamorig:RightHand"]; af_ = int(os.environ.get("ARROWF", "6"))
+        def HP(f):
+            sc.frame_set(f0 + f); bpy.context.view_layer.update(); return W @ (rh_.tail + (rh_.tail - rh_.head) * 0.4)
+        if os.environ.get("QPOSE"):  # QPOSE=mx,my,mz,ax,ay,az: the mouth and axis measured on the approved attack, so the other clips of the unit hang the quiver in the same spot
+            qp = list(map(float, os.environ["QPOSE"].split(","))); mouth, ax_, h0 = Vector(qp[:3]), Vector(qp[3:]).normalized(), Vector(qp[:3])
+        else:
+            h0, h4 = HP(af_), HP(af_ + 4); ax_ = (h4 - h0).normalized()
+            mouth = h0 - ax_ * 0.12 + Vector(map(float, os.environ["QFLOAT"].split(",")))  # fingertips 12 cm out of the mouth when the hand closes on the nock
+        Q.matrix_world = Matrix.Translation(mouth - ax_ * QL) @ Vector((0, 0, 1)).rotation_difference(ax_).to_matrix().to_4x4()
+        print("QFLOAT mouth", tuple(round(v, 3) for v in mouth), "axis", tuple(round(v, 2) for v in ax_), "hand f", af_, tuple(round(v, 3) for v in h0))
     for i, (dx, dy) in enumerate(((0.012, 0.01), (-0.014, 0.004), (0.002, -0.016), (-0.006, 0.02))):
-        a_ = arrow(f"prop_qa{i}", 0.5); a_.matrix_world = Q.matrix_world @ Matrix.Translation((dx, dy, 0.56)) @ Matrix.Rotation(math.pi, 4, "X")  # tips down in the quiver, nocks out
+        a_ = arrow(f"prop_qa{i}", min(0.5, QL + 0.15)); a_.matrix_world = Q.matrix_world @ Matrix.Translation((dx, dy, QL + 0.16)) @ Matrix.Rotation(math.pi, 4, "X")  # tips down in the quiver, nocks out
         a_.parent = Q; a_.matrix_parent_inverse = Q.matrix_world.inverted()
-    mw = Q.matrix_world.copy(); Q.parent = tgt; Q.parent_type = "BONE"; Q.parent_bone = "mixamorig:Spine2"  # bone parent = tail of the posed bone
-    Q.matrix_parent_inverse = (W @ sp2.matrix @ Matrix.Translation((0, sp2.bone.length, 0))).inverted(); Q.matrix_basis = mw
-    mo = lambda: Q.matrix_world @ Vector((0, 0, 0.4)); md = []
+    if os.environ.get("QFLOAT"):
+        base_ = Q.location.copy(); bob = float(os.environ.get("QBOB", "0.015"))
+        for f in range(f0, f1 + 2):  # gentle bob, one sine cycle over the loop (frame f1+1 = frame f0)
+            Q.location = base_ + Vector((0, 0, bob * math.sin(2 * math.pi * (f - f0) / (f1 + 1 - f0)))); Q.keyframe_insert("location", frame=f)
+    else:
+        mw = Q.matrix_world.copy(); Q.parent = tgt; Q.parent_type = "BONE"; Q.parent_bone = "mixamorig:Spine2"  # bone parent = tail of the posed bone
+        Q.matrix_parent_inverse = (W @ sp2.matrix @ Matrix.Translation((0, sp2.bone.length, 0))).inverted(); Q.matrix_basis = mw
+    mo = lambda: Q.matrix_world @ Vector((0, 0, QL)); md = []
     for f in range(f0, f1 + 1):  # the draw hand takes the arrow where it passes closest to the quiver mouth
         sc.frame_set(f); bpy.context.view_layer.update(); md.append(((W @ tgt.pose.bones["mixamorig:RightHand"].tail) - mo()).length)
     print("QMOUTH", [round(x, 2) for x in md])
-    AR = arrow("prop_arrow"); af = int(os.environ["ARROWF"]) if "ARROWF" in os.environ else md.index(min(md)); print("ARROWF", af); rh, lh = tgt.pose.bones["mixamorig:RightHand"], tgt.pose.bones["mixamorig:LeftHand"]
+    AL = float(os.environ.get("ARROWL", "0.62")); AR = arrow("prop_arrow", AL); af = int(os.environ["ARROWF"]) if "ARROWF" in os.environ else md.index(min(md)); print("ARROWF", af); rh, lh = tgt.pose.bones["mixamorig:RightHand"], tgt.pose.bones["mixamorig:LeftHand"]
     from mathutils.bvhtree import BVHTree
     from mathutils import Quaternion
-    def hits(nk, d, rest_, L=0.62):  # body hits along the shaft (skip the draw fingers at the nock and the bow hand at the rest)
+    def hits(nk, d, rest_, L=None):  # body hits along the shaft (skip the draw fingers at the nock and the bow hand at the rest)
+        L = L or AL
         dg = bpy.context.evaluated_depsgraph_get(); m_ = bo.evaluated_get(dg).to_mesh()
         bv = BVHTree.FromPolygons([bo.matrix_world @ v.co for v in m_.vertices], [p.vertices[:] for p in m_.polygons]); bo.evaluated_get(dg).to_mesh_clear()
         n_, o_, t_, dbg = 0, nk + d * 0.06, 0.06, []
@@ -364,7 +397,10 @@ if os.environ.get("QUIVER"):  # quiver on the back (Spine2) with arrows, and a n
     s_ = 0.0
     for f in range(f0, f1 + 1):
         sc.frame_set(f); bpy.context.view_layer.update()
-        nk = W @ (rh.tail + (rh.tail - rh.head) * 0.4); rest_ = W @ (lh.tail + (lh.tail - lh.head) * 0.2); d_ = (rest_ - nk)
+        nk = W @ (rh.tail + (rh.tail - rh.head) * 0.4); rest_ = W @ (lh.tail + (lh.tail - lh.head) * 0.2)
+        if os.environ.get("RESTUP"):  # the shaft rides on top of the bow fist, not through the wrist: raise the rest point by RESTUP m along the vertical perpendicular to the shot line
+            d0 = (rest_ - nk).normalized(); up_ = (Vector((0, 0, 1)) - d0 * d0.z).normalized(); rest_ = rest_ + up_ * float(os.environ["RESTUP"])
+        d_ = (rest_ - nk)
         sh, tr = d_.normalized(), (mo() - nk).normalized(); on = (f - f0) >= af
         hs = hits(nk, sh, rest_) if on else 0; bs = hit_bow[-1] if on else 0
         if on: tot[0] += hs; tot[1] += bs; shots.append(hs)
@@ -376,7 +412,7 @@ if os.environ.get("QUIVER"):  # quiver on the back (Spine2) with arrows, and a n
         mode, dm = "shot", (mo() - nk).length
         if os.environ.get("ARROWPATH", "1") == "1" and on and s_ < 1:
             qax = (Q.matrix_world.to_3x3() @ Vector((0, 0, 1))).normalized()
-            if dm < 0.62: d_, mode = (mo() - qax * min(0.62 - dm, 0.38)) - nk, "quiver"
+            if dm < AL: d_, mode = (mo() - qax * min(AL - dm, 0.38)) - nk, "quiver"
             else:
                 qd = tr.rotation_difference(sh); best = s_
                 for k in range(10, 0, -1):
@@ -386,6 +422,10 @@ if os.environ.get("QUIVER"):  # quiver on the back (Spine2) with arrows, and a n
                 s_ = best; d_ = Quaternion().slerp(qd, s_) @ tr; mode = f"turn {s_:.1f}"
         sv = hits(nk, d_.normalized(), rest_) if on else 0; shown.append(sv) if on else None
         print("ARROW", f - f0, "hands", round((rest_ - nk).length, 3), "shot hits", hs, "shown hits", sv, "->", mode)
+        if os.environ.get("ANCHOR"):  # same measure as the clip probe: nock vs head centre, and the shot line's miss, in hip heights and head lengths
+            hd_, tp_ = W @ tgt.pose.bones["mixamorig:Head"].head, W @ tgt.pose.bones["mixamorig:HeadTop_End"].head; hc = (hd_ + tp_) / 2; hl = (tp_ - hd_).length
+            sx_ = (rest_ - nk).normalized(); tt = (hc - nk).dot(sx_); ms = (hc - (nk + sx_ * tt)).length; hz_ = (W @ tgt.pose.bones["mixamorig:Hips"].bone.head_local).z
+            print("ANCHOR", f - f0, "nock-headc/hz", tuple(round(v, 3) for v in (nk - hc) / hz_), "rest-headc/hz", tuple(round(v, 3) for v in (rest_ - hc) / hz_), "dir", tuple(round(v, 2) for v in sx_), "miss/hz", round(ms / hz_, 3), "miss/headlen", round(ms / hl, 2), "headlen/hz", round(hl / hz_, 3))
         AR.matrix_world = Matrix.Translation(nk) @ Vector((0, 0, 1)).rotation_difference(d_.normalized()).to_matrix().to_4x4()
         AR.keyframe_insert("location", frame=f); AR.keyframe_insert("rotation_euler", frame=f)
         for o in [AR] + list(AR.children):
@@ -406,6 +446,29 @@ if os.environ.get("LHPROBE"):  # two-hand weapon: OFFS (local Euler XYZ, deg) th
         acc += h
         if (f - f0) % 10 == 0: print("LH", pb.name, f - f0, "angle", round(math.degrees(hole.angle(h)), 1))
     q = hole.rotation_difference(acc.normalized()); print("LHOFFS", ",".join(str(round(math.degrees(a), 1)) for a in q.to_euler("XYZ")))
+_solid_faces = None
+if os.environ.get("SOLID"):  # SOLID=x0,x1,y0,y1,z0,z1 (world, bind pose): the prop volume = every face of the target mesh whose verts all lie in the box; probed per frame on the evaluated mesh
+    from mathutils.bvhtree import BVHTree
+    _sb = [float(v) for v in os.environ["SOLID"].split(",")]; _sme = next(o for o in bpy.data.objects if o.type == "MESH" and o.find_armature() == tgt)
+    _sin = [all(_sb[2 * i] <= c[i] <= _sb[2 * i + 1] for i in range(3)) for c in (_sme.matrix_world @ v.co for v in _sme.data.vertices)]
+    _solid_faces = [list(pg.vertices) for pg in _sme.data.polygons if all(_sin[i] for i in pg.vertices)]
+    print("SOLID faces", len(_solid_faces))
+    def _solid_bvh():
+        ev = _sme.evaluated_get(bpy.context.evaluated_depsgraph_get()); W = _sme.matrix_world
+        return BVHTree.FromPolygons([W @ v.co for v in ev.data.vertices], _solid_faces, all_triangles=False)
+    def _sd(bvh, p):
+        loc, nrm, idx, dist = bvh.find_nearest(p)
+        return dist if (p - loc).dot(nrm) >= 0 else -dist
+for spec in filter(None, os.environ.get("MPROBE", "").split(";")):  # Side:x,y,z = a point welded to the hand (hand-bone local, armature units): its world position per frame
+    s, e = spec.split(":"); loc = Vector([float(v) for v in e.split(",")]); pb = tgt.pose.bones[f"mixamorig:{s}Hand"]
+    for f in range(f0, f1 + 1):
+        sc.frame_set(f); bpy.context.view_layer.update(); M = tgt.matrix_world @ pb.matrix
+        hp = M.translation + M.to_3x3().normalized() @ (loc * tgt.matrix_world.to_scale().x)
+        print("MP", s, f - f0, *[round(c, 3) for c in hp])
+        if _solid_faces is not None:  # SOLID: signed distance (m, + outside) of the head, the hand and the hand->head / forearm segments to the prop volume
+            bvh = _solid_bvh(); hb = tgt.matrix_world @ pb.head; fb = tgt.matrix_world @ tgt.pose.bones[f"mixamorig:{s}ForeArm"].head
+            seg = min(_sd(bvh, hb.lerp(hp, k / 6)) for k in range(7)); fore = min(_sd(bvh, fb.lerp(hb, k / 4)) for k in range(5))
+            print("SD", s, f - f0, round(_sd(bvh, hp), 3), round(_sd(bvh, hb), 3), round(seg, 3), round(fore, 3))
 if os.environ.get("HPROBE"):  # both hands relative to the hips, per frame
     hp = tgt.pose.bones["mixamorig:Hips"]
     for f in range(f0, f1 + 1):
@@ -518,7 +581,7 @@ if os.environ.get("CLIP"):  # per-frame axe/body triangle overlaps, then exit
     # body faces not skinned to that arm
     FS = os.environ.get("FIST", "Left"); arm = (FS + "Arm", FS + "ForeArm", FS + "Hand")
     pts = [n for n in (f"mixamorig:{FS}Hand", f"mixamorig:{FS}HandMiddle1", f"mixamorig:{FS}HandIndex1", f"mixamorig:{FS}HandPinky1") if n in tgt.pose.bones]
-    lbad = []
+    lbad = []; lsurf = []  # lsurf: flagged by the nearest-face normal only (open shell), not inside any closed volume
     for f in range(f0, f1 + 1):
         sc.frame_set(f); bpy.context.view_layer.update(); worst = 0
         for b in bd:
@@ -529,9 +592,21 @@ if os.environ.get("CLIP"):  # per-frame axe/body triangle overlaps, then exit
             t = BVHTree.FromPolygons(vs, ps); e.to_mesh_clear()
             for pn in pts:
                 p = tgt.matrix_world @ tgt.pose.bones[pn].head; loc, nrm, _, d = t.find_nearest(p)
-                if loc is not None and (p - loc).dot(nrm) < 0: worst = max(worst, round(d * 100, 1))
+                if loc is not None and (p - loc).dot(nrm) < 0:
+                    # confirm by ray parity (+Z and -Y): an open garment shell (fur mantle, cape) has inward faces that flag a fist
+                    # hanging in free air in front of it; a real hit sits inside a closed volume on both rays
+                    ins = 0
+                    for dr in (Vector((0, 0, 1)), Vector((0, -1, 0))):
+                        q = p.copy(); n = 0
+                        while True:
+                            hl, hn, _, hd = t.ray_cast(q, dr)
+                            if hl is None: break
+                            n += 1; q = hl + dr * 1e-4
+                        ins += n % 2
+                    if ins == 2: worst = max(worst, round(d * 100, 1))
+                    elif not lsurf or lsurf[-1][0] != f - f0: lsurf.append((f - f0, round(d * 100, 1)))
         if worst: lbad.append((f - f0, worst))
-    print("LFIST", len(lbad), lbad); sys.exit(0)
+    print("LFIST", len(lbad), lbad); print("LFISTSURF", len(lsurf), lsurf[:12]); sys.exit(0)
 cam = bpy.data.objects.new("cam", bpy.data.cameras.new("cam"))
 sc.collection.objects.link(cam)
 cam.location = (2.6, -2.6, 1.0); cam.rotation_euler = Euler((math.radians(82), 0, math.radians(45)))

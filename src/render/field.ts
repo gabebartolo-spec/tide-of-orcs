@@ -1,5 +1,5 @@
 import { ARROWS, BARRICADE, FIELD, LOB, VANGUARD, WAVE_LEN } from '../data/balance';
-import { ORC_TYPES, OrcKind } from '../data/orcs';
+import { FIREBALL, ORC_TYPES, OrcKind } from '../data/orcs';
 import { SimEvent } from '../sim/events';
 import { Orc, Projectile, SimState, Vanguard } from '../sim/state';
 import { barFrac } from '../sim/barricade';
@@ -32,6 +32,8 @@ export class FieldRenderer {
   private shake = 0;
   private storms: { pts: [number, number][]; life: number; c: string }[] = [];
   private impacts: { x: number; y: number; r: number; life: number }[] = [];
+  /** Fire puffs where a fireball landed (TB-127): discs that rise, swell and cool from pale core to ember to fire as they fade. */
+  private puffs: { x: number; y: number; r: number; vy: number; life: number; max: number }[] = [];
   /** Fire and frost ground patches left by an enchanted strike (TB-089). */
   private patches: { x: number; y: number; r: number; life: number; c: string; fire: boolean }[] = [];
   /** Colour of the elf's lob this frame: its first enchantment, or '' for plain cream. */
@@ -69,7 +71,7 @@ export class FieldRenderer {
 
   /** Turn sim events into particles, strokes, blood, text and shake. */
   consume(events: SimEvent[], s: SimState): void {
-    const fx = this.fx, B = VFX.blood, A = VFX.arrows;
+    const fx = this.fx, B = VFX.blood, A = VFX.arrows, F = VFX.fireball;
     for (const e of events) {
       switch (e.t) {
         case 'kill': {
@@ -92,6 +94,14 @@ export class FieldRenderer {
         case 'splinter': fx.burst(BAR_X, H / 2, P.grove, VFX.regrow[0], VFX.regrow[1]); fx.text(BAR_X + 60, H / 2 - 40, STR.splinter, P.grove); break;
         case 'impact': this.impacts.push({ x: e.x, y: e.y, r: e.r, life: IMPACT_LIFE }); fx.burst(e.x, e.y, P.cream, VFX.impact[0], VFX.impact[1]); fx.ring(e.x, e.y, e.r * VFX.lobDust.r, P.sand, 2, VFX.lobDust.life); break;
         case 'fireStrike': this.patches.push({ x: e.x, y: e.y, r: e.r, life: A.patchLife, c: P.firePatch, fire: true }); fx.ring(e.x, e.y, e.r, P.fire, 3, A.ringLife); for (let i = 0; i < A.fire[0] * 3; i++) fx.flame(e.x + (Math.random() - 0.5) * e.r * 1.6, e.y + (Math.random() - 0.5) * e.r * 0.8, i % 2 ? P.fire : P.amber); fx.burst(e.x, e.y, P.fire, A.fire[0] * 2, A.fire[1]); break;
+        case 'fireballCast': fx.burst(e.x, e.y, P.ember, F.cast[0], F.cast[1], Math.atan2(e.ty - e.y, e.tx - e.x), F.castSpread); for (let i = 0; i < F.castFlames; i++) fx.flame(e.x + (Math.random() - 0.5) * F.r, e.y, i % 2 ? P.fire : P.ember); break;
+        case 'fireballStrike':
+          this.patches.push({ x: e.x, y: e.y, r: e.r, life: F.patchLife, c: P.firePatch, fire: true });
+          this.puffs.push({ x: e.x, y: e.y, r: e.r * F.flash, vy: 0, life: F.flashLife, max: F.flashLife });
+          for (let i = 0; i < F.puffs; i++) { const life = F.puffLife * (0.7 + Math.random() * 0.6); this.puffs.push({ x: e.x + (Math.random() - 0.5) * e.r, y: e.y + (Math.random() - 0.5) * e.r * 0.4, r: e.r * F.puffR * (0.6 + Math.random() * 0.6), vy: F.puffRise * (0.6 + Math.random() * 0.8), life, max: life }); }
+          fx.ring(e.x, e.y, e.r * F.ring, P.sand, F.ringW, F.ringLife); fx.burst(e.x, e.y, P.ember, F.burst[0], F.burst[1], -1.57, F.burstSpread); fx.burst(e.x, e.y, P.fire, F.fireBurst[0], F.fireBurst[1], -1.57, F.burstSpread);
+          for (let i = 0; i < F.flames; i++) fx.flame(e.x + (Math.random() - 0.5) * e.r * 1.6, e.y + (Math.random() - 0.5) * e.r * 0.8, i % 2 ? P.fire : P.ember);
+          this.shake = Math.min(1, this.shake + F.shake); break;
         case 'chill': this.patches.push({ x: e.x, y: e.y, r: e.r, life: A.patchLife, c: P.frostPatch, fire: false }); fx.ring(e.x, e.y, e.r, P.frost, 3, A.ringLife); this.shards(e.x, e.y, e.r); fx.burst(e.x, e.y, P.frost, A.frost[0] * 2, A.frost[1]); break;
         case 'stun': fx.burst(e.x, e.y, P.spark, A.stun[0], A.stun[1]); break;
         case 'shatter': fx.ring(e.x, e.y, e.r, P.frost, 3, A.shatterLife); this.shards(e.x, e.y, e.r * 0.8); fx.burst(e.x, e.y, P.frost, A.shatter[0], A.shatter[1]); fx.burst(e.x, e.y, P.cream, A.shatter[0] / 2, A.shatter[1]); break;
@@ -169,6 +179,7 @@ export class FieldRenderer {
     this.fx.update(dt); this.clock += dt;
     for (let i = this.storms.length - 1; i >= 0; i--) { this.storms[i]!.life -= dt; if (this.storms[i]!.life <= 0) this.storms.splice(i, 1); }
     for (let i = this.impacts.length - 1; i >= 0; i--) { this.impacts[i]!.life -= dt; if (this.impacts[i]!.life <= 0) this.impacts.splice(i, 1); }
+    for (let i = this.puffs.length - 1; i >= 0; i--) { const pf = this.puffs[i]!; pf.life -= dt; pf.y -= pf.vy * dt; if (pf.life <= 0) this.puffs.splice(i, 1); }
     if (this.shake > 0) this.shake = Math.max(0, this.shake - dt * 3);
     this.watchGear(s);
     this.glow.t = Math.max(0, this.glow.t - dt); this.leaves = Math.max(0, this.leaves - dt); this.edge = Math.max(0, this.edge - dt); this.slow = Math.max(0, this.slow - dt);
@@ -208,7 +219,7 @@ export class FieldRenderer {
     if (s.stats.treant) { g.fillStyle = P.treantTrunk; g.fillRect(BAR_X + 40, H / 2 + 10, 14, 34); g.fillStyle = P.treantLeaf; g.beginPath(); g.arc(BAR_X + 47, H / 2 + 2, 22, 0, 6.28); g.fill(); g.fillStyle = P.treantLeaf2; g.beginPath(); g.arc(BAR_X + 40, H / 2 - 6, 14, 0, 6.28); g.fill(); }
 
     const drawn = Math.min(1, (s.run.shotT[0] ?? 0) / s.stats.lobCd), aiming = aim !== null && aim.x > BAR_X + BAR_W && !s.run.fallen;
-    this.elf(ELF_X, H / 2, false, aiming && !this.reducedMotion ? drawn * VFX.bow.pull : 0);
+    this.elf(ELF_X, H / 2, false, aiming && !this.reducedMotion ? drawn * VFX.bow.pull : 0, aiming ? drawn : -1);
     this.gearFx();
     if (aim && aiming) this.reticle(aim.x, aim.y, s.stats.radius, drawn);
     if (s.stats.archers >= 1) this.elf(ELF_X - 10, H / 2 - 90, true);
@@ -231,6 +242,7 @@ export class FieldRenderer {
     this.drawBeams(dt);
     s.shots.forEach((a) => {
       if (a.kind === 'lob') { this.lob(a); return; }
+      if (a.kind === 'fireball') { this.fireball(a, dt); return; }
       if (a.kind === 'star') { this.star(a); return; }
       if (a.kind === 'bounce') { g.fillStyle = P.arcaneGlow; g.beginPath(); g.arc(a.x, a.y, A.orbR * 2.2, 0, 6.28); g.fill(); g.fillStyle = P.arcane; g.beginPath(); g.arc(a.x, a.y, A.orbR * 1.4, 0, 6.28); g.fill(); g.fillStyle = P.arcaneCore; g.beginPath(); g.arc(a.x, a.y, A.orbR * 0.7, 0, 6.28); g.fill(); }
       const l = a.kind === 'bolt' ? 22 : a.kind === 'knife' ? 8 : a.kind === 'bounce' ? VFX.arrows.boltLen : 14, n = Math.hypot(a.vx, a.vy) || 1, ux = a.vx / n, uy = a.vy / n;
@@ -242,6 +254,11 @@ export class FieldRenderer {
       }
       g.beginPath(); g.moveTo(a.x, a.y); g.lineTo(a.x - ux * l, a.y - uy * l); g.stroke();
     });
+    if (this.puffs.length) {
+      g.save(); g.shadowColor = P.fireGlow; g.shadowBlur = VFX.fireball.glow;
+      for (const pf of this.puffs) { const k = pf.life / pf.max, r = pf.r * (1.4 - 0.5 * k); g.globalAlpha = Math.min(1, k * 1.5); g.fillStyle = k > 0.66 ? P.fireCore : k > 0.33 ? P.ember : P.fire; g.beginPath(); g.arc(pf.x, pf.y, r, 0, 6.28); g.fill(); }
+      g.restore(); g.globalAlpha = 1;
+    }
     for (const im of this.impacts) { const k = im.life / IMPACT_LIFE; g.globalAlpha = k; g.strokeStyle = P.cream; g.lineWidth = 2; g.beginPath(); g.arc(im.x, im.y, im.r * (1.15 - 0.15 * k), 0, 6.28); g.stroke(); g.globalAlpha = 1; }
     for (const sm of this.storms) {
       if (sm.c === P.lilac) { g.globalAlpha = sm.life / 0.35; g.strokeStyle = sm.c; g.lineWidth = 2; g.beginPath(); sm.pts.forEach((p, i) => (i ? g.lineTo(p[0] + (Math.random() - 0.5) * 6, p[1] + (Math.random() - 0.5) * 6) : g.moveTo(p[0], p[1]))); g.stroke(); g.globalAlpha = 1; continue; }
@@ -339,6 +356,27 @@ export class FieldRenderer {
     } g.beginPath(); g.moveTo(a.x, ay); g.lineTo(a.x - (dx / n) * 14, ay - (dy / n) * 14); g.stroke();
   }
 
+  /** The shaman's fireball (TB-127): a shadow on the ground, a glowing ball (pale core, ember body, fire rim and halo) along its arc,
+   *  a comet tail of ghost balls behind it and embers rising off it. */
+  private fireball(a: Projectile, dt: number): void {
+    const g = this.g, F = VFX.fireball, T = VFX.trail, u = Math.min(1, a.t / FIREBALL.flight);
+    if (u >= 1) return;
+    const ay = a.y - a.h;
+    g.fillStyle = P.shadow; g.beginPath(); g.ellipse(a.x, a.y, F.r, F.r * F.shadow, 0, 0, 6.28); g.fill();
+    if (!this.reducedMotion) {
+      g.fillStyle = P.fire;
+      for (let i = 1; i <= F.trail; i++) {
+        const v = Math.max(0, (a.t - T.gap * i) / FIREBALL.flight), gx = a.sx + (a.tx - a.sx) * v, gy = a.sy + (a.ty - a.sy) * v - FIREBALL.arc * 4 * v * (1 - v);
+        g.globalAlpha = T.alpha * (1 - (i - 1) / F.trail); g.beginPath(); g.arc(gx, gy, F.r * (0.9 - (0.7 * i) / (F.trail + 1)), 0, 6.28); g.fill();
+      }
+      g.globalAlpha = 1;
+      if (Math.random() < F.embers * dt) this.fx.flame(a.x + (Math.random() - 0.5) * F.r, ay, Math.random() < 0.5 ? P.fire : P.ember);
+    }
+    g.save(); g.shadowColor = P.fireGlow; g.shadowBlur = F.glow; g.fillStyle = P.fire; g.beginPath(); g.arc(a.x, ay, F.r, 0, 6.28); g.fill(); g.restore();
+    g.fillStyle = P.ember; g.beginPath(); g.arc(a.x, ay, F.r * 0.65, 0, 6.28); g.fill();
+    g.fillStyle = P.fireCore; g.beginPath(); g.arc(a.x - F.r * 0.1, ay - F.r * 0.1, F.r * 0.35, 0, 6.28); g.fill();
+  }
+
   /** Frost: ice shards radiating from a strike. */
   private shards(x: number, y: number, r: number): void {
     const A = VFX.arrows;
@@ -402,10 +440,13 @@ export class FieldRenderer {
     if (o.hp < o.maxhp) { g.fillStyle = P.dim; g.fillRect(-o.r, -o.r - 8, o.r * 2, 3); g.fillStyle = P.rose; g.fillRect(-o.r, -o.r - 8, o.r * 2 * Math.max(0, o.hp / o.maxhp), 3); }
   }
 
-  private elf(x: number, y: number, dim: boolean, pull = 0): void {
+  /** `draw` is the bow's charge (0..1) while the player aims, -1 otherwise. The sprite elf plays its idle loop (`elf`) at rest
+   *  and its draw clip (`elf.attack`) in step with the charge, so the string is at full draw as the lob leaves. */
+  private elf(x: number, y: number, dim: boolean, pull = 0, draw = -1): void {
     const g = this.g; g.save(); g.translate(x, y); if (dim) g.globalAlpha = 0.85;
     g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 16, 12, 4, 0, 0, 6.28); g.fill();
-    if (this.sprites.draw(g, dim ? 'archer' : 'elf', this.clock, 0, 16, ACTOR_R)) { g.restore(); return; }
+    const key = dim ? 'archer' : 'elf', aiming = draw >= 0, t = aiming ? Math.min(draw, 0.999) * this.sprites.duration(key + '.attack') : this.clock;
+    if (this.sprites.drawActor(g, key, aiming ? 'attack' : 'walk', t, 0, 16, ACTOR_R)) { g.restore(); return; }
     g.fillStyle = dim ? P.archerCloak : P.elfCloak; g.beginPath(); g.moveTo(-9, 14); g.lineTo(9, 14); g.lineTo(5, -6); g.lineTo(-5, -6); g.closePath(); g.fill();
     g.fillStyle = P.lilac; g.beginPath(); g.arc(0, -12, 7, 0, 6.28); g.fill();
     g.strokeStyle = P.cream; g.lineWidth = 2; g.beginPath(); g.arc(12, 0, 16, -1.3, 1.3); g.stroke();

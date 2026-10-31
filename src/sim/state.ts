@@ -21,7 +21,7 @@ export interface Orc {
   /** Marched in a boss wave: the challenge is cleared when none are left. */
   champ: boolean;
 }
-export type ProjectileKind = 'arrow' | 'knife' | 'bolt' | 'lob' | 'bounce' | 'star';
+export type ProjectileKind = 'arrow' | 'knife' | 'bolt' | 'lob' | 'bounce' | 'star' | 'fireball';
 export interface Projectile {
   live: boolean; kind: ProjectileKind; x: number; y: number; vx: number; vy: number; dmg: number; pierce: number; life: number;
   /** Enchantments this shot rolled (combat FX bits), and its crit chance and crit multiplier (TB-111). */
