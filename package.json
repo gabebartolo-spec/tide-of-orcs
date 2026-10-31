@@ -2,7 +2,7 @@
   "name": "tide-of-orcs",
   "version": "0.1.0",
   "description": "",
-  "main": "index.js",
+  "main": "desktop/main.cjs",
   "directories": {
     "doc": "docs"
   },
@@ -12,7 +12,8 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "lint": "eslint src sim && tsc --noEmit",
-    "balance": "tsx sim/run.ts"
+    "balance": "tsx sim/run.ts",
+    "desktop": "npm run build && electron ."
   },
   "keywords": [],
   "author": "",
@@ -22,6 +23,7 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/node": "^26.6.6",
+    "electron": "^45.2.1",
     "eslint": "^10.13.0",
     "tsx": "^4.23.15",
     "typescript": "^6.0.3",

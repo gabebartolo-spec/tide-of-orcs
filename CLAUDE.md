@@ -38,6 +38,7 @@ npm run build      # production bundle to dist/
 npm run test       # Vitest, headless
 npm run lint       # eslint + tsc --noEmit
 npm run balance    # runs sim/ headless balance report (see BALANCE.md)
+npm run desktop    # build, then open the Electron desktop shell (desktop/main.cjs)
 ```
 
 Run `npm run lint && npm run test` before every commit. Do not commit if either fails.
