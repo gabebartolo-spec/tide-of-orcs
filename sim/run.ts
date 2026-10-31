@@ -1,5 +1,5 @@
 /**
- * Headless balance runner. `npm run balance -- --minutes 30 --policy greedy [--seed 1] [--quiet]`
+ * Headless balance runner. `npm run balance -- --minutes 30 --policy greedy [--loot greedy|hoarder] [--seed 1] [--quiet]`
  * Plays the pure sim with a scripted buy/rally policy and prints a per-minute markdown table.
  * Writes sim/out/<policy>-<date>.md unless --quiet.
  */
@@ -14,11 +14,17 @@ import { canReplant, replant } from '../src/sim/prestige';
 import { NODES, NodeId } from '../src/data/skillTree';
 import { STEP } from '../src/data/balance';
 import { barFrac } from '../src/sim/barricade';
+import { createRng } from '../src/sim/rng';
+import { rollDrop } from '../src/sim/lootRoll';
+import { EquipPolicy, equippedItems, itemScore, pickUp } from '../src/sim/loot';
+import { OrcKind } from '../src/data/orcs';
 
 type Policy = 'greedy' | 'wall' | 'dps' | 'nobuy';
 const args = process.argv.slice(2);
 const arg = (k: string, d: string) => { const i = args.indexOf(`--${k}`); return i >= 0 ? args[i + 1] ?? d : d; };
 const minutes = Number(arg('minutes', '30')), policy = arg('policy', 'greedy') as Policy, seed = Number(arg('seed', '1')), quiet = args.includes('--quiet');
+/** Loot (TB-093): rolled on its own RNG so the combat stream, and every existing balance table, stays unchanged. */
+const lootPolicy = arg('loot', 'greedy') as EquipPolicy, lootRng = createRng(seed * 31 + 7); let drops = 0;
 
 const s = createState(seed); const ev = new EventBus();
 const rows: string[] = []; let falls = 0, fallWave = '-', lastKills = 0;
@@ -73,16 +79,16 @@ const total = Math.round((minutes * 60) / STEP);
 for (let i = 0; i < total; i++) {
   step(s, STEP, { aim: crowdAim(s, s.stats.radius) }, ev); // player model: aims at the thickest crowd
   if (i % 25 === 0) decide();
-  for (const e of ev.drain()) if (e.t === 'barricadeFell') { if (fallWave === '-') fallWave = String(e.wave); fallWaves.push(e.wave); fallMins.push(Math.round(e.runTime / 6) / 10); }
+  for (const e of ev.drain()) if (e.t === 'kill') { const it = rollDrop(lootRng, s.meta.loot, e.kind as OrcKind, s.run.wave, s.meta.prestiges, { itemFind: 0, luck: 0 }); if (it) { drops++; pickUp(s.meta.loot, it, lootPolicy); } } else if (e.t === 'barricadeFell') { if (fallWave === '-') fallWave = String(e.wave); fallWaves.push(e.wave); fallMins.push(Math.round(e.runTime / 6) / 10); }
   if (i % Math.round(60 / STEP) === 0) {
     const m = Math.round(i * STEP / 60);
     const owned = Object.values(s.run.levels).reduce((a, b) => a + (b ?? 0), 0) - 1;
-    rows.push(`| ${m} | ${s.run.wave} | ${Math.floor(s.run.starlight)} | ${s.run.kills - lastKills} | ${s.run.kills} | ${Math.round(barFrac(s) * 100)}% | ${s.vans.count} | ${owned} | ${s.meta.heartwood} | ${falls} |`);
+    rows.push(`| ${m} | ${s.run.wave} | ${Math.floor(s.run.starlight)} | ${s.run.kills - lastKills} | ${s.run.kills} | ${Math.round(barFrac(s) * 100)}% | ${s.vans.count} | ${owned} | ${s.meta.heartwood} | ${falls} | ${drops} | ${s.meta.loot.items.length} | ${equippedItems(s.meta.loot).reduce((a, x) => a + itemScore(x), 0).toFixed(2)} |`);
     lastKills = s.run.kills;
   }
 }
 
-const header = `# Balance run · policy=${policy} seed=${seed} minutes=${minutes}\n\n| min | wave | starlight | kills/min | kills | wall | vanguard | nodes | HW | falls |\n|---|---|---|---|---|---|---|---|---|---|\n`;
+const header = `# Balance run · policy=${policy} loot=${lootPolicy} seed=${seed} minutes=${minutes}\n\n| min | wave | starlight | kills/min | kills | wall | vanguard | nodes | HW | falls | drops | satchel | gear |\n|---|---|---|---|---|---|---|---|---|---|---|---|---|\n`;
 const summary = `
 First fall at wave ${fallWave}. Falls (wave@run minutes): ${fallWaves.length ? fallWaves.map((w, i) => `${w}@${fallMins[i]}`).join(', ') : '-'}. Replants: ${falls}. Heartwood: ${s.meta.heartwood}. Best wave: ${s.meta.bestWave}.
 `;

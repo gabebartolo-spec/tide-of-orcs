@@ -1,5 +1,6 @@
 import { OrcKind } from '../data/orcs';
 import { HwLevels } from '../data/heartwood';
+import { LootMeta, freshLoot } from '../data/loot';
 import { FIELD, ORC_CAP, VanType } from '../data/balance';
 import { Levels, Stats, deriveStats } from './stats';
 import { Pool } from './pool';
@@ -36,7 +37,7 @@ export interface RunState {
   lobN?: number;
 }
 /** heartwood: all Heartwood ever earned (drives the passive bonus); hwLevels: Heartwood tree ranks bought with it. */
-export interface MetaState { heartwood: number; lifetimeKills: number; bestWave: number; prestiges: number; hwLevels: HwLevels }
+export interface MetaState { heartwood: number; lifetimeKills: number; bestWave: number; prestiges: number; hwLevels: HwLevels; loot: LootMeta }
 
 export interface SimState {
   tick: number; t: number;
@@ -51,7 +52,7 @@ export function freshRun(): RunState {
   return { wave: 1, waveT: 0, runTime: 0, starlight: 0, earned: 0, kills: 0, levels: { root: 1 }, barHp: -1, bulwarkUsed: false, fallen: false, bossDone: 0, boss: null,
     foeT: {}, stormT: 0, shotT: [0, 0, 0], knifeT: 0, hawkT: 0, treantT: 0, ballT: 0 };
 }
-export function freshMeta(): MetaState { return { heartwood: 0, lifetimeKills: 0, bestWave: 1, prestiges: 0, hwLevels: {} }; }
+export function freshMeta(): MetaState { return { heartwood: 0, lifetimeKills: 0, bestWave: 1, prestiges: 0, hwLevels: {}, loot: freshLoot() }; }
 
 const makeOrc = (): Orc => ({ live: false, kind: 'grunt', x: 0, y: 0, hp: 0, maxhp: 0, spd: 0, r: 0, loot: 0, atk: 0, dead: false, burn: 0, hitT: 0, wob: 0, swingT: 0, champ: false, chill: 0, stun: 0 });
 const makeShot = (): Projectile => ({ live: false, kind: 'arrow', x: 0, y: 0, vx: 0, vy: 0, dmg: 0, pierce: 0, life: 0, target: null, hit: new Set(), sx: 0, sy: 0, tx: 0, ty: 0, t: 0, h: 0, r: 0 });

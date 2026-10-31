@@ -58,7 +58,7 @@ tide-of-orcs/
     audio/
       engine.ts         Web Audio: ambient loop, SFX from events, ducking; missing files skipped silently
     save/
-      schema.ts         SaveV6 type, CURRENT_VERSION, retired-id lists, defaultSettings()
+      schema.ts         SaveV7 type, CURRENT_VERSION, retired-id lists, defaultSettings()
       migrate.ts        migrations[v] = (old) => new
       storage.ts        localStorage with try/catch (key `tide-of-orcs-v1`); export/import as base64 UTF-8 JSON
       telemetry.ts      local run log for testers, own key, JSON export (TB-070); not part of the save
@@ -107,7 +107,7 @@ The seed lives only inside `rng`; the save version lives in the save, not in Sim
 `SimEvent` union in `sim/events.ts`: `kill` (with `kind`), `hit` (with `crit`, `src` = shot kind), `impact` (lob strike, with radius), `wave`, `bossReady`, `bossStart`, `bossEnd` (with `cleared`, `loot`), `storm`, `hawkDive`, `treantStamp`, `bite`, `barricadeHit` (with damage fraction, drives shake), `barricadeRegrow`, `barricadeFell` (with the run summary), `vanguardRallied`, `vanguardHit`, `vanguardFell`, `bought`, `orcSwing` (kind, from, target: melee release), `vanStrike` (vanguard type, from, target), `bleed` (melee wound, blood only); these three are presentation-only (TB-088), `hwBought`, `replant` (with `forced`). `EventBus` is a plain array capped at 2,000 per frame. Render turns these into particles, floating text, shake and toasts; audio turns them into SFX via `cueFor`. Sim never knows about either.
 
 ## Save
-- `SaveV6 = { version: 6, savedAt: number, run, meta, settings: { volume, reducedMotion, numberFormat } }`. Pools are **not** saved; a load starts with an empty field (orcs respawn within seconds; this avoids serialising 160 orcs).
+- `SaveV7 = { version: 7, savedAt: number, run, meta, settings: { volume, reducedMotion, numberFormat } }`. `meta.loot` (v7, TB-090) holds the satchel `items[]`, `equipped` uids by slot, `glimmer`, `lootFilter`, boss `pity` counters and `nextUid`; it survives replants. Pools are **not** saved; a load starts with an empty field (orcs respawn within seconds; this avoids serialising 160 orcs).
 - History: v1→v2 (TB-028) drops retired node ids (`RETIRED_NODE_IDS`), fixture `src/save/fixtures/v1.ts`; v2→v3 (TB-080) retires Blood Banners and splits the spawn clock per orc kind; v3→v4 (TB-081) retires the Warboss nodes for boss waves; v4→v5 (TB-052) adds `run.earned`; v5→v6 (TB-055) adds `meta.hwLevels` (empty).
 - `migrate.ts` runs `while (save.version < CURRENT) save = migrations[save.version](save)` and throws on a save newer than the build. Every schema bump adds a migration and a test (`src/save/save.test.ts`) with a save of the previous version (the v1 fixture file, or inline for v2–v5).
 - Export: `btoa` of the UTF-8 JSON, shown in the Settings textarea for the player to copy. Import: decode, `JSON.parse`, `migrate()`, then replace state. There is no separate schema validation beyond `migrate`.
