@@ -87,9 +87,9 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-070 | Local telemetry export (JSON of run stats) for testers | app | 052 | claude | done f31ce6b |
 | TB-071 | Balance pass #2 from tester data | balance | 070 | gabe | todo |
 | TB-072 | Perf verification on phone; profile and fix | perf | M4 | | dropped (mobile off roadmap, 31 Oct) |
-| TB-073 | Itch.io page copy, screenshots, HTML5 zip pipeline | release | 072 | gabe | todo |
+| TB-073 | Itch.io page copy, screenshots, HTML5 zip pipeline | release | — | gabe | todo |
 | TB-074 | Electron wrapper spike | release | 073 | | todo |
-| TB-075 | Bug bash checklist run | qa | 072 | | todo |
+| TB-075 | Bug bash checklist run | qa | — | | todo |
 | TB-076 | Move 6 colour literals in src/render (rgba/hex) into palette tokens (rule 6) | render | | claude | done c189562 |
 | TB-077 | Move inline tree multipliers in sim/stats.ts (1.25, 1.15, 1.2, 1.4 …) into data/balance (rule 3) | sim/data | | claude | done c189562 |
 | TB-078 | Fallen overlay clips on phones: at 375 px the field is 183 px tall and the Replant button starts at its bottom edge, so it is unreachable (rule 1). Fit overlay to field height or move it out of the canvas box | ui | 027 | | done 9bfcc0e |
@@ -98,6 +98,8 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-082 | Tree opens at 1:1 on Waking instead of fit-to-width (unreadable in the 378 px panel); enemy Fury/Swarm nodes stacked so labels don't collide | render | 021 | claude | done 5cb30c1 |
 | TB-081 | Boss waves: every 10 waves a boss wave unlocks; the player summons it, starting a 60 s challenge of bespoke mini-waves. Replaces the Warboss summon, Fury, Swarm and Bounty nodes (save v4) | sim/ui | 080 | claude | done e3b4536 |
 | TB-098 | Field ground redesign (director, 31 Oct): seeded grass tufts, small rocks, worn and barren patches, pre-rendered offscreen | render | | claude | done (PR) |
+| TB-099 | Loot sets: 7 sets with 2/4/6-piece effects on the field (planned as "TB-098" on the loot branch; renumbered, TB-098 is the field ground) | sim/render | 097 | claude | todo |
+| TB-100 | Loot mythic powers (planned as "TB-099" on the loot branch) | sim/render | 099 | claude | todo |
 
 ## Icebox
 - Starfall, Owl, Mist, Lantern nodes (SKILL-TREE.md Planned).
