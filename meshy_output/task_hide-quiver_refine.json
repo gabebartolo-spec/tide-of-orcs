@@ -1,0 +1,27 @@
+{
+  "id": "01a1938d-4d8d-7733-8e09-ef315a97f3e2",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 1038410910,
+  "prompt": "Rough rawhide arrow quiver, a game item prop. A tube of stitched hide with a seam, a shoulder strap, four fletched arrow shafts standing out of the mouth, no bow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Rust-brown rawhide with bone-coloured stitches, ochre strap, pale sage arrow shafts with bone fletching.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476875528,
+  "progress": 100,
+  "started_at": 1793476875536,
+  "finished_at": 1793476903522,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938d-4d8d-7733-8e09-ef315a97f3e2/output/model.glb?Expires=4947004800&Signature=TwSZ9UpitQnfI5Mqw40WfzTdItOcNH4yLhctSCTSWMvywdKFUIogNtmOdDw4EvtMc-7nfz9LJ-0D~IO~nJd79s-6BkgqHqBlNUl3QE1jH3riGkrhiBKwfAypCvSRyn9sds8VOETvk-Ugc4m83OS1L8XW2zjmI0dUKPD-FAR2iqe8Mma6cchZUFc2Euxzmj6WxuuIM-rCJ60WPoTfddyGHUhFuxRRMYBh9WEP3epqGyORDlIJXMrNDX8DmPg2bM7J59rsD4lZljdtNlhLQEj3wpe20ASi5UKgr1jJOC8JNVR10bRRmPYOlq14GH5Vm082XIseYuphM5zmB6Hh0jGNnw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938d-4d8d-7733-8e09-ef315a97f3e2/output/preview.png?Expires=4947004800&Signature=pjAYlTECSMdxWJcKlaqOPnEl1EKi5B7XefBscnx5~MD9S4Jkv4f93OfWUUDZc~-2xCeQU~wwHT0xay3efj2f~PoBBGGI1SFmpMYAPNHAGplKl87XC58DfgiqcTIlxcFZXB7zoK5ikeJC7SszTPjTR5igwmdjzNMtQpV7FPVhGHwd3djrHUE~cvdwQOzKmhEarFb15hrFWQDGODClaVEx-JoAi0gszSuOYsqI1N7yldvCvao8ZsHD1~Sn7mSq9SQdxMkVndlsh8xGWunFt1a0tOyj4C0JBIrhiFCMRfWPL89~UeUv~doqkBwiCQoPBouSPmCKH8akCH93wwJbyv~tUw__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938d-4d8d-7733-8e09-ef315a97f3e2/output/texture_0.png?Expires=4947004800&Signature=VPsAyIenwKr62mg4Kkqvt81fYx78tOnvm25426abWWwYB9y5I1cok655-2ov25rE6xiLqtfGmAKIb-phRmqSfztB4QzOStvBdbLmsG3VJvsB22piW9AFSNeIgBM2hBkYa3L7XYaBQwC4nPPWkrehqKQP3zdN-4OczET2~vs8d8jVcBvru1YbD0CyFk1NW2zika3tFlCubRmjGZZZkBNdhEUDg8EGr21vaCQ~lhJ2FkSqBfjJ2vPPKvg-nGlqGgpld0-ujy3f4lQSQHBp7hKm8KMp6~L5mZO7RaRXY2nN4nNB7cd6zi2tWiJDnd9nP7HR0WQ8gP9qwehM31xgMC7mTw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

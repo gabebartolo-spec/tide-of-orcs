@@ -1,0 +1,27 @@
+{
+  "id": "01a1938d-6bfe-75cb-b8f8-9383cffbb2a7",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 472862177,
+  "prompt": "Woven reed arrow quiver, a game item prop. A basket-weave tube with a braided rim and a strap, five fletched arrow shafts standing out of the mouth, no bow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Ochre woven reeds, dusty sage braided rim, rust-brown strap, bone fletching.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476883017,
+  "progress": 100,
+  "started_at": 1793476883024,
+  "finished_at": 1793476907827,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938d-6bfe-75cb-b8f8-9383cffbb2a7/output/model.glb?Expires=4947004800&Signature=ocTmMh4O9f8kUA8mRApoVd0Um2JwGekLRVQNjsyjoWRoA9zIPLnbPRpZZEbJFi3mj4UHHG5lB0NDRCsv8KuQU8ah6X6364uRF4URk81guEt~PWgSzj6QFyG7Stuyq6jW89KJa8zPmMcizv8d5cHk4BHRw~5clh-z4PENxdCgo5NEqJfjLuqhyonlbcBGLXf78MUhrhi2I2IyNjR~kvxH-jhGLkGJf0zprLhrV66QGWt2dq79POdSPi4KNJKZlWo-mQwiiubrckTHUP5IUTLWZ2Awhf1N2qu-ETz1RCm33y9cnTLpHzKVrLXi~uHu0oWX88vyy26jC41Sr9D~T5vdrQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938d-6bfe-75cb-b8f8-9383cffbb2a7/output/preview.png?Expires=4947004800&Signature=MdXfUgBM4ljWmbBCmM9Qbb~ftcfxtdbyI6TXtXZgavVFXcor1tIqlJFms9vb2ZoUghYkWvpTHFHh9NwGZCPRpzmp~gOta6PzQXhxPl028UDY-GY0whN51Ovp5Z94S8ZNGGLNpHOFI5PSQiWb34MOTzbQ2Z0aev-kkC-F9y26t1YDyN0JYYpSEnEvY0QLyRq9rhY03rz8mfoM-vZMAlLMC0FTQrVkREVgKYill4riTJQBmxb1U5ByJNfCn6kCk4W3t7dYMt4NNHPmj--a6pKgZ2dUkloh9uXE79hDPtzq33WQ710r5Or8A5A0inWv9CfzkwLX3lk-~OeZ6vXPhtYVXQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938d-6bfe-75cb-b8f8-9383cffbb2a7/output/texture_0.png?Expires=4947004800&Signature=gN5p0vYhK5OImLBndXj0cwxjCMhqcFpah8lxRxvAq3MpnLz8BolyUjCX1Ua4y7Z7KqvMz~Tc4ZviloS4i0lz-~D4EP78HYVNcXPgMziwTbY7IW9cp0bM~oFcfp50p~yt9UWoEBeiZCLFbw9PsnQY~HHwBHcNdbHtAp0fM6jJ22RnCIFfndPGaic9vMNksLno5eJ9b74NqYprgw00VMlzUzw8zLjebl2DyxRo1alOIFsGOjwvxjIxBOQlV3VpB1aPrhWVbolHj9XZkbBWj112NCE8RmPcfwh8wthwcbhfO4-LrS6kENKUYPfHX4y01gHCcs6q5E2vghrZFm7dA7rTEw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

@@ -1,0 +1,27 @@
+{
+  "id": "01a1938f-6e0e-716a-84fe-6680c6dc8c80",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 2706970698,
+  "prompt": "Mythic oak bow, a game item prop. A bow carved from a gnarled oak branch with bark patches, a single taut string, three small wooden stakes hanging from the grip on cords, no arrow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Ochre oak wood with rust-brown bark patches, dusty sage lichen, bone-coloured stakes and string.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793477014556,
+  "progress": 100,
+  "started_at": 1793477014562,
+  "finished_at": 1793477048694,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938f-6e0e-716a-84fe-6680c6dc8c80/output/model.glb?Expires=4947004800&Signature=L~3rZ6fFMWcveJRRpaCgnXEuxcHajcZzjzwCWXlVOUE~mf2J9Frx1P9k9Xxbo3Ek1DQMrwJhPo4S-oe93Ikhmm0dpqO0cpAbKGlpptTJdQxXO~aoMjW2N5cYE1nPL4unHMFOzBXsh46w7r~TxeX6RlDxQWa5od~fscC1XBzHnOZrYyn1fV4HjstzNZ5BtqHT7zhg4Id6I93Ly6YN3tVSje~fErhPx20oNKNthDwi96AA4wosK-T7llkZi1UdmpeH4QKOc5jxvgr4td9cWn0GvQghUFvOYPsVgBmAGauDy9Y4~YKeEnZxNfcyhmd163TxGqxy0EmNHelAxxfaVP39jQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938f-6e0e-716a-84fe-6680c6dc8c80/output/preview.png?Expires=4947004800&Signature=TxRXsHUaLeJ0yEBIyYyHgwojrPUoPKwEP-trrA7itCN~5E-RfKCAWGw4~DJtiyGlL9WOK0schtbZn9KgyilEQGpJ7O41zH3m1-Pu4e7iCLHQrRASmT2RFYhwyVOAUfUEIbMmkBf2rhD9WcDvE-33SrZZb0RlpPswLxllEPifzNuVQDprC7Swdz42QGmqTV1bvd4-weaojZEV6wflXxxwI425fzp2PsdvPlaKci15BHzxaIU1mnjwhOpw1r9XMOtKOLFYokssly4zmGWX2JAVHIZpZ0~CrFqo62A24o9Q8WTE3xFN6ILqpD3e5ueG8CHW2doaBeaIHkItFFRp4sSxOg__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938f-6e0e-716a-84fe-6680c6dc8c80/output/texture_0.png?Expires=4947004800&Signature=V7p0MKfP3WJpIXdy8EzPxWy6stb6cID6vzC~grYhUye63cVYeQP2ENadqOih2DIbhISQnziVidtifImGBELSKcSlQySNIDgJ51nnkJZBPScm1~a7nydoGLli~sVPLtwBm6KZvXEbWkxFAK3-7NqvzhA9t1TV1uCILnXfaI0~LxDc0TW5i-JACsquteyEfBpODWftj8cyXKbldu~gr2k-l0GU6fjjxalbE8uXkBSHTzM-e-fvYl~8TcIFW4hNOaSsQjViZJztFZb031Hki2dIwBhYjBP6-~V8r0AfttbKEMj78YvZScKfzuuOsO~WRmDSpkB~rJTakHbexOjAJVmQQQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

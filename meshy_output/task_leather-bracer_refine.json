@@ -1,0 +1,27 @@
+{
+  "id": "01a1938d-a232-713c-bf86-a3e8c5db879c",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 2125867991,
+  "prompt": "Archer's leather bracer, a game item prop. A curved forearm guard with two buckled straps and a simple embossed leaf motif, no arm inside. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Rust-brown leather with ochre buckles and straps, a pale sage leaf motif, bone-coloured edge stitching.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476897257,
+  "progress": 100,
+  "started_at": 1793476897264,
+  "finished_at": 1793476928773,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938d-a232-713c-bf86-a3e8c5db879c/output/model.glb?Expires=4947004800&Signature=D5ND~AFL~XlqucxQsYoJY0AUjKS6I0ljvURgN~Bs6-WjZjm1C-CC9zkUt1az4uBJCuoFp7KzxEQAcbl26rYMzjwxlg9OWhevocm1Zd656UBa~4tWfUBJfSW5j2b9YsSiCXLSNC0PfQJ1kq4r9Ob0ffoKwGTva74JX04npSVwKvSlnFS53HlBDyL7193O1IqhxvqVxSqz6iw5X988vzr1J5m4e0dp9CIAVQeG7vkJp2kUa~aEja6CAbNEyuBfSFqCbSxlqLrU7iOzlWQKmzRcMD2SVZTDBj92hLxrkUvpQjDZJacCIbw6psyY7uFaZ--ZHuIN4kRBpi8JMHYfNX898A__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938d-a232-713c-bf86-a3e8c5db879c/output/preview.png?Expires=4947004800&Signature=WX3a6S46SbaYXTJ4Vjdorsxuz9ItFSdoEFYtJJgt3lKdOhIdMQLimVbSsPvnZchFJvTxcWQuB3o0iCeC8W~l9GIctB~TceRyl21XLQr~UGu9GgKhS2q7VrYk9gqZooPC4xH3CcPaO4BU2u1NmB7TVZ9iUQ~uhOCktRtbukpX9dOVP2Lsn6JVbuiUuDJVs5YpPoc~dszewr151soPKlUqdtH1vqJpCTjS7bCvc8dXHmRZKgLqkRVaOB6iFTuKki7BzLoeIrWyOGSJ4kuF65QAPqrKJ-sPtRtxwDTvAXo0bd3tEZj3pG8J81MFIMTocYtDODfauz5xIAxuh0bDIK9GbA__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938d-a232-713c-bf86-a3e8c5db879c/output/texture_0.png?Expires=4947004800&Signature=STWdxackctcrJJ439UbcFBY1VF~fXEMXWBKRZjJ7G9etFISEz7CAevS2bTZ1hS-~BIBsZUd712DVGIX~YAIFnr~NsSaaIu0uKVP45uMDn1kr31Cy3~1L9qPu65vsyTeVuvTXnJT1UdxsgfvAKMA~uCID1fqsDesTRJNYUJUib0eOIC-8GaPbhlJAquXjvriTyZ7TPwygVb-WW9BaaWqpBsi~5K1YzwBw6G0haRO21IO1-X1sq-vsVt5486UqBykmHEETtkslLA7Au1kleNexc10mAPnEyd6olH7QqdurFshvPGOzCW6HF2nm7AvYw4sEVDsnx4EVH7hj7Y5l5XCK5g__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}
