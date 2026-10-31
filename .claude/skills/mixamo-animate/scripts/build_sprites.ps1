@@ -43,6 +43,10 @@ $jobs = @(
       RESTUP = "0.03"; ARROWL = "0.5"; ARROWF = "6"; QFLOAT = "0,0,0"; QLEN = "0.32"; QBOB = "0.015"
       WOFFS = "mixamorig:RightArm:0,1,0,-35;mixamorig:RightForeArm:0,1,0,-25;mixamorig:LeftArm:0,0,1,-25" } }
 )
+# orc.wolfrider.attack is NOT an apply_anim job: the wolf rider is a Tripo "Other" rig driven by Quaternius Wolf "Attack" (no Mixamo skeleton).
+# Its 20 frames + anchor come from wolfrider\render_wr_sheet.py (same field camera, ORTHO 1.4, RES 512, mirrored to face screen-right):
+#   $env:ORTHO = "1.4"; & $bl -b --python "$s\wolfrider\render_wr_sheet.py" -- "$a\wolf_rider\wolfrider_anim6.blend" $o orc.wolfrider.attack
+# then put its ANCHOR line into anchors.json as [ax, ay, 1.4] by hand (SKILL.md step 6); pack_sprites.py below picks the frames up like any key.
 $anc = @{}; $af = "$o\anchors.json"; if (Test-Path $af) { (Get-Content $af | ConvertFrom-Json).PSObject.Properties | ForEach-Object { $anc[$_.Name] = $_.Value } }
 foreach ($j in $jobs) {
   if ($Only.Count -and $Only -notcontains $j.key) { continue }
