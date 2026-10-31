@@ -1,4 +1,4 @@
-# A Lot of Orcs — Development Plan (repo: tide-of-orcs)
+# Let's Hunt Some Orc! — Development Plan (repo: tide-of-orcs)
 
 **Version 1.4 · 1 Nov 2026 · Owner: Gabe**
 
@@ -109,14 +109,14 @@ Orcs drop gear; six worn slots, a satchel, affixes, sets and mythic powers feed 
 
 ### M4.7 — Tree and voice (1 Nov) · **done except TB-112, TB-117**
 - Per-type upgrade nodes TB-111 (PR #31): 48 new nodes, tree 56 → 104.
-- Rename pass in the elf's voice TB-115 (PR #35): every node, Heartwood line, set and mythic renamed; currency Teeth and Grudge; game title **A Lot of Orcs**. Ids and saves unchanged.
+- Rename pass in the elf's voice TB-115 (PR #35): every node, Heartwood line, set and mythic renamed; currency Teeth and Grudge; game title **A Lot of Orcs** (renamed **Let's Hunt Some Orc!** 1 Nov). Ids and saves unchanged.
 - Tree keyboard access TB-116 (PR #38).
 - Open: TB-117 branch legend over node labels (PR #39 open), TB-112 tooltip says "needs" for an owned parent.
 
 ### M5 — Ship (week 8) · local telemetry done (TB-070 f31ce6b, loot events TB-107); bug bash run twice
 - Balance pass #2 with telemetry from testers (TB-071; local JSON export, no server; export built).
 - Save import/export (done in TB-065), version migration test suite.
-- Itch.io page and web build (TB-073), Electron wrapper spike for Steam (TB-074, done: `npm run desktop`; fonts bundled in TB-118; packaging TB-119 remains).
+- Itch.io page and web build (TB-073), Electron wrapper spike for Steam (TB-074, done: `npm run desktop`; fonts bundled in TB-118; Windows package in TB-119: `npm run desktop:pack`; app icon and Steam upload remain, TB-120).
 - Bug bash (TB-075, `docs/QA-CHECKLIST.md`): runs 1 and 2 done (PRs #33, #37); their bugs became TB-112–117. Performance: no frame spikes in a visible browser with 160 orcs (TB-113); still untested on a mid-range PC.
 
 Mobile is out of the roadmap (director, 31 Oct): the web build ships for PC first; a mobile port comes after it is perfect on PC. TB-064/TB-078 layout work stays in the code.

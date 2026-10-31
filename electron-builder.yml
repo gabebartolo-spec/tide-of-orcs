@@ -1,0 +1,15 @@
+# Desktop (Steam) package for Windows (TB-119). `npm run desktop:pack` writes release/win-unpacked/,
+# the folder a SteamPipe depot uploads. Unsigned; no installer (Steam installs it).
+appId: com.gabebartolo.alotoforcs
+productName: "Let's Hunt Some Orc!"
+directories:
+  output: release
+files:
+  - desktop/**
+  - dist/**
+  - package.json
+  - "!dist/**/*.map"
+win:
+  target: dir
+# the game text is English only; other Chromium locales add ~48 MB
+electronLanguages: [en-US]
