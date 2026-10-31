@@ -45,12 +45,17 @@ export class SatchelPane {
     $('sat-detail').onclick = (e) => {
       const act = (e.target as HTMLElement).closest<HTMLElement>('[data-act]')?.dataset.act, uid = this.selected;
       if (!act || !uid) return;
-      if (act === 'equip') this.game.equipItem(uid);
+      const i = Number((e.target as HTMLElement).closest<HTMLElement>('[data-i]')?.dataset.i);
+      let flash: (() => Element | null | undefined) | null = null;
+      // TB-105: the worn card flashes its rarity, the counter flashes on salvage, a rerolled line shimmers in
+      if (act === 'equip' && this.game.equipItem(uid)) flash = () => $('sat-worn').querySelector(`[data-uid="${uid}"]`);
       else if (act === 'lock') this.game.lockItem(uid);
       else if (act === 'heirloom') this.game.heirloomItem(uid);
-      else if (act === 'reroll') this.game.rerollItem(uid, Number((e.target as HTMLElement).closest<HTMLElement>('[data-i]')?.dataset.i));
-      else if (act === 'salvage' && this.game.salvageItem(uid)) this.selected = null;
+      else if (act === 'reroll' && this.game.rerollItem(uid, i)) flash = () => $('sat-detail').querySelectorAll('.affixes li')[i];
+      else if (act === 'salvage' && this.game.salvageItem(uid)) { this.selected = null; flash = () => $('sat-count'); }
       this.render();
+      const el = flash?.();
+      if (el) { el.classList.remove('flash'); void (el as HTMLElement).offsetWidth; el.classList.add('flash'); }
     };
   }
 

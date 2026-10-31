@@ -47,7 +47,8 @@ fetch('./build.json').then((r) => (r.ok ? r.json() : null)).then((b) => { if (b)
 let last = performance.now(), acc = 0, hudT = 0, saveT = 0;
 function frame(now: number): void {
   const dt = Math.min(0.25, (now - last) / 1000); last = now;
-  acc += dt;
+  // a mythic drop briefly holds, then slows the field (TB-105)
+  acc += dt * field.timeScale;
   // the field holds still while the replant ceremony plays
   if (field.ceremony.active) acc = 0;
   while (acc >= STEP) { game.tick(STEP); acc -= STEP; }
