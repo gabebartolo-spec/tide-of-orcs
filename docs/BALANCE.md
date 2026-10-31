@@ -104,6 +104,7 @@ Status measured 31 Oct 2026 at 8791ac2, seed 1, 25 min, player model `crowdAim` 
 | A spearman earns its keep | buys at least as many seconds of wall life per starlight as a Seasoned Timber rank (median over waves 3/6/10/14, seeds 1–3) | met, barely: median ratio 1.06, 7 of 12 cases ≥ 1 at `wallMult` 10 (`sim/spearman.ts`, TB-086); was 1.5 before TB-080 |
 | Breakout | a run passes wave 15 within 15 min of total play | met: greedy after 4–6 short runs (6–12 min), that run falls at wave 24–26 (TB-054) |
 | Bare archer, no purchases, holds | ≥ 4 waves | met (falls wave 4–5) |
+| Worn gear power (TB-108) | +60–90% vs bare, about +2–3 waves at late orc HP (director, 2026-11-01; "+10 waves" dropped) | over: best wave worn vs bare +5 to +8 (seed 1, 25 h, P-108) |
 | Tree fully bought in a run | never | met: 117 of 156 buyable ranks at most (greedy run 5) |
 
 ## Heartwood tree (M3, built TB-053)
@@ -349,7 +350,7 @@ Evidence: `npm run balance -- --minutes 1500 --seed N --quiet --tune …` (25 si
 | Best wave worn | | 90 (bare 83) | 87 | 89 / 89 / 90 / 91 |
 
 Read: G sets land at 7–12 h (C: 3.6 h; C with every 60 on seeds 1–3: 3.6–6.9 h), about 20–30% slower than C. Mythic stays luck-bound at 0.8% per boss; two of four seeds beat the 15 h floor, pity caps it at boss 25 (~13 h at this boss rate). First rare in run 1 misses at any weight: run 1 falls at wave 5 in 1.6 min.
-Gear power: worn vs bare best wave +5 to +8 (seed 1, 25 h). Late orc HP grows ~30% per wave, so +60–90% power ≈ +2–3 waves and "+10 waves" ≈ ×14 power: the two targets disagree. The runner's play-on trial (end state, worn vs bare) gives −5 to +7 waves by seed, too noisy to tune on.
+Gear power: worn vs bare best wave +5 to +8 (seed 1, 25 h). Late orc HP grows ~30% per wave, so +60–90% power ≈ +2–3 waves and "+10 waves" ≈ ×14 power: the two targets disagree. Director (1 Nov) picked +60–90% power. The runner's play-on trial (end state, worn vs bare) gives −5 to +7 waves by seed, too noisy to tune on.
 Found: past wave ~117 combat stops (0 kills/min, wall 100%, waves tick to 463 on seed 3 at bosses every 60); TB-118.
 
 ### P-111 · Per-type upgrade nodes (2026-11-01, TB-111)
