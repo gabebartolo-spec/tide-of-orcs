@@ -75,8 +75,8 @@ Goal: parity with the prototype, properly built.
 - ~~Balance pass #1 via the simulator (TB-054):~~ Done 1185a3a: re-set the pacing targets for the wall ×10 design, then tune; original aim was first prestige at 30–45 min, second at ~35 min of a fresh run. Measured now: greedy breaks out after 4–6 short runs (6–12 min), reaches the wave-35 ceiling around 14 min run time.
 **Done when:** three consecutive prestige runs each feel faster than the last.
 
-### M4 — Presentation (weeks 6–7) · **done except TB-063** (music beds), **TB-068** (sprite sheets, Gabe) and **TB-069** (ElevenLabs SFX, Gabe). Done: sprite loader TB-060, parallax/day-dusk TB-061, audio engine TB-062, mobile TB-064, settings TB-065, tree polish TB-066, strings TB-067.
-- Final art: Tripo models → Cascadeur animation → sprite sheets for orcs, elf, vanguard, companions (ART-STYLE.md §Asset pipeline); vector draws remain the fallback. Wall weathering, parallax hills, day/night tinting.
+### M4 — Presentation (weeks 6–7) · **done except TB-063** (music beds), **TB-068** (sprite sheets, Gabe) and **TB-069** (ElevenLabs SFX, Gabe). Done: sprite loader TB-060, parallax/day-dusk TB-061, audio engine TB-062, mobile TB-064, settings TB-065, tree polish TB-066, strings TB-067, field ground TB-098 (tufts, rocks, worn patches).
+- Final art: Tripo models → Cascadeur animation → sprite sheets for orcs, elf, vanguard, companions (ART-STYLE.md §Asset pipeline); vector draws remain the fallback. Wall weathering, parallax hills, day/night tinting, natural ground (ART-STYLE �Ground).
 - Audio: ElevenLabs SFX and ambient bed, two music beds, ducking on wall fall and boss.
 - Tree layout polish: branch curves, bloom on affordable nodes, camera easing.
 - Settings, reduced-motion path, number formats.
