@@ -10,6 +10,9 @@ export type SimEvent =
   /** An orc struck by a melee source with no projectile (vanguard, wolf, hawk, treant, storm). Render-only (TB-088). */
   | { t: 'bleed'; x: number; y: number; r: number }
   | { t: 'impact'; x: number; y: number; r: number }
+  /** The elf looses a lob, or a throwing knife leaves the hand (audio only). */
+  | { t: 'loose' }
+  | { t: 'knife' }
   | { t: 'wave'; wave: number }
   | { t: 'bossReady' }
   | { t: 'bossStart' }

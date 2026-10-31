@@ -17,6 +17,11 @@ describe('audio cue map', () => {
     expect(cueFor({ t: 'replant', heartwood: 1, forced: true })).toBe('replant');
     expect(cueFor({ t: 'wave', wave: 2 })).toBeNull();
   });
+  it('maps the loose, the knife throw and the boss roar', () => {
+    expect(cueFor({ t: 'loose' })).toBe('loose');
+    expect(cueFor({ t: 'knife' })).toBe('knife');
+    expect(cueFor({ t: 'bossStart' })).toBe('bossRoar');
+  });
   it('ducks only on big moments', () => {
     expect(Object.entries(CUES).filter(([, c]) => c.duck).map(([k]) => k).sort()).toEqual(['bossRoar', 'rallyHorn', 'replant', 'wallFall']);
   });
