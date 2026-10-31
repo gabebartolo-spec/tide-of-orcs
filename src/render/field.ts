@@ -70,6 +70,13 @@ export class FieldRenderer {
         case 'hawkDive': fx.burst(e.x, e.y, P.cream, VFX.hawk[0], VFX.hawk[1]); fx.blood(e.x, e.y, footOf(ACTOR_R), P.bloodOrc, B.kill, 0); break;
         case 'treantStamp': fx.burst(e.x, e.y, P.sage, VFX.treant[0], VFX.treant[1]); fx.blood(e.x + 30, e.y - 20, footOf(ACTOR_R), P.bloodOrc, B.hit, 1); this.shake = Math.min(1, this.shake + VFX.treantShake); break;
         case 'storm': this.storms.push({ pts: e.pts, life: VFX.stormLife, c: P.lilac }); for (let i = 1; i < e.pts.length; i++) fx.blood(e.pts[i]![0], e.pts[i]![1], footOf(ACTOR_R), P.bloodOrc, B.hit, 0); break;
+        case 'burnSpread': fx.burst(e.tx, e.ty, P.amber, VFX.hit[0], VFX.hit[1]); break;
+        case 'pinned': fx.burst(e.x, e.y, P.cream, VFX.hit[0], VFX.hit[1]); fx.text(e.x, e.y - 22, STR.pinned, P.cream); break;
+        case 'freeRally': fx.burst(BAR_X, H / 2, P.grove, VFX.regrow[0], VFX.regrow[1]); fx.text(BAR_X + 60, H / 2 - 40, STR.freeRally, P.grove); break;
+        case 'thunder': fx.burst(W / 2, H / 2, P.cream, VFX.regrow[0], VFX.regrow[1]); fx.text(W / 2, H / 2 - 40, STR.thunder, P.cream); break;
+        case 'starCloak': fx.burst(e.x, e.y, P.starfall, VFX.hit[0], VFX.hit[1]); break;
+        case 'stake': fx.burst(e.x, e.y, P.stake, VFX.hit[0], VFX.hit[1]); break;
+        case 'splinter': fx.burst(BAR_X, H / 2, P.grove, VFX.regrow[0], VFX.regrow[1]); fx.text(BAR_X + 60, H / 2 - 40, STR.splinter, P.grove); break;
         case 'impact': this.impacts.push({ x: e.x, y: e.y, r: e.r, life: IMPACT_LIFE }); fx.burst(e.x, e.y, P.cream, VFX.impact[0], VFX.impact[1]); fx.ring(e.x, e.y, e.r * VFX.lobDust.r, P.sand, 2, VFX.lobDust.life); break;
         case 'fireStrike': this.patches.push({ x: e.x, y: e.y, r: e.r, life: A.patchLife, c: P.firePatch, fire: true }); fx.ring(e.x, e.y, e.r, P.fire, 3, A.ringLife); for (let i = 0; i < A.fire[0] * 3; i++) fx.flame(e.x + (Math.random() - 0.5) * e.r * 1.6, e.y + (Math.random() - 0.5) * e.r * 0.8, i % 2 ? P.fire : P.amber); fx.burst(e.x, e.y, P.fire, A.fire[0] * 2, A.fire[1]); break;
         case 'chill': this.patches.push({ x: e.x, y: e.y, r: e.r, life: A.patchLife, c: P.frostPatch, fire: false }); fx.ring(e.x, e.y, e.r, P.frost, 3, A.ringLife); this.shards(e.x, e.y, e.r); fx.burst(e.x, e.y, P.frost, A.frost[0] * 2, A.frost[1]); break;
@@ -146,6 +153,12 @@ export class FieldRenderer {
     if (s.stats.spikes) { g.fillStyle = P.cream; for (let y = 8; y < H; y += 24) { g.beginPath(); g.moveTo(BAR_X + BAR_W, y); g.lineTo(BAR_X + BAR_W + 9, y + 4); g.lineTo(BAR_X + BAR_W, y + 8); g.closePath(); g.fill(); } }
 
     this.fx.drawGround(g);
+    s.zones.forEach((z) => {
+      if (z.kind === 'stake') { g.strokeStyle = P.stake; g.lineWidth = 4; g.beginPath(); g.moveTo(z.x, z.y + z.r); g.lineTo(z.x + 3, z.y - z.r * 1.6); g.stroke(); return; }
+      const cin = z.kind === 'cinder';
+      g.globalAlpha = Math.min(1, z.life / VFX.zoneFade); g.fillStyle = cin ? P.cinder : P.moonwell; g.strokeStyle = cin ? P.cinderEdge : P.moonwellEdge; g.lineWidth = 1.5;
+      g.beginPath(); g.ellipse(z.x, z.y, z.r, z.r * VFX.zoneSquash, 0, 0, 6.28); g.fill(); g.stroke(); g.globalAlpha = 1;
+    });
 
     if (s.stats.treant) { g.fillStyle = P.treantTrunk; g.fillRect(BAR_X + 40, H / 2 + 10, 14, 34); g.fillStyle = P.treantLeaf; g.beginPath(); g.arc(BAR_X + 47, H / 2 + 2, 22, 0, 6.28); g.fill(); g.fillStyle = P.treantLeaf2; g.beginPath(); g.arc(BAR_X + 40, H / 2 - 6, 14, 0, 6.28); g.fill(); }
 
@@ -155,7 +168,7 @@ export class FieldRenderer {
     if (s.stats.archers >= 1) this.elf(ELF_X - 10, H / 2 - 90, true);
     if (s.stats.archers >= 2) this.elf(ELF_X - 10, H / 2 + 90, true);
     if (s.stats.ballista) { g.fillStyle = P.bark; g.fillRect(ELF_X - 10, H / 2 - 48, 30, 10); g.fillStyle = P.cream; g.fillRect(ELF_X + 10, H / 2 - 45, 22, 3); }
-    if (s.stats.wolf) { const w = s.wolf; g.save(); g.translate(w.x, w.y); g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 8, 12, 4, 0, 0, 6.28); g.fill(); g.fillStyle = P.wolf; g.beginPath(); g.ellipse(0, 0, 13, 7, 0, 0, 6.28); g.fill(); g.beginPath(); g.arc(11, -4, 5, 0, 6.28); g.fill(); g.restore(); }
+    if (s.stats.wolf) { this.wolf(s.wolf); for (let i = 0; i < s.stats.extraWolves && i < s.pack.length; i++) this.wolf(s.pack[i]!); }
 
     const A = VFX.arrows, ss = s.stats;
     this.tint = ss.fire ? P.fire : ss.slow ? P.frost : ss.shock || ss.stun ? P.spark : ss.bounce ? P.arcane : '';
@@ -299,10 +312,17 @@ export class FieldRenderer {
     return w;
   }
 
-  /** Thunderclap sparks and health bar, shared by the vector and sprite orc. */
+  private wolf(w: { x: number; y: number }): void {
+    const g = this.g; g.save(); g.translate(w.x, w.y); g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 8, 12, 4, 0, 0, 6.28); g.fill(); g.fillStyle = P.wolf; g.beginPath(); g.ellipse(0, 0, 13, 7, 0, 0, 6.28); g.fill(); g.beginPath(); g.arc(11, -4, 5, 0, 6.28); g.fill(); g.restore();
+  }
+
+  /** Thunderclap sparks, set-bonus marks (bleed, pin, root) and health bar, shared by the vector and sprite orc. */
   private orcBars(o: Orc): void {
     const g = this.g;
     if (o.stun > 0) { const A = VFX.arrows, sp = this.reducedMotion ? 0 : this.clock * A.stunSpin; g.fillStyle = P.spark; for (let i = 0; i < 3; i++) { const t = sp + i * 2.09; g.fillRect(Math.cos(t) * A.stunOrbit * 1.6 - 1.5, -o.r - 6 + Math.sin(t) * A.stunOrbit * 0.5 - 1.5, 3, 3); } }
+    if (o.bleed > 0) { g.fillStyle = P.rose; g.beginPath(); g.arc(o.r * 0.5, -o.r * 0.2, 2.5, 0, 6.28); g.fill(); }
+    if (o.root > 0) { g.strokeStyle = P.sage; g.lineWidth = 2; g.beginPath(); g.ellipse(0, o.r * 0.9, o.r, o.r * 0.35, 0, 0, 6.28); g.stroke(); }
+    if (o.pin > 0) { g.strokeStyle = P.cream; g.lineWidth = 3; g.beginPath(); g.moveTo(-o.r * 0.6, -o.r); g.lineTo(o.r * 0.3, o.r * 1.1); g.stroke(); }
     if (o.hp < o.maxhp) { g.fillStyle = P.dim; g.fillRect(-o.r, -o.r - 8, o.r * 2, 3); g.fillStyle = P.rose; g.fillRect(-o.r, -o.r - 8, o.r * 2 * Math.max(0, o.hp / o.maxhp), 3); }
   }
 

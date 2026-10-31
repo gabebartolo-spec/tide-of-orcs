@@ -25,5 +25,7 @@ export interface LootMeta {
   pity: { legendary: number; mythic: number };
   /** Next item uid. */
   nextUid: number;
+  /** The Heirloom item's uid (TB-101): it gains item levels each Replant. */
+  heirloom: string | null;
 }
-export const freshLoot = (): LootMeta => ({ items: [], equipped: {}, glimmer: 0, lootFilter: { minRarity: 'common' }, pity: { legendary: 0, mythic: 0 }, nextUid: 1 });
+export const freshLoot = (): LootMeta => ({ items: [], equipped: {}, glimmer: 0, lootFilter: { minRarity: 'common' }, pity: { legendary: 0, mythic: 0 }, nextUid: 1, heirloom: null });

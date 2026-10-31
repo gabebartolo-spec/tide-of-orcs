@@ -9,7 +9,11 @@ export const RARITY = {
 } as const;
 /** P(drop) = min(cap, base · lootTier^tierExp · (1 + itemFind)). Item level = wave, capped at ilvlCap + ilvlPerPrestige × prestiges. */
 export const DROP = { base: 0.008, tierExp: 1.5, cap: 0.6, ilvlCap: 20, ilvlPerPrestige: 10, commonsEndAt: 3, raresEndAt: 8, legendaryPity: 0.1, mythicPity: 25 } as const;
+/** Rarities that toast when picked up; lower ones arrive quietly (TB-096). */
+export const LOOT_TOAST: readonly string[] = ['epic', 'legendary', 'mythic'];
 export const SATCHEL = { base: 40, deep: 80, maxArrowAffixes: 2 } as const;
+/** Spoils branch (TB-101), BALANCE P-101. trophyEvery: waves whose kills roll twice; echo: mythic power ×1.25 more often or longer. */
+export const SPOILS_FX = { hunterCrit: 0.05, scavenger: 1.5, trophyEvery: 10, sharpFind: 0.1, resonance: 1, echo: 1.25 } as const;
 /** Affix ranges grow by 1 + 0.03 × item level. */
 export const affixScale = (ilvl: number): number => 1 + 0.03 * ilvl;
 
@@ -45,24 +49,55 @@ export const BASES: readonly BaseDef[] = [
 export interface StatLine { stat: string; op: 'mul' | 'add'; value: number }
 /** Set bonuses at 2, 4 and 6 pieces worn. */
 export interface SetDef { id: string; name: string; bonus: Record<2 | 4 | 6, StatLine[]> }
-const S = (id: string, name: string, stat: string, v: [number, number, number]): SetDef =>
-  ({ id, name, bonus: { 2: [{ stat, op: 'mul', value: v[0] }], 4: [{ stat, op: 'mul', value: v[1] }], 6: [{ stat, op: 'mul', value: v[2] }] } });
+/** Set effect numbers (TB-099, BALANCE ## Proposed P-099). Field distances are in field px (~20 px per metre). */
+export const SET_FX = {
+  knifeRate: 0.25, bleedAmp: 0.3, bleedSecs: 3, fanEvery: 3, fanKnives: 5, fanRad: 0.18,
+  burn: 0.3, burnSpread: 2, spreadReach: 90, cinderSecs: 4, slow: 0.25,
+  chain: 1, chainReach: 0.5, rebound: 3, stormRate: 0.3,
+  ballRate: 0.25, boltFirst: 0.5, boltShove: 30, pinSecs: 2, pinMult: 2,
+  moonRate: 0.25, moonCritMult: 1.5, wellSecs: 3, wellHeal: 0.02,
+  petDmg: 0.2, petHaste: 0.25, nearWall: 220, extraWolves: 1, rootSecs: 1.5,
+  barMax: 0.15, barRegen: 0.005, freeRallyBelow: 0.25, freeRallySecs: 10,
+  /** Most Cinderground patches and Moonwells alive at once. */
+  zoneCap: 48,
+} as const;
+
+const F = SET_FX;
+const on = (stat: string, value = 1): StatLine => ({ stat, op: 'add', value });
+const mul = (stat: string, value: number): StatLine => ({ stat, op: 'mul', value });
+/** Each line names the Stats field it changes; systems read those fields, never set ids. */
 export const SETS: readonly SetDef[] = [
-  S('nightknife', 'Nightknife', 'knifeDmg', [0.2, 0.5, 1]), S('emberwright', 'Emberwright', 'fireDmg', [0.2, 0.5, 1]),
-  S('stormcaller', 'Stormcaller', 'stormDmg', [0.2, 0.5, 1]), S('siegebreaker', 'Siegebreaker', 'ballista', [0.2, 0.5, 1]),
-  S('moonveil', 'Moonveil', 'homingDmg', [0.2, 0.5, 1]), S('packlord', 'Packlord', 'wolf', [0.2, 0.5, 1]),
-  S('rootwarden', 'Rootwarden', 'barMax', [0.15, 0.4, 0.8]),
+  { id: 'nightknife', name: 'Nightknife', bonus: { 2: [mul('knifeRate', F.knifeRate)], 4: [on('bleedAmp', F.bleedAmp)], 6: [on('knifeFan')] } },
+  { id: 'emberwright', name: 'Emberwright', bonus: { 2: [mul('burn', F.burn)], 4: [on('burnSpread', F.burnSpread)], 6: [on('cinder')] } },
+  { id: 'stormcaller', name: 'Stormcaller', bonus: { 2: [on('chain', F.chain)], 4: [mul('chainJump', F.chainReach)], 6: [on('rebound', F.rebound), mul('stormRate', F.stormRate)] } },
+  { id: 'siegebreaker', name: 'Siegebreaker', bonus: { 2: [mul('ballRate', F.ballRate)], 4: [on('boltShove')], 6: [on('boltPin')] } },
+  { id: 'moonveil', name: 'Moonveil', bonus: { 2: [mul('moonRate', F.moonRate)], 4: [on('moonCrit')], 6: [on('moonwell')] } },
+  { id: 'packlord', name: 'Packlord', bonus: { 2: [mul('petDmg', F.petDmg)], 4: [on('petHaste', F.petHaste)], 6: [on('extraWolves', F.extraWolves), on('treantRoot')] } },
+  { id: 'rootwarden', name: 'Rootwarden', bonus: { 2: [mul('barMax', F.barMax)], 4: [on('barRegen', F.barRegen)], 6: [on('freeRally')] } },
 ];
 
-/** Mythics: one power and one cost each (powers wired in TB-099). */
-export interface MythicDef { id: string; name: string; slot: Slot; power: string; cost: string }
+/** Mythics: one power and one cost each (powers wired in TB-100). */
+/** A mythic's power switches on a Stats field through `lines`, as set bonuses do (TB-100); its numbers live in MYTHIC_FX. */
+export interface MythicDef { id: string; name: string; slot: Slot; lines: StatLine[] }
 export const MYTHICS: readonly MythicDef[] = [
-  { id: 'last-knife', name: 'The Last Knife', slot: 'bracer', power: 'knives crit twice', cost: 'knife rate -20%' },
-  { id: 'heart-of-kiln', name: 'Heart of the Kiln', slot: 'charm', power: 'burning orcs burst on death', cost: 'arrow damage -10%' },
-  { id: 'thunders-memory', name: "Thunder's Memory", slot: 'quiver', power: 'every 5th lob calls the storm', cost: 'radius -10%' },
-  { id: 'oakspine', name: 'Oakspine', slot: 'bow', power: 'wall regrowth fires splinters', cost: 'fire rate -15%' },
-  { id: 'pale-moon', name: 'Sliver of the Pale Moon', slot: 'bow', power: 'crits pierce everything', cost: 'crit chance halved' },
-  { id: 'first-wolf', name: 'The First Wolf', slot: 'cloak', power: 'a second wolf hunts', cost: 'hawk damage -30%' },
-  { id: 'heartwood-splinter', name: 'Heartwood Splinter', slot: 'charm', power: 'Heartwood bonus counts double', cost: 'starlight -15%' },
-  { id: 'starfall-cloak', name: 'Starfall Cloak', slot: 'cloak', power: 'kills rain starlight on the plain', cost: 'vanguard cap -1' },
+  { id: 'last-knife', name: 'The Last Knife', slot: 'bow', lines: [on('knifeReturn')] },
+  { id: 'heart-of-kiln', name: 'Heart of the Kiln', slot: 'quiver', lines: [on('burnRamp')] },
+  { id: 'thunders-memory', name: "Thunder's Memory", slot: 'bracer', lines: [on('stormStore')] },
+  { id: 'oakspine', name: 'Oakspine', slot: 'bow', lines: [on('stakes')] },
+  { id: 'pale-moon', name: 'Sliver of the Pale Moon', slot: 'charm', lines: [on('fullMoon')] },
+  { id: 'first-wolf', name: 'The First Wolf', slot: 'boots', lines: [on('petReturn')] },
+  { id: 'heartwood-splinter', name: 'Heartwood Splinter', slot: 'charm', lines: [on('wallSplinter')] },
+  { id: 'starfall-cloak', name: 'Starfall Cloak', slot: 'cloak', lines: [on('starCloak'), on('itemFind', 0.15)] },
 ];
+
+/** Mythic power numbers (TB-100), proposed in BALANCE P-100. */
+export const MYTHIC_FX = {
+  knifeBackLife: 3,
+  burnRampPerSec: 0.1,
+  thunderCharges: 10, thunderMult: 3,
+  stakeAfter: 3, stakeSecs: 8, stakeR: 10,
+  moonDraw: 0.5, moonCost: 0.02, moonCostFloor: 0.1,
+  wolfEvery: 15, wolfStack: 0.25, wolfMax: 4,
+  splinterFrac: 0.3, splinterHw: 0.5,
+  starfallEvery: 100, starfallCd: 1, starfallMult: 5,
+} as const;

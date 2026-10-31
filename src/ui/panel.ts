@@ -1,17 +1,19 @@
-import { PRESTIGE, VanType, vanCost } from '../data/balance';
+import { PRESTIGE, VanType } from '../data/balance';
 import { BRANCH_COLOR, NODE } from '../data/skillTree';
 import { STR } from '../data/strings';
 import type { Cue } from '../data/audio';
 import { GameController } from '../game';
 import { TreeRenderer } from '../render/tree';
 import { canBuy, costOf, rankOf, unlocked } from '../sim/tree';
-import { canRally } from '../sim/vanguard';
+import { canRally, rallyCost } from '../sim/vanguard';
 import { gain } from '../sim/prestige';
 import { bossesReady, canSummonBoss } from '../sim/boss';
 import { BOSS_WAVE } from '../data/bosses';
 import { NumberFormat, fmt, setNumberFormat } from './format';
 import { HW_NODE, HW_NODES, HwId } from '../data/heartwood';
-import { canBuyHw, hwAvailable, hwCost, hwRank } from '../sim/heartwood';
+import { canBuyHw, hwAvailable, hwCost, hwRank, hwUnlocked } from '../sim/heartwood';
+import { SatchelPane, itemName } from './satchel';
+import { LOOT_TOAST } from '../data/lootTables';
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string): T => document.getElementById(id) as T;
 const VAN_NAME: Record<VanType, string> = { spear: 'Spearman', blade: 'Bladedancer' };
@@ -19,6 +21,7 @@ const VAN_NAME: Record<VanType, string> = { spear: 'Spearman', blade: 'Bladedanc
 export class Panel {
   private toastTimer = 0;
   private wipeArmed = false;
+  private satchel: SatchelPane;
 
   constructor(private game: GameController, private tree: TreeRenderer) {
     // static copy
@@ -32,7 +35,8 @@ export class Panel {
     $('dep-spear').querySelector('.n')!.textContent = STR.rallySpear; $('dep-blade').querySelector('.n')!.textContent = STR.rallyBlade;
     $('dep-boss').querySelector('.n')!.textContent = STR.summonBoss;
 
-    $('tab-settings').textContent = STR.tabSettings;
+    $('tab-settings').textContent = STR.tabSettings; $('tab-satchel').textContent = STR.tabSatchel;
+    this.satchel = new SatchelPane(game); $('tab-satchel').onclick = () => { this.onCue('click'); this.setTab('satchel'); this.satchel.render(); };
     $('tab-grove').onclick = () => { this.onCue('click'); this.setTab('grove'); }; $('tab-prestige').onclick = () => { this.onCue('click'); this.setTab('prestige'); }; $('tab-settings').onclick = () => { this.onCue('click'); this.setTab('settings'); };
     this.initSettings();
     $('dep-spear').onclick = () => this.rally('spear'); $('dep-blade').onclick = () => this.rally('blade');
@@ -57,7 +61,7 @@ export class Panel {
   renderHw(): void {
     const m = this.game.state.meta;
     $('hw-tree').innerHTML = HW_NODES.map((n) => { const r = hwRank(m, n.id), c = hwCost(m, n.id); return `
-      <div class="hwnode"><div><div class="name">${n.name} <span class="desc">${STR.hwRank(r, n.costs.length)}</span></div><div class="desc">${n.desc}</div></div>
+      <div class="hwnode"><div><div class="name">${n.name} <span class="desc">${STR.hwRank(r, n.costs.length)}</span></div><div class="desc">${n.desc}</div>${hwUnlocked(m, n.id) ? '' : `<div class="desc">${STR.hwNeeds((n.req ?? []).map(([r, k]) => `${HW_NODE[r].name} ${k}`).join(', '))}</div>`}</div>
       <button class="buy" data-hw="${n.id}" ${canBuyHw(m, n.id) ? '' : 'disabled'}>${c === null ? STR.complete : STR.hwCost(c)}</button></div>`; }).join('');
   }
 
@@ -66,6 +70,7 @@ export class Panel {
     const s = this.game.state;
     $('st-star').textContent = fmt(s.run.starlight); $('st-wave').textContent = String(s.run.wave); $('st-kills').textContent = fmt(s.meta.lifetimeKills); $('st-heart').textContent = STR.heartAvail(hwAvailable(s.meta), s.meta.heartwood);
     $('hw-body').textContent = STR.hwBody(hwAvailable(s.meta));
+    if (!$('pane-satchel').hidden) this.satchel.update();
     for (const b of $('hw-tree').querySelectorAll<HTMLButtonElement>('button[data-hw]')) b.disabled = !canBuyHw(s.meta, b.dataset.hw as HwId);
     const g = gain(s), ok = s.run.wave >= PRESTIGE.voluntaryWave && g > 0 && !s.run.fallen;
     $('pr-gain').textContent = '+' + g; ($('pr-btn') as HTMLButtonElement).disabled = !ok;
@@ -85,7 +90,7 @@ export class Panel {
   private rallyButton(type: VanType, el: HTMLElement): void {
     const s = this.game.state, c = el.querySelector('.c')!, btn = el as HTMLButtonElement;
     if (!s.stats.muster) { btn.disabled = true; c.textContent = STR.learnMuster; c.className = 'c dim'; return; }
-    const full = s.vans.count >= s.stats.vanCap, cost = vanCost(type, s.run.wave);
+    const full = s.vans.count >= s.stats.vanCap, cost = rallyCost(s, type);
     btn.disabled = !canRally(s, type);
     c.textContent = full ? STR.lineFull : STR.starlightCost(fmt(cost)); c.className = 'c' + (btn.disabled ? ' dim' : '');
   }
@@ -101,6 +106,7 @@ export class Panel {
       else if (e.t === 'vanguardRallied') this.toast(STR.takesField(VAN_NAME[e.type as VanType]));
       else if (e.t === 'vanguardFell') this.toast(STR.vanFalls(VAN_NAME[e.type as VanType]));
       else if (e.t === 'barricadeRegrow') this.toast(STR.regrow);
+      else if (e.t === 'loot' && e.kept && LOOT_TOAST.includes(e.rarity)) { const it = this.game.state.meta.loot.items.find((i) => i.uid === e.uid); if (it) this.toast(STR.lootFound(itemName(it))); }
       else if (e.t === 'barricadeFell') this.showFallen();
     }
   }
@@ -119,8 +125,8 @@ export class Panel {
     $('buy-btn').onclick = () => this.buy(n.id);
   }
 
-  setTab(k: 'grove' | 'prestige' | 'settings'): void {
-    for (const t of ['grove', 'prestige', 'settings'] as const) { $('pane-' + t).hidden = k !== t; $('tab-' + t).setAttribute('aria-selected', String(k === t)); }
+  setTab(k: 'grove' | 'satchel' | 'prestige' | 'settings'): void {
+    for (const t of ['grove', 'satchel', 'prestige', 'settings'] as const) { $('pane-' + t).hidden = k !== t; $('tab-' + t).setAttribute('aria-selected', String(k === t)); }
   }
 
   /** Called after any settings change so main.ts can apply volume and motion. */

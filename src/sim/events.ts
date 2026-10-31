@@ -1,6 +1,8 @@
 /** Sim → render/audio events. Sim pushes; observers drain once per frame. */
 export type SimEvent =
   | { t: 'kill'; x: number; y: number; loot: number; kind: string }
+  /** An item dropped (TB-094); `kept` is false when the loot filter salvaged it on the spot. */
+  | { t: 'loot'; x: number; y: number; uid: string; rarity: string; kept: boolean }
   /** `src` says what struck (lob, arrow, knife, bolt) so render can pick the impact. */
   | { t: 'hit'; x: number; y: number; crit: boolean; src: string }
   /** An orc's swing lands on the wall or a vanguard; (tx, ty) is where. Render-only (TB-088). */
@@ -10,6 +12,15 @@ export type SimEvent =
   /** An orc struck by a melee source with no projectile (vanguard, wolf, hawk, treant, storm). Render-only (TB-088). */
   | { t: 'bleed'; x: number; y: number; r: number }
   | { t: 'impact'; x: number; y: number; r: number }
+  /** Set bonuses (TB-099): burn passed from a dying orc to (tx, ty); a bolt pinned an orc; Rootwarden's free rally opened. */
+  | { t: 'burnSpread'; x: number; y: number; tx: number; ty: number }
+  | { t: 'pinned'; x: number; y: number }
+  | { t: 'freeRally'; secs: number }
+  /** Mythics (TB-100): Thunder's Memory's stored bolt hit the whole wave; a Starfall struck; a stake was driven; the wall stood again. */
+  | { t: 'thunder' }
+  | { t: 'starCloak'; x: number; y: number }
+  | { t: 'stake'; x: number; y: number }
+  | { t: 'splinter' }
   /** The elf looses a lob, or a throwing knife leaves the hand (audio only). */
   | { t: 'loose' }
   | { t: 'knife' }

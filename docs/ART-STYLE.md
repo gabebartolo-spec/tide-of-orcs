@@ -57,6 +57,7 @@ Rules: semantic colours (amber = money, timber = the wall, rose = permanent/dang
 - Vanguard: same silhouette as the elf. Spearman: spear-blue cloak, round timber shield on the left, long cream spear. Bladedancer: lilac cloak, two short cream blades. HP bar above when hurt.
 - Barricade: 14 px column of alternating planks with dark cross-bands, sand edge on the grove side, cream spike triangles on the plain side once Thornwall is owned.
 - Wolf: grey ellipse + head circle. Hawk: a bark-coloured diamond. Treant: stacked green circles on a trunk.
+- Item glyphs (TB-097): one 24-unit line icon per gear slot (bow, quiver, bracer, cloak, boots, charm), round caps, 35% tinted fill, in the rarity colour. The frame shape also marks rarity so it never rests on colour alone: common faint, rare solid, epic double line, legendary square-cornered, mythic glowing. Fallback until TB-103 model renders.
 - Arrows are 14 px cream lines; knives 8 px pale; ballista bolt 22 px bark, 3 px wide.
 - Strike circle (TB-079): a disc of radius `stats.radius` (40 px × 1.2^Wide Volley) filled `aimFill` and outlined `aimLine`, with a cream ring that fills clockwise from the top as the bow draws; a dotted `aimLine` arc from the elf traces the lob's flight. In flight a lob is a short shaft along its arc with a ground shadow; on landing a cream ring flashes at the circle. The OS cursor is hidden over the field (`cursor: none`). Nothing is drawn when the pointer is over the grove side or the wall has fallen.
 

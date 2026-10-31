@@ -57,6 +57,13 @@ Layout coordinates are for a 760×920 tree canvas, root bottom-centre at (380, 6
 | ranks | Close Ranks | Vanguard | shield | 3 | 400 | 2.6 | 80 | 525 | +1 vanguard may stand at once. |
 | mend | Field Mending | Vanguard | drill | 3 | 350 | 2.4 | 90 | 455 | Vanguard recover 3% health per second per rank. |
 | champion | Bladedancer | Vanguard | ranks | 1 | 2200 | — | 60 | 400 | Rally bladedancers: costlier, faster, their strikes cleave every orc in reach. |
+| hunter | Hunter's Eye | Spoils | root | 1 | 120 | — | 300 | 720 | +5% chance to strike for triple damage (adds to Keen Eye and gear crit). |
+| scavenger | Scavenger | Spoils | hunter | 1 | 150 | — | 220 | 760 | Salvage gives 50% more Glimmer this run (rounded down). |
+| trophy | Trophy | Spoils | hunter | 1 | 200 | — | 310 | 800 | Kills on waves 10, 20, 30… roll a second drop. |
+| sharpeyes | Sharp Eyes | Spoils | scavenger | 1 | 600 | — | 160 | 820 | Item Find +10% this run. |
+| hoard | Boss Hoard | Spoils | trophy | 1 | 900 | — | 300 | 870 | Boss drops roll one rarity higher, up to legendary (mythic rolls untouched). |
+| resonance | Set Resonance | Spoils | sharpeyes | 1 | 4000 | — | 200 | 890 | Every set you wear counts one piece more (needs at least one piece). |
+| echo | Mythic Echo | Spoils | resonance | 1 | 6000 | — | 110 | 880 | Mythic powers trigger 25% more often or last 25% longer (thresholds ÷1.25, durations ×1.25). |
 
 ## Deprecated ids (reserved, never reuse)
 Lists live in `src/save/schema.ts`; each migration drops the keys from `run.levels`.

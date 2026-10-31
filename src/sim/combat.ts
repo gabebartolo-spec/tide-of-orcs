@@ -1,6 +1,11 @@
 import { ARROWS, FIELD, LOB, PLAYER, SOURCES } from '../data/balance';
 import { EventBus } from './events';
-import { Orc, ProjectileKind, SimState } from './state';
+import { Orc, ProjectileKind, SimState, Zone, recompute } from './state';
+import { rollDrop } from './lootRoll';
+import { SPOILS_FX } from '../data/lootTables';
+import { pickUp } from './loot';
+import { lootMods } from './gear';
+import { MYTHIC_FX, SET_FX } from '../data/lootTables';
 
 export function nearestOrc(s: SimState, x: number, y: number, filter?: (o: Orc) => boolean): Orc | null {
   let best: Orc | null = null, bd = Infinity;
@@ -25,18 +30,55 @@ export function kill(s: SimState, ev: EventBus, o: Orc): void {
     ev.push({ t: 'shatter', x: o.x, y: o.y, r: R });
     s.orcs.forEach((q) => { if (!q.dead && (q.x - o.x) ** 2 + (q.y - o.y) ** 2 < (R + q.r) ** 2) damage(s, ev, q, s.stats.dmg * s.stats.shatter); });
   }
+  // Starfall Cloak: starlight gathered calls a shot from the sky on the strongest orc
+  if (s.stats.starCloak) { s.starAcc += loot; if (s.starAcc >= MYTHIC_FX.starfallEvery / s.stats.echo && s.starfallT <= 0) {
+    s.starAcc = 0; s.starfallT = MYTHIC_FX.starfallCd;
+    let top: Orc | null = null; s.orcs.forEach((q) => { if (!q.dead && (!top || q.hp > top.hp)) top = q; });
+    if (top) { const t = top as Orc; ev.push({ t: 'starCloak', x: t.x, y: t.y }); damage(s, ev, t, s.stats.dmg * MYTHIC_FX.starfallMult); }
+  } }
+  // Emberwright 4: a burning orc's flames pass to its nearest neighbours
+  if (o.burn > 0) for (let i = 0; i < s.stats.burnSpread; i++) {
+    const n = nearestOrc(s, o.x, o.y, (q) => q.burn <= 0 && (q.x - o.x) ** 2 + (q.y - o.y) ** 2 < SET_FX.spreadReach ** 2);
+    if (!n) break;
+    n.burn = SOURCES.burnSecs; ev.push({ t: 'burnSpread', x: o.x, y: o.y, tx: n.x, ty: n.y });
+  }
+  dropLoot(s, ev, o);
+}
+
+/** Roll this kill's drop (TB-094) and pick it up; re-derive stats if what is worn changed. */
+function dropLoot(s: SimState, ev: EventBus, o: Orc): void {
+  const l = s.meta.loot, st = s.stats, boss = o.kind === 'boss', worn = JSON.stringify(l.equipped);
+  const mods = { ...lootMods(l, st), bump: boss && st.hoard ? 1 : 0 };
+  // Warboss Tithe: bosses drop twice; Trophy: kills on every tenth wave roll twice
+  const rolls = boss ? st.bossDrops : st.trophy && s.run.wave % SPOILS_FX.trophyEvery === 0 ? 2 : 1;
+  for (let i = 0; i < rolls; i++) {
+    const it = rollDrop(s.lootRng, l, o.kind, s.run.wave, s.meta.prestiges, mods);
+    if (!it) continue;
+    pickUp(l, it, s.lootPolicy, st.satchelCap, st);
+    ev.push({ t: 'loot', x: o.x, y: o.y, uid: it.uid, rarity: it.rarity, kept: l.items.includes(it) });
+  }
+  if (JSON.stringify(l.equipped) !== worn) recompute(s);
+}
+
+/** Set-bonus damage taken: bleeding (Nightknife 4) and pinned (Siegebreaker 6) orcs take more from every source. */
+export const takenMult = (s: SimState, o: Orc): number => (o.bleed > 0 ? 1 + s.stats.bleedAmp : 1) * (o.pin > 0 ? SET_FX.pinMult : 1);
+
+/** Leave a patch of ground (TB-099); silently skipped when the zone pool is full. */
+export function addZone(s: SimState, kind: Zone['kind'], x: number, y: number, r: number, life: number): void {
+  const z = s.zones.alloc(); if (!z) return;
+  z.kind = kind; z.x = x; z.y = y; z.r = r; z.life = life; z.used = false;
 }
 
 export function damage(s: SimState, ev: EventBus, o: Orc, amt: number): void {
   if (o.dead) return;
-  o.hp -= amt; o.hitT = 0.12;
+  o.hp -= amt * takenMult(s, o); o.hitT = 0.12;
   if (o.hp <= 0) kill(s, ev, o);
 }
 
 export function shoot(s: SimState, kind: ProjectileKind, x: number, y: number, ang: number, speed: number, dmg: number, pierce: number, target: Orc | null): void {
   const p = s.shots.alloc(); if (!p) return;
   p.kind = kind; p.x = x; p.y = y; p.vx = Math.cos(ang) * speed; p.vy = Math.sin(ang) * speed;
-  p.dmg = dmg; p.pierce = pierce; p.life = 2.2; p.target = target; p.hit.clear();
+  p.dmg = dmg; p.pierce = pierce; p.life = 2.2; p.target = target; p.hit.clear(); p.back = false;
 }
 
 /** The elf's arcing shot: lands at (tx, ty) after LOB.flight and strikes every orc within the circle, 1 + pierce times. */
@@ -47,9 +89,11 @@ export function lob(s: SimState, sx: number, sy: number, tx: number, ty: number)
 }
 
 /** Strike every live orc inside the lob's circle. Each orc rolls its own crit; fire, frost and Thunderclap mark them all.
+ *  Moonveil: with the Moonbow owned every lob is a moon shot, which always crits at 4 pieces (a rolled crit still wins) and leaves a Moonwell at 6.
+ *  Emberwright 6: fire lobs leave Cinderground.
  *  `first` (a lob's first strike, not a Longshaft repeat or a Starfall arrow) also looses Shock Arrows and Rebound. */
 export function impact(s: SimState, ev: EventBus, p: { tx: number; ty: number; r: number; dmg: number }, first = false): void {
-  const st = s.stats;
+  const st = s.stats, moon = st.homing && st.moonCrit > 0;
   let core: Orc | null = null, cd = Infinity;
   const struck = new Set<Orc>();
   s.orcs.forEach((o) => {
@@ -58,13 +102,15 @@ export function impact(s: SimState, ev: EventBus, p: { tx: number; ty: number; r
     if (d < cd) { cd = d; core = o; }
     struck.add(o);
     const crit = s.rng.next() < st.crit;
-    ev.push({ t: 'hit', x: o.x, y: o.y, crit, src: 'lob' });
+    ev.push({ t: 'hit', x: o.x, y: o.y, crit: crit || moon, src: 'lob' });
     if (st.fire) o.burn = SOURCES.burnSecs;
     if (st.slow) o.chill = ARROWS.frost.secs;
     if (st.stun) o.stun = ARROWS.stun.secs;
-    damage(s, ev, o, crit ? p.dmg * PLAYER.critMult : p.dmg);
+    damage(s, ev, o, p.dmg * (crit ? PLAYER.critMult : moon ? SET_FX.moonCritMult : 1));
   });
   ev.push({ t: 'impact', x: p.tx, y: p.ty, r: p.r });
+  if (st.fire && st.cinder) addZone(s, 'cinder', p.tx, p.ty, p.r, SET_FX.cinderSecs);
+  if (st.homing && st.moonwell) addZone(s, 'moonwell', p.tx, p.ty, p.r, SET_FX.wellSecs);
   if (st.fire) ev.push({ t: 'fireStrike', x: p.tx, y: p.ty, r: p.r });
   if (st.slow) ev.push({ t: 'chill', x: p.tx, y: p.ty, r: p.r });
   if (st.stun && core) ev.push({ t: 'stun', x: p.tx, y: p.ty, r: p.r });

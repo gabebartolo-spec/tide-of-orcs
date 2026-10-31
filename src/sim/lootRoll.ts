@@ -5,7 +5,8 @@ import { AFFIXES, AffixDef, BASES, DROP, MYTHICS, RARITY, SETS, affixScale } fro
 import { Rng } from './rng';
 
 export const LOOT_TIER: Record<OrcKind, number> = { grunt: 1, runner: 2, brute: 3, elite: 4, boss: 5 };
-export interface LootMods { itemFind: number; luck: number }
+/** bump: rarity steps added after the roll (Boss Hoard), never past legendary. */
+export interface LootMods { itemFind: number; luck: number; bump?: number }
 
 export const dropChance = (tier: number, itemFind: number): number => Math.min(DROP.cap, DROP.base * tier ** DROP.tierExp * (1 + itemFind));
 export const itemLevel = (wave: number, prestiges: number): number => Math.min(wave, DROP.ilvlCap + DROP.ilvlPerPrestige * prestiges);
@@ -51,6 +52,7 @@ export function rollDrop(rng: Rng, loot: LootMeta, kind: OrcKind, wave: number, 
   let rarity: Rarity;
   if (boss && loot.pity.mythic + 1 >= DROP.mythicPity) rarity = 'mythic';
   else rarity = rollRarity(rng, rarityWeights(tier, mods.luck, prestiges, boss, loot.pity.legendary));
+  if (mods.bump && rarity !== 'mythic') rarity = RARITIES[Math.min(RARITIES.indexOf('legendary'), RARITIES.indexOf(rarity) + mods.bump)]!;
   if (boss) {
     loot.pity.legendary = rarity === 'legendary' || rarity === 'mythic' ? 0 : loot.pity.legendary + 1;
     loot.pity.mythic = rarity === 'mythic' ? 0 : loot.pity.mythic + 1;

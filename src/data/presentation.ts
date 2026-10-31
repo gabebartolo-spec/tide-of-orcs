@@ -44,7 +44,7 @@ export const VFX = {
     /** Element look (each must read at a glance): tinted lob head radius and width, ground patch life, ice shards, flames/s per burning orc,
      *  lightning glow/core width and jag, Rebound orb radius and hop ring, Starfall streak width. */
     headR: 4, lobW: 3, patchLife: 1.2, shards: 8, shardLen: 1.3, shardLife: 0.5, flameRate: 45, boltGlow: 16, boltW: 5, boltJag: 14, orbR: 4, rimBlur: 6, hopRing: 14, starW: 2.5 },
-  treantShake: 0.2, impactLife: 0.3, stormLife: 0.35, textLife: 0.9, textRise: 28,
+  treantShake: 0.2, impactLife: 0.3, stormLife: 0.35, zoneFade: 0.6, zoneSquash: 0.45, textLife: 0.9, textRise: 28,
 } as const;
 
 /** Field ground (TB-098, ART-STYLE §Ground). Seeded layout painted once to an offscreen canvas; field units. Ranges are [min, max]. */

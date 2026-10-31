@@ -3,17 +3,20 @@ import { EventBus } from './events';
 import { Orc, SimState, Vanguard } from './state';
 import { damage } from './combat';
 
+/** Starlight a rally costs now: nothing while Rootwarden's free window is open (TB-099). */
+export const rallyCost = (s: SimState, type: VanType): number => (s.freeRallyT > 0 ? 0 : vanCost(type, s.run.wave));
+
 export function canRally(s: SimState, type: VanType): boolean {
   if (s.run.fallen || !s.stats.muster) return false;
   if (type === 'blade' && !s.stats.champion) return false;
   if (s.vans.count >= s.stats.vanCap) return false;
-  return s.run.starlight >= vanCost(type, s.run.wave);
+  return s.run.starlight >= rallyCost(s, type);
 }
 
 export function rally(s: SimState, ev: EventBus, type: VanType): boolean {
   if (!canRally(s, type)) return false;
   const v = placeVanguard(s, type); if (!v) return false;
-  s.run.starlight -= vanCost(type, s.run.wave);
+  s.run.starlight -= rallyCost(s, type);
   ev.push({ t: 'vanguardRallied', type, x: v.x, y: v.y });
   return true;
 }

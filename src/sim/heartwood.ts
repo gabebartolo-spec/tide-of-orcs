@@ -10,7 +10,8 @@ export const hwSpent = (m: MetaState): number =>
   HW_NODES.reduce((sum, n) => sum + n.costs.slice(0, hwRank(m, n.id)).reduce((a, c) => a + c, 0), 0);
 export const hwAvailable = (m: MetaState): number => m.heartwood - hwSpent(m);
 export const hwCost = (m: MetaState, id: HwId): number | null => HW_NODE[id].costs[hwRank(m, id)] ?? null;
-export const canBuyHw = (m: MetaState, id: HwId): boolean => { const c = hwCost(m, id); return c !== null && hwAvailable(m) >= c; };
+export const hwUnlocked = (m: MetaState, id: HwId): boolean => (HW_NODE[id].req ?? []).every(([r, n]) => hwRank(m, r) >= n);
+export const canBuyHw = (m: MetaState, id: HwId): boolean => { const c = hwCost(m, id); return c !== null && hwUnlocked(m, id) && hwAvailable(m) >= c; };
 
 export function buyHw(s: SimState, ev: EventBus, id: HwId): boolean {
   if (!canBuyHw(s.meta, id)) return false;
