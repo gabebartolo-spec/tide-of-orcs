@@ -1,6 +1,6 @@
-# Tide of Orcs — Claude Code guide
+# Let's Hunt Some Orc! — Claude Code guide
 
-Tide of Orcs is a relaxing incremental tower-defence game. A lone elf archer holds a timber barricade against an endless orc tide, rallies melee vanguard with starlight, grows a branching skill tree of weapons, companions, wall and economy, and replants the grove (prestige) for permanent Heartwood bonuses when the wall falls. Read `docs/00-DEVELOPMENT-PLAN.md` first, then the document that covers the area you are working in.
+Let's Hunt Some Orc! is a relaxing incremental tower-defence game. A lone elf archer holds a timber barricade against an endless orc tide, rallies melee vanguard with starlight, grows a branching skill tree of weapons, companions, wall and economy, and replants the grove (prestige) for permanent Heartwood bonuses when the wall falls. Read `docs/00-DEVELOPMENT-PLAN.md` first, then the document that covers the area you are working in.
 
 ## Documents (source of truth, in priority order)
 
@@ -38,6 +38,8 @@ npm run build      # production bundle to dist/
 npm run test       # Vitest, headless
 npm run lint       # eslint + tsc --noEmit
 npm run balance    # runs sim/ headless balance report (see BALANCE.md)
+npm run desktop    # build, then open the Electron desktop shell (desktop/main.cjs)
+npm run desktop:pack  # build, then package the Windows app to release/win-unpacked/ (Steam depot)
 ```
 
 Run `npm run lint && npm run test` before every commit. Do not commit if either fails.

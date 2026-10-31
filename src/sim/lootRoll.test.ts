@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { freshLoot } from '../data/loot';
-import { AFFIXES } from '../data/lootTables';
+import { AFFIXES, AFFIX_NEEDS } from '../data/lootTables';
 import { createRng } from './rng';
-import { dropChance, itemLevel, rarityWeights, rollAffixes, rollDrop } from './lootRoll';
+import { dropChance, itemLevel, ownedAffixes, rarityWeights, rerollAffix, rollAffixes, rollDrop } from './lootRoll';
+import { deriveStats } from './stats';
 
 const mods = { itemFind: 0, luck: 0 };
 
@@ -41,5 +42,26 @@ describe('loot rolls (TB-092)', () => {
   it('bosses always drop, never common', () => {
     const r = createRng(3), l = freshLoot();
     for (let i = 0; i < 500; i++) expect(rollDrop(r, l, 'boss', 10, 0, mods)!.rarity).not.toBe('common');
+  });
+});
+
+describe('affix gate (TB-114)', () => {
+  const gated = (id: string) => !!AFFIX_NEEDS[id] || !!AFFIXES.find((d) => d.id === id)!.arrow;
+  const seen = (has: ReturnType<typeof ownedAffixes>) => { const r = createRng(3), ids = new Set<string>(); for (let i = 0; i < 3000; i++) rollAffixes(r, 4, 10, has).forEach((a) => ids.add(a.id)); return ids; };
+  it('a fresh run never rolls affixes for features it does not own', () => {
+    const ids = seen(ownedAffixes(deriveStats({}, 0)));
+    expect([...ids].filter(gated)).toEqual([]);
+    expect(ids.size).toBe(AFFIXES.filter((d) => !gated(d.id)).length);
+  });
+  it('owning a feature lets its affixes roll', () => {
+    const ids = seen(ownedAffixes(deriveStats({ wolf: 1, spikes: 1, fire: 1 }, 0)));
+    for (const id of ['packbond', 'kinship', 'thorns', 'emberhead', 'kindling']) expect(ids.has(id)).toBe(true);
+    for (const id of ['talons', 'banner', 'thunderhead', 'moonhead']) expect(ids.has(id)).toBe(false);
+  });
+  it('rerolls obey the gate, and a gated drop keeps it', () => {
+    const has = ownedAffixes(deriveStats({}, 0)), r = createRng(9), l = freshLoot();
+    const it = { uid: 'x', base: 'ashwood-bow', slot: 'bow' as const, rarity: 'legendary' as const, ilvl: 10, affixes: [{ id: 'packbond', value: 0.1 }, { id: 'might', value: 0.1 }] };
+    for (let i = 0; i < 500; i++) expect(gated(rerollAffix(r, it, 0, has)!.id)).toBe(false);
+    for (let i = 0; i < 500; i++) { const d = rollDrop(r, l, 'boss', 10, 0, { ...mods, has }); d?.affixes.forEach((a) => expect(gated(a.id)).toBe(false)); }
   });
 });

@@ -48,7 +48,7 @@ tide-of-orcs/
       sprites.ts        sprite atlas loader (public/sprites/atlas.json) with vector fallback (TB-060)
       particles.ts      preallocated pools (squares, blood droplets, strokes, ground splats, text) fed by events; sizes in `data/presentation.ts` VFX
       ceremony.ts       replant ceremony: burn, seed, dawn; skippable (TB-051)
-      camera.ts         tree camera: pan, zoom, clamp, ease (TB-021, TB-066)
+      camera.ts         tree camera: pan, zoom, clamp below the legend strip, ease (TB-021, TB-066, TB-117)
       tree.ts           skill tree canvas, curved branches, hit-test, camera ease to selection
     ui/
       panel.ts          tabs (Grove / Replant / Settings), detail card, rally bar, boss button, fallen overlay + run summary,
@@ -63,7 +63,7 @@ tide-of-orcs/
       storage.ts        localStorage with try/catch (key `tide-of-orcs-v1`); export/import as base64 UTF-8 JSON
       telemetry.ts      local run log for testers, own key, JSON export (TB-070); not part of the save
       fixtures/v1.ts    v1 save fixture
-  public/               (not yet created) sprites/ and audio/ assets; the game runs without them
+  public/               sprites/, audio/ and fonts/ assets (the game runs without sprites and audio); favicon.png is the app icon at 64 px (TB-123)
   sim/run.ts            headless balance runner (node), imports src/sim + src/data
   test/                 cross-module tests (empty); unit tests sit beside code
 ```
@@ -120,7 +120,7 @@ The seed lives only inside `rng`; the save version lives in the save, not in Sim
 - Field draws in logical 900×480 via `setTransform`, with screen shake applied to the transform (not to the HUD bars). Draw order: plain → dusk tint → hills → grove side → lamplight → barricade (splintered planks from the top as HP drops, spikes if Thornwall) → blood splats (`Particles.drawGround`) → treant → elf → strike circle and lob arc → rangers → ballista → wolf → vanguard (sorted by y) → orcs (sorted by y) → projectiles (lobs with ground shadow) → lob impacts → storm → hawk → particles → text → barricade/vanguard HUD → wave bar.
 - Actors draw from the sprite atlas when a key is present, else the vector draw (TB-060).
 - Batch by fill style where cheap (e.g. all grunts of same colour), but clarity over micro-optimisation until the profiler says otherwise.
-- Tree canvas: nodes from `data/skillTree.ts` layout, camera in `render/camera.ts`, hit-test in logical space.
+- Tree canvas: nodes from `data/skillTree.ts` layout, camera in `render/camera.ts`, hit-test in logical space. The branch legend sits on an opaque strip `TREE_VIEW.legendH` px tall at the top; the camera never lets the tree's top edge rise under it, nodes panned beneath it are hidden, and clicks on it select nothing (TB-117).
 - Reduced motion: the Settings override (`settings.reducedMotion`, null = follow `prefers-reduced-motion`); render modules check `reducedMotion`.
 
 ## UI
@@ -138,4 +138,4 @@ Plain DOM, no framework. `ui/panel.ts` renders the detail card with template str
 - No GC pressure spikes: verify with Chrome performance panel, allocations per frame ≈ 0 in `step`.
 
 ## Build & deploy
-- `vite build` → `dist/` static. Itch.io upload as HTML5 zip via `.github/workflows/itch.yml` (RELEASE.md). Later: Electron shell in `desktop/` for Steam, sharing `dist/`.
+- `vite build` → `dist/` static. Itch.io upload as HTML5 zip via `.github/workflows/itch.yml` (RELEASE.md). Desktop: `desktop/main.cjs` is an Electron shell (dev dependency `electron`, TB-074) that serves `dist/` over `app://tide`, so `fetch`, module scripts and `localStorage` behave as on a static host; `npm run desktop` builds and opens it. Background throttling stays on, so a minimised window stops the loop and nothing accrues (rule 2). Fonts are bundled (TB-118), so it runs offline. `npm run desktop:pack` (dev dependency `electron-builder`, config `electron-builder.yml`, TB-119) writes `release/win-unpacked/` with `Let's Hunt Some Orc!.exe`: the folder a SteamPipe depot uploads. No installer (Steam installs it), unsigned, app icon `desktop/icon.png` (the director's art, TB-120; electron-builder makes the .ico), English locale only. `userData` is pinned to `%APPDATA%/tide-of-orcs`, so the dev shell and the packaged exe share one save and a product rename never orphans it. Not yet uploaded to Steam.

@@ -2,6 +2,7 @@
 
 Run against the dev build (`npm run dev`) in a desktop browser, before each itch tag. Each line is one check: what to do, what must be true. Mark the run's result in the table at the end; anything that fails becomes a backlog row.
 Dev handle: `window.__tide` = `{ game, field, tree }` (dev builds only). `game.state` is the sim state; `game.buy(id)`, `game.rally(type)`, `game.replant()`, `game.summonBoss()` are the panel's intents.
+Names below are the design names (GDD). The UI speaks the TB-121 voice (`src/data/strings.ts`): starlight is teeth, Heartwood is grudge, Replant is Burn it down, Sharpened Tips (`sharp`) is Ouch, Waking (`root`) is Fine., Spearman is a Lad, Bladedancer a Show-off.
 
 ## A. Start and aim (GDD §2, §6, §12)
 - A1 Wipe save, reload: wave 1, 0 starlight, only grunts march, Sharpened Tips is selected in the tree.
@@ -89,7 +90,7 @@ Driven from the dev handle with `game.tick(1/50)`. The browser pane was hidden, 
 | I3 | partial | No console errors this session; the 5-minute visible run is not done |
 | J1 | not verified | Hidden pane, 160 orcs: median 1.5–2.7 ms per frame, but 4–6% of frames over 16.7 ms, with draw spikes up to 330 ms. Hidden pages are throttled, so this needs a visible rerun (TB-113) |
 
-Findings: TB-112 (tree label), TB-113 (perf rerun), TB-114 (affixes for features the player does not own).
+Findings: TB-112 (tree label), TB-113 (perf rerun), TB-114 (affixes for features the player does not own; fixed: they are gated).
 ## Run 2 (1 Nov 2026, dev build, claude, browser pane visible)
 Reruns the checks run 1 could not see. Pane 833×546 CSS px at DPR 3, 120 Hz display. The pane was hidden again partway through J1 and I3; that is noted where it matters.
 
@@ -98,11 +99,31 @@ Reruns the checks run 1 could not see. Pane 833×546 CSS px at DPR 3, 120 Hz dis
 | B1, E1 | pass | Toasts seen: "Quick Draw joins the grove", "Muster joins the grove", "Spearman takes the field" |
 | B3 | pass | 104 nodes, all positioned; closest pair 52.2 px apart against a hit radius of 20 |
 | B4 | pass | Opens near Waking (camera 282, 558, zoom 1) with Sharpened Tips selected; drag and wheel handlers bound |
-| B5 | fail | The tree canvas has no tabindex and no key handler; Tab skips from the rally button to the tabs. TB-116 |
+| B5 | fail, fixed by TB-116 | The tree canvas had no tabindex and no key handler. Since TB-116: Tab enters the tree, steps node by node branch by branch, Enter learns, Tab past the last node leaves it |
 | C2 | pass | Overlay seen: wave, slain, minutes, starlight per minute, best wave, items, +1 Heartwood, one button; rally disabled; Replant by a real click |
 | I3 | pass: 5 min soak, 23,576 ticks (393 sim s), 158 buys, 9 bosses, 3 rallies, a fall and replant, waves up to 27; 0 errors, rejections or warnings |
 | J1 | pass on this PC | rAF with 160 orcs and the wall held: 463 visible frames, median 8.3 ms, p95 8.4 ms (display-capped at 120 Hz), no long tasks. Timing `tick` + `draw` back to back: tick p95 0.1 ms, draw median 0.6 ms with a ~40 ms stall every ~11 frames, which only appears when frames are drawn without presenting (GPU queue backpressure), never in the rAF run. Not tested on a mid-range PC |
 
-Findings: TB-116 (tree keyboard access), TB-117 (the branch legend overlaps node labels at the top of the tree).
+Findings: TB-116 (tree keyboard access), TB-117 (the branch legend overlaps node labels at the top of the tree; fixed: the legend has its own strip).
 
 Notes, not filed: grunts at the wall can fill the 160 cap and starve the summoned kinds; at high waves one orc swing can exceed the wall's max HP.
+
+## Run 3 (1 Nov 2026, dev build at 01ebae9, claude, browser pane visible)
+Regression pass after sprites (TB-068 first sheet), bundled fonts (TB-118), the rename (TB-121), the affix gate (TB-114) and the desktop icon (TB-120). Pane at DPR 2–3, refresh capped at 40 Hz by the host (a steady 25 ms rAF interval with 8 orcs or 160).
+
+| Check | Result | Evidence |
+|---|---|---|
+| C2–C4, D3, D4, I3 | pass | Headless soak, 330,268 ticks (~6,600 sim s) aiming at the nearest orc, buying every node, rallying and summoning every 25 ticks: 7 falls (waves 7–63), each refused buy/rally/boss while fallen and paid ≥ 1 Heartwood on Replant; best wave 63, live orcs peaked at exactly 160, 26 bosses; 0 invariant violations (NaN, negative or non-finite starlight, wall HP out of range, starlight moving while fallen), 0 errors |
+| H1, H2 | pass | Reload at wave 34 with 80 items: save diff empty. Export then import: identical apart from `savedAt` |
+| A1 | pass | Wipe and reload: wave 1, 0 teeth, no Heartwood or items, `sharp` (Ouch) selected, tree opens on `root` (Fine.) |
+| A2–A4 | pass | Strike circle follows the pointer and lobs land in it; pointer over the panel clears the aim; a click on the field adds no shot and no teeth |
+| A5 | pass | First Ouch rank (12 teeth) affordable at 15.7 s of aiming |
+| B1, B4 | pass | First buys toast ("Right There. Good."); a fresh tree opens on `root`; the TB-117 branch legend sits in its own strip, clear of node labels |
+| C2 | pass | Fallen overlay seen in the narrow layout: wave, slain, minutes, teeth per minute, best wave, items, +1 grudge, one button |
+| G1, G2 | pass | Equip changes Stats; reroll of affix 0 swapped kindling for talons (hawk owned, so the TB-114 gate allows it); lock, salvage (+glimmer, 80 → 79 items) and heirloom all apply and survive `save()`; satchel shows Locked · Heirloom on the worn bow |
+| Sprites | pass | Atlas on main has grunt walk/attack, spear walk/attack, blade attack; close crops of the live canvas show grunts, spearmen and a bladedancer drawn from the sheet with shadows; other kinds fall back to vectors |
+| Fonts, title | pass | Spectral and Atkinson Hyperlegible loaded from the bundle; tab and header read "Let's Hunt Some Orc!" |
+| J1 | pass on this PC | 159 orcs on average over 237 frames, wall held: the game's rAF callback (tick + draw) median 2.6 ms, p95 4.0 ms, max 6.8 ms; no long tasks. With 8 orcs: median 1.3 ms. Frame interval 25 ms in both cases (host cap), so the game is not the limit. Not tested on a mid-range PC |
+| I3 | fixed | One console 404: `/favicon.ico`, as the web build had no icon. Added `public/favicon.png` (the director's icon at 64 px) and a `<link rel=icon>` |
+
+Findings: favicon 404 (fixed here); TB-124 and TB-125 file run 2's two unfiled notes. Not covered: the desktop package (unchanged since TB-120 checked it on this commit), I1/I2 (settings untouched since run 2).

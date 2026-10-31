@@ -2,12 +2,12 @@ import { describe, expect, it } from 'vitest';
 import { TREE_CANVAS, TREE_VIEW } from '../data/skillTree';
 import { centreOn, easeToward, fitCamera, panBy, startCamera, toWorld, zoomAt } from './camera';
 
-const VW = 380, VH = 460, FIT = VW / TREE_CANVAS.w;
+const VW = 380, VH = 460, FIT = VW / TREE_CANVAS.w, TOP = TREE_VIEW.legendH;
 
 describe('tree camera', () => {
   it('fits width and centres a short tree vertically', () => {
     const c = fitCamera(VW, VH);
-    expect(c.z).toBeCloseTo(FIT); expect(c.x).toBeCloseTo(0); expect(c.y).toBeCloseTo(-(VH / FIT - TREE_CANVAS.h) / 2);
+    expect(c.z).toBeCloseTo(FIT); expect(c.x).toBeCloseTo(0); expect(c.y).toBeCloseTo(-TOP / FIT - ((VH - TOP) / FIT - TREE_CANVAS.h) / 2);
   });
   it('opens at 1:1 on the root when the panel is narrower than the tree', () => {
     const c = startCamera(VW, VH);
@@ -28,7 +28,13 @@ describe('tree camera', () => {
     const c = zoomAt(fitCamera(VW, VH), 0, 0, 2, VW, VH);
     const far = panBy(c, -1e6, -1e6, VW, VH);
     expect(far.x).toBeCloseTo(TREE_CANVAS.w - VW / far.z); expect(far.y).toBeCloseTo(TREE_CANVAS.h - VH / far.z);
-    const near = panBy(c, 1e6, 1e6, VW, VH); expect(near.x).toBeCloseTo(0); expect(near.y).toBeCloseTo(0);
+    const near = panBy(c, 1e6, 1e6, VW, VH); expect(near.x).toBeCloseTo(0); expect(near.y).toBeCloseTo(-TOP / near.z);
+  });
+  it('never lets the top of the tree rise under the legend strip (TB-117)', () => {
+    for (const k of [0.01, 1, 2, 100]) {
+      const c = panBy(zoomAt(fitCamera(VW, VH), 0, 0, k, VW, VH), 1e6, 1e6, VW, VH);
+      expect((0 - c.y) * c.z).toBeGreaterThanOrEqual(TOP - 1e-9);
+    }
   });
   it('centres a node and eases toward it', () => {
     const c = startCamera(VW, VH), t = centreOn(c, 380, 600, VW, VH);

@@ -16,6 +16,7 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 22, cache: npm }
       - run: npm ci
+        env: { ELECTRON_SKIP_BINARY_DOWNLOAD: 1 }   # the web build never runs Electron
       - run: npm run lint && npm test
       - run: npm run build
       - name: Stamp build

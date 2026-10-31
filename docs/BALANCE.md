@@ -107,22 +107,22 @@ Status measured 31 Oct 2026 at 8791ac2, seed 1, 25 min, player model `crowdAim` 
 | Worn gear power (TB-108) | +60–90% vs bare, about +2–3 waves at late orc HP (director, 2026-11-01; "+10 waves" dropped) | over: best wave worn vs bare +5 to +8 (seed 1, 25 h, P-108) |
 | Tree fully bought in a run | never | met: 117 of 156 buyable ranks at most (greedy run 5) |
 
-## Heartwood tree (M3, built TB-053)
-Bought with Heartwood, never reset. Costs in HW. Spending does not lower the passive `heart` bonus: `heart` counts all Heartwood earned, and the tree spends from `available = earned − spent`. The header shows `available / earned` once anything is spent. Early Dawn's skipped boss waves are not owed (`bossDone` starts at `floor(startWave / BOSS_WAVE.every)`). Standing Orders spearmen are placed free, ignoring Muster and the line cap.
+## Heartwood tree (M3, built TB-053; shown to the player as Grudges, TB-112)
+Bought with Heartwood, never reset. Costs in HW. Spending does not lower the passive `heart` bonus: `heart` counts all Heartwood earned, and the tree spends from `available = earned − spent`. The header shows `available / earned` once anything is spent. Skip the Boring Bit's skipped boss waves are not owed (`bossDone` starts at `floor(startWave / BOSS_WAVE.every)`). Standby Lad lads are placed free, ignoring Muster and the line cap.
 
 | id | Name | Max | Cost | Effect |
 |---|---|---|---|---|
-| hw_dawn | Early Dawn | 5 | 2, 4, 8, 14, 22 | Start each run at wave +2 |
-| hw_wolf | Old Friend | 1 | 3 | Start with Grey Wolf |
-| hw_timber | Stout Timber | 3 | 4, 8, 16 | Barricade base HP +25% |
-| hw_orders | Standing Orders | 2 | 5, 12 | Start each run with one Spearman (two at rank 2) |
-| hw_boss | Warlords | 3 | 6, 12, 24 | Boss wave clear bonus +50% per rank (director chose the effect 2026-10-31; numbers proposed, unplaytested) |
-| hw_find | Far Sight | 3 | 2, 5, 12 | Item Find +15 / 35 / 60% total (TB-101, P-101) |
-| hw_fortune | Fortune's Favour | 3 | 3, 8, 20 | Luck +10 / 25 / 45% total |
-| hw_satchel | Deep Satchel | 1 | 4 | Satchel holds 80. Needs Far Sight 1 |
-| hw_tithe | Warboss Tithe | 1 | 10 | Bosses always drop 2 items. Needs Far Sight 2, Fortune 1 |
-| hw_heirloom | Heirloom | 1 | 15 | One worn item gains +5 ilvl each Replant, past the cap; affixes rescale. Needs Fortune 2 |
-| hw_glimmer | Glimmerwork | 1 | 6 | Salvage +1 Glimmer; reroll cost ×0.6 (TB-102). Needs Deep Satchel |
+| hw_dawn | Skip the Boring Bit | 5 | 2, 4, 8, 14, 22 | Start each run at wave +2 |
+| hw_wolf | Dog Comes Too | 1 | 3 | Start with the dog (A Dog) |
+| hw_timber | Better Fence | 3 | 4, 8, 16 | Fence base HP +25% |
+| hw_orders | Standby Lad | 2 | 5, 12 | Start each run with one lad (two at rank 2) |
+| hw_boss | Management Bonus | 3 | 6, 12, 24 | Boss wave clear bonus +50% per rank (director chose the effect 2026-10-31; numbers proposed, unplaytested) |
+| hw_find | Magpie | 3 | 2, 5, 12 | Item Find +15 / 35 / 60% total (TB-101, P-101) |
+| hw_fortune | Knock on Wood | 3 | 3, 8, 20 | Luck +10 / 25 / 45% total |
+| hw_satchel | Bigger Bag | 1 | 4 | Satchel holds 80. Needs Magpie 1 |
+| hw_tithe | Severance | 1 | 10 | Bosses always drop 2 items. Needs Magpie 2, Fortune 1 |
+| hw_heirloom | Keeping That | 1 | 15 | One worn item gains +5 ilvl each Replant, past the cap; affixes rescale. Needs Fortune 2 |
+| hw_glimmer | Haggling | 1 | 6 | Salvage +1 Glimmer; reroll cost ×0.6 (TB-102). Needs Bigger Bag |
 
 ## Simulator (`npm run balance`)
 Lives in `sim/run.ts`. Runs `src/sim/` headless at 50 steps/s and decides every 0.5 s with a policy:
@@ -312,16 +312,16 @@ Decision: keep 10. Measured falls over 40 min, seeds 1–3 (wave@run minutes): g
 ### Loot (TB-091, from the Loot Expansion Design; data in `src/data/lootTables.ts`, not yet live)
 - P(drop) = min(0.6, 0.008 · lootTier^1.5 · (1 + itemFind)). lootTier: grunt 1, runner 2, brute 3, elite 4, boss 5.
 - Rarity weights normal/boss: common 70.47/0, rare 25/45.1, epic 4.5/45, legendary 0.03/9, mythic 0/0.9 (P-108; boss column is the simmed 40/40/8/0.8 rescaled to sum 100). Each weight × (1+luck)^rank × (1 + 0.15(lootTier−1))^rank, rank 0–4.
-- Affixes per rarity 1/2/3/4/4; ranges × (1 + 0.03 · ilvl). Item level = wave, capped at 20 + 10 × prestiges. Commons stop after prestige 3, rares after 8.
+- Affixes per rarity 1/2/3/4/4; ranges × (1 + 0.03 · ilvl). Item level = wave, capped at 20 + 10 × prestiges. Commons stop after prestige 3, rares after 8. Affixes roll only for features the player owns (TB-114, `AFFIX_NEEDS`): Kinship needs any companion; Packbond the wolf, Talons the hawk, Roots the treant, Blades the knives, Ballistae the ballista, Thorns the spikes, Banner/Mail/Mending the vanguard (Muster), Elitebane elites marching; fire, storm and moon affixes need that arrow.
 - Pity: legendary weight +10% per boss without one; mythic guaranteed by the 25th boss without one.
-- Sets: 2/4/6-piece bonus +20/50/100% to the set's stat (Rootwarden 15/40/80%).
+- Sets: 2/4/6-piece bonus +20/50/100% to the set's stat (Handyman 15/40/80%).
 
 ### P-099 · Set bonus numbers (2026-10-31, TB-099)
-All in `SET_FX`. Nightknife: knives +25% rate / bleed 3 s, +30% taken / every 3rd throw fans 5 knives. Emberwright: burn +30% / burn spreads to 2 within 90 px / fire lobs leave Cinderground 4 s (burn, 25% slow). Stormcaller: +1 chain / chain reach +50% / killing link rebounds up to 3, storm +30% rate. Siegebreaker: ballista +25% rate / first bolt hit +50% and shoved 30 px / last bolt hit pinned 2 s, takes ×2. Moonveil: lob +25% with Moonbow / moon shots always crit ×1.5 / Moonwell 3 s heals wall 2%/s. Packlord: companions +20% dmg / +25% speed while an orc is within 220 px of the wall / +1 wolf, treants root 1.5 s. Rootwarden: wall +15% / +0.5%/s regen / once per run, wall below 25% makes rallies free for 10 s.
+All in `SET_FX`. Sharp Things: knives +25% rate / bleed 3 s, +30% taken / every 3rd throw fans 5 knives. Too Warm: burn +30% / burn spreads to 2 within 90 px / fire lobs leave Cinderground 4 s (burn, 25% slow). Bad Weather: +1 chain / chain reach +50% / killing link rebounds up to 3, storm +30% rate. Heavy Lifting: ballista +25% rate / first bolt hit +50% and shoved 30 px / last bolt hit pinned 2 s, takes ×2. Night Shift: lob +25% with Moonbow / moon shots always crit ×1.5 / Moonwell 3 s heals wall 2%/s. Dog People: companions +20% dmg / +25% speed while an orc is within 220 px of the wall / +1 wolf, treants root 1.5 s. Handyman: wall +15% / +0.5%/s regen / once per run, wall below 25% makes rallies free for 10 s.
 Evidence: `npm run balance` (default greedy) output identical to the tb-097 base (first fall wave 5, best wave 31): greedy runs rarely complete a set. Per-set tuning is TB-107.
 
 ### P-100 · Mythic power numbers (2026-11-01, TB-100)
-All in `MYTHIC_FX`. Last Knife: a knife that hits turns back, pierces all on the way home. Heart of the Kiln: burn never ends, +10% burn damage per second burning. Thunder's Memory: each storm stores a charge; at 10 the next lob hits every orc for ×3. Oakspine: a bolt's 3rd hit drives a stake (r 10, 8 s) that holds the first orc to touch it. Pale Moon: with the Moonbow draw ×0.5 cooldown, each shot costs 2% wall, skipped below 10% wall. First Wolf: companions +25% damage per 15 s of the run, max 4 stacks. Heartwood Splinter: once per run the fallen wall stands again at 30%; that run pays ×0.5 Heartwood (floor `PRESTIGE.minGain`). Starfall Cloak: every 100 starlight from kills strikes the highest-HP orc for ×5 damage, 1 s cooldown; Item Find +15%.
+All in `MYTHIC_FX`. That Knife Again: a knife that hits turns back, pierces all on the way home. Never Goes Out: burn never ends, +10% burn damage per second burning. Saving It Up: each storm stores a charge; at 10 the next lob hits every orc for ×3. Tent Pegs: a bolt's 3rd hit drives a stake (r 10, 8 s) that holds the first orc to touch it. Worth It?: with the Moonbow draw ×0.5 cooldown, each shot costs 2% wall, skipped below 10% wall. Old Dog: companions +25% damage per 15 s of the run, max 4 stacks. Spare Fence: once per run the fallen wall stands again at 30%; that run pays ×0.5 Heartwood (floor `PRESTIGE.minGain`). Raincoat: every 100 starlight from kills strikes the highest-HP orc for ×5 damage, 1 s cooldown; Item Find +15%.
 Evidence: `npm run balance` unchanged (greedy runs gear mythics too rarely to show). Per-mythic tuning is TB-107.
 
 ### P-101 · Spoils branch and Heartwood loot lines (2026-11-01, TB-101)
@@ -329,7 +329,7 @@ Numbers in `SPOILS_FX` (lootTables) and `HW_FX` (heartwood). Spoils costs 120 / 
 Evidence: `npm run balance` (greedy, seed 1, 30 min) vs the tb-110 base: first four falls identical (waves 5, 5, 7, 5); fifth fall wave 26 → 20, Heartwood 25 → 18, best wave 31 → 37. The runner now has Spoils nodes in its pool (Hunter's Eye is a cheap crit pick) and the report does not name purchases, so which node moved the curve is unmeasured. Tuning against drop rates is TB-107.
 
 ### P-102 · Glimmer reroll (2026-11-01, TB-102)
-Reroll one affix of a worn item: cost = max(1, round(2 × 2^n × rerollMult)), n = rerolls already on that item (`REROLL` in lootTables). Costs 2, 4, 8, 16, 32…; with Glimmerwork 1, 2, 5, 10, 19. The new affix is a different id, keeps the item's arrow rule, value rolled at the item's ilvl.
+Reroll one affix of a worn item: cost = max(1, round(2 × 2^n × rerollMult)), n = rerolls already on that item (`REROLL` in lootTables). Costs 2, 4, 8, 16, 32…; with Haggling 1, 2, 5, 10, 19. The new affix is a different id, keeps the item's arrow rule and the feature gate, value rolled at the item's ilvl.
 Evidence: none yet; the greedy runner never rerolls. Tuning is TB-107.
 
 ### P-108 · Loot pacing: rarer bosses and rarer top drops (2026-11-01, TB-108) · applied
@@ -351,7 +351,7 @@ Evidence: `npm run balance -- --minutes 1500 --seed N --quiet --tune …` (25 si
 
 Read: G sets land at 7–12 h (C: 3.6 h; C with every 60 on seeds 1–3: 3.6–6.9 h), about 20–30% slower than C. Mythic stays luck-bound at 0.8% per boss; two of four seeds beat the 15 h floor, pity caps it at boss 25 (~13 h at this boss rate). First rare in run 1 misses at any weight: run 1 falls at wave 5 in 1.6 min.
 Gear power: worn vs bare best wave +5 to +8 (seed 1, 25 h). Late orc HP grows ~30% per wave, so +60–90% power ≈ +2–3 waves and "+10 waves" ≈ ×14 power: the two targets disagree. Director (1 Nov) picked +60–90% power. The runner's play-on trial (end state, worn vs bare) gives −5 to +7 waves by seed, too noisy to tune on.
-Found: past wave ~117 combat stops (0 kills/min, wall 100%, waves tick to 463 on seed 3 at bosses every 60); TB-118.
+Found: past wave ~117 combat stops (0 kills/min, wall 100%, waves tick to 463 on seed 3 at bosses every 60); TB-126.
 
 ### P-111 · Per-type upgrade nodes (2026-11-01, TB-111)
 Design from the director (1 Nov): see SKILL-TREE §Per-type upgrade nodes. Numbers in `SHOT_FX`, `UNIT_FX`, `ELF_FX` (`src/data/balance.ts`).

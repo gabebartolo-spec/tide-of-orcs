@@ -69,7 +69,7 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | Id | Task | Area | Depends | Owner | Status |
 |---|---|---|---|---|---|
 | TB-060 | Sprite-sheet loader with atlas JSON and vector fallback; draw actors from sheets when present | render | M2 | claude | done 47e4010 |
-| TB-068 | Tripo models + Cascadeur loops → sheets for orcs, elf, vanguard, companions (ART-STYLE §Asset pipeline) | art | 060 | gabe | todo |
+| TB-068 | Tripo models + Cascadeur loops → sheets for orcs, elf, vanguard, companions (ART-STYLE §Asset pipeline) | art | 060 | gabe, claude | doing (first sheet in game: grunt walk/attack, spearman walk/attack, bladedancer attack) |
 | TB-069 | ElevenLabs SFX set (16) + ambient bed, exported per ART-STYLE | audio | — | claude | SFX done b3e4c5f (16 cues, OGG+MP3, −16 LUFS; loose, knife, bossRoar, click, denied wired); ambient bed done (30 s seamless loop, take A, director pick); `ignite` plays on the elf's release with Fire Arrows (director call) |
 | TB-061 | Parallax hills, day/night tint, bank lamplight | render | 018 | claude | done 71d05f4 |
 | TB-062 | Audio engine: ambient loop, SFX map from events, ducking | audio | 019,069 | claude | done 09b60cf |
@@ -79,7 +79,7 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-066 | Tree layout polish: curved branch lines, camera ease to selected | render | 021 | claude | done e4d999a |
 | TB-067 | Strings table audit; all copy via `strings.ts` | ui | — | claude | done d26c4c5 |
 | TB-088 | Attack and hit VFX for every unit: wind-up/release cue and impact per orc kind, elf lob, archers, spearman, bladedancer, companions; blood (spray + fading ground splats, new `bloodOrc`/`bloodElf` tokens); pooled, numbers in `data/presentation.ts` | render | 019 | claude | done (904b970, 0f6afd4) |
-| TB-089 | Arrow arsenal: Rebound, Starfall, Frost Arrows, Shatter, Shock Arrows, Thunderclap nodes; VFX for each plus Fire Arrows strike; 7 ElevenLabs SFX (P-002 numbers) | sim/render/audio | 088 | claude | in review |
+| TB-089 | Arrow arsenal: Rebound, Starfall, Frost Arrows, Shatter, Shock Arrows, Thunderclap nodes; VFX for each plus Fire Arrows strike; 7 ElevenLabs SFX (P-002 numbers) | sim/render/audio | 088 | claude | done (PR #15, c069ff1) |
 
 ## M5 — Ship
 | Id | Task | Area | Depends | Owner | Status |
@@ -88,7 +88,7 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-071 | Balance pass #2 from tester data | balance | 070 | gabe | todo |
 | TB-072 | Perf verification on phone; profile and fix | perf | M4 | | dropped (mobile off roadmap, 31 Oct) |
 | TB-073 | Itch.io page copy, screenshots, HTML5 zip pipeline | release | — | gabe | todo |
-| TB-074 | Electron wrapper spike | release | 073 | | todo |
+| TB-074 | Electron wrapper spike | release | 073 | claude | done (0965ce2) |
 | TB-075 | Bug bash checklist run (`docs/QA-CHECKLIST.md`; run 1 hidden, run 2 visible, both 1 Nov) | qa | — | claude | done (c8e9264, run 2 in this PR) |
 | TB-076 | Move 6 colour literals in src/render (rgba/hex) into palette tokens (rule 6) | render | | claude | done c189562 |
 | TB-077 | Move inline tree multipliers in sim/stats.ts (1.25, 1.15, 1.2, 1.4 …) into data/balance (rule 3) | sim/data | | claude | done c189562 |
@@ -97,9 +97,10 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-080 | Enemy types: only grunts at first; runners, brutes, elites (new), warboss summoned by Grove nodes; per-kind Fury and Swarm nodes; Blood Banners retired (save v3); orc wall damage raised so a bare run falls at wave 3–4 | sim/data | | claude | done 4ed98fb |
 | TB-082 | Tree opens at 1:1 on Waking instead of fit-to-width (unreadable in the 378 px panel); enemy Fury/Swarm nodes stacked so labels don't collide | render | 021 | claude | done 5cb30c1 |
 | TB-081 | Boss waves: every 10 waves a boss wave unlocks; the player summons it, starting a 60 s challenge of bespoke mini-waves. Replaces the Warboss summon, Fury, Swarm and Bounty nodes (save v4) | sim/ui | 080 | claude | done e3b4536 |
+| TB-087 | New orc kinds (director, 31 Oct): berserker, war drummer, shaman, wolf rider. Models made in TB-068; behaviour, stats (BALANCE.md) and wave mix need director design first | sim | 068 | | todo |
 | TB-098 | Field ground redesign (director, 31 Oct): seeded grass tufts, small rocks, worn and barren patches, pre-rendered offscreen | render | | claude | done (PR) |
-| TB-099 | Loot sets: 7 sets with 2/4/6-piece effects on the field (planned as "TB-098" on the loot branch; renumbered, TB-098 is the field ground) | sim/render | 097 | claude | todo |
-| TB-100 | Loot mythic powers (planned as "TB-099" on the loot branch) | sim/render | 099 | claude | todo |
+| TB-099 | Loot sets: 7 sets with 2/4/6-piece effects on the field (planned as "TB-098" on the loot branch; renumbered, TB-098 is the field ground) | sim/render | 097 | claude | superseded by the L3 TB-099 row below |
+| TB-100 | Loot mythic powers (planned as "TB-099" on the loot branch) | sim/render | 099 | claude | superseded by the L3 TB-100 row below |
 
 ## Icebox
 - Starfall, Owl, Mist, Lantern nodes (SKILL-TREE.md Planned).
@@ -118,15 +119,24 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-100 | Loot L3: the 8 mythic powers on the field (Last Knife return, Kiln burn ramp, Thunder charges, Oakspine stakes, Pale Moon draw, First Wolf stacks, Heartwood Splinter second wall, Starfall). Numbers in `MYTHIC_FX` (lootTables) | sim | 098 | claude | done (tb-099-mythics) |
 | TB-110 | Save v8: Thunder charges, Heartwood Splinter's used flag and Rootwarden's free-rally flag move into the saved `run`, so a reload cannot reset them; 7→8 migration + test | save | 100 | claude | done (tb-110-save-v8) |
 | TB-111 | Per-type upgrade nodes (director 1 Nov): 3 nodes per shot type (damage, effect, chance per shot), damage/rate/crit→crit damage per companion and vanguard unit, move speed for melee units, Deadly Aim for the elf; 48 nodes, 56 → 104; tree canvas 1288×1262. Numbers P-103 | sim/data | 101 | claude | done (616a8c0, PR 31; renumbered from TB-103, which the loot plan holds) |
-| TB-112 | Tree tooltip says "needs <parent>" even when the parent is owned (`ui/panel.ts`); show it only while the parent is unowned | ui | 075 | | todo |
+| TB-112 | Tree tooltip says "needs <parent>" even when the parent is owned (`ui/panel.ts`); show it only while the parent is unowned | ui | 075 | claude | done (f288c68) |
 | TB-113 | Perf: rerun QA J1 in a visible browser (160 orcs); the hidden-pane run showed 4–6% of frames over 16.7 ms with draw spikes up to 330 ms. Profile and fix if they reproduce | perf | 075 | claude | done (QA run 2: no spikes in visible rAF frames; still untested on a mid-range PC) |
-| TB-114 | Loot: affixes that scale a feature the player does not own (Packbond without the wolf, Thorns without Spikes) roll and do nothing; decide whether to reroll, gate or label them | loot | 075 | | todo |
-| TB-116 | Tree keyboard access (QA B5): the tree canvas takes no focus or keys. Make nodes reachable by Tab or arrows and buyable by Enter (GDD §13) | ui | 075 | | todo |
-| TB-117 | Tree: the branch legend (BOW, COMPANIONS …) is drawn over node labels at the top of the tree (QA run 2) | ui | 075 | | todo |
+| TB-114 | Loot: affixes that scale a feature the player does not own (Packbond without the wolf, Thorns without Spikes) roll and do nothing; director chose gate: they roll only while the feature is owned | loot | 075 | claude | done (1d3063f) |
+| TB-115 | Rename pass in the elf's voice (director's doc, 1 Nov): 49 skill nodes, 5 Grudges lines, currency Teeth/Grudge, Burn It Down, Fence, Lads, orc kinds and the player copy; then (director: do it yourself) the 55 later nodes, 6 loot Grudges lines, 7 sets and 8 mythics in the same voice; game title A Lot of Orcs (director, 1 Nov); branch display labels; ids and save unchanged | data/ui | 111 | claude | done (PR #35, e08d2ca) |
+| TB-116 | Tree keyboard access (QA B5): the tree canvas takes no focus or keys. Make nodes reachable by Tab or arrows and buyable by Enter (GDD §13) | ui | 075 | claude | done (33cf889) |
+| TB-117 | Tree: the branch legend (BOW, COMPANIONS …) is drawn over node labels at the top of the tree (QA run 2) | ui | 075 | claude | done (831aef2) |
+| TB-118 | Desktop: bundle the Spectral and Atkinson Hyperlegible fonts instead of loading Google Fonts, so the Electron build looks right offline (TB-074 finding) | release | 074 | claude | done (4e10b33) |
+| TB-119 | Desktop: package the Electron shell into a Windows build for Steam (electron-builder, `npm run desktop:pack` → `release/win-unpacked/`) | release | 074 | claude | done (a0a0dc5) |
+| TB-120 | Desktop: app icon (the director's art, `desktop/icon.png` → exe .ico via electron-builder) | release | 119 | claude | done (2e28a11) |
+| TB-121 | Rename the game to Let's Hunt Some Orc! (director, 1 Nov): page title, header, strings title, desktop productName, doc headings; repo name and save keys unchanged | ui/docs | 115 | claude | done (e439fcf) |
+| TB-122 | Desktop: first SteamPipe depot upload of `release/win-unpacked/` (needs the Steam app id, i.e. the ~$100 Steam Direct fee: spend, needs the director's written yes) | release | 119 | | todo |
+| TB-123 | Bug bash run 3 on main after sprites, fonts, rename, affix gate and desktop icon (`docs/QA-CHECKLIST.md`) | qa | 075 | claude | done (4fc3a48) |
+| TB-124 | Waves: grunts held at the wall can fill the 160-orc cap and starve the summoned kinds (runner, brute, blackguard) of slots; needs a design call (reserved slots per kind, or a grunt share of the cap) | sim | 123 | | todo |
+| TB-125 | Balance: at high waves one orc swing can exceed the wall's max HP (QA run 2), so the wall can fall in one hit; propose a cap or a gentler damage curve under BALANCE `## Proposed` with sim output | balance | 123 | | todo |
 | TB-101 | Loot L4: Spoils branch (7 Grove nodes) and 6 Heartwood loot lines (Far Sight, Fortune's Favour, Deep Satchel, Warboss Tithe, Heirloom, Glimmerwork) with requirements; save v9 adds the Heirloom uid. Numbers P-101 | sim | 110 | claude | done (9e8b756) |
 | TB-102 | Loot L5: spend Glimmer to reroll one affix on a worn item; cost doubles per reroll on that item, Glimmerwork ×0.6. Numbers P-102 | sim | 101 | claude | done (4d924fe) |
 | TB-103 | Loot L6: Replant screen lists items found this run by rarity and the best drop, in its rarity colour | ui | 102 | claude | done (d74f6a5) |
 | TB-105 | Loot L8: loot VFX. Drop beams per rarity (common glint; rare/epic/legendary/mythic beams 1/1.5/2/3 s, epic mote spiral, legendary+ ground ring), mythic 0.5 s hold then 0.6× for 0.5 s with a rose screen edge; equip glows the bow and flashes the worn card; set tier rise rings the elf with leaves 2 s; salvage flashes the count; reroll line fades in. Reduced motion keeps beams and colour flashes only. HUD quiver streak/bounce skipped (no HUD quiver). SFX are TB-106 | render/ui | 103 | claude | done (be4e1b7) |
-| TB-107 | Loot L9: loot telemetry. Drop, equip, salvage, reroll and set-tier events (wave, run, minutes since the first logged event, rarity/slot/base/set) in their own localStorage key (cap 5000), buffered in GameController and written with each save; the Settings export gains `loot`. No save schema change | app | 105 | claude | done 54ab3db |
+| TB-107 | Loot L9: loot telemetry. Drop, equip, salvage, reroll and set-tier events (wave, run, minutes since the first logged event, rarity/slot/base/set) in their own localStorage key (cap 5000), buffered in GameController and written with each save; the Settings export gains `loot`. No save schema change | app | 105 | claude | done (PR #36, 54ab3db) |
 | TB-108 | Loot L10: balance pass. sim/run.ts reports loot milestones (first drop, first of each rarity by run/minute/boss, first 6-piece set), gear and mythic power ratios, `--hw` ranks and a `--bare` baseline; tuning proposed in BALANCE.md `## Proposed` | sim | 107 | claude | done (P-108 applied, PR 50) |
-| TB-118 | Combat stalls past wave ~117: 0 kills/min, wall 100%, waves keep ticking (sim seed 3, bosses every 60, reached wave 463). Find the overflow or spawn stall and fix | sim | 108 | | todo |
+| TB-126 | Combat stalls past wave ~117: 0 kills/min, wall 100%, waves keep ticking (sim seed 3, bosses every 60, reached wave 463). Find the overflow or spawn stall and fix | sim | 108 | | todo |
