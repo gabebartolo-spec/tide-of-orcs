@@ -63,7 +63,7 @@ tide-of-orcs/
       storage.ts        localStorage with try/catch (key `tide-of-orcs-v1`); export/import as base64 UTF-8 JSON
       telemetry.ts      local run log for testers, own key, JSON export (TB-070); not part of the save
       fixtures/v1.ts    v1 save fixture
-  public/               (not yet created) sprites/ and audio/ assets; the game runs without them
+  public/               sprites/, audio/ and fonts/ assets (the game runs without sprites and audio); favicon.png is the app icon at 64 px (TB-123)
   sim/run.ts            headless balance runner (node), imports src/sim + src/data
   test/                 cross-module tests (empty); unit tests sit beside code
 ```
@@ -138,4 +138,4 @@ Plain DOM, no framework. `ui/panel.ts` renders the detail card with template str
 - No GC pressure spikes: verify with Chrome performance panel, allocations per frame ≈ 0 in `step`.
 
 ## Build & deploy
-- `vite build` → `dist/` static. Itch.io upload as HTML5 zip via `.github/workflows/itch.yml` (RELEASE.md). Desktop: `desktop/main.cjs` is an Electron shell (dev dependency `electron`, TB-074) that serves `dist/` over `app://tide`, so `fetch`, module scripts and `localStorage` behave as on a static host; `npm run desktop` builds and opens it. Background throttling stays on, so a minimised window stops the loop and nothing accrues (rule 2). Fonts are bundled (TB-118), so it runs offline. `npm run desktop:pack` (dev dependency `electron-builder`, config `electron-builder.yml`, TB-119) writes `release/win-unpacked/` with `Let's Hunt Some Orc!.exe`: the folder a SteamPipe depot uploads. No installer (Steam installs it), unsigned, default Electron icon, English locale only. `userData` is pinned to `%APPDATA%/tide-of-orcs`, so the dev shell and the packaged exe share one save and a product rename never orphans it. Not yet uploaded to Steam.
+- `vite build` → `dist/` static. Itch.io upload as HTML5 zip via `.github/workflows/itch.yml` (RELEASE.md). Desktop: `desktop/main.cjs` is an Electron shell (dev dependency `electron`, TB-074) that serves `dist/` over `app://tide`, so `fetch`, module scripts and `localStorage` behave as on a static host; `npm run desktop` builds and opens it. Background throttling stays on, so a minimised window stops the loop and nothing accrues (rule 2). Fonts are bundled (TB-118), so it runs offline. `npm run desktop:pack` (dev dependency `electron-builder`, config `electron-builder.yml`, TB-119) writes `release/win-unpacked/` with `Let's Hunt Some Orc!.exe`: the folder a SteamPipe depot uploads. No installer (Steam installs it), unsigned, app icon `desktop/icon.png` (the director's art, TB-120; electron-builder makes the .ico), English locale only. `userData` is pinned to `%APPDATA%/tide-of-orcs`, so the dev shell and the packaged exe share one save and a product rename never orphans it. Not yet uploaded to Steam.
