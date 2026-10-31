@@ -8,6 +8,7 @@ import { fmt } from '../ui/format';
 import { STR } from '../data/strings';
 import { Ceremony } from './ceremony';
 import { Sprites } from './sprites';
+import { orcState, vanState } from './actorState';
 import { SKY, dusk } from '../data/presentation';
 
 /** Seconds an impact ring lingers. */
@@ -103,8 +104,8 @@ export class FieldRenderer {
     if (s.stats.ballista) { g.fillStyle = P.bark; g.fillRect(ELF_X - 10, H / 2 - 48, 30, 10); g.fillStyle = P.cream; g.fillRect(ELF_X + 10, H / 2 - 45, 22, 3); }
     if (s.stats.wolf) { const w = s.wolf; g.save(); g.translate(w.x, w.y); g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 8, 12, 4, 0, 0, 6.28); g.fill(); g.fillStyle = P.wolf; g.beginPath(); g.ellipse(0, 0, 13, 7, 0, 0, 6.28); g.fill(); g.beginPath(); g.arc(11, -4, 5, 0, 6.28); g.fill(); g.restore(); }
 
-    const vans: Vanguard[] = []; s.vans.forEach((v) => vans.push(v)); vans.sort((a, b) => a.y - b.y).forEach((v) => this.van(v));
-    const orcs: Orc[] = []; s.orcs.forEach((o) => { if (!o.dead) orcs.push(o); }); orcs.sort((a, b) => a.y - b.y).forEach((o) => { this.orc(o); if (o.burn > 0 && !this.reducedMotion && Math.random() < FLAME.rate * dt) this.fx.flame(o.x, o.y, P.amber); });
+    const vans: Vanguard[] = []; s.vans.forEach((v) => vans.push(v)); vans.sort((a, b) => a.y - b.y).forEach((v) => this.van(s, v));
+    const orcs: Orc[] = []; s.orcs.forEach((o) => { if (!o.dead) orcs.push(o); }); orcs.sort((a, b) => a.y - b.y).forEach((o) => { this.orc(s, o); if (o.burn > 0 && !this.reducedMotion && Math.random() < FLAME.rate * dt) this.fx.flame(o.x, o.y, P.amber); });
 
     s.shots.forEach((a) => { if (a.kind === 'lob') { this.lob(a); return; } const l = a.kind === 'bolt' ? 22 : a.kind === 'knife' ? 8 : 14; const n = Math.hypot(a.vx, a.vy); g.strokeStyle = a.kind === 'bolt' ? P.bark : a.kind === 'knife' ? P.knife : P.cream; g.lineWidth = a.kind === 'bolt' ? 3 : 1.5; g.beginPath(); g.moveTo(a.x, a.y); g.lineTo(a.x - (a.vx / n) * l, a.y - (a.vy / n) * l); g.stroke(); });
     for (const im of this.impacts) { const k = im.life / IMPACT_LIFE; g.globalAlpha = k; g.strokeStyle = P.cream; g.lineWidth = 2; g.beginPath(); g.arc(im.x, im.y, im.r * (1.15 - 0.15 * k), 0, 6.28); g.stroke(); g.globalAlpha = 1; }
@@ -155,11 +156,11 @@ export class FieldRenderer {
     g.strokeStyle = P.cream; g.lineWidth = 1.5; g.beginPath(); g.moveTo(a.x, ay); g.lineTo(a.x - (dx / n) * 14, ay - (dy / n) * 14); g.stroke();
   }
 
-  private orc(o: Orc): void {
+  private orc(s: SimState, o: Orc): void {
     const g = this.g; g.save(); g.translate(o.x, o.y);
     const bob = this.reducedMotion ? 0 : Math.sin(o.wob) * 1.5;
     g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, o.r * 0.9, o.r * 0.9, o.r * 0.35, 0, 0, 6.28); g.fill();
-    if (this.sprites.draw(g, `orc.${o.kind}`, this.clock + o.wob, 0, o.r * 0.9, o.r, o.hitT > 0)) { this.orcBars(o, 0); g.restore(); return; }
+    if (this.sprites.drawActor(g, `orc.${o.kind}`, orcState(s, o), this.clock + o.wob, 0, o.r * 0.9, o.r, o.hitT > 0)) { this.orcBars(o, 0); g.restore(); return; }
     g.fillStyle = o.hitT > 0 ? P.cream : o.kind === 'boss' ? P.boss : o.kind === 'elite' ? P.elite : o.kind === 'brute' ? P.brute : P.orc;
     g.beginPath(); g.ellipse(0, bob, o.r, o.r * 1.05, 0, 0, 6.28); g.fill();
     g.fillStyle = P.tusk; g.fillRect(-o.r * 0.55, bob - o.r * 0.15, o.r * 0.32, o.r * 0.22); g.fillRect(o.r * 0.2, bob - o.r * 0.15, o.r * 0.32, o.r * 0.22);
@@ -187,10 +188,10 @@ export class FieldRenderer {
     g.restore();
   }
 
-  private van(v: Vanguard): void {
+  private van(s: SimState, v: Vanguard): void {
     const g = this.g, T = VANGUARD[v.type]; g.save(); g.translate(v.x, v.y);
     g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 16, 12, 4, 0, 0, 6.28); g.fill();
-    if (this.sprites.draw(g, `van.${v.type}`, this.clock, 0, 16, ACTOR_R, v.hitT > 0)) { this.vanBar(v); g.restore(); return; }
+    if (this.sprites.drawActor(g, `van.${v.type}`, vanState(s, v), this.clock, 0, 16, ACTOR_R, v.hitT > 0)) { this.vanBar(v); g.restore(); return; }
     g.fillStyle = v.hitT > 0 ? P.cream : v.type === 'spear' ? P.spear : P.blade; g.beginPath(); g.moveTo(-9, 14); g.lineTo(9, 14); g.lineTo(6, -6); g.lineTo(-6, -6); g.closePath(); g.fill();
     g.fillStyle = P.lilac; g.beginPath(); g.arc(0, -12, 7, 0, 6.28); g.fill();
     g.strokeStyle = P.cream; g.lineWidth = 2; g.beginPath();
