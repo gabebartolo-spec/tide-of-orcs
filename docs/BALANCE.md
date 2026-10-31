@@ -104,7 +104,7 @@ Status measured 31 Oct 2026 at 8791ac2, seed 1, 25 min, player model `crowdAim` 
 | A spearman earns its keep | buys at least as many seconds of wall life per starlight as a Seasoned Timber rank (median over waves 3/6/10/14, seeds 1–3) | met, barely: median ratio 1.06, 7 of 12 cases ≥ 1 at `wallMult` 10 (`sim/spearman.ts`, TB-086); was 1.5 before TB-080 |
 | Breakout | a run passes wave 15 within 15 min of total play | met: greedy after 4–6 short runs (6–12 min), that run falls at wave 24–26 (TB-054) |
 | Bare archer, no purchases, holds | ≥ 4 waves | met (falls wave 4–5) |
-| Worn gear power (TB-108) | +60–90% vs bare, about +2–3 waves at late orc HP (director, 2026-11-01; "+10 waves" dropped) | over: best wave worn vs bare +5 to +8 (seed 1, 25 h, P-108) |
+| Worn gear power (TB-108) | +60–90% vs bare, about +2–3 waves at late orc HP (director, 2026-11-01; "+10 waves" dropped) | met: +1.5 waves mean worn vs bare, seeds 1–4, 25 h (P-108b gain 0.75; was +4.75) |
 | Tree fully bought in a run | never | met: 117 of 156 buyable ranks at most (greedy run 5) |
 
 ## Heartwood tree (M3, built TB-053; shown to the player as Grudges, TB-112)
@@ -312,7 +312,7 @@ Decision: keep 10. Measured falls over 40 min, seeds 1–3 (wave@run minutes): g
 ### Loot (TB-091, from the Loot Expansion Design; data in `src/data/lootTables.ts`, not yet live)
 - P(drop) = min(0.6, 0.008 · lootTier^1.5 · (1 + itemFind)). lootTier: grunt 1, runner 2, brute 3, elite 4, boss 5.
 - Rarity weights normal/boss: common 70.47/0, rare 25/45.1, epic 4.5/45, legendary 0.03/9, mythic 0/0.9 (P-108; boss column is the simmed 40/40/8/0.8 rescaled to sum 100). Each weight × (1+luck)^rank × (1 + 0.15(lootTier−1))^rank, rank 0–4.
-- Affixes per rarity 1/2/3/4/4; ranges × (1 + 0.03 · ilvl). Item level = wave, capped at 20 + 10 × prestiges. Commons stop after prestige 3, rares after 8. Affixes roll only for features the player owns (TB-114, `AFFIX_NEEDS`): Kinship needs any companion; Packbond the wolf, Talons the hawk, Roots the treant, Blades the knives, Ballistae the ballista, Thorns the spikes, Banner/Mail/Mending the vanguard (Muster), Elitebane elites marching; fire, storm and moon affixes need that arrow.
+- Affixes per rarity 1/2/3/4/4; ranges × 0.75 × (1 + 0.03 · ilvl) (`AFFIX.gain` 0.75, P-108b). Item level = wave, capped at 20 + 10 × prestiges. Commons stop after prestige 3, rares after 8. Affixes roll only for features the player owns (TB-114, `AFFIX_NEEDS`): Kinship needs any companion; Packbond the wolf, Talons the hawk, Roots the treant, Blades the knives, Ballistae the ballista, Thorns the spikes, Banner/Mail/Mending the vanguard (Muster), Elitebane elites marching; fire, storm and moon affixes need that arrow.
 - Pity: legendary weight +10% per boss without one; mythic guaranteed by the 25th boss without one.
 - Sets: 2/4/6-piece bonus +20/50/100% to the set's stat (Handyman 15/40/80%).
 
@@ -353,8 +353,8 @@ Read: G sets land at 7–12 h (C: 3.6 h; C with every 60 on seeds 1–3: 3.6–6
 Gear power: worn vs bare best wave +5 to +8 (seed 1, 25 h). Late orc HP grows ~30% per wave, so +60–90% power ≈ +2–3 waves and "+10 waves" ≈ ×14 power: the two targets disagree. Director (1 Nov) picked +60–90% power. The runner's play-on trial (end state, worn vs bare) gives −5 to +7 waves by seed, too noisy to tune on.
 Found: past wave ~117 combat stops (0 kills/min, wall 100%, waves tick to 463 on seed 3 at bosses every 60); TB-126.
 
-### P-108b · Gear power: affix gain 0.75 (2026-11-01, TB-108)
-Director (1 Nov): target +60–90% gear power (about +2–3 waves); "Yes, tune down". Proposed: `AFFIX.gain` 1 → 0.75 (lootTables.ts), so every affix rolls at 75% of today's value. Sets and mythics unchanged.
+### P-108b · Gear power: affix gain 0.75 (2026-11-01, TB-108) · applied
+Director (1 Nov): target +60–90% gear power (about +2–3 waves); "Yes, tune down"; approved "Yes, apply" (1 Nov). Applied: `AFFIX.gain` 1 → 0.75 (lootTables.ts), so every affix rolls at 75% of today's value. Sets and mythics unchanged.
 
 Evidence: `npm run balance -- --minutes 1500 --seed N --quiet [--bare | --tune AFFIX.gain=G]` with P-108 drops. Best wave in 25 h, seeds 1 / 2 / 3 / 4:
 

@@ -17,7 +17,7 @@ export const SATCHEL = { base: 40, deep: 80, maxArrowAffixes: 2 } as const;
 /** Spoils branch (TB-101), BALANCE P-101. trophyEvery: waves whose kills roll twice; echo: mythic power ×1.25 more often or longer. */
 export const SPOILS_FX = { hunterCrit: 0.05, scavenger: 1.5, trophyEvery: 10, sharpFind: 0.1, resonance: 1, echo: 1.25 } as const;
 /** Affix ranges grow by gain × (1 + perIlvl × item level). gain is the TB-108 power lever. */
-export const AFFIX = { gain: 1, perIlvl: 0.03 };
+export const AFFIX = { gain: 0.75, perIlvl: 0.03 };
 export const affixScale = (ilvl: number): number => AFFIX.gain * (1 + AFFIX.perIlvl * ilvl);
 
 export type ArrowType = 'fire' | 'storm' | 'moon';
