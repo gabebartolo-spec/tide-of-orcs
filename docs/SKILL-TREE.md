@@ -1,6 +1,6 @@
 # Skill Tree — node data
 
-Status: **Current** (v1.4, 104 nodes, 48 of them the TB-103 per-type nodes (costs in BALANCE P-103), checked against the code 1 Nov 2026). Started from `docs/prototype.html` and since changed (Wide Volley, War Drums and the summon/Fury/Swarm nodes added; Dreaming Roots, Blood Banners and the Warboss nodes retired; see GDD §14). Mirrored exactly by `src/data/skillTree.ts` (tested: unique ids, parents exist, no cycles, coordinates in bounds, ≥ 40 px apart). Node ids are stable API: never rename; deprecate instead.
+Status: **Current** (v1.4, 104 nodes, 48 of them the TB-111 per-type nodes (costs in BALANCE P-111), checked against the code 1 Nov 2026). Started from `docs/prototype.html` and since changed (Wide Volley, War Drums and the summon/Fury/Swarm nodes added; Dreaming Roots, Blood Banners and the Warboss nodes retired; see GDD §14). Mirrored exactly by `src/data/skillTree.ts` (tested: unique ids, parents exist, no cycles, coordinates in bounds, ≥ 40 px apart). Node ids are stable API: never rename; deprecate instead.
 
 Cost formula: `cost(rank, w) = round(base × growth^rank × 1.25^max(0, w − 10))` (rank = ranks already owned, w = wave at purchase; the wave factor is P-001, BALANCE.md §Economy). Costs are starlight.
 
@@ -135,7 +135,7 @@ interface Stats {
   pierce: number;         // pierce           (extra lob strikes; ranger arrow pierce)
   crit: number;           // 0.08 × crit + 0.05 × hunter
   critMult: number;       // 3 + 0.5 × deadly   (the elf's crits)
-  // per-type shot nodes (TB-103): chance per shot, 0 until the type is owned
+  // per-type shot nodes (TB-111): chance per shot, 0 until the type is owned
   fireP, frostP, shockP, rebP, moonP: number;   // min(1, 0.25 + 0.15 × <type>chance)
   starP: number;          // starfall ? min(1, 0.1 + 0.05 × starchance) : 0
   burnSecs: number;       // 3 + wildfire
@@ -185,8 +185,8 @@ interface Stats {
 // deriveStats(levels, heartwood, hwLevels) in src/sim/stats.ts
 ```
 
-## Per-type upgrade nodes (TB-103, built 1 Nov 2026)
-Director rules (1 Nov): every arrow/shot type has 3 upgrade nodes (damage, special effect, frequency); every enemy type has 2 (health+reward, frequency); every companion and vanguard unit has damage, fire rate and crit chance, and every crit chance node unlocks a crit damage node; melee units (wolf, spearman, bladedancer) also get move speed. Frequency for a shot type = chance per shot (unlock gives 25%). Existing nodes fold in where they fit; no id renames. Costs are proposed in BALANCE P-103.
+## Per-type upgrade nodes (TB-111, built 1 Nov 2026)
+Director rules (1 Nov): every arrow/shot type has 3 upgrade nodes (damage, special effect, frequency); every enemy type has 2 (health+reward, frequency); every companion and vanguard unit has damage, fire rate and crit chance, and every crit chance node unlocks a crit damage node; melee units (wolf, spearman, bladedancer) also get move speed. Frequency for a shot type = chance per shot (unlock gives 25%). Existing nodes fold in where they fit; no id renames. Costs are proposed in BALANCE P-111.
 
 Enemies already conform: grunt (War Drums, Call the Horde), runner/brute/elite (Fury, Swarm under their unlock). Nothing new.
 

@@ -12,12 +12,12 @@ export interface Stats {
   homing: boolean; fire: boolean;
   /** Arrow enchantments (TB-089): Rebound hops (0 = none), shock, stun, frost slow fraction (0 = none), shatter damage × player dmg (0 = none), starfall. */
   bounce: number; shock: boolean; stun: boolean; slow: number; shatter: number; starfall: boolean;
-  /** Per-type shot nodes (TB-103): chance per shot of each enchantment (0 = not owned), and what the type's damage and effect nodes set.
+  /** Per-type shot nodes (TB-111): chance per shot of each enchantment (0 = not owned), and what the type's damage and effect nodes set.
    *  moonMult multiplies a moon shot's damage; homeR is how far from the aim a moon shot settles; the elf's crits deal critMult. */
   fireP: number; frostP: number; shockP: number; rebP: number; moonP: number; starP: number;
   burnSecs: number; stunSecs: number; shockMult: number; rebMult: number; moonMult: number; homeR: number; starDmg: number; starArrows: number;
   critMult: number; knifeExtra: number; boltRoot: number;
-  /** Per-unit nodes (TB-103) for companions and vanguard. */
+  /** Per-unit nodes (TB-111) for companions and vanguard. */
   units: Record<Unit, UnitFx>;
   starMult: number;
   /** Per orc kind: summoned yet, and its Fury/Swarm multipliers. The Warboss never marches; he comes only with a boss wave. */

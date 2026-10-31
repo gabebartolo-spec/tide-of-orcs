@@ -13,7 +13,7 @@ export type NodeId =
   | 'timber' | 'repair' | 'spikes' | 'bulwark'
   | 'muster' | 'shield' | 'drill' | 'ranks' | 'mend' | 'champion'
   | 'hunter' | 'scavenger' | 'trophy' | 'sharpeyes' | 'hoard' | 'resonance' | 'echo'
-  // TB-103
+  // TB-111
   | 'kindle' | 'wildfire' | 'firechance' | 'frostchance' | 'static' | 'shockchance' | 'rebdmg' | 'rebchance' | 'moondmg' | 'moonreach' | 'moonchance' | 'stardmg' | 'starcount' | 'starchance' | 'knifedmg' | 'knifefan' | 'boltpin' | 'windlass' | 'deadly' | 'wolfrate' | 'wolfcrit' | 'wolfcritx' | 'wolfspd' | 'rangerdmg' | 'rangerrate' | 'rangercrit' | 'rangercritx' | 'wardendmg' | 'wardenrate' | 'wardencrit' | 'wardencritx' | 'hawkdmg' | 'hawkrate' | 'hawkcrit' | 'hawkcritx' | 'treantdmg' | 'treantrate' | 'treantcrit' | 'treantcritx' | 'spearrate' | 'spearcrit' | 'spearcritx' | 'spearspd' | 'bladedmg' | 'bladerate' | 'bladecrit' | 'bladecritx' | 'bladespd';
 
 export interface SkillNode {
@@ -90,7 +90,7 @@ export const NODES: readonly SkillNode[] = [
   n('hoard', 'Boss Hoard', 'Spoils', 'trophy', 1, 900, 1, 546, 1180, 'Boss drops roll one rarity higher, up to legendary.'),
   n('resonance', 'Set Resonance', 'Spoils', 'sharpeyes', 1, 4000, 1, 386, 1212, 'Every set you wear counts one piece more.'),
   n('echo', 'Mythic Echo', 'Spoils', 'resonance', 1, 6000, 1, 242, 1196, 'Your mythic power triggers 25% more often, or lasts 25% longer.'),
-  // Per-type nodes (TB-103): costs proposed in BALANCE P-103
+  // Per-type nodes (TB-111): costs proposed in BALANCE P-111
   n('kindle', 'Kindling', 'Armoury', 'fire', 5, 600, 1.9, 925, 355, 'Burning orcs take +30% burn damage per rank.'),
   n('wildfire', 'Wildfire', 'Armoury', 'fire', 3, 900, 2.2, 1006, 406, 'Burns last 1 s longer per rank.'),
   n('firechance', 'Fire Quiver', 'Armoury', 'fire', 5, 500, 1.9, 887, 402, '+15% chance per rank that a shot is a fire arrow.'),

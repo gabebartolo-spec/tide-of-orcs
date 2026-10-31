@@ -14,7 +14,7 @@ const orcAt = (s: S, x: number, y: number, hp = 1e6) => {
   return o;
 };
 
-describe('per-type shot nodes (TB-103)', () => {
+describe('per-type shot nodes (TB-111)', () => {
   it('each enchantment is a chance per shot: 0 unowned, 25% on unlock, +15% per Quiver rank', () => {
     expect(withNodes({}).stats.fireP).toBe(0);
     expect(withNodes({ fire: 1 }).stats.fireP).toBeCloseTo(SHOT_FX.chance0);
@@ -68,7 +68,7 @@ describe('per-type shot nodes (TB-103)', () => {
   });
 });
 
-describe('per-unit nodes (TB-103)', () => {
+describe('per-unit nodes (TB-111)', () => {
   it('rate, crit, crit damage and speed per rank', () => {
     const u = withNodes({ ranger: 1, rangerrate: 2, rangercrit: 3, rangercritx: 2, wolf: 1, wolfspd: 1 }).stats.units;
     expect(u.ranger.rate).toBeCloseTo(UNIT_FX.rate ** 2);

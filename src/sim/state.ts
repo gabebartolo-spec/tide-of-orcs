@@ -24,7 +24,7 @@ export interface Orc {
 export type ProjectileKind = 'arrow' | 'knife' | 'bolt' | 'lob' | 'bounce' | 'star';
 export interface Projectile {
   live: boolean; kind: ProjectileKind; x: number; y: number; vx: number; vy: number; dmg: number; pierce: number; life: number;
-  /** Enchantments this shot rolled (combat FX bits), and its crit chance and crit multiplier (TB-103). */
+  /** Enchantments this shot rolled (combat FX bits), and its crit chance and crit multiplier (TB-111). */
   fx: number; crit: number; critX: number;
   target: Orc | null; hit: Set<Orc>;
   /** The Last Knife (TB-100): this knife is flying back to the quiver, hitting everything. */

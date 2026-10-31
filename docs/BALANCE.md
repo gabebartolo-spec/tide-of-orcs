@@ -329,7 +329,7 @@ Evidence: `npm run balance` (greedy, seed 1, 30 min) vs the tb-110 base: first f
 Reroll one affix of a worn item: cost = max(1, round(2 × 2^n × rerollMult)), n = rerolls already on that item (`REROLL` in lootTables). Costs 2, 4, 8, 16, 32…; with Glimmerwork 1, 2, 5, 10, 19. The new affix is a different id, keeps the item's arrow rule, value rolled at the item's ilvl.
 Evidence: none yet; the greedy runner never rerolls. Tuning is TB-107.
 
-### P-103 · Per-type upgrade nodes (2026-11-01, TB-103)
+### P-111 · Per-type upgrade nodes (2026-11-01, TB-111)
 Design from the director (1 Nov): see SKILL-TREE §Per-type upgrade nodes. Numbers in `SHOT_FX`, `UNIT_FX`, `ELF_FX` (`src/data/balance.ts`).
 - Enchantment chance per shot: 0.25 on unlock + 0.15 per Quiver rank, capped at 1 (fire, frost, shock, rebound, moon). Starfall 0.1 + 0.05 per Wishing Star rank (replaces "every 10th lob"). Thunderclap stuns only on shots that roll shock.
 - Shot damage nodes ×1.3^r (Kindling burn, Static zap, Hard Rebound, Starsteel, Keen Knives); Moonsilver ×1.2^r on the Moonbow's ×1.6, which now applies to moon shots only.
