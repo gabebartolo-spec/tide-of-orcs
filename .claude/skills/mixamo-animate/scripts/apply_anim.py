@@ -300,8 +300,11 @@ if os.environ.get("BOWALIGN"):  # each frame turn the bow hand so the bow stands
     # back for the arrow there is no arrow line, so the bow keeps facing the target like a real archer's
     w = bpy.data.objects["wpn_bow"]; ax = Vector(w["bow_ax"]); bk = Vector(w["bow_back"]); pb = tgt.pose.bones["mixamorig:LeftHand"]
     P = lambda n: tgt.matrix_world @ tgt.pose.bones["mixamorig:" + n].head
-    n = int(os.environ["BOWALIGN"]); sc.frame_set(f1 if n < 0 else f0 + n); bpy.context.view_layer.update()
-    ar = (P("LeftHand") - P("RightHand")).normalized(); u = Vector((0, 0, 1)); u = (u - ar * u.dot(ar)).normalized()
+    if os.environ["BOWALIGN"] == "up":  # no draw in this clip (idle): bow upright, back facing the way the elf faces (-Y, INPLACE)
+        ar, u = Vector((0, -1, 0)), Vector((0, 0, 1))
+    else:
+        n = int(os.environ["BOWALIGN"]); sc.frame_set(f1 if n < 0 else f0 + n); bpy.context.view_layer.update()
+        ar = (P("LeftHand") - P("RightHand")).normalized(); u = Vector((0, 0, 1)); u = (u - ar * u.dot(ar)).normalized()
     for f in range(f0, f1 + 1):
         sc.frame_set(f); bpy.context.view_layer.update(); M3 = w.matrix_world.to_3x3()
         d = (M3 @ ax).normalized(); b = (M3 @ bk); b = (b - d * b.dot(d)).normalized()
@@ -345,8 +348,11 @@ if os.environ.get("QUIVER"):  # quiver on the back (Spine2) with arrows, and a n
         rh_ = tgt.pose.bones["mixamorig:RightHand"]; af_ = int(os.environ.get("ARROWF", "6"))
         def HP(f):
             sc.frame_set(f0 + f); bpy.context.view_layer.update(); return W @ (rh_.tail + (rh_.tail - rh_.head) * 0.4)
-        h0, h4 = HP(af_), HP(af_ + 4); ax_ = (h4 - h0).normalized()
-        mouth = h0 - ax_ * 0.12 + Vector(map(float, os.environ["QFLOAT"].split(",")))  # fingertips 12 cm out of the mouth when the hand closes on the nock
+        if os.environ.get("QPOSE"):  # QPOSE=mx,my,mz,ax,ay,az: the mouth and axis measured on the approved attack, so the other clips of the unit hang the quiver in the same spot
+            qp = list(map(float, os.environ["QPOSE"].split(","))); mouth, ax_, h0 = Vector(qp[:3]), Vector(qp[3:]).normalized(), Vector(qp[:3])
+        else:
+            h0, h4 = HP(af_), HP(af_ + 4); ax_ = (h4 - h0).normalized()
+            mouth = h0 - ax_ * 0.12 + Vector(map(float, os.environ["QFLOAT"].split(",")))  # fingertips 12 cm out of the mouth when the hand closes on the nock
         Q.matrix_world = Matrix.Translation(mouth - ax_ * QL) @ Vector((0, 0, 1)).rotation_difference(ax_).to_matrix().to_4x4()
         print("QFLOAT mouth", tuple(round(v, 3) for v in mouth), "axis", tuple(round(v, 2) for v in ax_), "hand f", af_, tuple(round(v, 3) for v in h0))
     for i, (dx, dy) in enumerate(((0.012, 0.01), (-0.014, 0.004), (0.002, -0.016), (-0.006, 0.02))):
