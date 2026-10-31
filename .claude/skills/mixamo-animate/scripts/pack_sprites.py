@@ -19,6 +19,8 @@ ANIMS = {
     "orc.berserker.attack": (15, True, "orc.berserker", 2.4),
     "orc.shaman": (30, True, "orc.shaman", 2.4),
     "orc.shaman.attack": (15, True, "orc.shaman", 2.4),
+    "elf": (10, False, "elf", 3.0),  # idle loop, every 3rd clip frame (build_sprites.ps1)
+    "elf.attack": (15, False, "elf", 3.0),
 }
 anchors = json.load(open(os.path.join(src, "anchors.json"), encoding="utf-8-sig"))
 

@@ -62,6 +62,13 @@ export class Sprites {
     return go(key, 0) || go(atk, 0);
   }
 
+  /** Length of one loop of `key` in seconds (0 when it has no sprite). Lets a caller play a clip in step with a sim timer,
+   *  e.g. the elf's draw clip runs with the bow's charge instead of free-running. */
+  duration(key: string): number {
+    const a = this.atlas?.anims[key];
+    return a ? a.frames.length / a.fps : 0;
+  }
+
   /** Draw animation `key` with its feet at (x, y) for an actor of radius r. False when there is no sprite for it.
    *  `tint` washes the frame's own pixels in that colour (shading shows through); `glow` rims it in a soft halo. */
   draw(g: CanvasRenderingContext2D, key: string, t: number, x: number, y: number, r: number, flash = false, tint = '', glow = '', blur = 0): boolean {

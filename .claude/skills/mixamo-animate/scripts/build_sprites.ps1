@@ -4,7 +4,8 @@
 param([string[]]$Only = @())
 $s = $PSScriptRoot; $bl = "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe"; $a = "C:\Users\DANTE\Documents\tide-assets"; $mx = "$a\mixamo"
 $o = "$a\sprites\frames"; New-Item -ItemType Directory -Force $o | Out-Null
-$vars = "RMATCH", "SWING", "MIRR", "H1", "MPH", "HINGE", "FREEZE", "WOFFS", "OFFS", "REST", "ARMSET", "ELBOWSET", "ARMTWIST", "DIRECT", "INPLACE", "ALIGN", "GRIP2", "CLIP", "CLIPDBG", "ELBOW", "HPROBE", "LHPROBE", "AMP", "DAMP", "ABD", "HIDE", "FOCUS"
+$vars = "RMATCH", "SWING", "MIRR", "H1", "MPH", "HINGE", "FREEZE", "WOFFS", "OFFS", "REST", "ARMSET", "ELBOWSET", "ARMTWIST", "DIRECT", "INPLACE", "ALIGN", "GRIP2", "CLIP", "CLIPDBG", "ELBOW", "HPROBE", "LHPROBE", "AMP", "DAMP", "ABD", "HIDE", "FOCUS",
+  "QUIVER", "QFLOAT", "QPOSE", "QLEN", "QBOB", "ARROWF", "ARROWL", "RESTUP", "BOWALIGN", "GRIPSIDE", "ARROWPATH", "ARROWDBG"  # elf hero (bow + floating quiver)
 $even = { param($n) (0..($n - 1) | Where-Object { $_ % 2 -eq 0 }) -join "," }
 $jobs = @(
   @{ key = "orc.grunt"; m = "$a\grunt2\grunt2u.blend"; c = "$mx\Sword And Shield Walk.fbx"; ortho = "2.4"; fr = (0..32 -join ","); env = @{  # walk_grunt.ps1 (v19)
@@ -31,7 +32,16 @@ $jobs = @(
   @{ key = "orc.shaman.attack"; m = "$a\shaman\shaman_cut2.blend"; c = "$mx\Standing 1H Magic Attack 01 MIRROR AS100.fbx"; ortho = "2.0"; fr = (& $even 69); env = @{  # cast_shaman.ps1 (v2)
       RMATCH = "RightShoulder,RightArm,RightForeArm,RightHand,LeftShoulder,LeftArm,LeftForeArm,LeftHand"; REST = "mixamorig:RightArm,mixamorig:RightForeArm,mixamorig:RightHand"; FREEZE = "mixamorig:RightShoulder"
       INPLACE = "1"; WOFFS = "mixamorig:RightArm:1,0,0,-15" } },
-  @{ key = "van.blade.attack"; m = "$a\elf_bladedancer\bladedancer_dagger.blend"; c = "$mx\Dual Weapon Combo AS100.fbx"; ortho = "2.6"; fr = (& $even 110); env = @{ DIRECT = "1"; INPLACE = "1" } }  # SKILL.md bladedancer attack v1
+  @{ key = "van.blade.attack"; m = "$a\elf_bladedancer\bladedancer_dagger.blend"; c = "$mx\Dual Weapon Combo AS100.fbx"; ortho = "2.6"; fr = (& $even 110); env = @{ DIRECT = "1"; INPLACE = "1" } },  # SKILL.md bladedancer attack v1
+  # Elf hero: `elf` is the idle loop (the elf never walks). Standing Idle 03 Examine is 153 unique frames (153 = frame 0), slow motion,
+  # so every 3rd frame at 10 fps keeps the 5.1 s loop under the sheet budget. Quiver pinned with QPOSE to the attack's measured spot.
+  @{ key = "elf"; m = "$a\elf_hero\hero27.blend"; c = "$mx\Standing Idle 03 Examine.fbx"; ortho = "1.4"; fr = ((0..152 | Where-Object { $_ % 3 -eq 0 }) -join ","); env = @{  # idle_hero.ps1 (v1)
+      QUIVER = "1"; INPLACE = "1"; GRIPSIDE = "Left"; BOWALIGN = "up"; RMATCH = "LeftShoulder,LeftArm,LeftForeArm,RightShoulder,RightArm,RightForeArm"
+      QFLOAT = "0,0,0"; QPOSE = "-0.049,0.412,0.518,-0.18,-0.64,0.74"; QLEN = "0.32"; QBOB = "0.015"; ARROWF = "999" } },
+  @{ key = "elf.attack"; m = "$a\elf_hero\hero27.blend"; c = "$mx\Standing Draw Arrow AS100.fbx"; ortho = "1.4"; fr = (& $even 32); env = @{  # attack_hero.ps1 (v5); frame 32 = frame 0
+      QUIVER = "1"; INPLACE = "1"; GRIPSIDE = "Left"; BOWALIGN = "-1"; RMATCH = "LeftShoulder,LeftArm,LeftForeArm,RightShoulder,RightArm,RightForeArm"
+      RESTUP = "0.03"; ARROWL = "0.5"; ARROWF = "6"; QFLOAT = "0,0,0"; QLEN = "0.32"; QBOB = "0.015"
+      WOFFS = "mixamorig:RightArm:0,1,0,-35;mixamorig:RightForeArm:0,1,0,-25;mixamorig:LeftArm:0,0,1,-25" } }
 )
 $anc = @{}; $af = "$o\anchors.json"; if (Test-Path $af) { (Get-Content $af | ConvertFrom-Json).PSObject.Properties | ForEach-Object { $anc[$_.Name] = $_.Value } }
 foreach ($j in $jobs) {
@@ -41,7 +51,9 @@ foreach ($j in $jobs) {
   $env:GAMECAM = "20"; $env:CAMROT = "0"; $env:ORTHO = $j.ortho; $env:RES = "512"; $env:ANCHOR = "1"; $env:FR = $j.fr
   $out = & "$s\hid.ps1" $bl -b --factory-startup --python "$s\apply_anim.py" $j.m $j.c "$o\$($j.key)" | Select-String "^ANCHOR|Error"  # hid.ps1: no Blender window on the screen
   "$($j.key) $out"
-  $m = $out | ForEach-Object { "$_" } | Select-String "^ANCHOR (\S+) (\S+)" | Select-Object -First 1  # stringify: a MatchInfo piped into Select-String passes through unmatched (empty groups -> 0,0 anchors)
+  # stringify: a MatchInfo piped into Select-String passes through unmatched (empty groups -> 0,0 anchors). Numeric groups only: the elf's
+  # arrow probe also prints "ANCHOR <frame> nock-headc/hz ..." lines, which must not be taken for the foot anchor.
+  $m = $out | ForEach-Object { "$_" } | Select-String "^ANCHOR (\d+(?:\.\d+)?) (\d+(?:\.\d+)?)\s*$" | Select-Object -First 1
   if ($m) { $anc[$j.key] = @([double]$m.Matches[0].Groups[1].Value, [double]$m.Matches[0].Groups[2].Value, [double]$j.ortho) }
 }
 $anc | ConvertTo-Json | Set-Content -Encoding utf8 $af
