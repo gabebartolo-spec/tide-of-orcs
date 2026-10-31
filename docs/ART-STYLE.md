@@ -39,6 +39,7 @@ Status: **Current** (v1.3, checked against `src/render/palette.ts` and `src/data
 | knife | #d9d4c3 | Throwing knives |
 | treantTrunk, treantLeaf, treantLeaf2 | #4e5e3f, #5f7d53, #6f8f60 | Treant |
 | aimLine, aimFill | cream 25%, cream 8% | Strike circle outline and lob arc, circle fill |
+| bloodOrc, bloodElf | #7a4a2c, #6e3a44 | Blood (TB-088): orc blood a dark rust-ochre, elf/vanguard blood a deep wine. Muted on purpose; never rose, which stays Heartwood/danger |
 | shadow, dim, dim45 | ink-dark 25%, ink 60%, ink 45% | Actor shadows; HUD and HP bar backs, wave bar track |
 
 Branch colours: Bow = lilac, Companions = amber, Armoury = rose, Grove = #9fc48f, Barricade = #c9a06a, Vanguard = #8fb7c9.
@@ -72,6 +73,23 @@ Rules: semantic colours (amber = money, timber = the wall, rose = permanent/dang
 - Affordable node: amber ring, 0.5–1.0 alpha sine at 4 rad/s. Rally buttons: border turns amber on hover when affordable.
 - Replant: tree desaturates, amber particles rise, one seed falls, field fades up through a #e2a85b-tinted overlay. ≤ 4 s.
 - Reduced motion: no bob, no pulse, no shake; replant becomes a 300 ms cross-fade.
+
+## Attack and hit VFX (TB-088)
+Every attack reads in three beats: **wind-up** (the actor draws back, derived from its swing/shot timer, no extra state), **release** (a short cream streak or arc in the direction of the blow) and **impact** (a burst at the target). All counts, sizes and timings live in `VFX` in `src/data/presentation.ts`; all shapes come from one preallocated pool (no per-frame allocation). Cream stays the "strike" colour, as for hit flash, arrows and the lob ring.
+
+| Unit | Wind-up | Release | Impact |
+|---|---|---|---|
+| Grunt / runner | Leans back up to 0.2 r over the last 40% of its 1 s swing | Cream crescent swipe in front, 0.15 s (runner's is smaller) | On the wall: 3 timber chips (as before) + 2 cream chips. On a vanguard: wine blood spray |
+| Brute | Same lean, 0.3 r | Wider, thicker crescent | Wall: 5 timber chips + small shake bump; vanguard: heavier spray |
+| Elite (Blackguard) | Same lean | Two crossed crescents (X) | As grunt, more spray |
+| Warboss | Rises 0.25 r (overhead) | Downward slam: cream shock ring on the ground, radius 1.6 r | 8 timber chips + shake bump on the wall |
+| Elf (strike circle) | Bowstring pulls back with the draw ring (up to 5 px) | Lob carries a 3-ghost fading trail along its arc | Existing cream ring + 6 cream chips, a dust ring on the ground, rust blood on every orc struck |
+| Ranger / warden, knives, ballista | — | Fading trail behind each shaft (arrow 3 ghosts, bolt 4, knife 2) | Cream chips + blood on the orc hit |
+| Spearman | Spear draws back up to 6 px over the cooldown | Cream thrust streak out to its reach, 0.12 s | Blood spray on the orc, small cream chip |
+| Bladedancer | Blades fold in (cross) over the cooldown | Two lilac→cream slash crescents, 0.15 s | Blood spray on every orc caught |
+| Wolf / hawk / treant / storm | — | (existing bite, dive, stamp, bolt) | Existing bursts + blood on the orc(s) hit |
+
+Blood: droplets fall in a short arc (gravity) and land as a flat splat (ellipse, 25%→0 alpha over 6 s) drawn on the ground under every actor. Hit: 4 droplets; kill: 10 droplets + one larger splat, size scaled by orc radius. Vanguard hit: 4 wine droplets; vanguard fell: 10 + a splat, beside the existing 14 spear-blue squares. Kill burst (moss squares), rally and fall bursts are unchanged. Splats are capped (oldest recycled first). Reduced motion: wind-ups and trails are skipped, impacts and blood still show, no shake bumps.
 
 ## Asset pipeline (tools Gabe has: Tripo, Cascadeur, ElevenLabs)
 Vector draws stay the baseline so the game is always playable without assets. M4 may upgrade actors to **pre-rendered sprite sheets** on top of the same palette:

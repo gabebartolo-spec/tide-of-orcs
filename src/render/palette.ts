@@ -10,6 +10,7 @@ export const P = {
   treantTrunk: '#4e5e3f', treantLeaf: '#5f7d53', treantLeaf2: '#6f8f60', sage: '#8fa98a', grove: '#9fc48f',
   hillFar: '#5a7058', hillNear: '#4f644d', plainDusk: '#5f6f72', lamp: 'rgba(226,168,91,.2)', lampClear: 'rgba(226,168,91,0)',
   spear: '#8fb7c9', blade: '#cdbdea',
+  bloodOrc: '#7a4a2c', bloodElf: '#6e3a44',
   aimLine: 'rgba(239,230,210,.25)',
   aimFill: 'rgba(239,230,210,.08)',
   wallBar: '#c9a06a', nodeOwned: '#2b3448', nodeLabelLocked: '#6b7383',

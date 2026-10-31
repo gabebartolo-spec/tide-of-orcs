@@ -46,7 +46,7 @@ export function impact(s: SimState, ev: EventBus, p: { tx: number; ty: number; r
   s.orcs.forEach((o) => {
     if (o.dead || (o.x - p.tx) ** 2 + (o.y - p.ty) ** 2 > (p.r + o.r) ** 2) return;
     const crit = s.rng.next() < st.crit;
-    ev.push({ t: 'hit', x: o.x, y: o.y, crit });
+    ev.push({ t: 'hit', x: o.x, y: o.y, crit, src: 'lob' });
     damage(s, ev, o, crit ? p.dmg * PLAYER.critMult : p.dmg);
     if (st.fire) o.burn = SOURCES.burnSecs;
   });

@@ -40,7 +40,11 @@ export function vanguardStep(s: SimState, ev: EventBus, dt: number): void {
     let hitAny = false;
     s.orcs.forEach((o: Orc) => {
       if (o.dead || (hitAny && !T.cleave)) return;
-      if (Math.hypot(o.x - v.x, o.y - v.y) < T.reach + o.r) { damage(s, ev, o, st.dmg * T.dmg * st.vanDmg); hitAny = true; }
+      if (Math.hypot(o.x - v.x, o.y - v.y) < T.reach + o.r) {
+        if (!hitAny) ev.push({ t: 'vanStrike', type: v.type, x: v.x, y: v.y, tx: o.x, ty: o.y });
+        ev.push({ t: 'bleed', x: o.x, y: o.y, r: o.r });
+        damage(s, ev, o, st.dmg * T.dmg * st.vanDmg); hitAny = true;
+      }
     });
     if (hitAny) v.swingT = 0;
   });

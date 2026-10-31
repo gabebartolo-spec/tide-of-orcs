@@ -78,6 +78,7 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-065 | Settings tab: volume, reduced motion override, number format, export/import | ui | 008 | claude | done 0ed4259 |
 | TB-066 | Tree layout polish: curved branch lines, camera ease to selected | render | 021 | claude | done e4d999a |
 | TB-067 | Strings table audit; all copy via `strings.ts` | ui | — | claude | done d26c4c5 |
+| TB-088 | Attack and hit VFX for every unit: wind-up/release cue and impact per orc kind, elf lob, archers, spearman, bladedancer, companions; blood (spray + fading ground splats, new `bloodOrc`/`bloodElf` tokens); pooled, numbers in `data/presentation.ts` | render | 019 | claude | doing |
 
 ## M5 — Ship
 | Id | Task | Area | Depends | Owner | Status |
