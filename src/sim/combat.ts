@@ -131,7 +131,7 @@ export function impact(s: SimState, ev: EventBus, p: { tx: number; ty: number; r
     ev.push({ t: 'hit', x: o.x, y: o.y, crit: crit || moon, src: 'lob' });
     if (fire) o.burn = st.burnSecs;
     if (frost) o.chill = ARROWS.frost.secs;
-    if (stun) o.stun = st.stunSecs;
+    if (stun) stunOrc(o, st.stunSecs);
     damage(s, ev, o, p.dmg * (crit ? st.critMult : moon ? SET_FX.moonCritMult : 1));
   });
   ev.push({ t: 'impact', x: p.tx, y: p.ty, r: p.r });
@@ -196,3 +196,8 @@ export function volley(s: SimState, sx: number, sy: number, tx: number, ty: numb
     shoot(s, 'arrow', sx, sy, ang, PLAYER.arrowSpeed, st.dmg * mult, st.pierce, target, fx, u ? u.crit : st.crit, u ? u.critMult : st.critMult);
   }
 }
+
+/** Thunderclap and roots can't be topped up while they hold (TB-126): a fresh one lands only once the orc has broken free.
+ *  Before this, shots faster than the stun, or treant stamps faster than the root, froze the pile at the cap and nothing new spawned. */
+export function stunOrc(o: Orc, secs: number): void { if (o.stun <= 0) o.stun = secs; }
+export function rootOrc(o: Orc, secs: number): void { if (o.root <= 0) o.root = secs; }

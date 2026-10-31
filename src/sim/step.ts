@@ -3,7 +3,7 @@ import { FIREBALL, ORC_KINDS, ORC_TYPES, OrcKind } from '../data/orcs';
 import { EventBus } from './events';
 import { Orc, Projectile, SimState, Wolf } from './state';
 import { MYTHIC_FX, SET_FX } from '../data/lootTables';
-import { FX, addZone, bounce, damage, impact, lob, nearestOrc, rollFx, shoot, starfall, takenMult, unitHit, volley } from './combat';
+import { FX, addZone, bounce, damage, rootOrc, impact, lob, nearestOrc, rollFx, shoot, starfall, takenMult, unitHit, volley } from './combat';
 import { barricadeHit, barricadeRegen } from './barricade';
 import { bossStep } from './boss';
 import { BOSS_WAVE } from '../data/bosses';
@@ -168,7 +168,7 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
     const U = st.units.treant; run.treantT += dt * haste * U.rate;
     if (run.treantT >= SOURCES.treant.cd) {
       run.treantT = 0; let any = false;
-      s.orcs.forEach((o) => { if (!o.dead && o.x < BAR_X + SOURCES.treant.range) { damage(s, ev, o, unitHit(s, U, st.dmg * SOURCES.treant.mult * st.kin * pet * U.dmg)); if (st.treantRoot) o.root = SET_FX.rootSecs; any = true; } });
+      s.orcs.forEach((o) => { if (!o.dead && o.x < BAR_X + SOURCES.treant.range) { damage(s, ev, o, unitHit(s, U, st.dmg * SOURCES.treant.mult * st.kin * pet * U.dmg)); if (st.treantRoot) rootOrc(o, SET_FX.rootSecs); any = true; } });
       if (any) ev.push({ t: 'treantStamp', x: BAR_X + 50, y: H / 2 + 30 });
     }
   }
@@ -226,7 +226,7 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
         damage(s, ev, o, d);
         if (st.fire && a.fx & FX.FIRE) o.burn = st.burnSecs;
         // Pinning Bolts: every orc a bolt passes through is held still
-        if (a.kind === 'bolt' && st.boltRoot > 0) o.root = Math.max(o.root, st.boltRoot);
+        if (a.kind === 'bolt' && st.boltRoot > 0) rootOrc(o, st.boltRoot);
         if (a.kind === 'knife' && st.bleedAmp) o.bleed = SET_FX.bleedSecs;
         if (a.kind === 'bolt') a.target = o;
         // Oakspine: a bolt that has pierced enough orcs drives a stake where it is
@@ -268,7 +268,7 @@ function zoneStep(s: SimState, dt: number): void {
     if (z.life <= 0) { s.zones.release(z); return; }
     if (z.kind === 'stake') {
       // holds the first orc to reach it until the stake rots
-      if (!z.used) s.orcs.forEach((o) => { if (!z.used && !o.dead && (o.x - z.x) ** 2 + (o.y - z.y) ** 2 < (z.r + o.r) ** 2) { z.used = true; o.root = Math.max(o.root, z.life); } });
+      if (!z.used) s.orcs.forEach((o) => { if (!z.used && !o.dead && (o.x - z.x) ** 2 + (o.y - z.y) ** 2 < (z.r + o.r) ** 2) { z.used = true; rootOrc(o, z.life); } });
       return;
     }
     if (z.kind === 'moonwell') s.run.barHp = Math.min(s.stats.barMax, s.run.barHp + s.stats.barMax * SET_FX.wellHeal * dt);

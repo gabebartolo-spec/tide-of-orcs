@@ -21,6 +21,7 @@ ANIMS = {
     "orc.shaman.attack": (15, True, "orc.shaman", 2.4),
     "elf": (10, False, "elf", 3.0),  # idle loop, every 3rd clip frame (build_sprites.ps1)
     "elf.attack": (15, False, "elf", 3.0),
+    "orc.wolfrider.attack": (15, True, "orc.wolfrider.attack", 2.6),  # no walk clip: the attack is its own body key; frames from wolfrider/render_wr_sheet.py
 }
 anchors = json.load(open(os.path.join(src, "anchors.json"), encoding="utf-8-sig"))
 

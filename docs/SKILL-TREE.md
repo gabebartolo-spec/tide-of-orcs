@@ -195,7 +195,7 @@ Enemies already conform: grunt (War Drums, Call the Horde), runner/brute/elite (
 |---|---|---|---|
 | Fire `fire*` | `kindle` burn +30%/rank (5) | `wildfire` burn lasts +1 s/rank (3) | `firechance` +15% chance/rank (5) |
 | Frost `frost*` | `shatter*` | `frost*` ranks: slow strength | `frostchance` +15%/rank (5) |
-| Shock `shock*` | `static` zap +30%/rank (5) | `stun*` Thunderclap, max 1→3: stun +0.25 s/rank | `shockchance` +15%/rank (5) |
+| Shock `shock*` | `static` zap +30%/rank (5) | `stun*` Thunderclap, max 1→3: stun +0.25 s/rank, never topped up while it holds (TB-126) | `shockchance` +15%/rank (5) |
 | Rebound `bounce*` | `rebdmg` bolt +30%/rank (5) | `bounce*` ranks: hops | `rebchance` +15%/rank (5) |
 | Moonbow `moon*` | `moondmg` +20%/rank (5) | `moonreach` settles from +25% farther/rank (3) | `moonchance` +15%/rank (5) |
 | Starfall `starfall*` | `stardmg` +30%/rank (5) | `starcount` +2 arrows/rank (3) | `starchance` 10% per shot, +5%/rank (5); replaces "every 10th" |
