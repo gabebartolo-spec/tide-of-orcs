@@ -11,7 +11,9 @@ import { STR } from '../data/strings';
 import { Ceremony } from './ceremony';
 import { Sprites } from './sprites';
 import { Ground } from './ground';
-import { SKY, VFX, dusk } from '../data/presentation';
+import { LOOT_VFX, SKY, VFX, dusk } from '../data/presentation';
+import { SLOTS } from '../data/loot';
+import { setTiers } from '../sim/gear';
 
 const IMPACT_LIFE = VFX.impactLife;
 /** Foot offset below an actor's centre, where its blood lands. */
@@ -19,6 +21,8 @@ const footOf = (r: number): number => r * 0.9;
 const byY = (a: { y: number }, b: { y: number }): number => a.y - b.y;
 /** Radius the elf and vanguard sprites are sized against (their vector bodies span ~12 units). */
 const ACTOR_R = 12;
+/** Drop beam and equip glow colour per rarity. */
+const RAR_C: Record<string, string> = { common: P.cream, rare: P.spear, epic: P.lilac, legendary: P.starGold, mythic: P.rose };
 const W = FIELD.w, H = FIELD.h, BAR_X = FIELD.barX, BAR_W = FIELD.barW, ELF_X = FIELD.elfX;
 
 export class FieldRenderer {
@@ -42,6 +46,14 @@ export class FieldRenderer {
   private orcBuf: Orc[] = [];
   private wind = { dx: 0, dy: 0 };
   private sim: SimState | null = null;
+  /** Loot moments (TB-105): drop beams, the equip glow on the bow, the set-bonus leaf ring, the mythic screen-edge shimmer and slow-motion clock. */
+  private beams: { x: number; y: number; life: number; max: number; c: string; ground: boolean; spiral: boolean }[] = [];
+  private glow = { t: 0, c: P.cream as string };
+  private leaves = 0; private edge = 0; private slow = 0; private tiers = -1;
+  private worn: Partial<Record<string, string>> = {};
+
+  /** Sim speed for the main loop: a mythic drop holds the field still, then runs it at 0.6× (never under reduced motion). */
+  get timeScale(): number { const M = LOOT_VFX.mythic; return this.slow <= 0 ? 1 : this.slow > M.slow ? 0 : M.slowScale; }
 
   constructor(private canvas: HTMLCanvasElement) {
     this.g = canvas.getContext('2d')!;
@@ -92,9 +104,39 @@ export class FieldRenderer {
         case 'vanguardHit': fx.blood(e.x, e.y, footOf(ACTOR_R) + 4, P.bloodElf, B.vanHit, -1); break;
         case 'vanguardFell': fx.burst(e.x, e.y, P.spear, VFX.vanFell[0], VFX.vanFell[1]); fx.blood(e.x, e.y, footOf(ACTOR_R) + 4, P.bloodElf, B.vanFell, 0); fx.splat(e.x, e.y + 16, B.vanSplat, P.bloodElf); break;
         case 'replant': this.ceremony.start(this.reducedMotion); break;
+        case 'loot': this.lootDrop(e.x, e.y, e.rarity); break;
         default: break;
       }
     }
+  }
+
+  /** A drop: common glints; rarer items stand a beam in their colour, epic with a mote spiral, legendary and mythic with a lit ground ring; mythic also holds, slows and shimmers the screen edge. */
+  private lootDrop(x: number, y: number, rarity: string): void {
+    const L = LOOT_VFX, c = RAR_C[rarity] ?? P.cream;
+    if (rarity === 'common') { this.fx.burst(x, y - 6, c, L.glint[0], L.glint[1]); return; }
+    const life = L.beam[rarity as keyof typeof L.beam] ?? L.beam.rare, ground = rarity === 'legendary' || rarity === 'mythic';
+    this.beams.push({ x, y: y + L.foot, life, max: life, c, ground, spiral: rarity === 'epic' });
+    if (this.reducedMotion) return;
+    this.fx.burst(x, y, c, L.motes[rarity as keyof typeof L.motes] ?? 0, L.moteSpeed);
+    if (ground) this.fx.ring(x, y + L.foot, L.ringR, c, 2, life * 0.5);
+    if (rarity === 'mythic') { this.edge = L.mythic.edge; this.slow = L.mythic.hold + L.mythic.slow; }
+  }
+
+  /** Watch what is worn: a newly equipped item glows the bow in its colour; a rise in set tiers rings the elf with leaves. Reads sim, never writes. */
+  private watchGear(s: SimState): void {
+    const l = s.meta.loot, first = this.tiers < 0;
+    let changed = false;
+    for (const slot of SLOTS) {
+      const uid = l.equipped[slot];
+      if (uid === this.worn[slot]) continue;
+      this.worn[slot] = uid; changed = true;
+      const it = uid && !first ? l.items.find((i) => i.uid === uid) : undefined;
+      if (it) this.glow = { t: LOOT_VFX.equip, c: RAR_C[it.rarity] ?? P.cream };
+    }
+    if (!changed && !first) return;
+    const t = setTiers(l, s.stats.setBoost);
+    if (!first && t > this.tiers) this.leaves = LOOT_VFX.leafLife;
+    this.tiers = t;
   }
 
   /** An orc's blow lands: crescent swipe (an X for elites, a ground slam for the boss); on the wall, timber and cream chips. Vanguard blood comes from vanguardHit. */
@@ -127,6 +169,8 @@ export class FieldRenderer {
     for (let i = this.storms.length - 1; i >= 0; i--) { this.storms[i]!.life -= dt; if (this.storms[i]!.life <= 0) this.storms.splice(i, 1); }
     for (let i = this.impacts.length - 1; i >= 0; i--) { this.impacts[i]!.life -= dt; if (this.impacts[i]!.life <= 0) this.impacts.splice(i, 1); }
     if (this.shake > 0) this.shake = Math.max(0, this.shake - dt * 3);
+    this.watchGear(s);
+    this.glow.t = Math.max(0, this.glow.t - dt); this.leaves = Math.max(0, this.leaves - dt); this.edge = Math.max(0, this.edge - dt); this.slow = Math.max(0, this.slow - dt);
     const sx = this.canvas.width / W, sy = this.canvas.height / H;
     const sh = this.reducedMotion ? 0 : this.shake;
     const shx = sh ? (Math.random() - 0.5) * 6 * sh : 0, shy = sh ? (Math.random() - 0.5) * 4 * sh : 0;
@@ -164,6 +208,7 @@ export class FieldRenderer {
 
     const drawn = Math.min(1, (s.run.shotT[0] ?? 0) / s.stats.lobCd), aiming = aim !== null && aim.x > BAR_X + BAR_W && !s.run.fallen;
     this.elf(ELF_X, H / 2, false, aiming && !this.reducedMotion ? drawn * VFX.bow.pull : 0);
+    this.gearFx();
     if (aim && aiming) this.reticle(aim.x, aim.y, s.stats.radius, drawn);
     if (s.stats.archers >= 1) this.elf(ELF_X - 10, H / 2 - 90, true);
     if (s.stats.archers >= 2) this.elf(ELF_X - 10, H / 2 + 90, true);
@@ -182,6 +227,7 @@ export class FieldRenderer {
     s.orcs.forEach((o) => { if (!o.dead) orcs.push(o); }); orcs.sort(byY);
     for (const o of orcs) { this.orc(o); if (o.burn > 0 && !this.reducedMotion && Math.random() < A.flameRate * dt) this.fx.flame(o.x + (Math.random() - 0.5) * o.r, o.y, Math.random() < 0.5 ? P.fire : P.amber); }
 
+    this.drawBeams(dt);
     s.shots.forEach((a) => {
       if (a.kind === 'lob') { this.lob(a); return; }
       if (a.kind === 'star') { this.star(a); return; }
@@ -220,7 +266,36 @@ export class FieldRenderer {
     g.fillText(STR.barricadeHud(fmt(Math.max(0, s.run.barHp)), fmt(s.stats.barMax)), 12, 32);
     if (s.stats.muster) g.fillText(STR.vanguardHud(s.vans.count, s.stats.vanCap), 12, 46);
     g.fillStyle = P.dim45; g.fillRect(0, H - 5, W, 5); g.fillStyle = P.amber; g.fillRect(0, H - 5, W * (s.run.waveT / WAVE_LEN), 5);
+    if (this.edge > 0) { const M = LOOT_VFX.mythic; g.globalAlpha = (this.edge / M.edge) * (0.6 + 0.4 * Math.sin(this.clock * M.flicker)); g.strokeStyle = P.rose; g.lineWidth = M.edgeW; g.strokeRect(M.edgeW / 2, M.edgeW / 2, W - M.edgeW, H - M.edgeW); g.globalAlpha = 1; }
     this.ceremony.draw(g, dt);
+  }
+
+  /** Light columns over drops, fading over their life; a lit ground ellipse under legendary and mythic; motes spiralling up an epic beam. */
+  private drawBeams(dt: number): void {
+    const g = this.g, L = LOOT_VFX, rm = this.reducedMotion;
+    for (let i = this.beams.length - 1; i >= 0; i--) {
+      const b = this.beams[i]!; b.life -= dt; if (b.life <= 0) { this.beams.splice(i, 1); continue; }
+      const k = b.life / b.max, w = L.beamW * (rm ? 1 : 1 + 0.25 * Math.sin(this.clock * L.pulse));
+      if (b.ground) { g.globalAlpha = L.groundAlpha * k; g.fillStyle = b.c; g.beginPath(); g.ellipse(b.x, b.y, L.ringR, L.ringR * 0.4, 0, 0, 6.28); g.fill(); }
+      const gr = g.createLinearGradient(0, b.y, 0, b.y - L.beamH); gr.addColorStop(0, b.c); gr.addColorStop(1, 'transparent');
+      g.globalAlpha = Math.min(1, k * 2) * L.beamAlpha; g.fillStyle = gr; g.fillRect(b.x - w / 2, b.y - L.beamH, w, L.beamH);
+      if (b.spiral && !rm) { g.fillStyle = b.c; for (let j = 0; j < L.spiral; j++) { const t = this.clock * L.spin + (j * 6.28) / L.spiral, yy = b.y - ((this.clock * L.rise + (j * L.beamH) / L.spiral) % L.beamH); g.fillRect(b.x + Math.cos(t) * w - 1.5, yy - 1.5, 3, 3); } }
+      g.globalAlpha = 1;
+    }
+  }
+
+  /** The equip glow along the elf's bow and the set-bonus ring of leaves (static under reduced motion). */
+  private gearFx(): void {
+    const g = this.g, L = LOOT_VFX, x = ELF_X, y = H / 2;
+    if (this.glow.t > 0) { g.globalAlpha = this.glow.t / L.equip; g.strokeStyle = this.glow.c; g.lineWidth = L.equipW; g.beginPath(); g.arc(x + 12, y, 16, -1.3, 1.3); g.stroke(); g.globalAlpha = 1; }
+    if (this.leaves <= 0) return;
+    const spin = this.reducedMotion ? 0 : this.clock * L.leafSpin;
+    g.globalAlpha = Math.min(1, (this.leaves / L.leafLife) * 2);
+    for (let j = 0; j < L.leafN; j++) {
+      const a = spin + (j * 6.28) / L.leafN;
+      g.fillStyle = j % 2 ? P.grove : P.treantLeaf; g.beginPath(); g.ellipse(x + Math.cos(a) * L.leafR, y + Math.sin(a) * L.leafR * 0.6, 5, 2.5, a + 1.57, 0, 6.28); g.fill();
+    }
+    g.globalAlpha = 1;
   }
 
   /** Two bands of distant hills along the far edge, drifting slowly (still under reduced motion). */
