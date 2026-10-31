@@ -16,6 +16,16 @@ const orcAt = (s: S, x: number, y: number, hp = 1e6) => {
 const strike = (s: S, ev: EventBus, x: number, y: number, first = true) => impact(s, ev, { tx: x, ty: y, r: 30, dmg: 10 }, first);
 
 describe('arrow arsenal (TB-089)', () => {
+  it('the elf release ignites only with Fire Arrows', () => {
+    for (const [lv, lit] of [[{}, false], [{ fire: 1 }, true]] as const) {
+      const s = withNodes(lv), ev = new EventBus();
+      s.run.shotT[0] = s.stats.lobCd; step(s, STEP, { ...noInputs, aim: { x: 500, y: 100 } }, ev);
+      const ts = ev.drain().map((e) => e.t);
+      expect(ts).toContain('loose');
+      expect(ts.includes('ignite')).toBe(lit);
+    }
+  });
+
   it('frost slow is 20% at rank 1 and 40% at rank 5', () => {
     expect(withNodes({ frost: 1 }).stats.slow).toBeCloseTo(0.2);
     expect(withNodes({ frost: 5 }).stats.slow).toBeCloseTo(0.4);
