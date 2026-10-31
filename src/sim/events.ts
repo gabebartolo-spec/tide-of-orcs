@@ -1,7 +1,14 @@
 /** Sim → render/audio events. Sim pushes; observers drain once per frame. */
 export type SimEvent =
   | { t: 'kill'; x: number; y: number; loot: number; kind: string }
-  | { t: 'hit'; x: number; y: number; crit: boolean }
+  /** `src` says what struck (lob, arrow, knife, bolt) so render can pick the impact. */
+  | { t: 'hit'; x: number; y: number; crit: boolean; src: string }
+  /** An orc's swing lands on the wall or a vanguard; (tx, ty) is where. Render-only (TB-088). */
+  | { t: 'orcSwing'; kind: string; x: number; y: number; tx: number; ty: number; r: number }
+  /** A vanguard's swing connects; (tx, ty) is the first orc struck. Render-only (TB-088). */
+  | { t: 'vanStrike'; type: string; x: number; y: number; tx: number; ty: number }
+  /** An orc struck by a melee source with no projectile (vanguard, wolf, hawk, treant, storm). Render-only (TB-088). */
+  | { t: 'bleed'; x: number; y: number; r: number }
   | { t: 'impact'; x: number; y: number; r: number }
   | { t: 'wave'; wave: number }
   | { t: 'bossReady' }

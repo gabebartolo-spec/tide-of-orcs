@@ -46,7 +46,7 @@ tide-of-orcs/
       palette.ts        colour tokens (ART-STYLE.md)
       field.ts          draws the battlefield from SimState; strike circle, lob arcs, sky and hills
       sprites.ts        sprite atlas loader (public/sprites/atlas.json) with vector fallback (TB-060)
-      particles.ts      render-side particle pool fed by events
+      particles.ts      preallocated pools (squares, blood droplets, strokes, ground splats, text) fed by events; sizes in `data/presentation.ts` VFX
       ceremony.ts       replant ceremony: burn, seed, dawn; skippable (TB-051)
       camera.ts         tree camera: pan, zoom, clamp, ease (TB-021, TB-066)
       tree.ts           skill tree canvas, curved branches, hit-test, camera ease to selection
@@ -104,7 +104,7 @@ interface SimState {
 The seed lives only inside `rng`; the save version lives in the save, not in SimState. Pools expose `alloc()`, `release(item)`, `forEach(fn)` (live items only), `clear()` and `count`. Pooled items are reused, not freed, so references stay valid; projectiles do hold `target: Orc | null` and `hit: Set<Orc>` across ticks and check `live`/`dead` before use.
 
 ## Events
-`SimEvent` union in `sim/events.ts`: `kill` (with `kind`), `hit` (with `crit`), `impact` (lob strike, with radius), `wave`, `bossReady`, `bossStart`, `bossEnd` (with `cleared`, `loot`), `storm`, `hawkDive`, `treantStamp`, `bite`, `barricadeHit` (with damage fraction, drives shake), `barricadeRegrow`, `barricadeFell` (with the run summary), `vanguardRallied`, `vanguardHit`, `vanguardFell`, `bought`, `hwBought`, `replant` (with `forced`). `EventBus` is a plain array capped at 2,000 per frame. Render turns these into particles, floating text, shake and toasts; audio turns them into SFX via `cueFor`. Sim never knows about either.
+`SimEvent` union in `sim/events.ts`: `kill` (with `kind`), `hit` (with `crit`, `src` = shot kind), `impact` (lob strike, with radius), `wave`, `bossReady`, `bossStart`, `bossEnd` (with `cleared`, `loot`), `storm`, `hawkDive`, `treantStamp`, `bite`, `barricadeHit` (with damage fraction, drives shake), `barricadeRegrow`, `barricadeFell` (with the run summary), `vanguardRallied`, `vanguardHit`, `vanguardFell`, `bought`, `orcSwing` (kind, from, target: melee release), `vanStrike` (vanguard type, from, target), `bleed` (melee wound, blood only); these three are presentation-only (TB-088), `hwBought`, `replant` (with `forced`). `EventBus` is a plain array capped at 2,000 per frame. Render turns these into particles, floating text, shake and toasts; audio turns them into SFX via `cueFor`. Sim never knows about either.
 
 ## Save
 - `SaveV6 = { version: 6, savedAt: number, run, meta, settings: { volume, reducedMotion, numberFormat } }`. Pools are **not** saved; a load starts with an empty field (orcs respawn within seconds; this avoids serialising 160 orcs).
@@ -115,7 +115,7 @@ The seed lives only inside `rng`; the save version lives in the save, not in Sim
 
 ## Rendering
 - One `<canvas>` for the field, one for the tree. `devicePixelRatio` capped at 2.
-- Field draws in logical 900×480 via `setTransform`, with screen shake applied to the transform (not to the HUD bars). Draw order: plain → dusk tint → hills → grove side → lamplight → barricade (splintered planks from the top as HP drops, spikes if Thornwall) → treant → elf → strike circle and lob arc → rangers → ballista → wolf → vanguard (sorted by y) → orcs (sorted by y) → projectiles (lobs with ground shadow) → lob impacts → storm → hawk → particles → text → barricade/vanguard HUD → wave bar.
+- Field draws in logical 900×480 via `setTransform`, with screen shake applied to the transform (not to the HUD bars). Draw order: plain → dusk tint → hills → grove side → lamplight → barricade (splintered planks from the top as HP drops, spikes if Thornwall) → blood splats (`Particles.drawGround`) → treant → elf → strike circle and lob arc → rangers → ballista → wolf → vanguard (sorted by y) → orcs (sorted by y) → projectiles (lobs with ground shadow) → lob impacts → storm → hawk → particles → text → barricade/vanguard HUD → wave bar.
 - Actors draw from the sprite atlas when a key is present, else the vector draw (TB-060).
 - Batch by fill style where cheap (e.g. all grunts of same colour), but clarity over micro-optimisation until the profiler says otherwise.
 - Tree canvas: nodes from `data/skillTree.ts` layout, camera in `render/camera.ts`, hit-test in logical space.
@@ -132,7 +132,7 @@ Plain DOM, no framework. `ui/panel.ts` renders the detail card with template str
 - `sim/` runner is also a smoke test in CI (30 sim-minutes of greedy; the < 5 s real-time budget is a goal, not enforced).
 
 ## Performance budget
-- 160 orcs (`ORC_CAP`) + 300 arrows + 500 particles at 60 fps on a 2020 mid-range Android.
+- 160 orcs (`ORC_CAP`) + 300 arrows + 900 particles (VFX.cap) at 60 fps on a 2020 mid-range Android.
 - No GC pressure spikes: verify with Chrome performance panel, allocations per frame ≈ 0 in `step`.
 
 ## Build & deploy

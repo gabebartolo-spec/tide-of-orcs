@@ -58,12 +58,12 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
     const v = engagedVanguard(s, o);
     if (v) {
       o.swingT += dt;
-      if (o.swingT >= BARRICADE.orcSwing) { o.swingT = 0; hurtVanguard(s, ev, v, o.atk); }
+      if (o.swingT >= BARRICADE.orcSwing) { o.swingT = 0; ev.push({ t: 'orcSwing', kind: o.kind, x: o.x, y: o.y, tx: v.x, ty: v.y, r: o.r }); hurtVanguard(s, ev, v, o.atk); }
       return;
     }
     if (o.x <= BAR_X + BAR_W + o.r) {
       o.x = BAR_X + BAR_W + o.r; o.swingT += dt;
-      if (o.swingT >= BARRICADE.orcSwing) { o.swingT = 0; barricadeHit(s, ev, o.atk * BARRICADE.wallMult, o.y); }
+      if (o.swingT >= BARRICADE.orcSwing) { o.swingT = 0; ev.push({ t: 'orcSwing', kind: o.kind, x: o.x, y: o.y, tx: BAR_X + BAR_W, ty: o.y, r: o.r }); barricadeHit(s, ev, o.atk * BARRICADE.wallMult, o.y); }
       if (st.spikes > 0) damage(s, ev, o, st.dmg * st.spikes * dt);
       return;
     }
@@ -162,7 +162,7 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
       if (dist(o.x, o.y, a.x, a.y) < o.r + 4) {
         a.hit.add(o);
         let d = a.dmg; const crit = a.kind === 'arrow' && s.rng.next() < st.crit; if (crit) d *= PLAYER.critMult;
-        ev.push({ t: 'hit', x: o.x, y: o.y, crit });
+        ev.push({ t: 'hit', x: o.x, y: o.y, crit, src: a.kind });
         damage(s, ev, o, d);
         if (st.fire && a.kind === 'arrow') o.burn = SOURCES.burnSecs;
         if (a.pierce-- <= 0) spent = true;
