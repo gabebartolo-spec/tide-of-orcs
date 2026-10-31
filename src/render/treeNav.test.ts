@@ -4,7 +4,7 @@ import { stepNode, tabOrder } from './treeNav';
 
 describe('tree tab order (TB-116)', () => {
   const order = tabOrder();
-  it('visits every node exactly once, Waking first', () => {
+  it('visits every node exactly once, root first', () => {
     expect(order[0]).toBe('root'); expect(order.length).toBe(NODES.length); expect(new Set(order).size).toBe(NODES.length);
   });
   it('keeps each branch together, in legend order', () => {

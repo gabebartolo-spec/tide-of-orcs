@@ -1,7 +1,7 @@
 /** Keyboard order through the skill tree (GDD §13, TB-116). Pure; the panel steps through it with Tab. */
 import { BRANCH_COLOR, Branch, NODES, NodeId, SkillNode } from '../data/skillTree';
 
-/** Waking first, then each branch in legend order, walked depth-first so a parent comes just before its children. */
+/** The root first, then each branch in legend order, walked depth-first so a parent comes just before its children. */
 export function tabOrder(nodes: readonly SkillNode[] = NODES): NodeId[] {
   const kids = new Map<NodeId | null, SkillNode[]>();
   for (const n of nodes) { const k = kids.get(n.parent); if (k) k.push(n); else kids.set(n.parent, [n]); }
@@ -10,7 +10,7 @@ export function tabOrder(nodes: readonly SkillNode[] = NODES): NodeId[] {
   const walk = (n: SkillNode, b: Branch): void => { out.push(n.id); for (const c of kids.get(n.id) ?? []) if (c.branch === b) walk(c, b); };
   for (const r of roots) out.push(r.id);
   for (const b of Object.keys(BRANCH_COLOR) as Branch[]) {
-    // A branch starts at each of its nodes hanging off Waking or off another branch.
+    // A branch starts at each of its nodes hanging off the root or off another branch.
     for (const n of nodes) if (n.branch === b && n.parent && (rootIds.has(n.parent) || branch.get(n.parent) !== b)) walk(n, b);
   }
   return out;
