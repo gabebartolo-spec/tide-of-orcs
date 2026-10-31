@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { Item, SLOTS } from '../data/loot';
 import { SET_FX } from '../data/lootTables';
-import { SOURCES } from '../data/balance';
+import { BARRICADE, SOURCES } from '../data/balance';
 import { EventBus } from './events';
 import { damage, impact, kill } from './combat';
 import { barricadeHit } from './barricade';
@@ -86,5 +86,14 @@ describe('set bonuses (TB-099)', () => {
     expect(s.freeRallyT).toBe(SET_FX.freeRallySecs); expect(rallyCost(s, 'spear')).toBe(0);
     s.freeRallyT = 0; barricadeHit(s, ev, 1, 300);
     expect(s.freeRallyT).toBe(0); expect(rallyCost(s, 'spear')).toBeGreaterThan(0);
+  });
+
+  it('one hit takes at most a quarter of the wall, so a late orc cannot fell a full wall (TB-125)', () => {
+    const s = wearing('rootwarden', 0), ev = new EventBus(), max = s.stats.barMax;
+    s.run.barHp = max; barricadeHit(s, ev, max * 750, 300);
+    expect(s.run.barHp).toBeCloseTo(max * (1 - BARRICADE.maxHitFrac)); expect(s.run.fallen).toBe(false);
+    barricadeHit(s, ev, max * 0.01, 300); expect(s.run.barHp).toBeCloseTo(max * (1 - BARRICADE.maxHitFrac - 0.01));
+    for (let i = 0; i < 3; i++) barricadeHit(s, ev, 1e12, 300);
+    expect(s.run.fallen).toBe(true);
   });
 });

@@ -79,10 +79,10 @@ describe('mythic powers (TB-100)', () => {
   it('Heartwood Splinter: the wall stands again once, and that run pays half (at least the minimum)', () => {
     const s = wearing('heartwood-splinter'), ev = new EventBus();
     s.run.wave = 30; s.run.kills = 500; const full = prestigeGain(30, 500);
-    barricadeHit(s, ev, 1e12, 300);
+    s.run.barHp = 1; barricadeHit(s, ev, 1e12, 300);
     expect(s.run.fallen).toBe(false); expect(s.run.barHp).toBeCloseTo(s.stats.barMax * MYTHIC_FX.splinterFrac);
     expect(gain(s)).toBe(Math.max(PRESTIGE.minGain, Math.floor(full * MYTHIC_FX.splinterHw)));
-    barricadeHit(s, ev, 1e12, 300); expect(s.run.fallen).toBe(true);
+    s.run.barHp = 1; barricadeHit(s, ev, 1e12, 300); expect(s.run.fallen).toBe(true);
     replant(s, ev); expect(s.run.splinterUsed).toBe(false);
   });
 

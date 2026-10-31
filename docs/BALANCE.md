@@ -16,7 +16,7 @@ interval(w) = max(0.3, 2.0 × 0.93^(w−1))   seconds between grunt spawns; kind
 boss wave: unlocks every 50 waves, 60 s script, clear bonus = 40 × waveLoot(w) × starMult × (1 + 0.5 × hw_boss rank)
 speed       = base × (1 + 0.008 w)
 atk         = 0.025 × maxhp                  per swing, one swing per second, vs vanguard
-wall hit    = 10 × atk                        per swing vs the barricade (TB-080: bare run falls at wave 3–4, ~90 s)
+wall hit    = min(10 × atk, 0.25 × barMax)    per swing vs the barricade (TB-080: bare run falls at wave 3–4, ~90 s; cap P-125, TB-125)
 ```
 Type multipliers and unlocks in GDD §4. Per kind: Fury ×1.3^r health, ×1.4^r starlight; Swarm ×1.2^r spawn rate (grunts: War Drums, Call the Horde). Live orc cap 160.
 
@@ -29,7 +29,7 @@ flight  = 0.7 s, apex 90 px; Longshaft repeat strikes 0.35 s apart; Split Shot a
 ```
 Rangers and Wardens keep straight volleys at `fireRate = 1.2 × 1.15^draw` per second, with `arrows` (Split Shot) in the fan, `pierce` (Longshaft), crit and Moonbow steering.
 
-| w | hp | loot | interval | grunt atk/s (vs vanguard) | grunt wall hit/s (×10) |
+| w | hp | loot | interval | grunt atk/s (vs vanguard) | grunt wall hit/s (×10, before the 25% cap) |
 |---|---|---|---|---|---|
 | 1 | 10 | 2 | 2.00 | 0.25 | 2.5 |
 | 10 | 41.1 | 6.0 | 1.04 | 1.03 | 10.3 |
@@ -376,3 +376,17 @@ Design from the director (1 Nov): see SKILL-TREE §Per-type upgrade nodes. Numbe
 - Units: damage ×1.3^r (Fangs keeps ×1.4, Spear Drill ×1.3 now spearmen only), rate ×1.15^r, crit +0.05 per rank at ×2 + 0.5 per Crit-damage rank, move speed ×1.15^r (wolf, spearman, bladedancer). Rangers and Wardens crit by their own nodes, no longer Keen Eye. Deadly Aim: elf crit ×3 + 0.5 per rank.
 - Costs (starlight base, growth): shot nodes 150–7000 near their unlock's cost (SKILL-TREE table); unit nodes damage ×1.2, rate ×1.4, crit ×1.6, crit damage ×2, speed ×1 of the unit's unlock cost, growth 1.9–2.0.
 Evidence: `npm run balance` (greedy, seed 1, 30 min) vs origin/main 2f4dd10: first four falls identical (waves 5, 5, 7, 5); fifth fall wave 20 @ 8 min → 18 @ 7 min, then a sixth run to wave 35 @ 13.7 min; replants 5 → 6, Heartwood 18 → 48, best wave 37 → 35. The 48 extra nodes give the greedy buyer cheap power, so later runs climb faster. Per-node tuning is TB-107.
+
+### P-125 · One orc swing can drop the wall from full (2026-11-01, TB-125; director chose A, now in Current)
+Today an orc's swing takes `atk × wallMult` = 0.025 × 10 = 0.25 × the orc's max health off the wall. Orc health grows ×1.3 per wave after wave 15 (`HP_RAMP`); the wall's max grows only with Seasoned Timber, Timber Heartwood and `heart`. So late in a run the first orc to reach the wall fells it, whatever the wall's HP, regen or rallies.
+
+Evidence: headless probe, greedy buys, crowd aim, seeds 1–3, 120 sim minutes each (largest single hit as a share of the wall's max, by wave band):
+
+| Variant | Largest hit, waves 30s / 40s / 50s–60s | Falls from above half HP in one hit | Best wave | Later runs (minutes) |
+|---|---|---|---|---|
+| Current | 170–280% / 2,700–5,900% / up to 75,000% | 5 of 10–12 falls per seed, every fall from wave 33 on | 60–61 | 13–24 |
+| A: hit capped at 25% of the wall's max | 25% | 0 | 59–62 | 14–25 |
+| B: hit capped at 10% of the wall's max | 10% | 0 | 62–63 | 14–25 |
+| C: wall hit on a gentler curve (×1.17 per wave, no ramp) | 44–60% / 270–300% / 490–760% | 3 | 57–59 | 9–23 |
+
+Proposal: A. Add `BARRICADE.maxHitFrac: 0.25`; `barricadeHit` takes `min(amount, maxHitFrac × barMax)`. The wall then always survives at least four swings, so Timber, Patient Hands and rallying keep mattering late, and pacing barely moves (best wave and run lengths within a wave and a minute of Current). B also works and is more forgiving (+1–2 waves). C is rejected: it still one-shots from wave 40 and shortens early runs. Early waves are unchanged by A and B (hits there are 1–3% of the wall).
