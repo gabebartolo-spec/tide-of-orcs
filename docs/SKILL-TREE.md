@@ -57,61 +57,61 @@ Layout coordinates are for a 1288×1262 tree canvas, root at (674, 748). Six bra
 | ranks | Another Lad | Vanguard | shield | 3 | 400 | 2.6 | 194 | 628 | +1 lad may stand at once. |
 | mend | Walk It Off | Vanguard | drill | 3 | 350 | 2.4 | 210 | 516 | Lads recover 3% health per second per rank. |
 | champion | Show-off | Vanguard | ranks | 1 | 2200 | — | 162 | 428 | Rally show-offs: costlier, faster, their strikes cleave every orc in reach. |
-| hunter | Hunter's Eye | Spoils | root | 1 | 120 | — | 546 | 940 | +5% chance to strike for triple damage. |
-| scavenger | Scavenger | Spoils | hunter | 1 | 150 | — | 418 | 1004 | Salvage gives 50% more Glimmer this run. |
-| trophy | Trophy | Spoils | hunter | 1 | 200 | — | 562 | 1068 | Kills on waves 10, 20, 30… roll a second drop. |
-| sharpeyes | Sharp Eyes | Spoils | scavenger | 1 | 600 | — | 322 | 1100 | Item Find +10% this run. |
-| hoard | Boss Hoard | Spoils | trophy | 1 | 900 | — | 546 | 1180 | Boss drops roll one rarity higher, up to legendary. |
-| resonance | Set Resonance | Spoils | sharpeyes | 1 | 4000 | — | 386 | 1212 | Every set you wear counts one piece more. |
-| echo | Mythic Echo | Spoils | resonance | 1 | 6000 | — | 242 | 1196 | Your mythic power triggers 25% more often, or lasts 25% longer. |
-| kindle | Kindling | Armoury | fire | 5 | 600 | 1.9 | 925 | 355 | Burning orcs take +30% burn damage per rank. |
-| wildfire | Wildfire | Armoury | fire | 3 | 900 | 2.2 | 1006 | 406 | Burns last 1 s longer per rank. |
-| firechance | Fire Quiver | Armoury | fire | 5 | 500 | 1.9 | 887 | 402 | +15% chance per rank that a shot is a fire arrow. |
-| frostchance | Frost Quiver | Armoury | frost | 5 | 900 | 1.9 | 938 | 213 | +15% chance per rank that a shot is a frost arrow. |
-| static | Static | Armoury | shock | 5 | 2500 | 1.9 | 1238 | 222 | Shock lightning +30% damage per rank. |
-| shockchance | Storm Quiver | Armoury | shock | 5 | 2400 | 1.9 | 1238 | 282 | +15% chance per rank that a shot is a shock arrow. |
-| rebdmg | Hard Rebound | Bow | bounce | 5 | 1300 | 1.9 | 396 | 174 | Rebound bolts +30% damage per rank. |
-| rebchance | Rebound Quiver | Bow | bounce | 5 | 1300 | 1.9 | 455 | 163 | +15% chance per rank that a shot looses Rebound. |
-| moondmg | Moonsilver | Bow | moon | 5 | 3500 | 1.9 | 166 | 179 | Moon shots +20% damage per rank. |
-| moonreach | Moonpull | Bow | moon | 3 | 3500 | 2.2 | 224 | 161 | Moon shots settle onto orcs 25% farther from your aim per rank. |
-| moonchance | Moon Quiver | Bow | moon | 5 | 3500 | 1.9 | 153 | 237 | +15% chance per rank that a shot is a moon shot. |
-| stardmg | Starsteel | Bow | starfall | 5 | 6500 | 1.9 | 162 | 50 | Starfall arrows +30% damage per rank. |
-| starcount | Meteor Shower | Bow | starfall | 3 | 7000 | 2.2 | 220 | 65 | +2 Starfall arrows per rank. |
-| starchance | Wishing Star | Bow | starfall | 5 | 6500 | 1.9 | 120 | 93 | +5% chance per rank that a shot calls Starfall. |
-| knifedmg | Keen Knives | Armoury | knives | 5 | 150 | 1.9 | 910 | 613 | Knives +30% damage per rank. |
-| knifefan | Knife Fan | Armoury | knives | 3 | 400 | 2.4 | 844 | 560 | +1 knife per throw per rank. |
-| boltpin | Pinning Bolts | Armoury | ballista | 3 | 2500 | 2.2 | 1177 | 451 | Every orc a bolt passes through is held still 0.3 s per rank. |
-| windlass | Windlass | Armoury | ballista | 5 | 2200 | 1.9 | 1171 | 511 | Ballista reload time −10% per rank. |
-| deadly | Deadly Aim | Bow | crit | 5 | 300 | 2.1 | 590 | 369 | Your crits strike +50% harder per rank (×3 to start). |
-| wolfrate | Swift Bite | Companions | wolf | 5 | 112 | 1.9 | 732 | 572 | Dog strikes 15% more often per rank. |
-| wolfcrit | Wolf Instinct | Companions | wolf | 5 | 128 | 2.0 | 616 | 572 | Dog bites: +5% chance per rank to crit for double damage. |
-| wolfcritx | Rending Bite | Companions | wolfcrit | 5 | 160 | 2.0 | 616 | 632 | Dog crits +50% damage per rank. |
-| wolfspd | Long Stride | Companions | wolf | 3 | 80 | 2.0 | 717 | 630 | Dog moves 15% faster per rank. |
-| rangerdmg | Ranger's Draw | Companions | ranger | 5 | 420 | 1.9 | 678 | 316 | Ranger +30% damage per rank. |
-| rangerrate | Ranger's Haste | Companions | ranger | 5 | 490 | 1.9 | 702 | 371 | Ranger strikes 15% more often per rank. |
-| rangercrit | Ranger's Eye | Companions | ranger | 5 | 560 | 2.0 | 580 | 317 | Ranger arrows: +5% chance per rank to crit for double damage. |
-| rangercritx | Ranger's Mark | Companions | rangercrit | 5 | 700 | 2.0 | 543 | 270 | Ranger crits +50% damage per rank. |
-| wardendmg | Warden's Draw | Companions | warden | 5 | 3360 | 1.9 | 666 | 176 | Warden +30% damage per rank. |
-| wardenrate | Warden's Haste | Companions | warden | 5 | 3920 | 1.9 | 713 | 212 | Warden strikes 15% more often per rank. |
-| wardencrit | Warden's Eye | Companions | warden | 5 | 4480 | 2.0 | 610 | 199 | Warden arrows: +5% chance per rank to crit for double damage. |
-| wardencritx | Warden's Mark | Companions | wardencrit | 5 | 5600 | 2.0 | 587 | 144 | Warden crits +50% damage per rank. |
-| hawkdmg | Sharp Talons | Companions | hawk | 5 | 1080 | 1.9 | 868 | 315 | Hawk +30% damage per rank. |
-| hawkrate | Swift Wings | Companions | hawk | 5 | 1260 | 1.9 | 799 | 291 | Hawk strikes 15% more often per rank. |
-| hawkcrit | Hawk Eye | Companions | hawk | 5 | 1440 | 2.0 | 759 | 336 | Hawk dives: +5% chance per rank to crit for double damage. |
-| hawkcritx | Killing Dive | Companions | hawkcrit | 5 | 1800 | 2.0 | 726 | 286 | Hawk crits +50% damage per rank. |
-| treantdmg | Heartoak | Companions | treant | 5 | 1680 | 1.9 | 887 | 164 | Treant +30% damage per rank. |
-| treantrate | Restless Roots | Companions | treant | 5 | 1960 | 1.9 | 828 | 173 | Treant strikes 15% more often per rank. |
-| treantcrit | Old Wrath | Companions | treant | 5 | 2240 | 2.0 | 904 | 266 | Treant stamps: +5% chance per rank to crit for double damage. |
-| treantcritx | Crushing Stamp | Companions | treantcrit | 5 | 2800 | 2.0 | 982 | 322 | Treant crits +50% damage per rank. |
-| spearrate | Spear Rhythm | Vanguard | muster | 5 | 168 | 1.9 | 412 | 702 | Lads strike 15% more often per rank. |
-| spearcrit | Spear Point | Vanguard | muster | 5 | 192 | 2.0 | 455 | 617 | Lad strikes: +5% chance per rank to crit for double damage. |
-| spearcritx | Deep Thrust | Vanguard | spearcrit | 5 | 240 | 2.0 | 443 | 558 | Lad crits +50% damage per rank. |
-| spearspd | Quick March | Vanguard | muster | 3 | 120 | 2.0 | 462 | 736 | Lads move 15% faster per rank. |
-| bladedmg | Blade Drill | Vanguard | champion | 5 | 2640 | 1.9 | 153 | 368 | Show-offs +30% damage per rank. |
-| bladerate | Blade Rhythm | Vanguard | champion | 5 | 3080 | 1.9 | 209 | 390 | Show-offs strike 15% more often per rank. |
-| bladecrit | Blade Edge | Vanguard | champion | 5 | 3520 | 2.0 | 106 | 406 | Show-off strikes: +5% chance per rank to crit for double damage. |
-| bladecritx | Whirling Edge | Vanguard | bladecrit | 5 | 4400 | 2.0 | 50 | 385 | Show-off crits +50% damage per rank. |
-| bladespd | Light Feet | Vanguard | champion | 3 | 2200 | 2.0 | 218 | 449 | Show-offs move 15% faster per rank. |
+| hunter | Right There | Spoils | root | 1 | 120 | — | 546 | 940 | +5% chance to strike for triple damage. |
+| scavenger | Waste Not | Spoils | hunter | 1 | 150 | — | 418 | 1004 | Salvage gives 50% more Glimmer this run. |
+| trophy | Souvenir | Spoils | hunter | 1 | 200 | — | 562 | 1068 | Kills on waves 10, 20, 30… roll a second drop. |
+| sharpeyes | Ooh, Shiny | Spoils | scavenger | 1 | 600 | — | 322 | 1100 | Item Find +10% this run. |
+| hoard | Expense Account | Spoils | trophy | 1 | 900 | — | 546 | 1180 | Boss drops roll one rarity higher, up to legendary. |
+| resonance | Coordinated | Spoils | sharpeyes | 1 | 4000 | — | 386 | 1212 | Every set you wear counts one piece more. |
+| echo | Encore | Spoils | resonance | 1 | 6000 | — | 242 | 1196 | Your mythic power triggers 25% more often, or lasts 25% longer. |
+| kindle | Hotter | Armoury | fire | 5 | 600 | 1.9 | 925 | 355 | Burning orcs take +30% burn damage per rank. |
+| wildfire | Still Burning | Armoury | fire | 3 | 900 | 2.2 | 1006 | 406 | Burns last 1 s longer per rank. |
+| firechance | Matches | Armoury | fire | 5 | 500 | 1.9 | 887 | 402 | +15% chance per rank that a shot is a fire arrow. |
+| frostchance | Draughty | Armoury | frost | 5 | 900 | 1.9 | 938 | 213 | +15% chance per rank that a shot is a frost arrow. |
+| static | Zap | Armoury | shock | 5 | 2500 | 1.9 | 1238 | 222 | Shock lightning +30% damage per rank. |
+| shockchance | You're It | Armoury | shock | 5 | 2400 | 1.9 | 1238 | 282 | +15% chance per rank that a shot is a shock arrow. |
+| rebdmg | Pass It Harder | Bow | bounce | 5 | 1300 | 1.9 | 396 | 174 | Rebound bolts +30% damage per rank. |
+| rebchance | Share Nicely | Bow | bounce | 5 | 1300 | 1.9 | 455 | 163 | +15% chance per rank that a shot looses Rebound. |
+| moondmg | Really, Don't | Bow | moon | 5 | 3500 | 1.9 | 166 | 179 | Moon shots +20% damage per rank. |
+| moonreach | I Can See You | Bow | moon | 3 | 3500 | 2.2 | 224 | 161 | Moon shots settle onto orcs 25% farther from your aim per rank. |
+| moonchance | Moonlighting | Bow | moon | 5 | 3500 | 1.9 | 153 | 237 | +15% chance per rank that a shot is a moon shot. |
+| stardmg | Pouring | Bow | starfall | 5 | 6500 | 1.9 | 162 | 50 | Starfall arrows +30% damage per rank. |
+| starcount | Bucketing Down | Bow | starfall | 3 | 7000 | 2.2 | 220 | 65 | +2 Starfall arrows per rank. |
+| starchance | Bring a Coat | Bow | starfall | 5 | 6500 | 1.9 | 120 | 93 | +5% chance per rank that a shot calls Starfall. |
+| knifedmg | Pointy End | Armoury | knives | 5 | 150 | 1.9 | 910 | 613 | Knives +30% damage per rank. |
+| knifefan | Catch These | Armoury | knives | 3 | 400 | 2.4 | 844 | 560 | +1 knife per throw per rank. |
+| boltpin | Stay There | Armoury | ballista | 3 | 2500 | 2.2 | 1177 | 451 | Every orc a bolt passes through is held still 0.3 s per rank. |
+| windlass | Wind It Up | Armoury | ballista | 5 | 2200 | 1.9 | 1171 | 511 | Ballista reload time −10% per rank. |
+| deadly | That One Hurt More | Bow | crit | 5 | 300 | 2.1 | 590 | 369 | Your crits strike +50% harder per rank (×3 to start). |
+| wolfrate | Fetch | Companions | wolf | 5 | 112 | 1.9 | 732 | 572 | Dog strikes 15% more often per rank. |
+| wolfcrit | Goes for the Ankles | Companions | wolf | 5 | 128 | 2.0 | 616 | 572 | Dog bites: +5% chance per rank to crit for double damage. |
+| wolfcritx | Won't Let Go | Companions | wolfcrit | 5 | 160 | 2.0 | 616 | 632 | Dog crits +50% damage per rank. |
+| wolfspd | Walkies | Companions | wolf | 3 | 80 | 2.0 | 717 | 630 | Dog moves 15% faster per rank. |
+| rangerdmg | Plus One Means It | Companions | ranger | 5 | 420 | 1.9 | 678 | 316 | Ranger +30% damage per rank. |
+| rangerrate | Plus One Hurries | Companions | ranger | 5 | 490 | 1.9 | 702 | 371 | Ranger strikes 15% more often per rank. |
+| rangercrit | Plus One Aims | Companions | ranger | 5 | 560 | 2.0 | 580 | 317 | Ranger arrows: +5% chance per rank to crit for double damage. |
+| rangercritx | Plus One Gloats | Companions | rangercrit | 5 | 700 | 2.0 | 543 | 270 | Ranger crits +50% damage per rank. |
+| wardendmg | Plus Two Means It | Companions | warden | 5 | 3360 | 1.9 | 666 | 176 | Warden +30% damage per rank. |
+| wardenrate | Plus Two Hurries | Companions | warden | 5 | 3920 | 1.9 | 713 | 212 | Warden strikes 15% more often per rank. |
+| wardencrit | Plus Two Aims | Companions | warden | 5 | 4480 | 2.0 | 610 | 199 | Warden arrows: +5% chance per rank to crit for double damage. |
+| wardencritx | Plus Two Gloats | Companions | wardencrit | 5 | 5600 | 2.0 | 587 | 144 | Warden crits +50% damage per rank. |
+| hawkdmg | Pointy Feet | Companions | hawk | 5 | 1080 | 1.9 | 868 | 315 | Hawk +30% damage per rank. |
+| hawkrate | Look Up Again | Companions | hawk | 5 | 1260 | 1.9 | 799 | 291 | Hawk strikes 15% more often per rank. |
+| hawkcrit | Right on the Head | Companions | hawk | 5 | 1440 | 2.0 | 759 | 336 | Hawk dives: +5% chance per rank to crit for double damage. |
+| hawkcritx | Messy | Companions | hawkcrit | 5 | 1800 | 2.0 | 726 | 286 | Hawk crits +50% damage per rank. |
+| treantdmg | Heavy Feet | Companions | treant | 5 | 1680 | 1.9 | 887 | 164 | Treant +30% damage per rank. |
+| treantrate | Stomp Stomp | Companions | treant | 5 | 1960 | 1.9 | 828 | 173 | Treant strikes 15% more often per rank. |
+| treantcrit | The Tree Is Upset | Companions | treant | 5 | 2240 | 2.0 | 904 | 266 | Treant stamps: +5% chance per rank to crit for double damage. |
+| treantcritx | Flat | Companions | treantcrit | 5 | 2800 | 2.0 | 982 | 322 | Treant crits +50% damage per rank. |
+| spearrate | Busy Lads | Vanguard | muster | 5 | 168 | 1.9 | 412 | 702 | Lads strike 15% more often per rank. |
+| spearcrit | Lucky Lads | Vanguard | muster | 5 | 192 | 2.0 | 455 | 617 | Lad strikes: +5% chance per rank to crit for double damage. |
+| spearcritx | Lads Overdo It | Vanguard | spearcrit | 5 | 240 | 2.0 | 443 | 558 | Lad crits +50% damage per rank. |
+| spearspd | Hurry Up, Lads | Vanguard | muster | 3 | 120 | 2.0 | 462 | 736 | Lads move 15% faster per rank. |
+| bladedmg | Showing Off | Vanguard | champion | 5 | 2640 | 1.9 | 153 | 368 | Show-offs +30% damage per rank. |
+| bladerate | Twirls | Vanguard | champion | 5 | 3080 | 1.9 | 209 | 390 | Show-offs strike 15% more often per rank. |
+| bladecrit | Look at Me | Vanguard | champion | 5 | 3520 | 2.0 | 106 | 406 | Show-off strikes: +5% chance per rank to crit for double damage. |
+| bladecritx | Takes a Bow | Vanguard | bladecrit | 5 | 4400 | 2.0 | 50 | 385 | Show-off crits +50% damage per rank. |
+| bladespd | Prances | Vanguard | champion | 3 | 2200 | 2.0 | 218 | 449 | Show-offs move 15% faster per rank. |
 
 ## Deprecated ids (reserved, never reuse)
 Lists live in `src/save/schema.ts`; each migration drops the keys from `run.levels`.

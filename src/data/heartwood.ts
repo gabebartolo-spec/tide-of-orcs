@@ -15,12 +15,12 @@ export const HW_NODES: readonly HwNode[] = [
   { id: 'hw_orders', name: 'Standby Lad', costs: [5, 12], desc: 'Each run starts with one lad on the field per rank.' },
   { id: 'hw_boss', name: 'Management Bonus', costs: [6, 12, 24], desc: 'Boss wave clear bonus +50% per rank.' },
   // loot lines (TB-101), BALANCE P-101
-  { id: 'hw_find', name: 'Far Sight', costs: [2, 5, 12], desc: 'Item Find +15% / +35% / +60% in total.' },
-  { id: 'hw_fortune', name: "Fortune's Favour", costs: [3, 8, 20], desc: 'Luck +10% / +25% / +45% in total.' },
-  { id: 'hw_satchel', name: 'Deep Satchel', costs: [4], desc: 'The satchel holds 80 items, not 40.', req: [['hw_find', 1]] },
-  { id: 'hw_tithe', name: 'Warboss Tithe', costs: [10], desc: 'Bosses always drop 2 items.', req: [['hw_find', 2], ['hw_fortune', 1]] },
-  { id: 'hw_heirloom', name: 'Heirloom', costs: [15], desc: 'Name one worn item your heirloom: it gains 5 item levels each time you burn it down, past the cap.', req: [['hw_fortune', 2]] },
-  { id: 'hw_glimmer', name: 'Glimmerwork', costs: [6], desc: 'Rerolls cost 40% less; salvage gives +1 Glimmer.', req: [['hw_satchel', 1]] },
+  { id: 'hw_find', name: 'Magpie', costs: [2, 5, 12], desc: 'Item Find +15% / +35% / +60% in total.' },
+  { id: 'hw_fortune', name: 'Knock on Wood', costs: [3, 8, 20], desc: 'Luck +10% / +25% / +45% in total.' },
+  { id: 'hw_satchel', name: 'Bigger Bag', costs: [4], desc: 'The satchel holds 80 items, not 40.', req: [['hw_find', 1]] },
+  { id: 'hw_tithe', name: 'Severance', costs: [10], desc: 'Bosses always drop 2 items.', req: [['hw_find', 2], ['hw_fortune', 1]] },
+  { id: 'hw_heirloom', name: 'Keeping That', costs: [15], desc: 'Name one worn item your heirloom: it gains 5 item levels each time you burn it down, past the cap.', req: [['hw_fortune', 2]] },
+  { id: 'hw_glimmer', name: 'Haggling', costs: [6], desc: 'Rerolls cost 40% less; salvage gives +1 Glimmer.', req: [['hw_satchel', 1]] },
 ];
 
 export const HW_NODE: Readonly<Record<HwId, HwNode>> = Object.fromEntries(HW_NODES.map((n) => [n.id, n])) as Record<HwId, HwNode>;
