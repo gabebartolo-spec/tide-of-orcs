@@ -79,7 +79,7 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-066 | Tree layout polish: curved branch lines, camera ease to selected | render | 021 | claude | done e4d999a |
 | TB-067 | Strings table audit; all copy via `strings.ts` | ui | — | claude | done d26c4c5 |
 | TB-088 | Attack and hit VFX for every unit: wind-up/release cue and impact per orc kind, elf lob, archers, spearman, bladedancer, companions; blood (spray + fading ground splats, new `bloodOrc`/`bloodElf` tokens); pooled, numbers in `data/presentation.ts` | render | 019 | claude | done (904b970, 0f6afd4) |
-| TB-089 | Arrow arsenal: Rebound, Starfall, Frost Arrows, Shatter, Shock Arrows, Thunderclap nodes; VFX for each plus Fire Arrows strike; 7 ElevenLabs SFX (P-002 numbers) | sim/render/audio | 088 | claude | in review |
+| TB-089 | Arrow arsenal: Rebound, Starfall, Frost Arrows, Shatter, Shock Arrows, Thunderclap nodes; VFX for each plus Fire Arrows strike; 7 ElevenLabs SFX (P-002 numbers) | sim/render/audio | 088 | claude | done (PR #15, c069ff1) |
 
 ## M5 — Ship
 | Id | Task | Area | Depends | Owner | Status |
@@ -98,8 +98,8 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-082 | Tree opens at 1:1 on Waking instead of fit-to-width (unreadable in the 378 px panel); enemy Fury/Swarm nodes stacked so labels don't collide | render | 021 | claude | done 5cb30c1 |
 | TB-081 | Boss waves: every 10 waves a boss wave unlocks; the player summons it, starting a 60 s challenge of bespoke mini-waves. Replaces the Warboss summon, Fury, Swarm and Bounty nodes (save v4) | sim/ui | 080 | claude | done e3b4536 |
 | TB-098 | Field ground redesign (director, 31 Oct): seeded grass tufts, small rocks, worn and barren patches, pre-rendered offscreen | render | | claude | done (PR) |
-| TB-099 | Loot sets: 7 sets with 2/4/6-piece effects on the field (planned as "TB-098" on the loot branch; renumbered, TB-098 is the field ground) | sim/render | 097 | claude | todo |
-| TB-100 | Loot mythic powers (planned as "TB-099" on the loot branch) | sim/render | 099 | claude | todo |
+| TB-099 | Loot sets: 7 sets with 2/4/6-piece effects on the field (planned as "TB-098" on the loot branch; renumbered, TB-098 is the field ground) | sim/render | 097 | claude | superseded by the L3 TB-099 row below |
+| TB-100 | Loot mythic powers (planned as "TB-099" on the loot branch) | sim/render | 099 | claude | superseded by the L3 TB-100 row below |
 
 ## Icebox
 - Starfall, Owl, Mist, Lantern nodes (SKILL-TREE.md Planned).
@@ -121,11 +121,11 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-112 | Tree tooltip says "needs <parent>" even when the parent is owned (`ui/panel.ts`); show it only while the parent is unowned | ui | 075 | | todo |
 | TB-113 | Perf: rerun QA J1 in a visible browser (160 orcs); the hidden-pane run showed 4–6% of frames over 16.7 ms with draw spikes up to 330 ms. Profile and fix if they reproduce | perf | 075 | claude | done (QA run 2: no spikes in visible rAF frames; still untested on a mid-range PC) |
 | TB-114 | Loot: affixes that scale a feature the player does not own (Packbond without the wolf, Thorns without Spikes) roll and do nothing; decide whether to reroll, gate or label them | loot | 075 | | todo |
-| TB-115 | Rename pass in the elf's voice (director's doc, 1 Nov): 49 skill nodes, 5 Grudges lines, currency Teeth/Grudge, Burn It Down, Fence, Lads, orc kinds and the player copy; then (director: do it yourself) the 55 later nodes, 6 loot Grudges lines, 7 sets and 8 mythics in the same voice; game title A Lot of Orcs (director, 1 Nov); branch display labels; ids and save unchanged | data/ui | 111 | claude | in review (rename-elf-voice) |
+| TB-115 | Rename pass in the elf's voice (director's doc, 1 Nov): 49 skill nodes, 5 Grudges lines, currency Teeth/Grudge, Burn It Down, Fence, Lads, orc kinds and the player copy; then (director: do it yourself) the 55 later nodes, 6 loot Grudges lines, 7 sets and 8 mythics in the same voice; game title A Lot of Orcs (director, 1 Nov); branch display labels; ids and save unchanged | data/ui | 111 | claude | done (PR #35, e08d2ca) |
 | TB-116 | Tree keyboard access (QA B5): the tree canvas takes no focus or keys. Make nodes reachable by Tab or arrows and buyable by Enter (GDD §13) | ui | 075 | claude | done (33cf889) |
 | TB-117 | Tree: the branch legend (BOW, COMPANIONS …) is drawn over node labels at the top of the tree (QA run 2) | ui | 075 | claude | done (831aef2) |
 | TB-101 | Loot L4: Spoils branch (7 Grove nodes) and 6 Heartwood loot lines (Far Sight, Fortune's Favour, Deep Satchel, Warboss Tithe, Heirloom, Glimmerwork) with requirements; save v9 adds the Heirloom uid. Numbers P-101 | sim | 110 | claude | done (9e8b756) |
 | TB-102 | Loot L5: spend Glimmer to reroll one affix on a worn item; cost doubles per reroll on that item, Glimmerwork ×0.6. Numbers P-102 | sim | 101 | claude | done (4d924fe) |
 | TB-103 | Loot L6: Replant screen lists items found this run by rarity and the best drop, in its rarity colour | ui | 102 | claude | done (d74f6a5) |
 | TB-105 | Loot L8: loot VFX. Drop beams per rarity (common glint; rare/epic/legendary/mythic beams 1/1.5/2/3 s, epic mote spiral, legendary+ ground ring), mythic 0.5 s hold then 0.6× for 0.5 s with a rose screen edge; equip glows the bow and flashes the worn card; set tier rise rings the elf with leaves 2 s; salvage flashes the count; reroll line fades in. Reduced motion keeps beams and colour flashes only. HUD quiver streak/bounce skipped (no HUD quiver). SFX are TB-106 | render/ui | 103 | claude | done (be4e1b7) |
-| TB-107 | Loot L9: loot telemetry. Drop, equip, salvage, reroll and set-tier events (wave, run, minutes since the first logged event, rarity/slot/base/set) in their own localStorage key (cap 5000), buffered in GameController and written with each save; the Settings export gains `loot`. No save schema change | app | 105 | claude | in review (tb-107-loot-telemetry) |
+| TB-107 | Loot L9: loot telemetry. Drop, equip, salvage, reroll and set-tier events (wave, run, minutes since the first logged event, rarity/slot/base/set) in their own localStorage key (cap 5000), buffered in GameController and written with each save; the Settings export gains `loot`. No save schema change | app | 105 | claude | done (PR #36, 54ab3db) |
