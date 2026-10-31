@@ -296,3 +296,10 @@ Options:
 3. **wallMult 2**: first fall 18–19, at the top edge of the target.
 
 Decision: keep 10. Measured falls over 40 min, seeds 1–3 (wave@run minutes): greedy 5@1.6 … 24–26@9–10, 35–36@14; dps 5@1.6 … 20–26@8–10, 35@14; nobuy 4–5@1.5–1.9 every run. Over 40 min dps no longer beats greedy (Heartwood 52–66 vs 60–68).
+
+### Loot (TB-091, from the Loot Expansion Design; data in `src/data/lootTables.ts`, not yet live)
+- P(drop) = min(0.6, 0.008 · lootTier^1.5 · (1 + itemFind)). lootTier: grunt 1, runner 2, brute 3, elite 4, boss 5.
+- Rarity weights normal/boss: common 70/0, rare 25/40, epic 4.5/40, legendary 0.5/17, mythic 0/3. Each weight × (1+luck)^rank × (1 + 0.15(lootTier−1))^rank, rank 0–4.
+- Affixes per rarity 1/2/3/4/4; ranges × (1 + 0.03 · ilvl). Item level = wave, capped at 20 + 10 × prestiges. Commons stop after prestige 3, rares after 8.
+- Pity: legendary weight +10% per boss without one; mythic guaranteed by the 25th boss without one.
+- Sets: 2/4/6-piece bonus +20/50/100% to the set's stat (Rootwarden 15/40/80%).
