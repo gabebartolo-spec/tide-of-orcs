@@ -22,6 +22,9 @@ Blender: `C:\Program Files\Blender Foundation\Blender 5.2\blender.exe -b --facto
 3. **Shape the motion** with the env vars below.
 4. **Probe.** `HPROBE=1` prints, per frame, the left hand | right hand | left-foot y relative to the hips (x, y, z; forward is -Y).
 5. **Sheets and GIFs.** `blender ... sheetn.py -- <prefix> <sheet.png>`, then `python gifn.py <prefix> <out.gif> 33 0,1,...,32`. Pass the frame indices comma-joined; in PowerShell, `((0..32) -join ",")`.
+6. **Game sprite sheet (after the director approves a clip).** Add the clip to `scripts/build_sprites.ps1` (`$jobs`: the approved recipe's env copied exactly, one `ortho` per actor so walk and attack share a scale, `fr` = all frames for a 30 fps walk, `(& $even N)` for a 15 fps attack) and to `pack_sprites.py` `ANIMS` (`key: (fps, mirror orcs=True, body key, body height in radii: orc 2.4, elf 3.0)`), then `& build_sprites.ps1 -Only <key>,<key.attack>` (Blender goes through hid.ps1; it repacks `public/sprites/sheet.webp` + `atlas.json`). Atlas keys are data: `src/render/sprites.ts` draws `key` for the walk and `key.attack` for the attack, so a new orc kind needs no code until its sim kind exists (TB-087). Check the atlas lists both keys and look at the packed frames before committing. Shaman entries (2026-11-01): `orc.shaman` (walk v4, ortho 2.0, 33 frames) and `orc.shaman.attack` (cast v2, even frames of 0..68).
+
+- **Cast clip hips turn (shaman sheet, 2026-11-01)**: Standing 1H Magic Attack 01 (mirrored) yaws the hips +58 deg at frame 0 (back to the game camera) to -48 deg at the throw; the source `SRC` print shows it (walk hips stay within 5 deg). It is the clip's motion, not a retarget error, and WOFFS on Hips (a constant yaw) cannot remove a swing. Judge such clips as a sequence from the game camera, and expect a pop at the walk->attack seam.
 
 ## apply_anim env vars
 | Var | Effect |
