@@ -353,6 +353,21 @@ Read: G sets land at 7–12 h (C: 3.6 h; C with every 60 on seeds 1–3: 3.6–6
 Gear power: worn vs bare best wave +5 to +8 (seed 1, 25 h). Late orc HP grows ~30% per wave, so +60–90% power ≈ +2–3 waves and "+10 waves" ≈ ×14 power: the two targets disagree. Director (1 Nov) picked +60–90% power. The runner's play-on trial (end state, worn vs bare) gives −5 to +7 waves by seed, too noisy to tune on.
 Found: past wave ~117 combat stops (0 kills/min, wall 100%, waves tick to 463 on seed 3 at bosses every 60); TB-126.
 
+### P-108b · Gear power: affix gain 0.75 (2026-11-01, TB-108)
+Director (1 Nov): target +60–90% gear power (about +2–3 waves); "Yes, tune down". Proposed: `AFFIX.gain` 1 → 0.75 (lootTables.ts), so every affix rolls at 75% of today's value. Sets and mythics unchanged.
+
+Evidence: `npm run balance -- --minutes 1500 --seed N --quiet [--bare | --tune AFFIX.gain=G]` with P-108 drops. Best wave in 25 h, seeds 1 / 2 / 3 / 4:
+
+| | Best wave | Gain over bare | Mean |
+|---|---|---|---|
+| Bare | 85 / 85 / 84 / 86 | | |
+| Gain 1 (now) | 89 / 89 / 90 / 91 | +4 / +4 / +6 / +5 | +4.75 |
+| Gain 0.75 | 87 / 84 / 87 / 88 | +2 / −1 / +3 / +2 | +1.5 |
+| Gain 0.5 (seeds 1–2) | 84 / 101 | −1 / +16 | noise |
+| Gain 0.3 (seeds 1–2) | 83 / 86 | −2 / +1 | |
+
+Read: 0.75 puts three of four seeds at +2–3 waves; seed noise is about ±2 waves. 0.5 and below are indistinguishable from bare except for one lucky seed.
+
 ### P-111 · Per-type upgrade nodes (2026-11-01, TB-111)
 Design from the director (1 Nov): see SKILL-TREE §Per-type upgrade nodes. Numbers in `SHOT_FX`, `UNIT_FX`, `ELF_FX` (`src/data/balance.ts`).
 - Enchantment chance per shot: 0.25 on unlock + 0.15 per Quiver rank, capped at 1 (fire, frost, shock, rebound, moon). Starfall 0.1 + 0.05 per Wishing Star rank (replaces "every 10th lob"). Thunderclap stuns only on shots that roll shock.
