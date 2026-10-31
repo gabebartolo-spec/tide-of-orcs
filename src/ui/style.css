@@ -1,4 +1,10 @@
 /* Layout: battlefield canvas on the left with a rally bar beneath it, a tabbed grove panel (skill tree / replant) on the right; stacks on phones. */
+/* Fonts ship with the game (latin subset, SIL OFL; licences in public/fonts/) so the desktop build works offline (TB-118) */
+@font-face { font-family: "Spectral"; font-style: normal; font-weight: 500; font-display: swap; src: url("./fonts/spectral-500.woff2") format("woff2"); }
+@font-face { font-family: "Spectral"; font-style: italic; font-weight: 500; font-display: swap; src: url("./fonts/spectral-500-italic.woff2") format("woff2"); }
+@font-face { font-family: "Spectral"; font-style: normal; font-weight: 700; font-display: swap; src: url("./fonts/spectral-700.woff2") format("woff2"); }
+@font-face { font-family: "Atkinson Hyperlegible"; font-style: normal; font-weight: 400; font-display: swap; src: url("./fonts/atkinson-400.woff2") format("woff2"); }
+@font-face { font-family: "Atkinson Hyperlegible"; font-style: normal; font-weight: 700; font-display: swap; src: url("./fonts/atkinson-700.woff2") format("woff2"); }
 :root {
   /* Tokens mirror src/render/palette.ts and docs/ART-STYLE.md */
   --ink: #1b2130; --ink-2: #242d3f; --ink-3: #30394d; --line: #3e4a60;

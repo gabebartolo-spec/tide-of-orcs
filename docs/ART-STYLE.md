@@ -71,6 +71,7 @@ The plain reads as natural, calm grassland, not a flat board. Layout is seeded (
 ## Typography
 - Display: **Spectral** (serif, 500/700, italic for the title's "Orcs"). Headings, big numbers.
 - Body/UI: **Atkinson Hyperlegible**. Labels uppercase at 11 px with 0.12 em tracking.
+- Both ship with the game as latin-subset woff2 in `src/ui/fonts/` (SIL OFL, licences in `public/fonts/`), declared in `src/ui/style.css`; no web font service (TB-118). A new weight or style needs its file added there.
 - Tabular numerals everywhere numbers change.
 
 ## Motion
