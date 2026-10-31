@@ -38,6 +38,8 @@ Blender: `C:\Program Files\Blender Foundation\Blender 5.2\blender.exe -b --facto
 | `AMP=bone:gain` | Scale the clip's swing about its mean (axis-angle; slerp can't go above 1) |
 | `WOFFS=bone:1,x,y,z` | Fixed local rotation offset in degrees (e.g. lower the arm, bend the wrist forward) |
 | `REST=bones` | Hold the bind pose |
+| `WLEVEL=bones` | Hold the bone at its modelled orientation in WORLD space (position follows the parent). Not for heads alone: the body turns under it (runner attack v3 rejected: "twisted", neck "gelatinous") |
+| `WYAW=b1,b2>ref` | Bones held upright at their modelled orientation, turned only by ref's heading (shoulder line, world Z). The head fix: `WYAW=mixamorig:Neck,mixamorig:Head>mixamorig:Spine2` = solid head, never tilted or slanted, facing where the shoulders face (runner attack v4). REST on Head tilts with the spine (v2 rejected) |
 | `CAMROT`, `ORTHO`, `FR` | Camera yaw, ortho scale, frames to render |
 | `GAMECAM=20` | The real field camera (ART-STYLE): side-on from the character's right, walking screen-right, 20° top-down. CAMROT 0 is a 45° three-quarter view, not the game angle |
 | `CLIP=1`, `HPROBE=1` | Check intersections (prints `CLIP` for weapon vs body, `LFIST` for left-hand depth inside the body in cm, both must be 0, and `LFISTSURF` for hits on open garment shells that ray parity rejects, visual check only) / print hand paths |

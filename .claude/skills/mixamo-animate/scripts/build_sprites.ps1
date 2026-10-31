@@ -4,7 +4,7 @@
 param([string[]]$Only = @())
 $s = $PSScriptRoot; $bl = "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe"; $a = "C:\Users\DANTE\Documents\tide-assets"; $mx = "$a\mixamo"
 $o = "$a\sprites\frames"; New-Item -ItemType Directory -Force $o | Out-Null
-$vars = "RMATCH", "SWING", "MIRR", "H1", "MPH", "HINGE", "FREEZE", "WOFFS", "OFFS", "REST", "ARMSET", "ELBOWSET", "ARMTWIST", "DIRECT", "INPLACE", "ALIGN", "GRIP2", "CLIP", "CLIPDBG", "ELBOW", "HPROBE", "LHPROBE", "AMP", "DAMP", "ABD", "HIDE", "FOCUS",
+$vars = "WYAW", "RMATCH", "SWING", "MIRR", "H1", "MPH", "HINGE", "FREEZE", "WOFFS", "OFFS", "REST", "ARMSET", "ELBOWSET", "ARMTWIST", "DIRECT", "INPLACE", "ALIGN", "GRIP2", "CLIP", "CLIPDBG", "ELBOW", "HPROBE", "LHPROBE", "AMP", "DAMP", "ABD", "HIDE", "FOCUS",
   "QUIVER", "QFLOAT", "QPOSE", "QLEN", "QBOB", "ARROWF", "ARROWL", "RESTUP", "BOWALIGN", "GRIPSIDE", "ARROWPATH", "ARROWDBG"  # elf hero (bow + floating quiver)
 $even = { param($n) (0..($n - 1) | Where-Object { $_ % 2 -eq 0 }) -join "," }
 $jobs = @(
@@ -32,6 +32,10 @@ $jobs = @(
   @{ key = "orc.shaman.attack"; m = "$a\shaman\shaman_cut2.blend"; c = "$mx\Standing 1H Magic Attack 01 MIRROR AS100.fbx"; ortho = "2.0"; fr = (& $even 69); env = @{  # cast_shaman.ps1 (v2)
       RMATCH = "RightShoulder,RightArm,RightForeArm,RightHand,LeftShoulder,LeftArm,LeftForeArm,LeftHand"; REST = "mixamorig:RightArm,mixamorig:RightForeArm,mixamorig:RightHand"; FREEZE = "mixamorig:RightShoulder"
       INPLACE = "1"; WOFFS = "mixamorig:RightArm:1,0,0,-15" } },
+  @{ key = "orc.runner"; m = "$a/runner/runner_split.blend"; c = "$mx/Orc Walk.fbx"; ortho = "1.8"; fr = (0..35 -join ","); env = @{  # walk_runner.ps1 (v2); ORTHO 1.8 = the attack's, so both share a pixel scale
+      WYAW = "mixamorig:Neck,mixamorig:Head>mixamorig:Spine2"; RMATCH = "Spine,LeftShoulder,LeftArm,LeftForeArm,LeftHand,RightShoulder,RightArm,RightForeArm,RightHand"; INPLACE = "1"; GRIP2 = "1"; WOFFS = "mixamorig:RightHand:0,0,1,-60" } },
+  @{ key = "orc.runner.attack"; m = "$a/runner/runner_split.blend"; c = "$mx/Standing Melee Attack Downward AS100.fbx"; ortho = "1.8"; fr = (& $even 69); env = @{  # attack_runner.ps1 (v4)
+      WYAW = "mixamorig:Neck,mixamorig:Head>mixamorig:Spine2"; RMATCH = "Spine,LeftShoulder,LeftArm,LeftForeArm,LeftHand,RightShoulder,RightArm,RightForeArm,RightHand"; INPLACE = "1"; GRIP2 = "1"; WOFFS = "mixamorig:RightHand:0,0,1,-60" } },
   @{ key = "van.blade.attack"; m = "$a\elf_bladedancer\bladedancer_dagger.blend"; c = "$mx\Dual Weapon Combo AS100.fbx"; ortho = "2.6"; fr = (& $even 110); env = @{ DIRECT = "1"; INPLACE = "1" } },  # SKILL.md bladedancer attack v1
   # Elf hero: `elf` is the idle loop (the elf never walks). Standing Idle 03 Examine is 153 unique frames (153 = frame 0), slow motion,
   # so every 3rd frame at 10 fps keeps the 5.1 s loop under the sheet budget. Quiver pinned with QPOSE to the attack's measured spot.
