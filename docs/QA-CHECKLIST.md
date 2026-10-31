@@ -90,4 +90,19 @@ Driven from the dev handle with `game.tick(1/50)`. The browser pane was hidden, 
 | J1 | not verified | Hidden pane, 160 orcs: median 1.5–2.7 ms per frame, but 4–6% of frames over 16.7 ms, with draw spikes up to 330 ms. Hidden pages are throttled, so this needs a visible rerun (TB-113) |
 
 Findings: TB-112 (tree label), TB-113 (perf rerun), TB-114 (affixes for features the player does not own).
+## Run 2 (1 Nov 2026, dev build, claude, browser pane visible)
+Reruns the checks run 1 could not see. Pane 833×546 CSS px at DPR 3, 120 Hz display. The pane was hidden again partway through J1 and I3; that is noted where it matters.
+
+| Check | Result | Evidence |
+|---|---|---|
+| B1, E1 | pass | Toasts seen: "Quick Draw joins the grove", "Muster joins the grove", "Spearman takes the field" |
+| B3 | pass | 104 nodes, all positioned; closest pair 52.2 px apart against a hit radius of 20 |
+| B4 | pass | Opens near Waking (camera 282, 558, zoom 1) with Sharpened Tips selected; drag and wheel handlers bound |
+| B5 | fail | The tree canvas has no tabindex and no key handler; Tab skips from the rally button to the tabs. TB-116 |
+| C2 | pass | Overlay seen: wave, slain, minutes, starlight per minute, best wave, items, +1 Heartwood, one button; rally disabled; Replant by a real click |
+| I3 | pass: 5 min soak, 23,576 ticks (393 sim s), 158 buys, 9 bosses, 3 rallies, a fall and replant, waves up to 27; 0 errors, rejections or warnings |
+| J1 | pass on this PC | rAF with 160 orcs and the wall held: 463 visible frames, median 8.3 ms, p95 8.4 ms (display-capped at 120 Hz), no long tasks. Timing `tick` + `draw` back to back: tick p95 0.1 ms, draw median 0.6 ms with a ~40 ms stall every ~11 frames, which only appears when frames are drawn without presenting (GPU queue backpressure), never in the rAF run. Not tested on a mid-range PC |
+
+Findings: TB-116 (tree keyboard access), TB-117 (the branch legend overlaps node labels at the top of the tree).
+
 Notes, not filed: grunts at the wall can fill the 160 cap and starve the summoned kinds; at high waves one orc swing can exceed the wall's max HP.
