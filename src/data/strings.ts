@@ -11,6 +11,7 @@ export const STR = {
   fallenTitle: 'The barricade has fallen',
   fallenSummary: (w: number, kills: string, mins: number) => `Wave ${w} · ${kills} orcs slain · ${mins} min held`,
   fallenRate: (perMin: string, best: number) => `${perMin} starlight / min · best wave ${best}`,
+  fallenLoot: (counts: string, best: string) => `Found ${counts} · best: ${best}`, fallenNoLoot: 'No items found this run',
   fallenHW: 'Heartwood carried back', fallenBtn: 'Replant the grove',
   starlight: 'Starlight', wave: 'Wave', slain: 'Slain', heartwood: 'Heartwood',
   tabGrove: 'The Grove', tabReplant: 'Replant',

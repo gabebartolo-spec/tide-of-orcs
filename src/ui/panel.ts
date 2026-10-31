@@ -14,6 +14,7 @@ import { HW_NODE, HW_NODES, HwId } from '../data/heartwood';
 import { canBuyHw, hwAvailable, hwCost, hwRank, hwUnlocked } from '../sim/heartwood';
 import { SatchelPane, itemName } from './satchel';
 import { LOOT_TOAST } from '../data/lootTables';
+import { RARITIES } from '../data/loot';
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string): T => document.getElementById(id) as T;
 const VAN_NAME: Record<VanType, string> = { spear: 'Spearman', blade: 'Bladedancer' };
@@ -185,6 +186,9 @@ export class Panel {
     const r = this.game.state.run;
     $('fallen-sum').textContent = STR.fallenSummary(r.wave, fmt(r.kills), Math.floor(r.runTime / 60));
     $('fallen-rate').textContent = STR.fallenRate(fmt(r.earned / Math.max(1, r.runTime / 60)), this.game.state.meta.bestWave);
+    // Items by rarity, rarest first, then the best drop in its rarity colour (TB-103)
+    const counts = RARITIES.filter((k) => r.found?.[k]).reverse().map((k) => `${r.found![k]} ${STR.rarityName[k] ?? k}`).join(', ');
+    $('fallen-loot').innerHTML = r.best ? STR.fallenLoot(counts, `<span class="best r-${r.best.rarity}">${itemName(r.best)}</span>`) : STR.fallenNoLoot;
     $('fallen-hw').textContent = '+' + gain(this.game.state); $('fallen').hidden = false;
   }
   private doReplant(): void {
