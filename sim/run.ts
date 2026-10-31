@@ -18,7 +18,7 @@ import { canReplant, replant } from '../src/sim/prestige';
 import { NODES, NodeId } from '../src/data/skillTree';
 import { STEP, waveHP } from '../src/data/balance';
 import { BOSS_WAVE } from '../src/data/bosses';
-import { DROP, RARITY } from '../src/data/lootTables';
+import { AFFIX, DROP, RARITY } from '../src/data/lootTables';
 import { SLOTS } from '../src/data/loot';
 import { barFrac } from '../src/sim/barricade';
 import { EquipPolicy, equippedItems, itemScore } from '../src/sim/loot';
@@ -36,7 +36,7 @@ const lootPolicy = arg('loot', 'greedy') as EquipPolicy; let drops = 0;
 
 const s = createState(seed); const ev = new EventBus(); s.lootPolicy = lootPolicy;
 const bare = args.includes('--bare');
-const TUNE: Record<string, unknown> = { BOSS_WAVE, RARITY, DROP };
+const TUNE: Record<string, unknown> = { BOSS_WAVE, RARITY, DROP, AFFIX };
 for (const kv of arg('tune', '').split(',').filter(Boolean)) {
   const [path, v] = kv.split('='), keys = path!.split('.'), last = keys.pop()!;
   const obj = keys.reduce<Record<string, unknown>>((o, k) => (o === TUNE ? TUNE[k] : o[k]) as Record<string, unknown>, TUNE);
