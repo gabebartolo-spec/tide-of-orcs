@@ -309,7 +309,7 @@ Decision: keep 10. Measured falls over 40 min, seeds 1–3 (wave@run minutes): g
 ### Loot (TB-091, from the Loot Expansion Design; data in `src/data/lootTables.ts`, not yet live)
 - P(drop) = min(0.6, 0.008 · lootTier^1.5 · (1 + itemFind)). lootTier: grunt 1, runner 2, brute 3, elite 4, boss 5.
 - Rarity weights normal/boss: common 70/0, rare 25/40, epic 4.5/40, legendary 0.5/17, mythic 0/3. Each weight × (1+luck)^rank × (1 + 0.15(lootTier−1))^rank, rank 0–4.
-- Affixes per rarity 1/2/3/4/4; ranges × (1 + 0.03 · ilvl). Item level = wave, capped at 20 + 10 × prestiges. Commons stop after prestige 3, rares after 8.
+- Affixes per rarity 1/2/3/4/4; ranges × (1 + 0.03 · ilvl). Item level = wave, capped at 20 + 10 × prestiges. Commons stop after prestige 3, rares after 8. Affixes roll only for features the player owns (TB-114, `AFFIX_NEEDS`): Kinship needs any companion; Packbond the wolf, Talons the hawk, Roots the treant, Blades the knives, Ballistae the ballista, Thorns the spikes, Banner/Mail/Mending the vanguard (Muster), Elitebane elites marching; fire, storm and moon affixes need that arrow.
 - Pity: legendary weight +10% per boss without one; mythic guaranteed by the 25th boss without one.
 - Sets: 2/4/6-piece bonus +20/50/100% to the set's stat (Handyman 15/40/80%).
 
@@ -326,7 +326,7 @@ Numbers in `SPOILS_FX` (lootTables) and `HW_FX` (heartwood). Spoils costs 120 / 
 Evidence: `npm run balance` (greedy, seed 1, 30 min) vs the tb-110 base: first four falls identical (waves 5, 5, 7, 5); fifth fall wave 26 → 20, Heartwood 25 → 18, best wave 31 → 37. The runner now has Spoils nodes in its pool (Hunter's Eye is a cheap crit pick) and the report does not name purchases, so which node moved the curve is unmeasured. Tuning against drop rates is TB-107.
 
 ### P-102 · Glimmer reroll (2026-11-01, TB-102)
-Reroll one affix of a worn item: cost = max(1, round(2 × 2^n × rerollMult)), n = rerolls already on that item (`REROLL` in lootTables). Costs 2, 4, 8, 16, 32…; with Haggling 1, 2, 5, 10, 19. The new affix is a different id, keeps the item's arrow rule, value rolled at the item's ilvl.
+Reroll one affix of a worn item: cost = max(1, round(2 × 2^n × rerollMult)), n = rerolls already on that item (`REROLL` in lootTables). Costs 2, 4, 8, 16, 32…; with Haggling 1, 2, 5, 10, 19. The new affix is a different id, keeps the item's arrow rule and the feature gate, value rolled at the item's ilvl.
 Evidence: none yet; the greedy runner never rerolls. Tuning is TB-107.
 
 ### P-111 · Per-type upgrade nodes (2026-11-01, TB-111)

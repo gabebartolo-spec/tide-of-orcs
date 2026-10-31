@@ -2,7 +2,7 @@ import { ARROWS, FIELD, LOB, PLAYER } from '../data/balance';
 import { EventBus } from './events';
 import { Orc, ProjectileKind, SimState, Zone, recompute } from './state';
 import { UnitFx } from './stats';
-import { rollDrop } from './lootRoll';
+import { ownedAffixes, rollDrop } from './lootRoll';
 import { SPOILS_FX } from '../data/lootTables';
 import { noteDrop, pickUp } from './loot';
 import { lootMods } from './gear';
@@ -59,7 +59,7 @@ export function kill(s: SimState, ev: EventBus, o: Orc): void {
 /** Roll this kill's drop (TB-094) and pick it up; re-derive stats if what is worn changed. */
 function dropLoot(s: SimState, ev: EventBus, o: Orc): void {
   const l = s.meta.loot, st = s.stats, boss = o.kind === 'boss', worn = JSON.stringify(l.equipped);
-  const mods = { ...lootMods(l, st), bump: boss && st.hoard ? 1 : 0 };
+  const mods = { ...lootMods(l, st), bump: boss && st.hoard ? 1 : 0, has: ownedAffixes(st) };
   // Warboss Tithe: bosses drop twice; Trophy: kills on every tenth wave roll twice
   const rolls = boss ? st.bossDrops : st.trophy && s.run.wave % SPOILS_FX.trophyEvery === 0 ? 2 : 1;
   for (let i = 0; i < rolls; i++) {

@@ -14,6 +14,7 @@ import { buyHw } from './sim/heartwood';
 import { HwId } from './data/heartwood';
 import { rally } from './sim/vanguard';
 import { equip, reroll, salvage, setFilter, toggleHeirloom, toggleLock } from './sim/loot';
+import { ownedAffixes } from './sim/lootRoll';
 import { Rarity } from './data/loot';
 import { Save, defaultSettings, CURRENT_VERSION } from './save/schema';
 import { clearSave, exportSave, importSave, readSave, writeSave } from './save/storage';
@@ -62,7 +63,7 @@ export class GameController {
   }
   salvageItem(uid: string): boolean { this.logItem('salvage', uid); const ok = salvage(this.state.meta.loot, uid, this.state.stats); if (ok) this.save(); else this.lootLog.pop(); return ok; }
   heirloomItem(uid: string): boolean { const ok = toggleHeirloom(this.state.meta.loot, uid); if (ok) this.save(); return ok; }
-  rerollItem(uid: string, i: number): boolean { const s = this.state, ok = reroll(s.meta.loot, uid, i, s.lootRng, s.stats.rerollMult); if (ok) { recompute(s); this.logItem('reroll', uid, { affix: i }); this.save(); } return ok; }
+  rerollItem(uid: string, i: number): boolean { const s = this.state, ok = reroll(s.meta.loot, uid, i, s.lootRng, s.stats.rerollMult, ownedAffixes(s.stats)); if (ok) { recompute(s); this.logItem('reroll', uid, { affix: i }); this.save(); } return ok; }
 
   /** Feed each frame's drained sim events (main loop): drops become loot telemetry. */
   noteEvents(events: readonly SimEvent[]): void {

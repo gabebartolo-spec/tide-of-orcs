@@ -36,6 +36,12 @@ export const AFFIXES: readonly AffixDef[] = [
   A('thunderhead', 'stormDmg', 'mul', 0.08, 0.18, 'storm'), A('chain', 'stormChain', 'add', 0.2, 0.5, 'storm'),
   A('moonhead', 'homingDmg', 'mul', 0.08, 0.18, 'moon'), A('paleglow', 'critDmg', 'mul', 0.08, 0.18, 'moon'),
 ];
+/** Features an affix scales (TB-114): it rolls only while the player owns that feature. Arrow-typed affixes need their arrow; affixes not listed always roll. */
+export type Feature = 'companion' | 'wolf' | 'hawk' | 'treant' | 'knives' | 'ballista' | 'spikes' | 'vanguard' | 'elites' | ArrowType;
+export const AFFIX_NEEDS: Readonly<Record<string, Feature>> = {
+  kinship: 'companion', packbond: 'wolf', talons: 'hawk', roots: 'treant', blades: 'knives', ballistae: 'ballista',
+  thorns: 'spikes', banner: 'vanguard', mail: 'vanguard', mending: 'vanguard', elitebane: 'elites',
+};
 
 export interface BaseDef { id: string; slot: Slot; name: string }
 const B = (slot: Slot, ...names: string[]): BaseDef[] => names.map((name) => ({ id: name.toLowerCase().replace(/[^a-z]+/g, '-'), slot, name }));

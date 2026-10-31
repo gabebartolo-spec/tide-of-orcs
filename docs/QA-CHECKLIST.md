@@ -89,7 +89,7 @@ Driven from the dev handle with `game.tick(1/50)`. The browser pane was hidden, 
 | I3 | partial | No console errors this session; the 5-minute visible run is not done |
 | J1 | not verified | Hidden pane, 160 orcs: median 1.5–2.7 ms per frame, but 4–6% of frames over 16.7 ms, with draw spikes up to 330 ms. Hidden pages are throttled, so this needs a visible rerun (TB-113) |
 
-Findings: TB-112 (tree label), TB-113 (perf rerun), TB-114 (affixes for features the player does not own).
+Findings: TB-112 (tree label), TB-113 (perf rerun), TB-114 (affixes for features the player does not own; fixed: they are gated).
 ## Run 2 (1 Nov 2026, dev build, claude, browser pane visible)
 Reruns the checks run 1 could not see. Pane 833×546 CSS px at DPR 3, 120 Hz display. The pane was hidden again partway through J1 and I3; that is noted where it matters.
 
