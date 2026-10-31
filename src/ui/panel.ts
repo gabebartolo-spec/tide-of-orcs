@@ -11,6 +11,7 @@ import { BOSS_WAVE } from '../data/bosses';
 import { NumberFormat, fmt, setNumberFormat } from './format';
 import { HW_NODE, HW_NODES, HwId } from '../data/heartwood';
 import { canBuyHw, hwAvailable, hwCost, hwRank } from '../sim/heartwood';
+import { SatchelPane } from './satchel';
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string): T => document.getElementById(id) as T;
 const VAN_NAME: Record<VanType, string> = { spear: 'Spearman', blade: 'Bladedancer' };
@@ -18,6 +19,7 @@ const VAN_NAME: Record<VanType, string> = { spear: 'Spearman', blade: 'Bladedanc
 export class Panel {
   private toastTimer = 0;
   private wipeArmed = false;
+  private satchel: SatchelPane;
 
   constructor(private game: GameController, private tree: TreeRenderer) {
     // static copy
@@ -31,7 +33,8 @@ export class Panel {
     $('dep-spear').querySelector('.n')!.textContent = STR.rallySpear; $('dep-blade').querySelector('.n')!.textContent = STR.rallyBlade;
     $('dep-boss').querySelector('.n')!.textContent = STR.summonBoss;
 
-    $('tab-settings').textContent = STR.tabSettings;
+    $('tab-settings').textContent = STR.tabSettings; $('tab-satchel').textContent = STR.tabSatchel;
+    this.satchel = new SatchelPane(game); $('tab-satchel').onclick = () => this.setTab('satchel');
     $('tab-grove').onclick = () => this.setTab('grove'); $('tab-prestige').onclick = () => this.setTab('prestige'); $('tab-settings').onclick = () => this.setTab('settings');
     this.initSettings();
     $('dep-spear').onclick = () => this.rally('spear'); $('dep-blade').onclick = () => this.rally('blade');
@@ -64,6 +67,7 @@ export class Panel {
     const s = this.game.state;
     $('st-star').textContent = fmt(s.run.starlight); $('st-wave').textContent = String(s.run.wave); $('st-kills').textContent = fmt(s.meta.lifetimeKills); $('st-heart').textContent = STR.heartAvail(hwAvailable(s.meta), s.meta.heartwood);
     $('hw-body').textContent = STR.hwBody(hwAvailable(s.meta));
+    if (!$('pane-satchel').hidden) this.satchel.update();
     for (const b of $('hw-tree').querySelectorAll<HTMLButtonElement>('button[data-hw]')) b.disabled = !canBuyHw(s.meta, b.dataset.hw as HwId);
     const g = gain(s), ok = s.run.wave >= PRESTIGE.voluntaryWave && g > 0 && !s.run.fallen;
     $('pr-gain').textContent = '+' + g; ($('pr-btn') as HTMLButtonElement).disabled = !ok;
@@ -117,8 +121,8 @@ export class Panel {
     $('buy-btn').onclick = () => this.buy(n.id);
   }
 
-  setTab(k: 'grove' | 'prestige' | 'settings'): void {
-    for (const t of ['grove', 'prestige', 'settings'] as const) { $('pane-' + t).hidden = k !== t; $('tab-' + t).setAttribute('aria-selected', String(k === t)); }
+  setTab(k: 'grove' | 'satchel' | 'prestige' | 'settings'): void {
+    for (const t of ['grove', 'satchel', 'prestige', 'settings'] as const) { $('pane-' + t).hidden = k !== t; $('tab-' + t).setAttribute('aria-selected', String(k === t)); }
   }
 
   /** Called after any settings change so main.ts can apply volume and motion. */
