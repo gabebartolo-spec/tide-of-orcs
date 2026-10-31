@@ -11,7 +11,8 @@ import { BOSS_WAVE } from '../data/bosses';
 import { NumberFormat, fmt, setNumberFormat } from './format';
 import { HW_NODE, HW_NODES, HwId } from '../data/heartwood';
 import { canBuyHw, hwAvailable, hwCost, hwRank } from '../sim/heartwood';
-import { SatchelPane } from './satchel';
+import { SatchelPane, itemName } from './satchel';
+import { LOOT_TOAST } from '../data/lootTables';
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string): T => document.getElementById(id) as T;
 const VAN_NAME: Record<VanType, string> = { spear: 'Spearman', blade: 'Bladedancer' };
@@ -34,7 +35,7 @@ export class Panel {
     $('dep-boss').querySelector('.n')!.textContent = STR.summonBoss;
 
     $('tab-settings').textContent = STR.tabSettings; $('tab-satchel').textContent = STR.tabSatchel;
-    this.satchel = new SatchelPane(game); $('tab-satchel').onclick = () => this.setTab('satchel');
+    this.satchel = new SatchelPane(game); $('tab-satchel').onclick = () => { this.setTab('satchel'); this.satchel.render(); };
     $('tab-grove').onclick = () => this.setTab('grove'); $('tab-prestige').onclick = () => this.setTab('prestige'); $('tab-settings').onclick = () => this.setTab('settings');
     this.initSettings();
     $('dep-spear').onclick = () => this.rally('spear'); $('dep-blade').onclick = () => this.rally('blade');
@@ -103,6 +104,7 @@ export class Panel {
       else if (e.t === 'vanguardRallied') this.toast(STR.takesField(VAN_NAME[e.type as VanType]));
       else if (e.t === 'vanguardFell') this.toast(STR.vanFalls(VAN_NAME[e.type as VanType]));
       else if (e.t === 'barricadeRegrow') this.toast(STR.regrow);
+      else if (e.t === 'loot' && e.kept && LOOT_TOAST.includes(e.rarity)) { const it = this.game.state.meta.loot.items.find((i) => i.uid === e.uid); if (it) this.toast(STR.lootFound(itemName(it))); }
       else if (e.t === 'barricadeFell') this.showFallen();
     }
   }

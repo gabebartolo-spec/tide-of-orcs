@@ -93,3 +93,5 @@ header h1 em { color: var(--amber); font-style: italic; }
 .itemdetail .name { font-family: var(--display); font-size: 18px; color: var(--rar, var(--cream)); }
 .itemdetail .affixes { margin: 6px 0; padding-left: 18px; }
 .r-common { --rar: var(--cream-dim); } .r-rare { --rar: var(--sage); } .r-epic { --rar: var(--lilac); } .r-legendary { --rar: var(--amber); } .r-mythic { --rar: var(--rose); }
+.satbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px; font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: var(--cream-dim); }
+.itemdetail .row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 8px; }

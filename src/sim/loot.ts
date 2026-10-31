@@ -1,5 +1,5 @@
 /** Satchel and equip logic (TB-093/094). Pure. Set pieces and mythics are never auto-salvaged. */
-import { Item, LootMeta, RARITIES, SLOTS } from '../data/loot';
+import { Item, LootMeta, RARITIES, Rarity, SLOTS } from '../data/loot';
 import { SATCHEL } from '../data/lootTables';
 
 /** player: wear into empty slots only, the player swaps by hand; greedy/hoarder are balance-runner policies. */
@@ -39,4 +39,25 @@ export function pickUp(l: LootMeta, it: Item, policy: EquipPolicy, cap: number =
     const spare = l.items.filter((x) => !Object.values(l.equipped).includes(x.uid) && !x.locked && !x.set && !x.mythic).sort((a, b) => itemScore(a) - itemScore(b))[0];
     if (!spare || !salvage(l, spare.uid)) break;
   }
+}
+
+/** Player intents (TB-096). Each returns false when nothing changed. */
+export function equip(l: LootMeta, uid: string): boolean {
+  const it = l.items.find((x) => x.uid === uid);
+  if (!it || l.equipped[it.slot] === uid) return false;
+  l.equipped[it.slot] = uid;
+  return true;
+}
+
+export function toggleLock(l: LootMeta, uid: string): boolean {
+  const it = l.items.find((x) => x.uid === uid);
+  if (!it) return false;
+  it.locked = !it.locked;
+  return true;
+}
+
+export function setFilter(l: LootMeta, minRarity: Rarity): boolean {
+  if (l.lootFilter.minRarity === minRarity) return false;
+  l.lootFilter.minRarity = minRarity;
+  return true;
 }

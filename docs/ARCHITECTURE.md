@@ -122,8 +122,8 @@ The seed lives only inside `rng`; the save version lives in the save, not in Sim
 - Reduced motion: the Settings override (`settings.reducedMotion`, null = follow `prefers-reduced-motion`); render modules check `reducedMotion`.
 
 ## UI
-Plain DOM, no framework. `ui/panel.ts` renders the detail card with template strings and owns the rally bar, the boss button, the fallen overlay, the Heartwood tree and Settings; it dispatches intents to `GameController`, which is the only thing allowed to call into `sim/`:
-`tick(dt)`, `setAim(x, y)` / `clearAim()`, `buy(id)`, `rally(type)`, `summonBoss()`, `buyHw(id)`, `canReplant()`, `replant()`, `telemetry()`, `toSave()`, `save()`, `exportSave()`, `importSave(str)`, `wipe()`.
+Plain DOM, no framework. `ui/panel.ts` renders the detail card with template strings and owns the rally bar, the boss button, the fallen overlay, the Heartwood tree and Settings, and creates `ui/satchel.ts` (SatchelPane: worn slots, satchel grid, item detail and its controls); it dispatches intents to `GameController`, which is the only thing allowed to call into `sim/`:
+`tick(dt)`, `setAim(x, y)` / `clearAim()`, `buy(id)`, `rally(type)`, `summonBoss()`, `buyHw(id)`, `equipItem(uid)`, `salvageItem(uid)`, `lockItem(uid)`, `setLootFilter(rarity)`, `canReplant()`, `replant()`, `telemetry()`, `toSave()`, `save()`, `exportSave()`, `importSave(str)`, `wipe()`.
 `[hidden] { display: none !important }` is in `style.css` because the standalone build has no host reset.
 
 ## Testing

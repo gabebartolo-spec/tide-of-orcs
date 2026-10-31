@@ -9,6 +9,8 @@ export const RARITY = {
 } as const;
 /** P(drop) = min(cap, base · lootTier^tierExp · (1 + itemFind)). Item level = wave, capped at ilvlCap + ilvlPerPrestige × prestiges. */
 export const DROP = { base: 0.008, tierExp: 1.5, cap: 0.6, ilvlCap: 20, ilvlPerPrestige: 10, commonsEndAt: 3, raresEndAt: 8, legendaryPity: 0.1, mythicPity: 25 } as const;
+/** Rarities that toast when picked up; lower ones arrive quietly (TB-096). */
+export const LOOT_TOAST: readonly string[] = ['epic', 'legendary', 'mythic'];
 export const SATCHEL = { base: 40, deep: 80, maxArrowAffixes: 2 } as const;
 /** Affix ranges grow by 1 + 0.03 × item level. */
 export const affixScale = (ilvl: number): number => 1 + 0.03 * ilvl;
