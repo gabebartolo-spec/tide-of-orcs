@@ -63,7 +63,7 @@ tide-of-orcs/
       storage.ts        localStorage with try/catch (key `tide-of-orcs-v1`); export/import as base64 UTF-8 JSON
       telemetry.ts      local run log for testers, own key, JSON export (TB-070); not part of the save
       fixtures/v1.ts    v1 save fixture
-  public/               (not yet created) sprites/ and audio/ assets; the game runs without them
+  public/               sprites/, audio/ and fonts/ assets (the game runs without sprites and audio); favicon.png is the app icon at 64 px (TB-123)
   sim/run.ts            headless balance runner (node), imports src/sim + src/data
   test/                 cross-module tests (empty); unit tests sit beside code
 ```
