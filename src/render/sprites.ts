@@ -32,6 +32,8 @@ export function parseAtlas(raw: unknown): Atlas | null {
 export class Sprites {
   private atlas: Atlas | null = null;
   private img: HTMLImageElement | null = null;
+  /** Scratch canvas for tinting one frame without touching the sheet. */
+  private tmp: HTMLCanvasElement | null = null;
 
   /** Fetch the atlas and its sheet; any failure leaves vector fallback in place. */
   async load(base = import.meta.env.BASE_URL): Promise<boolean> {
@@ -47,15 +49,24 @@ export class Sprites {
     } catch { return false; }
   }
 
-  /** Draw animation `key` with its feet at (x, y) for an actor of radius r. False when there is no sprite for it. */
-  draw(g: CanvasRenderingContext2D, key: string, t: number, x: number, y: number, r: number, flash = false): boolean {
+  /** Draw animation `key` with its feet at (x, y) for an actor of radius r. False when there is no sprite for it.
+   *  `tint` washes the frame's own pixels in that colour (shading shows through); `glow` rims it in a soft halo. */
+  draw(g: CanvasRenderingContext2D, key: string, t: number, x: number, y: number, r: number, flash = false, tint = '', glow = '', blur = 0): boolean {
     const a = this.atlas?.anims[key];
     if (!a || !this.img) return false;
     const [fx, fy, fw, fh] = a.frames[frameAt(a, t)]!;
-    const h = a.hPerR * r, w = h * (fw / fh);
-    if (flash) g.filter = 'brightness(2.2)';
-    g.drawImage(this.img, fx, fy, fw, fh, x - w * a.ax, y - h * a.ay, w, h);
-    if (flash) g.filter = 'none';
+    const h = a.hPerR * r, w = h * (fw / fh), dx = x - w * a.ax, dy = y - h * a.ay;
+    const f = [flash ? 'brightness(2.2)' : '', glow ? `drop-shadow(0 0 ${blur}px ${glow})` : ''].filter(Boolean).join(' ');
+    if (f) g.filter = f;
+    g.drawImage(this.img, fx, fy, fw, fh, dx, dy, w, h);
+    if (f) g.filter = 'none';
+    if (tint) {
+      const c = (this.tmp ??= document.createElement('canvas')), cg = c.getContext('2d')!;
+      if (c.width < fw || c.height < fh) { c.width = Math.max(c.width, fw); c.height = Math.max(c.height, fh); }
+      cg.clearRect(0, 0, fw, fh); cg.globalCompositeOperation = 'source-over'; cg.drawImage(this.img, fx, fy, fw, fh, 0, 0, fw, fh);
+      cg.globalCompositeOperation = 'source-atop'; cg.fillStyle = tint; cg.fillRect(0, 0, fw, fh);
+      g.drawImage(c, 0, 0, fw, fh, dx, dy, w, h);
+    }
     return true;
   }
 }

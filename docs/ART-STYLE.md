@@ -91,6 +91,19 @@ Every attack reads in three beats: **wind-up** (the actor draws back, derived fr
 
 Blood: droplets fall in a short arc (gravity) and land as a flat splat (ellipse, 25%→0 alpha over 6 s) drawn on the ground under every actor. Hit: 4 droplets; kill: 10 droplets + one larger splat, size scaled by orc radius. Vanguard hit: 4 wine droplets; vanguard fell: 10 + a splat, beside the existing 14 spear-blue squares. Kill burst (moss squares), rally and fall bursts are unchanged. Splats are capped (oldest recycled first). Reduced motion: wind-ups and trails are skipped, impacts and blood still show, no shake bumps.
 
+## Arrow enchantment VFX (TB-089)
+Each enchanted arrow must be told apart at a glance, by colour and by shape, and its colours come from the cast: Starfall's gold is the bow's amber, Rebound's plum is the bladedancer's cape. Tokens in `palette.ts`, sizes in `VFX.arrows`.
+
+| Node | Colour token | Lob | Strike | On the orc |
+|---|---|---|---|---|
+| Fire Arrows | `fire` #f2763a | Orange arrow with a round head | Orange ring, flames, burning ground patch (1.2 s) | Body tinted `fireTint`, orange rim, flames rise |
+| Frost Arrows / Shatter | `frost` #bfe3ee | Icy blue arrow | Ice-shard starburst, frost ground patch; Shatter adds a shard ring | Body tinted `frostTint`, frost rim |
+| Shock Arrows / Thunderclap | `spark` #f4eaa6, glow `sparkGlow` | Yellow arrow | Thick jagged glowing bolts (glow 16, core 5, jag 14) to up to 3 orcs | Thunderclap: 3 sparks orbit the head |
+| Rebound | `arcane` #9b6bd6, core `arcaneCore` #ece8ff | Plum arrow | A plum orb with a pale core and halo hops orc to orc, a ring at each hit | — |
+| Starfall | `starGold` #ffd36b | — | Gold streaks fall straight down onto orcs on the plain | — |
+
+Burning and chilled orcs are tinted on their own body, never with a shape laid over them: sprites tint only the frame's own pixels (`Sprites.draw` tint, `source-atop` on a scratch canvas) plus a `drop-shadow` rim of `rimBlur` 6; vector orcs fill their body shape again in the tint. Shading stays visible under the colour. The lob takes the colour of the first enchantment owned (fire, frost, shock, Rebound, in that order).
+
 ## Asset pipeline (tools Gabe has: Tripo, Cascadeur, ElevenLabs)
 Vector draws stay the baseline so the game is always playable without assets. M4 may upgrade actors to **pre-rendered sprite sheets** on top of the same palette:
 - **Tripo** generates the 3D models (orc grunt/runner/brute/warboss, elf, spearman, bladedancer, wolf, hawk, treant). Prompt with the palette hexes and "soft low-poly toy-board, flat shading, no outlines". One model per actor; variants by tint in-engine, not by new models.

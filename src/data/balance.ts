@@ -48,6 +48,22 @@ export const SOURCES = {
   archerDmgFrac: 0.7, archerOffsetY: 90,
 } as const;
 
+/** Arrow enchantments (TB-089): effects on the elf's lob strikes. */
+export const ARROWS = {
+  /** Rebound: a magic bolt leaps from the strike to the nearest orc within `jump`, 1 + rank times; each hop deals `falloff` × the last. */
+  bounce: { jump: 120, falloff: 0.6, speed: 420 },
+  /** Shock Arrows: lightning from the struck orc to up to `targets` others within `jump`, `mult` × lob damage each. */
+  shock: { targets: 3, mult: 0.3, jump: 90 },
+  /** Thunderclap: struck orcs stop moving and swinging for `secs`. */
+  stun: { secs: 0.5 },
+  /** Frost Arrows: struck orcs move and swing slower for `secs`; slow = slow0 + slowPerRank × (rank − 1), 20% → 40% at rank 5. */
+  frost: { secs: 3, slow0: 0.2, slowPerRank: 0.05 },
+  /** Shatter: a chilled orc that dies deals `mult` × perRank^(rank − 1) × player damage to orcs within `radius`. */
+  shatter: { radius: 50, mult: 1, perRank: 1.4 },
+  /** Starfall: every `every`th lob also rains `arrows` arrows on orcs across the plain, each a small strike circle, falling `stagger` s apart. */
+  starfall: { every: 10, arrows: 8, r: 26, height: 260, flight: 0.6, stagger: 0.08 },
+} as const;
+
 /** Per-rank multipliers and flat effects of tree nodes (SKILL-TREE.md effect column). */
 export const NODE_FX = {
   sharpDmg: 1.25, moonDmg: 1.6, drawRate: 1.15, critPerRank: 0.08, gleanLoot: 1.15, kinship: 1.2,

@@ -3,7 +3,8 @@ import type { SimEvent } from '../sim/events';
 
 export type Cue =
   | 'loose' | 'arrowHit' | 'knife' | 'ignite' | 'orcHit' | 'orcDeath' | 'bruteDeath' | 'bossRoar'
-  | 'wallThud' | 'wallCreak' | 'wallFall' | 'rallyHorn' | 'replant' | 'click' | 'bought' | 'denied';
+  | 'wallThud' | 'wallCreak' | 'wallFall' | 'rallyHorn' | 'replant' | 'click' | 'bought' | 'denied'
+  | 'fireArrow' | 'bounce' | 'shock' | 'stun' | 'frost' | 'shatter' | 'starfall';
 
 export const AMBIENT = 'ambient';
 
@@ -48,6 +49,14 @@ export const CUES: Record<Cue, { gain: number; gap: number; duck?: boolean }> = 
   click: { gain: 0.5, gap: 0.03 },
   bought: { gain: 0.7, gap: 0.05 },
   denied: { gain: 0.6, gap: 0.15 },
+  // Arrow enchantments (TB-089, ElevenLabs)
+  fireArrow: { gain: 0.5, gap: 0.2 },
+  bounce: { gain: 0.45, gap: 0.08 },
+  shock: { gain: 0.55, gap: 0.2 },
+  stun: { gain: 0.5, gap: 0.25 },
+  frost: { gain: 0.5, gap: 0.2 },
+  shatter: { gain: 0.6, gap: 0.12 },
+  starfall: { gain: 0.8, gap: 1 },
 };
 
 /** Pure mapping from one sim event to the cue it plays, or null. */
@@ -60,6 +69,13 @@ export function cueFor(e: SimEvent): Cue | null {
     case 'vanguardRallied': return 'rallyHorn';
     case 'vanguardHit': return 'orcHit';
     case 'bought': return 'bought';
+    case 'fireStrike': return 'fireArrow';
+    case 'bounceHit': return 'bounce';
+    case 'shock': return 'shock';
+    case 'stun': return 'stun';
+    case 'chill': return 'frost';
+    case 'shatter': return 'shatter';
+    case 'starfall': return 'starfall';
     case 'replant': return 'replant';
     default: return null;
   }
