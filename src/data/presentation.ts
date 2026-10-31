@@ -44,6 +44,11 @@ export const VFX = {
     /** Element look (each must read at a glance): tinted lob head radius and width, ground patch life, ice shards, flames/s per burning orc,
      *  lightning glow/core width and jag, Rebound orb radius and hop ring, Starfall streak width. */
     headR: 4, lobW: 3, patchLife: 1.2, shards: 8, shardLen: 1.3, shardLife: 0.5, flameRate: 45, boltGlow: 16, boltW: 5, boltJag: 14, orbR: 4, rimBlur: 6, hopRing: 14, starW: 2.5 },
+  /** Shaman fireball (TB-127, ART-STYLE §Shaman fireball VFX). In flight: ball radius, glow blur, ghost count, embers/s, ground shadow squash.
+   *  Cast: ember burst [count, speed] in a ±spread cone toward the target, flames at the staff tip. Strike: flash puff (× r) and its life, then
+   *  `puffs` rising fire puffs (× r, rise px/s, life), ground dust ring (× r) width/life, flame count, ember and fire bursts [count, speed] fountaining up within ±burstSpread
+   *  of straight up, burning ground patch life, screen shake. */
+  fireball: { r: 6, glow: 14, trail: 6, embers: 30, shadow: 0.4, cast: [8, 60], castSpread: 0.6, castFlames: 4, flash: 0.9, flashLife: 0.12, puffs: 7, puffR: 0.45, puffRise: 45, puffLife: 0.4, ring: 1.6, ringW: 2, ringLife: 0.4, flames: 24, burst: [20, 140], fireBurst: [10, 90], burstSpread: 1.1, patchLife: 1.4, shake: 0.08 },
   treantShake: 0.2, impactLife: 0.3, stormLife: 0.35, zoneFade: 0.6, zoneSquash: 0.45, textLife: 0.9, textRise: 28,
 } as const;
 

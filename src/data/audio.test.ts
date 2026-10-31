@@ -23,6 +23,11 @@ describe('audio cue map', () => {
     expect(cueFor({ t: 'ignite' })).toBe('ignite');
     expect(cueFor({ t: 'bossStart' })).toBe('bossRoar');
   });
+  it('maps the shaman fireball to its cast and hit cues without ducking (TB-127)', () => {
+    expect(cueFor({ t: 'fireballCast', x: 0, y: 0, tx: 1, ty: 1 })).toBe('fireballCast');
+    expect(cueFor({ t: 'fireballStrike', x: 0, y: 0, r: 24 })).toBe('fireballHit');
+    expect(CUES.fireballCast.duck).toBeUndefined();
+  });
   it('ducks only on big moments', () => {
     expect(Object.entries(CUES).filter(([, c]) => c.duck).map(([k]) => k).sort()).toEqual(['bossRoar', 'rallyHorn', 'replant', 'wallFall']);
   });

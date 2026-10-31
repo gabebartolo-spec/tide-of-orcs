@@ -1,5 +1,5 @@
 import { ARROWS, BARRICADE, FIELD, LOB, PLAYER, SOURCES, WAVE_LEN, waveHP, waveInterval, waveLoot, waveSpeedMult } from '../data/balance';
-import { ORC_KINDS, ORC_TYPES, OrcKind } from '../data/orcs';
+import { FIREBALL, ORC_KINDS, ORC_TYPES, OrcKind } from '../data/orcs';
 import { EventBus } from './events';
 import { Orc, Projectile, SimState, Wolf } from './state';
 import { MYTHIC_FX, SET_FX } from '../data/lootTables';
@@ -175,6 +175,13 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
 
   // projectiles
   s.shots.forEach((a: Projectile) => {
+    if (a.kind === 'fireball') {
+      // The shaman's fireball (TB-127): the lob's parabola on its own timings; lands as a strike event, no damage yet (TB-087).
+      a.t += dt; const u = Math.min(1, a.t / FIREBALL.flight);
+      a.x = a.sx + (a.tx - a.sx) * u; a.y = a.sy + (a.ty - a.sy) * u; a.h = FIREBALL.arc * 4 * u * (1 - u);
+      if (a.t >= FIREBALL.flight) { ev.push({ t: 'fireballStrike', x: a.tx, y: a.ty, r: a.r }); s.shots.release(a); }
+      return;
+    }
     if (a.kind === 'lob') {
       // Flies a parabola to its landing point, strikes, then strikes again pulseGap later per Longshaft rank.
       a.t += dt; const u = Math.min(1, a.t / LOB.flight);

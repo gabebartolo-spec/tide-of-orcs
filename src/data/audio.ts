@@ -4,7 +4,8 @@ import type { SimEvent } from '../sim/events';
 export type Cue =
   | 'loose' | 'arrowHit' | 'knife' | 'ignite' | 'orcHit' | 'orcDeath' | 'bruteDeath' | 'bossRoar'
   | 'wallThud' | 'wallCreak' | 'wallFall' | 'rallyHorn' | 'replant' | 'click' | 'bought' | 'denied'
-  | 'fireArrow' | 'bounce' | 'shock' | 'stun' | 'frost' | 'shatter' | 'starfall';
+  | 'fireArrow' | 'bounce' | 'shock' | 'stun' | 'frost' | 'shatter' | 'starfall'
+  | 'fireballCast' | 'fireballHit';
 
 export const AMBIENT = 'ambient';
 
@@ -57,6 +58,9 @@ export const CUES: Record<Cue, { gain: number; gap: number; duck?: boolean }> = 
   frost: { gain: 0.5, gap: 0.2 },
   shatter: { gain: 0.6, gap: 0.12 },
   starfall: { gain: 0.8, gap: 1 },
+  // Orc shaman fireball (TB-127, ElevenLabs): the whoosh-ignite as it leaves the staff, the blast where it lands
+  fireballCast: { gain: 0.55, gap: 0.2 },
+  fireballHit: { gain: 0.65, gap: 0.15 },
 };
 
 /** Pure mapping from one sim event to the cue it plays, or null. */
@@ -80,6 +84,8 @@ export function cueFor(e: SimEvent): Cue | null {
     case 'chill': return 'frost';
     case 'shatter': return 'shatter';
     case 'starfall': return 'starfall';
+    case 'fireballCast': return 'fireballCast';
+    case 'fireballStrike': return 'fireballHit';
     case 'replant': return 'replant';
     default: return null;
   }

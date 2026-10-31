@@ -390,3 +390,6 @@ Evidence: headless probe, greedy buys, crowd aim, seeds 1–3, 120 sim minutes e
 | C: wall hit on a gentler curve (×1.17 per wave, no ramp) | 44–60% / 270–300% / 490–760% | 3 | 57–59 | 9–23 |
 
 Proposal: A. Add `BARRICADE.maxHitFrac: 0.25`; `barricadeHit` takes `min(amount, maxHitFrac × barMax)`. The wall then always survives at least four swings, so Timber, Patient Hands and rallying keep mattering late, and pacing barely moves (best wave and run lengths within a wave and a minute of Current). B also works and is more forgiving (+1–2 waves). C is rejected: it still one-shots from wave 40 and shortens early runs. Early waves are unchanged by A and B (hits there are 1–3% of the wall).
+
+### P-127 · Shaman fireball flight (2026-11-01, TB-127; presentation only, damage waits on TB-087)
+`FIREBALL` in `src/data/orcs.ts`: flight 0.9 s, arc 55 px, strike radius 24 px, damage 0. The ball leaves the staff tip and lands where the shaman aimed when it cast; nothing takes damage yet. Chosen so the cast-sheet throw (35 frames at 15 fps, release about frame 18) reads as one motion with the lob, and so the strike circle matches the elf's own 24 px strike circle for a familiar read. Once TB-087 fixes shaman stats, damage, target choice (wall or vanguard) and cadence go here with sim output.
