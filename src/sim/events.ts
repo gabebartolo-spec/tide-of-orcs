@@ -21,8 +21,9 @@ export type SimEvent =
   | { t: 'starCloak'; x: number; y: number }
   | { t: 'stake'; x: number; y: number }
   | { t: 'splinter' }
-  /** The elf looses a lob, or a throwing knife leaves the hand (audio only). */
+  /** The elf looses a lob (`ignite` too when Fire Arrows is owned), or a throwing knife leaves the hand (audio only). */
   | { t: 'loose' }
+  | { t: 'ignite' }
   | { t: 'knife' }
   | { t: 'wave'; wave: number }
   | { t: 'bossReady' }

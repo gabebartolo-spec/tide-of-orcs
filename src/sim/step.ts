@@ -95,6 +95,7 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
     const home = st.homing ? nearestOrc(s, x, y, (o) => dist(o.x, o.y, x, y) < PLAYER.aimHomingRadius) : null;
     if (home) { x = home.x; y = home.y; }
     run.shotT[0] = 0; lob(s, ELF_X, H / 2, x, y); ev.push({ t: 'loose' });
+    if (st.fire) ev.push({ t: 'ignite' });
     run.lobN = (run.lobN ?? 0) + 1;
     if (st.starfall && run.lobN % ARROWS.starfall.every === 0) starfall(s, ev);
     // Pale Moon: each moon shot costs wall, but never takes it below the floor

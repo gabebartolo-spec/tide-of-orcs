@@ -20,6 +20,7 @@ describe('audio cue map', () => {
   it('maps the loose, the knife throw and the boss roar', () => {
     expect(cueFor({ t: 'loose' })).toBe('loose');
     expect(cueFor({ t: 'knife' })).toBe('knife');
+    expect(cueFor({ t: 'ignite' })).toBe('ignite');
     expect(cueFor({ t: 'bossStart' })).toBe('bossRoar');
   });
   it('ducks only on big moments', () => {
