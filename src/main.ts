@@ -53,7 +53,7 @@ function frame(now: number): void {
   if (field.ceremony.active) acc = 0;
   while (acc >= STEP) { game.tick(STEP); acc -= STEP; }
   const events = game.events.drain();
-  field.consume(events, game.state); panel.handleEvents(events); audio.consume(events);
+  game.noteEvents(events); field.consume(events, game.state); panel.handleEvents(events); audio.consume(events);
   if (!document.hidden) field.draw(game.state, dt, game.aim);
   treeWrap.classList.toggle('burning', field.ceremony.burning);
   hudT += dt; if (hudT > 0.15) { hudT = 0; panel.update(); tree.draw(game.state, game.state.t); } else if (tree.live) tree.draw(game.state, game.state.t);

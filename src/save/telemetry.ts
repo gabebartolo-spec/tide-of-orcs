@@ -38,5 +38,41 @@ export function appendTelemetry(rec: RunRecord, st: Store | null = store()): voi
 }
 
 /** The export file's contents. */
-export const telemetryJson = (runs: RunRecord[], build = import.meta.env.MODE): string =>
-  JSON.stringify({ game: 'tide-of-orcs', build, exportedAt: new Date().toISOString(), runs }, null, 2);
+/** Loot events (TB-107, loot plan §13): their own key, capped; `min` counts from the first one this browser logged (its own key, so the save schema is untouched). */
+export const LOOT_LOG_KEY = 'tide-of-orcs-loot-log';
+export const LOOT_START_KEY = 'tide-of-orcs-telemetry-start';
+export const LOOT_LOG_CAP = 5000;
+export type LootKind = 'drop' | 'equip' | 'salvage' | 'reroll' | 'set';
+
+export interface LootRecord {
+  kind: LootKind; wave: number; run: number; min: number;
+  rarity?: string; slot?: string; base?: string; set?: string; kept?: boolean; affix?: number; tiers?: number;
+}
+
+/** When this browser first logged loot, set on the first call. */
+export function lootStart(now: number, st: Store | null = store()): number {
+  try {
+    const v = Number(st?.getItem(LOOT_START_KEY));
+    if (v > 0) return v;
+    st?.setItem(LOOT_START_KEY, String(now));
+  } catch { /* no storage: count from now */ }
+  return now;
+}
+
+export function lootRecord(s: SimState, kind: LootKind, extra: Partial<LootRecord>, now: number, start: number): LootRecord {
+  return { kind, wave: s.run.wave, run: s.meta.prestiges + 1, min: Math.round(((now - start) / 60000) * 10) / 10, ...extra };
+}
+
+export function readLoot(st: Store | null = store()): LootRecord[] {
+  try { const v: unknown = JSON.parse(st?.getItem(LOOT_LOG_KEY) ?? '[]'); return Array.isArray(v) ? (v as LootRecord[]) : []; } catch { return []; }
+}
+
+export function appendLoot(recs: LootRecord[], st: Store | null = store()): void {
+  if (!recs.length) return;
+  const all = [...readLoot(st), ...recs].slice(-LOOT_LOG_CAP);
+  try { st?.setItem(LOOT_LOG_KEY, JSON.stringify(all)); } catch { /* storage full: drop it */ }
+}
+
+/** The export file's contents. */
+export const telemetryJson = (runs: RunRecord[], build = import.meta.env.MODE, loot: LootRecord[] = []): string =>
+  JSON.stringify({ game: 'tide-of-orcs', build, exportedAt: new Date().toISOString(), runs, loot }, null, 2);
