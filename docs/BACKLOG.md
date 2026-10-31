@@ -88,7 +88,7 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-071 | Balance pass #2 from tester data | balance | 070 | gabe | todo |
 | TB-072 | Perf verification on phone; profile and fix | perf | M4 | | dropped (mobile off roadmap, 31 Oct) |
 | TB-073 | Itch.io page copy, screenshots, HTML5 zip pipeline | release | — | gabe | todo |
-| TB-074 | Electron wrapper spike | release | 073 | claude | done (HASH) |
+| TB-074 | Electron wrapper spike | release | 073 | claude | done (0965ce2) |
 | TB-075 | Bug bash checklist run (`docs/QA-CHECKLIST.md`; run 1 hidden, run 2 visible, both 1 Nov) | qa | — | claude | done (c8e9264, run 2 in this PR) |
 | TB-076 | Move 6 colour literals in src/render (rgba/hex) into palette tokens (rule 6) | render | | claude | done c189562 |
 | TB-077 | Move inline tree multipliers in sim/stats.ts (1.25, 1.15, 1.2, 1.4 …) into data/balance (rule 3) | sim/data | | claude | done c189562 |
