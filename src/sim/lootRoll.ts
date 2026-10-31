@@ -33,16 +33,27 @@ export function rollRarity(rng: Rng, w: Record<Rarity, number>): Rarity {
   return [...RARITIES].reverse().find((r) => w[r] > 0) ?? 'rare';
 }
 
-/** No duplicate affixes; at most two arrow-typed, and they share one arrow type. */
+/** Affixes that may join `chosen`: no duplicates; at most two arrow-typed, and they share one arrow type. */
+const affixPool = (chosen: AffixDef[]): AffixDef[] => {
+  const arrows = chosen.filter((a) => a.arrow);
+  return AFFIXES.filter((a) => !chosen.includes(a) && (!a.arrow || (arrows.length < 2 && (!arrows[0] || arrows[0].arrow === a.arrow))));
+};
+const rollValue = (rng: Rng, a: AffixDef, ilvl: number): Item['affixes'][number] =>
+  ({ id: a.id, value: Math.round((a.min + (a.max - a.min) * rng.next()) * affixScale(ilvl) * 1e4) / 1e4 });
+
 export function rollAffixes(rng: Rng, n: number, ilvl: number): Item['affixes'] {
   const chosen: AffixDef[] = [];
-  while (chosen.length < n) {
-    const arrows = chosen.filter((a) => a.arrow);
-    const pool = AFFIXES.filter((a) => !chosen.includes(a) && (!a.arrow || (arrows.length < 2 && (!arrows[0] || arrows[0].arrow === a.arrow))));
-    chosen.push(pick(rng, pool));
-  }
-  const k = affixScale(ilvl);
-  return chosen.map((a) => ({ id: a.id, value: Math.round((a.min + (a.max - a.min) * rng.next()) * k * 1e4) / 1e4 }));
+  while (chosen.length < n) chosen.push(pick(rng, affixPool(chosen)));
+  return chosen.map((a) => rollValue(rng, a, ilvl));
+}
+
+/** Reroll (TB-102): a new affix for slot `i`, never the one it replaces, obeying the same rules as a drop. */
+export function rerollAffix(rng: Rng, it: Item, i: number): Item['affixes'][number] | null {
+  const old = it.affixes[i];
+  if (!old) return null;
+  const others = it.affixes.filter((_, k) => k !== i).map((a) => AFFIXES.find((d) => d.id === a.id)).filter((d): d is AffixDef => !!d);
+  const pool = affixPool(others).filter((a) => a.id !== old.id);
+  return pool.length ? rollValue(rng, pick(rng, pool), it.ilvl) : null;
 }
 
 /** Roll one kill. Returns an item or null; updates boss pity and the uid counter. */
