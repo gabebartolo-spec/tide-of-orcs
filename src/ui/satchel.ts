@@ -5,7 +5,8 @@ import { STR } from '../data/strings';
 import { GameController } from '../game';
 import { glyph } from './glyphs';
 import { itemScore, rerollCost, salvageGlimmer } from '../sim/loot';
-import { setCounts } from '../sim/gear';
+import { setCounts, setTiers } from '../sim/gear';
+import type { Cue } from '../data/audio';
 import { hwRank } from '../sim/heartwood';
 
 const $ = (id: string): HTMLElement => document.getElementById(id)!;
@@ -34,7 +35,7 @@ export class SatchelPane {
   selected: string | null = null;
   private sig = '';
 
-  constructor(private game: GameController) {
+  constructor(private game: GameController, private onCue: (c: Cue) => void = () => {}) {
     $('sat-title').textContent = STR.satchelTitle; $('sat-worn-k').textContent = STR.satchelWorn;
     const pick = (e: Event) => { const uid = (e.target as HTMLElement).closest<HTMLElement>('[data-uid]')?.dataset.uid; if (uid) { this.selected = uid; this.render(); } };
     $('sat-worn').onclick = pick; $('sat-grid').onclick = pick;
@@ -48,11 +49,12 @@ export class SatchelPane {
       const i = Number((e.target as HTMLElement).closest<HTMLElement>('[data-i]')?.dataset.i);
       let flash: (() => Element | null | undefined) | null = null;
       // TB-105: the worn card flashes its rarity, the counter flashes on salvage, a rerolled line shimmers in
-      if (act === 'equip' && this.game.equipItem(uid)) flash = () => $('sat-worn').querySelector(`[data-uid="${uid}"]`);
+      const tiers = setTiers(this.loot, this.game.state.stats.setBoost);
+      if (act === 'equip' && this.game.equipItem(uid)) { flash = () => $('sat-worn').querySelector(`[data-uid="${uid}"]`); this.onCue(setTiers(this.loot, this.game.state.stats.setBoost) > tiers ? 'setRise' : 'equip'); }
       else if (act === 'lock') this.game.lockItem(uid);
       else if (act === 'heirloom') this.game.heirloomItem(uid);
-      else if (act === 'reroll' && this.game.rerollItem(uid, i)) flash = () => $('sat-detail').querySelectorAll('.affixes li')[i];
-      else if (act === 'salvage' && this.game.salvageItem(uid)) { this.selected = null; flash = () => $('sat-count'); }
+      else if (act === 'reroll' && this.game.rerollItem(uid, i)) { flash = () => $('sat-detail').querySelectorAll('.affixes li')[i]; this.onCue('reroll'); }
+      else if (act === 'salvage' && this.game.salvageItem(uid)) { this.selected = null; flash = () => $('sat-count'); this.onCue('salvage'); }
       this.render();
       const el = flash?.();
       if (el) { el.classList.remove('flash'); void (el as HTMLElement).offsetWidth; el.classList.add('flash'); }

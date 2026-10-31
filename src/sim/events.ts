@@ -38,6 +38,9 @@ export type SimEvent =
   | { t: 'chill'; x: number; y: number; r: number }
   | { t: 'shatter'; x: number; y: number; r: number }
   | { t: 'starfall' }
+  /** Orc shaman (TB-127): a fireball leaves the staff at (x, y) for (tx, ty); it lands with strike radius r. Render and audio only until TB-087 gives it damage. */
+  | { t: 'fireballCast'; x: number; y: number; tx: number; ty: number }
+  | { t: 'fireballStrike'; x: number; y: number; r: number }
   | { t: 'hawkDive'; x: number; y: number }
   | { t: 'treantStamp'; x: number; y: number }
   | { t: 'bite'; x: number; y: number }

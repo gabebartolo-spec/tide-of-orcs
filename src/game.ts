@@ -10,6 +10,7 @@ import { SimState, createState, freshMeta, freshRun, recompute } from './sim/sta
 import { Inputs, step } from './sim/step';
 import { buy } from './sim/tree';
 import { summonBoss } from './sim/boss';
+import { castFireball } from './sim/combat';
 import { buyHw } from './sim/heartwood';
 import { HwId } from './data/heartwood';
 import { rally } from './sim/vanguard';
@@ -77,6 +78,8 @@ export class GameController {
   lockItem(uid: string): boolean { const ok = toggleLock(this.state.meta.loot, uid); if (ok) this.save(); return ok; }
   setLootFilter(r: Rarity): boolean { const ok = setFilter(this.state.meta.loot, r); if (ok) this.save(); return ok; }
   summonBoss(): boolean { return summonBoss(this.state, this.events); }
+  /** Preview intent (TB-127): loose the shaman's fireball from (sx, sy) onto (tx, ty). The shaman itself casts it once TB-087 lands. */
+  castFireball(sx: number, sy: number, tx: number, ty: number): void { castFireball(this.state, this.events, sx, sy, tx, ty); }
   canReplant(): boolean { return canReplant(this.state); }
   replant(): number { const rec = runRecord(this.state, gain(this.state)); const hw = replant(this.state, this.events); appendTelemetry({ ...rec, heartwoodGained: hw, heartwoodTotal: this.state.meta.heartwood }); this.save(); return hw; }
   /** Finished-run records as an export file (TB-070). */

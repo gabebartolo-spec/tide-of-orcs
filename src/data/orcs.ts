@@ -13,5 +13,9 @@ export const ORC_TYPES: Readonly<Record<OrcKind, OrcType>> = {
   boss: { kind: 'boss', hp: 28, speed: 26, loot: 30, radius: 24, every: 0 }, // marches only in a boss wave
 };
 
+/** The orc shaman's ranged fireball (TB-127, GDD §4): seconds aloft, arc height (units) and strike radius.
+ *  Damage, cast cadence and the shaman's own stats come with its wave design (TB-087). */
+export const FIREBALL = { flight: 0.9, arc: 55, radius: 24 } as const;
+
 /** Per rank of a kind's two nodes: Fury (health and starlight) and Swarm (spawn rate). */
 export const FOE_FX = { hp: 1.3, loot: 1.4, spawn: 1.2 } as const;
