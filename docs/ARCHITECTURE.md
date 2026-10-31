@@ -113,7 +113,7 @@ The seed lives only inside `rng`; the save version lives in the save, not in Sim
 - History: v1→v2 (TB-028) drops retired node ids (`RETIRED_NODE_IDS`), fixture `src/save/fixtures/v1.ts`; v2→v3 (TB-080) retires Blood Banners and splits the spawn clock per orc kind; v3→v4 (TB-081) retires the Warboss nodes for boss waves; v4→v5 (TB-052) adds `run.earned`; v5→v6 (TB-055) adds `meta.hwLevels` (empty).
 - `migrate.ts` runs `while (save.version < CURRENT) save = migrations[save.version](save)` and throws on a save newer than the build. Every schema bump adds a migration and a test (`src/save/save.test.ts`) with a save of the previous version (the v1 fixture file, or inline for v2–v5).
 - Export: `btoa` of the UTF-8 JSON, shown in the Settings textarea for the player to copy. Import: decode, `JSON.parse`, `migrate()`, then replace state. There is no separate schema validation beyond `migrate`.
-- Telemetry (TB-070) is a separate localStorage key (`tide-of-orcs-telemetry`, last 500 runs), written on replant, downloaded from Settings.
+- Telemetry (TB-070) is a separate localStorage key (`tide-of-orcs-telemetry`, last 500 runs), written on replant, downloaded from Settings. Loot events (TB-107: drop, equip, salvage, reroll, set tier) go to `tide-of-orcs-loot-log` (last 5000), buffered by `GameController` and flushed on every save; `min` counts from `tide-of-orcs-telemetry-start`, set on the first event. The export carries `runs` and `loot`.
 
 ## Rendering
 - One `<canvas>` for the field, one for the tree. `devicePixelRatio` capped at 2.
