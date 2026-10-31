@@ -62,7 +62,7 @@ describe('mythic powers (TB-100)', () => {
   });
 
   it('Pale Moon: faster draw with the Moonbow, each shot costs wall but never below the floor', () => {
-    const base = createState(1, { ...freshRun(), levels: { root: 1, moon: 1 } }), s = wearing('pale-moon', { moon: 1 }), ev = new EventBus();
+    const base = createState(1, { ...freshRun(), levels: { root: 1, moon: 1 } }), s = wearing('pale-moon', { moon: 1, moonchance: 5 }), ev = new EventBus();
     expect(s.stats.lobCd).toBeCloseTo(base.stats.lobCd * MYTHIC_FX.moonDraw);
     s.run.shotT[0] = 99; const hp = s.run.barHp; step(s, 0, aim(700, 300), ev);
     expect(s.run.barHp).toBeCloseTo(hp - s.stats.barMax * MYTHIC_FX.moonCost);
