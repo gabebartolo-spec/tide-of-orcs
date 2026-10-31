@@ -17,6 +17,7 @@ ANIMS = {
     "van.blade.attack": (15, False, "van.blade.attack", 3.0),
     "orc.berserker": (30, True, "orc.berserker", 2.4),
     "orc.berserker.attack": (15, True, "orc.berserker", 2.4),
+    "orc.drummer": (30, True, "orc.drummer", 2.4),  # walk only (drumming dropped by the director)
     "orc.shaman": (30, True, "orc.shaman", 2.4),
     "orc.shaman.attack": (15, True, "orc.shaman", 2.4),
     "orc.runner": (30, True, "orc.runner", 2.4),
