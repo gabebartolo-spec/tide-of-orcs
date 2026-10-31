@@ -98,7 +98,7 @@ Reruns the checks run 1 could not see. Pane 833×546 CSS px at DPR 3, 120 Hz dis
 | B1, E1 | pass | Toasts seen: "Quick Draw joins the grove", "Muster joins the grove", "Spearman takes the field" |
 | B3 | pass | 104 nodes, all positioned; closest pair 52.2 px apart against a hit radius of 20 |
 | B4 | pass | Opens near Waking (camera 282, 558, zoom 1) with Sharpened Tips selected; drag and wheel handlers bound |
-| B5 | fail | The tree canvas has no tabindex and no key handler; Tab skips from the rally button to the tabs. TB-116 |
+| B5 | fail, fixed by TB-116 | The tree canvas had no tabindex and no key handler. Since TB-116: Tab enters the tree, steps node by node branch by branch, Enter learns, Tab past the last node leaves it |
 | C2 | pass | Overlay seen: wave, slain, minutes, starlight per minute, best wave, items, +1 Heartwood, one button; rally disabled; Replant by a real click |
 | I3 | pass: 5 min soak, 23,576 ticks (393 sim s), 158 buys, 9 bosses, 3 rallies, a fall and replant, waves up to 27; 0 errors, rejections or warnings |
 | J1 | pass on this PC | rAF with 160 orcs and the wall held: 463 visible frames, median 8.3 ms, p95 8.4 ms (display-capped at 120 Hz), no long tasks. Timing `tick` + `draw` back to back: tick p95 0.1 ms, draw median 0.6 ms with a ~40 ms stall every ~11 frames, which only appears when frames are drawn without presenting (GPU queue backpressure), never in the rAF run. Not tested on a mid-range PC |

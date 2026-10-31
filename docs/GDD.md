@@ -130,7 +130,7 @@ All companion damage scales with Kinship (×1.2/rank) and Heartwood. Kinship als
 ## 13. Accessibility
 - Reduced motion: no screen shake, no bob, no pulse; replant ceremony becomes a 300 ms cross-fade.
 - Colour never carries meaning alone: orc types differ in size and marking; the wall shows splinters as well as a colour shift; node states use fill + ring + text.
-- Everything in the panel is keyboard reachable; tree nodes focusable in tab order by branch (TB-064).
+- Everything in the panel is keyboard reachable; tree nodes focusable in tab order by branch (TB-064, TB-116): the tree canvas is one tab stop, Tab and Shift+Tab step through the nodes (the root, then each branch in legend order, parents before children) and leave the tree past either end, Enter or Space learns the selected node, and a dashed ring marks it while focus came from the keyboard.
 
 ## 14. Divergences from the prototype
 `docs/prototype.html` is frozen as the original concept. These mechanics have deliberately changed since; the docs and code win over the prototype.
