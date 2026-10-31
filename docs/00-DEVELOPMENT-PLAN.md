@@ -109,7 +109,7 @@ Orcs drop gear; six worn slots, a satchel, affixes, sets and mythic powers feed 
 - Balance pass #2 with telemetry from testers (TB-071; local JSON export, no server; export built).
 - Save import/export (done in TB-065), version migration test suite.
 - Itch.io page and web build (TB-073), Electron wrapper spike for Steam (TB-074).
-- Bug bash (TB-075), performance budget verified in a desktop browser.
+- Bug bash (TB-075, `docs/QA-CHECKLIST.md`), performance budget verified in a desktop browser.
 
 Mobile is out of the roadmap (director, 31 Oct): the web build ships for PC first; a mobile port comes after it is perfect on PC. TB-064/TB-078 layout work stays in the code.
 **Done when:** build is public on itch.
