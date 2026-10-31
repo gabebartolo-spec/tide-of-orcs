@@ -20,6 +20,11 @@ $jobs = @(
       ARMSET = "Left:18.6,-15.6"; ELBOWSET = "Left:37"; ARMTWIST = "Left:17.1,22.7" } },
   @{ key = "van.spear.attack"; m = "$a\elf_spearman\spearman_2h_g0.08.blend"; c = "$mx\Bayonet Stab AS100.fbx"; ortho = "2.6"; fr = (& $even 99); env = @{  # attack_spearman.ps1 (v1)
       RMATCH = "RightShoulder,RightArm,RightForeArm,RightHand,LeftShoulder,LeftArm,LeftForeArm,LeftHand"; INPLACE = "1"; ALIGN = "Left:-0.607,-0.5,0.618;Right:0.012,-0.004,1.0"; GRIP2 = "1" } },
+  @{ key = "orc.berserker"; m = "$a\berserker\berserker_split.blend"; c = "$mx\Orc Walk.fbx"; ortho = "2.0"; fr = (0..35 -join ","); env = @{  # walk_berserker.ps1 (v1)
+      RMATCH = "LeftShoulder,LeftArm,LeftForeArm,LeftHand,RightShoulder,RightArm,RightForeArm,RightHand"; INPLACE = "1"; GRIP2 = "1"
+      WOFFS = "mixamorig:LeftHand:0,0,1,90;mixamorig:RightHand:0,0,1,-90;mixamorig:LeftHand:1,0,0,-20;mixamorig:RightHand:1,0,0,-20" } },
+  @{ key = "orc.berserker.attack"; m = "$a\berserker\berserker_split.blend"; c = "$mx\Standing Melee Attack Downward AS100.fbx"; ortho = "2.0"; fr = (& $even 69); env = @{  # attack_berserker.ps1 (v1)
+      RMATCH = "LeftShoulder,LeftArm,LeftForeArm,LeftHand,RightShoulder,RightArm,RightForeArm,RightHand"; INPLACE = "1"; GRIP2 = "1" } },
   @{ key = "van.blade.attack"; m = "$a\elf_bladedancer\bladedancer_dagger.blend"; c = "$mx\Dual Weapon Combo AS100.fbx"; ortho = "2.6"; fr = (& $even 110); env = @{ DIRECT = "1"; INPLACE = "1" } }  # SKILL.md bladedancer attack v1
 )
 $anc = @{}; $af = "$o\anchors.json"; if (Test-Path $af) { (Get-Content $af | ConvertFrom-Json).PSObject.Properties | ForEach-Object { $anc[$_.Name] = $_.Value } }
@@ -30,7 +35,7 @@ foreach ($j in $jobs) {
   $env:GAMECAM = "20"; $env:CAMROT = "0"; $env:ORTHO = $j.ortho; $env:RES = "512"; $env:ANCHOR = "1"; $env:FR = $j.fr
   $out = & $bl -b --factory-startup --python "$s\apply_anim.py" -- $j.m $j.c "$o\$($j.key)" 2>&1 | Select-String "^ANCHOR|Error"
   "$($j.key) $out"
-  $m = $out | Select-String "^ANCHOR (\S+) (\S+)" | Select-Object -First 1
+  $m = $out | ForEach-Object { "$_" } | Select-String "^ANCHOR (\S+) (\S+)" | Select-Object -First 1  # stringify: a MatchInfo piped into Select-String passes through unmatched (empty groups -> 0,0 anchors)
   if ($m) { $anc[$j.key] = @([double]$m.Matches[0].Groups[1].Value, [double]$m.Matches[0].Groups[2].Value, [double]$j.ortho) }
 }
 $anc | ConvertTo-Json | Set-Content -Encoding utf8 $af
