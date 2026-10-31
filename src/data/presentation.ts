@@ -46,3 +46,20 @@ export const VFX = {
     headR: 4, lobW: 3, patchLife: 1.2, shards: 8, shardLen: 1.3, shardLife: 0.5, flameRate: 45, boltGlow: 16, boltW: 5, boltJag: 14, orbR: 4, rimBlur: 6, hopRing: 14, starW: 2.5 },
   treantShake: 0.2, impactLife: 0.3, stormLife: 0.35, textLife: 0.9, textRise: 28,
 } as const;
+
+/** Field ground (TB-098, ART-STYLE §Ground). Seeded layout painted once to an offscreen canvas; field units. Ranges are [min, max]. */
+export const GROUND = {
+  seed: 0x6a7e31,
+  /** Keep-clear strip in front of the wall (units). */
+  wallGap: 22,
+  /** Lusher, darker grass drifts: count, blobs per drift, blob radius, y squash, blob scatter. */
+  lush: { n: 11, blobs: [4, 7], r: [14, 30], squash: 0.45, spread: 34 },
+  /** Worn dry-grass patches with a barren earth core: count, blobs, radius, squash, scatter; bare core blobs and their scale. */
+  worn: { n: 6, blobs: [5, 8], r: [18, 34], squash: 0.42, spread: 34, bare: [3, 5], bareScale: 0.5 },
+  /** Soft-edge passes per blob (each at `alpha`, radius stepping down by `step`). */
+  soft: { passes: 4, alpha: 0.3, step: 0.15 },
+  /** Grass tufts: clusters, tufts per cluster, scatter; loose singles; blades per tuft, blade height, lean (rad), stroke width. */
+  tufts: { clusters: 26, per: [3, 6], spread: 18, singles: 40, blades: [4, 7], h: [6, 12], lean: 0.6, width: 1.4 },
+  /** Small rocks: count (half sit on worn patches), radius, y squash, pebbles beside each, pebble radius. */
+  rocks: { n: 18, r: [2.6, 5.5], squash: 0.62, pebbles: [0, 3], pebbleR: [1, 1.8] },
+} as const;
