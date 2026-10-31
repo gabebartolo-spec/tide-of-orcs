@@ -115,6 +115,10 @@ Each enchanted arrow must be told apart at a glance, by colour and by shape, and
 
 Burning and chilled orcs are tinted on their own body, never with a shape laid over them: sprites tint only the frame's own pixels (`Sprites.draw` tint, `source-atop` on a scratch canvas) plus a `drop-shadow` rim of `rimBlur` 6; vector orcs fill their body shape again in the tint. Shading stays visible under the colour. The lob takes the colour of the first enchantment owned (fire, frost, shock, Rebound, in that order).
 
+## Loot VFX (TB-105)
+
+Numbers in `LOOT_VFX` (`src/data/presentation.ts`), colours per rarity: common cream, rare spear blue, epic lilac, legendary star gold, mythic rose. Common drops glint; rarer drops stand a light column fading over its life (1 / 1.5 / 2 / 3 s), epic with motes spiralling up, legendary and mythic with a lit ground ellipse and ring. Mythic holds the field 0.5 s, runs it at 0.6x for 0.5 s and flickers a rose screen edge. Equipping glows the bow 1 s in the item colour and flashes the worn card; a new set tier rings the elf with leaves for 2 s. Reduced motion keeps beams, glows and colour flashes and drops motes, pulse, spin, the edge and slow-motion.
+
 ## Asset pipeline (tools Gabe has: Tripo, Cascadeur, ElevenLabs)
 Vector draws stay the baseline so the game is always playable without assets. M4 may upgrade actors to **pre-rendered sprite sheets** on top of the same palette:
 - **Tripo** generates the 3D models (orc grunt/runner/brute/warboss, elf, spearman, bladedancer, wolf, hawk, treant). Prompt with the palette hexes and "soft low-poly toy-board, flat shading, no outlines". One model per actor; variants by tint in-engine, not by new models.

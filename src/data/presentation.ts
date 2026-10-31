@@ -63,3 +63,13 @@ export const GROUND = {
   /** Small rocks: count (half sit on worn patches), radius, y squash, pebbles beside each, pebble radius. */
   rocks: { n: 18, r: [2.6, 5.5], squash: 0.62, pebbles: [0, 3], pebbleR: [1, 1.8] },
 } as const;
+
+/** Loot moments (TB-105, plan §11). Lives in seconds, sizes in field units.
+ *  beam: how long each rarity's light column stands; common only glints. motes: burst on the drop. foot: beam base below the corpse centre.
+ *  mythic: hold (sim frozen), then slow (sim at slowScale), then the screen-edge shimmer's life. Reduced motion keeps beams, glows and rings but drops motes, pulse, spin and slow-motion. */
+export const LOOT_VFX = {
+  glint: [4, 60], beam: { rare: 1, epic: 1.5, legendary: 2, mythic: 3 }, motes: { rare: 2, epic: 8, legendary: 14, mythic: 22 }, moteSpeed: 90,
+  foot: 10, beamH: 110, beamW: 8, beamAlpha: 0.7, pulse: 9, spiral: 6, spin: 5, rise: 60, ringR: 34, groundAlpha: 0.25,
+  mythic: { hold: 0.5, slow: 0.5, slowScale: 0.6, edge: 1.5, edgeW: 14, flicker: 20 },
+  equip: 1, equipW: 4, leafLife: 2, leafN: 10, leafR: 30, leafSpin: 1.6,
+} as const;

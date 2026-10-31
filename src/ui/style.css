@@ -112,3 +112,10 @@ header h1 em { color: var(--amber); font-style: italic; }
 .set .tier { color: var(--cream-dim); opacity: .55; font-size: 12px; line-height: 1.35; }
 .set .tier.on { color: var(--amber); opacity: 1; }
 .fallen .best { color: var(--rar); font-weight: 700; }
+/* Loot moments (TB-105): colour fades only, so they stay under reduced motion */
+@keyframes rar-flash { from { box-shadow: 0 0 0 2px var(--rar), 0 0 14px var(--rar); } }
+.item.flash { animation: rar-flash 0.9s ease-out; }
+@keyframes count-flash { from { color: var(--amber); } }
+#sat-count.flash { animation: count-flash 0.8s ease-out; }
+@keyframes line-in { from { opacity: 0.15; color: var(--amber); } }
+.affixes li.flash { animation: line-in 0.6s ease-out; }

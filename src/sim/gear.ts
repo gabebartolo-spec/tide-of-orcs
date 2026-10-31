@@ -45,6 +45,13 @@ export function applyGear(st: Stats, l: LootMeta): Stats {
 }
 
 /** Pieces worn per set, for the satchel's set panel. */
+/** Set-bonus tiers earned across every worn set (2, 4 and 6 pieces each count one), Set Resonance included; the renderer rings the elf when it rises (TB-105). */
+export function setTiers(l: LootMeta, boost = 0): number {
+  let t = 0;
+  for (const n of Object.values(setCounts(l))) for (const k of [2, 4, 6]) if (n + boost >= k) t++;
+  return t;
+}
+
 export function setCounts(l: LootMeta): Record<string, number> {
   const n: Record<string, number> = {};
   for (const it of equippedItems(l)) if (it.set) n[it.set] = (n[it.set] ?? 0) + 1;
