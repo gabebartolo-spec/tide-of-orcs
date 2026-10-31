@@ -79,10 +79,10 @@ Every attack reads in three beats: **wind-up** (the actor draws back, derived fr
 
 | Unit | Wind-up | Release | Impact |
 |---|---|---|---|
-| Grunt / runner | Leans back up to 0.2 r over the last 40% of its 1 s swing | Cream crescent swipe in front, 0.15 s (runner's is smaller) | On the wall: 3 timber chips (as before) + 2 cream chips. On a vanguard: wine blood spray |
-| Brute | Same lean, 0.3 r | Wider, thicker crescent | Wall: 5 timber chips + small shake bump; vanguard: heavier spray |
-| Elite (Blackguard) | Same lean | Two crossed crescents (X) | As grunt, more spray |
-| Warboss | Rises 0.25 r (overhead) | Downward slam: cream shock ring on the ground, radius 1.6 r | 8 timber chips + shake bump on the wall |
+| Grunt / runner | Leans back up to 0.4 r over the last 40% of its 1 s swing | Cream crescent swipe in front, 0.15 s (runner's is smaller) | On the wall: 3 timber chips + 2 cream chips thrown up and back over the wall. On a vanguard: wine blood spray |
+| Brute | Same lean, 0.5 r | Wider, thicker crescent | Wall: 5 timber chips + small shake bump; vanguard: heavier spray |
+| Elite (Blackguard) | Same lean | Double crescent (second one 1.35× wider) | As grunt, more spray |
+| Warboss | Rises 0.35 r (overhead) | Downward slam: cream shock ring on the ground, radius 1.6 r | 8 timber chips + shake bump on the wall |
 | Elf (strike circle) | Bowstring pulls back with the draw ring (up to 5 px) | Lob carries a 3-ghost fading trail along its arc | Existing cream ring + 6 cream chips, a dust ring on the ground, rust blood on every orc struck |
 | Ranger / warden, knives, ballista | — | Fading trail behind each shaft (arrow 3 ghosts, bolt 4, knife 2) | Cream chips + blood on the orc hit |
 | Spearman | Spear draws back up to 6 px over the cooldown | Cream thrust streak out to its reach, 0.12 s | Blood spray on the orc, small cream chip |

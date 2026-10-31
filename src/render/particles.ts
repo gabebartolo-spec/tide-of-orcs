@@ -26,10 +26,11 @@ export class Particles {
   /** Live counts, for the pool test. */
   get counts(): { parts: number; strokes: number; texts: number } { return { parts: this.np, strokes: this.ns, texts: this.nt }; }
 
-  burst(x: number, y: number, c: string, n: number, sp: number): void {
+  /** Squares from (x, y): all round, or within ±spread of angle `ang` when spread > 0. */
+  burst(x: number, y: number, c: string, n: number, sp: number, ang = 0, spread = 0): void {
     const B = VFX.burst;
     for (let i = 0; i < n && this.np < this.parts.length; i++) {
-      const p = this.parts[this.np++]!, a = Math.random() * 6.28, v = sp * (0.3 + Math.random());
+      const p = this.parts[this.np++]!, a = spread > 0 ? ang + (Math.random() * 2 - 1) * spread : Math.random() * 6.28, v = sp * (0.3 + Math.random());
       p.x = x; p.y = y; p.vx = Math.cos(a) * v; p.vy = Math.sin(a) * v; p.life = B.life + Math.random() * B.lifeJitter; p.c = c; p.r = B.size + Math.random() * B.sizeJitter; p.ground = 0; p.g = 0; p.splat = 0;
     }
   }

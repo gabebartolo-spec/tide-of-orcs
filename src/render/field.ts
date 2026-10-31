@@ -83,13 +83,13 @@ export class FieldRenderer {
     const fx = this.fx, S = VFX.orcSwipe, Wh = VFX.wallHit, ang = Math.atan2(ty - y, tx - x), wall = tx === BAR_X + BAR_W;
     if (kind === 'boss') fx.ring(x - r * 0.6, y + footOf(r), r * S.slam, P.cream, S.widthBrute, S.slamLife);
     else {
-      const rr = r * S.r * (kind === 'runner' ? S.runner : 1), w = kind === 'brute' ? S.widthBrute : S.width, tilt = kind === 'elite' ? 0.35 : 0;
-      fx.arc(x, y, rr, ang - tilt, S.half, P.cream, P.cream, w, S.life);
-      if (tilt) fx.arc(x, y, rr, ang + tilt, S.half, P.cream, P.cream, w, S.life);
+      const rr = r * S.r * (kind === 'runner' ? S.runner : 1), w = kind === 'brute' ? S.widthBrute : S.width, elite = kind === 'elite';
+      fx.arc(x, y, rr, ang, S.half, P.cream, P.cream, w, S.life);
+      if (elite) fx.arc(x, y, rr * S.elite, ang, S.half, P.cream, P.cream, w, S.life);
     }
     if (!wall) return;
     const chips = kind === 'boss' ? Wh.chipsBoss : kind === 'brute' ? Wh.chipsBrute : Wh.chips;
-    fx.burst(tx, ty, P.timber, chips, Wh.speed); fx.burst(tx, ty, P.cream, Wh.cream, Wh.speed);
+    fx.burst(tx, ty, P.timber, chips, Wh.speed, Wh.chipAng, Wh.chipSpread); fx.burst(tx, ty, P.cream, Wh.cream, Wh.speed, Wh.chipAng, Wh.chipSpread);
     if (!this.reducedMotion) this.shake = Math.min(1, this.shake + (kind === 'boss' ? Wh.shakeBoss : kind === 'brute' ? Wh.shakeBrute : 0));
   }
 

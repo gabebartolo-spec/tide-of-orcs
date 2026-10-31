@@ -22,11 +22,11 @@ export const VFX = {
   /** Blood droplets: fly up then fall onto the ground plane and leave a splat. */
   blood: { hit: 4, kill: 10, vanHit: 4, vanFell: 10, speed: 70, lift: 60, gravity: 420, size: 2, drop: 6, splatLife: 6, splatAlpha: 0.55, dropSplat: 1.6, killSplat: 0.8, vanSplat: 9 },
   /** Orc wind-up: lean back over the last `from` fraction of the swing, `lean` × r (brute/boss own values). */
-  orcWind: { from: 0.6, lean: 0.2, leanBrute: 0.3, liftBoss: 0.25 },
+  orcWind: { from: 0.6, lean: 0.4, leanBrute: 0.5, liftBoss: 0.35 },
   /** Orc release: crescent swipe radius × r, arc half-width (rad), life; runner scale; boss slam ring × r. */
-  orcSwipe: { r: 1.1, half: 0.9, life: 0.15, width: 2, widthBrute: 3.5, runner: 0.75, slam: 1.6, slamLife: 0.3 },
-  /** Wall impact: timber chips per kind, cream chips, chip speed, shake bump (brute, boss). */
-  wallHit: { chips: 3, chipsBrute: 5, chipsBoss: 8, cream: 2, speed: 60, shakeBrute: 0.08, shakeBoss: 0.2 },
+  orcSwipe: { r: 1.1, half: 0.9, life: 0.15, width: 2, widthBrute: 3.5, runner: 0.75, elite: 1.35, slam: 1.6, slamLife: 0.3 },
+  /** Wall impact: timber chips per kind, cream chips, chip speed, spray angle (rad, up and back over the wall) ± spread, shake bump (brute, boss). */
+  wallHit: { chips: 3, chipsBrute: 5, chipsBoss: 8, cream: 2, speed: 60, chipAng: -2.2, chipSpread: 0.6, shakeBrute: 0.08, shakeBoss: 0.2 },
   /** Vanguard: spear draw-back (px), thrust streak life/width, blade fold (rad), slash radius/half-arc/life. */
   spear: { draw: 6, life: 0.12, width: 2.5 },
   blade: { fold: 0.5, r: 26, half: 0.8, life: 0.15, width: 2.5 },
