@@ -104,7 +104,7 @@ Orcs drop gear; six worn slots, a satchel, affixes, sets and mythic powers feed 
 - L0 data and rolls TB-090–093 (PR #12). L1 drops and satchel TB-094–096 (PRs #13, #14, #16). L2 glyph icons TB-097 (PR #18).
 - L3 set engine TB-099 (PR #21) and mythic powers TB-100 (PR #22); save v8 keeps once-per-run gear state TB-110 (PR #23).
 - L4 Spoils branch and Heartwood loot lines TB-101 (PR #25, save v9). L5 Glimmer reroll TB-102 (PR #29). L6 loot line in the run summary TB-103 (PR #30). L8 loot VFX TB-105 (PR #34). L9 loot telemetry TB-107 (PR #36).
-- Open: TB-114, affixes for features the player does not own roll and do nothing; reroll, gate or label them is the director's call.
+- TB-114: affixes for features the player does not own no longer roll (director: gate them, 1 Nov).
 **Done when:** drops, sets and mythics all work in game. *(Met; numbers wait on the director.)*
 
 ### M4.7 — Tree and voice (1 Nov) · **done except TB-112, TB-117**
