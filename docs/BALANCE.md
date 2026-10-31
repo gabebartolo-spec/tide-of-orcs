@@ -19,6 +19,7 @@ atk         = 0.025 × maxhp                  per swing, one swing per second, v
 wall hit    = min(10 × atk, 0.25 × barMax)    per swing vs the barricade (TB-080: bare run falls at wave 3–4, ~90 s; cap P-125, TB-125)
 ```
 Type multipliers and unlocks in GDD §4. Per kind: Fury ×1.3^r health, ×1.4^r starlight; Swarm ×1.2^r spawn rate (grunts: War Drums, Call the Horde). Live orc cap 160.
+Crowd control (TB-126, P-126): a stun or root is never topped up or lengthened while it holds; a fresh one lands only once the orc has broken free (`stunOrc`, `rootOrc`). Pins and slows are unchanged.
 
 ### The elf's lob (TB-079)
 ```
@@ -351,7 +352,7 @@ Evidence: `npm run balance -- --minutes 1500 --seed N --quiet --tune …` (25 si
 
 Read: G sets land at 7–12 h (C: 3.6 h; C with every 60 on seeds 1–3: 3.6–6.9 h), about 20–30% slower than C. Mythic stays luck-bound at 0.8% per boss; two of four seeds beat the 15 h floor, pity caps it at boss 25 (~13 h at this boss rate). First rare in run 1 misses at any weight: run 1 falls at wave 5 in 1.6 min.
 Gear power: worn vs bare best wave +5 to +8 (seed 1, 25 h). Late orc HP grows ~30% per wave, so +60–90% power ≈ +2–3 waves and "+10 waves" ≈ ×14 power: the two targets disagree. Director (1 Nov) picked +60–90% power. The runner's play-on trial (end state, worn vs bare) gives −5 to +7 waves by seed, too noisy to tune on.
-Found: past wave ~117 combat stops (0 kills/min, wall 100%, waves tick to 463 on seed 3 at bosses every 60); TB-126.
+Found: past wave ~117 combat stopped (0 kills/min, wall 100%, waves ticked to 463 on seed 3 at bosses every 60); fixed by TB-126 (P-126).
 
 ### P-108b · Gear power: affix gain 0.75 (2026-11-01, TB-108) · applied
 Director (1 Nov): target +60–90% gear power (about +2–3 waves); "Yes, tune down"; approved "Yes, apply" (1 Nov). Applied: `AFFIX.gain` 1 → 0.75 (lootTables.ts), so every affix rolls at 75% of today's value. Sets and mythics unchanged.
@@ -390,3 +391,16 @@ Evidence: headless probe, greedy buys, crowd aim, seeds 1–3, 120 sim minutes e
 | C: wall hit on a gentler curve (×1.17 per wave, no ramp) | 44–60% / 270–300% / 490–760% | 3 | 57–59 | 9–23 |
 
 Proposal: A. Add `BARRICADE.maxHitFrac: 0.25`; `barricadeHit` takes `min(amount, maxHitFrac × barMax)`. The wall then always survives at least four swings, so Timber, Patient Hands and rallying keep mattering late, and pacing barely moves (best wave and run lengths within a wave and a minute of Current). B also works and is more forgiving (+1–2 waves). C is rejected: it still one-shots from wave 40 and shortens early runs. Early waves are unchanged by A and B (hits there are 1–3% of the wall).
+
+### P-126 · Crowd control froze the field at the orc cap (2026-11-01, TB-126; director chose no re-stun, now in Current)
+Cause, from a state dump at wave 110 (seed 3, bosses every 60, legendary and mythic weights raised): all 160 live orcs held. 128 sat stun-locked at the spawn edge (x 800–1000): maxed Quiver makes every shot roll shock, Thunderclap stun 1.0 s outlasts the 0.57 s lob cadence, and crowd aim keeps hitting the thickest pile, which is the frozen one. 32 sat root-locked by the Treant set's 1.5 s root, re-applied on every stamp faster than it wore off. With the cap full nothing spawned, nothing reached the wall, and the run never fell.
+
+Seed 3, 25 sim hours, greedy (falls are waves; the stalling tune is `BOSS_WAVE.every=60` with legendary weight 0.04/10 and mythic 1):
+
+| Rule | Last 10 falls, every 60 | Best | Last 10 falls, stalling tune | Stall |
+|---|---|---|---|---|
+| Before (refresh on every hit) | 85–93 | 93 | n/a | yes |
+| No re-stun or re-root while held | 83–87 | 87 | 82–86 | no |
+| No re-stun, plus immune for 0.25× / 1× the hold after | 80–83 | 83 | 81–85 / 80–83 | no |
+
+Applied: no re-stun or re-root while held. It costs 4–6 late waves on this seed, because the top waves came from orcs frozen in place rather than from kills; an immunity window after the hold costs more and adds per-orc state.
