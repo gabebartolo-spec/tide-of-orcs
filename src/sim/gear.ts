@@ -25,7 +25,7 @@ const MUL_FIELDS = ['dmg', 'fireRate', 'radius', 'starMult', 'kin', 'wolf', 'bal
 const ADD_FIELDS = {
   crit: false, pierce: true, arrows: true, barRegen: false, chain: true, rebound: true, bleedAmp: false, knifeFan: true, burnSpread: true, cinder: true,
   boltShove: true, boltPin: true, moonCrit: true, moonwell: true, petHaste: false, extraWolves: true, treantRoot: true, freeRally: true,
-  knifeReturn: true, burnRamp: true, stormStore: true, stakes: true, fullMoon: true, petReturn: true, wallSplinter: true, starfall: true,
+  knifeReturn: true, burnRamp: true, stormStore: true, stakes: true, fullMoon: true, petReturn: true, wallSplinter: true, starCloak: true,
 } as const;
 
 export function applyGear(st: Stats, l: LootMeta): Stats {

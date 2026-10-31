@@ -25,7 +25,7 @@ describe('mythic powers (TB-100)', () => {
   it('each mythic switches on its power only while worn', () => {
     expect(createState().stats.knifeReturn).toBe(0);
     expect(wearing('last-knife').stats.knifeReturn).toBe(1);
-    expect(wearing('starfall-cloak').stats.starfall).toBe(1);
+    expect(wearing('starfall-cloak').stats.starCloak).toBe(1);
   });
 
   it('The Last Knife: a knife that hits turns back and strikes on the way', () => {

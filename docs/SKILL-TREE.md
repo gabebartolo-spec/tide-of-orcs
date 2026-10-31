@@ -1,6 +1,6 @@
 # Skill Tree — node data
 
-Status: **Current** (v1.3, 43 nodes, checked against the code 31 Oct 2026). Started from `docs/prototype.html` and since changed (Wide Volley, War Drums and the summon/Fury/Swarm nodes added; Dreaming Roots, Blood Banners and the Warboss nodes retired; see GDD §14). Mirrored exactly by `src/data/skillTree.ts` (tested: unique ids, parents exist, no cycles, coordinates in bounds, ≥ 40 px apart). Node ids are stable API: never rename; deprecate instead.
+Status: **Current** (v1.3, 49 nodes (6 TB-089 arrow nodes; numbers pending P-002), checked against the code 31 Oct 2026). Started from `docs/prototype.html` and since changed (Wide Volley, War Drums and the summon/Fury/Swarm nodes added; Dreaming Roots, Blood Banners and the Warboss nodes retired; see GDD §14). Mirrored exactly by `src/data/skillTree.ts` (tested: unique ids, parents exist, no cycles, coordinates in bounds, ≥ 40 px apart). Node ids are stable API: never rename; deprecate instead.
 
 Cost formula: `cost(rank, w) = round(base × growth^rank × 1.25^max(0, w − 10))` (rank = ranks already owned, w = wave at purchase; the wave factor is P-001, BALANCE.md §Economy). Costs are starlight.
 
@@ -14,8 +14,10 @@ Layout coordinates are for a 760×920 tree canvas, root bottom-centre at (380, 6
 | crit | Keen Eye | Bow | sharp | 5 | 120 | 2.1 | 320 | 400 | +8% chance per rank to strike for triple damage. |
 | multi | Split Shot | Bow | draw | 3 | 220 | 4.2 | 140 | 350 | +1 extra arrow lands inside the circle with each shot. |
 | pierce | Longshaft | Bow | crit | 3 | 260 | 3.8 | 280 | 330 | Each shot strikes the ground +1 more time per rank. |
+| bounce | Rebound | Bow | pierce | 4 | 1200 | 2.2 | 230 | 270 | A magic bolt bounces on from your strike: 2 bounces, +1 per rank, each weaker. |
 | wide | Wide Volley | Bow | sharp | 5 | 40 | 1.8 | 335 | 455 | Your arrow strikes a circle 20% wider per rank. |
 | moon | Moonbow | Bow | multi | 1 | 3200 | — | 90 | 270 | Your circle settles onto the nearest orc, and arrows deal +60% damage. |
+| starfall | Starfall | Bow | moon | 1 | 6000 | — | 70 | 200 | Every 10th lob also rains 8 arrows across the plain. |
 | wolf | Grey Wolf | Companions | root | 1 | 70 | — | 380 | 500 | A wolf runs the plain and savages the nearest orc. |
 | fangs | Fangs | Companions | wolf | 5 | 90 | 1.9 | 430 | 430 | Wolf bites +40% harder per rank. |
 | ranger | Ranger | Companions | wolf | 1 | 350 | — | 360 | 360 | A second archer joins you behind the wall. |
@@ -27,6 +29,10 @@ Layout coordinates are for a 760×920 tree canvas, root bottom-centre at (380, 6
 | knifespd | Nimble Wrist | Armoury | knives | 5 | 140 | 1.9 | 570 | 470 | Knives fly 20% faster per rank and hit harder. |
 | fire | Fire Arrows | Armoury | knives | 1 | 450 | — | 550 | 390 | Arrows set orcs alight, burning for a few seconds. |
 | storm | Storm Glade | Armoury | fire | 1 | 1700 | — | 630 | 330 | Lightning leaps between up to 5 orcs every 6 s. |
+| frost | Frost Arrows | Armoury | fire | 5 | 800 | 1.9 | 560 | 300 | Arrows chill orcs 3 s, slowing them 20% (+5% per rank). |
+| shatter | Shatter | Armoury | frost | 5 | 1500 | 2.0 | 580 | 230 | A chilled orc that dies bursts, striking orcs nearby (×1.4 per rank). |
+| shock | Shock Arrows | Armoury | storm | 1 | 2200 | — | 700 | 290 | Lightning leaps from your strike to 3 more orcs. |
+| stun | Thunderclap | Armoury | shock | 1 | 3000 | — | 710 | 215 | Struck orcs are stunned for 0.5 s. |
 | ballista | Ballista | Armoury | knifespd | 1 | 3400 | — | 660 | 430 | A heavy bolt that punches through the whole line. |
 | bolt | Iron Bolts | Armoury | ballista | 5 | 2000 | 2.0 | 710 | 360 | Ballista +50% damage per rank. |
 | glean | Gleaning | Grove | root | 10 | 20 | 1.6 | 490 | 630 | +15% starlight from every orc. |
@@ -91,6 +97,10 @@ interface Stats {
   hawk: boolean; treant: boolean;
   knives: { rate: number; dmg: number } | null;
   storm: boolean;
+  bounce: number;         // bounce ? 1 + bounce : 0   (Rebound hops)
+  shock: boolean; stun: boolean; starfall: boolean;
+  slow: number;           // frost ? 0.2 + 0.05 × (frost − 1) : 0
+  shatter: number;        // shatter ? 1.4^(shatter − 1) : 0   (× dmg)
   ballista: number;       // ballista ? 40 × 1.5^bolt × kin : 0
   // barricade
   barMax: number;         // 400 × (1 + 0.25 × hw_timber) × 1.25^timber × heart
@@ -110,7 +120,6 @@ interface Stats {
 ```
 
 ## Planned nodes (DRAFT, not in 1.0 data)
-- **Bow → Starfall** (after Moonbow): every 10th lob is a rain of 8 arrows across the plain.
 - **Companions → Owl** (after Warden): marks a brute; marked orcs take +50% damage.
 - **Barricade → Gatehouse** (after Deep Roots): the wall gains a second segment with its own health; the run ends only when both fall.
 - **Vanguard → Standard Bearer** (after Bladedancer): a banner unit that doesn't fight but gives vanguard in its lane +25% damage and mend.

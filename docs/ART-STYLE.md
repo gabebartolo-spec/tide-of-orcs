@@ -29,7 +29,10 @@ Status: **Current** (v1.3, checked against `src/render/palette.ts` and `src/data
 | wallBar | #c9a06a | Wall bar above 50%, Barricade branch |
 | nodeOwned, nodeLabelLocked | #2b3448, #6b7383 | Tree: bought-not-maxed node fill, locked node label |
 | wallShade, burnGlow | ink 30%, amber 50% | Barricade shadow strip, burning orc glow |
-| plain, plainPatch, grass | #7c9676, #86a07e, cream 18% | Field base, field patches, grass strokes |
+| plain, plainPatch | #7c9676, #86a07e | Field base, legacy patch tone |
+| plainLush, plainWorn, plainBare | #728d6c, #8e9a72, #a09c80 | Ground (TB-098): lusher grass drifts, worn dry grass, barren earth core |
+| tuft, tuftLight | #5e7858, #a3b993 | Grass tuft blades (dark, sunlit) |
+| rock, rockLight | #8f9597, #b7bbb6 | Small rocks and pebbles, their top highlight |
 | plainDusk | #5f6f72 | Dusk tint over the plain |
 | hillFar, hillNear | #5a7058, #4f644d | Parallax hill bands |
 | lamp, lampClear | amber 20%, amber 0% | Lamplight on the grove bank at night |
@@ -57,6 +60,13 @@ Rules: semantic colours (amber = money, timber = the wall, rose = permanent/dang
 - Item glyphs (TB-097): one 24-unit line icon per gear slot (bow, quiver, bracer, cloak, boots, charm), round caps, 35% tinted fill, in the rarity colour. The frame shape also marks rarity so it never rests on colour alone: common faint, rare solid, epic double line, legendary square-cornered, mythic glowing. Fallback until TB-103 model renders.
 - Arrows are 14 px cream lines; knives 8 px pale; ballista bolt 22 px bark, 3 px wide.
 - Strike circle (TB-079): a disc of radius `stats.radius` (40 px × 1.2^Wide Volley) filled `aimFill` and outlined `aimLine`, with a cream ring that fills clockwise from the top as the bow draws; a dotted `aimLine` arc from the elf traces the lob's flight. In flight a lob is a short shaft along its arc with a ground shadow; on landing a cream ring flashes at the circle. The OS cursor is hidden over the field (`cursor: none`). Nothing is drawn when the pointer is over the grove side or the wall has fallen.
+
+## Ground (TB-098)
+The plain reads as natural, calm grassland, not a flat board. Layout is seeded (`GROUND.seed`, `src/data/presentation.ts`) and painted once to an offscreen canvas in `src/render/ground.ts`, repainted only when the canvas size or DPR changes, then blitted each frame (no per-frame decoration cost). A strip `GROUND.wallGap` wide in front of the wall stays clear.
+- Layers, bottom up: plain base; lusher drifts (`plainLush`); worn dry-grass patches (`plainWorn`) with a smaller barren-earth core (`plainBare`); rocks; tufts. Patches are clusters of squashed ellipses (same soft-ellipse language as the actors) feathered by a few stacked low-alpha passes, so edges are soft without a blur filter.
+- Tufts: 4�7 curved blades fanning from one root, mostly `tuft` with about a third `tuftLight`; some grouped in clumps, some single. Kept low-contrast so orcs, blood, VFX and the strike circle read on top.
+- Rocks: flat-ink shadow offset down-right, `rock` body, `rockLight` top-left highlight, 0�3 pebbles beside each; half sit on worn patches, where ground is thin.
+- The dusk tint and hills still draw over the ground each frame.
 
 ## Typography
 - Display: **Spectral** (serif, 500/700, italic for the title's "Orcs"). Headings, big numbers.
@@ -92,6 +102,19 @@ Every attack reads in three beats: **wind-up** (the actor draws back, derived fr
 
 Blood: droplets fall in a short arc (gravity) and land as a flat splat (ellipse, 25%→0 alpha over 6 s) drawn on the ground under every actor. Hit: 4 droplets; kill: 10 droplets + one larger splat, size scaled by orc radius. Vanguard hit: 4 wine droplets; vanguard fell: 10 + a splat, beside the existing 14 spear-blue squares. Kill burst (moss squares), rally and fall bursts are unchanged. Splats are capped (oldest recycled first). Reduced motion: wind-ups and trails are skipped, impacts and blood still show, no shake bumps.
 
+## Arrow enchantment VFX (TB-089)
+Each enchanted arrow must be told apart at a glance, by colour and by shape, and its colours come from the cast: Starfall's gold is the bow's amber, Rebound's plum is the bladedancer's cape. Tokens in `palette.ts`, sizes in `VFX.arrows`.
+
+| Node | Colour token | Lob | Strike | On the orc |
+|---|---|---|---|---|
+| Fire Arrows | `fire` #f2763a | Orange arrow with a round head | Orange ring, flames, burning ground patch (1.2 s) | Body tinted `fireTint`, orange rim, flames rise |
+| Frost Arrows / Shatter | `frost` #bfe3ee | Icy blue arrow | Ice-shard starburst, frost ground patch; Shatter adds a shard ring | Body tinted `frostTint`, frost rim |
+| Shock Arrows / Thunderclap | `spark` #f4eaa6, glow `sparkGlow` | Yellow arrow | Thick jagged glowing bolts (glow 16, core 5, jag 14) to up to 3 orcs | Thunderclap: 3 sparks orbit the head |
+| Rebound | `arcane` #9b6bd6, core `arcaneCore` #ece8ff | Plum arrow | A plum orb with a pale core and halo hops orc to orc, a ring at each hit | — |
+| Starfall | `starGold` #ffd36b | — | Gold streaks fall straight down onto orcs on the plain | — |
+
+Burning and chilled orcs are tinted on their own body, never with a shape laid over them: sprites tint only the frame's own pixels (`Sprites.draw` tint, `source-atop` on a scratch canvas) plus a `drop-shadow` rim of `rimBlur` 6; vector orcs fill their body shape again in the tint. Shading stays visible under the colour. The lob takes the colour of the first enchantment owned (fire, frost, shock, Rebound, in that order).
+
 ## Asset pipeline (tools Gabe has: Tripo, Cascadeur, ElevenLabs)
 Vector draws stay the baseline so the game is always playable without assets. M4 may upgrade actors to **pre-rendered sprite sheets** on top of the same palette:
 - **Tripo** generates the 3D models (orc grunt/runner/brute/warboss, elf, spearman, bladedancer, wolf, hawk, treant). Prompt with the palette hexes and "soft low-poly toy-board, flat shading, no outlines". One model per actor; variants by tint in-engine, not by new models.
@@ -99,7 +122,7 @@ Vector draws stay the baseline so the game is always playable without assets. M4
 - Render to sheets with an orthographic camera at the field's ~20° top-down tilt, 64 px tall for grunts, scaled by `radius`, flat 25% ink shadow added in-engine. PNG sheets under `public/sprites/`, atlas JSON beside them, loaded lazily with vector fallback.
 - Atlas (TB-060, `src/render/sprites.ts`): `public/sprites/atlas.json` = `{ image, anims: { key: { frames: [[x,y,w,h]…], fps, ax, ay, hPerR } } }`. Keys: `orc.grunt|runner|brute|elite|boss`, `elf`, `archer`, `van.spear|blade`. (ax, ay) is the foot anchor as a fraction of the frame; drawn height = hPerR × actor radius (elf/vanguard radius 12). Any missing key, or no atlas, draws the vector actor.
 - Sheet budget: ≤ 2 MB total for 1.0 so the itch build stays snappy.
-- **ElevenLabs** produces the audio: sound-effects generation for the 16 cues in `src/data/audio.ts` `CUES` (`loose`, `arrowHit`, `knife`, `ignite`, `orcHit`, `orcDeath`, `bruteDeath`, `bossRoar`, `wallThud`, `wallCreak`, `wallFall`, `rallyHorn`, `replant`, `click`, `bought`, `denied`), and an ambient wind-and-grove bed (`ambient`). File names are the cue names. Export 44.1 kHz OGG + MP3 fallback, normalised to −16 LUFS, under `public/audio/`. No voice lines in 1.0. **Suno** makes the two music beds (`music-a` grove, `music-b` dusk, TB-063) and the boss-wave track (`music-boss`, plays from its start on a boss wave, 1.5 s fades): instrumental, 2–3 min, loopable; MP3 alone is fine (the loader falls back from OGG to MP3).
+- **ElevenLabs** produces the audio: sound-effects generation for the 16 cues in `src/data/audio.ts` `CUES` (`loose`, `arrowHit`, `knife`, `ignite`, `orcHit`, `orcDeath`, `bruteDeath`, `bossRoar`, `wallThud`, `wallCreak`, `wallFall`, `rallyHorn`, `replant`, `click`, `bought`, `denied`), and an ambient wind-and-grove bed (`ambient`). File names are the cue names. Export 44.1 kHz OGG + MP3 fallback, normalised to −16 LUFS, under `public/audio/` (silence trimmed; a limiter holds peaks at −1 dBFS, so the most transient cues, `ignite` and the wall hits, sit 1–3 LU under). No voice lines in 1.0. **Suno** makes the two music beds (`music-a` grove, `music-b` dusk, TB-063) and the boss-wave track (`music-boss`, plays from its start on a boss wave, 1.5 s fades): instrumental, 2–3 min, loopable; MP3 alone is fine (the loader falls back from OGG to MP3).
 
 ## M4 presentation additions
 - Parallax: two bands of distant hills (sageDeep darkened) scrolling very slowly.

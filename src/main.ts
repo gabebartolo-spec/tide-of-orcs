@@ -20,6 +20,7 @@ const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 const applyMotion = () => { field.reducedMotion = game.settings.reducedMotion ?? reduced.matches; tree.reducedMotion = field.reducedMotion; };
 applyMotion(); reduced.addEventListener('change', applyMotion);
 panel.onSettings = () => { audio.setVolume(game.settings.volume); applyMotion(); };
+panel.onCue = (c) => audio.play(c);
 
 
 // Aiming: the bow follows the pointer while it is over the field. No clicking; the bow looses on its own.

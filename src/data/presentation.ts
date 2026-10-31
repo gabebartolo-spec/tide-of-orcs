@@ -33,11 +33,33 @@ export const VFX = {
   /** Elf: string pull (px) at full draw. */
   bow: { pull: 5 },
   /** Projectile trails: ghost count per kind, spacing along the path (s), alpha of the first ghost. */
-  trail: { lob: 3, arrow: 3, bolt: 4, knife: 2, gap: 0.025, alpha: 0.45, lobSpacing: 2 },
+  trail: { lob: 3, arrow: 3, bolt: 4, knife: 2, bounce: 8, star: 2, gap: 0.025, alpha: 0.45, lobSpacing: 2 },
   /** Lob landing: dust ring on the ground (× circle radius), its life. */
   lobDust: { r: 0.6, life: 0.35 },
   /** Existing bursts (count, speed), kept as they were before TB-088. */
   kill: [10, 90], hit: [2, 60], bite: [3, 50], hawk: [14, 120], treant: [16, 140], impact: [6, 70],
   regrow: [40, 160], rally: [8, 60], vanFell: [14, 100],
+  /** Arrow enchantments (TB-089): burst [count, speed] per effect, ring widths/lives, stun star orbit. */
+  arrows: { fire: [10, 70], frost: [8, 50], shatter: [18, 140], stun: [6, 50], bounce: [6, 60], ringLife: 0.4, shatterLife: 0.3, stunOrbit: 6, stunSpin: 8, starLen: 18, boltLen: 10,
+    /** Element look (each must read at a glance): tinted lob head radius and width, ground patch life, ice shards, flames/s per burning orc,
+     *  lightning glow/core width and jag, Rebound orb radius and hop ring, Starfall streak width. */
+    headR: 4, lobW: 3, patchLife: 1.2, shards: 8, shardLen: 1.3, shardLife: 0.5, flameRate: 45, boltGlow: 16, boltW: 5, boltJag: 14, orbR: 4, rimBlur: 6, hopRing: 14, starW: 2.5 },
   treantShake: 0.2, impactLife: 0.3, stormLife: 0.35, zoneFade: 0.6, zoneSquash: 0.45, textLife: 0.9, textRise: 28,
+} as const;
+
+/** Field ground (TB-098, ART-STYLE §Ground). Seeded layout painted once to an offscreen canvas; field units. Ranges are [min, max]. */
+export const GROUND = {
+  seed: 0x6a7e31,
+  /** Keep-clear strip in front of the wall (units). */
+  wallGap: 22,
+  /** Lusher, darker grass drifts: count, blobs per drift, blob radius, y squash, blob scatter. */
+  lush: { n: 11, blobs: [4, 7], r: [14, 30], squash: 0.45, spread: 34 },
+  /** Worn dry-grass patches with a barren earth core: count, blobs, radius, squash, scatter; bare core blobs and their scale. */
+  worn: { n: 6, blobs: [5, 8], r: [18, 34], squash: 0.42, spread: 34, bare: [3, 5], bareScale: 0.5 },
+  /** Soft-edge passes per blob (each at `alpha`, radius stepping down by `step`). */
+  soft: { passes: 4, alpha: 0.3, step: 0.15 },
+  /** Grass tufts: clusters, tufts per cluster, scatter; loose singles; blades per tuft, blade height, lean (rad), stroke width. */
+  tufts: { clusters: 26, per: [3, 6], spread: 18, singles: 40, blades: [4, 7], h: [6, 12], lean: 0.6, width: 1.4 },
+  /** Small rocks: count (half sit on worn patches), radius, y squash, pebbles beside each, pebble radius. */
+  rocks: { n: 18, r: [2.6, 5.5], squash: 0.62, pebbles: [0, 3], pebbleR: [1, 1.8] },
 } as const;

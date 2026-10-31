@@ -18,14 +18,25 @@ export type SimEvent =
   | { t: 'freeRally'; secs: number }
   /** Mythics (TB-100): Thunder's Memory's stored bolt hit the whole wave; a Starfall struck; a stake was driven; the wall stood again. */
   | { t: 'thunder' }
-  | { t: 'starfall'; x: number; y: number }
+  | { t: 'starCloak'; x: number; y: number }
   | { t: 'stake'; x: number; y: number }
   | { t: 'splinter' }
+  /** The elf looses a lob, or a throwing knife leaves the hand (audio only). */
+  | { t: 'loose' }
+  | { t: 'knife' }
   | { t: 'wave'; wave: number }
   | { t: 'bossReady' }
   | { t: 'bossStart' }
   | { t: 'bossEnd'; cleared: boolean; loot: number }
   | { t: 'storm'; pts: [number, number][] }
+  /** Arrow enchantments (TB-089). `fireStrike`: a lob landed with Fire Arrows. `bounceHit`: a Rebound bolt struck. `shock`: lightning from (x, y) to each of pts. `stun`, `chill`: a strike stunned or chilled orcs. `shatter`: a chilled orc died and burst. `starfall`: the rain began. */
+  | { t: 'fireStrike'; x: number; y: number; r: number }
+  | { t: 'bounceHit'; x: number; y: number }
+  | { t: 'shock'; x: number; y: number; pts: [number, number][] }
+  | { t: 'stun'; x: number; y: number; r: number }
+  | { t: 'chill'; x: number; y: number; r: number }
+  | { t: 'shatter'; x: number; y: number; r: number }
+  | { t: 'starfall' }
   | { t: 'hawkDive'; x: number; y: number }
   | { t: 'treantStamp'; x: number; y: number }
   | { t: 'bite'; x: number; y: number }

@@ -6,6 +6,7 @@ export type NodeId =
   | 'root' | 'sharp' | 'draw' | 'crit' | 'multi' | 'pierce' | 'moon' | 'wide'
   | 'wolf' | 'fangs' | 'ranger' | 'warden' | 'hawk' | 'treant' | 'bond'
   | 'knives' | 'knifespd' | 'fire' | 'storm' | 'ballista' | 'bolt'
+  | 'bounce' | 'starfall' | 'frost' | 'shatter' | 'shock' | 'stun'
   | 'glean' | 'horde' | 'drums'
   | 'runners' | 'runfury' | 'runswarm' | 'brutes' | 'brutefury' | 'bruteswarm'
   | 'elites' | 'elitefury' | 'eliteswarm'
@@ -38,6 +39,8 @@ export const NODES: readonly SkillNode[] = [
   n('multi', 'Split Shot', 'Bow', 'draw', 3, 220, 4.2, 140, 350, '+1 extra arrow lands inside the circle with each shot.'),
   n('pierce', 'Longshaft', 'Bow', 'crit', 3, 260, 3.8, 280, 330, 'Each shot strikes the ground +1 more time per rank.'),
   n('moon', 'Moonbow', 'Bow', 'multi', 1, 3200, 1, 90, 270, 'Your circle settles onto the nearest orc, and arrows deal +60% damage.'),
+  n('bounce', 'Rebound', 'Bow', 'pierce', 4, 1200, 2.2, 230, 270, 'A magic bolt leaps from your strike to 2 more orcs, +1 per rank; each leap hits softer.'),
+  n('starfall', 'Starfall', 'Bow', 'moon', 1, 6000, 1, 70, 200, 'Every 10th shot also rains 8 arrows on orcs across the plain.'),
   n('wolf', 'Grey Wolf', 'Companions', 'root', 1, 70, 1, 380, 500, 'A wolf runs the plain and savages the nearest orc.'),
   n('fangs', 'Fangs', 'Companions', 'wolf', 5, 90, 1.9, 430, 430, 'Wolf bites +40% harder per rank.'),
   n('ranger', 'Ranger', 'Companions', 'wolf', 1, 350, 1, 360, 360, 'A second archer joins you behind the wall.'),
@@ -49,6 +52,10 @@ export const NODES: readonly SkillNode[] = [
   n('knifespd', 'Nimble Wrist', 'Armoury', 'knives', 5, 140, 1.9, 570, 470, 'Knives fly 20% faster per rank and hit harder.'),
   n('fire', 'Fire Arrows', 'Armoury', 'knives', 1, 450, 1, 550, 390, 'Arrows set orcs alight, burning for a few seconds.'),
   n('storm', 'Storm Glade', 'Armoury', 'fire', 1, 1700, 1, 630, 330, 'Lightning leaps between up to 5 orcs every 6 s.'),
+  n('frost', 'Frost Arrows', 'Armoury', 'fire', 5, 800, 1.9, 560, 300, 'Arrows chill orcs for 3 s: they move and swing 20% slower, +5% per rank.'),
+  n('shatter', 'Shatter', 'Armoury', 'frost', 5, 1500, 2.0, 580, 230, 'A chilled orc that dies shatters, striking orcs around it. +40% per rank.'),
+  n('shock', 'Shock Arrows', 'Armoury', 'storm', 1, 2200, 1, 700, 290, 'Lightning leaps from your strike to 3 more orcs.'),
+  n('stun', 'Thunderclap', 'Armoury', 'shock', 1, 3000, 1, 710, 215, 'Struck orcs are stunned for half a second.'),
   n('ballista', 'Ballista', 'Armoury', 'knifespd', 1, 3400, 1, 660, 430, 'A heavy bolt that punches through the whole line.'),
   n('bolt', 'Iron Bolts', 'Armoury', 'ballista', 5, 2000, 2.0, 710, 360, 'Ballista +50% damage per rank.'),
   n('glean', 'Gleaning', 'Grove', 'root', 10, 20, 1.6, 490, 630, '+15% starlight from every orc.'),

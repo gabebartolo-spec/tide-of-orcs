@@ -2,7 +2,7 @@ import { NodeId } from '../data/skillTree';
 import { HW_FX, HwLevels } from '../data/heartwood';
 import { SATCHEL, SPOILS_FX } from '../data/lootTables';
 import { FOE_FX, OrcKind } from '../data/orcs';
-import { BARRICADE, LOB, NODE_FX, PLAYER, SOURCES, VANGUARD, heartMult } from '../data/balance';
+import { ARROWS, BARRICADE, LOB, NODE_FX, PLAYER, SOURCES, VANGUARD, heartMult } from '../data/balance';
 
 export type Levels = Partial<Record<NodeId, number>>;
 
@@ -10,6 +10,8 @@ export type Levels = Partial<Record<NodeId, number>>;
 export interface Stats {
   dmg: number; fireRate: number; lobCd: number; radius: number; arrows: number; pierce: number; crit: number;
   homing: boolean; fire: boolean;
+  /** Arrow enchantments (TB-089): Rebound hops (0 = none), shock, stun, frost slow fraction (0 = none), shatter damage × player dmg (0 = none), starfall. */
+  bounce: number; shock: boolean; stun: boolean; slow: number; shatter: number; starfall: boolean;
   starMult: number;
   /** Per orc kind: summoned yet, and its Fury/Swarm multipliers. The Warboss never marches; he comes only with a boss wave. */
   foes: Record<OrcKind, Foe>;
@@ -26,7 +28,7 @@ export interface Stats {
   ballCd: number; boltShove: number; boltPin: number; moonCrit: number; moonwell: number;
   petDmg: number; petHaste: number; extraWolves: number; treantRoot: number; freeRally: number;
   // mythic powers (TB-100): 0 = off; numbers from MYTHIC_FX
-  knifeReturn: number; burnRamp: number; stormStore: number; stakes: number; fullMoon: number; petReturn: number; wallSplinter: number; starfall: number;
+  knifeReturn: number; burnRamp: number; stormStore: number; stakes: number; fullMoon: number; petReturn: number; wallSplinter: number; starCloak: number;
   // loot (TB-101): Heartwood lines and the Spoils branch. salvageMult/Plus shape Glimmer; rerollMult is read by the reroll (TB-102)
   itemFind: number; luck: number; satchelCap: number; bossDrops: number; trophy: boolean; hoard: boolean;
   salvageMult: number; salvagePlus: number; rerollMult: number; setBoost: number; echo: number;
@@ -57,6 +59,12 @@ export function deriveStats(lv: Levels, heartwood: number, hw: HwLevels = {}): S
     crit: NODE_FX.critPerRank * L('crit') + (L('hunter') ? SPOILS_FX.hunterCrit : 0),
     homing: L('moon') > 0,
     fire: L('fire') > 0,
+    bounce: L('bounce') ? 1 + L('bounce') : 0,
+    shock: L('shock') > 0,
+    stun: L('stun') > 0,
+    slow: L('frost') ? ARROWS.frost.slow0 + ARROWS.frost.slowPerRank * (L('frost') - 1) : 0,
+    shatter: L('shatter') ? ARROWS.shatter.mult * Math.pow(ARROWS.shatter.perRank, L('shatter') - 1) : 0,
+    starfall: L('starfall') > 0,
     starMult: Math.pow(NODE_FX.gleanLoot, L('glean')) * hm,
     foes: { boss: { on: false, hp: 1, loot: 1, spawn: 1 }, ...Object.fromEntries(Object.entries(FOE_NODES).map(([k, [on, fury, swarm]]) => [k, {
       on: on === null || L(on) > 0,
@@ -84,7 +92,7 @@ export function deriveStats(lv: Levels, heartwood: number, hw: HwLevels = {}): S
     chain: SOURCES.storm.targets, chainJump: SOURCES.storm.jump, rebound: 0, stormCd: SOURCES.storm.cd,
     ballCd: SOURCES.ballista.cd, boltShove: 0, boltPin: 0, moonCrit: 0, moonwell: 0,
     petDmg: 1, petHaste: 0, extraWolves: 0, treantRoot: 0, freeRally: 0,
-    knifeReturn: 0, burnRamp: 0, stormStore: 0, stakes: 0, fullMoon: 0, petReturn: 0, wallSplinter: 0, starfall: 0,
+    knifeReturn: 0, burnRamp: 0, stormStore: 0, stakes: 0, fullMoon: 0, petReturn: 0, wallSplinter: 0, starCloak: 0,
     itemFind: HW_FX.find[hw.hw_find ?? 0]! + (L('sharpeyes') ? SPOILS_FX.sharpFind : 0), luck: HW_FX.fortune[hw.hw_fortune ?? 0]!,
     satchelCap: hw.hw_satchel ? SATCHEL.deep : SATCHEL.base, bossDrops: hw.hw_tithe ? HW_FX.titheDrops : 1,
     trophy: L('trophy') > 0, hoard: L('hoard') > 0,

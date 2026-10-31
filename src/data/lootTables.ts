@@ -87,7 +87,7 @@ export const MYTHICS: readonly MythicDef[] = [
   { id: 'pale-moon', name: 'Sliver of the Pale Moon', slot: 'charm', lines: [on('fullMoon')] },
   { id: 'first-wolf', name: 'The First Wolf', slot: 'boots', lines: [on('petReturn')] },
   { id: 'heartwood-splinter', name: 'Heartwood Splinter', slot: 'charm', lines: [on('wallSplinter')] },
-  { id: 'starfall-cloak', name: 'Starfall Cloak', slot: 'cloak', lines: [on('starfall'), on('itemFind', 0.15)] },
+  { id: 'starfall-cloak', name: 'Starfall Cloak', slot: 'cloak', lines: [on('starCloak'), on('itemFind', 0.15)] },
 ];
 
 /** Mythic power numbers (TB-100), proposed in BALANCE P-100. */
