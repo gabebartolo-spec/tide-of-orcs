@@ -16,14 +16,14 @@ export function fitCamera(vw: number, vh: number): Camera {
   return clampCamera({ x: 0, y: 0, z: vw / TREE_CANVAS.w }, vw, vh);
 }
 
-/** Keep zoom in range relative to fit, and keep the tree from leaving the viewport. */
+/** Keep zoom in range relative to fit, and keep the tree from leaving the viewport or rising under the legend strip. */
 export function clampCamera(c: Camera, vw: number, vh: number): Camera {
   const fit = vw / TREE_CANVAS.w;
   const z = Math.min(fit * TREE_VIEW.maxZoom, Math.max(fit * TREE_VIEW.minZoom, c.z));
-  const ax = (vw / z - TREE_CANVAS.w), ay = (vh / z - TREE_CANVAS.h);
-  // When the tree is smaller than the view on an axis, centre it; otherwise allow panning to each edge.
+  const top = TREE_VIEW.legendH / z, ax = (vw / z - TREE_CANVAS.w), ay = (vh / z - top - TREE_CANVAS.h);
+  // When the tree is smaller than the view on an axis, centre it (vertically, in the space below the legend); otherwise allow panning to each edge.
   const x = ax >= 0 ? -ax / 2 : Math.min(-ax, Math.max(0, c.x));
-  const y = ay >= 0 ? -ay / 2 : Math.min(-ay, Math.max(0, c.y));
+  const y = ay >= 0 ? -top - ay / 2 : Math.min(TREE_CANVAS.h - vh / z, Math.max(-top, c.y));
   return { x, y, z };
 }
 

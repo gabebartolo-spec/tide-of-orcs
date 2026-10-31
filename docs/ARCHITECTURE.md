@@ -48,7 +48,7 @@ tide-of-orcs/
       sprites.ts        sprite atlas loader (public/sprites/atlas.json) with vector fallback (TB-060)
       particles.ts      preallocated pools (squares, blood droplets, strokes, ground splats, text) fed by events; sizes in `data/presentation.ts` VFX
       ceremony.ts       replant ceremony: burn, seed, dawn; skippable (TB-051)
-      camera.ts         tree camera: pan, zoom, clamp, ease (TB-021, TB-066)
+      camera.ts         tree camera: pan, zoom, clamp below the legend strip, ease (TB-021, TB-066, TB-117)
       tree.ts           skill tree canvas, curved branches, hit-test, camera ease to selection
     ui/
       panel.ts          tabs (Grove / Replant / Settings), detail card, rally bar, boss button, fallen overlay + run summary,
@@ -120,7 +120,7 @@ The seed lives only inside `rng`; the save version lives in the save, not in Sim
 - Field draws in logical 900×480 via `setTransform`, with screen shake applied to the transform (not to the HUD bars). Draw order: plain → dusk tint → hills → grove side → lamplight → barricade (splintered planks from the top as HP drops, spikes if Thornwall) → blood splats (`Particles.drawGround`) → treant → elf → strike circle and lob arc → rangers → ballista → wolf → vanguard (sorted by y) → orcs (sorted by y) → projectiles (lobs with ground shadow) → lob impacts → storm → hawk → particles → text → barricade/vanguard HUD → wave bar.
 - Actors draw from the sprite atlas when a key is present, else the vector draw (TB-060).
 - Batch by fill style where cheap (e.g. all grunts of same colour), but clarity over micro-optimisation until the profiler says otherwise.
-- Tree canvas: nodes from `data/skillTree.ts` layout, camera in `render/camera.ts`, hit-test in logical space.
+- Tree canvas: nodes from `data/skillTree.ts` layout, camera in `render/camera.ts`, hit-test in logical space. The branch legend sits on an opaque strip `TREE_VIEW.legendH` px tall at the top; the camera never lets the tree's top edge rise under it, nodes panned beneath it are hidden, and clicks on it select nothing (TB-117).
 - Reduced motion: the Settings override (`settings.reducedMotion`, null = follow `prefers-reduced-motion`); render modules check `reducedMotion`.
 
 ## UI
