@@ -133,6 +133,8 @@ Lives in `sim/run.ts`. Runs `src/sim/` headless at 50 steps/s and decides every 
 
 Loot flags (TB-108): `--hw hw_find:2,hw_fortune:1` starts with Heartwood ranks; `--bare` never wears gear; `--tune 'BOSS_WAVE.every=50,RARITY.weights.legendary.1=8'` overrides data for a sweep. Bosses are summoned when ready; the equip policy wears a set once 4+ of its slots are owned. The report ends with loot milestones (first drop, first of each rarity as run/minute/boss, first 6-piece set, bosses) and the run played on to its fall worn vs bare.
 
+Mythic flags (TB-128): `--mythic <id>` wears that mythic from the start and ends with its power played on removed (affixes kept); `--reroll` spends Glimmer each minute rerolling the lowest affix on the cheapest worn item.
+
 Report columns per minute: wave, starlight, kills/min, kills, wall %, vanguard count, nodes owned, HW, falls. Summary line gives the first fall wave, every fall wave in order (`Falls:`), replants, Heartwood, best wave. (Before TB-084 the "First fall" field printed the last fall.) Writes `sim/out/<policy>-<date>.md` unless `--quiet`. CI runs 30 minutes of greedy as a smoke test.
 
 ## Proposed
@@ -331,6 +333,25 @@ Evidence: `npm run balance` (greedy, seed 1, 30 min) vs the tb-110 base: first f
 ### P-102 · Glimmer reroll (2026-11-01, TB-102)
 Reroll one affix of a worn item: cost = max(1, round(2 × 2^n × rerollMult)), n = rerolls already on that item (`REROLL` in lootTables). Costs 2, 4, 8, 16, 32…; with Haggling 1, 2, 5, 10, 19. The new affix is a different id, keeps the item's arrow rule and the feature gate, value rolled at the item's ilvl.
 Evidence: none yet; the greedy runner never rerolls. Tuning is TB-107.
+
+### P-128 · Mythic and reroll measurement (2026-11-01, TB-128; closes the evidence gap in P-100, P-101, P-102)
+Evidence: `npm run balance -- --minutes 300 --seed N --quiet` with `--mythic <id>` (locked mythic worn from the start, re-equipped each minute; at the end the run is played on with the power deleted and the affixes kept) or `--reroll` (each minute rerolls the lowest affix on the cheapest worn item while Glimmer lasts). Seeds 1–4.
+
+| Run | Best wave, seeds 1 / 2 / 3 / 4 | Mean | Power alone (waves, play-on trial) |
+|---|---|---|---|
+| base | 74 / 76 / 69 / 79 | 74.5 | |
+| reroll | 77 / 73 / 74 / 74 | 74.5 | 277–374 rerolls, 23–26k Glimmer spent |
+| That Knife Again | 73 / 71 / 75 / 79 | 74.5 | 0 / +2 / 0 / 0 |
+| Never Goes Out | 76 / 74 / 73 / 74 | 74.3 | 0 / −1 / 0 / −4 |
+| Saving It Up | 71 / 72 / 76 / 75 | 73.5 | 0 / 0 / +2 / 0 |
+| Tent Pegs | 73 / 73 / 72 / 75 | 73.3 | 0 / 0 / +3 / −2 |
+| Worth It? | 76 / 75 / 76 / 75 | 75.5 | +3 / −1 / −1 / −4 |
+| Old Dog | 74 / 75 / 76 / 74 | 74.8 | 0 / +4 / −3 / 0 |
+| Spare Fence | 69 / 68 / 68 / 73 | 69.5 | 0 / 0 / 0 / +3 |
+| Raincoat | 74 / 74 / 75 / 74 | 74.3 | 0 / 0 / 0 / 0 |
+
+Read: no mythic power moves the wave beyond seed noise (±4); Spare Fence costs ~5 waves (cause not yet traced). Rerolls are near free: Glimmer piles up faster than the doubling cost (2 × 2^n) drains it, and better affixes buy no waves. Late orc HP grows ~30% per wave, so a power worth +3 waves must be about ×2.2 damage; P-100's numbers are an order of magnitude short of that.
+Open: the director sets the target a mythic should be worth (waves), then each `MYTHIC_FX` number is scaled to hit it and `REROLL` is steepened to match.
 
 ### P-108 · Loot pacing: rarer bosses and rarer top drops (2026-11-01, TB-108) · applied
 Director (1 Nov): make bosses rarer; "candidate C looks okay, just make it like 20% slower"; approved "Yes, apply P-108" (1 Nov). Applied (G), now in Current and the data:

@@ -4,6 +4,8 @@
  * --bare never wears gear (the baseline for waves gained); --hw starts with those Heartwood ranks.
  * --tune 'BOSS_WAVE.every=50,RARITY.weights.legendary.1=5' overrides data constants for a sweep (never written back).
  * The loot policy also chases sets: once four or more slots of one set are owned, it wears them.
+ * --mythic last-knife wears that mythic from the start (affixes rolled at the ilvl cap) and reports waves with its power off (TB-128).
+ * --reroll spends Glimmer each minute rerolling the lowest affix on worn items while affordable (TB-128).
  * Plays the pure sim with a scripted buy/rally policy and prints a per-minute markdown table.
  * Writes sim/out/<policy>-<date>.md unless --quiet.
  */
@@ -18,10 +20,11 @@ import { canReplant, replant } from '../src/sim/prestige';
 import { NODES, NodeId } from '../src/data/skillTree';
 import { STEP, waveHP } from '../src/data/balance';
 import { BOSS_WAVE } from '../src/data/bosses';
-import { AFFIX, DROP, RARITY } from '../src/data/lootTables';
+import { AFFIX, DROP, MYTHIC_FX, MYTHICS, RARITY } from '../src/data/lootTables';
 import { SLOTS } from '../src/data/loot';
 import { barFrac } from '../src/sim/barricade';
-import { EquipPolicy, equippedItems, itemScore } from '../src/sim/loot';
+import { EquipPolicy, equippedItems, itemScore, reroll, rerollCost } from '../src/sim/loot';
+import { ownedAffixes, rollAffixes } from '../src/sim/lootRoll';
 import { summonBoss } from '../src/sim/boss';
 import { setCounts } from '../src/sim/gear';
 import { recompute } from '../src/sim/state';
@@ -36,13 +39,34 @@ const lootPolicy = arg('loot', 'greedy') as EquipPolicy; let drops = 0;
 
 const s = createState(seed); const ev = new EventBus(); s.lootPolicy = lootPolicy;
 const bare = args.includes('--bare');
-const TUNE: Record<string, unknown> = { BOSS_WAVE, RARITY, DROP, AFFIX };
+const TUNE: Record<string, unknown> = { BOSS_WAVE, RARITY, DROP, AFFIX, MYTHIC_FX };
 for (const kv of arg('tune', '').split(',').filter(Boolean)) {
   const [path, v] = kv.split('='), keys = path!.split('.'), last = keys.pop()!;
   const obj = keys.reduce<Record<string, unknown>>((o, k) => (o === TUNE ? TUNE[k] : o[k]) as Record<string, unknown>, TUNE);
   obj[last] = Number(v);
 }
 for (const kv of arg('hw', '').split(',').filter(Boolean)) { const [k, v] = kv.split(':'); s.meta.hwLevels[k as HwId] = Number(v); }
+/** --mythic: a forced mythic, kept worn and locked so the equip policy never swaps it out. */
+const forced = MYTHICS.find((m) => m.id === arg('mythic', '')), doReroll = args.includes('--reroll');
+let rerolls = 0, glimmerSpent = 0;
+if (forced) {
+  const l = s.meta.loot, uid = `i${l.nextUid++}`;
+  l.items.push({ uid, base: 'forced', slot: forced.slot, rarity: 'mythic', ilvl: DROP.ilvlCap, mythic: forced.id, locked: true, affixes: rollAffixes(s.lootRng, RARITY.affixes.mythic, DROP.ilvlCap) });
+  l.equipped[forced.slot] = uid;
+}
+const keepForced = () => { if (forced) { const it = s.meta.loot.items.find((x) => x.mythic === forced.id && x.base === 'forced')!; if (s.meta.loot.equipped[it.slot] !== it.uid) { s.meta.loot.equipped[it.slot] = it.uid; recompute(s); } } };
+/** --reroll: lowest affix on the cheapest worn item first, while Glimmer lasts. Results are kept even when worse, as in play. */
+function rerollWorn(): void {
+  const l = s.meta.loot; let changed = false;
+  for (;;) {
+    const it = equippedItems(l).filter((x) => x.affixes.length).sort((a, b) => rerollCost(a, s.stats.rerollMult) - rerollCost(b, s.stats.rerollMult))[0];
+    if (!it) break;
+    const cost = rerollCost(it, s.stats.rerollMult), i = it.affixes.reduce((m, x, k, a) => (x.value < a[m]!.value ? k : m), 0);
+    if (!reroll(l, it.uid, i, s.lootRng, s.stats.rerollMult, ownedAffixes(s.stats))) break;
+    rerolls++; glimmerSpent += cost; changed = true;
+  }
+  if (changed) recompute(s);
+}
 recompute(s);
 /** Loot milestones: rarity → "run r, min m, boss b"; the first 6-piece set; bosses fought. */
 const firsts: Record<string, string> = {}; let bosses = 0, firstDrop = '-', firstSix = '-';
@@ -125,6 +149,7 @@ for (let i = 0; i < total; i++) {
   } else if (e.t === 'barricadeFell') { if (fallWave === '-') fallWave = String(e.wave); fallWaves.push(e.wave); fallMins.push(Math.round(e.runTime / 6) / 10); }
   if (i % Math.round(60 / STEP) === 0) {
     if (!bare) chaseSet();
+    keepForced(); if (doReroll && !bare) rerollWorn();
     if (firstSix === '-' && Object.values(setCounts(s.meta.loot)).some((n) => n >= 6)) firstSix = at(i);
     const m = Math.round(i * STEP / 60);
     const owned = Object.values(s.run.levels).reduce((a, b) => a + (b ?? 0), 0) - 1;
@@ -139,11 +164,14 @@ First fall at wave ${fallWave}. Falls (wave@run minutes): ${fallWaves.length ? f
 `;
 const worn = equippedItems(s.meta.loot), withGear = gearTrial(() => {}), noGear = gearTrial((l) => { l.equipped = {}; });
 const myth = worn.filter((x) => x.rarity === 'mythic'), noMyth = myth.length ? gearTrial((l) => { for (const x of myth) delete l.equipped[x.slot]; }) : 0;
+const powerOff = forced ? gearTrial((l) => { for (const x of l.items) if (x.mythic === forced.id) delete x.mythic; }) : 0;
 const ratio = (a: number, b: number) => (b > 0 ? `${Math.round((a / b - 1) * 100)}%` : '-');
 const lootSummary = `
 Loot (TB-108)${bare ? ' [bare]' : ''}: first drop min ${firstDrop}. ${['rare', 'epic', 'legendary', 'mythic'].map((r) => `First ${r}: ${firsts[r] ?? '-'}`).join('. ')}. First 6-piece set: min ${firstSix}. Bosses: ${bosses}.
 Worn at end: ${worn.map((x) => x.rarity[0]).join('') || '-'}. Run played on to its fall: wave ${withGear} worn, ${noGear} bare (+${withGear - noGear} waves; orc HP held ${ratio(waveHP(withGear), waveHP(noGear))})${myth.length ? `, ${noMyth} without the mythic (orc HP ${ratio(waveHP(withGear), waveHP(noMyth))})` : ''}.
-`;
+${forced ? `Forced mythic ${forced.id}: power off, affixes kept: wave ${powerOff} (power worth +${withGear - powerOff} waves).
+` : ''}${doReroll ? `Rerolls: ${rerolls}, Glimmer spent ${glimmerSpent}, Glimmer left ${s.meta.loot.glimmer}.
+` : ''}`;
 const report = header + rows.join('\n') + '\n' + summary + lootSummary;
 console.log(report);
 if (!quiet) {
