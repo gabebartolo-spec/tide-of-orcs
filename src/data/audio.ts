@@ -62,10 +62,13 @@ export const CUES: Record<Cue, { gain: number; gap: number; duck?: boolean }> = 
 /** Pure mapping from one sim event to the cue it plays, or null. */
 export function cueFor(e: SimEvent): Cue | null {
   switch (e.t) {
+    case 'loose': return 'loose';
+    case 'knife': return 'knife';
     case 'hit': return 'arrowHit';
     case 'kill': return e.kind === 'boss' || e.kind === 'brute' || e.kind === 'elite' ? 'bruteDeath' : 'orcDeath';
     case 'barricadeHit': return e.frac < AUDIO.creakFrac ? 'wallCreak' : 'wallThud';
     case 'barricadeFell': return 'wallFall';
+    case 'bossStart': return 'bossRoar';
     case 'vanguardRallied': return 'rallyHorn';
     case 'vanguardHit': return 'orcHit';
     case 'bought': return 'bought';

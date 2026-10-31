@@ -84,7 +84,7 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
     // Moonbow: the circle settles onto the nearest orc near the aim point.
     const home = st.homing ? nearestOrc(s, x, y, (o) => dist(o.x, o.y, x, y) < PLAYER.aimHomingRadius) : null;
     if (home) { x = home.x; y = home.y; }
-    run.shotT[0] = 0; lob(s, ELF_X, H / 2, x, y);
+    run.shotT[0] = 0; lob(s, ELF_X, H / 2, x, y); ev.push({ t: 'loose' });
     run.lobN = (run.lobN ?? 0) + 1;
     if (st.starfall && run.lobN % ARROWS.starfall.every === 0) starfall(s, ev);
     // Split Shot: extra arrows land at random inside the circle.
@@ -101,7 +101,7 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
     const tg = nearestOrc(s, sx, sy);
     if (tg) { run.shotT[i] = 0; volley(s, sx, sy, tg.x, tg.y, SOURCES.archerDmgFrac * st.kin, tg); }
   }
-  if (st.knives) { run.knifeT += dt; if (run.knifeT >= 1 / st.knives.rate) { const tg = nearestOrc(s, ELF_X, H / 2); if (tg) { run.knifeT = 0; shoot(s, 'knife', ELF_X, H / 2, Math.atan2(tg.y - H / 2, tg.x - ELF_X), SOURCES.knives.speed, st.knives.dmg, 0, tg); } } }
+  if (st.knives) { run.knifeT += dt; if (run.knifeT >= 1 / st.knives.rate) { const tg = nearestOrc(s, ELF_X, H / 2); if (tg) { run.knifeT = 0; ev.push({ t: 'knife' }); shoot(s, 'knife', ELF_X, H / 2, Math.atan2(tg.y - H / 2, tg.x - ELF_X), SOURCES.knives.speed, st.knives.dmg, 0, tg); } } }
   if (st.ballista) { run.ballT += dt; if (run.ballT >= SOURCES.ballista.cd) { const tg = nearestOrc(s, ELF_X, H / 2); if (tg) { run.ballT = 0; shoot(s, 'bolt', ELF_X + 6, H / 2 - 40, Math.atan2(tg.y - H / 2 + 40, tg.x - ELF_X), SOURCES.ballista.speed, st.ballista, 99, null); } } }
 
   if (st.storm) {

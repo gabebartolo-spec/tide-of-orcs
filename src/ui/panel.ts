@@ -1,6 +1,7 @@
 import { PRESTIGE, VanType, vanCost } from '../data/balance';
 import { BRANCH_COLOR, NODE } from '../data/skillTree';
 import { STR } from '../data/strings';
+import type { Cue } from '../data/audio';
 import { GameController } from '../game';
 import { TreeRenderer } from '../render/tree';
 import { canBuy, costOf, rankOf, unlocked } from '../sim/tree';
@@ -32,7 +33,7 @@ export class Panel {
     $('dep-boss').querySelector('.n')!.textContent = STR.summonBoss;
 
     $('tab-settings').textContent = STR.tabSettings;
-    $('tab-grove').onclick = () => this.setTab('grove'); $('tab-prestige').onclick = () => this.setTab('prestige'); $('tab-settings').onclick = () => this.setTab('settings');
+    $('tab-grove').onclick = () => { this.onCue('click'); this.setTab('grove'); }; $('tab-prestige').onclick = () => { this.onCue('click'); this.setTab('prestige'); }; $('tab-settings').onclick = () => { this.onCue('click'); this.setTab('settings'); };
     this.initSettings();
     $('dep-spear').onclick = () => this.rally('spear'); $('dep-blade').onclick = () => this.rally('blade');
     $('dep-boss').onclick = () => { game.summonBoss(); };
@@ -42,7 +43,8 @@ export class Panel {
     $('btn-reset').onclick = () => this.wipe();
     tree.canvas.addEventListener('click', (e) => {
       const id = tree.hitTest(e.clientX, e.clientY); if (!id) return;
-      if (tree.selected === id && canBuy(game.state, NODE[id])) this.buy(id);
+      // A second click on the selected node buys it (the buy plays `bought`), or is denied.
+      if (tree.selected === id) { if (canBuy(game.state, NODE[id])) this.buy(id); else this.onCue('denied'); } else this.onCue('click');
       tree.select(id); this.renderDetail();
     });
     $('hw-title').textContent = STR.hwTitle;
@@ -123,6 +125,8 @@ export class Panel {
 
   /** Called after any settings change so main.ts can apply volume and motion. */
   onSettings: () => void = () => {};
+  /** UI sounds with no sim event behind them (tab and node clicks, a refused buy). */
+  onCue: (c: Cue) => void = () => {};
 
   private initSettings(): void {
     $('set-vol-k').textContent = STR.setVolume; $('set-motion-k').textContent = STR.setMotion; $('set-num-k').textContent = STR.setNumbers;
