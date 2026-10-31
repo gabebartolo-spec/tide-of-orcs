@@ -1,7 +1,7 @@
 # Desktop (Steam) package for Windows (TB-119). `npm run desktop:pack` writes release/win-unpacked/,
 # the folder a SteamPipe depot uploads. Unsigned; no installer (Steam installs it).
 appId: com.gabebartolo.alotoforcs
-productName: A Lot of Orcs
+productName: "Let's Hunt Some Orc!"
 directories:
   output: release
 files:

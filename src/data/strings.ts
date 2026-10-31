@@ -3,7 +3,7 @@
 const grudges = (n: number): string => `${n} ${n === 1 ? 'grudge' : 'grudges'}`;
 
 export const STR = {
-  title: 'A Lot of Orcs',
+  title: "Let's Hunt Some Orc!",
   hint: 'Hold the fence. Move your pointer over the field to aim the bow; it looses on its own. Rally lads with teeth to meet the orcs in melee.',
   hintTouch: 'Hold the fence. Touch and hold the field to aim the bow; it looses on its own. Rally lads with teeth to meet the orcs in melee.',
   barricade: 'Fence', vanguard: 'Lads',
