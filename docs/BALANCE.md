@@ -106,16 +106,16 @@ Status measured 31 Oct 2026 at 8791ac2, seed 1, 25 min, player model `crowdAim` 
 | Bare archer, no purchases, holds | ≥ 4 waves | met (falls wave 4–5) |
 | Tree fully bought in a run | never | met: 117 of 156 buyable ranks at most (greedy run 5) |
 
-## Heartwood tree (M3, built TB-053)
-Bought with Heartwood, never reset. Costs in HW. Spending does not lower the passive `heart` bonus: `heart` counts all Heartwood earned, and the tree spends from `available = earned − spent`. The header shows `available / earned` once anything is spent. Early Dawn's skipped boss waves are not owed (`bossDone` starts at `floor(startWave / 10)`). Standing Orders spearmen are placed free, ignoring Muster and the line cap.
+## Heartwood tree (M3, built TB-053; shown to the player as Grudges, TB-112)
+Bought with Heartwood, never reset. Costs in HW. Spending does not lower the passive `heart` bonus: `heart` counts all Heartwood earned, and the tree spends from `available = earned − spent`. The header shows `available / earned` once anything is spent. Skip the Boring Bit's skipped boss waves are not owed (`bossDone` starts at `floor(startWave / 10)`). Standby Lad lads are placed free, ignoring Muster and the line cap.
 
 | id | Name | Max | Cost | Effect |
 |---|---|---|---|---|
-| hw_dawn | Early Dawn | 5 | 2, 4, 8, 14, 22 | Start each run at wave +2 |
-| hw_wolf | Old Friend | 1 | 3 | Start with Grey Wolf |
-| hw_timber | Stout Timber | 3 | 4, 8, 16 | Barricade base HP +25% |
-| hw_orders | Standing Orders | 2 | 5, 12 | Start each run with one Spearman (two at rank 2) |
-| hw_boss | Warlords | 3 | 6, 12, 24 | Boss wave clear bonus +50% per rank (director chose the effect 2026-10-31; numbers proposed, unplaytested) |
+| hw_dawn | Skip the Boring Bit | 5 | 2, 4, 8, 14, 22 | Start each run at wave +2 |
+| hw_wolf | Dog Comes Too | 1 | 3 | Start with the dog (A Dog) |
+| hw_timber | Better Fence | 3 | 4, 8, 16 | Fence base HP +25% |
+| hw_orders | Standby Lad | 2 | 5, 12 | Start each run with one lad (two at rank 2) |
+| hw_boss | Management Bonus | 3 | 6, 12, 24 | Boss wave clear bonus +50% per rank (director chose the effect 2026-10-31; numbers proposed, unplaytested) |
 | hw_find | Far Sight | 3 | 2, 5, 12 | Item Find +15 / 35 / 60% total (TB-101, P-101) |
 | hw_fortune | Fortune's Favour | 3 | 3, 8, 20 | Luck +10 / 25 / 45% total |
 | hw_satchel | Deep Satchel | 1 | 4 | Satchel holds 80. Needs Far Sight 1 |

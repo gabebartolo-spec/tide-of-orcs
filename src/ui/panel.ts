@@ -1,5 +1,5 @@
 import { PRESTIGE, VanType } from '../data/balance';
-import { BRANCH_COLOR, NODE } from '../data/skillTree';
+import { BRANCH_COLOR, BRANCH_LABEL, NODE } from '../data/skillTree';
 import { STR } from '../data/strings';
 import type { Cue } from '../data/audio';
 import { GameController } from '../game';
@@ -17,7 +17,7 @@ import { LOOT_TOAST } from '../data/lootTables';
 import { RARITIES } from '../data/loot';
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string): T => document.getElementById(id) as T;
-const VAN_NAME: Record<VanType, string> = { spear: 'Spearman', blade: 'Bladedancer' };
+const VAN_NAME: Record<VanType, string> = { spear: 'Lad', blade: 'Show-off' };
 
 export class Panel {
   private toastTimer = 0;
@@ -118,7 +118,7 @@ export class Panel {
   renderDetail(): void {
     const s = this.game.state, n = NODE[this.tree.selected], lvl = rankOf(s, n.id), cost = costOf(s, n), maxed = lvl >= n.max, un = unlocked(s, n);
     $('detail').innerHTML = `
-      <div class="branch" style="color:${BRANCH_COLOR[n.branch]}">${n.branch}${n.parent ? ' · ' + STR.needs(NODE[n.parent].name) : ''}</div>
+      <div class="branch" style="color:${BRANCH_COLOR[n.branch]}">${BRANCH_LABEL[n.branch]}${n.parent ? ' · ' + STR.needs(NODE[n.parent].name) : ''}</div>
       <div class="name"><span>${n.name}</span><span style="font-size:13px;color:var(--cream-dim)">${n.max > 1 ? STR.rank(lvl, n.max) : lvl ? STR.learned : ''}</span></div>
       <div class="desc">${n.desc}</div>
       <div class="row"><span style="font-variant-numeric:tabular-nums;color:var(--amber)">${maxed ? STR.fullyGrown : n.base === 0 ? '' : STR.starlightCost(fmt(cost))}</span>
