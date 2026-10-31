@@ -130,6 +130,8 @@ Lives in `sim/run.ts`. Runs `src/sim/` headless at 50 steps/s and decides every 
 - **nobuy**: never spends. Measures the bare archer.
 - **dps** (TB-040, built): every 15 s, trial the 6 cheapest affordable nodes over a 120 s lookahead (save-like restart, empty field) and buy the best Δ earned ÷ cost. Re-run TB-085 (wallMult 10, 30 min, seeds 1–3): Heartwood 26/55/53 vs greedy 22/23/27; best wave 30/35/35 vs 33/28/26. All six first fall at wave 5 by minute 1.8; dps breaks out at minute 10/7.6/7.6 of run time vs greedy 9.2/9.7/10.3, and on seeds 2–3 reaches the wave-35 ceiling inside 30 min. Same Heartwood as the pre-TB-054 figures: those were already at wallMult 10, only the "first fall" label was wrong.
 
+Loot flags (TB-108): `--hw hw_find:2,hw_fortune:1` starts with Heartwood ranks; `--bare` never wears gear; `--tune 'BOSS_WAVE.every=50,RARITY.weights.legendary.1=8'` overrides data for a sweep. Bosses are summoned when ready; the equip policy wears a set once 4+ of its slots are owned. The report ends with loot milestones (first drop, first of each rarity as run/minute/boss, first 6-piece set, bosses) and the run played on to its fall worn vs bare.
+
 Report columns per minute: wave, starlight, kills/min, kills, wall %, vanguard count, nodes owned, HW, falls. Summary line gives the first fall wave, every fall wave in order (`Falls:`), replants, Heartwood, best wave. (Before TB-084 the "First fall" field printed the last fall.) Writes `sim/out/<policy>-<date>.md` unless `--quiet`. CI runs 30 minutes of greedy as a smoke test.
 
 ## Proposed
@@ -328,6 +330,27 @@ Evidence: `npm run balance` (greedy, seed 1, 30 min) vs the tb-110 base: first f
 ### P-102 · Glimmer reroll (2026-11-01, TB-102)
 Reroll one affix of a worn item: cost = max(1, round(2 × 2^n × rerollMult)), n = rerolls already on that item (`REROLL` in lootTables). Costs 2, 4, 8, 16, 32…; with Glimmerwork 1, 2, 5, 10, 19. The new affix is a different id, keeps the item's arrow rule, value rolled at the item's ilvl.
 Evidence: none yet; the greedy runner never rerolls. Tuning is TB-107.
+
+### P-108 · Loot pacing: rarer bosses and rarer top drops (2026-11-01, TB-108)
+Director (1 Nov): make bosses rarer; "candidate C looks okay, just make it like 20% slower". Proposed (G):
+- `BOSS_WAVE.every` 10 → 50 (bosses.ts). A boss wave unlocks at wave 50, 100 …; runs fall near wave 85, so this is one boss per late run, about 1.9 per hour of play.
+- `RARITY.weights` (lootTables.ts), normal / boss: legendary 0.5 / 17 → 0.03 / 8; mythic 0 / 3 → 0 / 0.8. Others unchanged. Mythic pity stays 25 bosses (the "never past boss 25" cap).
+
+Evidence: `npm run balance -- --minutes 1500 --seed N --quiet --tune …` (25 sim-hours, greedy buys, every boss summoned at once, set-chasing equip). Times are play time since a fresh save.
+
+| | Target | Now (seed 1) | C: every 50, legendary 0.05/10, mythic 1 (seed 1) | G (proposed), seeds 1 / 2 / 3 / 4 |
+|---|---|---|---|---|
+| First drop | ≤ 3 min | 2.3 min | 2.3 min | 2.3 / 4.4 / 1.6 / 3.5 min |
+| First rare | run 1 | run 4 | run 4 | run 4 / 4 / 1 / 2 |
+| First legendary | 1–2 h | 13 min (boss 1) | 55 min | 55 / 44 / 62 / 71 min |
+| First mythic | 15–25 h, by boss 25 | 29 min (boss 4) | 9.1 h (boss 17) | 3.2 h (5) / 5.5 h (10) / 12.2 h (23) / 9.5 h (18) |
+| First 6-piece set | 6–10 h | never | 3.6 h | 9.7 / 11.8 / 7.5 / 7.0 h |
+| Bosses in 25 h | ≤ ~40 | 345 | 47 | 46 / 47 / 46 / 46 |
+| Best wave worn | | 90 (bare 83) | 87 | 89 / 89 / 90 / 91 |
+
+Read: G sets land at 7–12 h (C: 3.6 h; C with every 60 on seeds 1–3: 3.6–6.9 h), about 20–30% slower than C. Mythic stays luck-bound at 0.8% per boss; two of four seeds beat the 15 h floor, pity caps it at boss 25 (~13 h at this boss rate). First rare in run 1 misses at any weight: run 1 falls at wave 5 in 1.6 min.
+Gear power: worn vs bare best wave +5 to +8 (seed 1, 25 h). Late orc HP grows ~30% per wave, so +60–90% power ≈ +2–3 waves and "+10 waves" ≈ ×14 power: the two targets disagree. The runner's play-on trial (end state, worn vs bare) gives −5 to +7 waves by seed, too noisy to tune on.
+Found: past wave ~117 combat stops (0 kills/min, wall 100%, waves tick to 463 on seed 3 at bosses every 60); TB-118.
 
 ### P-111 · Per-type upgrade nodes (2026-11-01, TB-111)
 Design from the director (1 Nov): see SKILL-TREE §Per-type upgrade nodes. Numbers in `SHOT_FX`, `UNIT_FX`, `ELF_FX` (`src/data/balance.ts`).
