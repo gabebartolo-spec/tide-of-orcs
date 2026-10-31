@@ -88,7 +88,7 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-071 | Balance pass #2 from tester data | balance | 070 | gabe | todo |
 | TB-072 | Perf verification on phone; profile and fix | perf | M4 | | dropped (mobile off roadmap, 31 Oct) |
 | TB-073 | Itch.io page copy, screenshots, HTML5 zip pipeline | release | — | gabe | todo |
-| TB-074 | Electron wrapper spike | release | 073 | | todo |
+| TB-074 | Electron wrapper spike | release | 073 | claude | done (HASH) |
 | TB-075 | Bug bash checklist run (`docs/QA-CHECKLIST.md`; run 1 hidden, run 2 visible, both 1 Nov) | qa | — | claude | done (c8e9264, run 2 in this PR) |
 | TB-076 | Move 6 colour literals in src/render (rgba/hex) into palette tokens (rule 6) | render | | claude | done c189562 |
 | TB-077 | Move inline tree multipliers in sim/stats.ts (1.25, 1.15, 1.2, 1.4 …) into data/balance (rule 3) | sim/data | | claude | done c189562 |
@@ -124,6 +124,8 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-115 | Rename pass in the elf's voice (director's doc, 1 Nov): 49 skill nodes, 5 Grudges lines, currency Teeth/Grudge, Burn It Down, Fence, Lads, orc kinds and the player copy; then (director: do it yourself) the 55 later nodes, 6 loot Grudges lines, 7 sets and 8 mythics in the same voice; game title A Lot of Orcs (director, 1 Nov); branch display labels; ids and save unchanged | data/ui | 111 | claude | done (PR #35, e08d2ca) |
 | TB-116 | Tree keyboard access (QA B5): the tree canvas takes no focus or keys. Make nodes reachable by Tab or arrows and buyable by Enter (GDD §13) | ui | 075 | claude | done (33cf889) |
 | TB-117 | Tree: the branch legend (BOW, COMPANIONS …) is drawn over node labels at the top of the tree (QA run 2) | ui | 075 | claude | done (831aef2) |
+| TB-118 | Desktop: bundle the Spectral and Atkinson Hyperlegible fonts instead of loading Google Fonts, so the Electron build looks right offline (TB-074 finding) | release | 074 | | todo |
+| TB-119 | Desktop: package the Electron shell into a Windows build for Steam (needs a packager dependency, e.g. electron-builder; ask first) | release | 074 | | todo |
 | TB-101 | Loot L4: Spoils branch (7 Grove nodes) and 6 Heartwood loot lines (Far Sight, Fortune's Favour, Deep Satchel, Warboss Tithe, Heirloom, Glimmerwork) with requirements; save v9 adds the Heirloom uid. Numbers P-101 | sim | 110 | claude | done (9e8b756) |
 | TB-102 | Loot L5: spend Glimmer to reroll one affix on a worn item; cost doubles per reroll on that item, Glimmerwork ×0.6. Numbers P-102 | sim | 101 | claude | done (4d924fe) |
 | TB-103 | Loot L6: Replant screen lists items found this run by rarity and the best drop, in its rarity colour | ui | 102 | claude | done (d74f6a5) |
