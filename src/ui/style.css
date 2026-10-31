@@ -107,7 +107,7 @@ header h1 em { color: var(--amber); font-style: italic; }
 .glyph.big { width: 44px; height: 44px; } .glyph.big svg { width: 32px; height: 32px; }
 .itemdetail .head { display: flex; align-items: center; gap: 10px; }
 
-/* set bonuses (TB-098): earned tiers lit, the rest dimmed */
+/* set bonuses (TB-099): earned tiers lit, the rest dimmed */
 .sets .set, .itemdetail .set { margin: 6px 0; }
 .set .tier { color: var(--cream-dim); opacity: .55; font-size: 12px; line-height: 1.35; }
 .set .tier.on { color: var(--amber); opacity: 1; }

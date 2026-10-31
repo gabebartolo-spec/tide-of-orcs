@@ -225,7 +225,7 @@ function wolfStep(s: SimState, ev: EventBus, wf: Wolf, dt: number, haste: number
   if (tg && d < SOURCES.wolf.reach && wf.biteT > SOURCES.wolf.biteCd) { wf.biteT = 0; damage(s, ev, tg, s.stats.wolf * pet); ev.push({ t: 'bite', x: tg.x, y: tg.y }); }
 }
 
-/** Cinderground and Moonwells (TB-098): tick down, burn or slow the orcs inside; Moonwells mend the wall. */
+/** Cinderground and Moonwells (TB-099): tick down, burn or slow the orcs inside; Moonwells mend the wall. */
 function zoneStep(s: SimState, dt: number): void {
   s.zones.forEach((z) => {
     z.life -= dt;

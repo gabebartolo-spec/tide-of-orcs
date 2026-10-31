@@ -21,7 +21,7 @@ const orcAt = (s: SimState, x: number, y: number) => { spawnOrc(s, 'grunt', y); 
 const first = <T,>(pool: { forEach(f: (x: T) => void): void }, f: (x: T) => boolean): T | null => { let r: T | null = null; pool.forEach((x) => { if (!r && f(x)) r = x; }); return r; };
 const aim = (x: number, y: number) => ({ ...noInputs, aim: { x, y } });
 
-describe('mythic powers (TB-099)', () => {
+describe('mythic powers (TB-100)', () => {
   it('each mythic switches on its power only while worn', () => {
     expect(createState().stats.knifeReturn).toBe(0);
     expect(wearing('last-knife').stats.knifeReturn).toBe(1);

@@ -42,7 +42,7 @@ export const STR = {
   lootFound: (name: string) => `${name} found`,
   pinned: 'pinned', freeRally: 'Free rally!',
   setsWorn: 'Sets', setProgress: (name: string, n: number) => `${name} ${n}/6`,
-  /** Set bonus lines at 2, 4 and 6 pieces (TB-098). */
+  /** Set bonus lines at 2, 4 and 6 pieces (TB-099). */
   setFx: {
     nightknife: ['+25% knife throw rate', 'Knives make orcs bleed; bleeding orcs take +30% damage from everything', 'Every third throw is a Fan: 5 knives in a cone'],
     emberwright: ['+30% burn damage', 'A burning orc that dies passes its flames to 2 neighbours', 'Fire arrows leave Cinderground for 4 s: orcs on it burn and walk 25% slower'],
@@ -53,7 +53,7 @@ export const STR = {
     rootwarden: ['+15% wall health', 'The wall regrows 0.5%/s', 'Once per run, when the wall drops below 25%, rallies are free for 10 s'],
   } as Record<string, [string, string, string]>,
   itemLevel: (n: number) => `item level ${n}`, mythicLine: (power: string) => `Power: ${power}`,
-  /** Mythic powers as the player reads them (TB-099); numbers match MYTHIC_FX. */
+  /** Mythic powers as the player reads them (TB-100); numbers match MYTHIC_FX. */
   mythicPower: {
     'last-knife': 'A knife that hits flies back to the quiver, striking everything on its way.',
     'heart-of-kiln': 'Burn never runs out while the orc is on the field, and grows 10% stronger each second.',

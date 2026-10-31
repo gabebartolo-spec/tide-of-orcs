@@ -19,12 +19,12 @@ export interface Stats {
   barMax: number; barRegen: number; spikes: number; bulwark: boolean;
   // vanguard
   muster: boolean; vanCap: number; vanHp: number; vanDmg: number; vanMend: number; champion: boolean;
-  // set bonuses (TB-098): 0 = off; numbers from SET_FX, applied by applyGear
+  // set bonuses (TB-099): 0 = off; numbers from SET_FX, applied by applyGear
   bleedAmp: number; knifeFan: number; burn: number; burnSpread: number; cinder: number;
   chain: number; chainJump: number; rebound: number; stormCd: number;
   ballCd: number; boltShove: number; boltPin: number; moonCrit: number; moonwell: number;
   petDmg: number; petHaste: number; extraWolves: number; treantRoot: number; freeRally: number;
-  // mythic powers (TB-099): 0 = off; numbers from MYTHIC_FX
+  // mythic powers (TB-100): 0 = off; numbers from MYTHIC_FX
   knifeReturn: number; burnRamp: number; stormStore: number; stakes: number; fullMoon: number; petReturn: number; wallSplinter: number; starfall: number;
 }
 

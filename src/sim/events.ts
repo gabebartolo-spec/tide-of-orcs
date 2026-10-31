@@ -12,11 +12,11 @@ export type SimEvent =
   /** An orc struck by a melee source with no projectile (vanguard, wolf, hawk, treant, storm). Render-only (TB-088). */
   | { t: 'bleed'; x: number; y: number; r: number }
   | { t: 'impact'; x: number; y: number; r: number }
-  /** Set bonuses (TB-098): burn passed from a dying orc to (tx, ty); a bolt pinned an orc; Rootwarden's free rally opened. */
+  /** Set bonuses (TB-099): burn passed from a dying orc to (tx, ty); a bolt pinned an orc; Rootwarden's free rally opened. */
   | { t: 'burnSpread'; x: number; y: number; tx: number; ty: number }
   | { t: 'pinned'; x: number; y: number }
   | { t: 'freeRally'; secs: number }
-  /** Mythics (TB-099): Thunder's Memory's stored bolt hit the whole wave; a Starfall struck; a stake was driven; the wall stood again. */
+  /** Mythics (TB-100): Thunder's Memory's stored bolt hit the whole wave; a Starfall struck; a stake was driven; the wall stood again. */
   | { t: 'thunder' }
   | { t: 'starfall'; x: number; y: number }
   | { t: 'stake'; x: number; y: number }

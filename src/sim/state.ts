@@ -12,9 +12,9 @@ import { EquipPolicy } from './loot';
 export interface Orc {
   live: boolean; kind: OrcKind; x: number; y: number; hp: number; maxhp: number; spd: number; r: number; loot: number; atk: number;
   dead: boolean; burn: number; hitT: number; wob: number; swingT: number;
-  /** Set-bonus timers in seconds (TB-098): bleeding takes more damage, slowed walks slower, pinned/rooted stand still. */
+  /** Set-bonus timers in seconds (TB-099): bleeding takes more damage, slowed walks slower, pinned/rooted stand still. */
   bleed: number; slow: number; pin: number; root: number;
-  /** Heart of the Kiln (TB-099): seconds this orc has burned, for the ramp. */
+  /** Heart of the Kiln (TB-100): seconds this orc has burned, for the ramp. */
   burnT: number;
   /** Marched in a boss wave: the challenge is cleared when none are left. */
   champ: boolean;
@@ -23,13 +23,13 @@ export type ProjectileKind = 'arrow' | 'knife' | 'bolt' | 'lob';
 export interface Projectile {
   live: boolean; kind: ProjectileKind; x: number; y: number; vx: number; vy: number; dmg: number; pierce: number; life: number;
   target: Orc | null; hit: Set<Orc>;
-  /** The Last Knife (TB-099): this knife is flying back to the quiver, hitting everything. */
+  /** The Last Knife (TB-100): this knife is flying back to the quiver, hitting everything. */
   back: boolean;
   /** Lob only: launch and landing points, time aloft, height above ground, strike radius. */
   sx: number; sy: number; tx: number; ty: number; t: number; h: number; r: number;
 }
-/** A patch of ground left by a set bonus (TB-098): Cinderground burns and slows, a Moonwell slows and mends the wall. */
-/** Oakspine's stake (TB-099) holds the first orc to reach it; `used` once it has. */
+/** A patch of ground left by a set bonus (TB-099): Cinderground burns and slows, a Moonwell slows and mends the wall. */
+/** Oakspine's stake (TB-100) holds the first orc to reach it; `used` once it has. */
 export interface Zone { live: boolean; kind: 'cinder' | 'moonwell' | 'stake'; x: number; y: number; r: number; life: number; used: boolean }
 export interface Wolf { x: number; y: number; tx: number; ty: number; biteT: number }
 export interface Vanguard {
@@ -62,9 +62,9 @@ export interface SimState {
   pack: Wolf[];
   hawk: { x: number; y: number; a: number };
   zones: Pool<Zone>;
-  /** Run-only set state, not saved (TB-098): knives thrown toward the next Fan, Rootwarden's free-rally window and whether it was spent. */
+  /** Run-only set state, not saved (TB-099): knives thrown toward the next Fan, Rootwarden's free-rally window and whether it was spent. */
   knifeN: number; freeRallyT: number; freeRallyUsed: boolean;
-  /** Run-only mythic state, not saved (TB-099): stored storm charges, starlight toward the next Starfall and its cooldown, whether Heartwood Splinter has stood the wall again. */
+  /** Run-only mythic state, not saved (TB-100): stored storm charges, starlight toward the next Starfall and its cooldown, whether Heartwood Splinter has stood the wall again. */
   thunder: number; starAcc: number; starfallT: number; splinterUsed: boolean;
 }
 

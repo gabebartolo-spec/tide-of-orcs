@@ -47,7 +47,7 @@ export const BASES: readonly BaseDef[] = [
 export interface StatLine { stat: string; op: 'mul' | 'add'; value: number }
 /** Set bonuses at 2, 4 and 6 pieces worn. */
 export interface SetDef { id: string; name: string; bonus: Record<2 | 4 | 6, StatLine[]> }
-/** Set effect numbers (TB-098, BALANCE ## Proposed P-098). Field distances are in field px (~20 px per metre). */
+/** Set effect numbers (TB-099, BALANCE ## Proposed P-099). Field distances are in field px (~20 px per metre). */
 export const SET_FX = {
   knifeRate: 0.25, bleedAmp: 0.3, bleedSecs: 3, fanEvery: 3, fanKnives: 5, fanRad: 0.18,
   burn: 0.3, burnSpread: 2, spreadReach: 90, cinderSecs: 4, slow: 0.25,
@@ -74,8 +74,8 @@ export const SETS: readonly SetDef[] = [
   { id: 'rootwarden', name: 'Rootwarden', bonus: { 2: [mul('barMax', F.barMax)], 4: [on('barRegen', F.barRegen)], 6: [on('freeRally')] } },
 ];
 
-/** Mythics: one power and one cost each (powers wired in TB-099). */
-/** A mythic's power switches on a Stats field through `lines`, as set bonuses do (TB-099); its numbers live in MYTHIC_FX. */
+/** Mythics: one power and one cost each (powers wired in TB-100). */
+/** A mythic's power switches on a Stats field through `lines`, as set bonuses do (TB-100); its numbers live in MYTHIC_FX. */
 export interface MythicDef { id: string; name: string; slot: Slot; lines: StatLine[] }
 export const MYTHICS: readonly MythicDef[] = [
   { id: 'last-knife', name: 'The Last Knife', slot: 'bow', lines: [on('knifeReturn')] },
@@ -88,7 +88,7 @@ export const MYTHICS: readonly MythicDef[] = [
   { id: 'starfall-cloak', name: 'Starfall Cloak', slot: 'cloak', lines: [on('starfall'), on('itemFind', 0.15)] },
 ];
 
-/** Mythic power numbers (TB-099), proposed in BALANCE P-099. */
+/** Mythic power numbers (TB-100), proposed in BALANCE P-100. */
 export const MYTHIC_FX = {
   knifeBackLife: 3,
   burnRampPerSec: 0.1,
