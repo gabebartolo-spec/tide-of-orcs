@@ -13,7 +13,7 @@ Two sections. `## Current` is what ships and is human-owned. `## Proposed` is wh
 hp(w)       = 10 × 1.17^(min(w,15)−1) × 1.30^max(0, w−15)   ramp from wave 15 (P-001)
 loot(w)     = 2  × 1.13^(w−1)
 interval(w) = max(0.3, 2.0 × 0.93^(w−1))   seconds between grunt spawns; kind k every interval × every_k / 1.2^swarm_k; paused during a boss wave
-boss wave: unlocks every 10 waves, 60 s script, clear bonus = 40 × waveLoot(w) × starMult × (1 + 0.5 × hw_boss rank)
+boss wave: unlocks every 50 waves, 60 s script, clear bonus = 40 × waveLoot(w) × starMult × (1 + 0.5 × hw_boss rank)
 speed       = base × (1 + 0.008 w)
 atk         = 0.025 × maxhp                  per swing, one swing per second, vs vanguard
 wall hit    = 10 × atk                        per swing vs the barricade (TB-080: bare run falls at wave 3–4, ~90 s)
@@ -54,7 +54,7 @@ Rangers and Wardens keep straight volleys at `fireRate = 1.2 × 1.15^draw` per s
 | `SOURCES.knives.speed`, `ballista.speed` | 640, 760 px/s | balance.ts |
 | `VANGUARD.walkSpeed`, `engageRange` | 60 px/s; orcs within r + 18 px engage a vanguard | balance.ts |
 | `ORC_TYPES` | hp/speed/loot/radius/spawn multiples per kind (GDD §4) | orcs.ts |
-| `BOSS_WAVE`, `BOSS_SCRIPT` | every 10 waves, 60 s, clear loot 40 × waveLoot; 8 mini-waves, 28 orcs | bosses.ts |
+| `BOSS_WAVE`, `BOSS_SCRIPT` | every 50 waves, 60 s, clear loot 40 × waveLoot; 8 mini-waves, 28 orcs | bosses.ts |
 | `HW_FX` | Early Dawn +2 waves/rank, Stout Timber +0.25/rank, Warlords +0.5/rank | heartwood.ts |
 | `SKY` (render only) | 600 s day cycle, dusk alpha 0.85, two hill bands, lamp radius 150 | presentation.ts |
 | `AUDIO`, `CUES` (audio only) | gains, ducking, per-cue throttles | audio.ts |
@@ -104,10 +104,11 @@ Status measured 31 Oct 2026 at 8791ac2, seed 1, 25 min, player model `crowdAim` 
 | A spearman earns its keep | buys at least as many seconds of wall life per starlight as a Seasoned Timber rank (median over waves 3/6/10/14, seeds 1–3) | met, barely: median ratio 1.06, 7 of 12 cases ≥ 1 at `wallMult` 10 (`sim/spearman.ts`, TB-086); was 1.5 before TB-080 |
 | Breakout | a run passes wave 15 within 15 min of total play | met: greedy after 4–6 short runs (6–12 min), that run falls at wave 24–26 (TB-054) |
 | Bare archer, no purchases, holds | ≥ 4 waves | met (falls wave 4–5) |
+| Worn gear power (TB-108) | +60–90% vs bare, about +2–3 waves at late orc HP (director, 2026-11-01; "+10 waves" dropped) | met: +1.5 waves mean worn vs bare, seeds 1–4, 25 h (P-108b gain 0.75; was +4.75) |
 | Tree fully bought in a run | never | met: 117 of 156 buyable ranks at most (greedy run 5) |
 
 ## Heartwood tree (M3, built TB-053; shown to the player as Grudges, TB-112)
-Bought with Heartwood, never reset. Costs in HW. Spending does not lower the passive `heart` bonus: `heart` counts all Heartwood earned, and the tree spends from `available = earned − spent`. The header shows `available / earned` once anything is spent. Skip the Boring Bit's skipped boss waves are not owed (`bossDone` starts at `floor(startWave / 10)`). Standby Lad lads are placed free, ignoring Muster and the line cap.
+Bought with Heartwood, never reset. Costs in HW. Spending does not lower the passive `heart` bonus: `heart` counts all Heartwood earned, and the tree spends from `available = earned − spent`. The header shows `available / earned` once anything is spent. Skip the Boring Bit's skipped boss waves are not owed (`bossDone` starts at `floor(startWave / BOSS_WAVE.every)`). Standby Lad lads are placed free, ignoring Muster and the line cap.
 
 | id | Name | Max | Cost | Effect |
 |---|---|---|---|---|
@@ -129,6 +130,8 @@ Lives in `sim/run.ts`. Runs `src/sim/` headless at 50 steps/s and decides every 
 - **wall**: like greedy but rallies at 90% and weights Barricade/Vanguard nodes at half cost.
 - **nobuy**: never spends. Measures the bare archer.
 - **dps** (TB-040, built): every 15 s, trial the 6 cheapest affordable nodes over a 120 s lookahead (save-like restart, empty field) and buy the best Δ earned ÷ cost. Re-run TB-085 (wallMult 10, 30 min, seeds 1–3): Heartwood 26/55/53 vs greedy 22/23/27; best wave 30/35/35 vs 33/28/26. All six first fall at wave 5 by minute 1.8; dps breaks out at minute 10/7.6/7.6 of run time vs greedy 9.2/9.7/10.3, and on seeds 2–3 reaches the wave-35 ceiling inside 30 min. Same Heartwood as the pre-TB-054 figures: those were already at wallMult 10, only the "first fall" label was wrong.
+
+Loot flags (TB-108): `--hw hw_find:2,hw_fortune:1` starts with Heartwood ranks; `--bare` never wears gear; `--tune 'BOSS_WAVE.every=50,RARITY.weights.legendary.1=8'` overrides data for a sweep. Bosses are summoned when ready; the equip policy wears a set once 4+ of its slots are owned. The report ends with loot milestones (first drop, first of each rarity as run/minute/boss, first 6-piece set, bosses) and the run played on to its fall worn vs bare.
 
 Report columns per minute: wave, starlight, kills/min, kills, wall %, vanguard count, nodes owned, HW, falls. Summary line gives the first fall wave, every fall wave in order (`Falls:`), replants, Heartwood, best wave. (Before TB-084 the "First fall" field printed the last fall.) Writes `sim/out/<policy>-<date>.md` unless `--quiet`. CI runs 30 minutes of greedy as a smoke test.
 
@@ -308,8 +311,8 @@ Decision: keep 10. Measured falls over 40 min, seeds 1–3 (wave@run minutes): g
 
 ### Loot (TB-091, from the Loot Expansion Design; data in `src/data/lootTables.ts`, not yet live)
 - P(drop) = min(0.6, 0.008 · lootTier^1.5 · (1 + itemFind)). lootTier: grunt 1, runner 2, brute 3, elite 4, boss 5.
-- Rarity weights normal/boss: common 70/0, rare 25/40, epic 4.5/40, legendary 0.5/17, mythic 0/3. Each weight × (1+luck)^rank × (1 + 0.15(lootTier−1))^rank, rank 0–4.
-- Affixes per rarity 1/2/3/4/4; ranges × (1 + 0.03 · ilvl). Item level = wave, capped at 20 + 10 × prestiges. Commons stop after prestige 3, rares after 8. Affixes roll only for features the player owns (TB-114, `AFFIX_NEEDS`): Kinship needs any companion; Packbond the wolf, Talons the hawk, Roots the treant, Blades the knives, Ballistae the ballista, Thorns the spikes, Banner/Mail/Mending the vanguard (Muster), Elitebane elites marching; fire, storm and moon affixes need that arrow.
+- Rarity weights normal/boss: common 70.47/0, rare 25/45.1, epic 4.5/45, legendary 0.03/9, mythic 0/0.9 (P-108; boss column is the simmed 40/40/8/0.8 rescaled to sum 100). Each weight × (1+luck)^rank × (1 + 0.15(lootTier−1))^rank, rank 0–4.
+- Affixes per rarity 1/2/3/4/4; ranges × 0.75 × (1 + 0.03 · ilvl) (`AFFIX.gain` 0.75, P-108b). Item level = wave, capped at 20 + 10 × prestiges. Commons stop after prestige 3, rares after 8. Affixes roll only for features the player owns (TB-114, `AFFIX_NEEDS`): Kinship needs any companion; Packbond the wolf, Talons the hawk, Roots the treant, Blades the knives, Ballistae the ballista, Thorns the spikes, Banner/Mail/Mending the vanguard (Muster), Elitebane elites marching; fire, storm and moon affixes need that arrow.
 - Pity: legendary weight +10% per boss without one; mythic guaranteed by the 25th boss without one.
 - Sets: 2/4/6-piece bonus +20/50/100% to the set's stat (Handyman 15/40/80%).
 
@@ -328,6 +331,42 @@ Evidence: `npm run balance` (greedy, seed 1, 30 min) vs the tb-110 base: first f
 ### P-102 · Glimmer reroll (2026-11-01, TB-102)
 Reroll one affix of a worn item: cost = max(1, round(2 × 2^n × rerollMult)), n = rerolls already on that item (`REROLL` in lootTables). Costs 2, 4, 8, 16, 32…; with Haggling 1, 2, 5, 10, 19. The new affix is a different id, keeps the item's arrow rule and the feature gate, value rolled at the item's ilvl.
 Evidence: none yet; the greedy runner never rerolls. Tuning is TB-107.
+
+### P-108 · Loot pacing: rarer bosses and rarer top drops (2026-11-01, TB-108) · applied
+Director (1 Nov): make bosses rarer; "candidate C looks okay, just make it like 20% slower"; approved "Yes, apply P-108" (1 Nov). Applied (G), now in Current and the data:
+- `BOSS_WAVE.every` 10 → 50 (bosses.ts). A boss wave unlocks at wave 50, 100 …; runs fall near wave 85, so this is one boss per late run, about 1.9 per hour of play.
+- `RARITY.weights` (lootTables.ts), normal / boss: legendary 0.5 / 17 → 0.03 / 9; mythic 0 / 3 → 0 / 0.9; common 70 → 70.47, boss rare/epic 40 → 45.1/45, so each column sums to 100 (same ratios as the simmed 40/40/8/0.8). Mythic pity stays 25 bosses (the "never past boss 25" cap).
+
+Evidence: `npm run balance -- --minutes 1500 --seed N --quiet --tune …` (25 sim-hours, greedy buys, every boss summoned at once, set-chasing equip). Times are play time since a fresh save.
+
+| | Target | Now (seed 1) | C: every 50, legendary 0.05/10, mythic 1 (seed 1) | G (proposed), seeds 1 / 2 / 3 / 4 |
+|---|---|---|---|---|
+| First drop | ≤ 3 min | 2.3 min | 2.3 min | 2.3 / 4.4 / 1.6 / 3.5 min |
+| First rare | run 1 | run 4 | run 4 | run 4 / 4 / 1 / 2 |
+| First legendary | 1–2 h | 13 min (boss 1) | 55 min | 55 / 44 / 62 / 71 min |
+| First mythic | 15–25 h, by boss 25 | 29 min (boss 4) | 9.1 h (boss 17) | 3.2 h (5) / 5.5 h (10) / 12.2 h (23) / 9.5 h (18) |
+| First 6-piece set | 6–10 h | never | 3.6 h | 9.7 / 11.8 / 7.5 / 7.0 h |
+| Bosses in 25 h | ≤ ~40 | 345 | 47 | 46 / 47 / 46 / 46 |
+| Best wave worn | | 90 (bare 83) | 87 | 89 / 89 / 90 / 91 |
+
+Read: G sets land at 7–12 h (C: 3.6 h; C with every 60 on seeds 1–3: 3.6–6.9 h), about 20–30% slower than C. Mythic stays luck-bound at 0.8% per boss; two of four seeds beat the 15 h floor, pity caps it at boss 25 (~13 h at this boss rate). First rare in run 1 misses at any weight: run 1 falls at wave 5 in 1.6 min.
+Gear power: worn vs bare best wave +5 to +8 (seed 1, 25 h). Late orc HP grows ~30% per wave, so +60–90% power ≈ +2–3 waves and "+10 waves" ≈ ×14 power: the two targets disagree. Director (1 Nov) picked +60–90% power. The runner's play-on trial (end state, worn vs bare) gives −5 to +7 waves by seed, too noisy to tune on.
+Found: past wave ~117 combat stops (0 kills/min, wall 100%, waves tick to 463 on seed 3 at bosses every 60); TB-126.
+
+### P-108b · Gear power: affix gain 0.75 (2026-11-01, TB-108) · applied
+Director (1 Nov): target +60–90% gear power (about +2–3 waves); "Yes, tune down"; approved "Yes, apply" (1 Nov). Applied: `AFFIX.gain` 1 → 0.75 (lootTables.ts), so every affix rolls at 75% of today's value. Sets and mythics unchanged.
+
+Evidence: `npm run balance -- --minutes 1500 --seed N --quiet [--bare | --tune AFFIX.gain=G]` with P-108 drops. Best wave in 25 h, seeds 1 / 2 / 3 / 4:
+
+| | Best wave | Gain over bare | Mean |
+|---|---|---|---|
+| Bare | 85 / 85 / 84 / 86 | | |
+| Gain 1 (now) | 89 / 89 / 90 / 91 | +4 / +4 / +6 / +5 | +4.75 |
+| Gain 0.75 | 87 / 84 / 87 / 88 | +2 / −1 / +3 / +2 | +1.5 |
+| Gain 0.5 (seeds 1–2) | 84 / 101 | −1 / +16 | noise |
+| Gain 0.3 (seeds 1–2) | 83 / 86 | −2 / +1 | |
+
+Read: 0.75 puts three of four seeds at +2–3 waves; seed noise is about ±2 waves. 0.5 and below are indistinguishable from bare except for one lucky seed.
 
 ### P-111 · Per-type upgrade nodes (2026-11-01, TB-111)
 Design from the director (1 Nov): see SKILL-TREE §Per-type upgrade nodes. Numbers in `SHOT_FX`, `UNIT_FX`, `ELF_FX` (`src/data/balance.ts`).

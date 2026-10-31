@@ -2,7 +2,7 @@ import { OrcKind } from './orcs';
 
 /** Boss waves (TB-081). Every `every` waves one unlocks; the player summons it whenever they like. Mirrors docs/GDD.md §4. */
 export const BOSS_WAVE = {
-  every: 10,      // a boss wave unlocks at wave 10, 20, 30 …
+  every: 50,      // a boss wave unlocks at wave 50, 100, 150 … (P-108: one boss per late run)
   secs: 60,       // the challenge lasts this long
   clearLoot: 40,  // clearing every orc in time pays this × waveLoot(w) starlight
 } as const;

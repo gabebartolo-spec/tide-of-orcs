@@ -3,7 +3,7 @@ import { Rarity, Slot } from './loot';
 
 /** Rarity weights (normal / boss) and affix counts. Each weight is shifted by (1+luck)^rank and (1 + tierShift·(lootTier−1))^rank. */
 export const RARITY = {
-  weights: { common: [70, 0], rare: [25, 40], epic: [4.5, 40], legendary: [0.5, 17], mythic: [0, 3] } as Record<Rarity, [number, number]>,
+  weights: { common: [70.47, 0], rare: [25, 45.1], epic: [4.5, 45], legendary: [0.03, 9], mythic: [0, 0.9] } as Record<Rarity, [number, number]>,
   affixes: { common: 1, rare: 2, epic: 3, legendary: 4, mythic: 4 } as Record<Rarity, number>,
   tierShift: 0.15,
 } as const;
@@ -16,8 +16,9 @@ export const REROLL = { base: 2, growth: 2 } as const;
 export const SATCHEL = { base: 40, deep: 80, maxArrowAffixes: 2 } as const;
 /** Spoils branch (TB-101), BALANCE P-101. trophyEvery: waves whose kills roll twice; echo: mythic power ×1.25 more often or longer. */
 export const SPOILS_FX = { hunterCrit: 0.05, scavenger: 1.5, trophyEvery: 10, sharpFind: 0.1, resonance: 1, echo: 1.25 } as const;
-/** Affix ranges grow by 1 + 0.03 × item level. */
-export const affixScale = (ilvl: number): number => 1 + 0.03 * ilvl;
+/** Affix ranges grow by gain × (1 + perIlvl × item level). gain is the TB-108 power lever. */
+export const AFFIX = { gain: 0.75, perIlvl: 0.03 };
+export const affixScale = (ilvl: number): number => AFFIX.gain * (1 + AFFIX.perIlvl * ilvl);
 
 export type ArrowType = 'fire' | 'storm' | 'moon';
 /** `stat`: the gear stat the affix feeds; `op`: mul (+x as a fraction) or add. */

@@ -201,16 +201,19 @@ describe('kinship, horde (TB-039)', () => {
 
 describe('boss waves (TB-081)', () => {
   const at = (wave: number) => { const s = createState(6); s.run.wave = wave; s.stats.barMax = s.run.barHp = 1e9; return s; }; // a wall that never falls
-  it('one unlocks every 10 waves and waits to be summoned', () => {
-    expect(bossesReady(at(9))).toBe(0); expect(bossesReady(at(10))).toBe(1); expect(bossesReady(at(23))).toBe(2);
-    const s = at(10), ev = new EventBus();
+  /** A boss waiting at a low wave (one owed), so its orcs stay weak enough to clear. */
+  const owed = (wave: number) => { const s = at(wave); s.run.bossDone = -1; return s; };
+  it('one unlocks every BOSS_WAVE.every waves and waits to be summoned', () => {
+    const B = BOSS_WAVE.every;
+    expect(bossesReady(at(B - 1))).toBe(0); expect(bossesReady(at(B))).toBe(1); expect(bossesReady(at(2 * B + 3))).toBe(2);
+    const s = at(B), ev = new EventBus();
     for (let i = 0; i < 5 / STEP; i++) step(s, STEP, noInputs, ev);
     expect(s.run.boss).toBeNull();
     expect(summonBoss(s, ev)).toBe(true); expect(summonBoss(s, ev)).toBe(false);
     expect(bossesReady(s)).toBe(0);
   });
   it('plays its script for 60 s with regular marching paused, and the Warboss marches only in it', () => {
-    const s = at(10), ev = new EventBus(); summonBoss(s, ev);
+    const s = owed(10), ev = new EventBus(); summonBoss(s, ev);
     const kinds = new Set<string>(); let champs = 0;
     for (let i = 0; i < 30 / STEP; i++) { step(s, STEP, noInputs, ev); s.orcs.forEach((o) => { kinds.add(o.kind); if (!o.champ) champs = -1e9; }); }
     expect(kinds.has('boss')).toBe(true); expect(champs).toBe(0);
@@ -220,7 +223,7 @@ describe('boss waves (TB-081)', () => {
     const plain = at(10); for (let i = 0; i < 60 / STEP; i++) { step(plain, STEP, aimed(plain), new EventBus()); plain.orcs.forEach((o) => { expect(o.kind).not.toBe('boss'); }); }
   });
   it('clearing every orc in time pays a starlight bounty', () => {
-    const s = at(10), ev = new EventBus(); summonBoss(s, ev);
+    const s = owed(10), ev = new EventBus(); summonBoss(s, ev);
     let paid = 0;
     for (let i = 0; i < 60 / STEP && s.run.boss; i++) {
       step(s, STEP, noInputs, ev);

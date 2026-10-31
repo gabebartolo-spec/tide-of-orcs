@@ -39,7 +39,7 @@ describe('Heartwood tree (TB-053)', () => {
     expect(bossesReady(s)).toBe(0); expect(s.run.bossDone).toBe(Math.floor(11 / BOSS_WAVE.every));
   });
   it('Warlords raises the boss wave clear bonus 50% per rank', () => {
-    const s = withHw(100, { hw_boss: 2 }), ev = new EventBus(); s.run.wave = 10;
+    const s = withHw(100, { hw_boss: 2 }), ev = new EventBus(); s.run.wave = 10; s.run.bossDone = -1; // one boss waiting at low orc HP
     s.run.boss = { t: 59, next: BOSS_SCRIPT.length, left: 0 }; bossStep(s, ev, 0.1);
     const end = ev.drain().find((e) => e.t === 'bossEnd');
     expect(end).toMatchObject({ cleared: true }); expect(end && 'loot' in end ? end.loot : 0).toBeCloseTo(BOSS_WAVE.clearLoot * waveLoot(10) * s.stats.starMult * 2);
