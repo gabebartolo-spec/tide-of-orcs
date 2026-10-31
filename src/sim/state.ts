@@ -8,14 +8,16 @@ import { Rng, createRng } from './rng';
 export interface Orc {
   live: boolean; kind: OrcKind; x: number; y: number; hp: number; maxhp: number; spd: number; r: number; loot: number; atk: number;
   dead: boolean; burn: number; hitT: number; wob: number; swingT: number;
+  /** Seconds left chilled (Frost Arrows) and stunned (Thunderclap). */
+  chill: number; stun: number;
   /** Marched in a boss wave: the challenge is cleared when none are left. */
   champ: boolean;
 }
-export type ProjectileKind = 'arrow' | 'knife' | 'bolt' | 'lob';
+export type ProjectileKind = 'arrow' | 'knife' | 'bolt' | 'lob' | 'bounce' | 'star';
 export interface Projectile {
   live: boolean; kind: ProjectileKind; x: number; y: number; vx: number; vy: number; dmg: number; pierce: number; life: number;
   target: Orc | null; hit: Set<Orc>;
-  /** Lob only: launch and landing points, time aloft, height above ground, strike radius. */
+  /** Lob and star (a Starfall arrow, falling straight down from h): launch and landing points, time aloft, height above ground, strike radius. */
   sx: number; sy: number; tx: number; ty: number; t: number; h: number; r: number;
 }
 export interface Vanguard {
@@ -30,6 +32,8 @@ export interface RunState {
   /** Boss waves summoned this run, and the one running now (t: seconds in, next: script index, left: its orcs not yet slain). */
   bossDone: number; boss: { t: number; next: number; left: number } | null;
   foeT: Partial<Record<OrcKind, number>>; stormT: number; shotT: number[]; knifeT: number; hawkT: number; treantT: number; ballT: number;
+  /** Lobs loosed this run, for Starfall's every-10th count. Optional: older saves lack it. */
+  lobN?: number;
 }
 /** heartwood: all Heartwood ever earned (drives the passive bonus); hwLevels: Heartwood tree ranks bought with it. */
 export interface MetaState { heartwood: number; lifetimeKills: number; bestWave: number; prestiges: number; hwLevels: HwLevels }
@@ -49,7 +53,7 @@ export function freshRun(): RunState {
 }
 export function freshMeta(): MetaState { return { heartwood: 0, lifetimeKills: 0, bestWave: 1, prestiges: 0, hwLevels: {} }; }
 
-const makeOrc = (): Orc => ({ live: false, kind: 'grunt', x: 0, y: 0, hp: 0, maxhp: 0, spd: 0, r: 0, loot: 0, atk: 0, dead: false, burn: 0, hitT: 0, wob: 0, swingT: 0, champ: false });
+const makeOrc = (): Orc => ({ live: false, kind: 'grunt', x: 0, y: 0, hp: 0, maxhp: 0, spd: 0, r: 0, loot: 0, atk: 0, dead: false, burn: 0, hitT: 0, wob: 0, swingT: 0, champ: false, chill: 0, stun: 0 });
 const makeShot = (): Projectile => ({ live: false, kind: 'arrow', x: 0, y: 0, vx: 0, vy: 0, dmg: 0, pierce: 0, life: 0, target: null, hit: new Set(), sx: 0, sy: 0, tx: 0, ty: 0, t: 0, h: 0, r: 0 });
 const makeVan = (): Vanguard => ({ live: false, type: 'spear', x: 0, y: 0, tx: 0, hp: 0, maxhp: 0, swingT: 0, hitT: 0 });
 

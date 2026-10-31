@@ -1,7 +1,7 @@
 import { NodeId } from '../data/skillTree';
 import { HW_FX, HwLevels } from '../data/heartwood';
 import { FOE_FX, OrcKind } from '../data/orcs';
-import { BARRICADE, LOB, NODE_FX, PLAYER, SOURCES, VANGUARD, heartMult } from '../data/balance';
+import { ARROWS, BARRICADE, LOB, NODE_FX, PLAYER, SOURCES, VANGUARD, heartMult } from '../data/balance';
 
 export type Levels = Partial<Record<NodeId, number>>;
 
@@ -9,6 +9,8 @@ export type Levels = Partial<Record<NodeId, number>>;
 export interface Stats {
   dmg: number; fireRate: number; lobCd: number; radius: number; arrows: number; pierce: number; crit: number;
   homing: boolean; fire: boolean;
+  /** Arrow enchantments (TB-089): Rebound hops (0 = none), shock, stun, frost slow fraction (0 = none), shatter damage × player dmg (0 = none), starfall. */
+  bounce: number; shock: boolean; stun: boolean; slow: number; shatter: number; starfall: boolean;
   starMult: number;
   /** Per orc kind: summoned yet, and its Fury/Swarm multipliers. The Warboss never marches; he comes only with a boss wave. */
   foes: Record<OrcKind, Foe>;
@@ -46,6 +48,12 @@ export function deriveStats(lv: Levels, heartwood: number, hw: HwLevels = {}): S
     crit: NODE_FX.critPerRank * L('crit'),
     homing: L('moon') > 0,
     fire: L('fire') > 0,
+    bounce: L('bounce') ? 1 + L('bounce') : 0,
+    shock: L('shock') > 0,
+    stun: L('stun') > 0,
+    slow: L('frost') ? ARROWS.frost.slow0 + ARROWS.frost.slowPerRank * (L('frost') - 1) : 0,
+    shatter: L('shatter') ? ARROWS.shatter.mult * Math.pow(ARROWS.shatter.perRank, L('shatter') - 1) : 0,
+    starfall: L('starfall') > 0,
     starMult: Math.pow(NODE_FX.gleanLoot, L('glean')) * hm,
     foes: { boss: { on: false, hp: 1, loot: 1, spawn: 1 }, ...Object.fromEntries(Object.entries(FOE_NODES).map(([k, [on, fury, swarm]]) => [k, {
       on: on === null || L(on) > 0,

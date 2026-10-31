@@ -82,6 +82,22 @@ Goal: parity with the prototype, properly built.
 - Settings, reduced-motion path, number formats.
 **Done when:** a 60-second trailer can be captured without placeholder art.
 
+### M4.5 — Arrow arsenal (TB-089) · **in progress**
+Six new nodes (43 → 49) giving the elf's lob distinct elemental arrows, each with its own VFX and ElevenLabs SFX. Numbers are proposals (BALANCE.md §Proposed P-002) until the director approves.
+
+| Node | Branch, after | Ranks | What it does |
+|---|---|---|---|
+| Rebound (`bounce`) | Bow, Longshaft | 4 | A magic bolt leaps from the strike to the nearest orc within 120, then on: 2 bounces at rank 1, +1 per rank. Each bounce deals 60% of the last. |
+| Starfall (`starfall`) | Bow, Moonbow | 1 | Every 10th lob also rains 8 arrows straight down on random orcs across the plain. |
+| Frost Arrows (`frost`) | Armoury, Fire Arrows | 5 | Struck orcs are chilled 3 s: march and swing slowed 20% at rank 1, +5% per rank (40% at rank 5). |
+| Shatter (`shatter`) | Armoury, Frost Arrows | 5 | A chilled orc that dies bursts, hitting orcs within 50 for 100% lob damage, ×1.4 per rank. |
+| Shock Arrows (`shock`) | Armoury, Storm Glade | 1 | Lightning jumps from the strike to 3 orcs outside the circle (within 90) for 30% damage. |
+| Thunderclap (`stun`) | Armoury, Shock Arrows | 1 | Struck orcs are stunned 0.5 s (no move, no swing). |
+
+Fire Arrows gains a strike flame VFX and SFX. Every effect is render-pooled VFX plus one SFX cue: fire, bounce, shock, stun, frost, shatter, starfall.
+Spend: director gave a written yes with no cap on ElevenLabs credits for these SFX (31 Oct); first pass 7 cues × 2 takes, about 233 credits.
+**Done when:** all six nodes buy and work in game, VFX and SFX play, tests cover each effect, the director has approved the numbers.
+
 ### M5 — Ship (week 8) · local telemetry done (TB-070 f31ce6b)
 - Balance pass #2 with telemetry from testers (local JSON export, no server; export built).
 - Save import/export, version migration test suite.

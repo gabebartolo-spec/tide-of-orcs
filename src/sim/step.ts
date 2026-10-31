@@ -1,8 +1,8 @@
-import { BARRICADE, FIELD, LOB, PLAYER, SOURCES, WAVE_LEN, waveHP, waveInterval, waveLoot, waveSpeedMult } from '../data/balance';
+import { ARROWS, BARRICADE, FIELD, LOB, PLAYER, SOURCES, WAVE_LEN, waveHP, waveInterval, waveLoot, waveSpeedMult } from '../data/balance';
 import { ORC_KINDS, ORC_TYPES, OrcKind } from '../data/orcs';
 import { EventBus } from './events';
 import { Orc, Projectile, SimState } from './state';
-import { damage, impact, lob, nearestOrc, shoot, volley } from './combat';
+import { bounce, damage, impact, lob, nearestOrc, shoot, starfall, volley } from './combat';
 import { barricadeHit, barricadeRegen } from './barricade';
 import { bossStep } from './boss';
 import { BOSS_WAVE } from '../data/bosses';
@@ -24,7 +24,7 @@ export function spawnOrc(s: SimState, kind: OrcKind, y?: number, champ = false):
   o.kind = kind; o.x = W + 24; o.y = y ?? 50 + s.rng.next() * (H - 100);
   o.hp = hp; o.maxhp = hp; o.spd = T.speed * waveSpeedMult(w); o.r = T.radius; o.atk = hp * BARRICADE.orcAtkFrac;
   o.loot = waveLoot(w) * T.loot * F.loot;
-  o.dead = false; o.burn = 0; o.hitT = 0; o.wob = s.rng.next() * 6.28; o.swingT = s.rng.next(); o.champ = champ;
+  o.dead = false; o.burn = 0; o.chill = 0; o.stun = 0; o.hitT = 0; o.wob = s.rng.next() * 6.28; o.swingT = s.rng.next(); o.champ = champ;
   return true;
 }
 
@@ -55,19 +55,23 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
     o.wob += dt * 8;
     if (o.burn > 0) { o.burn -= dt; o.hp -= st.dmg * SOURCES.burnFrac * dt; if (o.hp <= 0) { damage(s, ev, o, 0); return; } }
     if (o.hitT > 0) o.hitT -= dt;
+    // Thunderclap holds an orc still; Frost Arrows slow its march and its swing.
+    if (o.stun > 0) { o.stun -= dt; return; }
+    const pace = o.chill > 0 ? 1 - st.slow : 1;
+    if (o.chill > 0) o.chill -= dt;
     const v = engagedVanguard(s, o);
     if (v) {
-      o.swingT += dt;
+      o.swingT += dt * pace;
       if (o.swingT >= BARRICADE.orcSwing) { o.swingT = 0; ev.push({ t: 'orcSwing', kind: o.kind, x: o.x, y: o.y, tx: v.x, ty: v.y, r: o.r }); hurtVanguard(s, ev, v, o.atk); }
       return;
     }
     if (o.x <= BAR_X + BAR_W + o.r) {
-      o.x = BAR_X + BAR_W + o.r; o.swingT += dt;
+      o.x = BAR_X + BAR_W + o.r; o.swingT += dt * pace;
       if (o.swingT >= BARRICADE.orcSwing) { o.swingT = 0; ev.push({ t: 'orcSwing', kind: o.kind, x: o.x, y: o.y, tx: BAR_X + BAR_W, ty: o.y, r: o.r }); barricadeHit(s, ev, o.atk * BARRICADE.wallMult, o.y); }
       if (st.spikes > 0) damage(s, ev, o, st.dmg * st.spikes * dt);
       return;
     }
-    o.x -= o.spd * dt;
+    o.x -= o.spd * pace * dt;
   });
   if (run.fallen) return;
 
@@ -81,6 +85,8 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
     const home = st.homing ? nearestOrc(s, x, y, (o) => dist(o.x, o.y, x, y) < PLAYER.aimHomingRadius) : null;
     if (home) { x = home.x; y = home.y; }
     run.shotT[0] = 0; lob(s, ELF_X, H / 2, x, y);
+    run.lobN = (run.lobN ?? 0) + 1;
+    if (st.starfall && run.lobN % ARROWS.starfall.every === 0) starfall(s, ev);
     // Split Shot: extra arrows land at random inside the circle.
     for (let k = 1; k < st.arrows; k++) {
       const a = s.rng.next() * 6.28, d = s.rng.next() * st.radius * LOB.splitSpread;
@@ -146,7 +152,25 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
       // Flies a parabola to its landing point, strikes, then strikes again pulseGap later per Longshaft rank.
       a.t += dt; const u = Math.min(1, a.t / LOB.flight);
       a.x = a.sx + (a.tx - a.sx) * u; a.y = a.sy + (a.ty - a.sy) * u; a.h = LOB.arc * 4 * u * (1 - u);
-      if (a.t >= LOB.flight) { impact(s, ev, a); if (a.pierce-- > 0) a.t -= LOB.pulseGap; else s.shots.release(a); }
+      if (a.t >= LOB.flight) { impact(s, ev, a, a.pierce === st.pierce); if (a.pierce-- > 0) a.t -= LOB.pulseGap; else s.shots.release(a); }
+      return;
+    }
+    if (a.kind === 'star') {
+      a.t += dt; a.h = ARROWS.starfall.height * (1 - Math.max(0, Math.min(1, a.t / ARROWS.starfall.flight)));
+      if (a.t >= ARROWS.starfall.flight) { impact(s, ev, a); s.shots.release(a); }
+      return;
+    }
+    if (a.kind === 'bounce') {
+      // Rebound: fly at the target; on reaching it strike, then leap on from there, softer each hop.
+      const tg = a.target; a.life -= dt;
+      if (!tg || !tg.live || tg.dead || a.life <= 0) { s.shots.release(a); return; }
+      const dx = tg.x - a.x, dy = tg.y - a.y, d = Math.hypot(dx, dy), m = ARROWS.bounce.speed * dt;
+      a.vx = dx / (d || 1) * ARROWS.bounce.speed; a.vy = dy / (d || 1) * ARROWS.bounce.speed;
+      if (d > tg.r + 4 + m) { a.x += dx / d * m; a.y += dy / d * m; return; }
+      a.hit.add(tg); ev.push({ t: 'hit', x: tg.x, y: tg.y, crit: false, src: 'bounce' }); ev.push({ t: 'bounceHit', x: tg.x, y: tg.y });
+      damage(s, ev, tg, a.dmg);
+      if (a.pierce > 0) bounce(s, tg.x, tg.y, a.dmg * ARROWS.bounce.falloff, a.pierce - 1, a.hit);
+      s.shots.release(a);
       return;
     }
     a.life -= dt;
