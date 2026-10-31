@@ -1,6 +1,8 @@
 /** Satchel and equip logic (TB-093/094). Pure. Set pieces and mythics are never auto-salvaged. */
 import { Item, LootMeta, RARITIES, Rarity, SLOTS } from '../data/loot';
-import { SATCHEL, affixScale } from '../data/lootTables';
+import { REROLL, SATCHEL, affixScale } from '../data/lootTables';
+import { rerollAffix } from './lootRoll';
+import { Rng } from './rng';
 
 /** player: wear into empty slots only, the player swaps by hand; greedy/hoarder are balance-runner policies. */
 export type EquipPolicy = 'player' | 'greedy' | 'hoarder';
@@ -17,6 +19,19 @@ export const equippedItems = (l: LootMeta): Item[] =>
 export interface SalvageFx { salvageMult: number; salvagePlus: number }
 const NO_FX: SalvageFx = { salvageMult: 1, salvagePlus: 0 };
 export const salvageGlimmer = (it: Item, fx: SalvageFx = NO_FX): number => Math.floor(2 ** RARITIES.indexOf(it.rarity) * fx.salvageMult) + fx.salvagePlus;
+
+/** Glimmer for the next reroll on `it`: doubles with each one bought, Glimmerwork cuts it (TB-102). */
+export const rerollCost = (it: Item, mult = 1): number => Math.max(1, Math.round(REROLL.base * REROLL.growth ** (it.rerolls ?? 0) * mult));
+
+/** Reroll affix `i` of a worn item for Glimmer. Mythics' powers are not affixes and stay. */
+export function reroll(l: LootMeta, uid: string, i: number, rng: Rng, mult = 1): boolean {
+  const it = l.items.find((x) => x.uid === uid), cost = it ? rerollCost(it, mult) : 0;
+  if (!it || !Object.values(l.equipped).includes(uid) || l.glimmer < cost) return false;
+  const next = rerollAffix(rng, it, i);
+  if (!next) return false;
+  it.affixes[i] = next; it.rerolls = (it.rerolls ?? 0) + 1; l.glimmer -= cost;
+  return true;
+}
 
 export function salvage(l: LootMeta, uid: string, fx: SalvageFx = NO_FX): boolean {
   const i = l.items.findIndex((x) => x.uid === uid);

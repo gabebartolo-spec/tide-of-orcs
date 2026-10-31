@@ -39,6 +39,7 @@ export const STR = {
   satchelVs: (worn: string, d: number) => `Against worn ${worn}: ${d >= 0 ? '+' : ''}${d} power`,
   satchelFilter: 'Keep', filterAtLeast: (r: string) => `${r} and up`, satchelWornNow: 'Worn',
   equip: 'Wear', lock: 'Lock', unlock: 'Unlock', lockedMark: ' · locked', salvageFor: (g: number) => `Salvage +${g} Glimmer`,
+  rerollFor: (g: number) => `Reroll · ${g} Glimmer`,
   heirloom: 'Make heirloom', unheirloom: 'Not heirloom', heirloomMark: ' · heirloom',
   hwNeeds: (names: string) => `Needs ${names}`,
   lootFound: (name: string) => `${name} found`,

@@ -13,7 +13,7 @@ import { summonBoss } from './sim/boss';
 import { buyHw } from './sim/heartwood';
 import { HwId } from './data/heartwood';
 import { rally } from './sim/vanguard';
-import { equip, salvage, setFilter, toggleHeirloom, toggleLock } from './sim/loot';
+import { equip, reroll, salvage, setFilter, toggleHeirloom, toggleLock } from './sim/loot';
 import { Rarity } from './data/loot';
 import { Save, defaultSettings, CURRENT_VERSION } from './save/schema';
 import { clearSave, exportSave, importSave, readSave, writeSave } from './save/storage';
@@ -51,6 +51,7 @@ export class GameController {
   equipItem(uid: string): boolean { const ok = equip(this.state.meta.loot, uid); if (ok) { recompute(this.state); this.save(); } return ok; }
   salvageItem(uid: string): boolean { const ok = salvage(this.state.meta.loot, uid, this.state.stats); if (ok) this.save(); return ok; }
   heirloomItem(uid: string): boolean { const ok = toggleHeirloom(this.state.meta.loot, uid); if (ok) this.save(); return ok; }
+  rerollItem(uid: string, i: number): boolean { const s = this.state, ok = reroll(s.meta.loot, uid, i, s.lootRng, s.stats.rerollMult); if (ok) { recompute(s); this.save(); } return ok; }
   lockItem(uid: string): boolean { const ok = toggleLock(this.state.meta.loot, uid); if (ok) this.save(); return ok; }
   setLootFilter(r: Rarity): boolean { const ok = setFilter(this.state.meta.loot, r); if (ok) this.save(); return ok; }
   summonBoss(): boolean { return summonBoss(this.state, this.events); }

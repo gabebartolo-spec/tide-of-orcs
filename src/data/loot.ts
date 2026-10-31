@@ -13,6 +13,8 @@ export interface Item {
   /** Set id for set pieces, mythic id for mythics. */
   set?: string; mythic?: string;
   locked?: boolean;
+  /** Affix rerolls bought on this item (TB-102); absent = 0, so older saves need no migration. */
+  rerolls?: number;
 }
 /** Auto-salvage on pickup: rarities below `minRarity` go straight to starlight and Glimmer. Set pieces and mythics never do. */
 export interface LootFilter { minRarity: Rarity }
