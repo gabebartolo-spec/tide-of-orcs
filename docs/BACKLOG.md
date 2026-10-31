@@ -125,7 +125,8 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-116 | Tree keyboard access (QA B5): the tree canvas takes no focus or keys. Make nodes reachable by Tab or arrows and buyable by Enter (GDD §13) | ui | 075 | claude | done (33cf889) |
 | TB-117 | Tree: the branch legend (BOW, COMPANIONS …) is drawn over node labels at the top of the tree (QA run 2) | ui | 075 | claude | done (831aef2) |
 | TB-118 | Desktop: bundle the Spectral and Atkinson Hyperlegible fonts instead of loading Google Fonts, so the Electron build looks right offline (TB-074 finding) | release | 074 | claude | done (4e10b33) |
-| TB-119 | Desktop: package the Electron shell into a Windows build for Steam (needs a packager dependency, e.g. electron-builder; ask first) | release | 074 | | todo |
+| TB-119 | Desktop: package the Electron shell into a Windows build for Steam (electron-builder, `npm run desktop:pack` → `release/win-unpacked/`) | release | 074 | claude | done (HASH) |
+| TB-120 | Desktop: app icon (needs art from the director) and the first SteamPipe depot upload of `release/win-unpacked/` (needs the Steam app id) | release | 119 | | todo |
 | TB-101 | Loot L4: Spoils branch (7 Grove nodes) and 6 Heartwood loot lines (Far Sight, Fortune's Favour, Deep Satchel, Warboss Tithe, Heirloom, Glimmerwork) with requirements; save v9 adds the Heirloom uid. Numbers P-101 | sim | 110 | claude | done (9e8b756) |
 | TB-102 | Loot L5: spend Glimmer to reroll one affix on a worn item; cost doubles per reroll on that item, Glimmerwork ×0.6. Numbers P-102 | sim | 101 | claude | done (4d924fe) |
 | TB-103 | Loot L6: Replant screen lists items found this run by rarity and the best drop, in its rarity colour | ui | 102 | claude | done (d74f6a5) |

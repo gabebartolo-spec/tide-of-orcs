@@ -7,6 +7,9 @@ const { pathToFileURL } = require('node:url');
 const DIST = path.join(__dirname, '..', 'dist');
 const ORIGIN = 'app://tide';
 
+// localStorage (the save) lives under userData; pin it so a productName change never orphans a save (rule 5)
+app.setPath('userData', path.join(app.getPath('appData'), 'tide-of-orcs'));
+
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { standard: true, secure: true, supportFetchAPI: true } },
 ]);

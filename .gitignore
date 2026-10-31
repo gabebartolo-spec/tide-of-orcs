@@ -3,3 +3,4 @@ dist
 sim/out
 .DS_Store
 *.local
+release
