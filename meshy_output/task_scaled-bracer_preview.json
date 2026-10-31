@@ -1,0 +1,23 @@
+{
+  "id": "01a19384-2e35-7664-99c4-5246752397a7",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 755306343,
+  "prompt": "Scaled bracer, a game item prop. A forearm guard of overlapping small round plates like fish scales, two buckled straps, no arm inside. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476277269,
+  "progress": 100,
+  "started_at": 1793476277276,
+  "finished_at": 1793476291641,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19384-2e35-7664-99c4-5246752397a7/output/model.glb?Expires=4947004800&Signature=dx7IbBkqWt5C47P3zcFwYEg~QgncnMZAjWE1ubieJbr4cA336~au4ss~rrouA01vbAO7s4XnOomO8xcUc~XT9a84-LznHNAPM81bCjs8TQzy7sPfkc7pyhc7kEhIsYzL6kEiexiRfwo~4E6iNg7Tz-kjLV7EBZX3Lfgy9j7iUWNc1wLm7XMVVdVvqiGBUgu0fqc5-hZ~24gdBMRtnDx8KQ3fQLgAAZzO7QNHkL5gtzHl0icfPiqxT1CxL6wwTUTEgWKk325OYAk-FH~uAcTE5fCCtvjnp4s3arkQ1i98SzegAQ1nJBtgxZZeOdMSsl57le1kfPQZUJm5QdYxlLjUpw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19384-2e35-7664-99c4-5246752397a7/output/preview.png?Expires=4947004800&Signature=K82cgoNb2PMwLltgN4J9WLMju7hC4pfOHmiz0qHz29Ps1~uqtBGZhQQ9bz1awe~Uxc0b2cMScz3I~aHIKNZO490dfOGeZZi7bqVI2DNKKveLPBR4lEswBPod5~xTlwem2uNodCeDxkh6uu~hdoz0SP6-36uCuxOa5FhSyG4QU5tMlj~F63~K0qeY~g~KTIstVyrASYFHofirWeIKl8Ntmxyc58O~yVP-xbSAkkBkcjeAn984bUlykmH71WWvFvYpxOXICYgQqQjOKjE6bSOtNZ6Zazx3dyn4ijzM2ZRC28F1yL8~D0Nl5vpZvaxGTagOzwuYp7wpI0T8dcFR9SBbrg__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

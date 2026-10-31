@@ -1,0 +1,23 @@
+{
+  "id": "01a19386-6e9f-700c-a2d9-0700b6923906",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 1375452854,
+  "prompt": "Mythic starfall cloak, a game item prop, displayed standing as if worn by an invisible figure. A hooded cloak to the ground with small raised stars scattered over the cloth and a star clasp at the throat, no body. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476425142,
+  "progress": 100,
+  "started_at": 1793476425153,
+  "finished_at": 1793476442184,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19386-6e9f-700c-a2d9-0700b6923906/output/model.glb?Expires=4947004800&Signature=PDMnvmr8mQS3t0hpZY0VtgECkHthmcw~yk6fCyzkGJ-04mFOTuWN5LMfBT3TZL1FV16HZZlxZThvwwkw5PdC01j1K24WovPx1XBv8DULKHv8l7OS-rWWouLOSmNlsYdxNe-GeNLMqrZdGIhhQZ3HeMxv0x1qbPsTnH8128xAPXwE1heMT~jtV9h5K1lHi-MQDUJDDv8EF0QuH48sZUYB87yNAxWRHjUwPCB~6BwnmvIDjFlsZsi26Aj8EYStlph-aGE7fZ62C8npbBla79bweRDaV1uNGNEs6Dcqktolx84xdd9XbwlqCFhiE2kbSckM0EKo0ib-FhfPgoMYNPRB3A__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19386-6e9f-700c-a2d9-0700b6923906/output/preview.png?Expires=4947004800&Signature=ItIBHr3QOo~zn3-P-rWFsNGQEBYWYwu7-ssZFh7WA2tWwcb~fDNTl2j8wlVWmptP0csioEfaDE8XaADVKZb4eeLCtZVU3CdQeNcS8x06M~FQsp7N78Y2uVftlQ-6X-Xl5o8J23EgacDh7JdGBCm63TjORlzq~LA3DOhGPqWU5~JEX4HZ7XjKmmQVZvJJEtOG~WbT4vrvVocgGuuwr-qui-4ORXU28YU2TipNncVmbE-xhJwQsOOpa-bMYOJ3mFDv5TFnDf2wAcm18oSHnvOhiFNg-gR4eVzw3HR7gaSGdoSaHP5ufQz526fyIm1H8wgRXMc9TbVxuBsGU6YXqXhfkQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

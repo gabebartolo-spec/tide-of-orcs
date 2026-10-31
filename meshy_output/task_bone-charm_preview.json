@@ -1,0 +1,23 @@
+{
+  "id": "01a19385-6156-76d8-8c54-a37e1a589c3c",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 608110185,
+  "prompt": "Bone charm pendant, a game item prop. A small carved bone fang with a notched pattern, hung on a short cord loop. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476356650,
+  "progress": 100,
+  "started_at": 1793476356656,
+  "finished_at": 1793476369168,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19385-6156-76d8-8c54-a37e1a589c3c/output/model.glb?Expires=4947004800&Signature=CFvWv~FRQS5xpeYgLbhrls4SQnHa0qBIZd~wMC3rIqiqzSFBkQF7deJInTlhU7QJ9VSsGpk0GztDIpWbIckRa~DDAZddYE-aDAWSNco-af6jLvZUcMUTvmRs4ymxOVQj-viecBBwpB28edmAUYUR~AwCj1ODjSU-YX515QSUvvoKZsCiNag5POFQfWa0nQbo3WS7famWllLU1mwWleU420hrJDE9J07XfFtoZKelkbDR6r2dtvQZh5Ucnq69cx1akOsspZvf3PfSta5nU58f0kU3PphZVbEsiysC-eoC0F7UhXLWNy28~9hEkiel0kJN-ZGRgHRT2JW-0RNjml-69A__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19385-6156-76d8-8c54-a37e1a589c3c/output/preview.png?Expires=4947004800&Signature=k7FFCwJYEerVo1pMKbOnzhKLtdjYG2GILTdTCOs9hum5wES8mJ760ndFhSu51~qmChUl8DnQUpVumBW9RsvOm9wtGX0zN~9M94nvpMy0eXUPv5QpUU0mKzziQ9HB3gJqRKbNpEVMO0Kw-pcSxjp-I8c0tQiL077Z7lgO4WYlIVkHiJsXpN8wN3QwtFZfPLAhfhlbHViOHJODEnyR9Ur1hptaecggs-Ioz53b7rFegUe9Ol~Bds7aytKXtzmKr1inNs9udGT-ZU7IhxYOdpkWM0-92ptjAZxAHeB3VKMMePPu1TgpOAyvMNljfsg0duXcIeZZh24P6bljWEhYzcdLhA__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

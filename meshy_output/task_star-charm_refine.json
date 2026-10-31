@@ -1,0 +1,27 @@
+{
+  "id": "01a1938f-3780-76d3-887b-bd1681fc9340",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 4000369321,
+  "prompt": "Starlight charm pendant, a game item prop. A small carved wooden disc with a five-pointed star inset, hung on a short leather cord loop. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Pale bone-coloured carved wood disc with a dusty sage star inset, rust-brown leather cord, small ochre accents.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793477000888,
+  "progress": 100,
+  "started_at": 1793477000892,
+  "finished_at": 1793477024135,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938f-3780-76d3-887b-bd1681fc9340/output/model.glb?Expires=4947004800&Signature=PxEnPS4e98WXDYXGZMWuYWFQ6seendwBq7NaDEAnNsYn4UXYC9GEK2GCcDSAKqttvA~foze9f-dwG8NzmPUB-88SuPVC5eP~tdqlJ3igiQQeYTbmPXnO3eQDM2RPtKNtZ-Y6FX3KSiJAKJul4dXVxcz3of3o0ZultvG5gqAmc6aMwUnZFbBqyN5fa2mxLFQNWN3HiwokGv5KTAXb51HCCI90snepOY744ER50aygBCGGRNEo-va5CUL8Te66dd2JZauUP~ZcT-wNqDsI8xYUfYU1m60nXIiZB54rFUADgJKcaLvdPDZ~QSyjSOdb33ot6xFzuG85JgyP8G9QkGb7iw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938f-3780-76d3-887b-bd1681fc9340/output/preview.png?Expires=4947004800&Signature=jJoOAbeMpslEE2p9tnoJ~rBz7USJR428f-BJ7eKES-nl7O-Mykk3By8KKe3znu6x4XUqd0PcEZknibBfQk1G40rtJzU3IHRT7cVi3nAZ8DWW6rjlvx6H6rCPU4c4G698Tzk7Q3InXFTLPh32wMcs~JA3E7nXHxRrNReeFmTsySM8pg~dIyyqG68hxfEfXjb6lDlIe1pBrcB3gD9QmR0uzMY5FiD1tb4EryX1pkJFs-2-2KONrrORSRLU33mB4J4RT3dVGsbgezPOuPVGjXLN5K6EnP7xPZNPfNaK84qynP7Mxb2NclbmZ8r7J9Vo9f4IdzKG-eaVC1OSf~8VEbcR2w__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938f-3780-76d3-887b-bd1681fc9340/output/texture_0.png?Expires=4947004800&Signature=neI1Z7WUPVOlOG9ODC--~m73zdP56wJVJxHg9RKGkK7lb5L1DCnuGhuM9W54JSwu8E7f7iaCwkH8JFpB2Ynj36SXrcgcBw-NlKOwMwAaV5HMzpFIvF9Q5uGW78W0UGT~6QuxMXh7gWw1pzJk4vuswFvaTaGyxVEXv1oGVyQmH6BbCk7A40BK-sPXXH3XTf34vBb-cp~yzIdhE9In1TMmw6zwFp34~a9n-jb~yCln9GNh1KIG9-zzDUmLAMUBQdp76vX0rxlF1STK1RCPZ2gQvJzQg25TEw9s1Hy5IgPXj4VrthSNNArb8A8Gi6buYpoyZBRAoKzsFQ8e9sIh7KKNuQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

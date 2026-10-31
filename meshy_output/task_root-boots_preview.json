@@ -1,0 +1,23 @@
+{
+  "id": "01a19384-ec72-76cc-b5c2-e729e03f9437",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 189850748,
+  "prompt": "Pair of root boots, a game item prop. Two sturdy knee-high boots wrapped in twisting tree roots, standing side by side, no legs. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476326000,
+  "progress": 100,
+  "started_at": 1793476326008,
+  "finished_at": 1793476340029,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19384-ec72-76cc-b5c2-e729e03f9437/output/model.glb?Expires=4947004800&Signature=TodDyOnKO5HfnG9-b0D3XWAddnsrjcAG~vpDzpuCKx9SO-YF2nRput20KpNStSPbQX0pIknHSKPINjc0fMfP21RrDmaZ9IOlRtmgnXft3jisVatnh~KasLD2HdI3r0XM-P5uAD6UJGKJgUJ1rHaYaLKJ~jAasMnLU0NxVo1OQog2ysU5r8uJc64lJpa~7s7yYr2jH6pJB56UmpgY~zsPNJjemFPMiFLTL-u8glEz~0m3ZcUkP8T4d7orV-Pt0roYFygvN5RqURTZw~a884I6ee3myDyRj9VsdPJRYsLmZ5TQw0M8h0IOjlRUWt-~xHTMxQEuKu5MBakslIK6Tr8p5w__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19384-ec72-76cc-b5c2-e729e03f9437/output/preview.png?Expires=4947004800&Signature=ihbtCyd5qjILKiZRsqUhQkDonhafGwlUhh~Klk7l54OQRPYqIYHbJmVWP84XfL~-Pbhs4JRsefIbr1lTsTLb0QxEOuvyA7gm0CoObyJ1tnw51q3I1KypiLQVeEwNr87QmoAklFf8AfIk4JxBP3sOUln9dhy7o~WVhJs~K2C3xL8KWmoHmuCs7KKUj0qaXulfttVI897A5Ll4NrnUr71jLLBO~6WSPbKOvqwf~HM7h7SIQWG70RA9-vBl9RomZzmVJD-AsQMf9dODQyrqCaOqnE0PxOatSIumlAh1jHp4U6mBAJ8I2Rf8sUYWxsyrwAe9~VVKAner-mkFbRVLjpnhdw__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

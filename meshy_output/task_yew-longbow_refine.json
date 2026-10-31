@@ -1,0 +1,27 @@
+{
+  "id": "01a1938d-1a3f-71b0-ba7a-e17a8a54dbc2",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 1699695992,
+  "prompt": "Tall yew longbow, a game item prop. A long slender D-curved stave with narrow horn tips, a leather grip and a single taut string, no arrow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Warm ochre-yellow yew wood with a darker sage back strip, rust-brown grip, bone-coloured horn tips and string.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476862103,
+  "progress": 100,
+  "started_at": 1793476862115,
+  "finished_at": 1793476890553,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938d-1a3f-71b0-ba7a-e17a8a54dbc2/output/model.glb?Expires=4947004800&Signature=Lsswzix2co8-Ku~KgzEf~ojJr0j-2~uASWZpCFdKqfGVSPzwkghhRAAgOHCMqXYPcjI4-ZtsZCHv3yT~Tl6xVxdqE1BZ5gQV-MK1Uxy3~tsjvmQZPtJIfMPMoGFbP51yG1L6vIEfKjCV~9q8fiCo4LS2mKumh7bt6Lhlb01D2R4EpD3-cNQWRT7p19qKPY9SgYZYllVDKWnbe8EOsbGyqquR~Qe4-qVS~KoZlIBP8EMhsaWZHSifVhTGtv-NPuS7rHW8Hw5-5-nnraonIznz-3WFWJ8gaLqpA6n8OnkjPA~eJ-dzw1P2zeSiNlw6tdfRy6k0gHJEZ6QOivzKYZtnsA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938d-1a3f-71b0-ba7a-e17a8a54dbc2/output/preview.png?Expires=4947004800&Signature=VB0lLBG6QNcUXNiIoLo4sznKuPG-0cbol7PXtFvtld1-0hMTW2zFTnp~S2dzhdukz2AGnTMJQPMq5cf9pVtUFLwb3pzv2f2lNdderLAOp8oZLpAysnCIXIU1nTKox9~9WcNqLILlWPxbHIMJh3tFjXHS946uzc9YF-KULg~lX-gUQdQJDiD-IolQUy5SqwnTM-0QgbYwhTFC5NF~8Xx07lYRqsYLPBdOPi9DeLZQSC7LlMfWDtn2M9N0N0YQyy2bWmxfrW7hQVLTmNJcyq84~YEz5cC1EBN7panru8blE4ulhlsHYC1eYU55KRGTPwgTmmVIRuoBIHXEmTbXRqgjXw__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938d-1a3f-71b0-ba7a-e17a8a54dbc2/output/texture_0.png?Expires=4947004800&Signature=P19Uh-HB9LpE07sYCNDkYLBgV7TvSj~rqy4EdM3F~VVh7EDMebHoVvQu5cfixjSVlcqpDUQ~30184ePY9CdFVZaesUOC8pW57MUxrJlHXCnnJHOeo5GPVTrw5mwgkVAXmHjFiISQY40kE0QR13KZpoKoXpps2~c3ZlWoB97S0ngInzZ-ygfNib0vl74x5OlaBmrLkxuDN3KPlLA8MXAhPvvyOKTcJK2FysMi~dm4lJ-jyiJeeCeXLnZ3csyHADB~t1I0G4AQez4CSR97zKXuxhTa9txcOtuTEejpuSWuv~P0Ag3wcoGJq8Kr97gzC2-Rm-jexDUQTOXgVuq-tXGrhQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

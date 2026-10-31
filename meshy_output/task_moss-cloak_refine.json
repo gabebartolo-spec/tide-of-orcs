@@ -1,0 +1,27 @@
+{
+  "id": "01a1938d-fb10-7562-af11-5dfc8acde3bb",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 1473809843,
+  "prompt": "Hooded ranger cloak, a game item prop, displayed standing as if worn by an invisible figure. Flowing cloth hanging from the shoulders to the ground with a hood and a round clasp at the throat, no body. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Mossy dusty sage-green cloth with a darker sage hood lining, rust-brown round clasp, bone hem stitching.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476919841,
+  "progress": 100,
+  "started_at": 1793476919847,
+  "finished_at": 1793476946213,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938d-fb10-7562-af11-5dfc8acde3bb/output/model.glb?Expires=4947004800&Signature=oSZ9E7F-oHu~sEAaxIj-VOW8e93byVWb7TYKUXpcNFOqnWx6gHj4fFRdSsEIBRRBtK-7Mvfk9lUNdRLqtJs8pVLsciQQPFrmie7RZC6lf7kyZ~x5RulA7SvZ0XzyPnahxJz2SQBTvJ~2NlVLmPV8Tsw63JMK~yp~G-YZiF1KcZvU1V~k-Wgk-IKLEX8l7bKzTg8OiS14qeBvxzZ8Adi4ZkOPEVKy-gXWdSt7t8qnYUmCp~bCGDZZgUxBf7vk4FqgDtHZGHmq7izg7AAaLtB9hli2CmBSg4JZW4UsOkgOxMtn7t4BiXtxfU94~iM-K3ce9I8sOCiM4l9Gb0VYkiC-Qw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938d-fb10-7562-af11-5dfc8acde3bb/output/preview.png?Expires=4947004800&Signature=Fgf8BnnEcMYaeTncsED1-RXkGWU2qXhkTvjoUX2KkD1a9elJC~ic5dgnKhNMxzv8aer6IBRINcOBhEUuEPTHeW0YrxKQ17ga1J1pxuzBV3ZRuRmcaulALj8yE39lSsho3ReEQ93mmtDZ3mmrRWqesemNQx8oQ9gk2MK~h~s7L2uib9STBY-JrMNeDGypwZGEC7w5Tpk8k0P~VfToD7DfJQUN0b0JU55Y9OgqaThV4vhOFRrsz~3a5ljT0Rc~-n-aY6RpvhmPA5rFPYLLUB8pKgJrouslWqVnufpDJnqQzJEuGAEZI1EsnmLKLgolC5vaebkEqcXv~3EabjPJ3xu15A__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938d-fb10-7562-af11-5dfc8acde3bb/output/texture_0.png?Expires=4947004800&Signature=cUmQa6GBmYCiUQOemnVwMYqWzZ0tzwJbLXdxWlZyzKlsW7u9s4CpFmcqBrCoVg-5cHJ6yk47dBZq4gOeyG4B5l3JSxU7oEgef8Ijp31gBvTkyh7Szw5knVi5cfgHOwf0PTY1~SXs-vDEOtWIQ5yIWp3pNlGpDZCJll0O7ASC7KYS8L21tHLMJZJ7eRl2EwWMX3OF2giPE4ZZ2iqza06KXdym5MneBRkOphwq14Dh1tJOVAaSqdw2kFuQXrJr4~Z7ugIdpF4Aase5XP3JidHKBUDIh03yG42b3Mo8ryh-V1qZB6qHBToUgQBp0G0JEc48Ie3EOVfBqGX8v0uEuvqstQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

@@ -1,0 +1,27 @@
+{
+  "id": "01a1938e-52a5-752d-8f5a-38e293a95d48",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 2539623524,
+  "prompt": "Long sleek hooded dusk cloak, a game item prop, displayed standing as if worn by an invisible figure. Smooth cloth to the ground with a pointed hood and a star-shaped clasp, no body. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Deep dusk blue-sage cloth, darker sage hood lining, an ochre-gold star clasp, bone trim.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476941842,
+  "progress": 100,
+  "started_at": 1793476941848,
+  "finished_at": 1793476976074,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938e-52a5-752d-8f5a-38e293a95d48/output/model.glb?Expires=4947004800&Signature=o89bk68AiiBl8nsQWL30sph~ECGGcsxu4NtwzE4QY9xmj34E5IXaEJuoakTIx8CnQGDQsORYUi36uAoNxQiBUqxQb8z6GZpxlYlBISsk9se7Owx026FXxrIKP0ySBo-InenltbJ2tlnyOQ3R~Oipexx00kIrhZqm-y3P8SfmwzAWCgR1O8f8Ydl1~f04-So41WQ-ABhHbWKeQQgynj-3RhH~eiP7KsdCeyhTueLJfq0OcUvaHMxMxfeK0lWxqxk7oVyF4HnMCwILA0r0D0BwjP5DnsAUx5L0Lx7vJcXvV84rFC9a8LdQgAusUcvb6zKNk12N42q~Q6eoIqqy8O6w2Q__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938e-52a5-752d-8f5a-38e293a95d48/output/preview.png?Expires=4947004800&Signature=JZBQ7jtNXDXUkm78EjGpuPCaTg6eTs9fSRWNMCI1xMFhBCQraLOAm2Ao4AdM1eHrsO55UqERJptE7INUGNZkFwryOUw8wgaok9wOBjPhIWfc57oWCE6ceXtD9w3Vz-IK2QmY6xmSjZXSzIjNf4VS5~~bRToctsEQ9mnxIUaRrMLuUsTCvlYIUI6LzgjaduuPMzDe~lSabl-mPbuvouIlnVHgUGszDmJyUu9NBoX~PzRoW0JDcn3PD~7pgKWHW9tPBVWVeVGWd3U5yiouPweBAAz4HjEe0STtkc8Sr~3U5rXjSnW1TJO52Y2iwowcrKloXF5gfx6M4KO~5fxVw2VkNw__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938e-52a5-752d-8f5a-38e293a95d48/output/texture_0.png?Expires=4947004800&Signature=nzx-07LLelF1Zymp1Zemy51W36-1lLY5evXVpqyj0qskwRf6I5Uagqd93x9xcFORwyS-qaScMr66Vuy8pRXGmP4ISggOSUcawGz70ChxxevcmR4g5BNLcnJlQJUiLOtygFtIHnBGJ-gXjU0cR4zJ9jmLSWKi-KLhUoIsIPJ0ssWXg4pZWUT5-QAju0If4tBCvkSTKV~YYjtpkvOa6lXRM7UFoDh6MTT5FMR5L7CPm0paz9AuzipBxSxhxZJYH9ljUlDM2Tm7KgEYoMWEi8A3Od~7L2a6qxtRXQx-5SIcq33bRdVtfZ0E2CQQnpwFv2Ne~sVxleF9W8W-PVz1IelHeg__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

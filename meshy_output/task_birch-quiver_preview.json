@@ -1,0 +1,23 @@
+{
+  "id": "01a19383-9a73-74e1-839a-db352a79c262",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 2664742854,
+  "prompt": "Birch-bark arrow quiver, a game item prop. A cylindrical tube of birch bark with a rolled rim and a cord strap, five fletched arrow shafts standing out of the mouth, no bow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476240141,
+  "progress": 100,
+  "started_at": 1793476240157,
+  "finished_at": 1793476253355,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19383-9a73-74e1-839a-db352a79c262/output/model.glb?Expires=4947004800&Signature=bkJ6tgRXP3RbgBhqb8girBSVqSbKHkyK-Ef2nUoyCU9Z9kf1eMZmIGoc4x8-4tUQLXMmXmFpblruJl9AsG45-AyUz3bP1gmFA8BZB4eaTyi4sKyNyFBzcXa~akeEN0sTaronlaCFOWi0f4vV7JUjREinGzd1WSoHFmufmRKdW2CoXioZ~DfZ78PmdDvXWuQgHEx3YqC672EWpscbdEUBiP5aQgVipVmG6Xr9T1o8LUU3xKMHXijkkCJStgO~eXLtD0vunJrSM1EeLfKxbFNCdBllZVaYPCt1srqP-zaRte62llIS2kGl3C~mAAOINe5aP~cDjyaPyd7hidLGgGe1Rw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19383-9a73-74e1-839a-db352a79c262/output/preview.png?Expires=4947004800&Signature=LtjHJ5M2UaMkey1b9SI6q~XSBcSUwS0y2i7FIG-lcR6wFnRawFkD5FAnhvykTtwh5thn0HdoCzVe6nZG5PtmXlv3mdblEVUsKNqr8qB3OXB0byyUqNDX~5WEb8BzKBH~RY25exuCK57hgJ-FqmFZ2CIYyw4q00w1TeDLh0xxivyy~QeFf07mKh8sLW8KvweCLodQcp9jEcdiA-4nULSMfcktsqfULiJWOOVtAJ93PC8bzEmR1YgtEu61iUTjQL0pwOgiFJud~KSK4Yt8yZJSv67dDtgWL8dl1nbd8TLCC0v13imEnTmObvW8TVSCHa3Kj4lEDN1h1aSSDDx5SkpL0g__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

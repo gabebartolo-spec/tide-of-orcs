@@ -1,0 +1,23 @@
+{
+  "id": "01a19384-7e6e-7503-a21d-78b593e8df26",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 855813066,
+  "prompt": "Thick hooded wool cloak, a game item prop, displayed standing as if worn by an invisible figure. Heavy soft folds from the shoulders to the ground, a deep hood, a round clasp at the throat, no body. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476297946,
+  "progress": 100,
+  "started_at": 1793476297953,
+  "finished_at": 1793476311340,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19384-7e6e-7503-a21d-78b593e8df26/output/model.glb?Expires=4947004800&Signature=DOTgjxVdli5JUXOpPeehJbU~ItRwpEASGAsGxqef2siDzJhURqILF~MJsmY7TARKitLBrx2t88frUGyyccQkRAGoibcLa6KIF0o7h3qoEI-mcMoSuCZEfZ1kRKbIIH6fDNaTl1jdgrm3JuF9kn8y5vEJO1BjXiCxspD9KVdMNYlAdYpPrr-bvoyWvrRap37XfhFRd0Y5Xof~P-05vDLxHmGib9mcT1ysZHJotvM4I8jLbyyJjpGluojbZJF4r1g0n9oE9o8glbMwyI29f3IHFbKXjRhMjx5cXNf94Q4TlJrqOu8u2ydUqFjeCqAcEAZb21erlBreAZlYbL5X8nX4CA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19384-7e6e-7503-a21d-78b593e8df26/output/preview.png?Expires=4947004800&Signature=MhUC1OZkNJtBWh7k5b240oNAL9ILOfG4dGVIWq~tc5iLR7COtJ2lAbEcoHwspZ9NfPArlxN~rKyLesgsV3Lu4ssPezjQ-yrvRmHTgIJ8vw2PfQITIn~lJIXjKQlqcYriFo0dHrbqAqrVpZZuF3abBHxbSGkOwEslWABlgcO2eABH-07ZgdMmYp-rD~~J26WgimgPHUuLuQg5AwimUbiSAj45~0w4SZBrWtX2DgXh6pw8hXB3bdQCSXE0WWzAZikktgyIBNewQk7i0Wvm50NRK7dGQOQa5RbylNcOIAX6vQFqvGsyVBvSKGAp4DTU7hGhqvQNWQvqis1WD9z5nYQ4uA__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

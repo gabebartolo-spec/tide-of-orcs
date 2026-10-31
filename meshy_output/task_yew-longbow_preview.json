@@ -1,0 +1,23 @@
+{
+  "id": "01a19383-4045-7283-9e03-ae4f9dc56c55",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 1680775114,
+  "prompt": "Tall yew longbow, a game item prop. A long slender D-curved stave with narrow horn tips, a leather grip and a single taut string, no arrow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476216888,
+  "progress": 100,
+  "started_at": 1793476216894,
+  "finished_at": 1793476228849,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19383-4045-7283-9e03-ae4f9dc56c55/output/model.glb?Expires=4947004800&Signature=OhDfhbkjmW-~PTX6TLxAa4NcIfPeqZCYqtcLIhINI~dnxGp6UGHLzKicjdhjXGsPEVbdLzb66-u-VY6vuKPj-pCZkKDvozTq1rl2vtb056kSOLAlJp5BfIpJNJ6AZK0mx9SUvASHwuOTJrpGFo35HDmCXnZfGjj7bynVBfR3CCbrmEJOSN6RUquwpGON590AoojDDTeFFDUWPc15Q2QWokYffJgkgee4HJ44cpTlB55bXp0YebGIphNeAO9QJN2j~IUZlaBEoGfBJ7vciC6LLZ9NYsseT9VNNkSez4cRRlZUHznXC3QVICY~lbqsOs6cBOyo6gkbgjXzf82Y~agMOg__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19383-4045-7283-9e03-ae4f9dc56c55/output/preview.png?Expires=4947004800&Signature=fzZmmHfxBAZL2Dl7u5luYRdPW8phoPjW0uHptGtfEGtzQ0ZzkIQxyEchS4dIpdKv82Il1M6QgVn~Eunrx-tDoFLwrISMadPAi4mv1Asty0EvIuLDTOaMLLaX9DtQKXYEJnuCq~ARwJrtEgViS3k1KX56glX1j-3nRy5XS7cyPv7RMKdi9eP7r6W-Ryw3ihYwwbcmR8XTsMLUltBcu4J0icDuytPEMW8Hu6Zy-zoWI~DFes31hlpxqGutw2Czw4Vz5izIckPwaRVtn4gmAFdMOXLuvPmjqttqBEM1H2br0i9nrqtuLuW68cqZrCRTIwcVvTRu2gSixQFd33n3dzQ~UA__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}
