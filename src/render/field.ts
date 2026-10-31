@@ -67,6 +67,10 @@ export class FieldRenderer {
         case 'burnSpread': fx.burst(e.tx, e.ty, P.amber, VFX.hit[0], VFX.hit[1]); break;
         case 'pinned': fx.burst(e.x, e.y, P.cream, VFX.hit[0], VFX.hit[1]); fx.text(e.x, e.y - 22, STR.pinned, P.cream); break;
         case 'freeRally': fx.burst(BAR_X, H / 2, P.grove, VFX.regrow[0], VFX.regrow[1]); fx.text(BAR_X + 60, H / 2 - 40, STR.freeRally, P.grove); break;
+        case 'thunder': fx.burst(W / 2, H / 2, P.cream, VFX.regrow[0], VFX.regrow[1]); fx.text(W / 2, H / 2 - 40, STR.thunder, P.cream); break;
+        case 'starfall': fx.burst(e.x, e.y, P.starfall, VFX.hit[0], VFX.hit[1]); break;
+        case 'stake': fx.burst(e.x, e.y, P.stake, VFX.hit[0], VFX.hit[1]); break;
+        case 'splinter': fx.burst(BAR_X, H / 2, P.grove, VFX.regrow[0], VFX.regrow[1]); fx.text(BAR_X + 60, H / 2 - 40, STR.splinter, P.grove); break;
         case 'impact': this.impacts.push({ x: e.x, y: e.y, r: e.r, life: IMPACT_LIFE }); fx.burst(e.x, e.y, P.cream, VFX.impact[0], VFX.impact[1]); fx.ring(e.x, e.y, e.r * VFX.lobDust.r, P.sand, 2, VFX.lobDust.life); break;
         case 'orcSwing': this.orcSwing(e.kind, e.x, e.y, e.tx, e.ty, e.r); break;
         case 'vanStrike': this.vanStrike(e.type, e.x, e.y, e.tx, e.ty); break;
@@ -141,6 +145,7 @@ export class FieldRenderer {
 
     this.fx.drawGround(g);
     s.zones.forEach((z) => {
+      if (z.kind === 'stake') { g.strokeStyle = P.stake; g.lineWidth = 4; g.beginPath(); g.moveTo(z.x, z.y + z.r); g.lineTo(z.x + 3, z.y - z.r * 1.6); g.stroke(); return; }
       const cin = z.kind === 'cinder';
       g.globalAlpha = Math.min(1, z.life / VFX.zoneFade); g.fillStyle = cin ? P.cinder : P.moonwell; g.strokeStyle = cin ? P.cinderEdge : P.moonwellEdge; g.lineWidth = 1.5;
       g.beginPath(); g.ellipse(z.x, z.y, z.r, z.r * VFX.zoneSquash, 0, 0, 6.28); g.fill(); g.stroke(); g.globalAlpha = 1;

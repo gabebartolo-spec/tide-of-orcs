@@ -17,5 +17,7 @@ export const P = {
   wallShade: 'rgba(20,26,36,.3)', burnGlow: 'rgba(226,168,91,.5)',
   // set-bonus ground (TB-098): Cinderground and Moonwells
   cinder: 'rgba(226,168,91,.22)', cinderEdge: 'rgba(199,111,111,.45)', moonwell: 'rgba(205,189,234,.2)', moonwellEdge: 'rgba(205,189,234,.6)',
+  // mythic powers (TB-099): Oakspine's stake, Starfall's beam
+  stake: '#8a6a45', starfall: 'rgba(205,189,234,.85)',
   shadow: 'rgba(20,26,36,.25)', dim: 'rgba(27,33,48,.6)', dim45: 'rgba(27,33,48,.45)',
 } as const;

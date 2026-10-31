@@ -87,7 +87,7 @@ export class SatchelPane {
     const cmp = cur && cur.uid !== it.uid ? `<div class="desc">${STR.satchelVs(itemName(cur), Math.round((itemScore(it) - itemScore(cur)) * 100))}</div>` : '';
     $('sat-detail').innerHTML = `<div class="head">${glyph(it.slot, it, true)}<div class="name r-${it.rarity}">${itemName(it)}</div></div>
       <div class="desc">${STR.rarityName[it.rarity]} · ${STR.slotName[it.slot]} · ${STR.itemLevel(it.ilvl)}</div>
-      <ul class="affixes">${lines}</ul>${it.set ? setBlock(it.set, setCounts(l)[it.set] ?? 0) : ''}${myth ? `<div class="desc">${STR.mythicLine(myth.power, myth.cost)}</div>` : ''}${cmp}
+      <ul class="affixes">${lines}</ul>${it.set ? setBlock(it.set, setCounts(l)[it.set] ?? 0) : ''}${myth ? `<div class="desc">${STR.mythicLine(STR.mythicPower[myth.id] ?? '')}</div>` : ''}${cmp}
       <div class="row">${worn ? `<span class="desc">${STR.satchelWornNow}</span>` : `<button class="buy" data-act="equip">${STR.equip}</button>`}
       <button class="buy" data-act="lock">${it.locked ? STR.unlock : STR.lock}</button>
       <button class="buy" data-act="salvage"${worn || it.locked ? ' disabled' : ''}>${STR.salvageFor(salvageGlimmer(it))}</button></div>`;

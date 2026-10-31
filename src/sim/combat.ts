@@ -4,7 +4,7 @@ import { Orc, ProjectileKind, SimState, Zone, recompute } from './state';
 import { rollDrop } from './lootRoll';
 import { pickUp } from './loot';
 import { lootMods } from './gear';
-import { SET_FX } from '../data/lootTables';
+import { MYTHIC_FX, SET_FX } from '../data/lootTables';
 
 export function nearestOrc(s: SimState, x: number, y: number, filter?: (o: Orc) => boolean): Orc | null {
   let best: Orc | null = null, bd = Infinity;
@@ -23,6 +23,12 @@ export function kill(s: SimState, ev: EventBus, o: Orc): void {
   s.run.kills++; s.meta.lifetimeKills++; s.run.starlight += loot; s.run.earned += loot;
   if (o.champ && s.run.boss) s.run.boss.left--;
   ev.push({ t: 'kill', x: o.x, y: o.y, loot, kind: o.kind });
+  // Starfall Cloak: starlight gathered calls a shot from the sky on the strongest orc
+  if (s.stats.starfall) { s.starAcc += loot; if (s.starAcc >= MYTHIC_FX.starfallEvery && s.starfallT <= 0) {
+    s.starAcc = 0; s.starfallT = MYTHIC_FX.starfallCd;
+    let top: Orc | null = null; s.orcs.forEach((q) => { if (!q.dead && (!top || q.hp > top.hp)) top = q; });
+    if (top) { const t = top as Orc; ev.push({ t: 'starfall', x: t.x, y: t.y }); damage(s, ev, t, s.stats.dmg * MYTHIC_FX.starfallMult); }
+  } }
   // Emberwright 4: a burning orc's flames pass to its nearest neighbours
   if (o.burn > 0) for (let i = 0; i < s.stats.burnSpread; i++) {
     const n = nearestOrc(s, o.x, o.y, (q) => q.burn <= 0 && (q.x - o.x) ** 2 + (q.y - o.y) ** 2 < SET_FX.spreadReach ** 2);
@@ -48,7 +54,7 @@ export const takenMult = (s: SimState, o: Orc): number => (o.bleed > 0 ? 1 + s.s
 /** Leave a patch of ground (TB-098); silently skipped when the zone pool is full. */
 export function addZone(s: SimState, kind: Zone['kind'], x: number, y: number, r: number, life: number): void {
   const z = s.zones.alloc(); if (!z) return;
-  z.kind = kind; z.x = x; z.y = y; z.r = r; z.life = life;
+  z.kind = kind; z.x = x; z.y = y; z.r = r; z.life = life; z.used = false;
 }
 
 export function damage(s: SimState, ev: EventBus, o: Orc, amt: number): void {
@@ -60,7 +66,7 @@ export function damage(s: SimState, ev: EventBus, o: Orc, amt: number): void {
 export function shoot(s: SimState, kind: ProjectileKind, x: number, y: number, ang: number, speed: number, dmg: number, pierce: number, target: Orc | null): void {
   const p = s.shots.alloc(); if (!p) return;
   p.kind = kind; p.x = x; p.y = y; p.vx = Math.cos(ang) * speed; p.vy = Math.sin(ang) * speed;
-  p.dmg = dmg; p.pierce = pierce; p.life = 2.2; p.target = target; p.hit.clear();
+  p.dmg = dmg; p.pierce = pierce; p.life = 2.2; p.target = target; p.hit.clear(); p.back = false;
 }
 
 /** The elf's arcing shot: lands at (tx, ty) after LOB.flight and strikes every orc within the circle, 1 + pierce times. */

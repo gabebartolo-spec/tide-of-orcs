@@ -14,6 +14,8 @@ export interface Orc {
   dead: boolean; burn: number; hitT: number; wob: number; swingT: number;
   /** Set-bonus timers in seconds (TB-098): bleeding takes more damage, slowed walks slower, pinned/rooted stand still. */
   bleed: number; slow: number; pin: number; root: number;
+  /** Heart of the Kiln (TB-099): seconds this orc has burned, for the ramp. */
+  burnT: number;
   /** Marched in a boss wave: the challenge is cleared when none are left. */
   champ: boolean;
 }
@@ -21,11 +23,14 @@ export type ProjectileKind = 'arrow' | 'knife' | 'bolt' | 'lob';
 export interface Projectile {
   live: boolean; kind: ProjectileKind; x: number; y: number; vx: number; vy: number; dmg: number; pierce: number; life: number;
   target: Orc | null; hit: Set<Orc>;
+  /** The Last Knife (TB-099): this knife is flying back to the quiver, hitting everything. */
+  back: boolean;
   /** Lob only: launch and landing points, time aloft, height above ground, strike radius. */
   sx: number; sy: number; tx: number; ty: number; t: number; h: number; r: number;
 }
 /** A patch of ground left by a set bonus (TB-098): Cinderground burns and slows, a Moonwell slows and mends the wall. */
-export interface Zone { live: boolean; kind: 'cinder' | 'moonwell'; x: number; y: number; r: number; life: number }
+/** Oakspine's stake (TB-099) holds the first orc to reach it; `used` once it has. */
+export interface Zone { live: boolean; kind: 'cinder' | 'moonwell' | 'stake'; x: number; y: number; r: number; life: number; used: boolean }
 export interface Wolf { x: number; y: number; tx: number; ty: number; biteT: number }
 export interface Vanguard {
   live: boolean; type: VanType; x: number; y: number; tx: number; hp: number; maxhp: number; swingT: number; hitT: number;
@@ -59,6 +64,8 @@ export interface SimState {
   zones: Pool<Zone>;
   /** Run-only set state, not saved (TB-098): knives thrown toward the next Fan, Rootwarden's free-rally window and whether it was spent. */
   knifeN: number; freeRallyT: number; freeRallyUsed: boolean;
+  /** Run-only mythic state, not saved (TB-099): stored storm charges, starlight toward the next Starfall and its cooldown, whether Heartwood Splinter has stood the wall again. */
+  thunder: number; starAcc: number; starfallT: number; splinterUsed: boolean;
 }
 
 export function freshRun(): RunState {
@@ -67,9 +74,9 @@ export function freshRun(): RunState {
 }
 export function freshMeta(): MetaState { return { heartwood: 0, lifetimeKills: 0, bestWave: 1, prestiges: 0, hwLevels: {}, loot: freshLoot() }; }
 
-const makeOrc = (): Orc => ({ live: false, kind: 'grunt', x: 0, y: 0, hp: 0, maxhp: 0, spd: 0, r: 0, loot: 0, atk: 0, dead: false, burn: 0, hitT: 0, wob: 0, swingT: 0, champ: false, bleed: 0, slow: 0, pin: 0, root: 0 });
-const makeShot = (): Projectile => ({ live: false, kind: 'arrow', x: 0, y: 0, vx: 0, vy: 0, dmg: 0, pierce: 0, life: 0, target: null, hit: new Set(), sx: 0, sy: 0, tx: 0, ty: 0, t: 0, h: 0, r: 0 });
-const makeZone = (): Zone => ({ live: false, kind: 'cinder', x: 0, y: 0, r: 0, life: 0 });
+const makeOrc = (): Orc => ({ live: false, kind: 'grunt', x: 0, y: 0, hp: 0, maxhp: 0, spd: 0, r: 0, loot: 0, atk: 0, dead: false, burn: 0, hitT: 0, wob: 0, swingT: 0, champ: false, bleed: 0, slow: 0, pin: 0, root: 0, burnT: 0 });
+const makeShot = (): Projectile => ({ live: false, kind: 'arrow', x: 0, y: 0, vx: 0, vy: 0, dmg: 0, pierce: 0, life: 0, target: null, hit: new Set(), sx: 0, sy: 0, tx: 0, ty: 0, t: 0, h: 0, r: 0, back: false });
+const makeZone = (): Zone => ({ live: false, kind: 'cinder', x: 0, y: 0, r: 0, life: 0, used: false });
 const makeVan = (): Vanguard => ({ live: false, type: 'spear', x: 0, y: 0, tx: 0, hp: 0, maxhp: 0, swingT: 0, hitT: 0 });
 
 export function createState(seed = 1, run: RunState = freshRun(), meta: MetaState = freshMeta()): SimState {
@@ -81,6 +88,7 @@ export function createState(seed = 1, run: RunState = freshRun(), meta: MetaStat
     hawk: { x: 300, y: 100, a: 0 },
     zones: new Pool<Zone>(SET_FX.zoneCap, makeZone),
     knifeN: 0, freeRallyT: 0, freeRallyUsed: false,
+    thunder: 0, starAcc: 0, starfallT: 0, splinterUsed: false,
   };
   if (s.run.barHp < 0) s.run.barHp = s.stats.barMax;
   return s;

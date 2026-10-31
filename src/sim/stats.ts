@@ -24,6 +24,8 @@ export interface Stats {
   chain: number; chainJump: number; rebound: number; stormCd: number;
   ballCd: number; boltShove: number; boltPin: number; moonCrit: number; moonwell: number;
   petDmg: number; petHaste: number; extraWolves: number; treantRoot: number; freeRally: number;
+  // mythic powers (TB-099): 0 = off; numbers from MYTHIC_FX
+  knifeReturn: number; burnRamp: number; stormStore: number; stakes: number; fullMoon: number; petReturn: number; wallSplinter: number; starfall: number;
 }
 
 export interface Foe { on: boolean; hp: number; loot: number; spawn: number }
@@ -78,5 +80,6 @@ export function deriveStats(lv: Levels, heartwood: number, hw: HwLevels = {}): S
     chain: SOURCES.storm.targets, chainJump: SOURCES.storm.jump, rebound: 0, stormCd: SOURCES.storm.cd,
     ballCd: SOURCES.ballista.cd, boltShove: 0, boltPin: 0, moonCrit: 0, moonwell: 0,
     petDmg: 1, petHaste: 0, extraWolves: 0, treantRoot: 0, freeRally: 0,
+    knifeReturn: 0, burnRamp: 0, stormStore: 0, stakes: 0, fullMoon: 0, petReturn: 0, wallSplinter: 0, starfall: 0,
   };
 }

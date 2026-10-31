@@ -16,6 +16,11 @@ export type SimEvent =
   | { t: 'burnSpread'; x: number; y: number; tx: number; ty: number }
   | { t: 'pinned'; x: number; y: number }
   | { t: 'freeRally'; secs: number }
+  /** Mythics (TB-099): Thunder's Memory's stored bolt hit the whole wave; a Starfall struck; a stake was driven; the wall stood again. */
+  | { t: 'thunder' }
+  | { t: 'starfall'; x: number; y: number }
+  | { t: 'stake'; x: number; y: number }
+  | { t: 'splinter' }
   | { t: 'wave'; wave: number }
   | { t: 'bossReady' }
   | { t: 'bossStart' }

@@ -1,6 +1,6 @@
 /** Worn gear → Stats (TB-094/098): affixes and set bonuses, summed per stat, then applied once. Pure. */
 import { LootMeta } from '../data/loot';
-import { AFFIXES, SETS, StatLine } from '../data/lootTables';
+import { AFFIXES, MYTHICS, MYTHIC_FX, SETS, StatLine } from '../data/lootTables';
 import { equippedItems } from './loot';
 import { Stats } from './stats';
 
@@ -9,7 +9,10 @@ export interface GearTotals { mul: Record<string, number>; add: Record<string, n
 export function gearTotals(l: LootMeta): GearTotals {
   const t: GearTotals = { mul: {}, add: {} };
   const put = (x: StatLine) => { const m = x.op === 'mul' ? t.mul : t.add; m[x.stat] = (m[x.stat] ?? 0) + x.value; };
-  for (const it of equippedItems(l)) for (const a of it.affixes) { const d = AFFIXES.find((x) => x.id === a.id); if (d) put({ stat: d.stat, op: d.op, value: a.value }); }
+  for (const it of equippedItems(l)) {
+    for (const a of it.affixes) { const d = AFFIXES.find((x) => x.id === a.id); if (d) put({ stat: d.stat, op: d.op, value: a.value }); }
+    if (it.mythic) MYTHICS.find((m) => m.id === it.mythic)?.lines.forEach(put);
+  }
   const sets = setCounts(l);
   for (const s of SETS) for (const n of [2, 4, 6] as const) if ((sets[s.id] ?? 0) >= n) s.bonus[n].forEach(put);
   return t;
@@ -21,6 +24,7 @@ const MUL_FIELDS = ['dmg', 'fireRate', 'radius', 'starMult', 'kin', 'wolf', 'bal
 const ADD_FIELDS = {
   crit: false, pierce: true, arrows: true, barRegen: false, chain: true, rebound: true, bleedAmp: false, knifeFan: true, burnSpread: true, cinder: true,
   boltShove: true, boltPin: true, moonCrit: true, moonwell: true, petHaste: false, extraWolves: true, treantRoot: true, freeRally: true,
+  knifeReturn: true, burnRamp: true, stormStore: true, stakes: true, fullMoon: true, petReturn: true, wallSplinter: true, starfall: true,
 } as const;
 
 export function applyGear(st: Stats, l: LootMeta): Stats {
@@ -34,6 +38,8 @@ export function applyGear(st: Stats, l: LootMeta): Stats {
   if (t.mul.stormRate) st.stormCd /= 1 + t.mul.stormRate;
   if (t.mul.ballRate) st.ballCd /= 1 + t.mul.ballRate;
   if (st.homing && t.mul.moonRate) st.lobCd /= 1 + t.mul.moonRate;
+  // Pale Moon: with the Moonbow owned, the draw is near-instant (each shot costs wall, in step)
+  if (st.homing && st.fullMoon) st.lobCd *= MYTHIC_FX.moonDraw;
   return st;
 }
 

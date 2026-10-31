@@ -75,14 +75,27 @@ export const SETS: readonly SetDef[] = [
 ];
 
 /** Mythics: one power and one cost each (powers wired in TB-099). */
-export interface MythicDef { id: string; name: string; slot: Slot; power: string; cost: string }
+/** A mythic's power switches on a Stats field through `lines`, as set bonuses do (TB-099); its numbers live in MYTHIC_FX. */
+export interface MythicDef { id: string; name: string; slot: Slot; lines: StatLine[] }
 export const MYTHICS: readonly MythicDef[] = [
-  { id: 'last-knife', name: 'The Last Knife', slot: 'bracer', power: 'knives crit twice', cost: 'knife rate -20%' },
-  { id: 'heart-of-kiln', name: 'Heart of the Kiln', slot: 'charm', power: 'burning orcs burst on death', cost: 'arrow damage -10%' },
-  { id: 'thunders-memory', name: "Thunder's Memory", slot: 'quiver', power: 'every 5th lob calls the storm', cost: 'radius -10%' },
-  { id: 'oakspine', name: 'Oakspine', slot: 'bow', power: 'wall regrowth fires splinters', cost: 'fire rate -15%' },
-  { id: 'pale-moon', name: 'Sliver of the Pale Moon', slot: 'bow', power: 'crits pierce everything', cost: 'crit chance halved' },
-  { id: 'first-wolf', name: 'The First Wolf', slot: 'cloak', power: 'a second wolf hunts', cost: 'hawk damage -30%' },
-  { id: 'heartwood-splinter', name: 'Heartwood Splinter', slot: 'charm', power: 'Heartwood bonus counts double', cost: 'starlight -15%' },
-  { id: 'starfall-cloak', name: 'Starfall Cloak', slot: 'cloak', power: 'kills rain starlight on the plain', cost: 'vanguard cap -1' },
+  { id: 'last-knife', name: 'The Last Knife', slot: 'bow', lines: [on('knifeReturn')] },
+  { id: 'heart-of-kiln', name: 'Heart of the Kiln', slot: 'quiver', lines: [on('burnRamp')] },
+  { id: 'thunders-memory', name: "Thunder's Memory", slot: 'bracer', lines: [on('stormStore')] },
+  { id: 'oakspine', name: 'Oakspine', slot: 'bow', lines: [on('stakes')] },
+  { id: 'pale-moon', name: 'Sliver of the Pale Moon', slot: 'charm', lines: [on('fullMoon')] },
+  { id: 'first-wolf', name: 'The First Wolf', slot: 'boots', lines: [on('petReturn')] },
+  { id: 'heartwood-splinter', name: 'Heartwood Splinter', slot: 'charm', lines: [on('wallSplinter')] },
+  { id: 'starfall-cloak', name: 'Starfall Cloak', slot: 'cloak', lines: [on('starfall'), on('itemFind', 0.15)] },
 ];
+
+/** Mythic power numbers (TB-099), proposed in BALANCE P-099. */
+export const MYTHIC_FX = {
+  knifeBackLife: 3,
+  burnRampPerSec: 0.1,
+  thunderCharges: 10, thunderMult: 3,
+  stakeAfter: 3, stakeSecs: 8, stakeR: 10,
+  moonDraw: 0.5, moonCost: 0.02, moonCostFloor: 0.1,
+  wolfEvery: 15, wolfStack: 0.25, wolfMax: 4,
+  splinterFrac: 0.3, splinterHw: 0.5,
+  starfallEvery: 100, starfallCd: 1, starfallMult: 5,
+} as const;

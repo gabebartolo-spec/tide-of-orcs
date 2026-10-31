@@ -2,8 +2,8 @@ import { BARRICADE, FIELD, LOB, PLAYER, SOURCES, WAVE_LEN, waveHP, waveInterval,
 import { ORC_KINDS, ORC_TYPES, OrcKind } from '../data/orcs';
 import { EventBus } from './events';
 import { Orc, Projectile, SimState, Wolf } from './state';
-import { SET_FX } from '../data/lootTables';
-import { damage, impact, lob, nearestOrc, shoot, takenMult, volley } from './combat';
+import { MYTHIC_FX, SET_FX } from '../data/lootTables';
+import { addZone, damage, impact, lob, nearestOrc, shoot, takenMult, volley } from './combat';
 import { barricadeHit, barricadeRegen } from './barricade';
 import { bossStep } from './boss';
 import { BOSS_WAVE } from '../data/bosses';
@@ -25,7 +25,7 @@ export function spawnOrc(s: SimState, kind: OrcKind, y?: number, champ = false):
   o.kind = kind; o.x = W + 24; o.y = y ?? 50 + s.rng.next() * (H - 100);
   o.hp = hp; o.maxhp = hp; o.spd = T.speed * waveSpeedMult(w); o.r = T.radius; o.atk = hp * BARRICADE.orcAtkFrac;
   o.loot = waveLoot(w) * T.loot * F.loot;
-  o.dead = false; o.burn = 0; o.bleed = 0; o.slow = 0; o.pin = 0; o.root = 0; o.hitT = 0; o.wob = s.rng.next() * 6.28; o.swingT = s.rng.next(); o.champ = champ;
+  o.dead = false; o.burn = 0; o.bleed = 0; o.slow = 0; o.pin = 0; o.root = 0; o.burnT = 0; o.hitT = 0; o.wob = s.rng.next() * 6.28; o.swingT = s.rng.next(); o.champ = champ;
   return true;
 }
 
@@ -50,13 +50,15 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
   barricadeRegen(s, dt);
   vanguardStep(s, ev, dt);
   zoneStep(s, dt);
+  if (s.starfallT > 0) s.starfallT -= dt;
   if (s.freeRallyT > 0) s.freeRallyT = Math.max(0, s.freeRallyT - dt);
 
   // orcs
   s.orcs.forEach((o) => {
     if (o.dead || run.fallen) return;
     o.wob += dt * 8;
-    if (o.burn > 0) { o.burn -= dt; o.hp -= st.dmg * SOURCES.burnFrac * st.burn * takenMult(s, o) * dt; if (o.hp <= 0) { damage(s, ev, o, 0); return; } }
+    // Heart of the Kiln: burn never runs out on the field and grows the longer it burns
+    if (o.burn > 0) { if (st.burnRamp) o.burnT += dt; else o.burn -= dt; o.hp -= st.dmg * SOURCES.burnFrac * st.burn * (1 + o.burnT * MYTHIC_FX.burnRampPerSec) * takenMult(s, o) * dt; if (o.hp <= 0) { damage(s, ev, o, 0); return; } }
     if (o.bleed > 0) o.bleed -= dt;
     if (o.slow > 0) o.slow -= dt;
     if (o.pin > 0) o.pin -= dt;
@@ -89,6 +91,13 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
     const home = st.homing ? nearestOrc(s, x, y, (o) => dist(o.x, o.y, x, y) < PLAYER.aimHomingRadius) : null;
     if (home) { x = home.x; y = home.y; }
     run.shotT[0] = 0; lob(s, ELF_X, H / 2, x, y);
+    // Pale Moon: each moon shot costs wall, but never takes it below the floor
+    if (st.homing && st.fullMoon) { const c = st.barMax * MYTHIC_FX.moonCost; if (run.barHp - c >= st.barMax * MYTHIC_FX.moonCostFloor) run.barHp -= c; }
+    // Thunder's Memory: a full store of charges looses one bolt on the whole wave
+    if (st.stormStore && s.thunder >= MYTHIC_FX.thunderCharges) {
+      s.thunder = 0; ev.push({ t: 'thunder' });
+      s.orcs.forEach((o) => damage(s, ev, o, st.dmg * SOURCES.storm.mult * st.kin * MYTHIC_FX.thunderMult));
+    }
     // Split Shot: extra arrows land at random inside the circle.
     for (let k = 1; k < st.arrows; k++) {
       const a = s.rng.next() * 6.28, d = s.rng.next() * st.radius * LOB.splitSpread;
@@ -123,16 +132,18 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
         if (c.dead && reb < st.rebound) { reb++; cap++; }
         cur = nearestOrc(s, c.x, c.y, (o) => !seen.has(o) && dist(o.x, o.y, c.x, c.y) < st.chainJump);
       }
-      if (pts.length) ev.push({ t: 'storm', pts });
+      if (pts.length) { ev.push({ t: 'storm', pts }); if (st.stormStore) s.thunder = Math.min(MYTHIC_FX.thunderCharges, s.thunder + 1); }
     }
   }
 
   // Packlord 4: companions strike faster while an orc is near the wall
   const haste = st.petHaste > 0 && nearestOrc(s, BAR_X, H / 2, (o) => o.x < BAR_X + SET_FX.nearWall) ? 1 + st.petHaste : 1;
+  // The First Wolf: companions grow stronger as the run goes on, up to wolfMax stacks
+  const pet = st.petDmg * (1 + st.petReturn * MYTHIC_FX.wolfStack * Math.min(MYTHIC_FX.wolfMax, Math.floor(run.runTime / MYTHIC_FX.wolfEvery)));
   if (st.wolf) {
     while (s.pack.length < st.extraWolves) s.pack.push({ ...s.wolf, y: s.wolf.y + SOURCES.wolf.reach * 2 * (s.pack.length + 1) });
-    wolfStep(s, ev, s.wolf, dt, haste);
-    for (let i = 0; i < st.extraWolves; i++) wolfStep(s, ev, s.pack[i]!, dt, haste);
+    wolfStep(s, ev, s.wolf, dt, haste, pet);
+    for (let i = 0; i < st.extraWolves; i++) wolfStep(s, ev, s.pack[i]!, dt, haste, pet);
   }
 
   if (st.hawk) {
@@ -141,7 +152,7 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
     if (run.hawkT >= SOURCES.hawk.cd) {
       run.hawkT = 0; let best: Orc | null = null, bn = -1;
       s.orcs.forEach((o) => { if (o.dead) return; let n = 0; s.orcs.forEach((p) => { if (!p.dead && dist(p.x, p.y, o.x, o.y) < SOURCES.hawk.radius) n++; }); if (n > bn) { bn = n; best = o; } });
-      if (best) { const b = best as Orc; s.orcs.forEach((p) => { if (!p.dead && dist(p.x, p.y, b.x, b.y) < SOURCES.hawk.radius) damage(s, ev, p, st.dmg * SOURCES.hawk.mult * st.kin * st.petDmg); }); ev.push({ t: 'hawkDive', x: b.x, y: b.y }); hk.x = b.x; hk.y = b.y - 30; }
+      if (best) { const b = best as Orc; s.orcs.forEach((p) => { if (!p.dead && dist(p.x, p.y, b.x, b.y) < SOURCES.hawk.radius) damage(s, ev, p, st.dmg * SOURCES.hawk.mult * st.kin * pet); }); ev.push({ t: 'hawkDive', x: b.x, y: b.y }); hk.x = b.x; hk.y = b.y - 30; }
     }
   }
 
@@ -149,7 +160,7 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
     run.treantT += dt * haste;
     if (run.treantT >= SOURCES.treant.cd) {
       run.treantT = 0; let any = false;
-      s.orcs.forEach((o) => { if (!o.dead && o.x < BAR_X + SOURCES.treant.range) { damage(s, ev, o, st.dmg * SOURCES.treant.mult * st.kin * st.petDmg); if (st.treantRoot) o.root = SET_FX.rootSecs; any = true; } });
+      s.orcs.forEach((o) => { if (!o.dead && o.x < BAR_X + SOURCES.treant.range) { damage(s, ev, o, st.dmg * SOURCES.treant.mult * st.kin * pet); if (st.treantRoot) o.root = SET_FX.rootSecs; any = true; } });
       if (any) ev.push({ t: 'treantStamp', x: BAR_X + 50, y: H / 2 + 30 });
     }
   }
@@ -183,10 +194,18 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
         if (st.fire && a.kind === 'arrow') o.burn = SOURCES.burnSecs;
         if (a.kind === 'knife' && st.bleedAmp) o.bleed = SET_FX.bleedSecs;
         if (a.kind === 'bolt') a.target = o;
+        // Oakspine: a bolt that has pierced enough orcs drives a stake where it is
+        if (a.kind === 'bolt' && st.stakes && a.hit.size === MYTHIC_FX.stakeAfter) { addZone(s, 'stake', o.x, o.y, MYTHIC_FX.stakeR, MYTHIC_FX.stakeSecs); ev.push({ t: 'stake', x: o.x, y: o.y }); }
         if (a.pierce-- <= 0) spent = true;
       }
     });
-    if (spent || a.life <= 0 || a.x > W + 30 || a.y < -30 || a.y > H + 30) {
+    // The Last Knife: a knife that hits turns back to the quiver and strikes everything on the way
+    if (spent && a.kind === 'knife' && st.knifeReturn && !a.back) {
+      const sp = Math.hypot(a.vx, a.vy), ang = Math.atan2(H / 2 - a.y, ELF_X - a.x);
+      a.back = true; a.hit.clear(); a.pierce = Infinity; a.life = MYTHIC_FX.knifeBackLife; a.vx = Math.cos(ang) * sp; a.vy = Math.sin(ang) * sp;
+      return;
+    }
+    if (spent || a.life <= 0 || (a.back && a.x < BAR_X) || a.x > W + 30 || a.y < -30 || a.y > H + 30) {
       // Siegebreaker 6: the last orc a bolt passed through is pinned
       if (a.kind === 'bolt' && st.boltPin && a.target && !a.target.dead) { a.target.pin = SET_FX.pinSecs; ev.push({ t: 'pinned', x: a.target.x, y: a.target.y }); }
       s.shots.release(a);
@@ -197,13 +216,13 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
 }
 
 /** One wolf: run to the nearest orc and bite on its cooldown. */
-function wolfStep(s: SimState, ev: EventBus, wf: Wolf, dt: number, haste: number): void {
+function wolfStep(s: SimState, ev: EventBus, wf: Wolf, dt: number, haste: number, pet: number): void {
   const tg = nearestOrc(s, wf.x, wf.y, (o) => o.x < W - 40);
   if (tg) { wf.tx = tg.x; wf.ty = tg.y; }
   const dx = wf.tx - wf.x, dy = wf.ty - wf.y, d = Math.hypot(dx, dy);
   if (d > 2) { const m = Math.min(d, SOURCES.wolf.speed * dt); wf.x += dx / d * m; wf.y += dy / d * m; }
   wf.biteT += dt * haste;
-  if (tg && d < SOURCES.wolf.reach && wf.biteT > SOURCES.wolf.biteCd) { wf.biteT = 0; damage(s, ev, tg, s.stats.wolf * s.stats.petDmg); ev.push({ t: 'bite', x: tg.x, y: tg.y }); }
+  if (tg && d < SOURCES.wolf.reach && wf.biteT > SOURCES.wolf.biteCd) { wf.biteT = 0; damage(s, ev, tg, s.stats.wolf * pet); ev.push({ t: 'bite', x: tg.x, y: tg.y }); }
 }
 
 /** Cinderground and Moonwells (TB-098): tick down, burn or slow the orcs inside; Moonwells mend the wall. */
@@ -211,6 +230,11 @@ function zoneStep(s: SimState, dt: number): void {
   s.zones.forEach((z) => {
     z.life -= dt;
     if (z.life <= 0) { s.zones.release(z); return; }
+    if (z.kind === 'stake') {
+      // holds the first orc to reach it until the stake rots
+      if (!z.used) s.orcs.forEach((o) => { if (!z.used && !o.dead && (o.x - z.x) ** 2 + (o.y - z.y) ** 2 < (z.r + o.r) ** 2) { z.used = true; o.root = Math.max(o.root, z.life); } });
+      return;
+    }
     if (z.kind === 'moonwell') s.run.barHp = Math.min(s.stats.barMax, s.run.barHp + s.stats.barMax * SET_FX.wellHeal * dt);
     s.orcs.forEach((o) => {
       if (o.dead || (o.x - z.x) ** 2 + (o.y - z.y) ** 2 > (z.r + o.r) ** 2) return;

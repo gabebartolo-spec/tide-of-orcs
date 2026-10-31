@@ -52,7 +52,19 @@ export const STR = {
     packlord: ['+20% companion damage', 'Companions strike 25% faster while orcs are near the wall', 'A second wolf joins the hunt; treants root the orcs they hit'],
     rootwarden: ['+15% wall health', 'The wall regrows 0.5%/s', 'Once per run, when the wall drops below 25%, rallies are free for 10 s'],
   } as Record<string, [string, string, string]>,
-  itemLevel: (n: number) => `item level ${n}`, mythicLine: (power: string, cost: string) => `Power: ${power}. Cost: ${cost}.`,
+  itemLevel: (n: number) => `item level ${n}`, mythicLine: (power: string) => `Power: ${power}`,
+  /** Mythic powers as the player reads them (TB-099); numbers match MYTHIC_FX. */
+  mythicPower: {
+    'last-knife': 'A knife that hits flies back to the quiver, striking everything on its way.',
+    'heart-of-kiln': 'Burn never runs out while the orc is on the field, and grows 10% stronger each second.',
+    'thunders-memory': 'Each storm stores a charge; at 10, your next shot is one bolt that strikes the whole wave.',
+    oakspine: 'A bolt that pierces three orcs drives a stake; each stake holds one orc for up to 8 s.',
+    'pale-moon': 'With the Moonbow, the draw is twice as fast, but each moon shot costs 2% wall health (never below 10%).',
+    'first-wolf': 'Companions deal 25% more damage for every 15 s of the run, up to 4 times.',
+    'heartwood-splinter': 'When the wall falls it stands again once, at 30% health. Heartwood from that run is halved.',
+    'starfall-cloak': 'Every 100 starlight gained calls a Starfall on the strongest orc. Item Find +15%.',
+  } as Record<string, string>,
+  thunder: 'Thunder!', splinter: 'The wall stands again',
   slotName: { bow: 'Bow', quiver: 'Quiver', bracer: 'Bracer', cloak: 'Cloak', boots: 'Boots', charm: 'Charm' } as Record<string, string>,
   rarityName: { common: 'Common', rare: 'Rare', epic: 'Epic', legendary: 'Legendary', mythic: 'Mythic' } as Record<string, string>,
   statName: {
