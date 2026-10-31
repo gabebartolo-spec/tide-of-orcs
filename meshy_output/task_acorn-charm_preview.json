@@ -1,0 +1,23 @@
+{
+  "id": "01a19385-47e5-72a7-8d57-fc81eb224999",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 1004186682,
+  "prompt": "Acorn charm pendant, a game item prop. One large acorn with its cap, hung on a short leather cord loop. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476349512,
+  "progress": 100,
+  "started_at": 1793476349518,
+  "finished_at": 1793476361406,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19385-47e5-72a7-8d57-fc81eb224999/output/model.glb?Expires=4947004800&Signature=k9QcXBnmw6NOt~Ci5c0X42wUZTxJtT53DEsWgflg7ciyLU4W~pdaqMmTcZInUL6lSB01qKCVK9FEAdTOddS-tBfNRGfXyO73AS6uMCCSuOzQjJSNfGTPZ60jth4-6lv1Nxt30p6jZAYDPeZQZW-LHHWAWJHbLT9If1-Ypeu0mv8vc9dkp5n7Yv3oeCDtw56pjVHJwVhzSJvJ7~33IGvluay1ZynoGsHdksrMiMk31J1g3cptI2yew1jUdghVNu2ZG8sXLOyxvNep8x~TICr0NT3b5NXMb1ZzrkyeOSp~-WqCsjacnVygIGD~jM~ctDQpKVkRmXS6SB-S9WhH6Y9OPA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19385-47e5-72a7-8d57-fc81eb224999/output/preview.png?Expires=4947004800&Signature=CjqHxZ87gFj8U3owN8rKTkwS9hRsurmSv8hGYM4g56bkGsXbOFj9e6564QsUJC0WAgWT2UKdlvMSfayOm5emLFhEzxC-aYVTwv3PFMa3GSg3QBp2ZIzLLZ3jX1YZ2GLAVj07oG~OV69mYtJcujFzMpkc7sw2CpTaeRaYTbNLbjXKVxj9cyb59WyN3Wfr-hzzIZKBtGRNJnybnIU7Z6iZsGOhYlmNB4~jl-enRLVPa1U~xbcbh1LWgbq9yH7WbUPa2qM7mxv3gR2LQfv1eoWTCrbrd3p-hGLDoFKdYR8icgM8Y4VR0hK0JO5mfgLgb4PCIaHgKc5igyXyy7zl59f6vA__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

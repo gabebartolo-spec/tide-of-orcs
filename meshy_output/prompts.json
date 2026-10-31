@@ -1,0 +1,126 @@
+{
+ "ashwood-bow": {
+  "prompt": "Simple ashwood flatbow, a game item prop. One gently curved pale wooden stave, wide flat limbs, a plain grip and a single taut string, no arrow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Pale ash-grey wood with faint grain, rust-brown grip wrap, bone-coloured string."
+ },
+ "yew-longbow": {
+  "prompt": "Tall yew longbow, a game item prop. A long slender D-curved stave with narrow horn tips, a leather grip and a single taut string, no arrow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Warm ochre-yellow yew wood with a darker sage back strip, rust-brown grip, bone-coloured horn tips and string."
+ },
+ "hornbow": {
+  "prompt": "Short composite horn bow, a game item prop. Strongly recurved short limbs built from horn plates, a wrapped grip and a single taut string, no arrow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Dark rust-brown horn with bone-coloured bands, dusty sage leather grip, bone string."
+ },
+ "hide-quiver": {
+  "prompt": "Rough rawhide arrow quiver, a game item prop. A tube of stitched hide with a seam, a shoulder strap, four fletched arrow shafts standing out of the mouth, no bow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Rust-brown rawhide with bone-coloured stitches, ochre strap, pale sage arrow shafts with bone fletching."
+ },
+ "birch-quiver": {
+  "prompt": "Birch-bark arrow quiver, a game item prop. A cylindrical tube of birch bark with a rolled rim and a cord strap, five fletched arrow shafts standing out of the mouth, no bow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Bone-white birch bark with small ochre dash marks, rust-brown cord strap, pale sage arrow shafts."
+ },
+ "woven-quiver": {
+  "prompt": "Woven reed arrow quiver, a game item prop. A basket-weave tube with a braided rim and a strap, five fletched arrow shafts standing out of the mouth, no bow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Ochre woven reeds, dusty sage braided rim, rust-brown strap, bone fletching."
+ },
+ "gilded-quiver": {
+  "prompt": "Gilded ceremonial arrow quiver, a game item prop. A tapered tube with ornate raised bands and a star emblem, a strap, five fletched arrow shafts standing out of the mouth, no bow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Deep dusty sage with ochre-gold bands and star emblem, rust-brown strap, bone fletching."
+ },
+ "leather-bracer": {
+  "prompt": "Archer's leather bracer, a game item prop. A curved forearm guard with two buckled straps and a simple embossed leaf motif, no arm inside. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Rust-brown leather with ochre buckles and straps, a pale sage leaf motif, bone-coloured edge stitching."
+ },
+ "bark-bracer": {
+  "prompt": "Bark bracer, a game item prop. A forearm guard made of a curved piece of tree bark with a small leaf, tied on with two cords, no arm inside. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Rust-brown bark with dusty sage moss patches, bone-coloured cords, an ochre leaf."
+ },
+ "scaled-bracer": {
+  "prompt": "Scaled bracer, a game item prop. A forearm guard of overlapping small round plates like fish scales, two buckled straps, no arm inside. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Dusty sage scales with bone-coloured edges, rust-brown straps, ochre buckles."
+ },
+ "silver-bracer": {
+  "prompt": "Silver bracer, a game item prop. A smooth polished metal forearm guard with an engraved star and two buckled straps, no arm inside. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Pale bone-silver metal, an ochre engraved star, rust-brown leather straps."
+ },
+ "moss-cloak": {
+  "prompt": "Hooded ranger cloak, a game item prop, displayed standing as if worn by an invisible figure. Flowing cloth hanging from the shoulders to the ground with a hood and a round clasp at the throat, no body. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Mossy dusty sage-green cloth with a darker sage hood lining, rust-brown round clasp, bone hem stitching."
+ },
+ "wool-cloak": {
+  "prompt": "Thick hooded wool cloak, a game item prop, displayed standing as if worn by an invisible figure. Heavy soft folds from the shoulders to the ground, a deep hood, a round clasp at the throat, no body. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Ochre-cream wool with a rust-brown hem trim, bone-coloured round clasp, faint sage weave."
+ },
+ "feather-cloak": {
+  "prompt": "Feather cloak, a game item prop, displayed standing as if worn by an invisible figure. Layered rows of feathers over the shoulders falling into cloth to the ground, a hood, a clasp at the throat, no body. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Bone and dusty sage feathers in rows, rust-brown clasp, ochre feather tips."
+ },
+ "dusk-cloak": {
+  "prompt": "Long sleek hooded dusk cloak, a game item prop, displayed standing as if worn by an invisible figure. Smooth cloth to the ground with a pointed hood and a star-shaped clasp, no body. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Deep dusk blue-sage cloth, darker sage hood lining, an ochre-gold star clasp, bone trim."
+ },
+ "soft-boots": {
+  "prompt": "Pair of soft elven ankle boots, a game item prop. Two low soft boots with folded cuffs and pointed toes, standing side by side, no legs. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Ochre-tan suede with dusty sage folded cuffs, bone-coloured soles, rust-brown stitching."
+ },
+ "root-boots": {
+  "prompt": "Pair of root boots, a game item prop. Two sturdy knee-high boots wrapped in twisting tree roots, standing side by side, no legs. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Rust-brown leather wrapped in dusty sage roots, bone-coloured soles, ochre laces."
+ },
+ "ranger-boots": {
+  "prompt": "Pair of ranger boots, a game item prop. Two knee-high laced leather boots with folded cuffs, standing side by side, no legs. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Rust-brown leather with ochre laces, dusty sage folded cuffs, bone-coloured soles."
+ },
+ "windstep-boots": {
+  "prompt": "Pair of windstep boots, a game item prop. Two light ankle boots with a small wing shape at each heel and pointed toes, standing side by side, no legs. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Bone-white leather, dusty sage wings, ochre laces, rust-brown soles."
+ },
+ "acorn-charm": {
+  "prompt": "Acorn charm pendant, a game item prop. One large acorn with its cap, hung on a short leather cord loop. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Ochre acorn with a rust-brown cap, bone-coloured cord, small sage leaf."
+ },
+ "bone-charm": {
+  "prompt": "Bone charm pendant, a game item prop. A small carved bone fang with a notched pattern, hung on a short cord loop. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Bone-white carved fang with ochre notches, rust-brown cord, dusty sage knot."
+ },
+ "amber-charm": {
+  "prompt": "Amber charm pendant, a game item prop. A polished teardrop amber stone in a simple wooden setting, hung on a short cord loop. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Warm ochre-amber stone, rust-brown wooden setting, bone-coloured cord."
+ },
+ "star-charm": {
+  "prompt": "Starlight charm pendant, a game item prop. A small carved wooden disc with a five-pointed star inset, hung on a short leather cord loop. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Pale bone-coloured carved wood disc with a dusty sage star inset, rust-brown leather cord, small ochre accents."
+ },
+ "last-knife": {
+  "prompt": "Mythic recurve bow, a game item prop. Dark gnarled wooden limbs, a single taut string, and a small throwing knife lashed to the upper limb with cord, no arrow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Dark rust-brown gnarled wood, a bone-coloured knife blade, ochre cord bindings, bone string."
+ },
+ "heart-of-kiln": {
+  "prompt": "Mythic kiln-fired clay arrow quiver, a game item prop. A cracked clay tube with a rim and strap, five arrow shafts with ember-tipped heads standing out of the mouth, no bow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Rust-red fired clay with glowing ochre cracks, bone-coloured arrow shafts, dusty sage strap."
+ },
+ "thunders-memory": {
+  "prompt": "Mythic storm bracer, a game item prop. A forearm guard with a raised jagged lightning bolt and small copper coils, two straps, no arm inside. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Dusk blue-sage metal, an ochre-gold lightning bolt, rust-brown copper coils and straps, bone edge."
+ },
+ "oakspine": {
+  "prompt": "Mythic oak bow, a game item prop. A bow carved from a gnarled oak branch with bark patches, a single taut string, three small wooden stakes hanging from the grip on cords, no arrow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Ochre oak wood with rust-brown bark patches, dusty sage lichen, bone-coloured stakes and string."
+ },
+ "pale-moon": {
+  "prompt": "Mythic pale moon charm pendant, a game item prop. A smooth crescent-moon disc hung on a short cord loop. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Pale bone-white moon with a faint dusty sage glow, rust-brown cord, ochre tip."
+ },
+ "first-wolf": {
+  "prompt": "Pair of mythic wolf boots, a game item prop. Two fur-trimmed knee-high boots with a small wolf-head clasp on each, standing side by side, no legs. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Rust-brown leather with bone-coloured fur trim, ochre wolf-head clasps, dusty sage soles."
+ },
+ "heartwood-splinter": {
+  "prompt": "Mythic heartwood splinter charm pendant, a game item prop. A jagged splinter of pale wood bound with cord, hung on a short cord loop. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Pale bone heartwood with a faint dusty sage glow at the tip, rust-brown cord binding, ochre knot."
+ },
+ "starfall-cloak": {
+  "prompt": "Mythic starfall cloak, a game item prop, displayed standing as if worn by an invisible figure. A hooded cloak to the ground with small raised stars scattered over the cloth and a star clasp at the throat, no body. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Deep dusk sage cloth with scattered bone-coloured stars, an ochre-gold star clasp, rust-brown hem."
+ }
+}

@@ -1,0 +1,23 @@
+{
+  "id": "01a19385-07d6-7395-b03b-cada648b9b61",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 4025260579,
+  "prompt": "Pair of ranger boots, a game item prop. Two knee-high laced leather boots with folded cuffs, standing side by side, no legs. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476333685,
+  "progress": 100,
+  "started_at": 1793476333690,
+  "finished_at": 1793476347585,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19385-07d6-7395-b03b-cada648b9b61/output/model.glb?Expires=4947004800&Signature=YXyvMoGwvszTBgvyhOnJNeNbDydgYLGyPHe7ejRbIdS6vXjYygeE6SV1KQhGOzDhU32jS2vdDkNCYMoJva63KQLpGBrSlYahdJIbJ9-~S~oXFpUGgbJ-voSViwMWS-YGMKZ5o5buJjQEYwavUb4TwAX0ljS5su-REDmNrmq-pk0RXsDRt1uw9ynZbb-Z6UFkhvd1UIOfg-U2LNCouoKtcw252QnJJwY1jZAOKGupZvBZ9sf6beld-JooyTim5gnQfAUGqtP~spQ~6cPaLXt78QShudnBwU5xljVPqE0pJsNYvWCWjJZsDSARuFf2gXf3wl5fjFhW4tZRd7i9weZFIQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19385-07d6-7395-b03b-cada648b9b61/output/preview.png?Expires=4947004800&Signature=QqRv9WQmKJXkNM84w6zIiF71cPaRvgv~0suK1WIqJfAQGep~bBOBtWWN74VH8F4gIyRtQ5DIhLilmsJmGNveWqgL2pYZxdm4ixEea43dBuVbC6whpUvZBaFmy1DDw765KhPUVHJswCMr7MyTK-Bi~j52OJRFYh80-a7RixobKDh6og4N37QSGoXQpqJu~mYPRKYu-t0G-ZS~tTTa1lGR0BxsM64x4lDayn7R9iSuQch-ymF2tHOo3iMmGrDwduMVhbsTh0uIG~KxLpePc1Jk14E14r4wGYpwfKpFIWvxhzitqZPQDzraB2czQOxPAdgcyfEMQe1ChbGlcy02heXg~Q__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

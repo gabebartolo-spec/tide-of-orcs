@@ -1,0 +1,23 @@
+{
+  "id": "01a19383-bbbd-776e-81a0-b11ca62fc65c",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 4147514093,
+  "prompt": "Woven reed arrow quiver, a game item prop. A basket-weave tube with a braided rim and a strap, five fletched arrow shafts standing out of the mouth, no bow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476248281,
+  "progress": 100,
+  "started_at": 1793476248286,
+  "finished_at": 1793476260967,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19383-bbbd-776e-81a0-b11ca62fc65c/output/model.glb?Expires=4947004800&Signature=ff7l6FlU3IlnKcTuo~I2jSNO9BGOfEHAatVI9QsONA9wYpbhnsITFevs9oAvVleCh25OG6ijE0T8Vxg66TZT0Q5cGIzTsBBBfaExGgnS3PomzI5LV3sK~3DP20aK~xx54pb~AAvbBBHUfwC1TWSd53r6zsMz6B6QxEnSBpbXiIgLvnUoy-6eLzJ3SIzd-fejzbYYYpbVYdbldv1GR7T-EgDgUURg5RL3cou-muSIoxujWeQ0mUdeKyI45qrmvoM~KunX5UcXKhowDTs5CoYpR6y6lXuaIMgJFcTKQI7vaWswh7xpyzobBU3IqXAWNXtQcr7JOx2IEIsfPChiGoQU1w__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19383-bbbd-776e-81a0-b11ca62fc65c/output/preview.png?Expires=4947004800&Signature=FSmkVfJzSNThvXusgXrHngciK4lPvb3rqoT~NHkgDeT2oJAHbQUIRLkaPem3H4xWRIVa75cUnFbHqhlh2b0rA4yH3pOMC94sInF0pxYA0AogdZXJEJy1q1XZbcR9Gy7nryUpPpRTnvsVhW6OKuC1Gdakysql6Dx83AktlsoH3vpyK706DKYigJjfH05whEnBF~oWXYqNiLNco5OciCJELJDN7BCNGL0Iv0duI-o9ehq6sgN1p8Dp6jZMoQBCbMYQ87gZdVGE19wvmq76So-Wd6bE0Xu5j68IW5635DkOMEbStRLCWqmPeuV5X9x3TIE-PnQb6-c0Xwn3GNGLah4JZA__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

@@ -1,0 +1,23 @@
+{
+  "id": "01a19385-af96-77fe-a85b-c3fd3612d936",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 2613567197,
+  "prompt": "Mythic recurve bow, a game item prop. Dark gnarled wooden limbs, a single taut string, and a small throwing knife lashed to the upper limb with cord, no arrow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476376230,
+  "progress": 100,
+  "started_at": 1793476376234,
+  "finished_at": 1793476388879,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19385-af96-77fe-a85b-c3fd3612d936/output/model.glb?Expires=4947004800&Signature=oaRJhxBujoREjWTxa3S3y7Yx8iwiXQVm2MT8pQqwjHZDzv97nTECtKp6Nrc1dSlKNAaIkXa8F3JTIpafetcflezRtT3minY60Kuh1lepQAlzBWhpS5z3S3GD~~wlxUySe7YktfFA~UZ46YER9gQRVmOo7~pWCwceSmGfzPKOyr0L0f4OQ-RvuN1wlL9CKRXuF5HIQJBmXpu-XdEyDqGnUNhN5opbFoIkhfEXb93DTpvPjMng2e0xDOjehk~TC14-rQRy7erB4B1aLlXzwevzVstrDxhCmwS6XWA3GzWk~HQZZJR5e6waBCeZnoQwyVnT65UZsEUD87eyQLpxtQltdQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19385-af96-77fe-a85b-c3fd3612d936/output/preview.png?Expires=4947004800&Signature=ofUKWF3OdRJTKU-zSlWSKoKMPcQ4YlhNisGfvdx2a3YmMENDa3P17KXfq~QHAqj9VVJsf~VCCFxaAn-wcbNZh4~~wNDkylUEEjX1V-WraQ4SvsERsOdprObmCDsqZyBouXcFs9acXI~57FeFF3N8hL9I7QNBhI7WS5acQ0oAsKTOvlxkyHmMi32qbGlpYRdBBSKDwVlN0iBJb4pxdT6N1golCk5Z8gTEeAsC~ZByGBzdEKt9InPLyGPOIi2rZOWxQrDIeJ~hcVKu0RJk4ltkWPn90V9VkglELBIOZ4moqPCutAOWwQ-INxVq0WeA8jeMsZMns5SHxOKRs3BdcwMIlQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

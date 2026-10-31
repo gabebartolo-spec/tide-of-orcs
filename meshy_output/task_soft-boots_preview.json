@@ -1,0 +1,23 @@
+{
+  "id": "01a19384-d203-7324-904a-1eb2ebd56c16",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 1862134053,
+  "prompt": "Pair of soft elven ankle boots, a game item prop. Two low soft boots with folded cuffs and pointed toes, standing side by side, no legs. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476319174,
+  "progress": 100,
+  "started_at": 1793476319181,
+  "finished_at": 1793476334634,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19384-d203-7324-904a-1eb2ebd56c16/output/model.glb?Expires=4947004800&Signature=W3ry21~WEaoYbf379Xul1QQ5JaFqEcUW25mNO8ptDsgQ~iEOK~UL0acpE5DvhQvHCszTSuhZXmKmxbh2lFmA47UXxvwLzKg3jhqK1X5wGI7s6XBl1sBZhLQRrpn90utJk6WRwzoHKbUPGgF0kFO7anzQejRTVEnaKPwphmozaZ-5VIQNVAgk2in-d5qkIURXw9gTAmjGK7LBLFcK4R~UsMVsnQt8QesDNZEsSNRJRA1rL1-upQKl8HShp0txW9SbPOYFjlN7-Kt6HEId0QGp4K-r2X2lqMPauq08YYSidcnP2M0d~AjZbQzu0EdJJ47AXv3QvfPyINq-rCCtC-JViA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19384-d203-7324-904a-1eb2ebd56c16/output/preview.png?Expires=4947004800&Signature=evKGaxFrfS9rlMXS8yc4Dz0Vnckd7VT-WiMOv0QKTaFhvWW24E87umLjBpAUxIPdPqAFiArb8ljZ~cjOqdmNdlbFUWLltu-P2K3KsF3uiiExPP~9wOEht30g3fIAxyaGMYkv~4lLMI3IQalm-uaK1~8yjtz3AMksbL386T2vRdNpVswhexZyIZgUwRxMfy-iKzZLhE1joonT1QWXvQtQTuO4hmbvJeHzQUSZl6OtQdM3VX4eY-AQeXXGEzrSutWKg3RrgLNgOXQwySV7e1fo0Q7PJhuebpsYijWJWg1M5V2FN-btggnba8Sjw7qLv8umdLeJN4~CtKWQBoDzLv7dKw__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

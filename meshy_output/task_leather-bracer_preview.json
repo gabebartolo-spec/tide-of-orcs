@@ -1,0 +1,23 @@
+{
+  "id": "01a19383-f7b6-77bc-9a23-2d085b531c30",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 3352577097,
+  "prompt": "Archer's leather bracer, a game item prop. A curved forearm guard with two buckled straps and a simple embossed leaf motif, no arm inside. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476263114,
+  "progress": 100,
+  "started_at": 1793476263120,
+  "finished_at": 1793476277396,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19383-f7b6-77bc-9a23-2d085b531c30/output/model.glb?Expires=4947004800&Signature=pxo-mN3LCzOwGeUN0Y8UiivAT37-DtKNLUimQHelZem~nDUZT8WOIGEiVWeCcE8gouMgMqCXGD22vRa75XbexkbzZgRVpOfa4yyVbR3NHy7VLJ23bbzQmICpgnKYP8xibwX66TfAJIXGlteNmXbcuGosKEOF0THq9Fsxa-yi6nEYygIDtpKNyIlYGQhypAATuG~ZFEAgbdYQDW3a1shidtvS4mBr1pAFfY9BYGY1XvedsmHGdL~1NcDKugw6mcN7F1cTJXYMrTArOSAtcfBZZm7L9PH4TaWgzr2MUjaAAFuqIsGuj-PuMasx1Il8HrKzt7fE6kyldQMgzYhb9gEcYw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19383-f7b6-77bc-9a23-2d085b531c30/output/preview.png?Expires=4947004800&Signature=qVrOJtsOVnLx3nokYFGKJdMFuiAgynhxP5XouTjVGtlTJAt5x0sA-phWua2arpPYsO6wEBb9RvtxwyRIU3s5DNa8EwXnf3a1JA8MY2Wroq042fTmf3p4Rd0FUjqsQH0kh0ecOCz72BSI8quur1XIxlO8QEHVtJO3YbgKVmSHD2E4AFt40kMOehARv3gE6vRHJ1LzyT9cmUTcyB6KwSoNYDryJymAH9OdxpB~Gqenbyz0K0ThICdsyV4UOl-L~JaFtAjeCvWpvKy9ruATxuzcLSu8NZEGlrAOpleHWnpAxJtnE4B~-Ea0CCV9j1zSvcq94PlcLKR6kUjqlfWNxdAYWg__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

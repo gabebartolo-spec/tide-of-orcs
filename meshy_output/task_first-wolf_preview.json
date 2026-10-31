@@ -1,0 +1,23 @@
+{
+  "id": "01a19386-3720-749c-ae22-88a4348ef9b8",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 2087879281,
+  "prompt": "Pair of mythic wolf boots, a game item prop. Two fur-trimmed knee-high boots with a small wolf-head clasp on each, standing side by side, no legs. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476410823,
+  "progress": 100,
+  "started_at": 1793476410829,
+  "finished_at": 1793476425212,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19386-3720-749c-ae22-88a4348ef9b8/output/model.glb?Expires=4947004800&Signature=KHfu4kMsWYJAI6QEJhWvfDEG9Wguqx11zT5Q2AgWMQh5PyVoYz5qCB6eFA5wQzazg6ukVLiR55a~mzVryiQLtRnoriFU2-pG7dZp1JQPU9MNV30IpJllSuGg2wULOjxZxEo5TS3DF0-KDHyUfmbvLYwaOlhrnAAWTyqyAuv8H1eOdaunwds-RnnNepNYm5CVCF8fUPZrNaew-uK4ZYae9O49jCalftiHUxLr2MpKkr900o7-KvfgUXo2DoMCf5~91j1Ap7KhCjl7Qf9lIyKaF60gOyqDQ0OcQciDb73MAO7K0w2Qi4dXPeG8MIgPfEDuMGQC9ZnGWWWgDE~glBPKuw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19386-3720-749c-ae22-88a4348ef9b8/output/preview.png?Expires=4947004800&Signature=djeSqFIhPM5x6GruvMHKeWGj6lJWNmjWnIO-iLkvc4ibCBfESVZ-ythu2MFXDQMKCKtAi9tmyJQPTB9nYCtXiTnQaBPEQ2gDLAPCZb~ICOjUdckKBEML1ReyO01NAcRzcHlXPLsi~6o8zn9zEoBLKx7~RMRzSTJ4KAqF9ex6um8ocKCyn2q5geuL1FvHY8RCrHaVLWdXmqK-iQHY1chcij6yLb2pkbZWfXeO-zJLMqQDJUs3L~9-~Dk~vvJvnerYk4zca5zkjUkpKW3Pxx4joJrEmCxWYk~JwVWrveICC51UMqneP1ITN0wgFO-jq-NsI7sx7lug2oLcDhIkYWVFFQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

@@ -1,0 +1,23 @@
+{
+  "id": "01a19384-48b6-736e-8b75-db05c575c4f7",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 2052490318,
+  "prompt": "Silver bracer, a game item prop. A smooth polished metal forearm guard with an engraved star and two buckled straps, no arm inside. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476284015,
+  "progress": 100,
+  "started_at": 1793476284021,
+  "finished_at": 1793476302552,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19384-48b6-736e-8b75-db05c575c4f7/output/model.glb?Expires=4947004800&Signature=ZCwsJXp~orS1JHzyL0Yy2uY2~qVNsvI6fknNpBJUOvVuhazhMMgTZ2QbM1PuXJFaStZZEgrXn36jJLd6q0RVo3jujDTEK24UZNCjxAbX5Bl7tSSPblPb~igVO6PLD15u5-OXUeqlAn3LDNUq0e9HxaZ8MjpZ-ixsSnc7SwAvQvJ8cDTk~f4tzKYGO5RGByn90XAWeXWPnXySpXZxzTt-rbzfGviY4TBqtJRnHvUCAds3kndIsX9laCrugnaLRIqWgsm9qdoEor8xidak6x4ujEaw0axqXOlnq0Yck7B93vZeB92XJbB21NBcu13hpwvLF0Ags2YF4KOCJwJu~nHDng__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19384-48b6-736e-8b75-db05c575c4f7/output/preview.png?Expires=4947004800&Signature=UawZLZvWLaZQYV5g3Oc4jjr~UVoXjt6lQTRHh88BpJ6FqSKlch~cXai3kX4a6WwCfc8lMqSrBJtrPyXDWro7j84LTbfo02IbM4aZplBtCO0sZXAPMTqr3UJewF6weu~qsPc14FHE7Mjwe86Jo8Y7fc0Pe1-MTCKUpGk5FxDRDRCCZvQr4cqs~6J4bxYrU~Jqb-kJsKZpYlrNyqUCZPnSti6ibpCV0ZE53FKKn0RE26EnlbCpn-3DvGrte9Z6LIqI78YJNFrnTqugdBKCqgQzhGGbYClu91Kgcz~~yPY-sOKNIkP-8KgITAM~iGH-buNwGHj0L3wMQgo~Eol-OIH6iw__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

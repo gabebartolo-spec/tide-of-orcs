@@ -1,0 +1,23 @@
+{
+  "id": "01a19384-b4e2-7775-a7b7-f9ca9dae2d89",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 728208302,
+  "prompt": "Long sleek hooded dusk cloak, a game item prop, displayed standing as if worn by an invisible figure. Smooth cloth to the ground with a pointed hood and a star-shaped clasp, no body. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476312228,
+  "progress": 100,
+  "started_at": 1793476312233,
+  "finished_at": 1793476325561,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19384-b4e2-7775-a7b7-f9ca9dae2d89/output/model.glb?Expires=4947004800&Signature=Xb324qPrC6cN-KtGCMUSoz4uH8ehd2Gge1TbHn~wyO~G9xKJhZViEk~783Q7h~Pwfqb8piilEwmpUoauHCK~LUmNZZdwMV3UdLAEFanlzO2rWSIChwY20sSZF~NF-x3Cq4h4a-ndxyt8gghqcya8P9~fURfIdsVki9r7uQLy0X7FYFj2mn8ZAkaHKLoP9t4mbAnQ1ps2fNrHjBhzKQ6p0Kd~wWKD3oDaT3ijzvYlkY0jsjNCXsMA2~~-9DmE~F4ZuAwpNScOQHB5ZmxOeuIEwdMU2OBqPvtfUsgBHtH0I15hUiyvyitZsOWldteCJUTjKjwIFfTs80mO1nPI5wAVxw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19384-b4e2-7775-a7b7-f9ca9dae2d89/output/preview.png?Expires=4947004800&Signature=CIDMrhwvn2UFQ5ijTcduZy~WxvEhV9FAiJpedpLT3TnpSH0u6Z6fUZjfsgl51AzJUrcVmWusV~UF63j2cxEQc0AMa3b00JKSgKCaJsPzX-d08PsaDPLxdSgaVcpqhdkfaC6eJGUZhC1ANIr9Zf7oIu58KjQBQKsJVKYcBaa791kzGt7GuWv6l2M0nUBAyq2KJi4V4Rcqm5gNz3M8RTaWUcIKtFj0kPyg8a959~F3J64gODMrvNEqXWWLxMQK~GwihMPHJ4lctkk5VKfqH9fMeuWBOzJHOJzAu3aIxnfRsrYLL3geRVFvW5mydaOGJHkjk0Tj7NNnzJi82ggbtqgkQw__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

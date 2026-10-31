@@ -1,0 +1,23 @@
+{
+  "id": "01a19385-96fe-73c5-ae72-ff06871f8444",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 1649044902,
+  "prompt": "Starlight charm pendant, a game item prop. A small carved wooden disc with a five-pointed star inset, hung on a short leather cord loop. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476369555,
+  "progress": 100,
+  "started_at": 1793476369561,
+  "finished_at": 1793476382466,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19385-96fe-73c5-ae72-ff06871f8444/output/model.glb?Expires=4947004800&Signature=QRGt~85OvFD6pJ5C0V8FcJWue7vb1ttZWpWvETK3R2BWvTC7wbLCM3T5zYaCq~hSUEiycd3HZ5XmQFbMLmGEMvKvd71T13rBu0bqMdnVqwQy-qLR7awSOol6fF2mnqYN~NgQm-Gs8ITVwwVI4AI-TnF0cQVN4AHXbl8TR82Ji77K962h5pOUwIfKTlqNvHsnbLWyWROn-k~dbt7qcnlSUFP4DoIvTYKxgUzqnGGnuLMVBK~4VqjpZmZF1iDhfsYb0HfYnOrYaG8Ls2dBqbUeBjaQ0dLGK1lPXIqKso8zk2v3kR2W7bpZG-CKJveK4qwGU0b3n~sSiBvo0fun-f28mA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19385-96fe-73c5-ae72-ff06871f8444/output/preview.png?Expires=4947004800&Signature=lZaPie0b9VTT-Ztos~Y8H1iCkv7vibYdCvWOSY9hj86Uva51aRJOVtl58Gu3GYocQ4KvG6H~I45gw2KbS~j37dbLi9kZWg2JKZyX-mXAojwVYjqb3CipwaW0lrnYCjrNMtJtyR8jjSd6PAmRvYt0ZQwNEqZZ-R2nFSOabetrfR7Fq7H6IkxOMFGOJcOYn1MWnwzWePEOkOPjGAdr~6vHNGruFMjUdbPL~-sy6o5CMGA6kqG5isURnciFTwKDJ~e6kabPTlLlXHwXzfmDu2gwFxOAXLD~-s5r~dGrAaVX3OoJMaJHY6jcZGhNDeKAlIz2kIKx1DysdNYIfrZ48lEPVQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

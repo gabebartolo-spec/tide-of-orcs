@@ -1,0 +1,23 @@
+{
+  "id": "01a19385-7e0c-75a0-9f69-3c4ac21868c1",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 1171158935,
+  "prompt": "Amber charm pendant, a game item prop. A polished teardrop amber stone in a simple wooden setting, hung on a short cord loop. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476363411,
+  "progress": 100,
+  "started_at": 1793476363418,
+  "finished_at": 1793476379739,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19385-7e0c-75a0-9f69-3c4ac21868c1/output/model.glb?Expires=4947004800&Signature=o8TuHjAJKu0EIiTsEbCvuBhkeqBUrjX1OQ8bO06mHcyxZ7QQ9pk~nKlU7NnmkoUMBGhOBdoeE6tIJjC6MutV6YkY2xr~sN8cwlSSpja4rcqltlqSOrm0ADVcPg2BBK1WRbzwJqLYiAXkODuF~R7KCrjN4QLk17K4CrCpIbyuQLNgGIvsIVWExBDNvCtbkvB1tuRH~NWxCGvavVvZ2VuPPrnI-RwelDK38PfdUzpfpZxreqx0ba3bWbxkaSqaGeS0XsafUl9UDLFSDio1~f3r4uMN89wj0zN-0IGlBK8e7qrkMpp0b6oC3NlfP~ocenOQo3TmkLz1f5iPHmBkPNIgHQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19385-7e0c-75a0-9f69-3c4ac21868c1/output/preview.png?Expires=4947004800&Signature=a9nn1JkQGjbZSoPI2K~vdCc9rJV0EnF2czvgQ1S3u4ZJT2BW4bLtUc9k3~kJhDWOOBLI17MEznLl~nd9UkZiCLO96ifHTaUSztzI97ftunLEaDZpyMshBwA8-dgsg4RD4txvhCJzrRIr8kWMBi5SjfxnL4EUOjxywRZjqGdCVy4NN4sAN6ZPLU~6WopKxq3Lqq-5tg6sCADHFFhR1CvTxdtcJihdCcGaD0YPcBPALMLLo5OhsnnAMq90ibTEBGkxozLpi0h2e~91KRAttU52WUnbsF~sfqd7LsNfok-PqqZCiaROTn06VEwRs5E73QdYM91F3wwOTzJvH--hU0QaIA__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}
