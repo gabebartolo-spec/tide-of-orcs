@@ -8,6 +8,7 @@ export interface Anim { frames: [number, number, number, number][]; fps: number;
 export interface Atlas { image: string; anims: Record<string, Anim> }
 
 export const ATLAS_URL = 'sprites/atlas.json';
+export type ActorState = 'walk' | 'attack' | 'idle';
 
 /** Frame index for an animation at time t (seconds), looping. */
 export function frameAt(a: Anim, t: number): number {
@@ -47,6 +48,18 @@ export class Sprites {
       this.atlas = atlas; this.img = img;
       return true;
     } catch { return false; }
+  }
+
+  /**
+   * Draw an actor in one of its three states. `key` is the walk loop and `key.attack` the attack loop; idle holds the
+   * walk's first frame. A missing loop borrows the other one (the attack's first frame stands in for a walk), so one
+   * approved clip is enough to replace the vector actor.
+   */
+  drawActor(g: CanvasRenderingContext2D, key: string, state: ActorState, t: number, x: number, y: number, r: number, flash = false, tint = '', glow = '', blur = 0): boolean {
+    const atk = key + '.attack', go = (k: string, tt: number): boolean => this.draw(g, k, tt, x, y, r, flash, tint, glow, blur);
+    if (state === 'attack') return go(atk, t) || go(key, t);
+    if (state === 'walk' && go(key, t)) return true;
+    return go(key, 0) || go(atk, 0);
   }
 
   /** Draw animation `key` with its feet at (x, y) for an actor of radius r. False when there is no sprite for it.

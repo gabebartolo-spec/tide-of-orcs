@@ -10,6 +10,7 @@ import { fmt } from '../ui/format';
 import { STR } from '../data/strings';
 import { Ceremony } from './ceremony';
 import { Sprites } from './sprites';
+import { orcState, vanState } from './actorState';
 import { Ground } from './ground';
 import { LOOT_VFX, SKY, VFX, dusk } from '../data/presentation';
 import { SLOTS } from '../data/loot';
@@ -223,9 +224,9 @@ export class FieldRenderer {
       if (pt.fire && !this.reducedMotion && Math.random() < A.flameRate * dt) this.fx.flame(pt.x + (Math.random() - 0.5) * pt.r * 1.6, pt.y + (Math.random() - 0.5) * pt.r * 0.8 + 6, P.fire);
     }
     const vans = this.vanBuf, orcs = this.orcBuf; vans.length = 0; orcs.length = 0;
-    s.vans.forEach((v) => { vans.push(v); }); vans.sort(byY); for (const v of vans) this.van(v);
+    s.vans.forEach((v) => { vans.push(v); }); vans.sort(byY); for (const v of vans) this.van(s, v);
     s.orcs.forEach((o) => { if (!o.dead) orcs.push(o); }); orcs.sort(byY);
-    for (const o of orcs) { this.orc(o); if (o.burn > 0 && !this.reducedMotion && Math.random() < A.flameRate * dt) this.fx.flame(o.x + (Math.random() - 0.5) * o.r, o.y, Math.random() < 0.5 ? P.fire : P.amber); }
+    for (const o of orcs) { this.orc(s, o); if (o.burn > 0 && !this.reducedMotion && Math.random() < A.flameRate * dt) this.fx.flame(o.x + (Math.random() - 0.5) * o.r, o.y, Math.random() < 0.5 ? P.fire : P.amber); }
 
     this.drawBeams(dt);
     s.shots.forEach((a) => {
@@ -357,13 +358,13 @@ export class FieldRenderer {
     if (!this.reducedMotion) { g.globalAlpha = VFX.trail.alpha; g.beginPath(); g.moveTo(a.x, a.y - a.h - L); g.lineTo(a.x, a.y - a.h - L * 5); g.stroke(); g.globalAlpha = 1; }
   }
 
-  private orc(o: Orc): void {
+  private orc(s: SimState, o: Orc): void {
     const g = this.g, wind = this.windUp(o); g.save(); g.translate(o.x + wind.dx, o.y);
     const bob = (this.reducedMotion ? 0 : Math.sin(o.wob) * 1.5) - wind.dy;
     g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, o.r * 0.9, o.r * 0.9, o.r * 0.35, 0, 0, 6.28); g.fill();
     // Burning or chilled: the orc's own body takes the colour and a soft rim of it, so shading still reads (TB-089).
     const tint = o.burn > 0 ? P.fireTint : o.chill > 0 ? P.frostTint : '', glow = o.burn > 0 ? P.fire : o.chill > 0 ? P.frost : '';
-    if (this.sprites.draw(g, `orc.${o.kind}`, this.clock + o.wob, 0, o.r * 0.9, o.r, o.hitT > 0, tint, glow, VFX.arrows.rimBlur)) { this.orcBars(o); g.restore(); return; }
+    if (this.sprites.drawActor(g, `orc.${o.kind}`, orcState(s, o), this.clock + o.wob, 0, o.r * 0.9, o.r, o.hitT > 0, tint, glow, VFX.arrows.rimBlur)) { this.orcBars(o); g.restore(); return; }
     g.fillStyle = o.hitT > 0 ? P.cream : o.kind === 'boss' ? P.boss : o.kind === 'elite' ? P.elite : o.kind === 'brute' ? P.brute : P.orc;
     if (glow) { g.shadowColor = glow; g.shadowBlur = VFX.arrows.rimBlur; }
     g.beginPath(); g.ellipse(0, bob, o.r, o.r * 1.05, 0, 0, 6.28); g.fill(); g.shadowBlur = 0;
@@ -412,10 +413,10 @@ export class FieldRenderer {
     g.restore();
   }
 
-  private van(v: Vanguard): void {
+  private van(s: SimState, v: Vanguard): void {
     const g = this.g, T = VANGUARD[v.type]; g.save(); g.translate(v.x, v.y);
     g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 16, 12, 4, 0, 0, 6.28); g.fill();
-    if (this.sprites.draw(g, `van.${v.type}`, this.clock, 0, 16, ACTOR_R, v.hitT > 0)) { this.vanBar(v); g.restore(); return; }
+    if (this.sprites.drawActor(g, `van.${v.type}`, vanState(s, v), this.clock, 0, 16, ACTOR_R, v.hitT > 0)) { this.vanBar(v); g.restore(); return; }
     g.fillStyle = v.hitT > 0 ? P.cream : v.type === 'spear' ? P.spear : P.blade; g.beginPath(); g.moveTo(-9, 14); g.lineTo(9, 14); g.lineTo(6, -6); g.lineTo(-6, -6); g.closePath(); g.fill();
     g.fillStyle = P.lilac; g.beginPath(); g.arc(0, -12, 7, 0, 6.28); g.fill();
     g.strokeStyle = P.cream; g.lineWidth = 2; g.beginPath();

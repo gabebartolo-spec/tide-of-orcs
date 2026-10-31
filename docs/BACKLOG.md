@@ -69,7 +69,7 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | Id | Task | Area | Depends | Owner | Status |
 |---|---|---|---|---|---|
 | TB-060 | Sprite-sheet loader with atlas JSON and vector fallback; draw actors from sheets when present | render | M2 | claude | done 47e4010 |
-| TB-068 | Tripo models + Cascadeur loops → sheets for orcs, elf, vanguard, companions (ART-STYLE §Asset pipeline) | art | 060 | gabe | todo |
+| TB-068 | Tripo models + Cascadeur loops → sheets for orcs, elf, vanguard, companions (ART-STYLE §Asset pipeline) | art | 060 | gabe, claude | doing (first sheet in game: grunt walk/attack, spearman walk/attack, bladedancer attack) |
 | TB-069 | ElevenLabs SFX set (16) + ambient bed, exported per ART-STYLE | audio | — | claude | SFX done b3e4c5f (16 cues, OGG+MP3, −16 LUFS; loose, knife, bossRoar, click, denied wired); ambient bed done (30 s seamless loop, take A, director pick); `ignite` plays on the elf's release with Fire Arrows (director call) |
 | TB-061 | Parallax hills, day/night tint, bank lamplight | render | 018 | claude | done 71d05f4 |
 | TB-062 | Audio engine: ambient loop, SFX map from events, ducking | audio | 019,069 | claude | done 09b60cf |
@@ -97,6 +97,7 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-080 | Enemy types: only grunts at first; runners, brutes, elites (new), warboss summoned by Grove nodes; per-kind Fury and Swarm nodes; Blood Banners retired (save v3); orc wall damage raised so a bare run falls at wave 3–4 | sim/data | | claude | done 4ed98fb |
 | TB-082 | Tree opens at 1:1 on Waking instead of fit-to-width (unreadable in the 378 px panel); enemy Fury/Swarm nodes stacked so labels don't collide | render | 021 | claude | done 5cb30c1 |
 | TB-081 | Boss waves: every 10 waves a boss wave unlocks; the player summons it, starting a 60 s challenge of bespoke mini-waves. Replaces the Warboss summon, Fury, Swarm and Bounty nodes (save v4) | sim/ui | 080 | claude | done e3b4536 |
+| TB-087 | New orc kinds (director, 31 Oct): berserker, war drummer, shaman, wolf rider. Models made in TB-068; behaviour, stats (BALANCE.md) and wave mix need director design first | sim | 068 | | todo |
 | TB-098 | Field ground redesign (director, 31 Oct): seeded grass tufts, small rocks, worn and barren patches, pre-rendered offscreen | render | | claude | done (PR) |
 | TB-099 | Loot sets: 7 sets with 2/4/6-piece effects on the field (planned as "TB-098" on the loot branch; renumbered, TB-098 is the field ground) | sim/render | 097 | claude | superseded by the L3 TB-099 row below |
 | TB-100 | Loot mythic powers (planned as "TB-099" on the loot branch) | sim/render | 099 | claude | superseded by the L3 TB-100 row below |
