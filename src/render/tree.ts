@@ -1,4 +1,4 @@
-import { BRANCH_COLOR, NODE, NODES, NodeId, TREE_VIEW } from '../data/skillTree';
+import { BRANCH_COLOR, BRANCH_LABEL, NODE, NODES, NodeId, TREE_VIEW } from '../data/skillTree';
 import { Camera, centreOn, clampCamera, easeToward, startCamera, panBy, toWorld, zoomAt } from './camera';
 import { SimState } from '../sim/state';
 import { canBuy, rankOf, unlocked } from '../sim/tree';
@@ -112,6 +112,6 @@ export class TreeRenderer {
     }
     c.setTransform(k, 0, 0, k, 0, 0); // legend stays in screen space
     let lx = 14; c.font = '10px "Atkinson Hyperlegible", sans-serif'; c.textAlign = 'left';
-    for (const k of Object.keys(BRANCH_COLOR) as (keyof typeof BRANCH_COLOR)[]) { c.fillStyle = BRANCH_COLOR[k]; c.fillRect(lx, 14, 8, 8); c.fillStyle = P.creamDim; const label = k.toUpperCase(); c.fillText(label, lx + 12, 22); lx += c.measureText(label).width + 30; }
+    for (const k of Object.keys(BRANCH_COLOR) as (keyof typeof BRANCH_COLOR)[]) { c.fillStyle = BRANCH_COLOR[k]; c.fillRect(lx, 14, 8, 8); c.fillStyle = P.creamDim; const label = BRANCH_LABEL[k].toUpperCase(); c.fillText(label, lx + 12, 22); lx += c.measureText(label).width + 30; }
   }
 }

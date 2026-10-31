@@ -1,11 +1,13 @@
-# Tide of Orcs — Game Design Document
+# A Lot of Orcs — Game Design Document (repo: tide-of-orcs)
 
 Status: **Current** (v1.3, synced with the code 31 Oct 2026). Core-loop sections (§2–§5) are human-owned; ask before changing. `docs/prototype.html` is the original concept for tone, look and the core loop; its mechanics are historical (see §14).
 
 ## 1. Fantasy and tone
 You are the last warden of a grove on the western edge of a wide plain. Between you and the orc tide stands a timber barricade. The tide comes from the east, forever, and one day the wall will fall. That day isn't a loss. The grove burns down to a seed, you carry back Heartwood, and the next wall stands longer.
 
-Mood words: patient, verdant, lamplit, unhurried. A siege you will eventually lose and learn from. Never gritty, never grimdark. Orcs are weather.
+Mood words: patient, verdant, lamplit, unhurried.
+
+**Voice (TB-115, director's rename pass, 1 Nov 2026).** Every name is the elf's commentary on the orcs: dry, unimpressed, has done this before. Names are short plain words said out loud; no adjective + noun, no fantasy vocabulary, and the name never repeats the tooltip. The name is the joke; the description stays plain and factual (the manual). Mix shapes (one word, a question, a sentence, running gags like Lads and Management) so the tree reads as one person talking. Player-facing vocabulary: Teeth (currency orcs drop; code `starlight`), Grudge (prestige currency; code `heartwood`), Burn It Down (prestige; code `replant`), the Fence (code `barricade`), the Lads (code `vanguard`): a Lad (`spear`) and a Show-off (`blade`); orcs: Grunt, Little One (`runner`), Lump (`brute`), Fancy One (`elite`), Management (`boss`). Code ids and save fields keep the old names. A siege you will eventually lose and learn from. Never gritty, never grimdark. Orcs are weather.
 
 ## 2. Core loop
 
@@ -43,18 +45,18 @@ The field hint (`STR.hint`) reads: "Hold the barricade. Move your pointer over t
 
 ## 4. Waves and orcs
 - Waves are timed: one every 24 s regardless of kills. `wave` is the only difficulty driver.
-- At first only grunts march. Every other kind joins only when the player summons it with its Grove node (Goblin Runners → Brutes → Blackguard). Summoning is the risk-for-reward lever: more danger, more starlight. Falling is fine and expected; it feeds the replant loop.
-- **Boss waves (TB-081).** Every 10 waves (wave 10, 20, 30 …) a boss wave unlocks and waits; nothing happens until the player presses *Summon the boss wave*. It is a 60 s challenge: regular marching pauses and a fixed script of mini-waves marches in (a shield line, edge flankers, rams, a wedge, the Warboss with two Blackguard, a scatter, a last push; `src/data/bosses.ts`). Slay every one before the minute ends and it pays 40 × the wave's loot in starlight; otherwise the stragglers keep marching as ordinary orcs and regular marching resumes. Unsummoned boss waves stack. The Warboss marches only in boss waves.
-- Every kind has its own spawn clock and two nodes: **Fury** (+30% health, +40% starlight per rank) and **Swarm** (spawns 20% more often per rank). Grunts' are War Drums and Call the Horde.
+- At first only grunts march. Every other kind joins only when the player summons it with its Grove node (Little Ones → Lumps → Fancy Ones). Summoning is the risk-for-reward lever: more danger, more starlight. Falling is fine and expected; it feeds the replant loop.
+- **Boss waves (TB-081).** Every 10 waves (wave 10, 20, 30 …) a boss wave unlocks and waits; nothing happens until the player presses *Summon the boss wave*. It is a 60 s challenge: regular marching pauses and a fixed script of mini-waves marches in (a shield line, edge flankers, rams, a wedge, Management with two Fancy Ones, a scatter, a last push; `src/data/bosses.ts`). Slay every one before the minute ends and it pays 40 × the wave's loot in starlight; otherwise the stragglers keep marching as ordinary orcs and regular marching resumes. Unsummoned boss waves stack. Management marches only in boss waves.
+- Every kind has its own spawn clock and two nodes: **Fury** (+30% health, +40% starlight per rank) and **Swarm** (spawns 20% more often per rank). Grunts' are Eat Something and Bring Friends.
 - Spawn position: x = field width + 24, y uniform in [50, H−50]. Hard cap 160 live orcs.
 
 | Type | HP × | Speed | Loot × | Radius | Spawns every | Unlock |
 |---|---|---|---|---|---|---|
 | Grunt | 1.0 | 48 | 1.0 | 12 | 1 × wave interval | always |
-| Runner (small, fast) | 0.55 | 78 | 0.7 | 9 | 1.5 × | Goblin Runners |
-| Brute (slow, strong) | 3.2 | 34 | 3.0 | 16 | 4 × | Brutes |
-| Elite | 8 | 42 | 8 | 14 | 10 × | Blackguard |
-| Warboss | 28 | 26 | 30 | 24 | only in a boss wave | — |
+| Little One (runner: small, fast) | 0.55 | 78 | 0.7 | 9 | 1.5 × | Little Ones |
+| Lump (brute: slow, strong) | 3.2 | 34 | 3.0 | 16 | 4 × | Lumps |
+| Fancy One (elite, armoured) | 8 | 42 | 8 | 14 | 10 × | Fancy Ones |
+| Management (boss) | 28 | 26 | 30 | 24 | only in a boss wave | — |
 
 Speed scales ×(1 + 0.008·wave). All orcs swing once per second: a vanguard takes 2.5% of the orc's max HP, the wall takes 10× that (25%).
 

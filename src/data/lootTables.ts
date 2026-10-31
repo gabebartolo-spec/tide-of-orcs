@@ -69,27 +69,27 @@ const on = (stat: string, value = 1): StatLine => ({ stat, op: 'add', value });
 const mul = (stat: string, value: number): StatLine => ({ stat, op: 'mul', value });
 /** Each line names the Stats field it changes; systems read those fields, never set ids. */
 export const SETS: readonly SetDef[] = [
-  { id: 'nightknife', name: 'Nightknife', bonus: { 2: [mul('knifeRate', F.knifeRate)], 4: [on('bleedAmp', F.bleedAmp)], 6: [on('knifeFan')] } },
-  { id: 'emberwright', name: 'Emberwright', bonus: { 2: [mul('burn', F.burn)], 4: [on('burnSpread', F.burnSpread)], 6: [on('cinder')] } },
-  { id: 'stormcaller', name: 'Stormcaller', bonus: { 2: [on('chain', F.chain)], 4: [mul('chainJump', F.chainReach)], 6: [on('rebound', F.rebound), mul('stormRate', F.stormRate)] } },
-  { id: 'siegebreaker', name: 'Siegebreaker', bonus: { 2: [mul('ballRate', F.ballRate)], 4: [on('boltShove')], 6: [on('boltPin')] } },
-  { id: 'moonveil', name: 'Moonveil', bonus: { 2: [mul('moonRate', F.moonRate)], 4: [on('moonCrit')], 6: [on('moonwell')] } },
-  { id: 'packlord', name: 'Packlord', bonus: { 2: [mul('petDmg', F.petDmg)], 4: [on('petHaste', F.petHaste)], 6: [on('extraWolves', F.extraWolves), on('treantRoot')] } },
-  { id: 'rootwarden', name: 'Rootwarden', bonus: { 2: [mul('barMax', F.barMax)], 4: [on('barRegen', F.barRegen)], 6: [on('freeRally')] } },
+  { id: 'nightknife', name: 'Sharp Things', bonus: { 2: [mul('knifeRate', F.knifeRate)], 4: [on('bleedAmp', F.bleedAmp)], 6: [on('knifeFan')] } },
+  { id: 'emberwright', name: 'Too Warm', bonus: { 2: [mul('burn', F.burn)], 4: [on('burnSpread', F.burnSpread)], 6: [on('cinder')] } },
+  { id: 'stormcaller', name: 'Bad Weather', bonus: { 2: [on('chain', F.chain)], 4: [mul('chainJump', F.chainReach)], 6: [on('rebound', F.rebound), mul('stormRate', F.stormRate)] } },
+  { id: 'siegebreaker', name: 'Heavy Lifting', bonus: { 2: [mul('ballRate', F.ballRate)], 4: [on('boltShove')], 6: [on('boltPin')] } },
+  { id: 'moonveil', name: 'Night Shift', bonus: { 2: [mul('moonRate', F.moonRate)], 4: [on('moonCrit')], 6: [on('moonwell')] } },
+  { id: 'packlord', name: 'Dog People', bonus: { 2: [mul('petDmg', F.petDmg)], 4: [on('petHaste', F.petHaste)], 6: [on('extraWolves', F.extraWolves), on('treantRoot')] } },
+  { id: 'rootwarden', name: 'Handyman', bonus: { 2: [mul('barMax', F.barMax)], 4: [on('barRegen', F.barRegen)], 6: [on('freeRally')] } },
 ];
 
 /** Mythics: one power and one cost each (powers wired in TB-100). */
 /** A mythic's power switches on a Stats field through `lines`, as set bonuses do (TB-100); its numbers live in MYTHIC_FX. */
 export interface MythicDef { id: string; name: string; slot: Slot; lines: StatLine[] }
 export const MYTHICS: readonly MythicDef[] = [
-  { id: 'last-knife', name: 'The Last Knife', slot: 'bow', lines: [on('knifeReturn')] },
-  { id: 'heart-of-kiln', name: 'Heart of the Kiln', slot: 'quiver', lines: [on('burnRamp')] },
-  { id: 'thunders-memory', name: "Thunder's Memory", slot: 'bracer', lines: [on('stormStore')] },
-  { id: 'oakspine', name: 'Oakspine', slot: 'bow', lines: [on('stakes')] },
-  { id: 'pale-moon', name: 'Sliver of the Pale Moon', slot: 'charm', lines: [on('fullMoon')] },
-  { id: 'first-wolf', name: 'The First Wolf', slot: 'boots', lines: [on('petReturn')] },
-  { id: 'heartwood-splinter', name: 'Heartwood Splinter', slot: 'charm', lines: [on('wallSplinter')] },
-  { id: 'starfall-cloak', name: 'Starfall Cloak', slot: 'cloak', lines: [on('starCloak'), on('itemFind', 0.15)] },
+  { id: 'last-knife', name: 'That Knife Again', slot: 'bow', lines: [on('knifeReturn')] },
+  { id: 'heart-of-kiln', name: 'Never Goes Out', slot: 'quiver', lines: [on('burnRamp')] },
+  { id: 'thunders-memory', name: 'Saving It Up', slot: 'bracer', lines: [on('stormStore')] },
+  { id: 'oakspine', name: 'Tent Pegs', slot: 'bow', lines: [on('stakes')] },
+  { id: 'pale-moon', name: 'Worth It?', slot: 'charm', lines: [on('fullMoon')] },
+  { id: 'first-wolf', name: 'Old Dog', slot: 'boots', lines: [on('petReturn')] },
+  { id: 'heartwood-splinter', name: 'Spare Fence', slot: 'charm', lines: [on('wallSplinter')] },
+  { id: 'starfall-cloak', name: 'Raincoat', slot: 'cloak', lines: [on('starCloak'), on('itemFind', 0.15)] },
 ];
 
 /** Mythic power numbers (TB-100), proposed in BALANCE P-100. */
