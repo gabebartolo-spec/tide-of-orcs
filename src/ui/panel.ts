@@ -125,7 +125,7 @@ export class Panel {
   renderDetail(): void {
     const s = this.game.state, n = NODE[this.tree.selected], lvl = rankOf(s, n.id), cost = costOf(s, n), maxed = lvl >= n.max, un = unlocked(s, n);
     $('detail').innerHTML = `
-      <div class="branch" style="color:${BRANCH_COLOR[n.branch]}">${BRANCH_LABEL[n.branch]}${n.parent ? ' · ' + STR.needs(NODE[n.parent].name) : ''}</div>
+      <div class="branch" style="color:${BRANCH_COLOR[n.branch]}">${BRANCH_LABEL[n.branch]}${n.parent && !un ? ' · ' + STR.needs(NODE[n.parent].name) : ''}</div>
       <div class="name"><span>${n.name}</span><span style="font-size:13px;color:var(--cream-dim)">${n.max > 1 ? STR.rank(lvl, n.max) : lvl ? STR.learned : ''}</span></div>
       <div class="desc">${n.desc}</div>
       <div class="row"><span style="font-variant-numeric:tabular-nums;color:var(--amber)">${maxed ? STR.fullyGrown : n.base === 0 ? '' : STR.starlightCost(fmt(cost))}</span>
