@@ -116,6 +116,12 @@ Bought with Heartwood, never reset. Costs in HW. Spending does not lower the pas
 | hw_timber | Stout Timber | 3 | 4, 8, 16 | Barricade base HP +25% |
 | hw_orders | Standing Orders | 2 | 5, 12 | Start each run with one Spearman (two at rank 2) |
 | hw_boss | Warlords | 3 | 6, 12, 24 | Boss wave clear bonus +50% per rank (director chose the effect 2026-10-31; numbers proposed, unplaytested) |
+| hw_find | Far Sight | 3 | 2, 5, 12 | Item Find +15 / 35 / 60% total (TB-101, P-101) |
+| hw_fortune | Fortune's Favour | 3 | 3, 8, 20 | Luck +10 / 25 / 45% total |
+| hw_satchel | Deep Satchel | 1 | 4 | Satchel holds 80. Needs Far Sight 1 |
+| hw_tithe | Warboss Tithe | 1 | 10 | Bosses always drop 2 items. Needs Far Sight 2, Fortune 1 |
+| hw_heirloom | Heirloom | 1 | 15 | One worn item gains +5 ilvl each Replant, past the cap; affixes rescale. Needs Fortune 2 |
+| hw_glimmer | Glimmerwork | 1 | 6 | Salvage +1 Glimmer; reroll cost ×0.6 (read by TB-102). Needs Deep Satchel |
 
 ## Simulator (`npm run balance`)
 Lives in `sim/run.ts`. Runs `src/sim/` headless at 50 steps/s and decides every 0.5 s with a policy:
@@ -311,3 +317,7 @@ Evidence: `npm run balance` (default greedy) output identical to the tb-097 base
 ### P-100 · Mythic power numbers (2026-11-01, TB-100)
 All in `MYTHIC_FX`. Last Knife: a knife that hits turns back, pierces all on the way home. Heart of the Kiln: burn never ends, +10% burn damage per second burning. Thunder's Memory: each storm stores a charge; at 10 the next lob hits every orc for ×3. Oakspine: a bolt's 3rd hit drives a stake (r 10, 8 s) that holds the first orc to touch it. Pale Moon: with the Moonbow draw ×0.5 cooldown, each shot costs 2% wall, skipped below 10% wall. First Wolf: companions +25% damage per 15 s of the run, max 4 stacks. Heartwood Splinter: once per run the fallen wall stands again at 30%; that run pays ×0.5 Heartwood (floor `PRESTIGE.minGain`). Starfall Cloak: every 100 starlight from kills strikes the highest-HP orc for ×5 damage, 1 s cooldown; Item Find +15%.
 Evidence: `npm run balance` unchanged (greedy runs gear mythics too rarely to show). Per-mythic tuning is TB-107.
+
+### P-101 · Spoils branch and Heartwood loot lines (2026-11-01, TB-101)
+Numbers in `SPOILS_FX` (lootTables) and `HW_FX` (heartwood). Spoils costs 120 / 150 / 200 / 600 / 900 / 4000 / 6000 starlight; Hunter +5% crit (crit stays ×3, gear crit works without it, director 2026-11-01); Scavenger salvage ×1.5; Trophy every 10th wave; Sharp Eyes +10% Item Find; Hoard +1 rarity tier capped at legendary; Resonance +1 set piece; Echo ×1.25. Heartwood lines as in the table above, 6 lines and 10 ranks, 106 HW to buy all.
+Evidence: `npm run balance` (greedy, seed 1, 30 min) vs the tb-110 base: first four falls identical (waves 5, 5, 7, 5); fifth fall wave 26 → 20, Heartwood 25 → 18, best wave 31 → 37. The runner now has Spoils nodes in its pool (Hunter's Eye is a cheap crit pick) and the report does not name purchases, so which node moved the curve is unmeasured. Tuning against drop rates is TB-107.

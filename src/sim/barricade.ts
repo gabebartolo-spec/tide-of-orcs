@@ -22,7 +22,7 @@ export function barricadeHit(s: SimState, ev: EventBus, amount: number, y: numbe
   }
   // Heartwood Splinter: once per run the wall stands again; that run's Heartwood is halved (prestige.gain)
   if (s.stats.wallSplinter && !s.run.splinterUsed) {
-    s.run.splinterUsed = true; run.barHp = s.stats.barMax * MYTHIC_FX.splinterFrac;
+    s.run.splinterUsed = true; run.barHp = s.stats.barMax * Math.min(1, MYTHIC_FX.splinterFrac * s.stats.echo);
     ev.push({ t: 'splinter' });
     return;
   }

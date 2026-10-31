@@ -12,6 +12,8 @@ export const DROP = { base: 0.008, tierExp: 1.5, cap: 0.6, ilvlCap: 20, ilvlPerP
 /** Rarities that toast when picked up; lower ones arrive quietly (TB-096). */
 export const LOOT_TOAST: readonly string[] = ['epic', 'legendary', 'mythic'];
 export const SATCHEL = { base: 40, deep: 80, maxArrowAffixes: 2 } as const;
+/** Spoils branch (TB-101), BALANCE P-101. trophyEvery: waves whose kills roll twice; echo: mythic power ×1.25 more often or longer. */
+export const SPOILS_FX = { hunterCrit: 0.05, scavenger: 1.5, trophyEvery: 10, sharpFind: 0.1, resonance: 1, echo: 1.25 } as const;
 /** Affix ranges grow by 1 + 0.03 × item level. */
 export const affixScale = (ilvl: number): number => 1 + 0.03 * ilvl;
 

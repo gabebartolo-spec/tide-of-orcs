@@ -1,5 +1,6 @@
 import { NodeId } from '../data/skillTree';
 import { HW_FX, HwLevels } from '../data/heartwood';
+import { SATCHEL, SPOILS_FX } from '../data/lootTables';
 import { FOE_FX, OrcKind } from '../data/orcs';
 import { BARRICADE, LOB, NODE_FX, PLAYER, SOURCES, VANGUARD, heartMult } from '../data/balance';
 
@@ -26,6 +27,9 @@ export interface Stats {
   petDmg: number; petHaste: number; extraWolves: number; treantRoot: number; freeRally: number;
   // mythic powers (TB-100): 0 = off; numbers from MYTHIC_FX
   knifeReturn: number; burnRamp: number; stormStore: number; stakes: number; fullMoon: number; petReturn: number; wallSplinter: number; starfall: number;
+  // loot (TB-101): Heartwood lines and the Spoils branch. salvageMult/Plus shape Glimmer; rerollMult is read by the reroll (TB-102)
+  itemFind: number; luck: number; satchelCap: number; bossDrops: number; trophy: boolean; hoard: boolean;
+  salvageMult: number; salvagePlus: number; rerollMult: number; setBoost: number; echo: number;
 }
 
 export interface Foe { on: boolean; hp: number; loot: number; spawn: number }
@@ -50,7 +54,7 @@ export function deriveStats(lv: Levels, heartwood: number, hw: HwLevels = {}): S
     radius: LOB.radius * Math.pow(NODE_FX.wideRadius, L('wide')),
     arrows: 1 + L('multi'),
     pierce: L('pierce'),
-    crit: NODE_FX.critPerRank * L('crit'),
+    crit: NODE_FX.critPerRank * L('crit') + (L('hunter') ? SPOILS_FX.hunterCrit : 0),
     homing: L('moon') > 0,
     fire: L('fire') > 0,
     starMult: Math.pow(NODE_FX.gleanLoot, L('glean')) * hm,
@@ -81,5 +85,10 @@ export function deriveStats(lv: Levels, heartwood: number, hw: HwLevels = {}): S
     ballCd: SOURCES.ballista.cd, boltShove: 0, boltPin: 0, moonCrit: 0, moonwell: 0,
     petDmg: 1, petHaste: 0, extraWolves: 0, treantRoot: 0, freeRally: 0,
     knifeReturn: 0, burnRamp: 0, stormStore: 0, stakes: 0, fullMoon: 0, petReturn: 0, wallSplinter: 0, starfall: 0,
+    itemFind: HW_FX.find[hw.hw_find ?? 0]! + (L('sharpeyes') ? SPOILS_FX.sharpFind : 0), luck: HW_FX.fortune[hw.hw_fortune ?? 0]!,
+    satchelCap: hw.hw_satchel ? SATCHEL.deep : SATCHEL.base, bossDrops: hw.hw_tithe ? HW_FX.titheDrops : 1,
+    trophy: L('trophy') > 0, hoard: L('hoard') > 0,
+    salvageMult: L('scavenger') ? SPOILS_FX.scavenger : 1, salvagePlus: hw.hw_glimmer ? HW_FX.salvagePlus : 0, rerollMult: hw.hw_glimmer ? 1 - HW_FX.rerollCut : 1,
+    setBoost: L('resonance') ? SPOILS_FX.resonance : 0, echo: L('echo') ? SPOILS_FX.echo : 1,
   };
 }

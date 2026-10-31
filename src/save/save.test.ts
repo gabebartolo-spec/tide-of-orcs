@@ -69,7 +69,15 @@ describe('v7 → v8', () => {
   it('adds the once-per-run gear state to the saved run, unspent', () => {
     const run: Partial<ReturnType<typeof freshRun>> = { ...freshRun(), wave: 12 }; delete run.thunder; delete run.splinterUsed; delete run.freeRallyUsed;
     const s = migrate(JSON.parse(JSON.stringify({ version: 7, savedAt: 0, run, meta: freshMeta(), settings: defaultSettings() })));
-    expect(s.version).toBe(8); expect(s.run.wave).toBe(12);
+    expect(s.version).toBe(CURRENT_VERSION); expect(s.run.wave).toBe(12);
     expect(s.run.thunder).toBe(0); expect(s.run.splinterUsed).toBe(false); expect(s.run.freeRallyUsed).toBe(false);
+  });
+});
+
+describe('v8 → v9', () => {
+  it('adds the Heirloom slot, empty, and keeps the satchel', () => {
+    const meta = freshMeta(); const loot: Partial<typeof meta.loot> = { ...meta.loot, glimmer: 7 }; delete loot.heirloom;
+    const s = migrate(JSON.parse(JSON.stringify({ version: 8, savedAt: 0, run: freshRun(), meta: { ...meta, loot }, settings: defaultSettings() })));
+    expect(s.version).toBe(CURRENT_VERSION); expect(s.meta.loot.heirloom).toBeNull(); expect(s.meta.loot.glimmer).toBe(7);
   });
 });

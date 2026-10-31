@@ -1,6 +1,6 @@
 /** Skill tree nodes. Mirrors docs/SKILL-TREE.md exactly. Ids are stable API. */
 
-export type Branch = 'Bow' | 'Companions' | 'Armoury' | 'Grove' | 'Barricade' | 'Vanguard';
+export type Branch = 'Bow' | 'Companions' | 'Armoury' | 'Grove' | 'Barricade' | 'Vanguard' | 'Spoils';
 
 export type NodeId =
   | 'root' | 'sharp' | 'draw' | 'crit' | 'multi' | 'pierce' | 'moon' | 'wide'
@@ -10,7 +10,8 @@ export type NodeId =
   | 'runners' | 'runfury' | 'runswarm' | 'brutes' | 'brutefury' | 'bruteswarm'
   | 'elites' | 'elitefury' | 'eliteswarm'
   | 'timber' | 'repair' | 'spikes' | 'bulwark'
-  | 'muster' | 'shield' | 'drill' | 'ranks' | 'mend' | 'champion';
+  | 'muster' | 'shield' | 'drill' | 'ranks' | 'mend' | 'champion'
+  | 'hunter' | 'scavenger' | 'trophy' | 'sharpeyes' | 'hoard' | 'resonance' | 'echo';
 
 export interface SkillNode {
   id: NodeId;
@@ -72,6 +73,14 @@ export const NODES: readonly SkillNode[] = [
   n('ranks', 'Close Ranks', 'Vanguard', 'shield', 3, 400, 2.6, 80, 525, '+1 vanguard may stand at once.'),
   n('mend', 'Field Mending', 'Vanguard', 'drill', 3, 350, 2.4, 90, 455, 'Vanguard recover 3% health per second per rank.'),
   n('champion', 'Bladedancer', 'Vanguard', 'ranks', 1, 2200, 1, 60, 400, 'Rally bladedancers: costlier, faster, their strikes cleave every orc in reach.'),
+  // Spoils (TB-101): loot inside a run; costs proposed in BALANCE P-101
+  n('hunter', "Hunter's Eye", 'Spoils', 'root', 1, 120, 1, 300, 720, '+5% chance to strike for triple damage.'),
+  n('scavenger', 'Scavenger', 'Spoils', 'hunter', 1, 150, 1, 220, 760, 'Salvage gives 50% more Glimmer this run.'),
+  n('trophy', 'Trophy', 'Spoils', 'hunter', 1, 200, 1, 310, 800, 'Kills on waves 10, 20, 30… roll a second drop.'),
+  n('sharpeyes', 'Sharp Eyes', 'Spoils', 'scavenger', 1, 600, 1, 160, 820, 'Item Find +10% this run.'),
+  n('hoard', 'Boss Hoard', 'Spoils', 'trophy', 1, 900, 1, 300, 870, 'Boss drops roll one rarity higher, up to legendary.'),
+  n('resonance', 'Set Resonance', 'Spoils', 'sharpeyes', 1, 4000, 1, 200, 890, 'Every set you wear counts one piece more.'),
+  n('echo', 'Mythic Echo', 'Spoils', 'resonance', 1, 6000, 1, 110, 880, 'Your mythic power triggers 25% more often, or lasts 25% longer.'),
 ];
 
 export const NODE: Readonly<Record<NodeId, SkillNode>> = Object.fromEntries(NODES.map((x) => [x.id, x])) as Record<NodeId, SkillNode>;
@@ -82,4 +91,4 @@ export const TREE_VIEW = { startZoom: 1, focusX: 380, focusY: 600, minZoom: 0.6,
   /** Branch line bow as a fraction of its length; camera ease rate toward the selected node (1/s). */
   bow: 0.12, easeRate: 8 } as const;
 
-export const BRANCH_COLOR: Readonly<Record<Branch, string>> = { Bow: '#cdbdea', Companions: '#e2a85b', Armoury: '#c76f6f', Grove: '#9fc48f', Barricade: '#c9a06a', Vanguard: '#8fb7c9' };
+export const BRANCH_COLOR: Readonly<Record<Branch, string>> = { Bow: '#cdbdea', Companions: '#e2a85b', Armoury: '#c76f6f', Grove: '#9fc48f', Barricade: '#c9a06a', Vanguard: '#8fb7c9', Spoils: '#e8d9a0' };

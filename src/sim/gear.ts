@@ -6,7 +6,8 @@ import { Stats } from './stats';
 
 export interface GearTotals { mul: Record<string, number>; add: Record<string, number> }
 
-export function gearTotals(l: LootMeta): GearTotals {
+/** setBoost: Set Resonance (TB-101) counts every worn set one piece higher. */
+export function gearTotals(l: LootMeta, setBoost = 0): GearTotals {
   const t: GearTotals = { mul: {}, add: {} };
   const put = (x: StatLine) => { const m = x.op === 'mul' ? t.mul : t.add; m[x.stat] = (m[x.stat] ?? 0) + x.value; };
   for (const it of equippedItems(l)) {
@@ -14,7 +15,7 @@ export function gearTotals(l: LootMeta): GearTotals {
     if (it.mythic) MYTHICS.find((m) => m.id === it.mythic)?.lines.forEach(put);
   }
   const sets = setCounts(l);
-  for (const s of SETS) for (const n of [2, 4, 6] as const) if ((sets[s.id] ?? 0) >= n) s.bonus[n].forEach(put);
+  for (const s of SETS) for (const n of [2, 4, 6] as const) if (sets[s.id] && sets[s.id]! + setBoost >= n) s.bonus[n].forEach(put);
   return t;
 }
 
@@ -28,7 +29,7 @@ const ADD_FIELDS = {
 } as const;
 
 export function applyGear(st: Stats, l: LootMeta): Stats {
-  const t = gearTotals(l);
+  const t = gearTotals(l, st.setBoost);
   for (const f of MUL_FIELDS) if (t.mul[f]) st[f] *= 1 + t.mul[f];
   if (t.mul.fireRate) st.lobCd /= 1 + t.mul.fireRate;
   for (const [f, whole] of Object.entries(ADD_FIELDS) as [keyof typeof ADD_FIELDS, boolean][]) if (t.add[f]) st[f] += whole ? Math.floor(t.add[f]) : t.add[f];
@@ -39,7 +40,7 @@ export function applyGear(st: Stats, l: LootMeta): Stats {
   if (t.mul.ballRate) st.ballCd /= 1 + t.mul.ballRate;
   if (st.homing && t.mul.moonRate) st.lobCd /= 1 + t.mul.moonRate;
   // Pale Moon: with the Moonbow owned, the draw is near-instant (each shot costs wall, in step)
-  if (st.homing && st.fullMoon) st.lobCd *= MYTHIC_FX.moonDraw;
+  if (st.homing && st.fullMoon) st.lobCd *= MYTHIC_FX.moonDraw / st.echo;
   return st;
 }
 
@@ -50,4 +51,5 @@ export function setCounts(l: LootMeta): Record<string, number> {
   return n;
 }
 
-export const lootMods = (l: LootMeta) => { const t = gearTotals(l); return { itemFind: t.add.itemFind ?? 0, luck: t.add.luck ?? 0 }; };
+/** Gear Item Find and Luck plus the Heartwood and Spoils parts already in Stats (TB-101). */
+export const lootMods = (l: LootMeta, st: Stats) => { const t = gearTotals(l, st.setBoost); return { itemFind: (t.add.itemFind ?? 0) + st.itemFind, luck: (t.add.luck ?? 0) + st.luck }; };

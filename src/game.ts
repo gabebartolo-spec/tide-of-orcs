@@ -13,7 +13,7 @@ import { summonBoss } from './sim/boss';
 import { buyHw } from './sim/heartwood';
 import { HwId } from './data/heartwood';
 import { rally } from './sim/vanguard';
-import { equip, salvage, setFilter, toggleLock } from './sim/loot';
+import { equip, salvage, setFilter, toggleHeirloom, toggleLock } from './sim/loot';
 import { Rarity } from './data/loot';
 import { Save, defaultSettings, CURRENT_VERSION } from './save/schema';
 import { clearSave, exportSave, importSave, readSave, writeSave } from './save/storage';
@@ -49,7 +49,8 @@ export class GameController {
   buyHw(id: HwId): boolean { const ok = buyHw(this.state, this.events, id); if (ok) this.save(); return ok; }
   /** Satchel intents (TB-096): equipping recomputes Stats; every change saves. */
   equipItem(uid: string): boolean { const ok = equip(this.state.meta.loot, uid); if (ok) { recompute(this.state); this.save(); } return ok; }
-  salvageItem(uid: string): boolean { const ok = salvage(this.state.meta.loot, uid); if (ok) this.save(); return ok; }
+  salvageItem(uid: string): boolean { const ok = salvage(this.state.meta.loot, uid, this.state.stats); if (ok) this.save(); return ok; }
+  heirloomItem(uid: string): boolean { const ok = toggleHeirloom(this.state.meta.loot, uid); if (ok) this.save(); return ok; }
   lockItem(uid: string): boolean { const ok = toggleLock(this.state.meta.loot, uid); if (ok) this.save(); return ok; }
   setLootFilter(r: Rarity): boolean { const ok = setFilter(this.state.meta.loot, r); if (ok) this.save(); return ok; }
   summonBoss(): boolean { return summonBoss(this.state, this.events); }

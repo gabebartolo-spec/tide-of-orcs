@@ -58,7 +58,7 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
     if (o.dead || run.fallen) return;
     o.wob += dt * 8;
     // Heart of the Kiln: burn never runs out on the field and grows the longer it burns
-    if (o.burn > 0) { if (st.burnRamp) o.burnT += dt; else o.burn -= dt; o.hp -= st.dmg * SOURCES.burnFrac * st.burn * (1 + o.burnT * MYTHIC_FX.burnRampPerSec) * takenMult(s, o) * dt; if (o.hp <= 0) { damage(s, ev, o, 0); return; } }
+    if (o.burn > 0) { if (st.burnRamp) o.burnT += dt; else o.burn -= dt; o.hp -= st.dmg * SOURCES.burnFrac * st.burn * (1 + o.burnT * MYTHIC_FX.burnRampPerSec * st.echo) * takenMult(s, o) * dt; if (o.hp <= 0) { damage(s, ev, o, 0); return; } }
     if (o.bleed > 0) o.bleed -= dt;
     if (o.slow > 0) o.slow -= dt;
     if (o.pin > 0) o.pin -= dt;
@@ -94,7 +94,7 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
     // Pale Moon: each moon shot costs wall, but never takes it below the floor
     if (st.homing && st.fullMoon) { const c = st.barMax * MYTHIC_FX.moonCost; if (run.barHp - c >= st.barMax * MYTHIC_FX.moonCostFloor) run.barHp -= c; }
     // Thunder's Memory: a full store of charges looses one bolt on the whole wave
-    if (st.stormStore && s.run.thunder >= MYTHIC_FX.thunderCharges) {
+    if (st.stormStore && s.run.thunder >= Math.ceil(MYTHIC_FX.thunderCharges / st.echo)) {
       s.run.thunder = 0; ev.push({ t: 'thunder' });
       s.orcs.forEach((o) => damage(s, ev, o, st.dmg * SOURCES.storm.mult * st.kin * MYTHIC_FX.thunderMult));
     }
@@ -139,7 +139,7 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
   // Packlord 4: companions strike faster while an orc is near the wall
   const haste = st.petHaste > 0 && nearestOrc(s, BAR_X, H / 2, (o) => o.x < BAR_X + SET_FX.nearWall) ? 1 + st.petHaste : 1;
   // The First Wolf: companions grow stronger as the run goes on, up to wolfMax stacks
-  const pet = st.petDmg * (1 + st.petReturn * MYTHIC_FX.wolfStack * Math.min(MYTHIC_FX.wolfMax, Math.floor(run.runTime / MYTHIC_FX.wolfEvery)));
+  const pet = st.petDmg * (1 + st.petReturn * MYTHIC_FX.wolfStack * Math.min(MYTHIC_FX.wolfMax, Math.floor(run.runTime * st.echo / MYTHIC_FX.wolfEvery)));
   if (st.wolf) {
     while (s.pack.length < st.extraWolves) s.pack.push({ ...s.wolf, y: s.wolf.y + SOURCES.wolf.reach * 2 * (s.pack.length + 1) });
     wolfStep(s, ev, s.wolf, dt, haste, pet);
@@ -195,14 +195,14 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
         if (a.kind === 'knife' && st.bleedAmp) o.bleed = SET_FX.bleedSecs;
         if (a.kind === 'bolt') a.target = o;
         // Oakspine: a bolt that has pierced enough orcs drives a stake where it is
-        if (a.kind === 'bolt' && st.stakes && a.hit.size === MYTHIC_FX.stakeAfter) { addZone(s, 'stake', o.x, o.y, MYTHIC_FX.stakeR, MYTHIC_FX.stakeSecs); ev.push({ t: 'stake', x: o.x, y: o.y }); }
+        if (a.kind === 'bolt' && st.stakes && a.hit.size === MYTHIC_FX.stakeAfter) { addZone(s, 'stake', o.x, o.y, MYTHIC_FX.stakeR, MYTHIC_FX.stakeSecs * st.echo); ev.push({ t: 'stake', x: o.x, y: o.y }); }
         if (a.pierce-- <= 0) spent = true;
       }
     });
     // The Last Knife: a knife that hits turns back to the quiver and strikes everything on the way
     if (spent && a.kind === 'knife' && st.knifeReturn && !a.back) {
       const sp = Math.hypot(a.vx, a.vy), ang = Math.atan2(H / 2 - a.y, ELF_X - a.x);
-      a.back = true; a.hit.clear(); a.pierce = Infinity; a.life = MYTHIC_FX.knifeBackLife; a.vx = Math.cos(ang) * sp; a.vy = Math.sin(ang) * sp;
+      a.back = true; a.hit.clear(); a.pierce = Infinity; a.life = MYTHIC_FX.knifeBackLife * st.echo; a.vx = Math.cos(ang) * sp; a.vy = Math.sin(ang) * sp;
       return;
     }
     if (spent || a.life <= 0 || (a.back && a.x < BAR_X) || a.x > W + 30 || a.y < -30 || a.y > H + 30) {

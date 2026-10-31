@@ -2,6 +2,7 @@ import { LOB, PLAYER, SOURCES } from '../data/balance';
 import { EventBus } from './events';
 import { Orc, ProjectileKind, SimState, Zone, recompute } from './state';
 import { rollDrop } from './lootRoll';
+import { SPOILS_FX } from '../data/lootTables';
 import { pickUp } from './loot';
 import { lootMods } from './gear';
 import { MYTHIC_FX, SET_FX } from '../data/lootTables';
@@ -24,7 +25,7 @@ export function kill(s: SimState, ev: EventBus, o: Orc): void {
   if (o.champ && s.run.boss) s.run.boss.left--;
   ev.push({ t: 'kill', x: o.x, y: o.y, loot, kind: o.kind });
   // Starfall Cloak: starlight gathered calls a shot from the sky on the strongest orc
-  if (s.stats.starfall) { s.starAcc += loot; if (s.starAcc >= MYTHIC_FX.starfallEvery && s.starfallT <= 0) {
+  if (s.stats.starfall) { s.starAcc += loot; if (s.starAcc >= MYTHIC_FX.starfallEvery / s.stats.echo && s.starfallT <= 0) {
     s.starAcc = 0; s.starfallT = MYTHIC_FX.starfallCd;
     let top: Orc | null = null; s.orcs.forEach((q) => { if (!q.dead && (!top || q.hp > top.hp)) top = q; });
     if (top) { const t = top as Orc; ev.push({ t: 'starfall', x: t.x, y: t.y }); damage(s, ev, t, s.stats.dmg * MYTHIC_FX.starfallMult); }
@@ -40,11 +41,16 @@ export function kill(s: SimState, ev: EventBus, o: Orc): void {
 
 /** Roll this kill's drop (TB-094) and pick it up; re-derive stats if what is worn changed. */
 function dropLoot(s: SimState, ev: EventBus, o: Orc): void {
-  const l = s.meta.loot, it = rollDrop(s.lootRng, l, o.kind, s.run.wave, s.meta.prestiges, lootMods(l));
-  if (!it) return;
-  const worn = JSON.stringify(l.equipped);
-  pickUp(l, it, s.lootPolicy);
-  ev.push({ t: 'loot', x: o.x, y: o.y, uid: it.uid, rarity: it.rarity, kept: l.items.includes(it) });
+  const l = s.meta.loot, st = s.stats, boss = o.kind === 'boss', worn = JSON.stringify(l.equipped);
+  const mods = { ...lootMods(l, st), bump: boss && st.hoard ? 1 : 0 };
+  // Warboss Tithe: bosses drop twice; Trophy: kills on every tenth wave roll twice
+  const rolls = boss ? st.bossDrops : st.trophy && s.run.wave % SPOILS_FX.trophyEvery === 0 ? 2 : 1;
+  for (let i = 0; i < rolls; i++) {
+    const it = rollDrop(s.lootRng, l, o.kind, s.run.wave, s.meta.prestiges, mods);
+    if (!it) continue;
+    pickUp(l, it, s.lootPolicy, st.satchelCap, st);
+    ev.push({ t: 'loot', x: o.x, y: o.y, uid: it.uid, rarity: it.rarity, kept: l.items.includes(it) });
+  }
   if (JSON.stringify(l.equipped) !== worn) recompute(s);
 }
 

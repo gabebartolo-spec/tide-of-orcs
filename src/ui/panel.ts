@@ -10,7 +10,7 @@ import { bossesReady, canSummonBoss } from '../sim/boss';
 import { BOSS_WAVE } from '../data/bosses';
 import { NumberFormat, fmt, setNumberFormat } from './format';
 import { HW_NODE, HW_NODES, HwId } from '../data/heartwood';
-import { canBuyHw, hwAvailable, hwCost, hwRank } from '../sim/heartwood';
+import { canBuyHw, hwAvailable, hwCost, hwRank, hwUnlocked } from '../sim/heartwood';
 import { SatchelPane, itemName } from './satchel';
 import { LOOT_TOAST } from '../data/lootTables';
 
@@ -59,7 +59,7 @@ export class Panel {
   renderHw(): void {
     const m = this.game.state.meta;
     $('hw-tree').innerHTML = HW_NODES.map((n) => { const r = hwRank(m, n.id), c = hwCost(m, n.id); return `
-      <div class="hwnode"><div><div class="name">${n.name} <span class="desc">${STR.hwRank(r, n.costs.length)}</span></div><div class="desc">${n.desc}</div></div>
+      <div class="hwnode"><div><div class="name">${n.name} <span class="desc">${STR.hwRank(r, n.costs.length)}</span></div><div class="desc">${n.desc}</div>${hwUnlocked(m, n.id) ? '' : `<div class="desc">${STR.hwNeeds((n.req ?? []).map(([r, k]) => `${HW_NODE[r].name} ${k}`).join(', '))}</div>`}</div>
       <button class="buy" data-hw="${n.id}" ${canBuyHw(m, n.id) ? '' : 'disabled'}>${c === null ? STR.complete : STR.hwCost(c)}</button></div>`; }).join('');
   }
 
