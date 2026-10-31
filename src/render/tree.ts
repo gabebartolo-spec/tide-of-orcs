@@ -84,7 +84,8 @@ export class TreeRenderer {
   /** Node under the pointer, or null. A press that turned into a drag never selects. */
   hitTest(clientX: number, clientY: number): NodeId | null {
     if (this.dragged) { this.dragged = false; return null; }
-    const [x, y] = toWorld(this.cam, ...this.local({ clientX, clientY }));
+    const [sx, sy] = this.local({ clientX, clientY }); if (sy < TREE_VIEW.legendH) return null; // the legend strip covers what is under it
+    const [x, y] = toWorld(this.cam, sx, sy);
     for (const n of NODES) if (Math.hypot(n.x - x, n.y - y) < TREE_VIEW.hitR) return n.id;
     return null;
   }
@@ -114,7 +115,8 @@ export class TreeRenderer {
       c.fillStyle = un ? P.cream : P.nodeLabelLocked; c.font = '11px "Atkinson Hyperlegible", sans-serif'; c.textAlign = 'center'; c.fillText(n.name, n.x, n.y + r + 13);
       if (n.max > 1) { c.fillStyle = maxed ? P.ink : P.cream; c.font = '700 10px "Atkinson Hyperlegible", sans-serif'; c.fillText(`${lvl}/${n.max}`, n.x, n.y + 4); }
     }
-    c.setTransform(k, 0, 0, k, 0, 0); // legend stays in screen space
+    c.setTransform(k, 0, 0, k, 0, 0); // legend stays in screen space, on its own strip so nodes pan under it, not through it (TB-117)
+    c.fillStyle = P.ink2; c.fillRect(0, 0, this.vw, TREE_VIEW.legendH); c.fillStyle = P.line; c.fillRect(0, TREE_VIEW.legendH - 1, this.vw, 1);
     let lx = 14; c.font = '10px "Atkinson Hyperlegible", sans-serif'; c.textAlign = 'left';
     for (const k of Object.keys(BRANCH_COLOR) as (keyof typeof BRANCH_COLOR)[]) { c.fillStyle = BRANCH_COLOR[k]; c.fillRect(lx, 14, 8, 8); c.fillStyle = P.creamDim; const label = BRANCH_LABEL[k].toUpperCase(); c.fillText(label, lx + 12, 22); lx += c.measureText(label).width + 30; }
   }
