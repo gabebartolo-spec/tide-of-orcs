@@ -89,7 +89,7 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-072 | Perf verification on phone; profile and fix | perf | M4 | | dropped (mobile off roadmap, 31 Oct) |
 | TB-073 | Itch.io page copy, screenshots, HTML5 zip pipeline | release | — | gabe | todo |
 | TB-074 | Electron wrapper spike | release | 073 | | todo |
-| TB-075 | Bug bash checklist run | qa | — | | todo |
+| TB-075 | Bug bash checklist run (`docs/QA-CHECKLIST.md`; run 1 on 1 Nov: B3–B5, J1 and the toasts still need a visible browser) | qa | — | claude | in review (tb-075-bug-bash) |
 | TB-076 | Move 6 colour literals in src/render (rgba/hex) into palette tokens (rule 6) | render | | claude | done c189562 |
 | TB-077 | Move inline tree multipliers in sim/stats.ts (1.25, 1.15, 1.2, 1.4 …) into data/balance (rule 3) | sim/data | | claude | done c189562 |
 | TB-078 | Fallen overlay clips on phones: at 375 px the field is 183 px tall and the Replant button starts at its bottom edge, so it is unreachable (rule 1). Fit overlay to field height or move it out of the canvas box | ui | 027 | | done 9bfcc0e |
@@ -118,6 +118,9 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-100 | Loot L3: the 8 mythic powers on the field (Last Knife return, Kiln burn ramp, Thunder charges, Oakspine stakes, Pale Moon draw, First Wolf stacks, Heartwood Splinter second wall, Starfall). Numbers in `MYTHIC_FX` (lootTables) | sim | 098 | claude | done (tb-099-mythics) |
 | TB-110 | Save v8: Thunder charges, Heartwood Splinter's used flag and Rootwarden's free-rally flag move into the saved `run`, so a reload cannot reset them; 7→8 migration + test | save | 100 | claude | done (tb-110-save-v8) |
 | TB-111 | Per-type upgrade nodes (director 1 Nov): 3 nodes per shot type (damage, effect, chance per shot), damage/rate/crit→crit damage per companion and vanguard unit, move speed for melee units, Deadly Aim for the elf; 48 nodes, 56 → 104; tree canvas 1288×1262. Numbers P-103 | sim/data | 101 | claude | done (616a8c0, PR 31; renumbered from TB-103, which the loot plan holds) |
+| TB-112 | Tree tooltip says "needs <parent>" even when the parent is owned (`ui/panel.ts`); show it only while the parent is unowned | ui | 075 | | todo |
+| TB-113 | Perf: rerun QA J1 in a visible browser (160 orcs); the hidden-pane run showed 4–6% of frames over 16.7 ms with draw spikes up to 330 ms. Profile and fix if they reproduce | perf | 075 | | todo |
+| TB-114 | Loot: affixes that scale a feature the player does not own (Packbond without the wolf, Thorns without Spikes) roll and do nothing; decide whether to reroll, gate or label them | loot | 075 | | todo |
 | TB-101 | Loot L4: Spoils branch (7 Grove nodes) and 6 Heartwood loot lines (Far Sight, Fortune's Favour, Deep Satchel, Warboss Tithe, Heirloom, Glimmerwork) with requirements; save v9 adds the Heirloom uid. Numbers P-101 | sim | 110 | claude | done (9e8b756) |
 | TB-102 | Loot L5: spend Glimmer to reroll one affix on a worn item; cost doubles per reroll on that item, Glimmerwork ×0.6. Numbers P-102 | sim | 101 | claude | done (4d924fe) |
 | TB-103 | Loot L6: Replant screen lists items found this run by rarity and the best drop, in its rarity colour | ui | 102 | claude | in review (tb-103-run-summary) |
