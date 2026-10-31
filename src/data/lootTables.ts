@@ -11,6 +11,8 @@ export const RARITY = {
 export const DROP = { base: 0.008, tierExp: 1.5, cap: 0.6, ilvlCap: 20, ilvlPerPrestige: 10, commonsEndAt: 3, raresEndAt: 8, legendaryPity: 0.1, mythicPity: 25 } as const;
 /** Rarities that toast when picked up; lower ones arrive quietly (TB-096). */
 export const LOOT_TOAST: readonly string[] = ['epic', 'legendary', 'mythic'];
+/** Reroll (TB-102), BALANCE P-102: Glimmer cost = base × growth^(rerolls on the item) × Glimmerwork, at least 1. */
+export const REROLL = { base: 2, growth: 2 } as const;
 export const SATCHEL = { base: 40, deep: 80, maxArrowAffixes: 2 } as const;
 /** Spoils branch (TB-101), BALANCE P-101. trophyEvery: waves whose kills roll twice; echo: mythic power ×1.25 more often or longer. */
 export const SPOILS_FX = { hunterCrit: 0.05, scavenger: 1.5, trophyEvery: 10, sharpFind: 0.1, resonance: 1, echo: 1.25 } as const;

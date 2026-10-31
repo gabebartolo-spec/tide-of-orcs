@@ -4,7 +4,7 @@ import { AFFIXES, BASES, MYTHICS, SETS } from '../data/lootTables';
 import { STR } from '../data/strings';
 import { GameController } from '../game';
 import { glyph } from './glyphs';
-import { itemScore, salvageGlimmer } from '../sim/loot';
+import { itemScore, rerollCost, salvageGlimmer } from '../sim/loot';
 import { setCounts } from '../sim/gear';
 import { hwRank } from '../sim/heartwood';
 
@@ -48,6 +48,7 @@ export class SatchelPane {
       if (act === 'equip') this.game.equipItem(uid);
       else if (act === 'lock') this.game.lockItem(uid);
       else if (act === 'heirloom') this.game.heirloomItem(uid);
+      else if (act === 'reroll') this.game.rerollItem(uid, Number((e.target as HTMLElement).closest<HTMLElement>('[data-i]')?.dataset.i));
       else if (act === 'salvage' && this.game.salvageItem(uid)) this.selected = null;
       this.render();
     };
@@ -85,7 +86,9 @@ export class SatchelPane {
     if (!it) { $('sat-detail').innerHTML = `<div class="desc">${STR.satchelPick}</div>`; return; }
     const cur = l.items.find((i) => i.uid === l.equipped[it.slot]), worn = cur?.uid === it.uid;
     const myth = it.mythic ? MYTHICS.find((m) => m.id === it.mythic) : null;
-    const lines = it.affixes.map((a) => `<li>${affixText(a)}</li>`).join('');
+    // Worn items show a reroll button per affix (TB-102); greyed while Glimmer is short
+    const cost = rerollCost(it, this.game.state.stats.rerollMult), poor = l.glimmer < cost;
+    const lines = it.affixes.map((a, i) => `<li>${affixText(a)}${worn ? ` <button class="buy" data-act="reroll" data-i="${i}"${poor ? ' disabled' : ''}>${STR.rerollFor(cost)}</button>` : ''}</li>`).join('');
     const cmp = cur && cur.uid !== it.uid ? `<div class="desc">${STR.satchelVs(itemName(cur), Math.round((itemScore(it) - itemScore(cur)) * 100))}</div>` : '';
     $('sat-detail').innerHTML = `<div class="head">${glyph(it.slot, it, true)}<div class="name r-${it.rarity}">${itemName(it)}</div></div>
       <div class="desc">${STR.rarityName[it.rarity]} · ${STR.slotName[it.slot]} · ${STR.itemLevel(it.ilvl)}</div>
