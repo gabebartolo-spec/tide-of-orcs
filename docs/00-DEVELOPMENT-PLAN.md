@@ -116,7 +116,7 @@ Orcs drop gear; six worn slots, a satchel, affixes, sets and mythic powers feed 
 ### M5 — Ship (week 8) · local telemetry done (TB-070 f31ce6b, loot events TB-107); bug bash run twice
 - Balance pass #2 with telemetry from testers (TB-071; local JSON export, no server; export built).
 - Save import/export (done in TB-065), version migration test suite.
-- Itch.io page and web build (TB-073), Electron wrapper spike for Steam (TB-074, done: `npm run desktop`; fonts bundled in TB-118; packaging TB-119 remains).
+- Itch.io page and web build (TB-073), Electron wrapper spike for Steam (TB-074, done: `npm run desktop`; fonts bundled in TB-118; Windows package in TB-119: `npm run desktop:pack`; app icon and Steam upload remain, TB-120).
 - Bug bash (TB-075, `docs/QA-CHECKLIST.md`): runs 1 and 2 done (PRs #33, #37); their bugs became TB-112–117. Performance: no frame spikes in a visible browser with 160 orcs (TB-113); still untested on a mid-range PC.
 
 Mobile is out of the roadmap (director, 31 Oct): the web build ships for PC first; a mobile port comes after it is perfect on PC. TB-064/TB-078 layout work stays in the code.
