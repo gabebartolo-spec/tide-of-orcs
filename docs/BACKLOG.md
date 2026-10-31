@@ -130,6 +130,9 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-120 | Desktop: app icon (the director's art, `desktop/icon.png` → exe .ico via electron-builder) | release | 119 | claude | done (2e28a11) |
 | TB-121 | Rename the game to Let's Hunt Some Orc! (director, 1 Nov): page title, header, strings title, desktop productName, doc headings; repo name and save keys unchanged | ui/docs | 115 | claude | done (e439fcf) |
 | TB-122 | Desktop: first SteamPipe depot upload of `release/win-unpacked/` (needs the Steam app id, i.e. the ~$100 Steam Direct fee: spend, needs the director's written yes) | release | 119 | | todo |
+| TB-123 | Bug bash run 3 on main after sprites, fonts, rename, affix gate and desktop icon (`docs/QA-CHECKLIST.md`) | qa | 075 | claude | done (HASH) |
+| TB-124 | Waves: grunts held at the wall can fill the 160-orc cap and starve the summoned kinds (runner, brute, blackguard) of slots; needs a design call (reserved slots per kind, or a grunt share of the cap) | sim | 123 | | todo |
+| TB-125 | Balance: at high waves one orc swing can exceed the wall's max HP (QA run 2), so the wall can fall in one hit; propose a cap or a gentler damage curve under BALANCE `## Proposed` with sim output | balance | 123 | | todo |
 | TB-101 | Loot L4: Spoils branch (7 Grove nodes) and 6 Heartwood loot lines (Far Sight, Fortune's Favour, Deep Satchel, Warboss Tithe, Heirloom, Glimmerwork) with requirements; save v9 adds the Heirloom uid. Numbers P-101 | sim | 110 | claude | done (9e8b756) |
 | TB-102 | Loot L5: spend Glimmer to reroll one affix on a worn item; cost doubles per reroll on that item, Glimmerwork ×0.6. Numbers P-102 | sim | 101 | claude | done (4d924fe) |
 | TB-103 | Loot L6: Replant screen lists items found this run by rarity and the best drop, in its rarity colour | ui | 102 | claude | done (d74f6a5) |

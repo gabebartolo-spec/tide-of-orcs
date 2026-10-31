@@ -2,6 +2,7 @@
 
 Run against the dev build (`npm run dev`) in a desktop browser, before each itch tag. Each line is one check: what to do, what must be true. Mark the run's result in the table at the end; anything that fails becomes a backlog row.
 Dev handle: `window.__tide` = `{ game, field, tree }` (dev builds only). `game.state` is the sim state; `game.buy(id)`, `game.rally(type)`, `game.replant()`, `game.summonBoss()` are the panel's intents.
+Names below are the design names (GDD). The UI speaks the TB-121 voice (`src/data/strings.ts`): starlight is teeth, Heartwood is grudge, Replant is Burn it down, Sharpened Tips (`sharp`) is Ouch, Waking (`root`) is Fine., Spearman is a Lad, Bladedancer a Show-off.
 
 ## A. Start and aim (GDD §2, §6, §12)
 - A1 Wipe save, reload: wave 1, 0 starlight, only grunts march, Sharpened Tips is selected in the tree.
@@ -106,3 +107,23 @@ Reruns the checks run 1 could not see. Pane 833×546 CSS px at DPR 3, 120 Hz dis
 Findings: TB-116 (tree keyboard access), TB-117 (the branch legend overlaps node labels at the top of the tree; fixed: the legend has its own strip).
 
 Notes, not filed: grunts at the wall can fill the 160 cap and starve the summoned kinds; at high waves one orc swing can exceed the wall's max HP.
+
+## Run 3 (1 Nov 2026, dev build at 01ebae9, claude, browser pane visible)
+Regression pass after sprites (TB-068 first sheet), bundled fonts (TB-118), the rename (TB-121), the affix gate (TB-114) and the desktop icon (TB-120). Pane at DPR 2–3, refresh capped at 40 Hz by the host (a steady 25 ms rAF interval with 8 orcs or 160).
+
+| Check | Result | Evidence |
+|---|---|---|
+| C2–C4, D3, D4, I3 | pass | Headless soak, 330,268 ticks (~6,600 sim s) aiming at the nearest orc, buying every node, rallying and summoning every 25 ticks: 7 falls (waves 7–63), each refused buy/rally/boss while fallen and paid ≥ 1 Heartwood on Replant; best wave 63, live orcs peaked at exactly 160, 26 bosses; 0 invariant violations (NaN, negative or non-finite starlight, wall HP out of range, starlight moving while fallen), 0 errors |
+| H1, H2 | pass | Reload at wave 34 with 80 items: save diff empty. Export then import: identical apart from `savedAt` |
+| A1 | pass | Wipe and reload: wave 1, 0 teeth, no Heartwood or items, `sharp` (Ouch) selected, tree opens on `root` (Fine.) |
+| A2–A4 | pass | Strike circle follows the pointer and lobs land in it; pointer over the panel clears the aim; a click on the field adds no shot and no teeth |
+| A5 | pass | First Ouch rank (12 teeth) affordable at 15.7 s of aiming |
+| B1, B4 | pass | First buys toast ("Right There. Good."); a fresh tree opens on `root`; the TB-117 branch legend sits in its own strip, clear of node labels |
+| C2 | pass | Fallen overlay seen in the narrow layout: wave, slain, minutes, teeth per minute, best wave, items, +1 grudge, one button |
+| G1, G2 | pass | Equip changes Stats; reroll of affix 0 swapped kindling for talons (hawk owned, so the TB-114 gate allows it); lock, salvage (+glimmer, 80 → 79 items) and heirloom all apply and survive `save()`; satchel shows Locked · Heirloom on the worn bow |
+| Sprites | pass | Atlas on main has grunt walk/attack, spear walk/attack, blade attack; close crops of the live canvas show grunts, spearmen and a bladedancer drawn from the sheet with shadows; other kinds fall back to vectors |
+| Fonts, title | pass | Spectral and Atkinson Hyperlegible loaded from the bundle; tab and header read "Let's Hunt Some Orc!" |
+| J1 | pass on this PC | 159 orcs on average over 237 frames, wall held: the game's rAF callback (tick + draw) median 2.6 ms, p95 4.0 ms, max 6.8 ms; no long tasks. With 8 orcs: median 1.3 ms. Frame interval 25 ms in both cases (host cap), so the game is not the limit. Not tested on a mid-range PC |
+| I3 | fixed | One console 404: `/favicon.ico`, as the web build had no icon. Added `public/favicon.png` (the director's icon at 64 px) and a `<link rel=icon>` |
+
+Findings: favicon 404 (fixed here); TB-124 and TB-125 file run 2's two unfiled notes. Not covered: the desktop package (unchanged since TB-120 checked it on this commit), I1/I2 (settings untouched since run 2).
