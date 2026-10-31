@@ -31,6 +31,8 @@ export const migrations: Record<number, (s: AnySave) => AnySave> = {
   5: (s) => ({ ...s, version: 6, meta: { ...(s.meta as object), hwLevels: {} } }),
   /** v6 → v7: loot (TB-090): empty satchel, nothing equipped, no Glimmer, pity at 0. */
   6: (s) => ({ ...s, version: 7, meta: { ...(s.meta as object), loot: freshLoot() } }),
+  /** v7 → v8: once-per-run gear state moves into the saved run (TB-110); nothing stored or spent yet. */
+  7: (s) => ({ ...s, version: 8, run: { ...(s.run as object), thunder: 0, splinterUsed: false, freeRallyUsed: false } }),
 };
 
 export function migrate(raw: unknown): Save {

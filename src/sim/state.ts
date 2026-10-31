@@ -41,6 +41,8 @@ export interface RunState {
   /** Starlight earned this run (never spent down); feeds the run summary's starlight per minute. */
   earned: number;
   barHp: number; bulwarkUsed: boolean; fallen: boolean;
+  /** Once-per-run gear state, saved so a reload cannot reset it (v8, TB-110): Thunder's Memory's stored charges, whether Heartwood Splinter stood the wall again, whether Rootwarden's free rally was spent. */
+  thunder: number; splinterUsed: boolean; freeRallyUsed: boolean;
   /** Boss waves summoned this run, and the one running now (t: seconds in, next: script index, left: its orcs not yet slain). */
   bossDone: number; boss: { t: number; next: number; left: number } | null;
   foeT: Partial<Record<OrcKind, number>>; stormT: number; shotT: number[]; knifeT: number; hawkT: number; treantT: number; ballT: number;
@@ -62,14 +64,14 @@ export interface SimState {
   pack: Wolf[];
   hawk: { x: number; y: number; a: number };
   zones: Pool<Zone>;
-  /** Run-only set state, not saved (TB-099): knives thrown toward the next Fan, Rootwarden's free-rally window and whether it was spent. */
-  knifeN: number; freeRallyT: number; freeRallyUsed: boolean;
-  /** Run-only mythic state, not saved (TB-100): stored storm charges, starlight toward the next Starfall and its cooldown, whether Heartwood Splinter has stood the wall again. */
-  thunder: number; starAcc: number; starfallT: number; splinterUsed: boolean;
+  /** Run-only set state, not saved (TB-099): knives thrown toward the next Fan, Rootwarden's free-rally window. */
+  knifeN: number; freeRallyT: number;
+  /** Run-only mythic state, not saved (TB-100): starlight toward the next Starfall and its cooldown. */
+  starAcc: number; starfallT: number;
 }
 
 export function freshRun(): RunState {
-  return { wave: 1, waveT: 0, runTime: 0, starlight: 0, earned: 0, kills: 0, levels: { root: 1 }, barHp: -1, bulwarkUsed: false, fallen: false, bossDone: 0, boss: null,
+  return { wave: 1, waveT: 0, runTime: 0, starlight: 0, earned: 0, kills: 0, levels: { root: 1 }, barHp: -1, bulwarkUsed: false, fallen: false, bossDone: 0, boss: null, thunder: 0, splinterUsed: false, freeRallyUsed: false,
     foeT: {}, stormT: 0, shotT: [0, 0, 0], knifeT: 0, hawkT: 0, treantT: 0, ballT: 0 };
 }
 export function freshMeta(): MetaState { return { heartwood: 0, lifetimeKills: 0, bestWave: 1, prestiges: 0, hwLevels: {}, loot: freshLoot() }; }
@@ -87,8 +89,8 @@ export function createState(seed = 1, run: RunState = freshRun(), meta: MetaStat
     pack: [],
     hawk: { x: 300, y: 100, a: 0 },
     zones: new Pool<Zone>(SET_FX.zoneCap, makeZone),
-    knifeN: 0, freeRallyT: 0, freeRallyUsed: false,
-    thunder: 0, starAcc: 0, starfallT: 0, splinterUsed: false,
+    knifeN: 0, freeRallyT: 0,
+    starAcc: 0, starfallT: 0,
   };
   if (s.run.barHp < 0) s.run.barHp = s.stats.barMax;
   return s;

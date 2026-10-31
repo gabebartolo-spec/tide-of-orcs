@@ -94,8 +94,8 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
     // Pale Moon: each moon shot costs wall, but never takes it below the floor
     if (st.homing && st.fullMoon) { const c = st.barMax * MYTHIC_FX.moonCost; if (run.barHp - c >= st.barMax * MYTHIC_FX.moonCostFloor) run.barHp -= c; }
     // Thunder's Memory: a full store of charges looses one bolt on the whole wave
-    if (st.stormStore && s.thunder >= MYTHIC_FX.thunderCharges) {
-      s.thunder = 0; ev.push({ t: 'thunder' });
+    if (st.stormStore && s.run.thunder >= MYTHIC_FX.thunderCharges) {
+      s.run.thunder = 0; ev.push({ t: 'thunder' });
       s.orcs.forEach((o) => damage(s, ev, o, st.dmg * SOURCES.storm.mult * st.kin * MYTHIC_FX.thunderMult));
     }
     // Split Shot: extra arrows land at random inside the circle.
@@ -132,7 +132,7 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
         if (c.dead && reb < st.rebound) { reb++; cap++; }
         cur = nearestOrc(s, c.x, c.y, (o) => !seen.has(o) && dist(o.x, o.y, c.x, c.y) < st.chainJump);
       }
-      if (pts.length) { ev.push({ t: 'storm', pts }); if (st.stormStore) s.thunder = Math.min(MYTHIC_FX.thunderCharges, s.thunder + 1); }
+      if (pts.length) { ev.push({ t: 'storm', pts }); if (st.stormStore) s.run.thunder = Math.min(MYTHIC_FX.thunderCharges, s.run.thunder + 1); }
     }
   }
 

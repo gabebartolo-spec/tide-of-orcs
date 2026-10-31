@@ -11,8 +11,8 @@ export function barricadeHit(s: SimState, ev: EventBus, amount: number, y: numbe
   run.barHp -= amount;
   ev.push({ t: 'barricadeHit', y, amount, frac: barFrac(s) });
   // Rootwarden 6: once per run, a wall below a quarter opens a window of free rallies
-  if (s.stats.freeRally && !s.freeRallyUsed && run.barHp > 0 && barFrac(s) < SET_FX.freeRallyBelow) {
-    s.freeRallyUsed = true; s.freeRallyT = SET_FX.freeRallySecs; ev.push({ t: 'freeRally', secs: SET_FX.freeRallySecs });
+  if (s.stats.freeRally && !s.run.freeRallyUsed && run.barHp > 0 && barFrac(s) < SET_FX.freeRallyBelow) {
+    s.run.freeRallyUsed = true; s.freeRallyT = SET_FX.freeRallySecs; ev.push({ t: 'freeRally', secs: SET_FX.freeRallySecs });
   }
   if (run.barHp > 0) return;
   if (s.stats.bulwark && !run.bulwarkUsed) {
@@ -21,8 +21,8 @@ export function barricadeHit(s: SimState, ev: EventBus, amount: number, y: numbe
     return;
   }
   // Heartwood Splinter: once per run the wall stands again; that run's Heartwood is halved (prestige.gain)
-  if (s.stats.wallSplinter && !s.splinterUsed) {
-    s.splinterUsed = true; run.barHp = s.stats.barMax * MYTHIC_FX.splinterFrac;
+  if (s.stats.wallSplinter && !s.run.splinterUsed) {
+    s.run.splinterUsed = true; run.barHp = s.stats.barMax * MYTHIC_FX.splinterFrac;
     ev.push({ t: 'splinter' });
     return;
   }

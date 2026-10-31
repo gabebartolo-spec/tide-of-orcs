@@ -46,10 +46,10 @@ describe('mythic powers (TB-100)', () => {
   it("Thunder's Memory: ten stored storms make the next shot hit every orc", () => {
     const s = wearing('thunders-memory', { storm: 1 }), ev = new EventBus();
     const a = orcAt(s, 600, 100), b = orcAt(s, 900, 500); a.hp = a.maxhp = b.hp = b.maxhp = 1e9;
-    s.thunder = MYTHIC_FX.thunderCharges - 1; s.run.stormT = 99; step(s, 0, noInputs, ev);
-    expect(s.thunder).toBe(MYTHIC_FX.thunderCharges);
+    s.run.thunder = MYTHIC_FX.thunderCharges - 1; s.run.stormT = 99; step(s, 0, noInputs, ev);
+    expect(s.run.thunder).toBe(MYTHIC_FX.thunderCharges);
     s.run.shotT[0] = 99; step(s, 0, aim(700, 300), ev);
-    expect(s.thunder).toBe(0); expect(a.hp).toBeLessThan(1e9); expect(b.hp).toBeLessThan(1e9);
+    expect(s.run.thunder).toBe(0); expect(a.hp).toBeLessThan(1e9); expect(b.hp).toBeLessThan(1e9);
   });
 
   it('Oakspine: a bolt through three orcs drives a stake that holds one orc', () => {
@@ -83,7 +83,7 @@ describe('mythic powers (TB-100)', () => {
     expect(s.run.fallen).toBe(false); expect(s.run.barHp).toBeCloseTo(s.stats.barMax * MYTHIC_FX.splinterFrac);
     expect(gain(s)).toBe(Math.max(PRESTIGE.minGain, Math.floor(full * MYTHIC_FX.splinterHw)));
     barricadeHit(s, ev, 1e12, 300); expect(s.run.fallen).toBe(true);
-    replant(s, ev); expect(s.splinterUsed).toBe(false);
+    replant(s, ev); expect(s.run.splinterUsed).toBe(false);
   });
 
   it('Starfall Cloak: starlight gathered strikes the strongest orc; Item Find +15%', () => {
