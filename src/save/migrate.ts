@@ -1,3 +1,4 @@
+import { freshLoot } from '../data/loot';
 import { CURRENT_VERSION, RETIRED_NODE_IDS, RETIRED_V3, RETIRED_V4, Save } from './schema';
 
 type AnySave = { version: number } & Record<string, unknown>;
@@ -28,6 +29,8 @@ export const migrations: Record<number, (s: AnySave) => AnySave> = {
   4: (s) => ({ ...s, version: 5, run: { ...(s.run as object), earned: 0 } }),
   // v5 to v6: meta.hwLevels, the Heartwood tree (TB-055); nothing bought yet
   5: (s) => ({ ...s, version: 6, meta: { ...(s.meta as object), hwLevels: {} } }),
+  /** v6 → v7: loot (TB-090): empty satchel, nothing equipped, no Glimmer, pity at 0. */
+  6: (s) => ({ ...s, version: 7, meta: { ...(s.meta as object), loot: freshLoot() } }),
 };
 
 export function migrate(raw: unknown): Save {
