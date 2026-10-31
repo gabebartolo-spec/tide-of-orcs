@@ -26,6 +26,7 @@ export const BARRICADE = {
   orcAtkFrac: 0.025,     // orc dps to vanguard = this × orc maxhp
   wallMult: 10,         // the wall takes this × an orc's hit: a bare run falls at wave 3–4 (TB-080)
   orcSwing: 1.0,        // seconds between orc swings
+  maxHitFrac: 0.25,     // one hit takes at most this × the wall's max, so late orcs can't one-shot it (TB-125)
 } as const;
 
 export const VANGUARD = {

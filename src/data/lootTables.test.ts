@@ -21,5 +21,5 @@ describe('loot tables (TB-091)', () => {
     expect(w.reduce((a, x) => a + x[0], 0)).toBeCloseTo(100); expect(w.reduce((a, x) => a + x[1], 0)).toBeCloseTo(100);
     expect(RARITY.weights.common[1]).toBe(0);
   });
-  it('affix ranges scale 1 + 0.03 × ilvl', () => { expect(affixScale(0)).toBe(1); expect(affixScale(20)).toBeCloseTo(1.6); });
+  it('affix ranges scale 0.75 × (1 + 0.03 × ilvl) (P-108b)', () => { expect(affixScale(0)).toBeCloseTo(0.75); expect(affixScale(20)).toBeCloseTo(1.2); });
 });
