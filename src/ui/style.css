@@ -84,7 +84,7 @@ header h1 em { color: var(--amber); font-style: italic; }
 @media (pointer: coarse) { .buy, .ghost, .tabs button, .deploy, .set select { min-height: 44px; } .ghost { padding-inline: 14px; } }
 @media (prefers-reduced-motion: reduce) { .toast { transition: none; } }
 .items { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 6px; margin: 4px 0 12px; }
-.item { background: var(--ink-2); border: 1px solid var(--line); border-left: 3px solid var(--rar, var(--line)); border-radius: 6px; padding: 5px 7px; display: flex; flex-direction: column; align-items: flex-start; gap: 1px; color: var(--cream); font: inherit; text-align: left; cursor: pointer; min-height: 44px; }
+.item { background: var(--ink-2); border: 1px solid var(--line); border-left: 3px solid var(--rar, var(--line)); border-radius: 6px; padding: 5px 7px; display: flex; flex-direction: row; align-items: center; gap: 7px; gap: 1px; color: var(--cream); font: inherit; text-align: left; cursor: pointer; min-height: 44px; }
 .item.empty { opacity: .45; cursor: default; }
 .item.sel { outline: 2px solid var(--rar, var(--cream)); }
 .item .slot { font-size: 10px; text-transform: uppercase; letter-spacing: .1em; color: var(--cream-dim); }
@@ -95,3 +95,14 @@ header h1 em { color: var(--amber); font-style: italic; }
 .r-common { --rar: var(--cream-dim); } .r-rare { --rar: var(--sage); } .r-epic { --rar: var(--lilac); } .r-legendary { --rar: var(--amber); } .r-mythic { --rar: var(--rose); }
 .satbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px; font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: var(--cream-dim); }
 .itemdetail .row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 8px; }
+/* Glyph frames (TB-097): colour from --rar, and a frame shape per rarity: common plain, rare solid, epic double, legendary square-cornered, mythic glowing */
+.item .txt { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; min-width: 0; }
+.glyph { flex: none; width: 30px; height: 30px; display: grid; place-items: center; color: var(--rar, var(--cream-dim)); background: var(--ink); border: 1px solid color-mix(in srgb, var(--rar, var(--line)) 45%, transparent); border-radius: 6px; }
+.glyph svg { width: 22px; height: 22px; }
+.glyph.none { opacity: .5; border-style: dashed; }
+.glyph.r-rare { border: 1.5px solid var(--rar); }
+.glyph.r-epic { border: 3px double var(--rar); }
+.glyph.r-legendary { border: 2px solid var(--rar); border-radius: 0; }
+.glyph.r-mythic { border: 2px solid var(--rar); box-shadow: 0 0 8px color-mix(in srgb, var(--rar) 70%, transparent); }
+.glyph.big { width: 44px; height: 44px; } .glyph.big svg { width: 32px; height: 32px; }
+.itemdetail .head { display: flex; align-items: center; gap: 10px; }
