@@ -120,11 +120,18 @@ Orcs drop gear; six worn slots, a satchel, affixes, sets and mythic powers feed 
 - Loot icons TB-131, quiver bob TB-134, orc clip speed fix TB-133.
 - Real node names TB-130 (5b1aa11), aim circle 40 → 20 px TB-132 (871d50f).
 
+### M4.9 — Director's list (1 Nov evening) · **done**
+- Heartwood is spent only at a prestige TB-149 (PR #92): the Heartwood tree opens on the fall/Grove page, never mid-run.
+- First-milestone sim TB-146 (PR #93): first Heartwood buy at the end of run 2; first boss on run 19–20 at 81–105 play minutes.
+- Stacking sim TB-147 (PR #94, BALANCE P-147): additive stacking simmed against per-rank multiply; director kept multiply. `STACKING.add` stays as a sim switch.
+- Performance at 1080p and 4K TB-150 (PR #95, QA run 4): 160 orcs at 119 fps (1080p) and 92 fps (4K); 60 fps holds at 4K down to a 4× slower CPU.
+- Itch page copy and three 1080p screenshots TB-073 (PR #96, `docs/ITCH-PAGE.md`, `docs/itch/`).
+
 ### M5 — Ship (week 8) · local telemetry done (TB-070 f31ce6b, loot events TB-107); bug bash run twice
 - Balance pass #2 with telemetry from testers (TB-071; local JSON export, no server; export built).
 - Save import/export (done in TB-065), version migration test suite (TB-140: every old save v1–v8 loads and plays).
-- Itch.io page and web build (TB-073), Electron wrapper spike for Steam (TB-074, done: `npm run desktop`; fonts bundled in TB-118; Windows package in TB-119: `npm run desktop:pack`; app icon in TB-120; the Steam upload remains, TB-122).
-- Bug bash (TB-075, `docs/QA-CHECKLIST.md`): runs 1 and 2 done (PRs #33, #37); their bugs became TB-112–117. Performance: no frame spikes in a visible browser with 160 orcs (TB-113); still untested on a mid-range PC.
+- Itch.io page and web build (TB-073: build pipeline `itch.yml`; page copy and screenshots in `docs/ITCH-PAGE.md`, not yet on the itch page), Electron wrapper spike for Steam (TB-074, done: `npm run desktop`; fonts bundled in TB-118; Windows package in TB-119: `npm run desktop:pack`; app icon in TB-120; the Steam upload remains, TB-122).
+- Bug bash (TB-075, `docs/QA-CHECKLIST.md`): runs 1 and 2 done (PRs #33, #37); their bugs became TB-112–117. Performance: no frame spikes in a visible browser with 160 orcs (TB-113); measured at 1080p and 4K with CPU throttling as a mid-range stand-in (TB-150, QA run 4): passes. Not yet on real mid-range hardware.
 
 Mobile is out of the roadmap (director, 31 Oct): the web build ships for PC first; a mobile port comes after it is perfect on PC. TB-064/TB-078 layout work stays in the code.
 **Done when:** build is public on itch.
@@ -155,9 +162,9 @@ A deep-research pass (1 Nov) on active, run-based incrementals (Nodebuster, Deep
 | # | Idea | Seen in | Where we stand | Next step |
 |---|---|---|---|---|
 | 1 | Meta currency is paid for **boss kills**, not distance, and each boss beaten opens a harder tier where orc stats and income rise together. Early runs are expected to fail at the first boss. | Nodebuster | P-142 already pays Heartwood from bosses (3 × floor(w/25)) plus a flat 1 per fall. Orc strength and income rise on the same wave curve with no tier step. | Director question: should each boss beaten be a visible tier (named tide, orc stats and Teeth both step up)? It touches GDD core loop, so ask before building (TB-148). |
-| 2 | **Bonuses add inside a stat; multipliers stay rare and gated.** Two +50% make +100%. Big multipliers come only from gated picks (weapon level 6/12/18, or two weapons sharing a tag). | DRG: Survivor | Every run-tree rank multiplies (`Math.pow(mult, rank)` in `stats.ts`), so deep lines compound and the late tree outruns the wave curve. | Simmed (TB-147, BALANCE P-147): adding with today's numbers nearly doubles the time to the first boss; adding with per-rank bonuses matched at rank 6 keeps pacing (84–91 min) and weakens 10-rank lines (×9.3 → ×5.7). Director 1 Nov: keep multiply. |
+| 2 | **Bonuses add inside a stat; multipliers stay rare and gated.** Two +50% make +100%. Big multipliers come only from gated picks (weapon level 6/12/18, or two weapons sharing a tag). | DRG: Survivor | Every run-tree rank multiplies (`Math.pow(mult, rank)` in `stats.ts`), so deep lines compound and the late tree outruns the wave curve. | Simmed (TB-147, BALANCE P-147): adding with today's numbers nearly doubles the time to the first boss; adding with per-rank bonuses matched at rank 6 keeps pacing (84–91 min) and weakens 10-rank lines (×9.3 → ×5.7). **Decided 1 Nov (director): keep multiply.** Closed. |
 | 3 | **Early ranks are cheap enough to buy at least one new upgrade after every run.** | Shroomstead players | A fall pays 1 Heartwood; the cheapest Heartwood nodes cost 2–3, so runs that fall before wave 25 need two falls per purchase. | Measured (TB-146, BALANCE §TB-146): first purchase at the end of run 2 (about 2 min); first boss on run 19–20 at 81–105 play minutes, then runs plateau at wave 27–28. |
-| 4 | **Price by power.** Base price set by how strong the upgrade is (200 for damage, 900 for cooldown, 10 000 for a revive), plus a small global fee that rises with every purchase, so order of buying matters less. | Vampire Survivors PowerUps | Heartwood prices are hand-set per node; the run tree uses base × growth^rank × costWave. | Measured (BALANCE P-147): Quick Draw costs 4× Sharpened Tips per +1%; Gleaning and Iron Bolts sit at 75 and 40. Multiply kept (1 Nov); prices not changed. |
+| 4 | **Price by power.** Base price set by how strong the upgrade is (200 for damage, 900 for cooldown, 10 000 for a revive), plus a small global fee that rises with every purchase, so order of buying matters less. | Vampire Survivors PowerUps | Heartwood prices are hand-set per node; the run tree uses base × growth^rank × costWave. | Measured (BALANCE P-147): Quick Draw costs 4× Sharpened Tips per +1%; Gleaning and Iron Bolts sit at 75 and 40. Multiply kept (1 Nov), so prices can now be set against this table; no proposal yet. |
 | 5 | **Compounding reroll cost** (about ×1.4 per reroll). | DRG: Survivor | Glimmer rerolls already compound per item (P-102). | None; this confirms our rule. |
 | 6 | **Calibrate meta strength.** Too weak feels pointless; too strong makes runs trivial. Repeatable upgrades go steep around level 20. | Ball x Pit, genre reviews | P-142 removed the Heartwood passive for this reason. | Keep the sim gate: a fresh save must still reach the first boss, and a full Heartwood tree must not skip it. |
 
