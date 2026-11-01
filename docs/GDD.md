@@ -107,6 +107,7 @@ All companion damage scales with Kinship (×1.2/rank). Kinship also scales vangu
 - **Voluntary:** from wave 12 while the wall still stands (TB-136): a header Replant button appears and ends the run as a fall does ("You leave the wall standing"), with the same Heartwood; the summary, Grove page and March again follow.
 - A fall (or voluntary replant) pays a flat 1 Heartwood (rule 1). The rest drops from cleared boss waves (§5; P-142, director 2026-11-01).
 - Heartwood has no passive bonus; it is only spent on the Heartwood tree.
+- Heartwood is spent only at a prestige (director, 1 Nov; TB-149): the Heartwood tree's buttons work only while the run has fallen (a fall or a voluntary replant), on the Grove page before *March again*. The fall's flat 1 counts there at once, before Replant adds it. Mid-run the tree is shown but closed, and Heartwood from bosses waits for the next prestige.
 - Reset: tree ranks, starlight, wave, vanguard, companions, timers, Deep Roots charge. Keep: Heartwood, lifetime slain, best wave, prestige count, settings.
 - **Heartwood tree (M3, TB-053):** five nodes on the Replant tab, bought with Heartwood and never reset: Early Dawn (start further on), Old Friend (start with the wolf), Stout Timber (wall base HP), Standing Orders (start with spearmen), Warlords (boss clear bonus). Numbers in BALANCE.md §Heartwood tree.
 - Ceremony: confirm (automatic when fallen) → tree desaturates and burns upward in amber → one seed falls → field fades up through dawn. ≤ 4 s, skippable, reduced-motion safe.
