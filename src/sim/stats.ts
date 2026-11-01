@@ -2,7 +2,7 @@ import { NodeId } from '../data/skillTree';
 import { HW_FX, HwLevels } from '../data/heartwood';
 import { SATCHEL, SPOILS_FX } from '../data/lootTables';
 import { FOE_FX, OrcKind } from '../data/orcs';
-import { ARROWS, BARRICADE, ELF_FX, LOB, NODE_FX, PLAYER, SHOT_FX, SOURCES, UNIT_FX, VANGUARD } from '../data/balance';
+import { ARROWS, BARRICADE, ELF_FX, LOB, NODE_FX, PLAYER, SHOT_FX, SOURCES, STACKING, UNIT_FX, VANGUARD } from '../data/balance';
 
 export type Levels = Partial<Record<NodeId, number>>;
 
@@ -68,21 +68,24 @@ const FOE_NODES: Partial<Record<OrcKind, [NodeId | null, NodeId, NodeId]>> = {
   elite: ['elites', 'elitefury', 'eliteswarm'],
 };
 
+/** A node line's factor at rank r (TB-147): m^r, or 1 + (m − 1) × r when STACKING.add (floored at 0.1 for shrinking lines). */
+const fx = (m: number, r: number): number => (STACKING.add ? Math.max(0.1, 1 + (m - 1) * r) : Math.pow(m, r));
+
 export function deriveStats(lv: Levels, hw: HwLevels = {}): Stats {
   const L = (id: NodeId): number => lv[id] ?? 0;
-  const kin = Math.pow(NODE_FX.kinship, L('bond'));
+  const kin = fx(NODE_FX.kinship, L('bond'));
   const muster = L('muster') > 0;
   // a shot type's chance per shot: 0 until owned, then chance0 + chancePerRank per Quiver rank
   const chance = (on: NodeId, q: NodeId): number => (L(on) ? Math.min(1, SHOT_FX.chance0 + SHOT_FX.chancePerRank * L(q)) : 0);
   const units = Object.fromEntries(Object.entries(UNIT_NODES).map(([u, [d, r, c, x, m]]) => [u, {
-    dmg: Math.pow(UNIT_DMG[u as Unit] ?? UNIT_FX.dmg, L(d)), rate: Math.pow(UNIT_FX.rate, L(r)),
-    crit: UNIT_FX.critPerRank * L(c), critMult: UNIT_FX.critMult0 + UNIT_FX.critxPerRank * L(x), spd: m ? Math.pow(UNIT_FX.spd, L(m)) : 1,
+    dmg: fx(UNIT_DMG[u as Unit] ?? UNIT_FX.dmg, L(d)), rate: fx(UNIT_FX.rate, L(r)),
+    crit: UNIT_FX.critPerRank * L(c), critMult: UNIT_FX.critMult0 + UNIT_FX.critxPerRank * L(x), spd: m ? fx(UNIT_FX.spd, L(m)) : 1,
   }])) as Record<Unit, UnitFx>;
   return {
-    dmg: PLAYER.baseDmg * Math.pow(NODE_FX.sharpDmg, L('sharp')),
-    fireRate: PLAYER.baseFireRate * Math.pow(NODE_FX.drawRate, L('draw')),
-    lobCd: LOB.cd / Math.pow(NODE_FX.drawRate, L('draw')),
-    radius: LOB.radius * Math.pow(NODE_FX.wideRadius, L('wide')),
+    dmg: PLAYER.baseDmg * fx(NODE_FX.sharpDmg, L('sharp')),
+    fireRate: PLAYER.baseFireRate * fx(NODE_FX.drawRate, L('draw')),
+    lobCd: LOB.cd / fx(NODE_FX.drawRate, L('draw')),
+    radius: LOB.radius * fx(NODE_FX.wideRadius, L('wide')),
     arrows: 1 + L('multi'),
     pierce: L('pierce'),
     crit: NODE_FX.critPerRank * L('crit') + (L('hunter') ? SPOILS_FX.hunterCrit : 0),
@@ -92,22 +95,22 @@ export function deriveStats(lv: Levels, hw: HwLevels = {}): Stats {
     shock: L('shock') > 0,
     stun: L('stun') > 0,
     slow: L('frost') ? ARROWS.frost.slow0 + ARROWS.frost.slowPerRank * (L('frost') - 1) : 0,
-    shatter: L('shatter') ? ARROWS.shatter.mult * Math.pow(ARROWS.shatter.perRank, L('shatter') - 1) : 0,
+    shatter: L('shatter') ? ARROWS.shatter.mult * fx(ARROWS.shatter.perRank, L('shatter') - 1) : 0,
     starfall: L('starfall') > 0,
     fireP: chance('fire', 'firechance'), frostP: chance('frost', 'frostchance'), shockP: chance('shock', 'shockchance'),
     rebP: chance('bounce', 'rebchance'), moonP: chance('moon', 'moonchance'),
     starP: L('starfall') ? Math.min(1, SHOT_FX.starChance0 + SHOT_FX.starChancePerRank * L('starchance')) : 0,
     burnSecs: SOURCES.burnSecs + SHOT_FX.burnSecsPerRank * L('wildfire'),
     stunSecs: ARROWS.stun.secs + SHOT_FX.stunSecsPerRank * Math.max(0, L('stun') - 1),
-    shockMult: ARROWS.shock.mult * Math.pow(SHOT_FX.dmg, L('static')),
-    rebMult: Math.pow(SHOT_FX.dmg, L('rebdmg')),
-    moonMult: NODE_FX.moonDmg * Math.pow(SHOT_FX.moonDmg, L('moondmg')),
+    shockMult: ARROWS.shock.mult * fx(SHOT_FX.dmg, L('static')),
+    rebMult: fx(SHOT_FX.dmg, L('rebdmg')),
+    moonMult: NODE_FX.moonDmg * fx(SHOT_FX.moonDmg, L('moondmg')),
     homeR: PLAYER.aimHomingRadius * (1 + SHOT_FX.homeReachPerRank * L('moonreach')),
-    starDmg: Math.pow(SHOT_FX.dmg, L('stardmg')), starArrows: ARROWS.starfall.arrows + SHOT_FX.starArrowsPerRank * L('starcount'),
+    starDmg: fx(SHOT_FX.dmg, L('stardmg')), starArrows: ARROWS.starfall.arrows + SHOT_FX.starArrowsPerRank * L('starcount'),
     critMult: PLAYER.critMult + ELF_FX.deadlyPerRank * L('deadly'),
     knifeExtra: SHOT_FX.knivesPerRank * L('knifefan'), boltRoot: SHOT_FX.boltRootSecs * L('boltpin'),
     units,
-    starMult: Math.pow(NODE_FX.gleanLoot, L('glean')),
+    starMult: fx(NODE_FX.gleanLoot, L('glean')),
     foes: { boss: { on: false, hp: 1, loot: 1, spawn: 1 }, ...Object.fromEntries(Object.entries(FOE_NODES).map(([k, [on, fury, swarm]]) => [k, {
       on: on === null || L(on) > 0,
       hp: Math.pow(FOE_FX.hp, L(fury)), loot: Math.pow(FOE_FX.loot, L(fury)), spawn: Math.pow(FOE_FX.spawn, L(swarm)),
@@ -117,22 +120,22 @@ export function deriveStats(lv: Levels, hw: HwLevels = {}): Stats {
     archers: L('ranger') + L('warden'),
     hawk: L('hawk') > 0,
     treant: L('treant') > 0,
-    knives: L('knives') ? { rate: Math.pow(NODE_FX.knifeRate, L('knifespd')) / SOURCES.knives.cd, dmg: SOURCES.knives.base * Math.pow(SHOT_FX.dmg, L('knifedmg')) * kin } : null,
+    knives: L('knives') ? { rate: fx(NODE_FX.knifeRate, L('knifespd')) / SOURCES.knives.cd, dmg: SOURCES.knives.base * fx(SHOT_FX.dmg, L('knifedmg')) * kin } : null,
     storm: L('storm') > 0,
-    ballista: L('ballista') ? SOURCES.ballista.base * Math.pow(NODE_FX.boltDmg, L('bolt')) * kin : 0,
-    barMax: BARRICADE.baseHp * (1 + HW_FX.timberPerRank * (hw.hw_timber ?? 0)) * Math.pow(BARRICADE.timberMult, L('timber')),
+    ballista: L('ballista') ? SOURCES.ballista.base * fx(NODE_FX.boltDmg, L('bolt')) * kin : 0,
+    barMax: BARRICADE.baseHp * (1 + HW_FX.timberPerRank * (hw.hw_timber ?? 0)) * fx(BARRICADE.timberMult, L('timber')),
     barRegen: BARRICADE.regenPerRank * L('repair'),
     spikes: BARRICADE.spikesPerRank * L('spikes'),
     bulwark: L('bulwark') > 0,
     muster,
     vanCap: muster ? VANGUARD.baseCap + L('ranks') : 0,
-    vanHp: Math.pow(VANGUARD.hpPerShield, L('shield')),
+    vanHp: fx(VANGUARD.hpPerShield, L('shield')),
     vanDmg: kin,
     vanMend: VANGUARD.mendPerRank * L('mend'),
     champion: L('champion') > 0,
-    bleedAmp: 0, knifeFan: 0, burn: Math.pow(SHOT_FX.dmg, L('kindle')), burnSpread: 0, cinder: 0,
+    bleedAmp: 0, knifeFan: 0, burn: fx(SHOT_FX.dmg, L('kindle')), burnSpread: 0, cinder: 0,
     chain: SOURCES.storm.targets, chainJump: SOURCES.storm.jump, rebound: 0, stormCd: SOURCES.storm.cd,
-    ballCd: SOURCES.ballista.cd * Math.pow(SHOT_FX.windlass, L('windlass')), boltShove: 0, boltPin: 0, moonCrit: 0, moonwell: 0,
+    ballCd: SOURCES.ballista.cd * fx(SHOT_FX.windlass, L('windlass')), boltShove: 0, boltPin: 0, moonCrit: 0, moonwell: 0,
     petDmg: 1, petHaste: 0, extraWolves: 0, treantRoot: 0, freeRally: 0,
     knifeReturn: 0, burnRamp: 0, stormStore: 0, stakes: 0, fullMoon: 0, petReturn: 0, wallSplinter: 0, starCloak: 0,
     itemFind: HW_FX.find[hw.hw_find ?? 0]! + (L('sharpeyes') ? SPOILS_FX.sharpFind : 0), luck: HW_FX.fortune[hw.hw_fortune ?? 0]!,
