@@ -28,7 +28,7 @@ Manual push: Actions → "Release to itch.io" → Run workflow → pick a channe
 | m4 | Presentation | html5-dev |
 | v1.0.0 | Ship | html5 |
 
-M2 and M3 work (enemy summons, boss waves, Heartwood tree, ceremony) and most of M4 (settings, sky, tree polish, audio engine) are on `main` but untagged. Recommendation: tag the next release `m3` once TB-054 (balance pass #1) lands; it will carry M2–M4 work together.
+M2–M4.10 are on `main` but untagged. Since 1 Nov builds of `main` go to `html5-dev` by manual workflow run; the latest is 8d20894 (2 Nov, run 41352680687).
 
 The itch page's "development log" gets a short post per milestone: what's new, what to test, where to leave feedback. Draft it from `docs/log/` for that milestone.
 
