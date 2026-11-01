@@ -192,7 +192,6 @@ export class FieldRenderer {
     this.ground.draw(g, this.canvas.width, this.canvas.height);
     const n = dusk(this.clock);
     g.globalAlpha = SKY.duskAlpha * n; g.fillStyle = P.plainDusk; g.fillRect(BAR_X, -10, W - BAR_X + 10, H + 20); g.globalAlpha = 1;
-    this.hills();
     g.fillStyle = P.groveSide; g.fillRect(-10, -10, BAR_X + 10, H + 20);
     if (n > 0.01) { const lg = g.createRadialGradient(ELF_X, H / 2, 0, ELF_X, H / 2, SKY.lampR); lg.addColorStop(0, P.lamp); lg.addColorStop(1, P.lampClear); g.globalAlpha = n; g.fillStyle = lg; g.fillRect(ELF_X - SKY.lampR, H / 2 - SKY.lampR, SKY.lampR * 2, SKY.lampR * 2); g.globalAlpha = 1; }
 
@@ -207,6 +206,7 @@ export class FieldRenderer {
     }
     g.fillStyle = P.sand; g.fillRect(BAR_X - 3, 0, 3, H);
     if (s.stats.spikes) { g.fillStyle = P.cream; for (let y = 8; y < H; y += 24) { g.beginPath(); g.moveTo(BAR_X + BAR_W, y); g.lineTo(BAR_X + BAR_W + 9, y + 4); g.lineTo(BAR_X + BAR_W, y + 8); g.closePath(); g.fill(); } }
+    this.hills();
 
     this.fx.drawGround(g);
     s.zones.forEach((z) => {
@@ -280,8 +280,8 @@ export class FieldRenderer {
     g.setTransform(sx, 0, 0, sy, 0, 0);
     g.fillStyle = P.dim; g.fillRect(12, 10, 150, 10);
     g.fillStyle = frac > 0.5 ? P.wallBar : frac > 0.25 ? P.amber : P.rose; g.fillRect(12, 10, 150 * frac, 10);
-    g.fillStyle = P.cream; g.font = '10px Heartwood'; g.textAlign = 'left';
-    g.fillText(STR.barricadeHud(fmt(Math.max(0, s.run.barHp)), fmt(s.stats.barMax)), 12, 32);
+    g.fillStyle = P.text; g.font = '13px Heartwood'; g.textAlign = 'left'; g.shadowColor = P.ink; g.shadowBlur = 4;
+    g.fillText(STR.barricadeHud(fmt(Math.max(0, s.run.barHp)), fmt(s.stats.barMax)), 12, 34); g.shadowBlur = 0;
     if (s.stats.muster) g.fillText(STR.vanguardHud(s.vans.count, s.stats.vanCap), 12, 46);
     g.fillStyle = P.dim45; g.fillRect(0, H - 5, W, 5); g.fillStyle = P.amber; g.fillRect(0, H - 5, W * (s.run.waveT / WAVE_LEN), 5);
     if (this.edge > 0) { const M = LOOT_VFX.mythic; g.globalAlpha = (this.edge / M.edge) * (0.6 + 0.4 * Math.sin(this.clock * M.flicker)); g.strokeStyle = P.rose; g.lineWidth = M.edgeW; g.strokeRect(M.edgeW / 2, M.edgeW / 2, W - M.edgeW, H - M.edgeW); g.globalAlpha = 1; }
@@ -316,14 +316,14 @@ export class FieldRenderer {
     g.globalAlpha = 1;
   }
 
-  /** Two bands of distant hills along the far edge, drifting slowly (still under reduced motion). */
+  /** Two bands of distant hills along the far edge, across grove and plain, drifting slowly (still under reduced motion). */
   private hills(): void {
     const g = this.g;
     SKY.hills.forEach((b, i) => {
       const off = this.reducedMotion ? 0 : (this.clock * b.speed) % b.w;
-      g.fillStyle = i ? P.hillNear : P.hillFar; g.beginPath(); g.moveTo(BAR_X, b.y);
-      for (let k = 0, x = BAR_X - off; x <= W + b.w; k++, x += b.w / 2) g.quadraticCurveTo(x + b.w / 4, b.y + (k % 2 ? b.h * 0.6 : b.h), x + b.w / 2, b.y + b.h * 0.3);
-      g.lineTo(W + 10, b.y + b.h * 0.3); g.lineTo(W + 10, -10); g.lineTo(BAR_X, -10); g.closePath(); g.fill();
+      g.fillStyle = i ? P.hillNear : P.hillFar; g.beginPath(); g.moveTo(-10, b.y);
+      for (let k = 0, x = -10 - off; x <= W + b.w; k++, x += b.w / 2) g.quadraticCurveTo(x + b.w / 4, b.y + (k % 2 ? b.h * 0.6 : b.h), x + b.w / 2, b.y + b.h * 0.3);
+      g.lineTo(W + 10, b.y + b.h * 0.3); g.lineTo(W + 10, -10); g.lineTo(-10, -10); g.closePath(); g.fill();
     });
   }
 

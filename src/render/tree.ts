@@ -112,12 +112,12 @@ export class TreeRenderer {
       if (lvl > 0 && !maxed) { c.beginPath(); c.arc(n.x, n.y, r, -1.571, -1.571 + (6.283 * lvl) / n.max); c.strokeStyle = col; c.lineWidth = 4; c.stroke(); }
       if (canBuy(s, n)) { c.beginPath(); c.arc(n.x, n.y, r + 5, 0, 6.28); c.strokeStyle = P.amber; c.lineWidth = 1; c.globalAlpha = this.reducedMotion ? 0.8 : 0.5 + 0.5 * Math.sin(t * 4); c.stroke(); c.globalAlpha = 1; }
       if (keyFocus && n.id === this.selected) { c.beginPath(); c.arc(n.x, n.y, r + 9, 0, 6.28); c.strokeStyle = P.cream; c.lineWidth = 2; c.setLineDash([4, 3]); c.stroke(); c.setLineDash([]); }
-      c.fillStyle = un ? P.cream : P.nodeLabelLocked; c.font = '11px Heartwood'; c.textAlign = 'center'; c.fillText(n.name, n.x, n.y + r + 13);
-      if (n.max > 1) { c.fillStyle = maxed ? P.ink : P.cream; c.font = '10px Heartwood'; c.fillText(`${lvl}/${n.max}`, n.x, n.y + 4); }
+      c.fillStyle = un ? P.text : P.nodeLabelLocked; c.font = '14px Heartwood'; c.textAlign = 'center'; c.shadowColor = P.ink; c.shadowBlur = 4; c.fillText(n.name, n.x, n.y + r + 15); c.shadowBlur = 0;
+      if (n.max > 1) { c.fillStyle = maxed ? P.ink : P.text; c.font = '13px Heartwood'; c.fillText(`${lvl}/${n.max}`, n.x, n.y + 4); }
     }
     c.setTransform(k, 0, 0, k, 0, 0); // legend stays in screen space, on its own strip so nodes pan under it, not through it (TB-117)
     c.fillStyle = P.ink2; c.fillRect(0, 0, this.vw, TREE_VIEW.legendH); c.fillStyle = P.line; c.fillRect(0, TREE_VIEW.legendH - 1, this.vw, 1);
-    let lx = 14; c.font = '10px Heartwood'; c.textAlign = 'left';
-    for (const k of Object.keys(BRANCH_COLOR) as (keyof typeof BRANCH_COLOR)[]) { c.fillStyle = BRANCH_COLOR[k]; c.fillRect(lx, 14, 8, 8); c.fillStyle = P.creamDim; const label = BRANCH_LABEL[k].toUpperCase(); c.fillText(label, lx + 12, 22); lx += c.measureText(label).width + 30; }
+    let lx = 14; c.font = '13px Heartwood'; c.textAlign = 'left';
+    for (const k of Object.keys(BRANCH_COLOR) as (keyof typeof BRANCH_COLOR)[]) { c.fillStyle = BRANCH_COLOR[k]; c.fillRect(lx, 14, 8, 8); c.fillStyle = P.textDim; const label = BRANCH_LABEL[k].toUpperCase(); c.fillText(label, lx + 12, 22); lx += c.measureText(label).width + 30; }
   }
 }
