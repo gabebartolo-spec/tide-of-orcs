@@ -29,10 +29,10 @@ describe('actor sprite state', () => {
 });
 
 describe('drawActor fallbacks', () => {
-  const anim = { frames: [[0, 0, 8, 8], [8, 0, 8, 8]] as [number, number, number, number][], fps: 10, ax: 0.5, ay: 1, hPerR: 2 };
+  const anim = { image: 'x', frames: [[0, 0, 8, 8], [8, 0, 8, 8]] as [number, number, number, number][], fps: 10, ax: 0.5, ay: 1, hPerR: 2 };
   const drawn = (anims: Record<string, typeof anim>, state: 'walk' | 'attack' | 'idle', t = 0.15) => {
     const sp = new Sprites(); const calls: number[] = [];
-    Object.assign(sp, { atlas: { image: 'x', anims }, img: {} });
+    Object.assign(sp, { atlas: { images: ['x'], anims }, imgs: new Map([['x', {}]]) });
     const g = { drawImage: (...a: number[]) => calls.push(a[1]!), filter: 'none' } as unknown as CanvasRenderingContext2D;
     return sp.drawActor(g, 'k', state, t, 0, 0, 10) ? calls[0] : null;
   };

@@ -70,7 +70,7 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 |---|---|---|---|---|---|
 | TB-060 | Sprite-sheet loader with atlas JSON and vector fallback; draw actors from sheets when present | render | M2 | claude | done 47e4010 |
 | TB-068 | Tripo models + Cascadeur loops → sheets for orcs, elf, vanguard, companions (ART-STYLE §Asset pipeline) | art | 060 | gabe, claude | doing (first sheet in game: grunt walk/attack, spearman walk/attack, bladedancer attack) |
-| TB-069 | ElevenLabs SFX set (16) + ambient bed, exported per ART-STYLE | audio | — | claude | SFX done b3e4c5f (16 cues, OGG+MP3, −16 LUFS; loose, knife, bossRoar, click, denied wired); ambient bed done (30 s seamless loop, take A, director pick); `ignite` plays on the elf's release with Fire Arrows (director call) |
+| TB-069 | ElevenLabs SFX set (16) + ambient bed, exported per ART-STYLE | audio | — | claude | SFX done b3e4c5f (16 cues, OGG+MP3, −16 LUFS; loose, knife, bossRoar, click, denied wired); ambient bed done (30 s seamless loop, take A, director pick); `ignite` plays on the elf's release with Fire Arrows (director call); `warDrum` cue added 1 Nov (100 credits, acked), unwired until the drummer unit exists |
 | TB-061 | Parallax hills, day/night tint, bank lamplight | render | 018 | claude | done 71d05f4 |
 | TB-062 | Audio engine: ambient loop, SFX map from events, ducking | audio | 019,069 | claude | done 09b60cf |
 | TB-063 | Music beds ×2, crossfade on Replant, boss-wave track (Suno MP3s in `public/audio/`) | audio | 062 | claude | done (PR #9) |
@@ -143,4 +143,5 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-126 | Combat stalls past wave ~117: 0 kills/min, wall 100%, waves keep ticking (sim seed 3, bosses every 60, reached wave 463). Find the overflow or spawn stall and fix | sim | 108 | claude | done (179a2ec) |
 | TB-128 | Loot L11: mythic and reroll tuning. Runner `--mythic <id>` (forced, locked, power-off trial) and `--reroll` policy; 8 mythics and Glimmer reroll measured on 4 seeds; retune proposed as P-128, closing P-100 and P-102 | sim | 108 | claude | in progress (tb-128-mythic-tune) |
 | TB-104 | Loot L7: item models for the worn slots and satchel, replacing the TB-097 glyph fallback (Meshy, Smart Topology; director yes 1 Nov) | art | 097 | claude | in progress (branch tb-104-meshy-loot) |
+| TB-129 | Split the sprite sheet: `sheet_orcs.webp` (orc.* keys) + `sheet_elf.webp` (elf, vanguard), one atlas with `image` per anim, loader decodes every sheet; the single sheet had reached 2753 KB against a 2 MB budget | art | 068 | claude | done (orcs 1776 KB, elf 945 KB) |
 | TB-106 | Loot L8b: loot SFX per rarity drop, mythic drop, equip, salvage, reroll, set tier rise (ElevenLabs, needs the director's spend yes) | audio | 105 | claude | in progress (files in, takes with director; spend yes 1 Nov) |

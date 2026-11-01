@@ -1,4 +1,5 @@
-# Pack build_sprites.ps1 frames into one sheet + atlas (ART-STYLE §Asset pipeline, src/render/sprites.ts).
+# Pack build_sprites.ps1 frames into two sheets + one atlas (ART-STYLE §Asset pipeline, src/render/sprites.ts).
+# orc.* keys go to sheet_orcs.webp, everything else (elf, vanguard) to sheet_elf.webp; each anim names its image in the atlas.
 # python pack_sprites.py <frames dir> <public/sprites dir>
 # Frames are <key>_<N>.png (RES 512, field camera); anchors.json maps key -> [x px, y px, ortho] of the ground under the rig origin.
 # Each anim is cropped to the union of its frames' alpha, scaled to PX_PER_M, mirrored for orcs (they march screen-left),
@@ -8,6 +9,8 @@ from PIL import Image
 
 src, dst = sys.argv[1], sys.argv[2]
 RES, PX_PER_M, SHEET_W, PAD = 512, 110, 2048, 2
+SHEETS = {"orcs": "sheet_orcs.webp", "elf": "sheet_elf.webp"}  # TB-129: one 2 MB sheet each instead of one shared sheet over budget
+def sheet_of(key): return SHEETS["orcs" if key.startswith("orc.") else "elf"]
 # key: (fps, mirror, body key, body height in actor radii). Vector actors: orc ~2.4 r with feet, elf/vanguard 36 units at radius 12.
 ANIMS = {
     "orc.grunt": (30, True, "orc.grunt", 2.4),
@@ -17,8 +20,13 @@ ANIMS = {
     "van.blade.attack": (15, False, "van.blade.attack", 3.0),
     "orc.berserker": (30, True, "orc.berserker", 2.4),
     "orc.berserker.attack": (15, True, "orc.berserker", 2.4),
+    "orc.drummer": (30, True, "orc.drummer", 2.4),  # walk only (drumming dropped by the director)
     "orc.shaman": (30, True, "orc.shaman", 2.4),
     "orc.shaman.attack": (15, True, "orc.shaman", 2.4),
+    "orc.runner": (30, True, "orc.runner", 2.4),
+    "orc.runner.attack": (15, True, "orc.runner", 2.4),
+    "orc.brute": (30, True, "orc.brute", 2.4),  # radius 16 (orcs.ts) already makes it bigger than a grunt
+    "orc.brute.attack": (15, True, "orc.brute", 2.4),
     "elf": (10, False, "elf", 3.0),  # idle loop, every 3rd clip frame (build_sprites.ps1)
     "elf.attack": (15, False, "elf", 3.0),
     "orc.wolfrider.attack": (15, True, "orc.wolfrider.attack", 2.6),  # no walk clip: the attack is its own body key; frames from wolfrider/render_wr_sheet.py
@@ -48,20 +56,27 @@ for key, (fps, mirror, bk, br) in ANIMS.items():
         b0 = fr[0].getchannel("A").point(lambda a: 255 if a > 8 else 0).getbbox(); body[key] = (b0[3] - b0[1]) * s
     cuts[key] = dict(imgs=out, fps=fps, ax=round(1 - fx if mirror else fx, 4), ay=round(fy, 4), bk=bk, br=br, touch=box[0] <= 0 or box[2] >= RES or box[1] <= 0)
 
-# shelf-pack every frame into one sheet
-x = y = rowh = 0; place = {}
-for key, c in cuts.items():
-    for i, im in enumerate(c["imgs"]):
-        if x + im.width > SHEET_W: x, y, rowh = 0, y + rowh + 1, 0
-        place[(key, i)] = (x, y, im.width, im.height); x += im.width + 1; rowh = max(rowh, im.height)
-sheet = Image.new("RGBA", (SHEET_W, y + rowh), (0, 0, 0, 0))
-anims = {}
-for key, c in cuts.items():
-    for i, im in enumerate(c["imgs"]): sheet.paste(im, place[(key, i)][:2])
-    fh = c["imgs"][0].height
-    anims[key] = dict(frames=[list(place[(key, i)]) for i in range(len(c["imgs"]))], fps=c["fps"], ax=c["ax"], ay=c["ay"], hPerR=round(fh / body[c["bk"]] * c["br"], 4))
-    print("PACK", key, len(c["imgs"]), "frames", f"{c['imgs'][0].width}x{fh}", "ax", c["ax"], "ay", c["ay"], "hPerR", anims[key]["hPerR"], "EDGE-CLIPPED" if c["touch"] else "")
+# shelf-pack every frame, one sheet per group (orcs / elf + vanguard)
+anims, sheets = {}, {}
+for name in SHEETS.values():
+    group = {k: c for k, c in cuts.items() if sheet_of(k) == name}
+    if not group: continue
+    x = y = rowh = 0; place = {}
+    for key, c in group.items():
+        for i, im in enumerate(c["imgs"]):
+            if x + im.width > SHEET_W: x, y, rowh = 0, y + rowh + 1, 0
+            place[(key, i)] = (x, y, im.width, im.height); x += im.width + 1; rowh = max(rowh, im.height)
+    sheet = Image.new("RGBA", (SHEET_W, y + rowh), (0, 0, 0, 0))
+    for key, c in group.items():
+        for i, im in enumerate(c["imgs"]): sheet.paste(im, place[(key, i)][:2])
+        fh = c["imgs"][0].height
+        anims[key] = dict(image=name, frames=[list(place[(key, i)]) for i in range(len(c["imgs"]))], fps=c["fps"], ax=c["ax"], ay=c["ay"], hPerR=round(fh / body[c["bk"]] * c["br"], 4))
+        print("PACK", key, len(c["imgs"]), "frames", f"{c['imgs'][0].width}x{fh}", "ax", c["ax"], "ay", c["ay"], "hPerR", anims[key]["hPerR"], "->", name, "EDGE-CLIPPED" if c["touch"] else "")
+    sheets[name] = sheet
 os.makedirs(dst, exist_ok=True)
-sheet.save(os.path.join(dst, "sheet.webp"), "WEBP", quality=90, method=6, alpha_quality=100)
-json.dump(dict(image="sheet.webp", anims=anims), open(os.path.join(dst, "atlas.json"), "w"), separators=(",", ":"))
-print("PACK sheet", sheet.size, os.path.getsize(os.path.join(dst, "sheet.webp")) // 1024, "KB")
+for name, sheet in sheets.items():
+    sheet.save(os.path.join(dst, name), "WEBP", quality=90, method=6, alpha_quality=100)
+    print("PACK sheet", name, sheet.size, os.path.getsize(os.path.join(dst, name)) // 1024, "KB")
+json.dump(dict(images=sorted(sheets), anims=anims), open(os.path.join(dst, "atlas.json"), "w"), separators=(",", ":"))
+old = os.path.join(dst, "sheet.webp")
+if os.path.exists(old): os.remove(old); print("PACK removed", old)
