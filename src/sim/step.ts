@@ -3,7 +3,7 @@ import { FIREBALL, ORC_KINDS, ORC_TYPES, OrcKind } from '../data/orcs';
 import { EventBus } from './events';
 import { Orc, Projectile, SimState, Wolf } from './state';
 import { MYTHIC_FX, SET_FX } from '../data/lootTables';
-import { FX, bounce, damage, rootOrc, impact, lob, nearestOrc, rollFx, shoot, starfall, takenMult, unitHit, volley } from './combat';
+import { FX, bounce, damage, drawMult, rootOrc, impact, lob, nearestOrc, rollFx, shoot, starfall, takenMult, unitHit, volley } from './combat';
 import { barricadeHit, barricadeRegen } from './barricade';
 import { bossStep } from './boss';
 import { BOSS_WAVE, tierHp, tierLoot } from '../data/bosses';
@@ -25,7 +25,7 @@ export function spawnOrc(s: SimState, kind: OrcKind, y?: number, champ = false):
   o.kind = kind; o.x = W + 24; o.y = y ?? 50 + s.rng.next() * (H - 100);
   o.hp = hp; o.maxhp = hp; o.spd = T.speed * waveSpeedMult(w); o.r = T.radius; o.atk = hp * BARRICADE.orcAtkFrac;
   o.loot = waveLoot(w) * T.loot * F.loot * tierLoot(s.run.tier);
-  o.dead = false; o.burn = 0; o.bleed = 0; o.slow = 0; o.pin = 0; o.root = 0; o.burnT = 0; o.mark = 0; o.chill = 0; o.stun = 0; o.hitT = 0; o.wob = s.rng.next() * 6.28; o.swingT = s.rng.next(); o.champ = champ;
+  o.dead = false; o.burn = 0; o.bleed = 0; o.slow = 0; o.pin = 0; o.root = 0; o.chill = 0; o.stun = 0; o.hitT = 0; o.wob = s.rng.next() * 6.28; o.swingT = s.rng.next(); o.champ = champ;
   return true;
 }
 
@@ -56,9 +56,7 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
   s.orcs.forEach((o) => {
     if (o.dead || run.fallen) return;
     o.wob += dt * ORC_WOB;
-    // Heart of the Kiln counts how long an orc has burned (combat.mythicMult)
-    if (o.burn > 0) { o.burn -= dt; if (st.burnRamp) o.burnT += dt; o.hp -= st.dmg * SOURCES.burnFrac * st.burn * takenMult(s, o) * dt; if (o.hp <= 0) { damage(s, ev, o, 0); return; } }
-    if (o.mark > 0) o.mark -= dt;
+    if (o.burn > 0) { o.burn -= dt; o.hp -= st.dmg * SOURCES.burnFrac * st.burn * takenMult(s, o) * dt; if (o.hp <= 0) { damage(s, ev, o, 0); return; } }
     if (o.bleed > 0) o.bleed -= dt;
     if (o.slow > 0) o.slow -= dt;
     if (o.pin > 0) o.pin -= dt;
@@ -88,9 +86,9 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
   // archers
   const shooters: [number, number][] = [[ELF_X, H / 2], [ELF_X - 10, H / 2 - SOURCES.archerOffsetY], [ELF_X - 10, H / 2 + SOURCES.archerOffsetY]];
   // The elf: an arcing shot onto the aim circle, only while the player aims. The draw holds when ready; it never banks.
-  // Thunder's Memory: for a while after each storm the draw is faster
+  // Thunder's Memory, the First Wolf and Heartwood Splinter quicken the draw (combat.drawMult)
   if (run.thunder > 0) run.thunder = Math.max(0, run.thunder - dt);
-  const lobCd = st.lobCd * (st.stormStore && run.thunder > 0 ? MYTHIC_FX.thunderDraw : 1);
+  const lobCd = st.lobCd * drawMult(s);
   run.shotT[0] = Math.min(lobCd, (run.shotT[0] ?? 0) + dt);
   if (run.shotT[0] >= lobCd && inputs.aim && inputs.aim.x > BAR_X + BAR_W) {
     let { x, y } = inputs.aim;
@@ -228,7 +226,8 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
         // Pinning Bolts: every orc a bolt passes through is held still
         if (a.kind === 'bolt' && st.boltRoot > 0) rootOrc(o, st.boltRoot);
         if (a.kind === 'knife' && st.bleedAmp) o.bleed = SET_FX.bleedSecs;
-        if (a.kind === 'knife' && st.knifeReturn) o.mark = MYTHIC_FX.knifeMarkSecs * st.echo;
+        // The Last Knife: every knife that lands brings the elf's next arrow closer
+        if (a.kind === 'knife' && st.knifeReturn) run.shotT[0] = (run.shotT[0] ?? 0) + MYTHIC_FX.knifeDraw * st.echo;
         if (a.kind === 'bolt') a.target = o;
         if (a.pierce-- <= 0) spent = true;
       }

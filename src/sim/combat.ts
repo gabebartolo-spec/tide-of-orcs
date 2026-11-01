@@ -100,21 +100,19 @@ export function lob(s: SimState, sx: number, sy: number, tx: number, ty: number,
   }
 }
 
-/** The lob-feeding mythics (TB-128, BALANCE P-128): what the elf's arrows deal to this orc, × its base damage.
- *  Mythic Echo (`echo`) makes each one trigger sooner or last longer, never hit harder. */
-export function mythicMult(s: SimState, o: Orc): number {
+/** The draw-quickening mythics (TB-128 reach, BALANCE P-128): the elf's draw time × this (below 1 is faster).
+ *  Mythic Echo (`echo`) makes each one trigger sooner or last longer, never draw faster. */
+export function drawMult(s: SimState): number {
   const st = s.stats, e = st.echo, M = MYTHIC_FX;
   let m = 1;
-  // The Last Knife: knifed orcs are marked
-  if (st.knifeReturn && o.mark > 0) m *= M.knifeMarkMult;
-  // Heart of the Kiln: the longer an orc has burned, the harder it is hit
-  if (st.burnRamp) m *= 1 + Math.min(M.burnRampMax, o.burnT * M.burnRampPerSec * e);
-  // The First Wolf: stacks with time into the wave
-  if (st.petReturn) m *= 1 + M.wolfStack * Math.min(M.wolfMax, Math.floor(s.run.waveT * e / M.wolfEvery));
-  // Heartwood Splinter: the lower the wall, the harder the arrows (full at the floor)
+  // Thunder's Memory: for a while after each storm
+  if (st.stormStore && s.run.thunder > 0) m *= M.thunderDraw;
+  // The First Wolf: quicker with every few seconds of the wave
+  if (st.petReturn) m /= 1 + M.wolfDraw * Math.min(M.wolfMax, Math.floor(s.run.waveT * e / M.wolfEvery));
+  // Heartwood Splinter: the lower the wall, the quicker the draw (full at the floor)
   if (st.wallSplinter && st.barMax > 0) {
     const lost = Math.min(1, Math.max(0, (1 - s.run.barHp / st.barMax) / (1 - M.splinterFloor) * e));
-    m *= 1 + (M.splinterMaxMult - 1) * lost;
+    m /= 1 + (M.splinterDraw - 1) * lost;
   }
   return m;
 }
@@ -141,7 +139,9 @@ export function impact(s: SimState, ev: EventBus, p: { tx: number; ty: number; r
   const struck = new Set<Orc>();
   s.orcs.forEach((o) => {
     const d = (o.x - p.tx) ** 2 + (o.y - p.ty) ** 2;
-    if (o.dead || d > (p.r + o.r) ** 2) return;
+    // Heart of the Kiln: a burning orc is caught farther from the centre
+    const r = p.r * (st.burnRamp && o.burn > 0 ? MYTHIC_FX.kilnReach : 1);
+    if (o.dead || d > (r + o.r) ** 2) return;
     if (d < cd) { cd = d; core = o; }
     struck.add(o);
     const crit = s.rng.next() < st.crit;
@@ -150,7 +150,7 @@ export function impact(s: SimState, ev: EventBus, p: { tx: number; ty: number; r
     if (frost) o.chill = ARROWS.frost.secs;
     if (stun) stunOrc(o, st.stunSecs);
     if (st.stakes) rootOrc(o, MYTHIC_FX.oakRootSecs * st.echo);
-    damage(s, ev, o, p.dmg * mythicMult(s, o) * (crit ? st.critMult : moon ? SET_FX.moonCritMult : 1));
+    damage(s, ev, o, p.dmg * (crit ? st.critMult : moon ? SET_FX.moonCritMult : 1));
   });
   ev.push({ t: 'impact', x: p.tx, y: p.ty, r: p.r });
   if (fire && st.cinder) addZone(s, 'cinder', p.tx, p.ty, p.r, SET_FX.cinderSecs);

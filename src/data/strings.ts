@@ -64,13 +64,13 @@ export const STR = {
   itemLevel: (n: number) => `item level ${n}`, mythicLine: (power: string) => `Power: ${power}`,
   /** Mythic powers as the player reads them (TB-100); numbers match MYTHIC_FX. */
   mythicPower: {
-    'last-knife': 'Orcs your knives hit are marked for 3 s; your arrows deal double damage to marked orcs.',
-    'heart-of-kiln': 'Your arrows deal 10% more damage for every second the orc has burned, up to +150%.',
+    'last-knife': 'Every knife that lands brings your next arrow a quarter of a second closer.',
+    'heart-of-kiln': 'Your circle catches burning orcs twice as far out.',
     'thunders-memory': 'Each storm charges the bow: for 15 s after a storm strikes, you draw two and a half times as fast.',
     oakspine: 'Your strike circle is 50% wider; orcs it hits are rooted for 0.5 s.',
     'pale-moon': 'With the Moonbow, the draw is twice as fast, but each moon shot costs 2% wall health (never below 10%).',
-    'first-wolf': 'The pack hunts with you: your arrows deal 25% more damage for every 15 s of the wave, up to 4 times.',
-    'heartwood-splinter': 'The wall feeds the bow: your arrows deal up to triple damage as the wall loses health (×1 full, ×3 at 10%).',
+    'first-wolf': 'The pack hunts with you: you draw 50% faster for every 3 s of the wave, up to 4 times.',
+    'heartwood-splinter': 'The wall feeds the bow: you draw up to four times as fast as the wall loses health (full speed at half wall).',
     'starfall-cloak': 'Half your arrows fall as stars: five times the damage in a circle half again as wide. Item Find +15%.',
   } as Record<string, string>,
   thunder: 'Thunder!',

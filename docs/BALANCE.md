@@ -614,6 +614,17 @@ Applied (director 2 Nov, "Yes, both"): Starfall Cloak set B (half the arrows fal
 
 Finding: extra lob damage is worth nothing. ×5 damage for 20 of every 24 s adds 0 waves; the powers that work all reach more orcs (Oakspine and Starfall widen the circle, Thunder and Pale Moon speed the draw). The lob already kills what it lands on, so the wall falls to the orcs it never reaches. Last Knife, Kiln, Splinter and First Wolf multiply damage only, so no numbers can bring them to target. Also note `WAVE_LEN` is 24 s: First Wolf as built (`wolfEvery=15`) never passes one stack.
 
+Reach draft (2 Nov; director: "Yes, both"). Last Knife, Kiln, Splinter and First Wolf keep their triggers but give reach instead of damage: `combat.drawMult(s)` scales the draw (First Wolf by `run.waveT`, Splinter by wall health, with Thunder's window), a Last Knife hit advances the draw by `knifeDraw` s, Kiln catches burning orcs `kilnReach`× as far from the circle's centre. Built on `tb-128-reach-draft` with the strongest set below as the defaults; same replay trial (seeds 1 / 2).
+
+| Power | Set A | A worth | Set B | B worth | Set C | C worth |
+|---|---|---|---|---|---|---|
+| Heart of the Kiln | `kilnReach=1.5` | +2 / +2 | `kilnReach=2` | **+2 / +3** | | |
+| The Last Knife | `knifeDraw=0.1` | +2 / 0 | `knifeDraw=0.25` | **+2 / +2** | | |
+| The First Wolf | `wolfEvery=5, wolfDraw=0.1` | +1 / 0 | `wolfDraw=0.2` | 0 / 0 | `wolfEvery=3, wolfDraw=0.5` (×3 draw from 12 s) | 0 / +4 |
+| Heartwood Splinter | `splinterDraw=2` | 0 / +1 | `splinterDraw=3` | +1 / 0 | `splinterDraw=4, splinterFloor=0.5` (×4 at half wall) | +3 / +1 |
+
+Read: every reach version beats its damage version (Kiln 0/+1 → +2/+3, Knife 0/+1 → +2/+2, Splinter 0/0 → +3/+1, Wolf −1/0 → 0/+4). Kiln B is at target; Knife B is one wave short; Wolf C and Splinter C average +2 but split widely by seed, because both peak late (late in the wave, late in the wall's life) while the fall is decided by the crowd before that.
+
 ### P-108 · Loot pacing: rarer bosses and rarer top drops (2026-11-01, TB-108) · applied
 Director (1 Nov): make bosses rarer; "candidate C looks okay, just make it like 20% slower"; approved "Yes, apply P-108" (1 Nov). Applied (G), now in Current and the data:
 - `BOSS_WAVE.every` 10 → 50 (bosses.ts). A boss wave unlocks at wave 50, 100 …; runs fall near wave 85, so this is one boss per late run, about 1.9 per hour of play.
