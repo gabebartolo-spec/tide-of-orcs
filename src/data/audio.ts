@@ -6,7 +6,8 @@ export type Cue =
   | 'wallThud' | 'wallCreak' | 'wallFall' | 'rallyHorn' | 'replant' | 'click' | 'bought' | 'denied'
   | 'fireArrow' | 'bounce' | 'shock' | 'stun' | 'frost' | 'shatter' | 'starfall'
   | 'fireballCast' | 'fireballHit'
-  | 'lootDrop' | 'lootRare' | 'lootEpic' | 'lootLegendary' | 'lootMythic' | 'equip' | 'salvage' | 'reroll' | 'setRise';
+  | 'lootDrop' | 'lootRare' | 'lootEpic' | 'lootLegendary' | 'lootMythic' | 'equip' | 'salvage' | 'reroll' | 'setRise'
+  | 'warDrum';
 
 export const AMBIENT = 'ambient';
 
@@ -72,6 +73,8 @@ export const CUES: Record<Cue, { gain: number; gap: number; duck?: boolean }> = 
   salvage: { gain: 0.55, gap: 0.05 },
   reroll: { gain: 0.55, gap: 0.05 },
   setRise: { gain: 0.8, gap: 0.5, duck: true },
+  // Orc war drum (ElevenLabs); no sim event plays it yet, the drummer unit is not in the sim
+  warDrum: { gain: 1, gap: 0.4 },
 };
 
 /** Drop chime per rarity; a common one is the quiet tick. */
