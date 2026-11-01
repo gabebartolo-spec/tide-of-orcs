@@ -10,7 +10,7 @@ Remove-Item Env:DIRECT, Env:FR -ErrorAction SilentlyContinue
 $env:QUIVER=1; $env:INPLACE=1; $env:ORTHO=1.4; $env:GRIPSIDE="Left"; $env:BOWALIGN=-1
 $env:RMATCH="LeftShoulder,LeftArm,LeftForeArm,RightShoulder,RightArm,RightForeArm"
 $env:ARROWPATH=1; $env:ARROWDBG=1; $env:RESTUP=0.03; $env:ARROWL=0.5; $env:ARROWF=6
-$env:QFLOAT="0,0,0"; $env:QLEN=0.32; $env:QBOB=0.015
+$env:QFLOAT="0,0,0"; $env:QLEN=0.38; $env:QBOB=0.04
 $env:WOFFS="mixamorig:RightArm:0,1,0,-35;mixamorig:RightForeArm:0,1,0,-25;mixamorig:LeftArm:0,0,1,-25"
 $views = @("g0"); if($side){ $views += 90 }
 foreach($cr in $views){  # g0 = the field camera (GAMECAM=20); 90 = side check view
