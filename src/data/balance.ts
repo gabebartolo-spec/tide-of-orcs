@@ -98,7 +98,7 @@ export const waveLoot = (w: number): number => 2 * Math.pow(1.13, w - 1);
 export const waveInterval = (w: number): number => Math.max(0.3, 2.0 * Math.pow(0.93, w - 1));
 export const waveSpeedMult = (w: number): number => 1 + 0.008 * w;
 
-export const COST_WAVE = { from: 10, rate: 1.25 } as const;
+export const COST_WAVE = { from: 10, rate: 1.1 } as const;
 /** Multiplier on every node price, by the wave at purchase (P-001). */
 export const costWave = (w: number): number => Math.pow(COST_WAVE.rate, Math.max(0, w - COST_WAVE.from));
 

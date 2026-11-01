@@ -88,7 +88,7 @@ cap = 2 + ranks        mend = 0.03 × mend × maxhp per second
 
 ### Economy
 - Provoke is per kind now (TB-080, see Fury/Swarm above). Blood Banners retired.
-- Node price at purchase: `cost = round(base × growth^rank × 1.25^max(0, w − 10))` (wave-scaled since P-001; ×1 to wave 10, ×28.4 at 25, ×7,523 at 50).
+- Node price at purchase: `cost = round(base × growth^rank × 1.1^max(0, w − 10))` (wave-scaled since P-001; ×1 to wave 10, ×4.18 at 25, ×45.3 at 50; rate 1.25 until P-142).
 - `starMult = 1.08^glean` (Gleaning sits under War Drums, 5 ranks; P-142). Heartwood gives no passive bonus (P-142): it is only spent on the Heartwood tree.
 
 ### Prestige
@@ -156,7 +156,18 @@ Evidence, `npm run balance -- --minutes N --seed S --quiet`, greedy bot:
 
 Findings: the snowball is gone; the bot's runs now plateau at wave 16–17, below the first boss at 25, so it never earns boss Heartwood and climbs only through the 1 HW per fall. A bare first run already falls at wave 3–5 in 1–2 min, so harsher early numbers only add more two-wave runs. The plateau sits where `costWave` (×1.25 per wave from wave 10) outruns income.
 
-Not applied, director to choose: (a) the early numbers 7/300/12; (b) the first boss earlier than 25; (c) a gentler `costWave` to lift the plateau toward the first boss.
+Director chose (c), a gentler `costWave` (2026-11-01). Sweep of `COST_WAVE.rate` (`--tune COST_WAVE.rate=r`), 180 min, seeds 1–2; loot grows ×1.13 per wave, so a rate above 1.13 makes each wave's prices outrun income:
+
+| rate | Best wave | Plateau | Heartwood | Bosses | First fall past wave 25 (play min) |
+|---|---|---|---|---|---|
+| 1.25 (was) | 17 (90 min) | 16–17 | 20 (90 min) | 0 | never |
+| 1.20 | 18–19 (90 min) | 18 | 19–20 (90 min) | 0 | — |
+| 1.13 | 27–28 | 27 | 45–46 | 6 | 117–123 |
+| **1.10 (applied)** | 30–32 | 27, then climbing | 47–51 | 7–8 | 99–106 |
+| 1.05 | 36 | 34–36 | 49–51 | 8–9 | 80–86 |
+| 1.00 (no wave scaling) | 37 | 36–37 (the ×1.30 HP ramp) | 50–51 | 9 | 66–70 |
+
+Applied 1.10: prices still rise slightly faster than loot, so the tree, not income alone, decides the reach; the first boss arrives after about 100 min of play instead of never.
 
 ### P-002 · Arrow arsenal numbers (TB-089, 2026-10-31, from the director's mechanics; not yet simmed)
 All in `ARROWS` (`src/data/balance.ts`). Rebound: jump 120, falloff 0.6 per bounce, bolt speed 420, hops 1 + rank. Shock: 3 targets, 0.3 × lob dmg, jump 90. Thunderclap: 0.5 s. Frost: 3 s, slow 0.2 + 0.05 × (rank − 1). Shatter: radius 50, 1.0 × dmg × 1.4^(rank − 1). Starfall: every 10th lob, 8 arrows, r 26, 0.6 s fall, 0.08 s stagger, lob damage each; each aims where its orc will be on landing, held no closer than the wall's face. Costs in SKILL-TREE.md. Sim run pending.
@@ -269,7 +280,7 @@ Harness: greedy, 40 min, seeds 1–10, ramp 15/1.30 on `waveHP` in every row exc
 ```
 baseDmg = 9                                                   (was 6)
 hp(w)   = 10 × 1.17^(min(w,15) − 1) × 1.30^max(0, w − 15)     (ramp 15/1.30, already picked)
-cost    = round(base × growth^rank × 1.25^max(0, w − 10))     (new: wave-scaled node cost, uncapped)
+cost    = round(base × growth^rank × 1.1^max(0, w − 10))     (new: wave-scaled node cost, uncapped)
 ```
 Result on seeds 1–10: first fall 12–18 (target 12–18) and run 2 at 25–29 (target ≤ 30). The third run falls at 40–43. Costs reach ×9.3 at wave 20 and ×87 at wave 30. Waves 1–10 cost the same as today. Before applying: the UI must show the live cost (it already calls `costOf`); `vanBaseHp` follows the ramp; add pinned tests for the cost multiplier at waves 1, 10, 25 and 50.
 

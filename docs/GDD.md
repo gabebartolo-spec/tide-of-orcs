@@ -138,7 +138,7 @@ All companion damage scales with Kinship (×1.2/rank). Kinship also scales vangu
 |---|---|---|---|
 | Aiming | Straight volleys at the pointer, auto-target when not aiming | Arcing lob into a strike circle every 2.5 s; no fire without aim; Wide Volley node; Split Shot, Longshaft, Moonbow reshaped | 16e3060 (TB-079) |
 | Offline progress | Offline starlight on return; Dreaming Roots node | None; Dreaming Roots removed | ab74ac8 (TB-023) |
-| P-001 numbers | Base damage 6, `waveHP` 1.17/wave, flat node cost | Base damage 9, `waveHP` ramp ×1.30 past wave 15, node cost ×1.25 per wave past 10 | 2a6ec16 (TB-025) |
+| P-001 numbers | Base damage 6, `waveHP` 1.17/wave, flat node cost | Base damage 9, `waveHP` ramp ×1.30 past wave 15, node cost ×1.25 per wave past 10 (×1.1 since P-142) | 2a6ec16 (TB-025), TB-142 |
 | Enemy mix | Random type rolls (runners, brutes) by wave | Grunts only until Grove nodes summon runners, brutes and the new Elite (Blackguard); per-kind Fury and Swarm; wall takes ×10; Heartwood floor 1 | 4ed98fb (TB-080) |
 | Warboss | Random 8% roll on every 10th wave; Warboss Bounty node | Scripted 60 s boss waves the player summons every 10 waves; Bounty and Warboss nodes retired | e3b4536 (TB-081) |
 | Prestige meta | Heartwood passive only | Heartwood tree (5 nodes); no passive since P-142 | dd09286, 3cc1563 (TB-053, TB-055), TB-142 |

@@ -25,8 +25,8 @@ describe('economy', () => {
   it.each([
     [1, 1],
     [10, 1],
-    [25, 28.42],
-    [50, 7523.16],
+    [25, 4.18],
+    [50, 45.26],
   ])('node cost wave multiplier at wave %i is %f', (w, m) => {
     expect(costWave(w)).toBeCloseTo(m, 2);
   });

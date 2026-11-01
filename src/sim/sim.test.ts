@@ -139,7 +139,7 @@ describe('tree', () => {
     const s = createState(1);
     expect(costOf(s, NODE.sharp)).toBe(12);
     s.run.wave = 12;
-    expect(costOf(s, NODE.sharp)).toBe(19); // 12 × 1.25² = 18.75
+    expect(costOf(s, NODE.sharp)).toBe(15); // 12 × 1.1² = 14.52
   });
   it('growing the wall heals the new timber', () => {
     const s = createState(1); const ev = new EventBus();
