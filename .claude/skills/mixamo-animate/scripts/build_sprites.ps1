@@ -1,5 +1,5 @@
 # Render every approved clip from the field camera (GAMECAM 20, CAMROT 0) into tide-assets\sprites\frames\<key>_N.png,
-# then pack_sprites.py builds public/sprites/sheet.webp + atlas.json. Each entry repeats its approved recipe's env exactly;
+# then pack_sprites.py builds public/sprites/sheet_orcs.webp + sheet_elf.webp + atlas.json. Each entry repeats its approved recipe's env exactly;
 # only the camera, ORTHO (one per actor so walk and attack share a pixel scale), RES and frames differ.
 param([string[]]$Only = @())
 $s = $PSScriptRoot; $bl = "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe"; $a = "C:\Users\DANTE\Documents\tide-assets"; $mx = "$a\mixamo"
