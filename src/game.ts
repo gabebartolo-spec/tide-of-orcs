@@ -83,7 +83,7 @@ export class GameController {
   canPullBack(): boolean { return canPullBack(this.state); }
   pullBack(): boolean { return pullBack(this.state, this.events); }
   canReplant(): boolean { return canReplant(this.state); }
-  replant(): number { const rec = runRecord(this.state, gain(this.state)); const hw = replant(this.state, this.events); appendTelemetry({ ...rec, heartwoodGained: hw, heartwoodTotal: this.state.meta.heartwood }); this.save(); return hw; }
+  replant(): number { const rec = runRecord(this.state, gain()); const hw = replant(this.state, this.events); appendTelemetry({ ...rec, heartwoodGained: hw, heartwoodTotal: this.state.meta.heartwood }); this.save(); return hw; }
   /** Finished-run records as an export file (TB-070). */
   telemetry(): { json: string; runs: number; loot: number } { this.save(); const runs = readTelemetry(), loot = readLoot(); return { json: telemetryJson(runs, undefined, loot), runs: runs.length, loot: loot.length }; }
 

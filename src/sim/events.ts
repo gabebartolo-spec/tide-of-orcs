@@ -28,7 +28,7 @@ export type SimEvent =
   | { t: 'wave'; wave: number }
   | { t: 'bossReady' }
   | { t: 'bossStart' }
-  | { t: 'bossEnd'; cleared: boolean; loot: number }
+  | { t: 'bossEnd'; cleared: boolean; loot: number; hw: number }
   | { t: 'storm'; pts: [number, number][] }
   /** Arrow enchantments (TB-089). `fireStrike`: a lob landed with Fire Arrows. `bounceHit`: a Rebound bolt struck. `shock`: lightning from (x, y) to each of pts. `stun`, `chill`: a strike stunned or chilled orcs. `shatter`: a chilled orc died and burst. `starfall`: the rain began. */
   | { t: 'fireStrike'; x: number; y: number; r: number }

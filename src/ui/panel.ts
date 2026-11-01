@@ -32,7 +32,7 @@ export class Panel {
     $('btn-save').textContent = STR.saveNow;
     $('k-star').textContent = STR.starlight; $('k-wave').textContent = STR.wave; $('k-kills').textContent = STR.slain; $('k-heart').textContent = STR.heartwood;
     $('pr-gain-k').textContent = STR.replantGainK; $('pr-btn').textContent = STR.replantBtn;
-    $('pr-each').innerHTML = STR.replantEach(Math.round(PRESTIGE.heartPerHW * 100)); $('pr-reset').textContent = STR.replantReset; $('pr-kept').textContent = STR.replantKept; $('btn-reset').textContent = STR.wipe; $('autosave').textContent = STR.autosave;
+    $('pr-each').innerHTML = STR.replantEach(PRESTIGE.fallGain); $('pr-reset').textContent = STR.replantReset; $('pr-kept').textContent = STR.replantKept; $('btn-reset').textContent = STR.wipe; $('autosave').textContent = STR.autosave;
     $('fallen-title').textContent = STR.fallenTitle; $('fallen-hw-k').textContent = STR.fallenHW; $('fallen-btn').textContent = STR.fallenToCamp;
     $('camp-title').textContent = STR.campTitle; $('camp-go').textContent = STR.campGo; $('camp-close').textContent = STR.campClose; $('btn-settings').textContent = STR.tabSettings;
     $('dep-spear').querySelector('.n')!.textContent = STR.rallySpear; $('dep-blade').querySelector('.n')!.textContent = STR.rallyBlade;
@@ -87,7 +87,7 @@ export class Panel {
     $('hw-body').textContent = STR.hwBody(hwAvailable(s.meta));
     if (!$('pane-satchel').hidden) this.satchel.update();
     for (const b of $('hw-tree').querySelectorAll<HTMLButtonElement>('button[data-hw]')) b.disabled = !canBuyHw(s.meta, b.dataset.hw as HwId);
-    const g = gain(s), ok = s.run.wave >= PRESTIGE.voluntaryWave && g > 0 && !s.run.fallen;
+    const g = gain(), ok = s.run.wave >= PRESTIGE.voluntaryWave && g > 0 && !s.run.fallen;
     $('btn-pullback').hidden = !ok;
     $('pr-gain').textContent = '+' + g; ($('pr-btn') as HTMLButtonElement).disabled = !ok;
     $('pr-req').textContent = ok ? STR.replantReady(s.meta.bestWave) : STR.replantFrom(PRESTIGE.voluntaryWave);
@@ -117,7 +117,7 @@ export class Panel {
       else if (e.t === 'kill' && e.kind === 'boss') this.toast(STR.bossFalls);
       else if (e.t === 'bossReady') this.toast(STR.bossReady);
       else if (e.t === 'bossStart') this.toast(STR.bossStart);
-      else if (e.t === 'bossEnd') this.toast(e.cleared ? STR.bossCleared(fmt(e.loot)) : STR.bossFailed);
+      else if (e.t === 'bossEnd') this.toast(e.cleared ? STR.bossCleared(fmt(e.loot), e.hw) : STR.bossFailed);
       else if (e.t === 'bought' && e.firstRank && e.id !== 'sharp') this.toast(STR.joins(NODE[e.id as keyof typeof NODE].name));
       else if (e.t === 'vanguardRallied') this.toast(STR.takesField(VAN_NAME[e.type as VanType]));
       else if (e.t === 'vanguardFell') this.toast(STR.vanFalls(VAN_NAME[e.type as VanType]));
@@ -216,7 +216,7 @@ export class Panel {
     // Items by rarity, rarest first, then the best drop in its rarity colour (TB-103)
     const counts = RARITIES.filter((k) => r.found?.[k]).reverse().map((k) => `${r.found![k]} ${STR.rarityName[k] ?? k}`).join(', ');
     $('fallen-loot').innerHTML = r.best ? STR.fallenLoot(counts, `<span class="best r-${r.best.rarity}">${itemName(r.best)}</span>`) : STR.fallenNoLoot;
-    $('fallen-hw').textContent = '+' + gain(this.game.state); $('fallen').hidden = false;
+    $('fallen-hw').textContent = '+' + gain(); $('fallen').hidden = false;
   }
   private doReplant(): void {
     const hw = this.game.replant(); $('fallen').hidden = true; this.tree.selected = 'sharp'; this.renderDetail(); this.renderHw(); this.setMode('run');

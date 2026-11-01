@@ -2,7 +2,7 @@ import { NodeId } from '../data/skillTree';
 import { HW_FX, HwLevels } from '../data/heartwood';
 import { SATCHEL, SPOILS_FX } from '../data/lootTables';
 import { FOE_FX, OrcKind } from '../data/orcs';
-import { ARROWS, BARRICADE, ELF_FX, LOB, NODE_FX, PLAYER, SHOT_FX, SOURCES, UNIT_FX, VANGUARD, heartMult } from '../data/balance';
+import { ARROWS, BARRICADE, ELF_FX, LOB, NODE_FX, PLAYER, SHOT_FX, SOURCES, UNIT_FX, VANGUARD } from '../data/balance';
 
 export type Levels = Partial<Record<NodeId, number>>;
 
@@ -68,10 +68,9 @@ const FOE_NODES: Partial<Record<OrcKind, [NodeId | null, NodeId, NodeId]>> = {
   elite: ['elites', 'elitefury', 'eliteswarm'],
 };
 
-export function deriveStats(lv: Levels, heartwood: number, hw: HwLevels = {}): Stats {
+export function deriveStats(lv: Levels, hw: HwLevels = {}): Stats {
   const L = (id: NodeId): number => lv[id] ?? 0;
-  const hm = heartMult(heartwood);
-  const kin = Math.pow(NODE_FX.kinship, L('bond')) * hm;
+  const kin = Math.pow(NODE_FX.kinship, L('bond'));
   const muster = L('muster') > 0;
   // a shot type's chance per shot: 0 until owned, then chance0 + chancePerRank per Quiver rank
   const chance = (on: NodeId, q: NodeId): number => (L(on) ? Math.min(1, SHOT_FX.chance0 + SHOT_FX.chancePerRank * L(q)) : 0);
@@ -80,7 +79,7 @@ export function deriveStats(lv: Levels, heartwood: number, hw: HwLevels = {}): S
     crit: UNIT_FX.critPerRank * L(c), critMult: UNIT_FX.critMult0 + UNIT_FX.critxPerRank * L(x), spd: m ? Math.pow(UNIT_FX.spd, L(m)) : 1,
   }])) as Record<Unit, UnitFx>;
   return {
-    dmg: PLAYER.baseDmg * Math.pow(NODE_FX.sharpDmg, L('sharp')) * hm,
+    dmg: PLAYER.baseDmg * Math.pow(NODE_FX.sharpDmg, L('sharp')),
     fireRate: PLAYER.baseFireRate * Math.pow(NODE_FX.drawRate, L('draw')),
     lobCd: LOB.cd / Math.pow(NODE_FX.drawRate, L('draw')),
     radius: LOB.radius * Math.pow(NODE_FX.wideRadius, L('wide')),
@@ -108,7 +107,7 @@ export function deriveStats(lv: Levels, heartwood: number, hw: HwLevels = {}): S
     critMult: PLAYER.critMult + ELF_FX.deadlyPerRank * L('deadly'),
     knifeExtra: SHOT_FX.knivesPerRank * L('knifefan'), boltRoot: SHOT_FX.boltRootSecs * L('boltpin'),
     units,
-    starMult: Math.pow(NODE_FX.gleanLoot, L('glean')) * hm,
+    starMult: Math.pow(NODE_FX.gleanLoot, L('glean')),
     foes: { boss: { on: false, hp: 1, loot: 1, spawn: 1 }, ...Object.fromEntries(Object.entries(FOE_NODES).map(([k, [on, fury, swarm]]) => [k, {
       on: on === null || L(on) > 0,
       hp: Math.pow(FOE_FX.hp, L(fury)), loot: Math.pow(FOE_FX.loot, L(fury)), spawn: Math.pow(FOE_FX.spawn, L(swarm)),
@@ -121,13 +120,13 @@ export function deriveStats(lv: Levels, heartwood: number, hw: HwLevels = {}): S
     knives: L('knives') ? { rate: Math.pow(NODE_FX.knifeRate, L('knifespd')) / SOURCES.knives.cd, dmg: SOURCES.knives.base * Math.pow(SHOT_FX.dmg, L('knifedmg')) * kin } : null,
     storm: L('storm') > 0,
     ballista: L('ballista') ? SOURCES.ballista.base * Math.pow(NODE_FX.boltDmg, L('bolt')) * kin : 0,
-    barMax: BARRICADE.baseHp * (1 + HW_FX.timberPerRank * (hw.hw_timber ?? 0)) * Math.pow(BARRICADE.timberMult, L('timber')) * hm,
+    barMax: BARRICADE.baseHp * (1 + HW_FX.timberPerRank * (hw.hw_timber ?? 0)) * Math.pow(BARRICADE.timberMult, L('timber')),
     barRegen: BARRICADE.regenPerRank * L('repair'),
     spikes: BARRICADE.spikesPerRank * L('spikes'),
     bulwark: L('bulwark') > 0,
     muster,
     vanCap: muster ? VANGUARD.baseCap + L('ranks') : 0,
-    vanHp: Math.pow(VANGUARD.hpPerShield, L('shield')) * hm,
+    vanHp: Math.pow(VANGUARD.hpPerShield, L('shield')),
     vanDmg: kin,
     vanMend: VANGUARD.mendPerRank * L('mend'),
     champion: L('champion') > 0,

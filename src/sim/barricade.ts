@@ -28,7 +28,7 @@ export function barricadeHit(s: SimState, ev: EventBus, amount: number, y: numbe
   }
   run.barHp = 0; run.fallen = true;
   s.meta.bestWave = Math.max(s.meta.bestWave, run.wave);
-  ev.push({ t: 'barricadeFell', wave: run.wave, kills: run.kills, runTime: run.runTime, heartwood: gain(s) });
+  ev.push({ t: 'barricadeFell', wave: run.wave, kills: run.kills, runTime: run.runTime, heartwood: gain() });
 }
 
 export function barricadeRegen(s: SimState, dt: number): void {

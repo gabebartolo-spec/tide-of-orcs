@@ -13,7 +13,7 @@ Two sections. `## Current` is what ships and is human-owned. `## Proposed` is wh
 hp(w)       = 10 × 1.17^(min(w,15)−1) × 1.30^max(0, w−15)   ramp from wave 15 (P-001)
 loot(w)     = 2  × 1.13^(w−1)
 interval(w) = max(0.3, 2.0 × 0.93^(w−1))   seconds between grunt spawns; kind k every interval × every_k / 1.2^swarm_k; paused during a boss wave
-boss wave: unlocks every 50 waves, 60 s script, clear bonus = 40 × waveLoot(w) × starMult × (1 + 0.5 × hw_boss rank)
+boss wave: unlocks every 25 waves, 60 s script, clear bonus = 40 × waveLoot(w) × starMult × (1 + 0.5 × hw_boss rank) starlight and bossHw(w) = 3 × floor(w / 25) Heartwood (P-142)
 speed       = base × (1 + 0.008 w)
 atk         = 0.025 × maxhp                  per swing, one swing per second, vs vanguard
 wall hit    = min(10 × atk, 0.25 × barMax)    per swing vs the barricade (TB-080: bare run falls at wave 3–4, ~90 s; cap P-125, TB-125)
@@ -55,19 +55,19 @@ Rangers and Wardens keep straight volleys at `fireRate = 1.2 × 1.15^draw` per s
 | `SOURCES.knives.speed`, `ballista.speed` | 640, 760 px/s | balance.ts |
 | `VANGUARD.walkSpeed`, `engageRange` | 60 px/s; orcs within r + 18 px engage a vanguard | balance.ts |
 | `ORC_TYPES` | hp/speed/loot/radius/spawn multiples per kind (GDD §4) | orcs.ts |
-| `BOSS_WAVE`, `BOSS_SCRIPT` | every 50 waves, 60 s, clear loot 40 × waveLoot; 8 mini-waves, 28 orcs | bosses.ts |
+| `BOSS_WAVE`, `BOSS_SCRIPT` | every 25 waves, 60 s, clear loot 40 × waveLoot, clear Heartwood 3 per 25 waves (`hwPerTier`); 8 mini-waves, 28 orcs | bosses.ts |
 | `HW_FX` | Early Dawn +2 waves/rank, Stout Timber +0.25/rank, Warlords +0.5/rank | heartwood.ts |
 | `SKY` (render only) | 600 s day cycle, dusk alpha 0.85, two hill bands, lamp radius 150 | presentation.ts |
 | `AUDIO`, `CUES` (audio only) | gains, ducking, per-cue throttles | audio.ts |
 
 ### Barricade
 ```
-barMax   = 400 × (1 + 0.25 × hw_timber) × 1.25^timber × heart
+barMax   = 400 × (1 + 0.25 × hw_timber) × 1.25^timber
 regen    = 0.01 × repair × barMax per second
 spikes   = 0.2 × spikes × dmg per second to each orc hacking the wall
 Deep Roots: once per run, regrow to 0.5 × barMax instead of falling
 ```
-| timber | barMax (heart 0) |
+| timber | barMax |
 |---|---|
 | 0 | 400 |
 | 3 | 781 |
@@ -76,8 +76,8 @@ Deep Roots: once per run, regrow to 0.5 × barMax instead of falling
 
 ### Vanguard
 ```
-cost(spear, w) = 6  × loot(w)     hp = 5 × hp(w) × 1.3^shield × heart   dmg = 1.6 × dmg × 1.3^drill × kin / 0.8 s   reach 28
-cost(blade, w) = 18 × loot(w)     hp = 4 × hp(w) × 1.3^shield × heart   dmg = 1.4 × dmg × 1.3^drill × kin / 0.45 s  reach 34, cleave
+cost(spear, w) = 6  × loot(w)     hp = 5 × hp(w) × 1.3^shield   dmg = 1.6 × dmg × 1.3^drill × kin / 0.8 s   reach 28
+cost(blade, w) = 18 × loot(w)     hp = 4 × hp(w) × 1.3^shield   dmg = 1.4 × dmg × 1.3^drill × kin / 0.45 s  reach 34, cleave
 cap = 2 + ranks        mend = 0.03 × mend × maxhp per second
 ```
 | w | spear cost | spear hp | blade cost |
@@ -88,11 +88,11 @@ cap = 2 + ranks        mend = 0.03 × mend × maxhp per second
 
 ### Economy
 - Provoke is per kind now (TB-080, see Fury/Swarm above). Blood Banners retired.
-- Node price at purchase: `cost = round(base × growth^rank × 1.25^max(0, w − 10))` (wave-scaled since P-001; ×1 to wave 10, ×28.4 at 25, ×7,523 at 50).
-- `starMult = 1.15^glean × heart`. Heartwood: `heart = 1 + 0.12 × HW`, applied to damage, starlight, barricade HP and vanguard HP.
+- Node price at purchase: `cost = round(base × growth^rank × 1.1^max(0, w − 10))` (wave-scaled since P-001; ×1 to wave 10, ×4.18 at 25, ×45.3 at 50; rate 1.25 until P-142).
+- `starMult = 1.08^glean` (Gleaning sits under War Drums, 5 ranks; P-142). Heartwood gives no passive bonus (P-142): it is only spent on the Heartwood tree.
 
 ### Prestige
-- Forced on barricade fall; voluntary from wave 12. `HW = max(1, floor((w − 4) × 0.75) + floor(runKills / 400))`. The floor of 1 keeps rule 1 (a fall always pays out) now that runs fall at wave 3–4.
+- Forced on barricade fall; voluntary from wave 12. A fall or voluntary replant pays a flat `PRESTIGE.fallGain` = 1 HW (rule 1). All other Heartwood drops from cleared boss waves: `bossHw(w) = 3 × max(1, floor(w / 25))`, halved (min 1) once Heartwood Splinter has stood the wall again (P-142).
 
 ### Pacing targets (what the sim must hit)
 Status measured 31 Oct 2026 at 8791ac2, seed 1, 25 min, player model `crowdAim` (except "no aim"). Greedy falls: waves 5, 5, 7, 5, 24 (minutes 1.6, 3.3, 5.8, 7.6, 16.9). Nobuy falls: wave 4 at 1.5 min, then waves 5–6 every ~2 min (13 falls). No aim at all: falls at wave 2–3 every ~0.8 min.
@@ -109,7 +109,7 @@ Status measured 31 Oct 2026 at 8791ac2, seed 1, 25 min, player model `crowdAim` 
 | Tree fully bought in a run | never | met: 117 of 156 buyable ranks at most (greedy run 5) |
 
 ## Heartwood tree (M3, built TB-053; shown to the player as Grudges, TB-112)
-Bought with Heartwood, never reset. Costs in HW. Spending does not lower the passive `heart` bonus: `heart` counts all Heartwood earned, and the tree spends from `available = earned − spent`. The header shows `available / earned` once anything is spent. Skip the Boring Bit's skipped boss waves are not owed (`bossDone` starts at `floor(startWave / BOSS_WAVE.every)`). Standby Lad lads are placed free, ignoring Muster and the line cap.
+Bought with Heartwood, never reset. Costs in HW. The tree spends from `available = earned − spent`. The header shows `available / earned` once anything is spent. Skip the Boring Bit's skipped boss waves are not owed (`bossDone` starts at `floor(startWave / BOSS_WAVE.every)`). Standby Lad lads are placed free, ignoring Muster and the line cap.
 
 | id | Name | Max | Cost | Effect |
 |---|---|---|---|---|
@@ -139,6 +139,35 @@ Mythic flags (TB-128): `--mythic <id>` wears that mythic from the start and ends
 Report columns per minute: wave, starlight, kills/min, kills, wall %, vanguard count, nodes owned, HW, falls. Summary line gives the first fall wave, every fall wave in order (`Falls:`), replants, Heartwood, best wave. (Before TB-084 the "First fall" field printed the last fall.) Writes `sim/out/<policy>-<date>.md` unless `--quiet`. CI runs 30 minutes of greedy as a smoke test.
 
 ## Proposed
+
+### P-142 · Tree-gated progress: Heartwood from bosses, no passive, Gleaning deeper (2026-11-01, TB-142)
+Director: early game too easy, first runs too long, Gleaning a no-brainer that snowballs, Heartwood too easy. Chosen and applied (now in Current): a fall pays a flat 1 HW; bosses pay the rest (`bossHw = 3 × floor(w / 25)`, 3 at wave 25, 6 at 50; halved after Heartwood Splinter); boss waves every 25; no passive `heart` bonus; Gleaning moves under War Drums (root → Call the Horde → War Drums → Gleaning), 5 ranks, base 600, growth 2.2, +8% per rank.
+
+Evidence, `npm run balance -- --minutes N --seed S --quiet`, greedy bot:
+
+| Build | Minutes | Falls (wave) | Heartwood | Best wave | Bosses |
+|---|---|---|---|---|---|
+| main (before) | 60, seeds 1–4 | 3,3,3,4,5,8,18,20,20,30,35 | 81–104 | 32–35 | — |
+| P-142 as applied | 60, seeds 1–4 | 3,3,3,3,3,6,7,13,14,16,16,16,17 … | 15–16 | 16–17 | 0 |
+| P-142 as applied | 180, seeds 1–2 | … plateau 16–17 for ~1.5 h, then 20–23 | 30–31 | 22–23 | 0 |
+| + boss every 15 (`--tune BOSS_WAVE.every=15`) | 90, seeds 1–2 | plateau 16–18 | 28–29 | 18 | 3–5 |
+| + boss every 10 | 90, seeds 1–2 | plateau 16–18 | 50–53 | 17–18 | 11 |
+| + early numbers 7/300/12 (dmg / wall HP / wallMult) | 60, seeds 1–4 | ~8 runs of wave 2–3 at 0.7 min, then plateau 16 | 19–21 | 16 | 0 |
+
+Findings: the snowball is gone; the bot's runs now plateau at wave 16–17, below the first boss at 25, so it never earns boss Heartwood and climbs only through the 1 HW per fall. A bare first run already falls at wave 3–5 in 1–2 min, so harsher early numbers only add more two-wave runs. The plateau sits where `costWave` (×1.25 per wave from wave 10) outruns income.
+
+Director chose (c), a gentler `costWave` (2026-11-01). Sweep of `COST_WAVE.rate` (`--tune COST_WAVE.rate=r`), 180 min, seeds 1–2; loot grows ×1.13 per wave, so a rate above 1.13 makes each wave's prices outrun income:
+
+| rate | Best wave | Plateau | Heartwood | Bosses | First fall past wave 25 (play min) |
+|---|---|---|---|---|---|
+| 1.25 (was) | 17 (90 min) | 16–17 | 20 (90 min) | 0 | never |
+| 1.20 | 18–19 (90 min) | 18 | 19–20 (90 min) | 0 | — |
+| 1.13 | 27–28 | 27 | 45–46 | 6 | 117–123 |
+| **1.10 (applied)** | 30–32 | 27, then climbing | 47–51 | 7–8 | 99–106 |
+| 1.05 | 36 | 34–36 | 49–51 | 8–9 | 80–86 |
+| 1.00 (no wave scaling) | 37 | 36–37 (the ×1.30 HP ramp) | 50–51 | 9 | 66–70 |
+
+Applied 1.10: prices still rise slightly faster than loot, so the tree, not income alone, decides the reach; the first boss arrives after about 100 min of play instead of never.
 
 ### P-002 · Arrow arsenal numbers (TB-089, 2026-10-31, from the director's mechanics; not yet simmed)
 All in `ARROWS` (`src/data/balance.ts`). Rebound: jump 120, falloff 0.6 per bounce, bolt speed 420, hops 1 + rank. Shock: 3 targets, 0.3 × lob dmg, jump 90. Thunderclap: 0.5 s. Frost: 3 s, slow 0.2 + 0.05 × (rank − 1). Shatter: radius 50, 1.0 × dmg × 1.4^(rank − 1). Starfall: every 10th lob, 8 arrows, r 26, 0.6 s fall, 0.08 s stagger, lob damage each; each aims where its orc will be on landing, held no closer than the wall's face. Costs in SKILL-TREE.md. Sim run pending.
@@ -251,7 +280,7 @@ Harness: greedy, 40 min, seeds 1–10, ramp 15/1.30 on `waveHP` in every row exc
 ```
 baseDmg = 9                                                   (was 6)
 hp(w)   = 10 × 1.17^(min(w,15) − 1) × 1.30^max(0, w − 15)     (ramp 15/1.30, already picked)
-cost    = round(base × growth^rank × 1.25^max(0, w − 10))     (new: wave-scaled node cost, uncapped)
+cost    = round(base × growth^rank × 1.1^max(0, w − 10))     (new: wave-scaled node cost, uncapped)
 ```
 Result on seeds 1–10: first fall 12–18 (target 12–18) and run 2 at 25–29 (target ≤ 30). The third run falls at 40–43. Costs reach ×9.3 at wave 20 and ×87 at wave 30. Waves 1–10 cost the same as today. Before applying: the UI must show the live cost (it already calls `costOf`); `vanBaseHp` follows the ramp; add pinned tests for the cost multiplier at waves 1, 10, 25 and 50.
 

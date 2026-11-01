@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { Item } from '../data/loot';
 import { MYTHICS, MYTHIC_FX } from '../data/lootTables';
-import { PRESTIGE, prestigeGain } from '../data/balance';
+import { PRESTIGE } from '../data/balance';
 import { EventBus } from './events';
 import { kill } from './combat';
 import { barricadeHit } from './barricade';
@@ -76,12 +76,12 @@ describe('mythic powers (TB-100)', () => {
     expect(o.maxhp - o.hp).toBeCloseTo(s.stats.wolf * (1 + MYTHIC_FX.wolfStack * MYTHIC_FX.wolfMax));
   });
 
-  it('Heartwood Splinter: the wall stands again once, and that run pays half (at least the minimum)', () => {
+  it('Heartwood Splinter: the wall stands again once; the fall still pays its flat 1', () => {
     const s = wearing('heartwood-splinter'), ev = new EventBus();
-    s.run.wave = 30; s.run.kills = 500; const full = prestigeGain(30, 500);
+    s.run.wave = 30; s.run.kills = 500;
     s.run.barHp = 1; barricadeHit(s, ev, 1e12, 300);
     expect(s.run.fallen).toBe(false); expect(s.run.barHp).toBeCloseTo(s.stats.barMax * MYTHIC_FX.splinterFrac);
-    expect(gain(s)).toBe(Math.max(PRESTIGE.minGain, Math.floor(full * MYTHIC_FX.splinterHw)));
+    expect(gain()).toBe(PRESTIGE.fallGain);
     s.run.barHp = 1; barricadeHit(s, ev, 1e12, 300); expect(s.run.fallen).toBe(true);
     replant(s, ev); expect(s.run.splinterUsed).toBe(false);
   });

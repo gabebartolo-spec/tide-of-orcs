@@ -19,7 +19,7 @@ tide-of-orcs/
     game.ts             GameController: the only caller into sim/ (see §UI)
     data/
       balance.ts        FIELD, PLAYER, LOB, BARRICADE, VANGUARD, SOURCES, NODE_FX, PRESTIGE, HP_RAMP, COST_WAVE; waveHP, waveLoot,
-                        waveInterval, waveSpeedMult, heartMult, prestigeGain, costWave, nodeCost, vanCost, vanBaseHp
+                        waveInterval, waveSpeedMult, costWave, nodeCost, vanCost, vanBaseHp
       skillTree.ts      NODES[] (mirrors SKILL-TREE.md), TREE_CANVAS, TREE_VIEW, BRANCH_COLOR
       orcs.ts           ORC_TYPES, ORC_KINDS, FOE_FX (Fury/Swarm)
       bosses.ts         BOSS_WAVE, BOSS_SCRIPT (TB-081)
