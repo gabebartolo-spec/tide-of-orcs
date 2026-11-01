@@ -85,7 +85,7 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | Id | Task | Area | Depends | Owner | Status |
 |---|---|---|---|---|---|
 | TB-070 | Local telemetry export (JSON of run stats) for testers | app | 052 | claude | done f31ce6b |
-| TB-071 | Balance pass #2 from tester data | balance | 070 | gabe | todo |
+| TB-071 | Balance pass #2 from tester data | balance | 070 | gabe | dropped (director 1 Nov: no testers; the sim answers balance) |
 | TB-072 | Perf verification on phone; profile and fix | perf | M4 | | dropped (mobile off roadmap, 31 Oct) |
 | TB-073 | Itch.io page copy, screenshots, HTML5 zip pipeline (pipeline: itch.yml; page: ITCH-PAGE.md, docs/itch/) | release | — | claude | done (PR 96, 972440b; page text and screenshots on itch 1 Nov, page kept Restricted) |
 | TB-074 | Electron wrapper spike | release | 073 | claude | done (0965ce2) |
@@ -130,7 +130,7 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-119 | Desktop: package the Electron shell into a Windows build for Steam (electron-builder, `npm run desktop:pack` → `release/win-unpacked/`) | release | 074 | claude | done (a0a0dc5) |
 | TB-120 | Desktop: app icon (the director's art, `desktop/icon.png` → exe .ico via electron-builder) | release | 119 | claude | done (2e28a11) |
 | TB-121 | Rename the game to Let's Hunt Some Orc! (director, 1 Nov): page title, header, strings title, desktop productName, doc headings; repo name and save keys unchanged | ui/docs | 115 | claude | done (e439fcf) |
-| TB-122 | Desktop: first SteamPipe depot upload of `release/win-unpacked/` (needs the Steam app id, i.e. the ~$100 Steam Direct fee: spend, needs the director's written yes) | release | 119 | | todo |
+| TB-122 | Desktop: first SteamPipe depot upload of `release/win-unpacked/` (needs the Steam app id, i.e. the ~$100 Steam Direct fee: spend, needs the director's written yes) | release | 119 | | dropped (director 1 Nov: commercial release is a maybe for later) |
 | TB-123 | Bug bash run 3 on main after sprites, fonts, rename, affix gate and desktop icon (`docs/QA-CHECKLIST.md`) | qa | 075 | claude | done (4fc3a48) |
 | TB-124 | Waves: grunts held at the wall can fill the 160-orc cap and starve the summoned kinds (runner, brute, blackguard) of slots; needs a design call (reserved slots per kind, or a grunt share of the cap) | sim | 123 | claude | won't fix: 3 headless 2 h runs (greedy, best wave 60–61) sat at the cap 0.4–0.7% of ticks and refused 0.7–1.1% of spawns, spread over the kinds by spawn rate (each kind has its own clock); director closed it 1 Nov |
 | TB-125 | Balance: at high waves one orc swing can exceed the wall's max HP (QA run 2), so the wall can fall in one hit; propose a cap or a gentler damage curve under BALANCE `## Proposed` with sim output | balance | 123 | claude | done (40219c5): one hit capped at 25% of the wall's max (P-125 A) |
