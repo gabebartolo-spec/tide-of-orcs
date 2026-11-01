@@ -87,7 +87,7 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-070 | Local telemetry export (JSON of run stats) for testers | app | 052 | claude | done f31ce6b |
 | TB-071 | Balance pass #2 from tester data | balance | 070 | gabe | todo |
 | TB-072 | Perf verification on phone; profile and fix | perf | M4 | | dropped (mobile off roadmap, 31 Oct) |
-| TB-073 | Itch.io page copy, screenshots, HTML5 zip pipeline | release | — | gabe | todo |
+| TB-073 | Itch.io page copy, screenshots, HTML5 zip pipeline (pipeline: itch.yml; page: ITCH-PAGE.md, docs/itch/) | release | — | claude | review |
 | TB-074 | Electron wrapper spike | release | 073 | claude | done (0965ce2) |
 | TB-075 | Bug bash checklist run (`docs/QA-CHECKLIST.md`; run 1 hidden, run 2 visible, both 1 Nov) | qa | — | claude | done (c8e9264, run 2 in this PR) |
 | TB-076 | Move 6 colour literals in src/render (rgba/hex) into palette tokens (rule 6) | render | | claude | done c189562 |
