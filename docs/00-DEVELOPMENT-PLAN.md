@@ -107,11 +107,18 @@ Orcs drop gear; six worn slots, a satchel, affixes, sets and mythic powers feed 
 - TB-114: affixes for features the player does not own no longer roll (director: gate them, 1 Nov).
 **Done when:** drops, sets and mythics all work in game. *(Met; numbers wait on the director.)*
 
-### M4.7 — Tree and voice (1 Nov) · **done except TB-112, TB-117**
+### M4.7 — Tree and voice (1 Nov) · **done**
 - Per-type upgrade nodes TB-111 (PR #31): 48 new nodes, tree 56 → 104.
 - Rename pass in the elf's voice TB-115 (PR #35): every node, Heartwood line, set and mythic renamed; currency Teeth and Grudge; game title **A Lot of Orcs** (renamed **Let's Hunt Some Orc!** 1 Nov). Ids and saves unchanged.
 - Tree keyboard access TB-116 (PR #38).
-- Open: TB-117 branch legend over node labels (PR #39 open), TB-112 tooltip says "needs" for an owned parent.
+- Branch legend TB-117 (831aef2) and owned-parent tooltip TB-112 (f288c68).
+
+### M4.8 — Look and feel (1 Nov) · **done except TB-130, TB-132** (both in review)
+- Heartwood, the game's own elf typeface TB-135 (c237d5d), now the only font, DOM and canvas TB-137 (ff134b3).
+- Living-wood UI TB-136 (9d9fc56): forest green, gilded vine ground, Blender-carved frame and buttons; voluntary Replant mid-run restored.
+- Fullscreen run and readable text TB-138 (54a4e37): field fits the window with overlay HUD; parchment text with ink halo; hills over grove and fence.
+- Loot icons TB-131, quiver bob TB-134, orc clip speed fix TB-133.
+- Open: TB-130 real node names (branch tb-130-real-names), TB-132 aim circle 40 → 20 px (branch tb-132-aim-radius).
 
 ### M5 — Ship (week 8) · local telemetry done (TB-070 f31ce6b, loot events TB-107); bug bash run twice
 - Balance pass #2 with telemetry from testers (TB-071; local JSON export, no server; export built).
