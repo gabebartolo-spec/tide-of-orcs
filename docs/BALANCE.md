@@ -338,6 +338,25 @@ Evidence: none yet; the greedy runner never rerolls. Tuning is TB-107.
 ### P-128 · Mythic and reroll measurement (2026-11-01, TB-128; closes the evidence gap in P-100, P-101, P-102)
 Evidence: `npm run balance -- --minutes 300 --seed N --quiet` with `--mythic <id>` (locked mythic worn from the start, re-equipped each minute; at the end the run is played on with the power deleted and the affixes kept) or `--reroll` (each minute rerolls the lowest affix on the cheapest worn item while Glimmer lasts). Seeds 1–4.
 
+Re-run 1 Nov after TB-132 (aim circle 20 px), TB-136 (tree bought only between runs) and TB-139 (the bot shops on each fall; before it the bot bought nothing after TB-136):
+
+| Run | Best wave, seeds 1 / 2 / 3 / 4 | Mean | Power alone (waves, play-on trial) |
+|---|---|---|---|
+| base | 65 / 65 / 65 / 66 | 65.3 | |
+| reroll | 64 / 65 / 64 / 66 | 64.8 | 275–298 rerolls, 19–21k Glimmer spent |
+| The Last Knife | 63 / 65 / 66 / 65 | 64.8 | −1 / +1 / +1 / +1 |
+| Heart of the Kiln | 64 / 65 / 65 / 65 | 64.8 | 0 / −1 / 0 / +1 |
+| Thunder's Memory | 66 / 65 / 65 / 66 | 65.5 | 0 / 0 / +1 / +1 |
+| Oakspine | 65 / 64 / 66 / 67 | 65.5 | 0 / +1 / 0 / 0 |
+| Sliver of the Pale Moon | 65 / 65 / 65 / 65 | 65.0 | 0 / +1 / +1 / 0 |
+| The First Wolf | 64 / 65 / 66 / 65 | 65.0 | 0 / −1 / +1 / +1 |
+| Heartwood Splinter | 63 / 60 / 62 / 61 | 61.5 | 0 / 0 / 0 / +1 |
+| Starfall Cloak | 66 / 65 / 65 / 64 | 65.0 | 0 / 0 / 0 / 0 |
+
+Read (re-run): seed noise is now ±1 wave and the finding stands: no mythic power is worth more than +1 wave. Heartwood Splinter's −4 is its cost: it halves every run's Heartwood (seed 2: 469 vs 854); with `--tune MYTHIC_FX.splinterHw=1` it reaches wave 64 (Heartwood 814). Rerolls still buy nothing.
+
+First measurement (before TB-132 and TB-136):
+
 | Run | Best wave, seeds 1 / 2 / 3 / 4 | Mean | Power alone (waves, play-on trial) |
 |---|---|---|---|
 | base | 74 / 76 / 69 / 79 | 74.5 | |
@@ -351,7 +370,7 @@ Evidence: `npm run balance -- --minutes 300 --seed N --quiet` with `--mythic <id
 | Heartwood Splinter | 69 / 68 / 68 / 73 | 69.5 | 0 / 0 / 0 / +3 |
 | Starfall Cloak | 74 / 74 / 75 / 74 | 74.3 | 0 / 0 / 0 / 0 |
 
-Read: no mythic power moves the wave beyond seed noise (±4); Heartwood Splinter costs ~5 waves (cause not yet traced). Rerolls are near free: Glimmer piles up faster than the doubling cost (2 × 2^n) drains it, and better affixes buy no waves. Late orc HP grows ~30% per wave, so a power worth +3 waves must be about ×2.2 damage; P-100's numbers are an order of magnitude short of that.
+Read: no mythic power moves the wave beyond seed noise (±4); Heartwood Splinter costs ~5 waves (traced in the re-run: its halved Heartwood). Rerolls are near free: Glimmer piles up faster than the doubling cost (2 × 2^n) drains it, and better affixes buy no waves. Late orc HP grows ~30% per wave, so a power worth +3 waves must be about ×2.2 damage; P-100's numbers are an order of magnitude short of that.
 Open: the director sets the target a mythic should be worth (waves), then each `MYTHIC_FX` number is scaled to hit it and `REROLL` is steepened to match.
 
 ### P-108 · Loot pacing: rarer bosses and rarer top drops (2026-11-01, TB-108) · applied
