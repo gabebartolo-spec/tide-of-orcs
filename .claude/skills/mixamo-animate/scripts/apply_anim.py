@@ -440,9 +440,12 @@ if os.environ.get("QUIVER"):  # quiver on the back (Spine2) with arrows, and a n
         a_ = arrow(f"prop_qa{i}", min(0.5, QL + 0.15)); a_.matrix_world = Q.matrix_world @ Matrix.Translation((dx, dy, QL + 0.16)) @ Matrix.Rotation(math.pi, 4, "X")  # tips down in the quiver, nocks out
         a_.parent = Q; a_.matrix_parent_inverse = Q.matrix_world.inverted()
     if os.environ.get("QFLOAT"):
-        base_ = Q.location.copy(); bob = float(os.environ.get("QBOB", "0.015"))
-        for f in range(f0, f1 + 2):  # gentle bob, one sine cycle over the loop (frame f1+1 = frame f0)
-            Q.location = base_ + Vector((0, 0, bob * math.sin(2 * math.pi * (f - f0) / (f1 + 1 - f0)))); Q.keyframe_insert("location", frame=f)
+        base_ = Q.location.copy(); brot = Q.rotation_euler.copy(); bob = float(os.environ.get("QBOB", "0.04"))
+        N_ = f1 + 1 - f0; cyc = max(1, round(N_ / 40))  # magic float: ~40-frame bob cycles, whole cycles per loop so it loops seamlessly
+        ph = lambda f, k=1: 2 * math.pi * k * cyc * (f - f0 - (af_ if not os.environ.get("QPOSE") else 0)) / N_  # zero offset on the frame the hand takes the arrow
+        for f in range(f0, f1 + 2):  # vertical bob + small drift and a slow wobble (sway lags the bob a quarter cycle, like hanging in a current)
+            Q.location = base_ + Vector((0.25 * bob * math.sin(ph(f) + math.pi / 2) - 0.25 * bob, 0, bob * math.sin(ph(f)))); Q.keyframe_insert("location", frame=f)
+            Q.rotation_euler = (brot.x + math.radians(4) * math.sin(ph(f) + math.pi / 2) - math.radians(4), brot.y + math.radians(3) * math.sin(ph(f)), brot.z); Q.keyframe_insert("rotation_euler", frame=f)
     else:
         mw = Q.matrix_world.copy(); Q.parent = tgt; Q.parent_type = "BONE"; Q.parent_bone = "mixamorig:Spine2"  # bone parent = tail of the posed bone
         Q.matrix_parent_inverse = (W @ sp2.matrix @ Matrix.Translation((0, sp2.bone.length, 0))).inverted(); Q.matrix_basis = mw
