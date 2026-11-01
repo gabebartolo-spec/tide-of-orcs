@@ -10,6 +10,7 @@ import { canRally, rallyCost } from '../sim/vanguard';
 import { gain } from '../sim/prestige';
 import { bossesReady, canSummonBoss } from '../sim/boss';
 import { BOSS_WAVE } from '../data/bosses';
+import { fitPages } from './fit';
 import { NumberFormat, fmt, setNumberFormat } from './format';
 import { HW_NODE, HW_NODES, HwId } from '../data/heartwood';
 import { canBuyHw, hwCost, hwPending, hwRank, hwSpendable, hwUnlocked } from '../sim/heartwood';
@@ -40,6 +41,7 @@ export class Panel {
 
     $('tab-settings').textContent = STR.tabSettings; $('tab-satchel').textContent = STR.tabSatchel;
     this.satchel = new SatchelPane(game, (c) => this.onCue(c)); $('tab-satchel').onclick = () => { this.onCue('click'); this.setTab('satchel'); this.satchel.render(); };
+    fitPages([$('pane-satchel'), $('pane-prestige'), $('pane-settings')]);
     $('tab-grove').onclick = () => { this.onCue('click'); this.setTab('grove'); }; $('tab-prestige').onclick = () => { this.onCue('click'); this.setTab('prestige'); }; $('tab-settings').onclick = () => { this.onCue('click'); this.setTab('settings'); };
     this.initSettings();
     $('dep-spear').onclick = () => this.rally('spear'); $('dep-blade').onclick = () => this.rally('blade');

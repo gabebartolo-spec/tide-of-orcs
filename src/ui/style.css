@@ -169,7 +169,6 @@ body[data-mode="settings"] .panel { display: flex; position: fixed; z-index: 5; 
 body[data-mode="settings"] .tabs { display: none; }
 body[data-mode="camp"] .play { display: none; }
 body[data-mode="camp"] .panel { width: min(73.75rem, 100%); margin-inline: auto; }
-body[data-mode="camp"] .treewrap { height: max(26.25rem, calc(100vh - 20.625rem)); }
 .campbar { display: flex; align-items: center; gap: 0.625rem; padding: 0.375rem 0.5rem 0.625rem; }
 .campbar h2 { font-family: var(--display); font-weight: 500; font-size: 1.375rem; margin: 0 auto 0 0; }
 header #btn-settings { align-self: center; }
@@ -195,3 +194,26 @@ body:not([data-mode="camp"]) header > * { pointer-events: auto; }
 body:not([data-mode="camp"]) header h1 { display: none; }
 body:not([data-mode="camp"]) .rally { position: absolute; left: 2.125rem; right: 2.125rem; bottom: 1.625rem; margin: 0; z-index: 2; pointer-events: none; }
 body:not([data-mode="camp"]) .rally > * { pointer-events: auto; }
+
+/* One page (TB-153, director 1 Nov): the camp pages never scroll. The page is the window's height; the tab fills what the
+   header, camp bar and tabs leave; only the tree canvas pans inside its own box. */
+body[data-mode="camp"] .wrap { height: 100vh; min-height: 0; overflow: hidden; }
+body[data-mode="camp"] .main { flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; }
+body[data-mode="camp"] .panel { flex: 1 1 0; min-height: 0; }
+body[data-mode="camp"] .tab:not([hidden]) { flex: 1 1 0; min-height: 0; overflow: clip; }
+body[data-mode="camp"] .treewrap { flex: 1 1 0; min-height: 0; height: auto; }
+/* Replant (TB-153): the run summary and the Heartwood tree side by side, so the page fits without scrolling. */
+.prestige.split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 0 1.5rem; align-items: start; }
+.prestige .col { display: flex; flex-direction: column; gap: 0.75rem; min-width: 0; }
+.prestige.settings.split { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+@media (max-width: 860px) { .prestige.split, .prestige.settings.split { grid-template-columns: 1fr; } }
+.prestige.split .hwtree { display: grid; grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr)); }
+/* Short screens (TB-153): slimmer camp chrome and Heartwood nodes, so 768-high laptops need little or no fit scaling. */
+@media (max-height: 800px) {
+  body[data-mode="camp"] .tabs button { padding-top: 0.75rem; padding-bottom: 0.375rem; }
+  body[data-mode="camp"] .footer { padding-top: 0.625rem; padding-bottom: 0.375rem; }
+  .prestige { padding-block: 0.625rem; gap: 0.5rem; }
+  .prestige.split .hwtree { grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: 0.375rem; }
+  .prestige.split .hwnode { padding: 0.375rem 0.5rem; }
+  .prestige.split .hwnode .desc { font-size: 0.8125rem; line-height: 1.3; }
+}

@@ -53,6 +53,7 @@ tide-of-orcs/
     ui/
       panel.ts          page modes run / camp / settings (body[data-mode], setMode; TB-136), tabs (Grove / Satchel / Replant / Settings), detail card, rally bar, boss button, fallen overlay + run summary,
                         Heartwood tree, settings, toasts, HUD numbers
+      fit.ts            camp pages fit one screen (TB-153): scales a tab's content down when it still overflows after layout
       format.ts         number formatting (short / scientific)
       style.css         the stylesheet (tokens mirror render/palette.ts)
     audio/
