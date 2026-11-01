@@ -136,6 +136,7 @@ Plain DOM, no framework. `ui/panel.ts` renders the detail card with template str
 
 ## Performance budget
 - 160 orcs (`ORC_CAP`) + 300 arrows + 900 particles (VFX.cap) at 60 fps on a 2020 mid-range Android.
+- Measured (TB-150, QA run 4): 160 orcs hold 60 fps at 1080p down to a 6× slower CPU and at 4K down to 4× slower (53 fps at 6×). `field.draw` costs the same at 4K; the browser's raster cost grows with pixels. Rerun with `tools/perf160.mjs`.
 - No GC pressure spikes: verify with Chrome performance panel, allocations per frame ≈ 0 in `step`.
 
 ## Build & deploy
