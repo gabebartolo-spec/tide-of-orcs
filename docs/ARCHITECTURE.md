@@ -62,7 +62,7 @@ tide-of-orcs/
       migrate.ts        migrations[v] = (old) => new
       storage.ts        localStorage with try/catch (key `tide-of-orcs-v1`); export/import as base64 UTF-8 JSON
       telemetry.ts      local run log for testers, own key, JSON export (TB-070); not part of the save
-      fixtures/v1.ts    v1 save fixture
+      fixtures/v1–v8.ts one save per old version; v2–v8 written by the last build at that version after 20 headless minutes (TB-140)
   public/               sprites/, audio/ and fonts/ assets (the game runs without sprites and audio); favicon.png is the app icon at 64 px (TB-123)
   sim/run.ts            headless balance runner (node), imports src/sim + src/data
   test/                 cross-module tests (empty); unit tests sit beside code
@@ -111,7 +111,7 @@ The seed lives only inside `rng`; the save version lives in the save, not in Sim
 - Set bonuses (TB-099): `SETS` lines name Stats fields; every number is in `SET_FX` (`data/lootTables.ts`); systems read Stats only. Run-only set state on `SimState` is not saved (`zones` pool for Cinderground/Moonwells, `pack` wolves, `knifeN`, `freeRallyT`); whether the free rally was spent is saved in `run` (v8).
 - Mythics (TB-100): `MYTHICS[].lines` set Stats switches like set lines; numbers in `MYTHIC_FX`. Run-only mythic state on `SimState` is not saved (`starAcc`, `starfallT`); Thunder charges and Splinter's used flag are saved in `run` (v8). `replant` resets the rest with the set state. Stakes are `zones` of kind `stake`. `prestige.gain(s)` is the one payout path (Splinter halves it).
 - History: v1→v2 (TB-028) drops retired node ids (`RETIRED_NODE_IDS`), fixture `src/save/fixtures/v1.ts`; v2→v3 (TB-080) retires Blood Banners and splits the spawn clock per orc kind; v3→v4 (TB-081) retires the Warboss nodes for boss waves; v4→v5 (TB-052) adds `run.earned`; v5→v6 (TB-055) adds `meta.hwLevels` (empty).
-- `migrate.ts` runs `while (save.version < CURRENT) save = migrations[save.version](save)` and throws on a save newer than the build. Every schema bump adds a migration and a test (`src/save/save.test.ts`) with a save of the previous version (the v1 fixture file, or inline for v2–v5).
+- `migrate.ts` runs `while (save.version < CURRENT) save = migrations[save.version](save)` and throws on a save newer than the build. Every schema bump adds a migration and a test (`src/save/save.test.ts`) with a save of the previous version (the v1 fixture file, or inline for v2–v5). `src/save/oldSaves.test.ts` (TB-140) takes every fixture v1–v8, migrates it, loads it as `GameController` does, plays 60 s and checks no number goes NaN or infinite and that export/import round-trips. A schema bump adds the fixture for the version it retires: dump a played save from the last build at that version.
 - Export: `btoa` of the UTF-8 JSON, shown in the Settings textarea for the player to copy. Import: decode, `JSON.parse`, `migrate()`, then replace state. There is no separate schema validation beyond `migrate`.
 - Telemetry (TB-070) is a separate localStorage key (`tide-of-orcs-telemetry`, last 500 runs), written on replant, downloaded from Settings. Loot events (TB-107: drop, equip, salvage, reroll, set tier) go to `tide-of-orcs-loot-log` (last 5000), buffered by `GameController` and flushed on every save; `min` counts from `tide-of-orcs-telemetry-start`, set on the first event. The export carries `runs` and `loot`.
 
@@ -129,7 +129,7 @@ Plain DOM, no framework. `ui/panel.ts` renders the detail card with template str
 `[hidden] { display: none !important }` is in `style.css` because the standalone build has no host reset.
 
 ## Testing
-- `src/**/*.test.ts`: formula pins (BALANCE.md reference tables), `deriveStats` changes for every node at max rank, tree buy rules and wave-scaled cost, timber heals the wall, vanguard cap/unlock, spearmen keep the wall healthier, the bare run eventually falls, a fallen run stops ticking, the lob hits the circle and never fires without aim, Fury/Swarm and summons, boss waves, Heartwood tree, forced and voluntary replant, migrations v1→v6, telemetry, camera, sprites, audio cue map.
+- `src/**/*.test.ts`: formula pins (BALANCE.md reference tables), `deriveStats` changes for every node at max rank, tree buy rules and wave-scaled cost, timber heals the wall, vanguard cap/unlock, spearmen keep the wall healthier, the bare run eventually falls, a fallen run stops ticking, the lob hits the circle and never fires without aim, Fury/Swarm and summons, boss waves, Heartwood tree, forced and voluntary replant, migrations v1→v9 and every old save v1–v8 loads and plays (TB-140), telemetry, camera, sprites, audio cue map.
 - Determinism test: two sims with same seed and scripted inputs produce identical `starlight` and `kills` after 10,000 ticks.
 - `sim/` runner is also a smoke test in CI (30 sim-minutes of greedy; the < 5 s real-time budget is a goal, not enforced).
 
