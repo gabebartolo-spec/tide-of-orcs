@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Heartwood Specimen</title>
+<style>
+@font-face { font-family: "Heartwood"; src: url("out/Heartwood-Regular.woff2") format("woff2"); font-display: block; }
+@font-face { font-family: "Spectral"; font-weight: 500; src: url("../../src/ui/fonts/spectral-500.woff2") format("woff2"); }
+@font-face { font-family: "Spectral"; font-weight: 700; src: url("../../src/ui/fonts/spectral-700.woff2") format("woff2"); }
+@font-face { font-family: "Spectral"; font-weight: 500; font-style: italic; src: url("../../src/ui/fonts/spectral-500-italic.woff2") format("woff2"); }
+@font-face { font-family: "Atkinson"; src: url("../../src/ui/fonts/atkinson-400.woff2") format("woff2"); }
+:root { --ink:#1b2130; --cream:#efe6d2; --dim:#b9b09c; --amber:#e2a85b; --rose:#c76f6f; --lilac:#cdbdea; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--ink); color: var(--cream); font-family: "Atkinson", system-ui, sans-serif; font-size: 14px; }
+.hw { font-family: "Heartwood", serif; font-synthesis: none; font-weight: 400; }
+.sp { font-family: "Spectral", Georgia, serif; }
+main { max-width: 1040px; margin: 0 auto; padding: 32px 16px 64px; }
+.hero { font-size: clamp(48px, 9vw, 104px); line-height: 1.05; margin: 8px 0 4px; }
+.hero em { font-style: normal; color: var(--amber); }
+.lbl { font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: var(--dim); margin: 36px 0 10px; }
+.set { font-size: clamp(28px, 4.4vw, 46px); line-height: 1.3; overflow-wrap: anywhere; }
+.paper { background: var(--cream); color: var(--ink); padding: 18px 20px; border-radius: 6px; }
+.cmp { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 680px) { .cmp { grid-template-columns: 1fr; } }
+.card { border: 1px solid #2c3446; border-radius: 6px; padding: 16px; }
+.card .tag { font-family: "Atkinson"; font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: var(--dim); margin-bottom: 12px; }
+.h1 { font-size: 26px; margin: 0 0 14px; } .h1 em { color: var(--amber); }
+.sp .h1 em { font-style: italic; } .hw .h1 em { font-style: normal; }
+.stats { display: flex; gap: 22px; margin-bottom: 16px; }
+.stat .k { display: block; font-family: "Atkinson"; font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: var(--dim); }
+.stat .v { font-size: 20px; } .sp .stat .v { font-weight: 700; }
+.h2 { font-size: 30px; margin: 0 0 6px; } .big { font-size: 40px; color: var(--rose); } .sp .big { font-weight: 700; }
+.items { font-size: 18px; line-height: 1.6; color: var(--lilac); }
+.kern { font-size: clamp(30px, 5vw, 56px); line-height: 1.25; }
+.off { font-kerning: none; font-feature-settings: "kern" 0; }
+</style></head>
+<body><main>
+<div class="lbl">Heartwood Regular 0.1 · an elf hand for Let's Hunt Some Orc!</div>
+<div class="hero hw">Let's Hunt Some <em>Orc!</em></div>
+
+<div class="lbl">Lowercase</div><div class="set hw">abcdefghijklmnopqrstuvwxyz</div>
+<div class="lbl">Capitals</div><div class="set hw">ABCDEFGHIJKLMNOPQRSTUVWXYZ</div>
+<div class="lbl">Figures and marks</div><div class="set hw">0123456789 &amp; % # + − = × &lt; &gt; · … .,:;!? ‘’ “” ( ) [ ] / * – —</div>
+
+<div class="lbl">In the game's display slots: Spectral today, Heartwood proposed</div>
+<div class="cmp">
+  <div class="card sp"><div class="tag">Spectral (current)</div>
+    <div class="h1">Let's Hunt Some <em>Orc!</em></div>
+    <div class="stats"><div class="stat"><span class="k">Stars</span><span class="v" style="color:var(--amber)">1,284</span></div><div class="stat"><span class="k">Wave</span><span class="v">37</span></div><div class="stat"><span class="k">Kills</span><span class="v">9,051</span></div></div>
+    <div class="h2">Well. That's the fence.</div><div class="stat"><span class="k">Grudge held</span></div><div class="big">+412</div>
+    <div class="items">Ashwood Bow · Birch Quiver · Acorn Charm · Bark Bracer</div></div>
+  <div class="card hw"><div class="tag">Heartwood (proposed)</div>
+    <div class="h1">Let's Hunt Some <em>Orc!</em></div>
+    <div class="stats"><div class="stat"><span class="k">Stars</span><span class="v" style="color:var(--amber)">1,284</span></div><div class="stat"><span class="k">Wave</span><span class="v">37</span></div><div class="stat"><span class="k">Kills</span><span class="v">9,051</span></div></div>
+    <div class="h2">Well. That's the fence.</div><div class="stat"><span class="k">Grudge held</span></div><div class="big">+412</div>
+    <div class="items">Ashwood Bow · Birch Quiver · Acorn Charm · Bark Bracer</div></div>
+</div>
+
+<div class="lbl">Kerning, off then on</div>
+<div class="kern hw off">AVATAR · To War · Yes. · P. F, Lynx</div>
+<div class="kern hw">AVATAR · To War · Yes. · P. F, Lynx</div>
+
+<div class="lbl">On paper</div>
+<div class="paper hw" style="font-size:34px;line-height:1.3">The tide comes at dusk. Hold the fence, mind the birch, and burn it down when the grudges run deep.</div>
+</main></body></html>
