@@ -117,6 +117,7 @@ The seed lives only inside `rng`; the save version lives in the save, not in Sim
 
 ## Rendering
 - One `<canvas>` for the field, one for the tree. `devicePixelRatio` capped at 2.
+- UI scale (TB-143): every CSS size in `style.css` is in rem, and the root font is `clamp(16px, min(100vw / 120, 100vh / 67.5), 32px)`, so the layout is the 1920×1080 one at 1× and grows to 2× at 3840×2160; smaller windows stay at 16 px. The tree canvas works in 1080p layout px (CSS px ÷ `uiScale()`) with its backing store at full CSS px × DPR, so legend, labels, camera framing and hit-testing scale with the UI.
 - Field draws in logical 900×480 via `setTransform`, with screen shake applied to the transform (not to the HUD bars). Draw order: plain → dusk tint → hills → grove side → lamplight → barricade (splintered planks from the top as HP drops, spikes if Thornwall) → blood splats (`Particles.drawGround`) → treant → elf → strike circle and lob arc → rangers → ballista → wolf → vanguard (sorted by y) → orcs (sorted by y) → projectiles (lobs with ground shadow) → lob impacts → storm → hawk → particles → text → barricade/vanguard HUD → wave bar.
 - Actors draw from the sprite atlas when a key is present, else the vector draw (TB-060).
 - Batch by fill style where cheap (e.g. all grunts of same colour), but clarity over micro-optimisation until the profiler says otherwise.
