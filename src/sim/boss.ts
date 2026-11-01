@@ -1,4 +1,5 @@
-import { BOSS_SCRIPT, BOSS_WAVE } from '../data/bosses';
+import { BOSS_SCRIPT, BOSS_WAVE, bossHw } from '../data/bosses';
+import { MYTHIC_FX } from '../data/lootTables';
 import { HW_FX } from '../data/heartwood';
 import { hwRank } from './heartwood';
 import { FIELD, waveLoot } from '../data/balance';
@@ -31,8 +32,10 @@ export function bossStep(s: SimState, ev: EventBus, dt: number): void {
   const cleared = b.left <= 0;
   if (!cleared && b.t < BOSS_WAVE.secs) return;
   const loot = cleared ? BOSS_WAVE.clearLoot * waveLoot(s.run.wave) * s.stats.starMult * (1 + HW_FX.bossPerRank * hwRank(s.meta, 'hw_boss')) : 0;
-  s.run.starlight += loot; s.run.earned += loot; s.run.boss = null;
+  // Heartwood drops only here (P-142), banked at once; halved once Heartwood Splinter has stood the wall again
+  const hw = cleared ? Math.max(1, Math.floor(bossHw(s.run.wave) * (s.run.splinterUsed ? MYTHIC_FX.splinterHw : 1))) : 0;
+  s.run.starlight += loot; s.run.earned += loot; s.run.boss = null; s.meta.heartwood += hw;
   // stragglers of a failed challenge keep marching as ordinary orcs
   s.orcs.forEach((o) => { o.champ = false; });
-  ev.push({ t: 'bossEnd', cleared, loot });
+  ev.push({ t: 'bossEnd', cleared, loot, hw });
 }

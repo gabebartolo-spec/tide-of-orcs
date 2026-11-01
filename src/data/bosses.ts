@@ -2,10 +2,14 @@ import { OrcKind } from './orcs';
 
 /** Boss waves (TB-081). Every `every` waves one unlocks; the player summons it whenever they like. Mirrors docs/GDD.md §4. */
 export const BOSS_WAVE = {
-  every: 50,      // a boss wave unlocks at wave 50, 100, 150 … (P-108: one boss per late run)
+  every: 25,      // a boss wave unlocks at wave 25, 50, 75 … (P-142)
   secs: 60,       // the challenge lasts this long
   clearLoot: 40,  // clearing every orc in time pays this × waveLoot(w) starlight
+  hwPerTier: 3,   // …and hwPerTier × (wave ÷ every) Heartwood: 3 at wave 25, 6 at 50 (P-142)
 } as const;
+
+/** Heartwood a cleared boss pays at this wave (P-142). The only Heartwood beyond a fall's flat 1. */
+export const bossHw = (wave: number): number => BOSS_WAVE.hwPerTier * Math.max(1, Math.floor(wave / BOSS_WAVE.every));
 
 /** One mini-wave: at `at` seconds into the challenge, one orc of `kind` per entry of `ys` (fraction of field height). */
 export interface MiniWave { at: number; kind: OrcKind; ys: readonly number[] }

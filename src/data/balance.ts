@@ -83,12 +83,13 @@ export const ELF_FX = { deadlyPerRank: 0.5 } as const;
 
 /** Per-rank multipliers and flat effects of tree nodes (SKILL-TREE.md effect column). */
 export const NODE_FX = {
-  sharpDmg: 1.25, moonDmg: 1.6, drawRate: 1.15, critPerRank: 0.08, gleanLoot: 1.15, kinship: 1.2,
+  sharpDmg: 1.25, moonDmg: 1.6, drawRate: 1.15, critPerRank: 0.08, gleanLoot: 1.08, kinship: 1.2,
   wideRadius: 1.2,
   fangsDmg: 1.4, knifeRate: 1.2, boltDmg: 1.5,
 } as const;
 
-export const PRESTIGE = { voluntaryWave: 12, heartPerHW: 0.12, waveOffset: 4, waveFactor: 0.75, killsPerHW: 400, minGain: 1 } as const;
+/** A fall (or a voluntary replant) pays a flat fallGain Heartwood (rule 1); real Heartwood drops from bosses (P-142). */
+export const PRESTIGE = { voluntaryWave: 12, fallGain: 1 } as const;
 
 export const HP_RAMP = { from: 15, rate: 1.3 } as const;
 export const waveHP = (w: number): number =>
@@ -96,12 +97,8 @@ export const waveHP = (w: number): number =>
 export const waveLoot = (w: number): number => 2 * Math.pow(1.13, w - 1);
 export const waveInterval = (w: number): number => Math.max(0.3, 2.0 * Math.pow(0.93, w - 1));
 export const waveSpeedMult = (w: number): number => 1 + 0.008 * w;
-export const heartMult = (heartwood: number): number => 1 + PRESTIGE.heartPerHW * heartwood;
 
-export const prestigeGain = (wave: number, runKills: number): number =>
-  Math.max(PRESTIGE.minGain, Math.floor((wave - PRESTIGE.waveOffset) * PRESTIGE.waveFactor) + Math.floor(runKills / PRESTIGE.killsPerHW));
-
-export const COST_WAVE = { from: 10, rate: 1.25 } as const;
+export const COST_WAVE = { from: 10, rate: 1.1 } as const;
 /** Multiplier on every node price, by the wave at purchase (P-001). */
 export const costWave = (w: number): number => Math.pow(COST_WAVE.rate, Math.max(0, w - COST_WAVE.from));
 

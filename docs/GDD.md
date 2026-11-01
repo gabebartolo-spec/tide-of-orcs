@@ -24,7 +24,7 @@ the barricade falls → run ends → Replant → Heartwood → next run grows fa
 Session shape (from the simulator, greedy policy, seed 1, 31 Oct 2026; since TB-080's wall ×10 the early runs are short and TB-054 will re-tune them):
 - Minute 0–1: lone archer, grunts only. The first Sharpened Tips rank lands within 30 s.
 - Minute 1–2 (wave 4–5): the first wall falls. Replant pays 1 Heartwood (the floor).
-- Next few runs: each falls around wave 5–7 for 1–2 Heartwood, until enough Heartwood lets a run tip over.
+- Next runs: each fall pays 1 Heartwood, and Heartwood has no passive bonus (P-142), so progress comes from the run's skill tree and the Heartwood tree. Bosses (every 25 waves) pay the rest of the Heartwood.
 - Later runs (run 5 on seed 1): Muster, companions and armoury fill out and the run reaches wave 20+ (fell at wave 24 at minute 17, 17 Heartwood). Summon runners, brutes and Blackguard for more starlight; summon boss waves from wave 10.
 
 ## 3. The barricade and the fail state (signature mechanic)
@@ -32,7 +32,7 @@ A timber palisade at x=150 (14 px wide) across the full field height. It has hea
 
 **State machine:** `intact → damaged → (Deep Roots regrow, once) → fallen → replant`.
 
-- `barMax = 400 × (1 + 0.25 × Stout Timber) × 1.25^Seasoned Timber × heart` (BALANCE.md owns the numbers).
+- `barMax = 400 × (1 + 0.25 × Stout Timber) × 1.25^Seasoned Timber` (BALANCE.md owns the numbers).
 - Orcs reaching `x ≤ barX + barW + r` stop and swing once per second. Each swing at the wall deals `wallMult × atk` = 10 × 0.025 × maxhp (TB-080: a bare run falls at wave 3–5). Damage scales with waves exactly as orc HP does, so the wall's relative pressure comes from *how many* orcs leak, not from a separate curve. One swing takes at most a quarter of the wall's max (TB-125), so even a late orc needs four swings to fell a full wall.
 - **Patient Hands** mends 1% of max per second per rank. **Thornwall** damages anyone hacking the wall for 20% of player damage per second per rank. **Deep Roots** regrows the wall to 50% once per run the moment it would fall.
 - **Fallen:** when HP hits 0 the sim freezes, the field shows "The barricade has fallen" with wave, slain, minutes held, items found by rarity with the best drop of the run (TB-103) and Heartwood carried back, and a single button: *Replant the grove*. Replant is the only *run* action: the rally bar and boss summoning are closed. Its button, *To the grove*, opens the Grove page (TB-136, director 1 Nov: "upgrade tree should be a separate page AFTER you die"): the Grove tree, the Satchel, the Heartwood tree and Settings, with *March again* to replant. Starlight is spent there and carries into the next run; Grove levels are kept.
@@ -44,7 +44,7 @@ The field hint (`STR.hint`) reads: "Hold the barricade. Move your pointer over t
 ## 4. Waves and orcs
 - Waves are timed: one every 24 s regardless of kills. `wave` is the only difficulty driver.
 - At first only grunts march. Every other kind joins only when the player summons it with its Grove node (Goblin Runners → Brutes → Blackguard). Summoning is the risk-for-reward lever: more danger, more starlight. Falling is fine and expected; it feeds the replant loop.
-- **Boss waves (TB-081).** Every 50 waves (wave 50, 100, 150 …; P-108, was 10) a boss wave unlocks and waits; nothing happens until the player presses *Summon the boss wave*. It is a 60 s challenge: regular marching pauses and a fixed script of mini-waves marches in (a shield line, edge flankers, rams, a wedge, the Warboss with two Blackguard, a scatter, a last push; `src/data/bosses.ts`). Slay every one before the minute ends and it pays 40 × the wave's loot in starlight; otherwise the stragglers keep marching as ordinary orcs and regular marching resumes. Unsummoned boss waves stack. The Warboss marches only in boss waves.
+- **Boss waves (TB-081).** Every 25 waves (wave 25, 50, 75 …; P-142, was 50) a boss wave unlocks and waits; nothing happens until the player presses *Summon the boss wave*. It is a 60 s challenge: regular marching pauses and a fixed script of mini-waves marches in (a shield line, edge flankers, rams, a wedge, the Warboss with two Blackguard, a scatter, a last push; `src/data/bosses.ts`). Slay every one before the minute ends and it pays 40 × the wave's loot in starlight and 3 Heartwood per 25 waves (3 at wave 25, 6 at 50), the only Heartwood beyond a fall's flat 1; otherwise the stragglers keep marching as ordinary orcs and regular marching resumes. Unsummoned boss waves stack. The Warboss marches only in boss waves.
 - Every kind has its own spawn clock and two nodes: **Fury** (+30% health, +40% starlight per rank) and **Swarm** (spawns 20% more often per rank). Grunts' are War Drums and Call the Horde.
 - Spawn position: x = field width + 24, y uniform in [50, H−50]. Hard cap 160 live orcs.
 
@@ -63,8 +63,8 @@ Vanguard are not tree nodes. **Muster** unlocks the rally bar under the field; e
 
 | Unit | Unlock | Cost | HP | Damage per swing | Swing | Reach | Notes |
 |---|---|---|---|---|---|---|---|
-| Spearman | Muster | 6 × loot(wave) | 5 × waveHP(wave) × 1.3^Shieldwall × heart | 1.6 × player dmg × 1.3^Spear Drill × Kinship (crit, rate and speed nodes, SKILL-TREE TB-111) | 0.8 s | 28 | One target |
-| Bladedancer | Bladedancer node | 18 × loot(wave) | 4 × waveHP(wave) × 1.3^Shieldwall × heart | 1.4 × player dmg × 1.3^Blade Drill × Kinship | 0.45 s | 34 | Cleaves every orc in reach |
+| Spearman | Muster | 6 × loot(wave) | 5 × waveHP(wave) × 1.3^Shieldwall | 1.6 × player dmg × 1.3^Spear Drill × Kinship (crit, rate and speed nodes, SKILL-TREE TB-111) | 0.8 s | 28 | One target |
+| Bladedancer | Bladedancer node | 18 × loot(wave) | 4 × waveHP(wave) × 1.3^Shieldwall | 1.4 × player dmg × 1.3^Blade Drill × Kinship | 0.45 s | 34 | Cleaves every orc in reach |
 
 Orcs within `r + 18` px of a vanguard engage it instead of advancing, swinging once per second for `atk`. **Field Mending** heals vanguard 3%/s per rank. Rally costs scale with wave, so a late reinforcement is a real decision. Both buttons show cost, grey out when unaffordable or the line is full ("Line is full"), and say "Learn Muster" before the node is owned.
 
@@ -78,7 +78,7 @@ Design intent: vanguard are the *reactive* spend. The tree is the *investment* s
 - Ranger and Warden always auto-target with straight volleys (a 0.09-rad fan at 520 px/s, `fireRate` = 1.2 × 1.15^Quick Draw per second); only the elf's bow is aimed. Bow nodes also carry over to their volleys: Split Shot adds arrows to the fan, Longshaft adds pierce, and Moonbow steers their arrows toward the target (6 rad/s). Each archer has its own damage, rate, crit chance and crit damage nodes (TB-111); fire on a volley arrow rolls Fire's chance.
 
 ## 7. Companions
-All companion damage scales with Kinship (×1.2/rank) and Heartwood. Kinship also scales vanguard.
+All companion damage scales with Kinship (×1.2/rank). Kinship also scales vanguard.
 
 | Companion | Node | Behaviour |
 |---|---|---|
@@ -97,7 +97,7 @@ All companion damage scales with Kinship (×1.2/rank) and Heartwood. Kinship als
 | Moonbow | moon | Moon shots (25% + 15% per Moon Quiver rank): the aim circle settles on the nearest orc within 70 px of the aim point, +60% damage; ranger/warden arrows steer toward their target (6 rad/s) |
 
 ## 9. Economy
-- **Starlight**: the only run currency. Earned per kill: `loot(wave, type) × starMult`, `starMult = 1.15^Gleaning × heart`.
+- **Starlight**: the only run currency. Earned per kill: `loot(wave, type) × starMult`, `starMult = 1.08^Gleaning` (Gleaning sits deep in the Grove, under War Drums).
 - Spent on tree nodes (geometric cost per rank) and on vanguard (linear in wave loot).
 - **No offline progress**: nothing accrues while the game is closed or the tab is hidden.
 - Early nodes cost 12–50 so the first purchase happens within 30 s and Muster within two minutes.
@@ -105,8 +105,8 @@ All companion damage scales with Kinship (×1.2/rank) and Heartwood. Kinship als
 ## 10. Prestige — Replant the Grove
 - **Forced:** the barricade falls → the run ends → the only run action is Replant (the Heartwood tree and Settings stay open, §3).
 - **Voluntary:** from wave 12 while the wall still stands (TB-136): a header Replant button appears and ends the run as a fall does ("You leave the wall standing"), with the same Heartwood; the summary, Grove page and March again follow.
-- Heartwood gained = `max(1, floor((wave − 4) × 0.75) + floor(runKills / 400))`, so a fall at any wave pays at least one Heartwood (TB-080).
-- Each Heartwood earned: +12% starlight, +12% damage (player, companions, vanguard), +12% barricade HP and +12% vanguard HP, permanent. Spending it on the Heartwood tree never lowers this bonus.
+- A fall (or voluntary replant) pays a flat 1 Heartwood (rule 1). The rest drops from cleared boss waves (§5; P-142, director 2026-11-01).
+- Heartwood has no passive bonus; it is only spent on the Heartwood tree.
 - Reset: tree ranks, starlight, wave, vanguard, companions, timers, Deep Roots charge. Keep: Heartwood, lifetime slain, best wave, prestige count, settings.
 - **Heartwood tree (M3, TB-053):** five nodes on the Replant tab, bought with Heartwood and never reset: Early Dawn (start further on), Old Friend (start with the wolf), Stout Timber (wall base HP), Standing Orders (start with spearmen), Warlords (boss clear bonus). Numbers in BALANCE.md §Heartwood tree.
 - Ceremony: confirm (automatic when fallen) → tree desaturates and burns upward in amber → one seed falls → field fades up through dawn. ≤ 4 s, skippable, reduced-motion safe.
@@ -138,8 +138,9 @@ All companion damage scales with Kinship (×1.2/rank) and Heartwood. Kinship als
 |---|---|---|---|
 | Aiming | Straight volleys at the pointer, auto-target when not aiming | Arcing lob into a strike circle every 2.5 s; no fire without aim; Wide Volley node; Split Shot, Longshaft, Moonbow reshaped | 16e3060 (TB-079) |
 | Offline progress | Offline starlight on return; Dreaming Roots node | None; Dreaming Roots removed | ab74ac8 (TB-023) |
-| P-001 numbers | Base damage 6, `waveHP` 1.17/wave, flat node cost | Base damage 9, `waveHP` ramp ×1.30 past wave 15, node cost ×1.25 per wave past 10 | 2a6ec16 (TB-025) |
+| P-001 numbers | Base damage 6, `waveHP` 1.17/wave, flat node cost | Base damage 9, `waveHP` ramp ×1.30 past wave 15, node cost ×1.25 per wave past 10 (×1.1 since P-142) | 2a6ec16 (TB-025), TB-142 |
 | Enemy mix | Random type rolls (runners, brutes) by wave | Grunts only until Grove nodes summon runners, brutes and the new Elite (Blackguard); per-kind Fury and Swarm; wall takes ×10; Heartwood floor 1 | 4ed98fb (TB-080) |
 | Warboss | Random 8% roll on every 10th wave; Warboss Bounty node | Scripted 60 s boss waves the player summons every 10 waves; Bounty and Warboss nodes retired | e3b4536 (TB-081) |
-| Prestige meta | Heartwood passive only | Heartwood tree (5 nodes) | dd09286, 3cc1563 (TB-053, TB-055) |
+| Prestige meta | Heartwood passive only | Heartwood tree (5 nodes); no passive since P-142 | dd09286, 3cc1563 (TB-053, TB-055), TB-142 |
+| Heartwood source | Scaled by wave reached | Flat 1 per fall; bosses (every 25 waves) pay the rest | TB-142 |
 | Bow branch | No circle | Wide Volley widens the strike circle | 16e3060 (TB-079) |

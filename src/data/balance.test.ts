@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { costWave, heartMult, nodeCost, prestigeGain, vanBaseHp, vanCost, waveHP, waveInterval, waveLoot } from './balance';
+import { PRESTIGE, costWave, nodeCost, vanBaseHp, vanCost, waveHP, waveInterval, waveLoot } from './balance';
 import { BARRICADE } from './balance';
 
 // Reference table from docs/BALANCE.md. Change the doc first, then these.
@@ -25,18 +25,12 @@ describe('economy', () => {
   it.each([
     [1, 1],
     [10, 1],
-    [25, 28.42],
-    [50, 7523.16],
+    [25, 4.18],
+    [50, 45.26],
   ])('node cost wave multiplier at wave %i is %f', (w, m) => {
     expect(costWave(w)).toBeCloseTo(m, 2);
   });
-  it('heartwood multiplier', () => { expect(heartMult(0)).toBe(1); expect(heartMult(10)).toBeCloseTo(2.2); });
-  it('prestige gain never negative; grows with wave and kills', () => {
-    expect(prestigeGain(1, 0)).toBe(1); // a fall always pays out (rule 1)
-    expect(prestigeGain(4, 0)).toBe(1);
-    expect(prestigeGain(12, 0)).toBe(6);
-    expect(prestigeGain(12, 800)).toBe(8);
-  });
+  it('a fall pays a flat Heartwood (rule 1, P-142)', () => { expect(PRESTIGE.fallGain).toBe(1); });
 });
 
 describe('barricade and vanguard', () => {

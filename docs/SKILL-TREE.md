@@ -35,9 +35,9 @@ Layout coordinates are for a 1288×1262 tree canvas, root at (674, 748). Six bra
 | stun | Thunderclap | Armoury | shock | 3 | 3000 | 2.2 | 1202 | 132 | Shock arrows stun the orcs they strike for half a second, +0.25 s per rank. |
 | ballista | Ballista | Armoury | knifespd | 1 | 3400 | — | 1122 | 476 | A heavy bolt that punches through the whole line. |
 | bolt | Iron Bolts | Armoury | ballista | 5 | 2000 | 2.0 | 1202 | 364 | Ballista +50% damage per rank. |
-| glean | Gleaning | Grove | root | 10 | 20 | 1.6 | 850 | 796 | +15% starlight from every orc. |
-| horde | Call the Horde | Grove | glean | 5 | 160 | 2.4 | 1010 | 764 | Grunts march 20% more often per rank. More orcs, more starlight. More danger. |
-| drums | War Drums | Grove | horde | 5 | 300 | 2.4 | 1186 | 828 | Grunts have +30% health and drop +40% starlight per rank. |
+| horde | Call the Horde | Grove | root | 5 | 160 | 2.4 | 850 | 796 | Grunts march 20% more often per rank. More orcs, more starlight. More danger. |
+| drums | War Drums | Grove | horde | 5 | 300 | 2.4 | 1010 | 764 | Grunts have +30% health and drop +40% starlight per rank. |
+| glean | Gleaning | Grove | drums | 5 | 600 | 2.2 | 1186 | 828 | +8% starlight from every orc. |
 | runners | Goblin Runners | Grove | horde | 1 | 120 | — | 722 | 940 | Small, fast orcs join the tide. |
 | runfury | Runner Fury | Grove | runners | 5 | 200 | 2.4 | 722 | 1052 | Runners have +30% health and drop +40% starlight per rank. |
 | runswarm | Runner Swarm | Grove | runners | 5 | 200 | 2.4 | 722 | 1148 | Runners march 20% more often per rank. |
@@ -127,7 +127,7 @@ Lists live in `src/save/schema.ts`; each migration drops the keys from `run.leve
 
 ```ts
 interface Stats {
-  dmg: number;            // 9 × 1.25^sharp × heart
+  dmg: number;            // 9 × 1.25^sharp
   fireRate: number;       // 1.2 × 1.15^draw  (ranger/warden volleys / s; the elf lobs)
   lobCd: number;          // 2.5 / 1.15^draw  (seconds between the elf's lobs)
   radius: number;         // 40 × 1.2^wide    (strike circle, px)
@@ -153,11 +153,11 @@ interface Stats {
     critMult; // 2 + 0.5 × <unit>critx   spd; // 1.15^<unit>spd (wolf, spear, blade)
   }>;
   homing: boolean; fire: boolean;
-  starMult: number;       // 1.15^glean × heart
+  starMult: number;       // 1.08^glean (P-142: no Heartwood passive)
   foes: Record<OrcKind, { on; hp: 1.3^fury; loot: 1.4^fury; spawn: 1.2^swarm }>
                           // grunt: always on, fury = drums, swarm = horde
                           // runner/brute/elite: on = runners/brutes/elites; boss: always off (boss waves only)
-  kin: number;            // 1.2^bond × heart   (companions AND vanguard)
+  kin: number;            // 1.2^bond   (companions AND vanguard)
   wolf: number;           // wolf ? 6 × 1.4^fangs × kin : 0
   archers: number;        // ranger + warden
   hawk: boolean; treant: boolean;
@@ -169,20 +169,20 @@ interface Stats {
   shatter: number;        // shatter ? 1.4^(shatter − 1) : 0   (× dmg)
   ballista: number;       // ballista ? 40 × 1.5^bolt × kin : 0
   // barricade
-  barMax: number;         // 400 × (1 + 0.25 × hw_timber) × 1.25^timber × heart
+  barMax: number;         // 400 × (1 + 0.25 × hw_timber) × 1.25^timber
   barRegen: number;       // 0.01 × repair     (fraction of max per second)
   spikes: number;         // 0.2 × spikes      (fraction of dmg per second to attackers)
   bulwark: boolean;       // Deep Roots owned
   // vanguard
   muster: boolean;
   vanCap: number;         // muster ? 2 + ranks : 0
-  vanHp: number;          // 1.3^shield × heart
+  vanHp: number;          // 1.3^shield
   vanDmg: number;         // kin  (Spear Drill moved to units.spear)
   vanMend: number;        // 0.03 × mend
   champion: boolean;      // Bladedancer rally unlocked
 }
-// heart = 1 + 0.12 × heartwood (all earned); hw_timber = Stout Timber rank
-// deriveStats(levels, heartwood, hwLevels) in src/sim/stats.ts
+// no Heartwood passive (P-142); hw_timber = Stout Timber rank
+// deriveStats(levels, hwLevels) in src/sim/stats.ts
 ```
 
 ## Per-type upgrade nodes (TB-111, built 1 Nov 2026)
