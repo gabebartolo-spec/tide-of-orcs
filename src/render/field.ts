@@ -444,7 +444,7 @@ export class FieldRenderer {
     const g = this.g; g.save(); g.translate(x, y); if (dim) g.globalAlpha = 0.85;
     g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 16, 12, 4, 0, 0, 6.28); g.fill();
     const key = dim ? 'archer' : 'elf', aiming = draw >= 0, t = aiming ? Math.min(draw, 0.999) * this.sprites.duration(key + '.attack') : this.clock;
-    if (this.sprites.drawActor(g, key, aiming ? 'attack' : 'walk', t, 0, 16, ACTOR_R)) { g.restore(); return; }
+    if (this.sprites.drawActor(g, key, aiming ? 'attack' : 'walk', t, 0, 16, ACTOR_R) || this.sprites.loading) { g.restore(); return; }
     g.fillStyle = dim ? P.archerCloak : P.elfCloak; g.beginPath(); g.moveTo(-9, 14); g.lineTo(9, 14); g.lineTo(5, -6); g.lineTo(-5, -6); g.closePath(); g.fill();
     g.fillStyle = P.lilac; g.beginPath(); g.arc(0, -12, 7, 0, 6.28); g.fill();
     g.strokeStyle = P.cream; g.lineWidth = 2; g.beginPath(); g.arc(12, 0, 16, -1.3, 1.3); g.stroke();

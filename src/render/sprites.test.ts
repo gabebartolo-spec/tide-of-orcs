@@ -33,4 +33,16 @@ describe('sprite atlas', () => {
     // The bow's charge (0..1) scaled by the loop length lands on the last frame just before the shot, never wrapping to 0.
     expect(frameAt(anim, 0.999 * sp.duration('elf.attack'))).toBe(2);
   });
+  it('is loading until the atlas fetch settles, so the vector elf never flashes first (TB-155)', async () => {
+    let answer!: (r: Response) => void;
+    const real = globalThis.fetch;
+    globalThis.fetch = () => new Promise<Response>((res) => { answer = res; });
+    try {
+      const sp = new Sprites(), done = sp.load('/');
+      expect(sp.loading).toBe(true);
+      answer(new Response('', { status: 404 }));
+      expect(await done).toBe(false);
+      expect(sp.loading).toBe(false);
+    } finally { globalThis.fetch = real; }
+  });
 });
