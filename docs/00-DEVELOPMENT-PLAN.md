@@ -1,8 +1,8 @@
 # Let's Hunt Some Orc! — Development Plan (repo: tide-of-orcs)
 
-**Version 1.5 · 1 Nov 2026 · Owner: Gabe**
+**Version 1.6 · 1 Nov 2026 · Owner: Gabe**
 
-v1.1 replaced the river (no fail state) with a barricade that can fall, forced Replant on a fall, and starlight-bought melee vanguard. v1.2 recorded M2 done and offline progress removed. v1.3 (31 Oct, evening) syncs with the code: M1 and M2 done, M3 done (TB-054 closed: `wallMult` 10 kept, targets reset; TB-085, TB-086 re-runs), M4 done except music and assets. v1.4 (1 Nov) syncs again: the arrow arsenal and the whole loot stack are on main, the tree grew to 104 nodes, the game is titled A Lot of Orcs (TB-115), and the M5 bug bash has run twice. v1.5 (1 Nov, night) adds §8, design directions from the active-incremental research (TB-145). `docs/prototype.html` (published as the Tide of Orcs artifact) is the original concept for tone and the core loop; mechanics have diverged since (GDD §14), and the docs now win over it.
+v1.1 replaced the river (no fail state) with a barricade that can fall, forced Replant on a fall, and starlight-bought melee vanguard. v1.2 recorded M2 done and offline progress removed. v1.3 (31 Oct, evening) syncs with the code: M1 and M2 done, M3 done (TB-054 closed: `wallMult` 10 kept, targets reset; TB-085, TB-086 re-runs), M4 done except music and assets. v1.4 (1 Nov) syncs again: the arrow arsenal and the whole loot stack are on main, the tree grew to 104 nodes, the game is titled A Lot of Orcs (TB-115), and the M5 bug bash has run twice. v1.5 (1 Nov, night) adds §8, design directions from the active-incremental research (TB-145). v1.6 (1 Nov, late) drops the public release, Steam and testers from the roadmap: the team is the director and Claude. The itch page stays private (Restricted) as a proof of concept, kept up to date and ready to go live only if the director chooses; a commercial release is a maybe for later. `docs/prototype.html` (published as the Tide of Orcs artifact) is the original concept for tone and the core loop; mechanics have diverged since (GDD §14), and the docs now win over it.
 
 ## 1. Vision
 
@@ -10,7 +10,7 @@ An elf stands behind a timber barricade with a bow. Orcs come forever. Every orc
 
 Tone: calm, cosy, slightly melancholy. ShredDead's "no fail state, satisfying grind" with Thronefall's soft pastoral palette and Esoteric Ebb's inky, lamplit UI.
 
-The single-file prototype (`docs/prototype.html`) proves the loop. The plan below turns it into a shippable game.
+The single-file prototype (`docs/prototype.html`) proves the loop. The plan below turns it into the finished game.
 
 ## 2. Pillars (every decision checks against these)
 
@@ -35,7 +35,8 @@ The single-file prototype (`docs/prototype.html`) proves the loop. The plan belo
 
 ### Out of scope for 1.0 (candidates for 1.x)
 - Multiple maps / biomes.
-- Achievements and Steam integration.
+- Achievements.
+- Commercial release (public itch page, Steam): a maybe for later, not planned (director, 1 Nov).
 - Named hero companions with their own trees.
 - Cloud saves.
 - Localisation (but all strings go through one table from day one).
@@ -125,16 +126,15 @@ Orcs drop gear; six worn slots, a satchel, affixes, sets and mythic powers feed 
 - First-milestone sim TB-146 (PR #93): first Heartwood buy at the end of run 2; first boss on run 19–20 at 81–105 play minutes.
 - Stacking sim TB-147 (PR #94, BALANCE P-147): additive stacking simmed against per-rank multiply; director kept multiply. `STACKING.add` stays as a sim switch.
 - Performance at 1080p and 4K TB-150 (PR #95, QA run 4): 160 orcs at 119 fps (1080p) and 92 fps (4K); 60 fps holds at 4K down to a 4× slower CPU.
-- Itch page copy and three 1080p screenshots TB-073 (PR #96, `docs/ITCH-PAGE.md`, `docs/itch/`).
+- Private itch page TB-073 (PR #96, #98): copy, three 1080p screenshots, kept Restricted.
 
-### M5 — Ship (week 8) · local telemetry done (TB-070 f31ce6b, loot events TB-107); bug bash run twice
-- Balance pass #2 with telemetry from testers (TB-071; local JSON export, no server; export built).
+### M5 — Polish · bug bash run twice
+- Private itch page as a proof of concept (TB-073, `docs/ITCH-PAGE.md`; builds via `itch.yml`): kept Restricted and up to date with each milestone; it goes public only if the director chooses.
 - Save import/export (done in TB-065), version migration test suite (TB-140: every old save v1–v8 loads and plays).
-- Itch.io page and web build (TB-073: build pipeline `itch.yml`; page copy and screenshots in `docs/ITCH-PAGE.md`, on the itch page 1 Nov; page Restricted until the director makes it public), Electron wrapper spike for Steam (TB-074, done: `npm run desktop`; fonts bundled in TB-118; Windows package in TB-119: `npm run desktop:pack`; app icon in TB-120; the Steam upload remains, TB-122).
 - Bug bash (TB-075, `docs/QA-CHECKLIST.md`): runs 1 and 2 done (PRs #33, #37); their bugs became TB-112–117. Performance: no frame spikes in a visible browser with 160 orcs (TB-113); measured at 1080p and 4K with CPU throttling as a mid-range stand-in (TB-150, QA run 4): passes. Not yet on real mid-range hardware.
 
-Mobile is out of the roadmap (director, 31 Oct): the web build ships for PC first; a mobile port comes after it is perfect on PC. TB-064/TB-078 layout work stays in the code.
-**Done when:** build is public on itch.
+Mobile is out of the roadmap (director, 31 Oct): the game is built for PC first; a mobile port comes after it is perfect on PC. TB-064/TB-078 layout work stays in the code.
+**Done when:** the director calls it finished.
 
 ## 5. Definition of done (any task)
 - Code matches ARCHITECTURE.md module boundaries.
@@ -168,4 +168,4 @@ A deep-research pass (1 Nov) on active, run-based incrementals (Nodebuster, Deep
 | 5 | **Compounding reroll cost** (about ×1.4 per reroll). | DRG: Survivor | Glimmer rerolls already compound per item (P-102). | None; this confirms our rule. |
 | 6 | **Calibrate meta strength.** Too weak feels pointless; too strong makes runs trivial. Repeatable upgrades go steep around level 20. | Ball x Pit, genre reviews | P-142 removed the Heartwood passive for this reason. | Keep the sim gate: a fresh save must still reach the first boss, and a full Heartwood tree must not skip it. |
 
-**Gaps the research could not fill:** no published run length or run count before a game's first milestone, and nothing on Rogue Tower, Halls of Torment or Brotato. Our own sim and tester telemetry (TB-071) have to answer those.
+**Gaps the research could not fill:** no published run length or run count before a game's first milestone, and nothing on Rogue Tower, Halls of Torment or Brotato. Our own sim has to answer those.
