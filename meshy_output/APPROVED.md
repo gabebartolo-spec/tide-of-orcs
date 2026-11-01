@@ -1,16 +1,44 @@
 # Approved loot models (TB-104)
 
-One row per item id (src/data loot ids). The GLB named here is the one UI wiring uses; every other file for
-that id in this folder is superseded history. Director approval is quoted from docs/log.
+One row per item id (src/data/lootTables.ts BASES and MYTHICS; set pieces reuse their base model). The GLB named
+here is the one UI wiring uses; every other file for that id in this folder is superseded history. Director
+approval is quoted from docs/log. Icons rendered from these files: icons/<stem>.png (render_icons.py).
 
-| item id | file | approved |
+| item id (slot) | file | approved |
 |---|---|---|
-| ashwood-bow (Ironbark Recurve) | ashwood-bow_refine.glb | 1 Nov, "Approve, quiver (5)" |
-| leather-bracer | leather-bracer-i1_i23d.glb | 1 Nov, "Approve all five" |
-| bark-bracer | bark-bracer-i1_i23d.glb | 1 Nov, "Approve all five" |
-| silver-bracer | silver-bracer-i1_i23d.glb | 1 Nov, "Approve all five" |
-| scaled-bracer | scaled-bracer-i1_i23d.glb | 1 Nov, "Approve all five" |
-| thunders-memory | thunders-memory-i1_i23d.glb | 1 Nov, "Approve all five" |
+| ashwood-bow (bow) | ashwood-bow-r2_refine.glb | 1 Nov, "yes all are approved" |
+| yew-longbow (bow) | yew-longbow_refine.glb | 1 Nov, "yes all are approved" |
+| hornbow (bow) | hornbow_refine.glb | 1 Nov, "yes all are approved" |
+| ironbark-recurve (bow) | bow_refine.glb | 1 Nov, "Approve, quiver (5)" |
+| hide-quiver (quiver) | hide-quiver_refine.glb | 1 Nov, "yes all are approved" |
+| birch-quiver (quiver) | birch-quiver-r2_refine.glb | 1 Nov, "yes all are approved" |
+| woven-quiver (quiver) | woven-quiver_refine.glb | 1 Nov, "yes all are approved" |
+| gilded-quiver (quiver) | gilded-quiver_refine.glb | 1 Nov, "yes all are approved" |
+| leather-bracer (bracer) | leather-bracer-i1_i23d.glb | 1 Nov, "Approve all five" |
+| bark-bracer (bracer) | bark-bracer-i1_i23d.glb | 1 Nov, "Approve all five" |
+| scaled-bracer (bracer) | scaled-bracer-i1_i23d.glb | 1 Nov, "Approve all five" |
+| silver-bracer (bracer) | silver-bracer-i1_i23d.glb | 1 Nov, "Approve all five" |
+| moss-cloak (cloak) | moss-cloak_refine.glb | 1 Nov, "yes all are approved" |
+| wool-cloak (cloak) | wool-cloak_refine.glb | 1 Nov, "yes all are approved" |
+| feather-cloak (cloak) | feather-cloak_refine.glb | 1 Nov, "yes all are approved" |
+| dusk-cloak (cloak) | dusk-cloak_refine.glb | 1 Nov, "yes all are approved" |
+| soft-boots (boots) | soft-boots_refine.glb | 1 Nov, "yes all are approved" |
+| root-boots (boots) | root-boots_refine.glb | 1 Nov, "yes all are approved" |
+| ranger-boots (boots) | ranger-boots_refine.glb | 1 Nov, "yes all are approved" |
+| windstep-boots (boots) | windstep-boots_refine.glb | 1 Nov, "yes all are approved" |
+| acorn-charm (charm) | acorn-charm_refine.glb | 1 Nov, "yes all are approved" |
+| bone-charm (charm) | bone-charm_refine.glb | 1 Nov, "yes all are approved" |
+| amber-charm (charm) | amber-charm_refine.glb | 1 Nov, "yes all are approved" |
+| star-charm (charm) | star-charm_refine.glb | 1 Nov, "yes all are approved" |
+| last-knife (mythic) | last-knife_refine.glb | 1 Nov, "yes all are approved" |
+| heart-of-kiln (mythic) | heart-of-kiln-r2_refine.glb | 1 Nov, "yes all are approved" |
+| thunders-memory (mythic) | thunders-memory-i1_i23d.glb | 1 Nov, "Approve all five" |
+| oakspine (mythic) | oakspine_refine.glb | 1 Nov, "yes all are approved" |
+| pale-moon (mythic) | pale-moon_refine.glb | 1 Nov, "yes all are approved" |
+| first-wolf (mythic) | first-wolf_refine.glb | 1 Nov, "yes all are approved" |
+| heartwood-splinter (mythic) | heartwood-splinter_refine.glb | 1 Nov, "yes all are approved" |
+| starfall-cloak (mythic) | starfall-cloak_refine.glb | 1 Nov, "yes all are approved" |
 
 Route that worked for open shells (bracers): Text-to-Image reference (gpt-image-2, 9 cr) -> Image-to-3D smart
-topology 3,000 tris textured 2K (15 cr), `run_img.sh image|i23d <id>-i1`. Text-to-3D for solid props.
+topology 3,000 tris textured 2K (15 cr), `run_img.sh image|i23d <id>-i1`. Text-to-3D (preview 5 + refine 10)
+for solid props.
