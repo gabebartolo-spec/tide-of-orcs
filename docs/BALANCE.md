@@ -503,7 +503,7 @@ All in `SET_FX`. Nightknife: knives +25% rate / bleed 3 s, +30% taken / every 3r
 Evidence: `npm run balance` (default greedy) output identical to the tb-097 base (first fall wave 5, best wave 31): greedy runs rarely complete a set. Per-set tuning is TB-107.
 
 ### P-100 · Mythic power numbers (2026-11-01, TB-100)
-All in `MYTHIC_FX`. The Last Knife: a knife that hits turns back, pierces all on the way home. Heart of the Kiln: burn never ends, +10% burn damage per second burning. Thunder's Memory: each storm stores a charge; at 10 the next lob hits every orc for ×3. Oakspine: a bolt's 3rd hit drives a stake (r 10, 8 s) that holds the first orc to touch it. Sliver of the Pale Moon: with the Moonbow draw ×0.5 cooldown, each shot costs 2% wall, skipped below 10% wall. The First Wolf: companions +25% damage per 15 s of the run, max 4 stacks. Heartwood Splinter: once per run the fallen wall stands again at 30%; that run pays ×0.5 Heartwood (floor `PRESTIGE.minGain`). Starfall Cloak: every 100 starlight from kills strikes the highest-HP orc for ×5 damage, 1 s cooldown; Item Find +15%.
+Superseded for seven of the eight by P-128 (TB-128, 2 Nov); Pale Moon stands. All in `MYTHIC_FX`. The Last Knife: a knife that hits turns back, pierces all on the way home. Heart of the Kiln: burn never ends, +10% burn damage per second burning. Thunder's Memory: each storm stores a charge; at 10 the next lob hits every orc for ×3. Oakspine: a bolt's 3rd hit drives a stake (r 10, 8 s) that holds the first orc to touch it. Sliver of the Pale Moon: with the Moonbow draw ×0.5 cooldown, each shot costs 2% wall, skipped below 10% wall. The First Wolf: companions +25% damage per 15 s of the run, max 4 stacks. Heartwood Splinter: once per run the fallen wall stands again at 30%; that run pays ×0.5 Heartwood (floor `PRESTIGE.minGain`). Starfall Cloak: every 100 starlight from kills strikes the highest-HP orc for ×5 damage, 1 s cooldown; Item Find +15%.
 Evidence: `npm run balance` unchanged (greedy runs gear mythics too rarely to show). Per-mythic tuning is TB-107.
 
 ### P-101 · Spoils branch and Heartwood loot lines (2026-11-01, TB-101)
@@ -569,7 +569,7 @@ Worn gear against bare is also +0 to −1 waves in the same replay. Tiers off (`
 
 Read: Pale Moon already meets the target at today's numbers (+3 to +4, 10–14%) and needs no change. The other seven cannot reach it by scaling numbers: ten times the numbers still adds 0 to +1 wave. Each one boosts a side source (knives, burn, storm, ballista stakes, wolf, one wall refill, one strike on one orc), while the fall is set by the elf's lob against the crowd; only Pale Moon, which doubles the lob cadence, touches that. `knifeBackLife` is also the wrong lever: a returning knife reaches the elf well inside 3 s, so a longer life changes nothing (×1 and ×10 runs are identical).
 
-Draft lob reworks (2 Nov; director chose "draft lob reworks": each weak power keeps its theme but feeds the elf's lob; edit freely, no code until approved). Sizing: Pale Moon's ×2 cadence is worth +3 to +4, so each draft aims at about ×2 lob power on average while its condition holds. Worth is arithmetic from that rule, not simmed; each gets the replay trial once built.
+Lob reworks (2 Nov; director chose "draft lob reworks", then "Build all seven": built as drafted). Mythic Echo makes each trigger sooner or last longer (mark and root ×1.25 long, Kiln and Wolf ramp ×1.25 fast, Splinter reaches ×3 sooner, storm window ×1.25, star chance ×1.25), never hit harder. Sizing: Pale Moon's ×2 cadence is worth +3 to +4, so each draft aims at about ×2 lob power on average while its condition holds. Worth is arithmetic from that rule, not simmed; each gets the replay trial once built.
 
 | Power | New text (player-facing) | Numbers (MYTHIC_FX) | Average lob gain | Cost / condition |
 |---|---|---|---|---|
@@ -582,6 +582,21 @@ Draft lob reworks (2 Nov; director chose "draft lob reworks": each weak power ke
 | Starfall Cloak | Each arrow has a 25% chance to fall as a star: four times the damage in a circle half again as wide. Item Find +15%. | `starfallChance=0.25, starfallMult=4, starfallRadius=1.5` | ×1.75 damage, more with the wider circle | none |
 
 Old powers retire with these (`knifeBackLife`, the stand-again, stored Thunder bolt, stakes, companion stacking, Starfall every 100 starlight). Item names, slots and drop rules stay. Save: worn mythics keep their id, so no migration.
+
+Built (2 Nov): replay trial, `npm run balance -- --minutes 300 --seed N --quiet --hwbuy --mythic <id>`, seeds 1 / 2. The bot now reaches tier 6 by ~185 min (G1 prices and set F), so the replayed run is a tier-6 run falling near wave 23–30; Pale Moon is re-measured on the same footing.
+
+| Power | Fall wave on, seeds 1 / 2 | Power off | Worth (waves) |
+|---|---|---|---|
+| Oakspine | 28 / 30 | 26 / 27 | +2 / +3 |
+| Thunder's Memory | 24 / 26 | 24 / 23 | 0 / +3 |
+| Starfall Cloak | 25 / 26 | 25 / 24 | 0 / +2 |
+| Sliver of the Pale Moon (unchanged) | 24 / 26 | 24 / 24 | 0 / +2 |
+| The Last Knife | 23 / 26 | 23 / 25 | 0 / +1 |
+| Heart of the Kiln | 27 / 24 | 27 / 23 | 0 / +1 |
+| Heartwood Splinter | 28 / 26 | 28 / 26 | 0 / 0 |
+| The First Wolf | 23 / 26 | 24 / 26 | −1 / 0 |
+
+Read: against the +10% target (~+3 waves at a wave-25 fall) only Oakspine gets there on both seeds; Thunder's Memory and Starfall Cloak reach it on one. Splinter and First Wolf add nothing: the bot's wall rarely sits low long before it falls, and tier-6 waves end before many 15 s stacks build. Every power is now on the lob, so further tuning is numbers in `MYTHIC_FX` only.
 
 ### P-108 · Loot pacing: rarer bosses and rarer top drops (2026-11-01, TB-108) · applied
 Director (1 Nov): make bosses rarer; "candidate C looks okay, just make it like 20% slower"; approved "Yes, apply P-108" (1 Nov). Applied (G), now in Current and the data:

@@ -1,7 +1,7 @@
 import { BARRICADE } from '../data/balance';
 import { EventBus } from './events';
 import { SimState } from './state';
-import { MYTHIC_FX, SET_FX } from '../data/lootTables';
+import { SET_FX } from '../data/lootTables';
 import { gain } from './prestige';
 
 export const barFrac = (s: SimState): number => Math.max(0, s.run.barHp / s.stats.barMax);
@@ -18,12 +18,6 @@ export function barricadeHit(s: SimState, ev: EventBus, amount: number, y: numbe
   if (s.stats.bulwark && !run.bulwarkUsed) {
     run.bulwarkUsed = true; run.barHp = s.stats.barMax * BARRICADE.bulwarkFrac;
     ev.push({ t: 'barricadeRegrow' });
-    return;
-  }
-  // Heartwood Splinter: once per run the wall stands again; that run's Heartwood is halved (prestige.gain)
-  if (s.stats.wallSplinter && !s.run.splinterUsed) {
-    s.run.splinterUsed = true; run.barHp = s.stats.barMax * Math.min(1, MYTHIC_FX.splinterFrac * s.stats.echo);
-    ev.push({ t: 'splinter' });
     return;
   }
   run.barHp = 0; run.fallen = true;

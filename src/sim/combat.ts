@@ -42,12 +42,6 @@ export function kill(s: SimState, ev: EventBus, o: Orc): void {
     ev.push({ t: 'shatter', x: o.x, y: o.y, r: R });
     s.orcs.forEach((q) => { if (!q.dead && (q.x - o.x) ** 2 + (q.y - o.y) ** 2 < (R + q.r) ** 2) damage(s, ev, q, s.stats.dmg * s.stats.shatter); });
   }
-  // Starfall Cloak: starlight gathered calls a shot from the sky on the strongest orc
-  if (s.stats.starCloak) { s.starAcc += loot; if (s.starAcc >= MYTHIC_FX.starfallEvery / s.stats.echo && s.starfallT <= 0) {
-    s.starAcc = 0; s.starfallT = MYTHIC_FX.starfallCd;
-    let top: Orc | null = null; s.orcs.forEach((q) => { if (!q.dead && (!top || q.hp > top.hp)) top = q; });
-    if (top) { const t = top as Orc; ev.push({ t: 'starCloak', x: t.x, y: t.y }); damage(s, ev, t, s.stats.dmg * MYTHIC_FX.starfallMult); }
-  } }
   // Emberwright 4: a burning orc's flames pass to its nearest neighbours
   if (o.burn > 0) for (let i = 0; i < s.stats.burnSpread; i++) {
     const n = nearestOrc(s, o.x, o.y, (q) => q.burn <= 0 && (q.x - o.x) ** 2 + (q.y - o.y) ** 2 < SET_FX.spreadReach ** 2);
@@ -96,10 +90,33 @@ export function shoot(s: SimState, kind: ProjectileKind, x: number, y: number, a
 
 /** The elf's arcing shot: lands at (tx, ty) after LOB.flight and strikes every orc within the circle, 1 + pierce times.
  *  `fx` is what it rolled (rollFx); a moon shot deals moonMult. */
-export function lob(s: SimState, sx: number, sy: number, tx: number, ty: number, fx: number = FX.ALL): void {
+export function lob(s: SimState, sx: number, sy: number, tx: number, ty: number, fx: number = FX.ALL, ev?: EventBus): void {
   const p = s.shots.alloc(); if (!p) return;
   p.kind = 'lob'; p.sx = p.x = sx; p.sy = p.y = sy; p.tx = tx; p.ty = ty; p.t = 0; p.h = 0; p.vx = p.vy = 0;
   p.r = s.stats.radius; p.dmg = s.stats.dmg * LOB.dmgMult * (s.stats.homing && fx & FX.MOON ? s.stats.moonMult : 1); p.fx = fx; p.pierce = s.stats.pierce; p.life = Infinity; p.target = null; p.hit.clear();
+  // Starfall Cloak: some arrows fall as stars, harder and wider
+  if (s.stats.starCloak && s.rng.next() < Math.min(1, MYTHIC_FX.starfallChance * s.stats.echo)) {
+    p.dmg *= MYTHIC_FX.starfallMult; p.r *= MYTHIC_FX.starfallRadius; ev?.push({ t: 'starCloak', x: tx, y: ty });
+  }
+}
+
+/** The lob-feeding mythics (TB-128, BALANCE P-128): what the elf's arrows deal to this orc, × its base damage.
+ *  Mythic Echo (`echo`) makes each one trigger sooner or last longer, never hit harder. */
+export function mythicMult(s: SimState, o: Orc): number {
+  const st = s.stats, e = st.echo, M = MYTHIC_FX;
+  let m = 1;
+  // The Last Knife: knifed orcs are marked
+  if (st.knifeReturn && o.mark > 0) m *= M.knifeMarkMult;
+  // Heart of the Kiln: the longer an orc has burned, the harder it is hit
+  if (st.burnRamp) m *= 1 + Math.min(M.burnRampMax, o.burnT * M.burnRampPerSec * e);
+  // The First Wolf: stacks with time into the wave
+  if (st.petReturn) m *= 1 + M.wolfStack * Math.min(M.wolfMax, Math.floor(s.run.waveT * e / M.wolfEvery));
+  // Heartwood Splinter: the lower the wall, the harder the arrows (full at the floor)
+  if (st.wallSplinter && st.barMax > 0) {
+    const lost = Math.min(1, Math.max(0, (1 - s.run.barHp / st.barMax) / (1 - M.splinterFloor) * e));
+    m *= 1 + (M.splinterMaxMult - 1) * lost;
+  }
+  return m;
 }
 
 /** Orc shaman (TB-127): a fireball lobbed from the staff at (sx, sy) onto (tx, ty). Flies like the elf's lob on FIREBALL's
@@ -132,7 +149,8 @@ export function impact(s: SimState, ev: EventBus, p: { tx: number; ty: number; r
     if (fire) o.burn = st.burnSecs;
     if (frost) o.chill = ARROWS.frost.secs;
     if (stun) stunOrc(o, st.stunSecs);
-    damage(s, ev, o, p.dmg * (crit ? st.critMult : moon ? SET_FX.moonCritMult : 1));
+    if (st.stakes) rootOrc(o, MYTHIC_FX.oakRootSecs * st.echo);
+    damage(s, ev, o, p.dmg * mythicMult(s, o) * (crit ? st.critMult : moon ? SET_FX.moonCritMult : 1));
   });
   ev.push({ t: 'impact', x: p.tx, y: p.ty, r: p.r });
   if (fire && st.cinder) addZone(s, 'cinder', p.tx, p.ty, p.r, SET_FX.cinderSecs);

@@ -83,8 +83,8 @@ describe('Spoils branch (TB-101)', () => {
     expect(createState(1, freshRun(), meta).stats.knifeFan).toBe(0);
     expect(createState(1, { ...freshRun(), levels: { root: 1, resonance: 1 } }, meta).stats.knifeFan).toBe(1);
   });
-  it('Mythic Echo: mythic thresholds shrink by 25%', () => {
+  it('Mythic Echo: mythic powers trigger 25% sooner or last 25% longer', () => {
     expect(st().echo).toBe(1); expect(st({ echo: 1 }).echo).toBe(SPOILS_FX.echo);
-    expect(Math.ceil(MYTHIC_FX.thunderCharges / st({ echo: 1 }).echo)).toBeLessThan(MYTHIC_FX.thunderCharges);
+    expect(MYTHIC_FX.thunderDrawSecs * st({ echo: 1 }).echo).toBeGreaterThan(MYTHIC_FX.thunderDrawSecs);
   });
 });
