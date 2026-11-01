@@ -39,6 +39,7 @@ export const STR = {
   replanted: (hw: number) => `The grove is replanted. ${hw} Heartwood carried back.`,
   saved: 'Saved', wipe: 'Wipe save', wipeConfirm: 'Really wipe? click again', freshDawn: 'A fresh dawn.',
   tabSettings: 'Settings',
+  turnSideways: 'Turn your phone sideways to hold the wall.',
   tabSatchel: 'Satchel', satchelTitle: 'Satchel', satchelWorn: 'Worn',
   satchelCount: (n: number, cap: number, glimmer: number) => `Satchel ${n} / ${cap} · ${glimmer} Glimmer`,
   satchelEmpty: 'Nothing carried yet. Orcs drop gear as the waves grow.', satchelPick: 'Pick an item to see it.',

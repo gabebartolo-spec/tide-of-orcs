@@ -5,7 +5,7 @@ The store page for **https://veniceissinking.itch.io/elves-vs-orcs**. This file 
 ## Page settings
 - Title: **Let's Hunt Some Orc!**
 - Short description (tagline, 120 chars max): *Hold the barricade against an endless orc tide. Aim the bow, grow the grove, fall, replant, and stand longer.*
-- Kind: HTML, played in browser. Viewport 1280 × 720, *Click to launch in fullscreen* on, *Mobile friendly* off (mobile is off the roadmap, GDD §11; RELEASE.md step 1 still says on).
+- Kind: HTML, played in browser. Viewport 1280 × 720, *Click to launch in fullscreen* on, *Mobile friendly* on with orientation *Landscape* once TB-155 ships (GDD §11; the itch setting is the director's to change).
 - Genre: Strategy. Tags: incremental, tower-defense, idle, fantasy, prestige, singleplayer, mouse-only.
 - Release status: In development.
 

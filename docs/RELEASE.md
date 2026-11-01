@@ -3,7 +3,7 @@
 Every development milestone ships a playable web build to **https://veniceissinking.itch.io/elves-vs-orcs**. Milestones go to the `html5-dev` channel; tagged versions (`v1.0.0`) go to `html5`.
 
 ## One-time setup (Gabe)
-1. On itch.io, open the project → Edit → set **Kind of project: HTML** and tick *This file will be played in the browser*. Set viewport to 1280 × 720 (or "Click to launch in fullscreen"), enable *Mobile friendly*.
+1. On itch.io, open the project → Edit → set **Kind of project: HTML** and tick *This file will be played in the browser*. Set viewport to 1280 × 720 (or "Click to launch in fullscreen"), enable *Mobile friendly* with orientation *Landscape* (TB-155).
 2. Get a butler API key: itch.io → Settings → API keys → Generate.
 3. In the GitHub repo: Settings → Secrets and variables → Actions → New repository secret `BUTLER_API_KEY` with that key. *(Done 30 Oct 2026.)*
 4. Optional later: move the job behind a GitHub environment with a required reviewer so an agent can tag but a human approves the upload.

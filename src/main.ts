@@ -4,6 +4,7 @@ import { FieldRenderer } from './render/field';
 import { TreeRenderer } from './render/tree';
 import { Panel } from './ui/panel';
 import { AudioEngine } from './audio/engine';
+import { STR } from './data/strings';
 
 const game = new GameController();
 const fieldCanvas = document.getElementById('game') as HTMLCanvasElement;
@@ -24,14 +25,34 @@ panel.onCue = (c) => audio.play(c);
 
 
 // Aiming: the bow follows the pointer while it is over the field. No clicking; the bow looses on its own.
+// Touch (TB-155): the elf aims while a finger is held on the plain, and the circle sits TOUCH_LIFT above the fingertip so
+// the finger never hides it. Only the first finger aims; a second one (on a rally button) leaves the aim alone.
+const TOUCH_LIFT = 3.5; // rem
+let aimFinger: number | null = null;
 const setAim = (e: PointerEvent): void => {
+  if (e.pointerType !== 'mouse' && aimFinger !== null && e.pointerId !== aimFinger) return;
   const r = fieldCanvas.getBoundingClientRect();
-  game.setAim(((e.clientX - r.left) / r.width) * FIELD.w, ((e.clientY - r.top) / r.height) * FIELD.h);
+  const lift = e.pointerType === 'mouse' ? 0 : TOUCH_LIFT * parseFloat(getComputedStyle(document.documentElement).fontSize);
+  // a captured finger can slide off the canvas: keep the circle on the plain
+  const x = Math.min(r.right, Math.max(r.left, e.clientX)), y = Math.min(r.bottom, Math.max(r.top, e.clientY - lift));
+  game.setAim(((x - r.left) / r.width) * FIELD.w, ((y - r.top) / r.height) * FIELD.h);
 };
+const endAim = (e: PointerEvent): void => {
+  if (e.pointerType === 'mouse') { if (e.type === 'pointerleave') game.clearAim(); return; }
+  if (e.pointerId === aimFinger) { aimFinger = null; game.clearAim(); }
+};
+fieldCanvas.addEventListener('pointerdown', (e) => {
+  if (e.pointerType !== 'mouse' && aimFinger === null) {
+    aimFinger = e.pointerId;
+    try { fieldCanvas.setPointerCapture(e.pointerId); } catch { /* pointer already gone: aim without capture */ }
+  }
+  setAim(e);
+});
 fieldCanvas.addEventListener('pointermove', setAim);
-fieldCanvas.addEventListener('pointerdown', setAim);
-fieldCanvas.addEventListener('pointerleave', () => game.clearAim());
-fieldCanvas.addEventListener('pointerup', (e) => { if (e.pointerType !== 'mouse') game.clearAim(); });
+for (const t of ['pointerup', 'pointercancel', 'pointerleave'] as const) fieldCanvas.addEventListener(t, endAim);
+// no long-press menu or callout on the field
+fieldCanvas.addEventListener('contextmenu', (e) => e.preventDefault());
+(document.getElementById('turn-msg') as HTMLElement).textContent = STR.turnSideways;
 window.addEventListener('resize', () => field.resize());
 // any press or key skips the replant ceremony
 const treeWrap = document.querySelector('.treewrap') as HTMLElement;
