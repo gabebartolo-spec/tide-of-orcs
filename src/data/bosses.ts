@@ -30,10 +30,10 @@ export const BOSS_SCRIPT: readonly MiniWave[] = [
  *  next one for good; at March the player picks any tier unlocked. Each tier above the first multiplies orc HP and
  *  starlight per kill, and boss Heartwood, from wave 1. `max: 1` keeps tiers off (P-148 proposes the numbers). */
 export const TIERS = {
-  max: 1,     // highest tier that can be unlocked; 1 = tiers off
-  hp: 1,      // orc HP × hp^(tier − 1)
-  loot: 1,    // starlight per kill and per boss clear × loot^(tier − 1)
-  hw: 0,      // boss Heartwood × (1 + hw × (tier − 1))
+  max: 6,     // highest tier that can be unlocked; 1 = tiers off
+  hp: 2,      // orc HP × hp^(tier − 1)
+  loot: 1.5,  // starlight per kill and per boss clear × loot^(tier − 1)
+  hw: 1,      // boss Heartwood × (1 + hw × (tier − 1))
 };
 
 export const tierHp = (tier: number): number => TIERS.hp ** (tier - 1);

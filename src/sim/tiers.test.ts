@@ -20,8 +20,14 @@ function clearBoss(tier: number, metaTier: number): { tier: number; events: stri
 }
 
 describe('boss tiers (TB-148)', () => {
-  it('Current values change nothing: tier 1 multiplies by 1 and no tier unlocks', () => {
+  it('Current values (P-148 set F): tier 1 multiplies by 1, tier 3 by hp 4 and loot 2.25, max 6', () => {
     expect(tierHp(1)).toBe(1); expect(tierLoot(1)).toBe(1);
+    expect(tierHp(3)).toBe(4); expect(tierLoot(3)).toBe(2.25);
+    expect(clearBoss(6, 6)).toEqual({ tier: 6, events: ['bossStart', 'bossEnd'] });
+  });
+
+  it('tiers off (max 1): no tier unlocks', () => {
+    Object.assign(TIERS, { max: 1 });
     expect(clearBoss(1, 1)).toEqual({ tier: 1, events: ['bossStart', 'bossEnd'] });
   });
 
