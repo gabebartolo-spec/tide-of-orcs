@@ -52,7 +52,7 @@ describe('drawActor fallbacks', () => {
   });
 });
 
-describe('orc sprite clock (TB-131)', () => {
+describe('orc sprite clock (TB-133)', () => {
   it('runs one second of clip per second of sim, not nine', () => {
     const s = createState(1), ev = new EventBus(), o = orcAt(s, 600, 200); o.spd = 40; o.wob = 0;
     for (let i = 0; i < 1 / STEP; i++) step(s, STEP, noInputs, ev);
