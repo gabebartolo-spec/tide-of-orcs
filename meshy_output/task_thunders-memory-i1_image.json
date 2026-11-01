@@ -1,0 +1,16 @@
+{
+  "id": "01a19566-d054-731e-8daf-4cbedf9782ac",
+  "type": "text-to-image",
+  "ai_model": "gpt-image-2",
+  "prompt": "Concept art of a single fantasy archer's bracer, a game item, shown alone in three-quarter view and centred on a plain pale grey background. It is an open curved forearm guard, a tapered half-cylinder of dark iron, wider at the elbow end and narrower at the wrist, its open inner side turned slightly toward the viewer so the hollow inside is visible; a raised jagged lightning bolt down the outer face and three copper coils ringing the wrist end; two leather straps with buckles holding it closed. No arm, no hand, no stand, no other objects. Stylised low-poly toy-miniature look, flat matte colours, soft even lighting, no outlines, no text. Palette: dusty sage, rust, ochre and bone.",
+  "status": "SUCCEEDED",
+  "progress": 100,
+  "created_at": 1793507905635,
+  "started_at": 1793507905642,
+  "finished_at": 1793507934818,
+  "expires_at": 1793767134818,
+  "image_urls": [
+    "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/uploads/image_01a19566-d054-731e-8daf-4cbedf9782ac_0.png?Expires=1793767134&Signature=BlgSktDDgsuL~XdBxhOdNpOFie0Y6iS2mKa-RQApCs5ACxH3B-HQ8cvQk5mOW-VY5uvV1QeIrF4wbC7cKqiobXkYPlEtKN0rdIW1SARFi1fsh5eorQWAsHPcPyDeK3Wp2RdgzQJ7ptKw5XHAX8PhSHQ4sbwertSBSg4q--~11FT5Lro~3Xs2X0qjGJvUJdMY-HBxue8HJFOBcaw-Rqvs8qKTto66SsBLvt~g5PnerRbwC2ebtwcvM9ZUmztqjyvJOXh4XhpPHgGgtXmGuZDgcH0ri4LEn9OvVR2~i9r6lAwKhA2T4HrtmHYC1pEXn49ub~Cf~YsH5~XJdH4hx5HHbA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "consumed_credits": 9
+}
