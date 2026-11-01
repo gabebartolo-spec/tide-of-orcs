@@ -16,7 +16,7 @@ import { replant } from './prestige';
 import { spawnOrc } from './step';
 
 const item = (uid: string, extra: Partial<Item> = {}): Item => ({ uid, base: 'x', slot: 'bow', rarity: 'epic', ilvl: 10, affixes: [{ id: 'sharp', value: 0.1 }], ...extra });
-const st = (lv: Levels = {}, hw: HwLevels = {}) => deriveStats({ root: 1, ...lv }, 0, hw);
+const st = (lv: Levels = {}, hw: HwLevels = {}) => deriveStats({ root: 1, ...lv }, hw);
 const orc = (s: SimState, kind: 'grunt' | 'boss') => { spawnOrc(s, kind, 300); let o = null as ReturnType<typeof s.orcs.alloc>; s.orcs.forEach((q) => { o = q; }); return o!; };
 const drops = (ev: EventBus) => ev.drain().filter((e) => e.t === 'loot').length;
 

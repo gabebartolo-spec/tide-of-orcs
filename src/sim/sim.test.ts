@@ -6,7 +6,7 @@ import { deriveStats } from './stats';
 import { buy, canBuy, costOf } from './tree';
 import { NODE, NODES } from '../data/skillTree';
 import { FIELD, STEP, waveLoot } from '../data/balance';
-import { BOSS_WAVE } from '../data/bosses';
+import { BOSS_WAVE, bossHw } from '../data/bosses';
 import { bossesReady, summonBoss } from './boss';
 import { damage } from './combat';
 import { canRally, rally } from './vanguard';
@@ -37,19 +37,19 @@ describe('rng', () => {
 
 describe('stats', () => {
   it('every node at max rank changes at least one stat', () => {
-    const base = deriveStats({ root: 1 }, 0);
+    const base = deriveStats({ root: 1 });
     for (const n of NODES) {
       if (n.id === 'root') continue;
       const lv: Record<string, number> = { root: 1 };
       // own the whole ancestor chain so dependent stats (e.g. ranks needs muster) resolve
       let p: typeof n | undefined = n; while (p) { lv[p.id] = p.max; p = p.parent ? NODE[p.parent] : undefined; }
-      const st = deriveStats(lv, 0);
+      const st = deriveStats(lv);
       expect(JSON.stringify(st), n.id).not.toBe(JSON.stringify(base));
     }
   });
-  it('heartwood scales damage, starlight and the wall', () => {
-    const a = deriveStats({ root: 1 }, 0), b = deriveStats({ root: 1 }, 5);
-    expect(b.dmg / a.dmg).toBeCloseTo(1.6); expect(b.starMult / a.starMult).toBeCloseTo(1.6); expect(b.barMax / a.barMax).toBeCloseTo(1.6);
+  it('Heartwood grants no passive bonus (P-142): stats depend only on the trees', () => {
+    const a = createState(1), b = createState(1); b.meta.heartwood = 50; recompute(b);
+    expect(b.stats.dmg).toBe(a.stats.dmg); expect(b.stats.starMult).toBe(a.stats.starMult); expect(b.stats.barMax).toBe(a.stats.barMax);
   });
 });
 
@@ -95,8 +95,8 @@ describe('simulation', () => {
     expect(s.shots.count).toBe(0);
   });
   it('Wide Volley widens the circle 20% per rank; Quick Draw shortens the draw', () => {
-    expect(deriveStats({ root: 1, wide: 2 }, 0).radius / deriveStats({ root: 1 }, 0).radius).toBeCloseTo(1.44);
-    expect(deriveStats({ root: 1, draw: 1 }, 0).lobCd).toBeCloseTo(2.5 / 1.15);
+    expect(deriveStats({ root: 1, wide: 2 }).radius / deriveStats({ root: 1 }).radius).toBeCloseTo(1.44);
+    expect(deriveStats({ root: 1, draw: 1 }).lobCd).toBeCloseTo(2.5 / 1.15);
   });
 });
 
@@ -112,7 +112,7 @@ describe('tree', () => {
     expect(s.stats.dmg).toBeCloseTo(11.25);
   });
   it('fury ranks toughen one kind and raise its starlight; swarm speeds its spawns', () => {
-    const st = deriveStats({ root: 1, drums: 2, runners: 1, runswarm: 1 }, 0);
+    const st = deriveStats({ root: 1, drums: 2, runners: 1, runswarm: 1 });
     expect(st.foes.grunt.hp).toBeCloseTo(1.69); expect(st.foes.grunt.loot).toBeCloseTo(1.96);
     expect(st.foes.runner.hp).toBe(1); expect(st.foes.runner.spawn).toBeCloseTo(1.2);
     expect(st.foes.brute.on).toBe(false);
@@ -197,7 +197,7 @@ describe('prestige', () => {
 describe('kinship, horde (TB-039)', () => {
   const comp = { root: 1, ranger: 1, wolf: 1, knives: 1, ballista: 1, muster: 1 };
   it('kinship scales every companion and the vanguard by 1.2 per rank', () => {
-    const a = deriveStats(comp, 0), b = deriveStats({ ...comp, bond: 3 }, 0), k = 1.2 ** 3;
+    const a = deriveStats(comp), b = deriveStats({ ...comp, bond: 3 }), k = 1.2 ** 3;
     expect(b.kin / a.kin).toBeCloseTo(k);
     expect(b.wolf / a.wolf).toBeCloseTo(k);
     expect(b.knives!.dmg / a.knives!.dmg).toBeCloseTo(k);
@@ -212,7 +212,7 @@ describe('kinship, horde (TB-039)', () => {
       let live = 0; s.orcs.forEach((o) => { if (!o.dead) live++; });
       return s.run.kills + live;
     };
-    expect(deriveStats({ root: 1, horde: 5 }, 0).foes.grunt.spawn).toBeCloseTo(1.2 ** 5);
+    expect(deriveStats({ root: 1, horde: 5 }).foes.grunt.spawn).toBeCloseTo(1.2 ** 5);
     expect(count(5)).toBeGreaterThan(count(0) * 1.5);
   });
 });
@@ -240,14 +240,18 @@ describe('boss waves (TB-081)', () => {
     const end = ev.drain().find((e) => e.t === 'bossEnd'); expect(end).toMatchObject({ t: 'bossEnd', cleared: false, loot: 0 });
     const plain = at(10); for (let i = 0; i < 60 / STEP; i++) { step(plain, STEP, aimed(plain), new EventBus()); plain.orcs.forEach((o) => { expect(o.kind).not.toBe('boss'); }); }
   });
-  it('clearing every orc in time pays a starlight bounty', () => {
+  it('clearing every orc in time pays a starlight bounty and banks Heartwood at once (P-142)', () => {
     const s = owed(10), ev = new EventBus(); summonBoss(s, ev);
-    let paid = 0;
+    let paid = 0, hw = 0;
     for (let i = 0; i < 60 / STEP && s.run.boss; i++) {
       step(s, STEP, noInputs, ev);
       s.orcs.forEach((o) => { if (!o.dead && o.champ && o.x < FIELD.w - 40) damage(s, ev, o, 1e9); });
-      for (const e of ev.drain()) if (e.t === 'bossEnd') { expect(e.cleared).toBe(true); paid = e.loot; }
+      for (const e of ev.drain()) if (e.t === 'bossEnd') { expect(e.cleared).toBe(true); paid = e.loot; hw = e.hw; }
     }
     expect(paid).toBeCloseTo(BOSS_WAVE.clearLoot * waveLoot(s.run.wave) * s.stats.starMult);
+    expect(hw).toBe(bossHw(s.run.wave)); expect(s.meta.heartwood).toBe(hw);
+  });
+  it('boss Heartwood: 3 per 25 waves reached, at least 3', () => {
+    expect(bossHw(10)).toBe(3); expect(bossHw(25)).toBe(3); expect(bossHw(50)).toBe(6); expect(bossHw(99)).toBe(9);
   });
 });
