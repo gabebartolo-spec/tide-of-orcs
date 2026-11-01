@@ -144,7 +144,8 @@ Report columns per minute: wave, starlight, kills/min, kills, wall %, vanguard c
 
 ## Proposed
 
-### P-151 · Price by power: cheaper Quick Draw, Keen Eye and Nimble Wrist (2026-11-02, TB-151)
+### P-151 · Price by power: cheaper Quick Draw, Keen Eye and Nimble Wrist (2026-11-02, TB-151) · applied
+**Decided 2026-11-02 (director): apply G1.** Quick Draw 12, Keen Eye 30, Nimble Wrist 46 are now the base prices in `src/data/skillTree.ts` and SKILL-TREE.md.
 P-147's table showed Quick Draw, Keen Eye and Nimble Wrist cost 4–30× more per percent than Sharpened Tips. Two price sets against today, greedy, `--hwbuy`, 300 min, seeds 1–3 (set F tiers). Reproduce with `npx tsx sim/run.ts --minutes 300 --seed 1 --quiet --hwbuy --cost draw=12,crit=30,knifespd=46`.
 
 | Set | Quick Draw | Keen Eye | Nimble Wrist | Tier 2 unlocked | Nodes at 120 min | Best wave |
@@ -295,11 +296,11 @@ Price by power (§8 #4), starlight per +1% at rank 0, today:
 |---|---|---|---|
 | Sharpened Tips | 12 | +25% damage | 0.48 |
 | Seasoned Timber | 25 | +25% wall health | 1.0 |
-| Quick Draw | 30 | +15% rate | 2.0 |
+| Quick Draw | 30 (12 since P-151) | +15% rate | 2.0 |
 | Wide Volley | 40 | +20% radius | 2.0 |
 | Fangs | 90 | +40% wolf damage | 2.3 |
-| Nimble Wrist | 140 | +20% knife rate | 7.0 |
-| Keen Eye | 120 | +8% crit chance | 15 |
+| Nimble Wrist | 140 (46 since P-151) | +20% knife rate | 7.0 |
+| Keen Eye | 120 (30 since P-151) | +8% crit chance | 15 |
 | Iron Bolts | 2000 | +50% ballista damage | 40 |
 | Gleaning | 600 | +8% starlight | 75 |
 

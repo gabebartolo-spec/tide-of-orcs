@@ -10,9 +10,9 @@ Layout coordinates are for a 1288×1262 tree canvas, root at (674, 748). Six bra
 |---|---|---|---|---|---|---|---|---|---|
 | root | Waking | Grove | — | 1 | 0 | — | 674 | 748 | An elf, a bow, a wall of timber, an endless tide. Begin. |
 | sharp | Sharpened Tips | Bow | root | 10 | 12 | 1.55 | 514 | 556 | +25% arrow damage per rank. |
-| draw | Quick Draw | Bow | sharp | 8 | 30 | 1.7 | 386 | 460 | +15% draw speed per rank. |
+| draw | Quick Draw | Bow | sharp | 8 | 12 | 1.7 | 386 | 460 | +15% draw speed per rank. |
 | wide | Wide Volley | Bow | sharp | 5 | 40 | 1.8 | 602 | 516 | Your arrow strikes a circle 20% wider per rank. |
-| crit | Keen Eye | Bow | sharp | 5 | 120 | 2.1 | 578 | 428 | +8% chance per rank to strike for triple damage. |
+| crit | Keen Eye | Bow | sharp | 5 | 30 | 2.1 | 578 | 428 | +8% chance per rank to strike for triple damage. |
 | multi | Split Shot | Bow | draw | 3 | 220 | 4.2 | 290 | 348 | +1 extra arrow lands inside the circle with each shot. |
 | pierce | Longshaft | Bow | crit | 3 | 260 | 3.8 | 514 | 316 | Each shot strikes the ground +1 more time per rank. |
 | moon | Moonbow | Bow | multi | 1 | 3200 | — | 210 | 220 | One shot in four is a moon shot: the circle settles onto the nearest orc and strikes +60% harder. |
@@ -26,7 +26,7 @@ Layout coordinates are for a 1288×1262 tree canvas, root at (674, 748). Six bra
 | treant | Treant | Companions | hawk | 1 | 1400 | — | 866 | 220 | An old treant roots itself before the wall and stamps the ground. |
 | bond | Kinship | Companions | ranger | 5 | 500 | 2.2 | 530 | 172 | All companions and vanguard +20% damage per rank. |
 | knives | Throwing Knives | Armoury | root | 1 | 100 | — | 850 | 620 | A knife flies at the nearest orc every 1.4 s. |
-| knifespd | Nimble Wrist | Armoury | knives | 5 | 140 | 1.9 | 978 | 540 | Knives fly 20% more often per rank. |
+| knifespd | Nimble Wrist | Armoury | knives | 5 | 46 | 1.9 | 978 | 540 | Knives fly 20% more often per rank. |
 | fire | Fire Arrows | Armoury | knives | 1 | 450 | — | 946 | 412 | One shot in four sets orcs alight, burning for a few seconds. |
 | storm | Storm Glade | Armoury | fire | 1 | 1700 | — | 1074 | 316 | Lightning leaps between up to 5 orcs every 6 s. |
 | frost | Frost Arrows | Armoury | fire | 5 | 800 | 1.9 | 962 | 268 | One shot in four chills orcs for 3 s: they move and swing 20% slower, +5% per rank. |
