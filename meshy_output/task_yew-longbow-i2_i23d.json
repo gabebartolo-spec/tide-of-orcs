@@ -1,0 +1,31 @@
+{
+  "id": "01a19599-d0d3-729b-8de1-b9381815db6a",
+  "type": "image-to-3d",
+  "name": "",
+  "art_style": "",
+  "object_prompt": "",
+  "style_prompt": "",
+  "negative_prompt": "",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy game prop, no outlines, no baked shadows. Warm golden-orange yew wood with a pale sapwood stripe, tan leather grip, bone-coloured nocks, pale bowstring.",
+  "texture_image_url": "",
+  "text_style_prompt": "",
+  "image_style_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793511250265,
+  "progress": 100,
+  "started_at": 1793511250273,
+  "finished_at": 1793511287315,
+  "expires_at": 1793770487315,
+  "task_error": null,
+  "model_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19599-d0d3-729b-8de1-b9381815db6a/output/model.glb?Expires=1793770487&Signature=XWTurobFteyZJ7JcXz9ZBYzcjHdWDOSbWbuNevn1mbMWXD~tdOAtjXmxlylAU-ryHZa~XLTGiezM4LMVlJ4cIMPrtqJFmHSjlBiS9IK-Y0oTPD5XQ3bgi-nbBIKg4M1TJ4O6TqPkkT2kiIuDeiWd9iMAyVWaDe1ffUKcHrCW9ntCnwJX-uLcPYcTQcZ3LB5DdgPCPuVJjqwBd~72r7mtb5JOtOVFYz~hUsQIWpUC428HvH~7FDvcBU6Z9v5l8nzZODv5vMinx1ycDcETpEwc87lz1cOu5haR0itCas~t5S2D~KbPQ0Ce1j3OfYcSFgrkYVMwPreVVs71hLRZ9wDovQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19599-d0d3-729b-8de1-b9381815db6a/output/model.glb?Expires=1793770487&Signature=XWTurobFteyZJ7JcXz9ZBYzcjHdWDOSbWbuNevn1mbMWXD~tdOAtjXmxlylAU-ryHZa~XLTGiezM4LMVlJ4cIMPrtqJFmHSjlBiS9IK-Y0oTPD5XQ3bgi-nbBIKg4M1TJ4O6TqPkkT2kiIuDeiWd9iMAyVWaDe1ffUKcHrCW9ntCnwJX-uLcPYcTQcZ3LB5DdgPCPuVJjqwBd~72r7mtb5JOtOVFYz~hUsQIWpUC428HvH~7FDvcBU6Z9v5l8nzZODv5vMinx1ycDcETpEwc87lz1cOu5haR0itCas~t5S2D~KbPQ0Ce1j3OfYcSFgrkYVMwPreVVs71hLRZ9wDovQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19599-d0d3-729b-8de1-b9381815db6a/output/preview.png?Expires=1793770487&Signature=MsCY0WeYc2F4ujufVirk7XWDn91cp6jN2Bfxzwgh-58NbY~ID~U-iA9q7Nmkuz6hAXCTVvO0i65ZBPQYSpHiAAAZI9ueTQZ4Ect-~S6XXxrmsIKiMLTnrKenrDIHhJ1B4vX3bHHqHU4lSUDeNM0xKx2dQVQ6eaZStsd-0z4rHLAREhBDikizZBVKeqxnAKN6LuYu4hmI4n0iJ0uC6rJEpCrA5di4KlBC45aITYjK6JJ~trbilSnKc5WnB8YW4feXtmaZDy6VcU54MF01D~HOROQyz0k-Mckr0KZP0kpnROG36VnwpMCDKvYSiqEPtbNE1n1xS5BzQAt0KpKopzEKSQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19599-d0d3-729b-8de1-b9381815db6a/output/texture_0.png?Expires=1793770487&Signature=MZovJBL5UOK~GgxZW7cyu5x5HM6O4sMxSnousAq8F5Ryo-i8HcmfHJGsr5KdZfFkAXsWVQrt6rmMT~qnsIMngyL89p2US8NANDmhjSiNS3Z5LDU0bEBizgJAR9TpDlBzqg3ciVsalgbdu~NfTIB3SkQYH0yaqULt2kPablo7pigEDTiAg7TvLmgiipu8Qre4dowW9UO3otd9fs0DcSJm7aQuNPui1ZBUSdql6i8faIJK7vrouTP2ZeDsnDkGOqxZRZq-d-3LHv6AC7RqJs4CL8tWIeRUkvp5YfmJnXHUfj519QsYlHTsCzLxP6IcfRMoviba7Doo0meBXEx0Y0N9hQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 15
+}

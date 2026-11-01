@@ -1,0 +1,16 @@
+{
+  "id": "01a1959e-7169-7668-82e2-824d8b9813b7",
+  "type": "text-to-image",
+  "ai_model": "gpt-image-2",
+  "prompt": "Concept art of a single fantasy elven longbow, a game item, shown upright in side view, centred on a plain pale grey background. A thick, sturdy limb of pale cream ashwood with clearly visible width, gently recurved tips, a wide grip wrapped in rust-red leather, and a taut bowstring tied to both tips forming a clean D shape. One bow only, a bold clear silhouette. No arrow, no hand, no quiver, no other objects. Stylised low-poly toy-miniature look, flat matte colours, soft even lighting, no outlines, no text. Palette: dusty sage, rust, ochre and bone.",
+  "status": "SUCCEEDED",
+  "progress": 100,
+  "created_at": 1793511551365,
+  "started_at": 1793511551372,
+  "finished_at": 1793511577616,
+  "expires_at": 1793770777616,
+  "image_urls": [
+    "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/uploads/image_01a1959e-7169-7668-82e2-824d8b9813b7_0.png?Expires=1793770777&Signature=d2Z1qOlfEG0Cf2UZyeK1Q0ZIAcsvjUQHp7FD2RcZY6~vpF5anCKUAUyMXCBrGMPnvRH2z14NlsITWDO-Sa6efWBYLFVurUgUjGHTYsNL-4IZU~1ZPC-g11F7GYzRZzXXVm2-Y3xvffx~xzCo8kFhOqxV9p5zwo50BPtcpZ4GHxm9nUyAOIhMR8drtaruVnKWaESwm6HNtev6OOdaBd5QVZlK243Bn4ERLb1ipP2-2ryr48NTNfoeBO-ftXGt~vDthNNgyhC5gEmv5Q4q6myXSAgqM1QrdXlp~Tv5rSTK6jergH2oIN5jclSRflMjsMJVoj05uGAvO1bQlqLuZPuzJw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "consumed_credits": 9
+}
