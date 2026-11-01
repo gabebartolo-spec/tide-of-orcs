@@ -103,7 +103,7 @@ describe('simulation', () => {
 describe('tree', () => {
   it('buys when affordable and unlocked, refuses otherwise', () => {
     const s = createState(1); const ev = new EventBus();
-    s.run.fallen = true; // the Grove is bought between runs (TB-131)
+    s.run.fallen = true; // the Grove is bought between runs (TB-136)
     expect(canBuy(s, NODE.sharp)).toBe(false);
     s.run.starlight = 100;
     expect(buy(s, ev, 'draw')).toBe(false); // parent not owned

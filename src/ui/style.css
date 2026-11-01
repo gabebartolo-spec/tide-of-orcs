@@ -131,7 +131,7 @@ header h1 em { color: var(--amber); font-style: normal; }
 @keyframes line-in { from { opacity: 0.15; color: var(--amber); } }
 .affixes li.flash { animation: line-in 0.6s ease-out; }
 
-/* Living wood (TB-131): panels are carved heartwood. Bark rim and root-knot corners (wood/frame.svg), faint ring grain on
+/* Living wood (TB-136): panels are carved heartwood. Bark rim and root-knot corners (wood/frame.svg), faint ring grain on
    every face (wood/grain.svg), roots instead of rules (wood/root.svg), a sprout on the active tab (wood/sprout.svg).
    Colours are the palette's timber tokens; nothing new. */
 :root { --bark: #5a4634; --timber-dark: #7a5c3c; --splinter: #4e3a28;
@@ -161,7 +161,7 @@ header h1 em { color: var(--amber); font-style: normal; }
 header h1 { padding-bottom: 8px; background: url("./wood/root.svg") no-repeat left bottom / 160px 10px; }
 @media (prefers-reduced-motion: reduce) { .tabs button[aria-selected="true"]::before { animation: none; } }
 
-/* Modes (TB-131). run: the field takes the screen, sized to fit the viewport at 15:8 under the header and rally bar.
+/* Modes (TB-136). run: the field takes the screen, sized to fit the viewport at 15:8 under the header and rally bar.
    camp: after a fall the field steps aside and the Grove, Satchel and Replant fill the page. settings: an overlay mid-run. */
 .main { grid-template-columns: 1fr; }
 .play { width: min(100%, calc((100vh - 150px) * 15 / 8 + 36px)); margin-inline: auto; }
@@ -175,7 +175,7 @@ body[data-mode="camp"] .treewrap { height: max(420px, calc(100vh - 330px)); }
 .campbar h2 { font-family: var(--display); font-weight: 500; font-size: 22px; margin: 0 auto 0 0; }
 header #btn-settings { align-self: center; }
 
-/* Gilded vine (TB-131): a faint gold leaf-and-blossom tile behind the page and the camp pages */
+/* Gilded vine (TB-136): a faint gold leaf-and-blossom tile behind the page and the camp pages */
 body { background-image: url("./wood/gilt.svg"); background-size: 320px 320px; }
 .panel { background-image: url("./wood/gilt.svg"), var(--grain); background-size: 320px 320px, auto; }
 body[data-mode="settings"]::after { content: ""; position: fixed; inset: 0; z-index: 4; background: var(--ink); opacity: .6; }

@@ -1,4 +1,4 @@
-# Carved living-wood UI pieces (TB-131). Run: blender -b --factory-startup --python art/ui/carve.py -- <outdir>
+# Carved living-wood UI pieces (TB-136). Run: blender -b --factory-startup --python art/ui/carve.py -- <outdir>
 # Renders top-down orthographic PNGs with alpha: frame.png (9-slice source) and button.png.
 import bpy, bmesh, sys, math, os
 

@@ -45,7 +45,7 @@ export class Panel {
     $('dep-spear').onclick = () => this.rally('spear'); $('dep-blade').onclick = () => this.rally('blade');
     $('dep-boss').onclick = () => { game.summonBoss(); };
     $('pr-btn').onclick = () => { if (game.canReplant() && !game.state.run.fallen) this.doReplant(); };
-    // After a fall the field gives way to the Grove page (TB-131): the tree and satchel are spent between runs
+    // After a fall the field gives way to the Grove page (TB-136): the tree and satchel are spent between runs
     $('fallen-btn').onclick = () => { this.onCue('click'); this.setMode('camp'); this.setTab('grove'); };
     $('camp-go').onclick = () => this.doReplant();
     $('btn-settings').onclick = () => { this.onCue('click'); this.setMode('settings'); this.setTab('settings'); };
