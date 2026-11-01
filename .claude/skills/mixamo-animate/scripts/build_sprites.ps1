@@ -5,7 +5,8 @@ param([string[]]$Only = @())
 $s = $PSScriptRoot; $bl = "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe"; $a = "C:\Users\DANTE\Documents\tide-assets"; $mx = "$a\mixamo"
 $o = "$a\sprites\frames"; New-Item -ItemType Directory -Force $o | Out-Null
 $vars = "WYAW", "RMATCH", "SWING", "MIRR", "H1", "MPH", "HINGE", "FREEZE", "WOFFS", "OFFS", "REST", "ARMSET", "ELBOWSET", "ARMTWIST", "DIRECT", "INPLACE", "ALIGN", "GRIP2", "CLIP", "CLIPDBG", "ELBOW", "HPROBE", "LHPROBE", "AMP", "DAMP", "ABD", "HIDE", "FOCUS",
-  "QUIVER", "QFLOAT", "QPOSE", "QLEN", "QBOB", "ARROWF", "ARROWL", "RESTUP", "BOWALIGN", "GRIPSIDE", "ARROWPATH", "ARROWDBG"  # elf hero (bow + floating quiver)
+  "QUIVER", "QFLOAT", "QPOSE", "QLEN", "QBOB", "ARROWF", "ARROWL", "RESTUP", "BOWALIGN", "GRIPSIDE", "ARROWPATH", "ARROWDBG",  # elf hero (bow + floating quiver)
+  "FMATCH", "FINGSRC", "MPROBE", "MALLETAXIS", "MALLETMAX", "MALLETFORE", "MALLETSET"  # bladedancer daggers
 $even = { param($n) (0..($n - 1) | Where-Object { $_ % 2 -eq 0 }) -join "," }
 $jobs = @(
   @{ key = "orc.grunt"; m = "$a\grunt2\grunt2u.blend"; c = "$mx\Sword And Shield Walk.fbx"; ortho = "2.4"; fr = (0..32 -join ","); env = @{  # walk_grunt.ps1 (v19)
@@ -43,6 +44,10 @@ $jobs = @(
       WYAW = "mixamorig:Neck,mixamorig:Head>mixamorig:Spine2"; RMATCH = "Spine,LeftShoulder,LeftArm,LeftForeArm,LeftHand,RightShoulder,RightArm,RightForeArm,RightHand"; INPLACE = "1"; GRIP2 = "1"; WOFFS = "mixamorig:LeftHand:0,0,1,90;mixamorig:LeftHand:0,1,0,30;mixamorig:LeftHand:1,0,0,15" } },
   @{ key = "orc.brute.attack"; m = "$a/brute/brute_split.blend"; c = "$mx/Standing Melee Attack Downward AS100.fbx"; ortho = "2.3"; fr = (& $even 69); env = @{  # attack_brute.ps1 (v1)  (LeftHand WOFFS = club off the left arm)
       WYAW = "mixamorig:Neck,mixamorig:Head>mixamorig:Spine2"; RMATCH = "Spine,LeftShoulder,LeftArm,LeftForeArm,LeftHand,RightShoulder,RightArm,RightForeArm,RightHand"; INPLACE = "1"; GRIP2 = "1"; WOFFS = "mixamorig:LeftHand:0,0,1,90;mixamorig:LeftHand:0,1,0,30;mixamorig:LeftHand:1,0,0,15" } },
+  @{ key = "van.blade"; m = "$a\elf_bladedancer\bladedancer_dagger.blend"; c = "$mx\Walking XBot.fbx"; ortho = "2.6"; fr = (0..36 -join ","); env = @{  # walk_bladedancer.ps1 (v5); frame 37 = frame 0
+      RMATCH = "LeftShoulder,LeftArm,LeftForeArm,LeftHand,RightShoulder,RightArm,RightForeArm,RightHand"; INPLACE = "1"; FMATCH = "Left,Right"
+      FINGSRC = "$mx\Dual Weapon Combo AS100.fbx|1|" + ((@("Thumb1", "Thumb2", "Thumb3", "Index1", "Index2", "Index3") | ForEach-Object { "mixamorig:LeftHand$_,mixamorig:RightHand$_" }) -join ",")
+      MPROBE = "Left:-19.26,-16.07,-1.19;Right:20.13,-15.04,-0.88"; MALLETAXIS = "fore"; MALLETMAX = "0"; MALLETFORE = "1"; MALLETSET = "Left:0,1,0;Right:0,1,0" } },
   @{ key = "van.blade.attack"; m = "$a\elf_bladedancer\bladedancer_dagger.blend"; c = "$mx\Dual Weapon Combo AS100.fbx"; ortho = "2.6"; fr = (& $even 110); env = @{ DIRECT = "1"; INPLACE = "1" } },  # SKILL.md bladedancer attack v1
   # Elf hero: `elf` is the idle loop (the elf never walks). Standing Idle 03 Examine is 153 unique frames (153 = frame 0), slow motion,
   # so every 3rd frame at 10 fps keeps the 5.1 s loop under the sheet budget. Quiver pinned with QPOSE to the attack's measured spot.
