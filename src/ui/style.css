@@ -105,12 +105,13 @@ header h1 em { color: var(--amber); font-style: italic; }
 .item .txt { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; min-width: 0; }
 .glyph { flex: none; width: 30px; height: 30px; display: grid; place-items: center; color: var(--rar, var(--cream-dim)); background: var(--ink); border: 1px solid color-mix(in srgb, var(--rar, var(--line)) 45%, transparent); border-radius: 6px; }
 .glyph svg { width: 22px; height: 22px; }
+.glyph img { width: 28px; height: 28px; object-fit: contain; }
 .glyph.none { opacity: .5; border-style: dashed; }
 .glyph.r-rare { border: 1.5px solid var(--rar); }
 .glyph.r-epic { border: 3px double var(--rar); }
 .glyph.r-legendary { border: 2px solid var(--rar); border-radius: 0; }
 .glyph.r-mythic { border: 2px solid var(--rar); box-shadow: 0 0 8px color-mix(in srgb, var(--rar) 70%, transparent); }
-.glyph.big { width: 44px; height: 44px; } .glyph.big svg { width: 32px; height: 32px; }
+.glyph.big { width: 44px; height: 44px; } .glyph.big svg { width: 32px; height: 32px; } .glyph.big img { width: 42px; height: 42px; }
 .itemdetail .head { display: flex; align-items: center; gap: 10px; }
 
 /* set bonuses (TB-099): earned tiers lit, the rest dimmed */

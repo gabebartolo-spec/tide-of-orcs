@@ -1,5 +1,6 @@
-/** Item glyphs (TB-097): one vector icon per slot, framed by rarity. The fallback until TB-103 renders models. */
+/** Item glyphs (TB-097): the rarity frame around the item's icon (TB-104), or a vector slot icon when there is none. */
 import { Item, Slot } from '../data/loot';
+import { ITEM_ICON_DIR, itemIconId } from '../data/itemArt';
 
 /** 24×24 inner markup per slot; strokes and fills use currentColor so the frame's rarity colour carries through. */
 const GLYPH: Record<Slot, string> = {
@@ -12,5 +13,10 @@ const GLYPH: Record<Slot, string> = {
 };
 
 /** Framed icon; the frame shape also differs per rarity (style.css .glyph.r-*) so rarity never rests on colour alone. */
-export const glyph = (slot: Slot, it?: Item, big = false): string =>
-  `<span class="glyph${it ? ` r-${it.rarity}` : ' none'}${big ? ' big' : ''}" aria-hidden="true"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">${GLYPH[slot]}</svg></span>`;
+export const glyph = (slot: Slot, it?: Item, big = false): string => {
+  const id = it ? itemIconId(it) : null;
+  const inner = id
+    ? `<img src="${import.meta.env.BASE_URL}${ITEM_ICON_DIR}/${id}.webp" alt="" draggable="false">`
+    : `<svg viewBox="0 0 24 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">${GLYPH[slot]}</svg>`;
+  return `<span class="glyph${it ? ` r-${it.rarity}` : ' none'}${big ? ' big' : ''}" aria-hidden="true">${inner}</span>`;
+};
