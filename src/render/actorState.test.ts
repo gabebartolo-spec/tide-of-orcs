@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { FIELD, VANGUARD } from '../data/balance';
 import { createState } from '../sim/state';
-import { orcState, vanState } from './actorState';
+import { orcAnimT, orcState, vanState } from './actorState';
+import { noInputs, step } from '../sim/step';
+import { EventBus } from '../sim/events';
+import { STEP } from '../data/balance';
 import { Sprites } from './sprites';
 
 type S = ReturnType<typeof createState>;
@@ -46,5 +49,13 @@ describe('drawActor fallbacks', () => {
     expect(drawn({ 'k.attack': atk }, 'walk')).toBe(100);
     expect(drawn({ k: walk }, 'attack')).toBe(8);
     expect(drawn({}, 'walk')).toBeNull();
+  });
+});
+
+describe('orc sprite clock (TB-131)', () => {
+  it('runs one second of clip per second of sim, not nine', () => {
+    const s = createState(1), ev = new EventBus(), o = orcAt(s, 600, 200); o.spd = 40; o.wob = 0;
+    for (let i = 0; i < 1 / STEP; i++) step(s, STEP, noInputs, ev);
+    expect(orcAnimT(o)).toBeCloseTo(1, 5);
   });
 });
