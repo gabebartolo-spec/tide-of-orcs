@@ -41,9 +41,12 @@ export class Sprites {
   private imgs = new Map<string, HTMLImageElement>();
   /** Scratch canvas for tinting one frame without touching the sheet. */
   private tmp: HTMLCanvasElement | null = null;
+  /** True from load() until it settles: callers hide vector stand-ins so the old body never flashes before the sheet (TB-155). */
+  loading = false;
 
   /** Fetch the atlas and its sheet; any failure leaves vector fallback in place. */
   async load(base = import.meta.env.BASE_URL): Promise<boolean> {
+    this.loading = true;
     try {
       const res = await fetch(base + ATLAS_URL);
       if (!res.ok) return false;
@@ -56,7 +59,7 @@ export class Sprites {
       }));
       this.atlas = atlas; this.imgs = new Map(imgs);
       return true;
-    } catch { return false; }
+    } catch { return false; } finally { this.loading = false; }
   }
 
   /**
