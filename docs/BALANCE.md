@@ -305,8 +305,21 @@ Price by power (§8 #4), starlight per +1% at rank 0, today:
 
 Damage and rate are the same lever for the elf's damage per second, yet Quick Draw costs four times as much per percent as Sharpened Tips. No price change is proposed yet. With multiply kept, this table is the per-rank power prices would be set against. Reproduce: `npx tsx sim/run.ts --minutes 180 --seed 1 --quiet --hwbuy --tune STACKING.add=1,NODE_FX.sharpDmg=1.47,NODE_FX.drawRate=1.22,NODE_FX.wideRadius=1.33,NODE_FX.knifeRate=1.33,NODE_FX.boltDmg=2.73,NODE_FX.gleanLoot=1.098,SHOT_FX.dmg=1.64,UNIT_FX.dmg=1.64,UNIT_FX.rate=1.22,BARRICADE.timberMult=1.47`.
 
-### P-002 · Arrow arsenal numbers (TB-089, 2026-10-31, from the director's mechanics; not yet simmed)
-All in `ARROWS` (`src/data/balance.ts`). Rebound: jump 120, falloff 0.6 per bounce, bolt speed 420, hops 1 + rank. Shock: 3 targets, 0.3 × lob dmg, jump 90. Thunderclap: 0.5 s. Frost: 3 s, slow 0.2 + 0.05 × (rank − 1). Shatter: radius 50, 1.0 × dmg × 1.4^(rank − 1). Starfall: every 10th lob, 8 arrows, r 26, 0.6 s fall, 0.08 s stagger, lob damage each; each aims where its orc will be on landing, held no closer than the wall's face. Costs in SKILL-TREE.md. Sim run pending.
+### P-002 · Arrow arsenal numbers (TB-089, 2026-10-31, from the director's mechanics; simmed 2 Nov)
+All in `ARROWS` (`src/data/balance.ts`). Rebound: jump 120, falloff 0.6 per bounce, bolt speed 420, hops 1 + rank. Shock: 3 targets, 0.3 × lob dmg, jump 90. Thunderclap: 0.5 s. Frost: 3 s, slow 0.2 + 0.05 × (rank − 1). Shatter: radius 50, 1.0 × dmg × 1.4^(rank − 1). Starfall: every 10th lob, 8 arrows, r 26, 0.6 s fall, 0.08 s stagger, lob damage each; each aims where its orc will be on landing, held no closer than the wall's face. Costs in SKILL-TREE.md.
+
+Sim, 2 Nov (set F tiers): each arrow node knocked out (`--cost <id>=1e15`, never affordable) against the base, greedy, `--hwbuy`, 300 min, seeds 1 / 2. Base: best wave 29 / 29, Heartwood 245 / 215, tier 2 at play min 84 / 97.
+
+| Node | First bought (play min) | Best wave without it | Heartwood without it |
+|---|---|---|---|
+| Rebound | 85 / 89 | 29 / 30 | 251 / 215 |
+| Frost Arrows | 76 / 74 | 28 / 29 | 215 / 185 |
+| Shatter | 93 / 98 | 29 / 29 | 251 / 233 |
+| Shock Arrows | 110 / 114 | 28 / 29 | 203 / 197 |
+| Thunderclap | 119 / 122 | 28 / 28 | 203 / 194 |
+| Starfall | 144 / 150 | 28 / 29 | 233 / 188 |
+
+Read: the bot buys every arrow node, all after tier 2 opens, and none is worth more than one wave; Frost, Shock, Thunderclap and Starfall each cost 10–40 Heartwood when missing, about the seed spread (30). No number change proposed: the arrow nodes are fair side buys, not carries. Same shape as the mythics (P-128): only changes to the elf's own lob move the fall wave.
 
 ### P-001 · First-run fall is too early; second run snowballs (2026-10-30, from M0 bring-up)
 Evidence: `npm run balance --policy greedy --minutes 20` seeds 1–3: first fall at wave 7–9 with 2–3 HW; the second run then reaches wave 42–44 with the wall never under 100% and 120 nodes bought.
