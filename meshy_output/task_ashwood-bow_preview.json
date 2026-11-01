@@ -1,0 +1,23 @@
+{
+  "id": "01a19383-232f-738e-bb12-790538c28850",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 516769839,
+  "prompt": "Simple ashwood flatbow, a game item prop. One gently curved pale wooden stave, wide flat limbs, a plain grip and a single taut string, no arrow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476208929,
+  "progress": 100,
+  "started_at": 1793476208934,
+  "finished_at": 1793476221339,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19383-232f-738e-bb12-790538c28850/output/model.glb?Expires=4947004800&Signature=g044iJkep6v1UL1soSy3yv6BQe8DJLYdPB9XoNzSxNhhuvQLaktjwbranJ749b~4em2Vd1i1EZIQkBzzyjnuU0i8~dyE479UC98c1suIVc6x7F76EaX-L6R3sWY1bGA3o8HjrDQC0F1LHF9z6BNoP4BYM9GN9eSOqY1g1EbQkNn7n0ljzVwFVUcUefeXMDg91TZDSbO1NrjU42cI8oLgovOYzLpHr2KhhIptFdGTRPepwni9xVzaxGYDSYdW5aFhQ1ib~HOOSgm0fX2DFXPWaWJurxdEgZdMxTePiTPLEntoHyjv6AFBzZ9lsKi~Jg~AJ7I6e2yA8bhP8hGjXCv2qw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19383-232f-738e-bb12-790538c28850/output/preview.png?Expires=4947004800&Signature=avOBP~It~EFf3lhuKIVHFsTCSHon96IKB~rqwYK7mHF9Jj-0W3f18VehXoyVXk850vS6BJ63K8ql5lkSSmiCsX9cLhzqSifyEBJtE1yaUssBs--RMjUl51oSZSqOlUdlbCc4GXIw-4fd~JLNy3jfHKZkkCWC1y~4~MGt25Xi2w9YJA2Q9ebV6oKdWxw6MZmEIE8JGfBxDqt9KuzeELkIMopEJ9gYL7pusQPrP67MoSIYcsIToKBS1Nmo3dPXOGER~8GkEJqJlYGhTu1Oc2y4BpKFXQxQpNOpohe-EWRTqpy04bQKJH8u8M03vnNLltPGgoGOCOOKPdy6xmXGlccvlQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

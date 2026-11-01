@@ -1,0 +1,23 @@
+{
+  "id": "01a19384-1041-72dd-895f-dc6f272bca93",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 766023506,
+  "prompt": "Bark bracer, a game item prop. A forearm guard made of a curved piece of tree bark with a small leaf, tied on with two cords, no arm inside. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476270473,
+  "progress": 100,
+  "started_at": 1793476270497,
+  "finished_at": 1793476283670,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19384-1041-72dd-895f-dc6f272bca93/output/model.glb?Expires=4947004800&Signature=S6wThF8wh516k6~8QWCGWiyhzXwUx6iDfnEy-lL~O0KDzXOb1Li2otC16Bl9hikhZRud-65eld0cdasSuBPpWsDC4FQy322YVfehWH2iYAzJq707nJ6dm5JllnllM6UqgCDnyBsLPQyE5ieNALAZXm9AoSrwwJvh-lY4fcSL32RYiHBCKRV9igMSwhLFfmbHq-LYkopQ8hI-NWZrqkjhs25WLjYnmiFMtDtjnTayEbSncpOhoBPU03WtCYdBf0mbEgQtniDRCaihzC1ZbS7k5frzQun45y~N~e4P0yq3pnkm3WFA8kuse60efp8TaDNOI~Anb2i1JBBTXlNS48gnew__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19384-1041-72dd-895f-dc6f272bca93/output/preview.png?Expires=4947004800&Signature=jmJ1asqRALPb44E5D-7wuf4Cn52zN1CztKF-MJ9IDaTGHpA4g0Dm50VIAl0XHSS~D1yGmoSN-RiRmWzLkTtIbNrOIAFja4rmygxmNy2AaV24TXDw2Q3d8TaZFkbvCyGjKF5HhTElfXxSbBKOr90Hzyh46HMRmcEY2wTitxBCySehcIL5-CLpOH7yINsJplZy3yfdQLjMjEubJds0lpuVADQJfk3LSeFENJXiAI9u9A0nfs2X7ntemt8L0Af1T1Qu1ulaOx6~jUpk05tlrjlFYnUCxBR3vSMMVi-6~Zr01qHFXl29UwwJ7emC1Jz4fiBZVMBQHytsxLwVdYX-PsnqcQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

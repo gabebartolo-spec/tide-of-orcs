@@ -1,0 +1,27 @@
+{
+  "id": "01a1938f-dd56-7286-bff6-dea8eec5f6ee",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 2248402742,
+  "prompt": "Mythic starfall cloak, a game item prop, displayed standing as if worn by an invisible figure. A hooded cloak to the ground with small raised stars scattered over the cloth and a star clasp at the throat, no body. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Deep dusk sage cloth with scattered bone-coloured stars, an ochre-gold star clasp, rust-brown hem.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793477043483,
+  "progress": 100,
+  "started_at": 1793477043489,
+  "finished_at": 1793477075442,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938f-dd56-7286-bff6-dea8eec5f6ee/output/model.glb?Expires=4947004800&Signature=nOQMNgwpRNj57Gh1YQx0Rgu3~XXmbgIto3-8gAgUfEV6lsIo7kp9hs2P-aDQ3r33LR0nA6hl0xV9EWrP1IQLfWW5d4qSbMl8hcRA87K4bRHGxYSqDUEbHObHsgQXNBlmXKtGoU5wl4wV5GOab9uFHey0~1Y9xy7WBJDkR0v97wr1yR80Pf-UZTfu4Des5LpeLU0JVEKIgkJmkbdM7w76pZAQcUN6UKZ-y49j1t9c6MObwrWXbjDptGoq44DnuAkMwBYOBq2Azo46W~WDCiMUJK1xjFbcAvuBAa-iw3CdLhwc8Rg7iPlWfM47LU9it7iLutv6ifohf3SBqGoLxijjkQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938f-dd56-7286-bff6-dea8eec5f6ee/output/preview.png?Expires=4947004800&Signature=PeK4K2Pc9Y-3NaMkt3YlWiLk13VDHY6C-CSPtf0dORyIAXT2Xp-KL8ijjVVNwsXVPzDzlVJJpUK0o1e1GkBC~HQRbZK7BvWmCfHEot5rhxbdc2-G7aP6WyL0QKfW98AMKqVLsavHUIP7oHVcbs-8sBFUQT5nZn-UBbGqsUIOMpuVjAkjXtHGklxh4pAVSF65MpguY3trIT~x8drqgSFeXN2TCDY65C3q5Uf0esK3kao3A-FQKPai6PQNDlm3k7ChskZ4NwTyqoAYl~Y-QMRTKiP2LYZPTOSXT5bLTBFypb0L7VMi-dLY6bQQWaEW6q8mHJW497u-Ei1ErzIkOpuVdw__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938f-dd56-7286-bff6-dea8eec5f6ee/output/texture_0.png?Expires=4947004800&Signature=oCTAtFa4reY7d2gglTuRJkyj~W7UIcHhxP9EnOZ-y2qDeCHTBPnn~OLXNIa7Tqd42yVMSBki6Ac-dyGgDlZekaKUu-5BYXVvt78H20Bak4MKIsLp7xfemZFNxa8-1FsjbQtDc~wRcPmSWCAUynX1LxGIwHAOXPrfYL-QDUHKyv~WIlth-wA88oU9NoleX8QDWzfyqC82v4xrFjgfiD1gXTkPDk46J8DfLiKilD0-HNjSaLRYm2y0-w6XPgFUZvOmS~lfv9kEyW1CnLCR~wdbiwMj0Unxh7mZVj5v6Nn6zL3BGQUSw-4WgHLgfyLymouUyaKCYmybTTqoDwwynPq91Q__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

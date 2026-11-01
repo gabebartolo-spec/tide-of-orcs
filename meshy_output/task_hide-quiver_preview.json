@@ -1,0 +1,23 @@
+{
+  "id": "01a19383-7e4b-7282-8054-3ff71e096b0b",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 2172208766,
+  "prompt": "Rough rawhide arrow quiver, a game item prop. A tube of stitched hide with a seam, a shoulder strap, four fletched arrow shafts standing out of the mouth, no bow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476232157,
+  "progress": 100,
+  "started_at": 1793476232162,
+  "finished_at": 1793476246510,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19383-7e4b-7282-8054-3ff71e096b0b/output/model.glb?Expires=4947004800&Signature=KgAGXGgRukHiQFOHBQnD6Xi37TYylwATCadXUCOH6FQRjXUeSrIxR09X8~QvfnVVS4yK3d~dIP8unBzvkDwnmKOZ7jRJYZY1azHw3xSX2e7PsUpRZC-8WgM4hTe-gWTKQOXq~o3Tx40EnH~RStmxP4Cq1Mc62YqqERvskkZvbfoRG2KdQNuyopRzbGqX-wBKqJz6ooDschVb-WsbGlrvltt~G1V59~qAEwkd1Afz6grymnrszkl4BibhEqZtkscroa4pNGuW6Z9Dnjve9ekkvVCZyuTk65YbM-gMXSPrPqsJLpdURtxD1G8TAiIk5WXG7sHMqHuhRYdtMi1LTo-KMg__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19383-7e4b-7282-8054-3ff71e096b0b/output/preview.png?Expires=4947004800&Signature=SkEXJPGtVxYXKhBE5f9NY6di9Zsfc6ndlBAdkcKDIZwHUDmHhBiTmCKpUMnY8pP~q5MwaGRd3VG1JKjHXDNaD-VCNpYqAzvXBupmt5y1TJca2j2DjEavzhqfB-lsarA9cHPPCS0S8COvwmoDM-bLg6rt0Az0iU0oZMehbftQBsKnXtgbPJFl~9DMeyByH3310jkxNAWH3ADXQKlN8ryOWlBwt17P6eD6G9zcVT-kkADFmFSx2b~W5GfbbWHvOjVQmgZWYFlVpnKYLgjGzIHp9EBaruK96iAiI68aImZkFbp7Yjnz5r3NSIVeICGl6kE53QweZKNHYV4rcHNZw9qOuw__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

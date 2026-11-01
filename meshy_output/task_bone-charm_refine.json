@@ -1,0 +1,27 @@
+{
+  "id": "01a1938f-0079-72ec-b460-0b763ea11326",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 2350558668,
+  "prompt": "Bone charm pendant, a game item prop. A small carved bone fang with a notched pattern, hung on a short cord loop. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Bone-white carved fang with ochre notches, rust-brown cord, dusty sage knot.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476986609,
+  "progress": 100,
+  "started_at": 1793476986615,
+  "finished_at": 1793477010755,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938f-0079-72ec-b460-0b763ea11326/output/model.glb?Expires=4947004800&Signature=dro09Uf5nAcQOIl1P3iWm9PDg69QkYjvQZaWMZFav4SkURcXw0y-JzYcYXscDkK~qKOZqOzRri656npJHWZNq~zIzJkOxG619xRGdLSQ8Pg0JLBBLaAoi9Nfjj53YnZ-Z~HItWSEotT-fsnT10TzI8QsyrwTAlnEJ8WvGXXf-PXszZEKp~FIYfRD1tV2gblih8QW4OB8Qw9kO5ajXq8UHE3IzL1JJqjS-AZMYypbXXj0GgDMdncYIeUw~40fTE3jg6f3FWdcRDFNyub0WjwP-nijqL8ZTgRTAN5n8tNn-GKYNsavVmy6-Zr0yBfOTD8RK1w0X~3lrgM1ACOfHXRy~g__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938f-0079-72ec-b460-0b763ea11326/output/preview.png?Expires=4947004800&Signature=phpuPzm2QTJ~PX1BJW5miXibqYQk~AQECAZXnV0D6D6NvPymaYZ8ofsyXxeVdqy5MObofAIpupeiOm~MUsuX61jAx~BY0O8T4r4wzlKWGJ~MJwPpI3b908hbUagOcc-MIWMi2m7EwzgG1zFDmSeJId~LANwj~fJuZS68K5cfOi9T2S6m-J~XGWvy9fIr1XYyiQvu63tAHjVv-JzfPffchM7X4S5sChcaT7Pn1MDbWXLJD-BG9rnMvP8Sy7MS9pni-YhPDVo3FcgjeblsI3JYhb0haNQvTwsBInOS7PO9ZDiJxVnyLCxtrWPEdD~tfpE~UzCwPCI3ajvdcvhi9zcRAw__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938f-0079-72ec-b460-0b763ea11326/output/texture_0.png?Expires=4947004800&Signature=Is8c6BapY1ahvdIHfTdDc-IiOYWTUrqTWswEq93W7FgxsUpXHHZ9K3VJ1vgWWJWx6AGkqfbi85XotTDi-wAW6ikQHRUjYE9MrUOiOUj~lCyg79VqsGZploDB-sH09PqqNFGNKDwedO~D30KCKpHlbG1SVJPi4xoQolXLf~ccK5Cry7V7YpHAQFjZ8UW~mELN-nPw5hX6HlzGcHDIMSlxE5D7IhDDVsFtruFcbFQE2waUmRoza3RlG3BplB2aKB97U3mYT2oNJyckQFtYHrMLW4rXnwD~6aFkN-UELva1MTCMpAM~gukcuyJsyQAYSp48yIpK1TtOhaxgIQVygxctvw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

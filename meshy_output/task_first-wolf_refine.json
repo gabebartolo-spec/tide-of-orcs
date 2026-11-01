@@ -1,0 +1,27 @@
+{
+  "id": "01a1938f-a686-7447-a4e4-d5aa46a4522a",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 1760850520,
+  "prompt": "Pair of mythic wolf boots, a game item prop. Two fur-trimmed knee-high boots with a small wolf-head clasp on each, standing side by side, no legs. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Rust-brown leather with bone-coloured fur trim, ochre wolf-head clasps, dusty sage soles.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793477029056,
+  "progress": 100,
+  "started_at": 1793477029060,
+  "finished_at": 1793477066138,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938f-a686-7447-a4e4-d5aa46a4522a/output/model.glb?Expires=4947004800&Signature=d67~Mucv8a45gBy9uyqzGHxdUvTAZnEWdn0HyvEKlUhkKrm8ue~2lG1ZROSxGrmOX2h6y3esZdWTyXzCvcw3pmDl0M-4T0SBqKGeM762XH~nw4xRwK8tueHHIeeWWc0cABLJjmWoAILrn-MQ4509tXxirx1ubo~qUOKfLG-shmX9R3jXKsaw156s8cOTbOs1tFbWJZyQqdLx1IaLlmAJseSHGhcGJAmEDTGlxT66seGGpXfxanrOqkUvR57Ko12Ra0YQOsIdhel44T60gWWz8L0mynHEkhYQ9uuHmPtemTAKmbAhDP3LDXw4ovIl186zH0V2g8BUPBxCrkcSAAhdaA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938f-a686-7447-a4e4-d5aa46a4522a/output/preview.png?Expires=4947004800&Signature=BwmoMOkty84mno6wI8Y5BkSq~lfv-xiE1jmKvoaN9ZNfS3CuaMieQN99B9EMJNmXqS-GSf3Znr8VwaB8l-wP0udCwZhuMoszz8HLBIAkp0kiOxt1idsALs-a1lfeCeI7raJcG4L5N7pOyAdtF-7jqiIJeXE~ISdS~W5Hv7B-gJfRAlRdAoFp4leFAYyipJbbROL6Ca-80~3mrmPrFToCmjkOiZk-FnG0qJ9eHx4aDmn9Fiqy7bsc0DCadmWCnX4oSjw38g8nYflWAlOp5TiJQuoepXPzN2uILvWhBZblOIlzwrn74lD~U-kjwi9UJqWEY~B4wlocmNu48WhSSS8WNA__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938f-a686-7447-a4e4-d5aa46a4522a/output/texture_0.png?Expires=4947004800&Signature=qu60qTkyGex-VfJjHcLYYCm1Ik3sBY6MbWbffTA98OVQU1ilG2-dz1gq-j5Y3xgEMKSM746vBZ9d3b0b6YBRwY-CC9vvotUqxRyPiw5eO7Lyt5Yv7j~TYTE4Fi8-XnOwjTUdSrNMTuggMw1uGQJouZICGsZM42os5h6INWUvvN9gn6LsHjzSDEWLZ~NJYwyS42CQlkI2uN6YFhPvnnVcM18REMDYrRW2KoNbqh1Oo1RdEN~xI4FDhYnLvmyIBahji3GIWGFO1TYjqb-fkLS-TwI04sguALq~Uh3VcX7oVCgzk8h-m~50M42pgaP-SR~7x6Oed763Khw2onYBBuh7lA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

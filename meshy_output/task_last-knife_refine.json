@@ -1,0 +1,27 @@
+{
+  "id": "01a1938f-526e-74c9-aa28-fe44d082f74c",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 3616565366,
+  "prompt": "Mythic recurve bow, a game item prop. Dark gnarled wooden limbs, a single taut string, and a small throwing knife lashed to the upper limb with cord, no arrow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Dark rust-brown gnarled wood, a bone-coloured knife blade, ochre cord bindings, bone string.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793477007621,
+  "progress": 100,
+  "started_at": 1793477007627,
+  "finished_at": 1793477039509,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938f-526e-74c9-aa28-fe44d082f74c/output/model.glb?Expires=4947004800&Signature=Kp3kui1Yt-BG4CGRveuY8VqtZJI3c93ZyMp2zUf0D1QUfCEY~4IDDlJ3s1gBxhPGJb6VakfgCSRd4bImjEM5wEy-Lrt2UG3fVXc-tOrDUiOEFsKTInXR7o-GCN1n4GDR-X4cc15sJOVQKEFY5LMa0lGs2sRkkwiACPP5ygJVa1rtzJZ31D--XsPiO08PWb4mRwXLSSF5~pvNZdoKuCYH5lL9OmGb-TckQarMuBH9I1Jw0ycdP57AtbOBdvMhUgydBsGcG6N~vMW1aGcIGhegwxRlj~eO3roZgfY32sBxp0B558cYIhui3AlvuYfjUfvx0XLeFrJZq1Q0dHAm598qhA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938f-526e-74c9-aa28-fe44d082f74c/output/preview.png?Expires=4947004800&Signature=bDBN1UrNyE-WyvYuHzt8C-AoW16xbqcy1MXPidvijYK4BrcX3Y0461Y4ZC-MwwFGH34H9S~-UWyUB5XGHYhkaSp-3-JOaloQAygHKIRWh9yL1xZai7RaQ0JjBhpN919S40rlg6FOn2wmxkxWKE8OqIvZy1UYMN9A7nqwZPzkuN0COw9XpKwt9XJRHUHjbHKgF95lSeL8KP~ip7vNoMJq1Z0DnaTPH2PVUpmW8HgU1dbim-WFYk5EaHQu9H1yaEIcEs1xLpv1ZIyeM4apAp~-t01KxdINBM-6JuFdd3~GUVrRONNFOMmS-a8fqzwG4sL0qKog1RwdN~9vbWJQNJeWYA__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938f-526e-74c9-aa28-fe44d082f74c/output/texture_0.png?Expires=4947004800&Signature=lgRP4OO8xnX7jClyGo1gok97ChYqDErtuY1CHGmBYqicmyehpSOFVAvnYNUZLM-qauikg6jaSG-qPf8xMdlPKtXFS9TCpZMe0gXxUbNBE2Ahky9jQJFwxQY3OSDia9d2--vpSdzV6FEhuuJai8a54ODHszbbaSZEoQRESASYxTt6LUcfxSZ1sWV~qf-P5LwCfHCsjSWVOj7fE0042nUN9G~vFelnuG8uSQKLBM5dB4PJdU91mz-7tBfJTmpMEl5Z8KMPwnCVk3vwCVfxaxIpatJtOpCRvVpK9erocTbjaO7X2gz-uhMmkmDyUSf9wCY1dmkpDb5YmZHHS2fKEKqY2g__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

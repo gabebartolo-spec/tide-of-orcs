@@ -1,0 +1,27 @@
+{
+  "id": "01a1938d-33b7-7088-918c-cbf42e55c563",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 2145315237,
+  "prompt": "Short composite horn bow, a game item prop. Strongly recurved short limbs built from horn plates, a wrapped grip and a single taut string, no arrow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Dark rust-brown horn with bone-coloured bands, dusty sage leather grip, bone string.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476868522,
+  "progress": 100,
+  "started_at": 1793476868529,
+  "finished_at": 1793476897628,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938d-33b7-7088-918c-cbf42e55c563/output/model.glb?Expires=4947004800&Signature=J22QFpKkfeGhxZN-YE5WZQ6OBOuQgTpsMlIxbewtquFOAb60cZztv9D6NDu416LNJCXpcvloUmI2RMH12ibiIdzvXf0-HFZC9brxXyrP1I-nR7dAICsOyf7upef3ztDiElcu8gZAXhF7GgUBZcAntSII6RAwfw2EW~QukxeJmgtAWg8DVyozsUuwgCk8j0sBS8zwXp6Tmt56pYiruihNCS~Fz6UqdeBT88B0cFelz6iNtAHj2v3hMjj~1mzxHtqq~TVzcsTG1JrxH32s9ZMdnMEN-tiWCsUEm-g2QHMAcndhKwHsSziJV3VztQ2P5ge2XkXuX69hrFqAvB0FOdHilw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938d-33b7-7088-918c-cbf42e55c563/output/preview.png?Expires=4947004800&Signature=UnSxiYgNFgDFMT6nTi8M4WtgBxlI81KqEGXD5MQyBLvo-ZdIhXj6dZ4AHrzvHmon2vSYJr1CswbJsG4UppQSsYlvnlyn3L9LWXMNo4sO-7KcVnyIRxu2ubACyTAawTf9nA8TXZ61Dia6bjhdA978PNkjWQLciwZTFUAw6lfJU~BjzfNIEvHTDNA4OhnSM~5rNziJ3QXhQv7l4QW-qO83IBXy5dM2SKF-eG3FlocQL3nyLiQBrWQKgpxKLm7BjtFCoo3Ts574yc17yiHy8iqXR4tilh6ohA~tsXNjo6gelPxrYcPkG7Yxtjzc6S7RIscG4HUHSKgOXewFX8mKj5-TVA__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938d-33b7-7088-918c-cbf42e55c563/output/texture_0.png?Expires=4947004800&Signature=bpkbFBNs8v69yb2k4Wq818ZRvrlgkAGD2IO8q-cpGik0pD~VxNu2TrPjMzKPPlPE0Nnr5Vj0cWN9irFNx7l7c5FjyEmtauWGDfsWDxx6-s~Ckt84-Tlfi6iE1eKDTmLQC4XeHF8WinS4G6pndLaon4YU7yvpeqVifattZ8UyFiyzJVV3VWxh8pOdlVyzL3vAWVUv9s4KgabfXHac71kdsPi7NsFZAMoHIDeifKP-sHAYFfMQLyeKQrq8Dc89BqDegQNwiifYBXsPszZNQNY-opA73GAvsq8FQ0Quy2ZPsT-cZZd0YLSnhaJhxwX35JuNTmMFxz5E4tvaVh0EUI1h2A__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

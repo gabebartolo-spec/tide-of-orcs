@@ -1,0 +1,27 @@
+{
+  "id": "01a1938f-1c0c-76fa-942e-99fa5f110ca8",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 719164267,
+  "prompt": "Amber charm pendant, a game item prop. A polished teardrop amber stone in a simple wooden setting, hung on a short cord loop. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Warm ochre-amber stone, rust-brown wooden setting, bone-coloured cord.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476993811,
+  "progress": 100,
+  "started_at": 1793476993816,
+  "finished_at": 1793477019438,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938f-1c0c-76fa-942e-99fa5f110ca8/output/model.glb?Expires=4947004800&Signature=KAfazyeYANKfmkU1lv3Y6EZR5xk8GVI2nLxYe~oSufUxV0aHpDj4Dui2VYOGD0S-ux7cczh3hTC2d0XtC3o8l7FuwTig5CigaRWkd3ym2bDAJQjYbi3ZBUy31XzQetgBdGBDme6pIT5~nFetQzo90TtAz6k9WSVn26Ujjg0FB7RhViT97TBGmzN-uKvOPB3c10fViV0bug3Lly8WQWoC~lrs00ST-0c38HCBUu5oiL3GqnNtq8kd4z4MhoAYUQ9dNWwxHm4U9MJChZTR4iA32cAEqh628l8ZasGntRMkUfxpELac1xu21k5WQn-aICXP8Gy7IoDjFDElqaUNCYXhFg__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938f-1c0c-76fa-942e-99fa5f110ca8/output/preview.png?Expires=4947004800&Signature=qHDzNByL-Vt4yUHSnwWOAmhhXR4KC-DFkNwFlbrj-Uoqw7FmhW5vrzs18ck2ryuH5rvU1qeXasjHgidSq9LZQ2kVbsBtXsn-hJr3hK91RC-6a7jcZmqumiNzLCdZbd34CJh3UIPuak~LfN1rXCFDbmzuhho3uVWKgUq-V-z~rQrWDRVoClCItwCObrVPp-bInnYPqIi-nMhZqpnoIYZVVfofODwxrux4bRhAEZVrfOE2FwZVI0kMH0PnZudt2ZII62TtyvJvOSdaHyTgmM~~u6mB1GY8m7pqa8D5A70XXAuMiwhOHTVny8yZxHqdZIRlgTo4bjM65NUmvzZTUK3ndQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938f-1c0c-76fa-942e-99fa5f110ca8/output/texture_0.png?Expires=4947004800&Signature=Hmu5hOcr~7LJQLtgKTS3Mi35scPMfSzm0LlLgLJWwhag4rif5a~uVXlrdCwBusX76QTVVVMMeU20xNRd--KqXDr6h~Fc~F~cL~~g2jUtCvWANJdDJ8E0MAeOvywbh~paIbcezzRd3kiISq0D5gFxYjGpfJ9oL4ywTyRb9gEFv4l7654U5NmcTSUi-91XBOeiHIsjZemkP2EGOb6nh~YcLswbKCXSBwPCl5CH01W4jUmxrtinu4Fs4riNxq7f2XJg4P6cCxgoP4Rsiif0pk8gPelZcYT9DBg35i2DMsFNFWTErptGVPAJmbXinrN1RWsWbbDkScHPeDp0Rj6OfPhDtw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

@@ -1,0 +1,27 @@
+{
+  "id": "01a1938d-bfcb-7635-b699-5d34a0768690",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 1174644528,
+  "prompt": "Bark bracer, a game item prop. A forearm guard made of a curved piece of tree bark with a small leaf, tied on with two cords, no arm inside. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Rust-brown bark with dusty sage moss patches, bone-coloured cords, an ochre leaf.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476904431,
+  "progress": 100,
+  "started_at": 1793476904437,
+  "finished_at": 1793476929792,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938d-bfcb-7635-b699-5d34a0768690/output/model.glb?Expires=4947004800&Signature=i2zVzr-mvCV9378Hpu3RJ2SlGza8PRWXo96TAMnn62BNg4FmMziwuMPI4T1KPsW-bT8HL0lKIkkU0STPJe7NKCeOGr9dA~fjjSIGNd9u~1rhyhA79ONi01egPu6WtcxwVSo~Au46Ldr749UyvnrSX5ayXcjtQUXT7b~lq67hDRwLIt4XSM~XI7QGSUTcm8GjdlfMxVKczgWu4fpju346tXJtUAojavAFpGMVTtpSEOk6~U2ty~OLWp-R3Tsf7hByTZRh66OMipSlHf5fzzZ~q9jAJ6X~QHXrRJv2yBv3bBpJBqa03e9TrOFUDhwv8P0oar-oduQIjgel9bQSenctJQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938d-bfcb-7635-b699-5d34a0768690/output/preview.png?Expires=4947004800&Signature=MfsoEQgbaz3wtXU~keCGz1RIbyTVZb-acysoGiAAQfW4frKL~2rUaAyawkR6A-vrjai8pCmM4EvUQ8rrErBD~h3njMhQ8y5V0z4ZbA981OPW-V6TlWoBexvU6LxxI-~63cwcB-OHWCFb7ztwEwzVglq9Exk6O7T2OC098baqSn1z9X1eXHrJdajfccQgMPv0R0oKyXwuVNauoDfMzcZ7MgJlSWVz49yapbukzwwvPRqhCAD4xLQ40UiHO61~-dtI8zMtGUOiYKt1a1ieZsf8AULlTHj9o2U~cVGDgqqJ~jKHSgO4G~YfD7K63m~OUx80TksFj1Ii6V86N7lMFRPYKA__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938d-bfcb-7635-b699-5d34a0768690/output/texture_0.png?Expires=4947004800&Signature=oW12Q4bqPgxgvfVYusmcrEo5sjmt6wgTaIquRVp-f9F17xrnIDsUKU37ht7-Zj24jGWChuoa9oBaDRML0LG~5alDgJLMlomO3EUq~OHSIIgNXtibFUJMjtmtkxAC7hzOiZ0RdHAChQb4KUwVJ9TnjG2i1ssPIibvggWnbcF9FXhh7vOzqtQxUWYy0MpufvFbvMSHUM3ygnMgLRaev0Mp7i9tYgswa4iA3FOUP1EE8-jdrjnesuWxPhdAR26-Fej2oKf7zJZamycLTawgxHn0hCaYIj5IS8ZEpBWpy1NOxBAL8xWxD~jJeCqgg~-vdqA66Dle46ro3hWDHlL2bEot~Q__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

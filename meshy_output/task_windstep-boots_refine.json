@@ -1,0 +1,27 @@
+{
+  "id": "01a1938e-c69f-72e4-97c9-d67fbc61811e",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 653512515,
+  "prompt": "Pair of windstep boots, a game item prop. Two light ankle boots with a small wing shape at each heel and pointed toes, standing side by side, no legs. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Bone-white leather, dusty sage wings, ochre laces, rust-brown soles.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476971567,
+  "progress": 100,
+  "started_at": 1793476971574,
+  "finished_at": 1793476998997,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938e-c69f-72e4-97c9-d67fbc61811e/output/model.glb?Expires=4947004800&Signature=cWacB1NVdhiPXaL-2rRLlL4SPUorIUlpdv1bNboUakSz4pLdQCfcUWhHacpuqAzwr4~it8z-~QBd3e3LA6YWpo~Y4mtBG9NoP20vwwIK8Drf94WNPdh5tHP9VFmAOtTehbGD2u7F57c-1D8rRWGeO44TNYGDaMNTd4G3RQCROK-xslCqKokCODwnT~m8ppNt-e4M78YgceiN7GArt~VA4zVzlGVyBKVjH2jLoAeSOmk4DHg-PTFgo1b4ivcqvnMDO4k3vFT~zeDpHbOyfaQKO8awf6mJF-oTp5WmTT3USzMjOXePiGq0YdoaShOuVrC7B8mvDAantIKKENBloIl9Gg__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938e-c69f-72e4-97c9-d67fbc61811e/output/preview.png?Expires=4947004800&Signature=NKo8Pv4WVpHasQ0gEoelws8DQte900RSH3CPHBPDMWQc9OW2dDX8KBc62agkno9myZAITdhR2gEOtCLggG1GVFhTHds8qmvKHGJ4G3vhnDSfoHygdWnAVZF7bI7xxLjjFP7yf5DagvnGZHmI2OpU~ZmFGjN3WhkZO7j87To3HhxCdPhD6QqY6DTe3JUXdzQmkbS48OJDX6ztug9xCrXQgkZRWjfiv4rr2mPbq1qqLcsMJFCyS8tXWxCeMVRioPezODcgg9lkF~fMHARnru9DCtbo0f8lakuhLk4J7LNAVZ5TbrELLckSFIHQD6TjZ2BlLCwlUm5Y6d63NKhEEoXSjw__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938e-c69f-72e4-97c9-d67fbc61811e/output/texture_0.png?Expires=4947004800&Signature=WYbxFV-o75k7iml5HtsWQECo5W4aiRa7g46RRNRK0w6fAoCo53rAPCwVlCxi1i6MxU4WntV5v8I7vTaACLPqXJI7BorGAROJasnZfgLFzUwl-52y0uxxWr33jcPRyua2KVSi3rTII6du5qMI8IHlrRAmEjb3GFxzSNNwlg1AoqNDTgjzPIUMv4pALYzuBXMlli~QrCn7uoKkExk9DTIEOxvS6ZJn40tMjCBc0JttwYZHxU8ABay6aPi4Kzd1ootUZ9ib6PBtYZGjSojLRaT2vAeEODv8zYxHo0zDLPUcqo~6kjkw5ZKsMenSPjfIjTefrK4N9sNnPr7G6kPiHapzPA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

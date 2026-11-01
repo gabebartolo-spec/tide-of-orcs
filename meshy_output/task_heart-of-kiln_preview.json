@@ -1,0 +1,23 @@
+{
+  "id": "01a19385-c962-706a-b72d-6d1ff8fa67ae",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 1306618079,
+  "prompt": "Mythic kiln-fired clay arrow quiver, a game item prop. A cracked clay tube with a rim and strap, five arrow shafts with ember-tipped heads standing out of the mouth, no bow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476382581,
+  "progress": 100,
+  "started_at": 1793476382588,
+  "finished_at": 1793476403469,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19385-c962-706a-b72d-6d1ff8fa67ae/output/model.glb?Expires=4947004800&Signature=dUUX4JpFA~KGtgnHtQFL9GQ7eLTyZqvO3xTX~E-N5LHy5YOeTCdgL5xHjQNBL3VvzI7g2vBBLYVu3YI5qzoO2nEdQb9WsPp0eybPIn1xIBaPHAHRGlmMeddfoZl9le8q-Ns-QPHAxnw-fWAUJanG9AL-1HNF~YqWfjnFfkzAjE-pEorH0MNDjTRAepMFtgSFJPpGjdfLm50KQLU99vAFc1YSZ8DjB-pdwKRv7yHRKtusvN1ceeToQj1kQwyU2-B1DOm8RM~YSPHxHG9hajFC5xGecQU4-ccnqdqcg6Ejr15HYNzo7x-N30jZZTay4zDln8vUO4doyDW3mK3XZRXKZQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19385-c962-706a-b72d-6d1ff8fa67ae/output/preview.png?Expires=4947004800&Signature=lwbTJvin4YKvH60eZNXVDR9dF6SFVcNka3THvxNwm2NsakPnNYWMI8KGzCVnva9Tbn8~HyyktuTOXNvWTNih09UxE5mUyTZv0p65PrLjzNpqqKed7UI4QUFrgHpaQTNjlndEe~Bny7gpSGL2WocS2PtkrTylBo3DQHo72rQShHPzdrfIHoDPN1yE5At73LoD7RvkHWafIpG1xevCC1LAt5v84aQYmTzooVwuBHEFwUMB-X3WiDR08nEXNlmvzyf5Cv~LOytg6joICTlDxBotvbfsh0T~5S7nlBs0~OGDI9lCW7gRlwrj3T2XyKCS7E9-vBRWt4XNQirBxBLIIKpefA__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

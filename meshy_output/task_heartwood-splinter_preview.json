@@ -1,0 +1,23 @@
+{
+  "id": "01a19386-53e9-738f-b424-11065f02704d",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 1393583143,
+  "prompt": "Mythic heartwood splinter charm pendant, a game item prop. A jagged splinter of pale wood bound with cord, hung on a short cord loop. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476417867,
+  "progress": 100,
+  "started_at": 1793476417873,
+  "finished_at": 1793476432464,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19386-53e9-738f-b424-11065f02704d/output/model.glb?Expires=4947004800&Signature=cc-wEU0iExlXagASmKbdH4QO8pfRqIgvOFf-8mM1WlN5e~aFCWw-Qk8cDpwGGe7n2zMbywyimkfQmc60mk51A5hLAl6XbjOjxpH8WWq2en6NSVhurfKkgCH6hCZLxstKgY8ro2SMf502v7Plr71dVDNCxTU00CO8sWrdJcyxnFIiG-qQ~uCeX6MHxhKkIL4qi3IdhoVQk1UtjSzE3r-ajnoY5pSMlC9~TKBqA~1kojnHcL~c-7waRoHlBnrplhf~wAtJ6fgCLRiw2zDYRUVDEgJt-nVRkZ1Eu9qu4T5HSvBCm7FankIaKRCmVESaeApKIUlKMhAWZDfh6of6lqsRsQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19386-53e9-738f-b424-11065f02704d/output/preview.png?Expires=4947004800&Signature=Qjxh6oowRkgtv4~PsYOL~LRQCKEwO9L9In705fFE1tO5XrJP0NZ1bEyhbtoBdgWECt7qiO6124wj0NnZD8e3-t5-5LXbPOWdtvDIIyN9A8fBlKSiQCZmmyyUseAft6YoBy-CjPBTCmli3xqAzYfnU4~5Bow~2CSIWa7y1ki7AsVpbK3eHaTS8f8AGFHmHRSU1PDx6OLh9JBhrSteFAMq77JZVARY5IlvMJ2Rcyy4wLp3Q~fdA5kHfec4rTVpIUxSFqXSpVrTW-dz9PFIh6uFHD7mC8EIa4ABU04uNNLVFLR0Jn~LOPkejSjgxvfyH0issLMlZTaobK3EkO-bkdOPRA__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

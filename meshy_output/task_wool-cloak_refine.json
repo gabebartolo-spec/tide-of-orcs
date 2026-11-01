@@ -1,0 +1,27 @@
+{
+  "id": "01a1938e-19e4-75a1-b381-32301f5250f8",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 1470001531,
+  "prompt": "Thick hooded wool cloak, a game item prop, displayed standing as if worn by an invisible figure. Heavy soft folds from the shoulders to the ground, a deep hood, a round clasp at the throat, no body. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Ochre-cream wool with a rust-brown hem trim, bone-coloured round clasp, faint sage weave.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476927395,
+  "progress": 100,
+  "started_at": 1793476927401,
+  "finished_at": 1793476958921,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938e-19e4-75a1-b381-32301f5250f8/output/model.glb?Expires=4947004800&Signature=gMIqxekEr1AnoLVF0C9dNk7PzgLSetF~jkEHmOFYursAoOP2PR59Umdzk16paRYIstGDGZgQQzrgVIRac~s6q2WQJMLO19PvlYxjnSee6Veyaz3bOsx1V4hS5jVDcCvuB2vMFxAJ4ZR7bCNBR8p0K39MHSho3VFfmeeimS3O9tCZXhPoCQIzzpvT0s465c~jYutIjwoiDvXy0L6se0un3YWTa0bnKOi0Xy-5tpqcwcF62~-K6eN6n1nLkNXBJiyPJymJMXAIv3CjewN9uKX4rwX62yHR7w7XvlLDkiyBQQM8f5f47GGEjzoAQhMw5r1HbLjaaoN0Lm0GFrOPQX768w__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938e-19e4-75a1-b381-32301f5250f8/output/preview.png?Expires=4947004800&Signature=PD7TNwIbfuHSZmdZOJq1D2csWAsYFMMAA8bLBlcFxRBXxVEBcfR0l6TUmI0MkljkhYJSqp0kv66LQGv2PGwFewsEPjgmv4~n3D8ciMDIEdGioxsAY20XKGEkxeY18p63P27UshcbIWYpAhyvieNabb8mcJp4ZIVofeUdWzF1pgVksNkutvRy8PXw~f9A~M66PwmmwF9~pypkLsyqO8ArjwjHDJIxkby4x7~EWLV71iXhVFVNvvGM3xfPoNtuJzyEa4YBaWAMAfkuZSGha8ohGzkM0ouvTb8vtJZlJFfqR7gwPNwkqxUyxLiEvBYzy2AvffmaAGBJFIAf-VLnvgSF7A__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938e-19e4-75a1-b381-32301f5250f8/output/texture_0.png?Expires=4947004800&Signature=E76Cvtoes5rJRTkljNCb8Q5SRqsWFAhd6VELKhVY95J2I-Q1UcZwVe37l7aupmeNN-HH7HB3OF-bm0P47D0DWk1YxJnnAxsYzHhI2mQUkjlvTpgcCoBRlE3vMKXZSA7T5I-bBhPKfX3YsmDRyr~-Kmh8jC9dy2WgfO6Bxxu4-yyNOC0JU5MUttOPfs5RRY3ViOdNUZz95oZbZ9J~7I1vfVrcsYxA6soTt4j1Z8mjZuqEgykv~HuplQDb6laA8neOZfHXukvRRYiY49VKnTlWD41Y2HbTGsohQtond1Ur~g2qsWuyrt6GXSHXJcC6AVj0MNTudrSztwUognHXH~O-Tg__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

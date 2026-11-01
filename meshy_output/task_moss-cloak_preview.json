@@ -1,0 +1,23 @@
+{
+  "id": "01a19384-639a-746d-b2f3-4d7ad5d53570",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 3471195080,
+  "prompt": "Hooded ranger cloak, a game item prop, displayed standing as if worn by an invisible figure. Flowing cloth hanging from the shoulders to the ground with a hood and a round clasp at the throat, no body. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476290909,
+  "progress": 100,
+  "started_at": 1793476290915,
+  "finished_at": 1793476303587,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19384-639a-746d-b2f3-4d7ad5d53570/output/model.glb?Expires=4947004800&Signature=edgaUG5nV~UasrSAuei6T-Vz-kP7AtEG5y17Um0Tqtojja7NbYcxbepvYpbDr8z3-ZaKLUoF6LSBfdAnNpsaq-5K30AB6IKI0VaxHzBbFzeeQ6AyQHqMttcha3Ir4PNqDWdoz6y3H9X29szoxY~CfA3c~Kin1eOisDcQMu3b-unQ~45NGE7-eJbwG7ghEhPl-58LwxVI1Bc5nbTsEPAGEKc9S2gk1f5OVnqA2G3pl87bOttSGjsRrEyzU1sBklgYbvueLjQ7n7VeMuqTVKbimJtMoXO6dFK1ymSVs~HwLfi-LIL-~z0BQ2vAr-AELp3KUj6mADip~7EQetO0kjPkeQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19384-639a-746d-b2f3-4d7ad5d53570/output/preview.png?Expires=4947004800&Signature=W9HGDYfDMhmATN~2oj-eDYJ7-3y40gIkCpY~OrPbwQKN4A8wFllNwjaTmrdswzdVpNq9CRZv9b4VJEG6XEcps4jyk9YxMTtuYNWTgZke4qFy2ssKYOa~XRw3aV8Ph~kiTvoOhMdmVItarFLXnvfOibdAqkHj-WIDh~-x54Ct6wpIxWA0Z-z5LLnaSwy92wKa0hQcO8r-OnWGw0QN0IqRD9iKKszi55WdO89eWezFuF4IKCTiW9h-48hOUl292cql2qXbqf4cLHetw7TFZiuYX3bn0EXRDzTNHZAX7uzMYWQrWt8TpbLfYl5Z41CuQQjNZfIaCXyvMnKzAFEaLXd3RQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

@@ -1,0 +1,27 @@
+{
+  "id": "01a1938e-6ce6-76ef-a180-50986d478ccf",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 4150450622,
+  "prompt": "Pair of soft elven ankle boots, a game item prop. Two low soft boots with folded cuffs and pointed toes, standing side by side, no legs. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Ochre-tan suede with dusty sage folded cuffs, bone-coloured soles, rust-brown stitching.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476948877,
+  "progress": 100,
+  "started_at": 1793476948882,
+  "finished_at": 1793476985690,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938e-6ce6-76ef-a180-50986d478ccf/output/model.glb?Expires=4947004800&Signature=mp-c0Khila3ETnQ8YJAPiB1K99yuYmdcS4ToZdKy~TOUMGg2Z2~~sd6-pxl2cJLtpQofFp4UKGu1mtTjZGYzdiNQm~G9K6v7GrlLey4IPr~C4Ju~1QF0Tq1j5wwpeeUApbc13fgEXkDWWKiybCt~T7fDepbSSOQk7mlifZueBomYy7KhxnOVKXkhwXWQvJ81FwZ0gQPEzTnsnVxHsPFFuyd6C-cOiKjehq-409braG89a8zyqjDtVEtwWCod8s9ifPIb~24tbwq74rKz8Hrk~aFEXB9y1lLwBC98dqUAn5qRK5LyCrhlQO7TpsPK6IqVX3X~UrBMbiwK~6UF4tFwRA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938e-6ce6-76ef-a180-50986d478ccf/output/preview.png?Expires=4947004800&Signature=M4bkeWQleUEyI1fjBbvL2Y1ZIuqdA9aHbLCehHycARy8pXq6TtHWrAtypi8hRW76AD2MURyi43Z3IBShOYsrrvhdGlXGlOuhG23DrwZ06Zq-DAdYzaUFDRjX1PrlE1Q3BER1J8na18lgFtRuAcY7YmbgEc~a6ZNGVpld8KvUfbMzaGhrApAxYJhDv70miJyZo9hHnZbbO~5Zpkjfv1sCJYB0uXhb3i8LUcct0ZtyoaogBFKAjA~-FLwW9-Xh0kgATQLcrwEMSu2mqDckdzjy3vuZ-U3Rfeu4MG2-scip2keEsauSRSdVd56hRF2-rS7~IV2YBZF55yZNJoshdVG3Jw__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938e-6ce6-76ef-a180-50986d478ccf/output/texture_0.png?Expires=4947004800&Signature=GDHSAubOPTn8hmjU68S4jcKffxzbi98zVp8TATTlnzvJwiGNYIDaQATgj4330waB-ZM2NbLXzqncaNgGu04VM46Dzex~DemuYB7bbl03v~XysbLYgpOC2IpsI~5vzwFJGo946NosVOGWQDdPgukIiuyOB4MJdnfrUJ-riHdIXlgAerPzQ42AwL9jxgvdsooXWFZx8-dCIwTEc33sWEoOcwQRRlE8VmQ210WyLDPK4CCLbPbNpbWrFPIk9xGZIiZ0tMqR0ste3CO9bF2Q-BZrdf7j6AG-wj0ra7ySio3iCcjB3GiE9RgdR-QJmlYD7Fyqjs6L3SytCS50wC3NsnqVAw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

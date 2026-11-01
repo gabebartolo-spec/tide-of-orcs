@@ -1,0 +1,27 @@
+{
+  "id": "01a1938e-e215-734c-a518-a55351a05044",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 697638883,
+  "prompt": "Acorn charm pendant, a game item prop. One large acorn with its cap, hung on a short leather cord loop. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Ochre acorn with a rust-brown cap, bone-coloured cord, small sage leaf.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476979000,
+  "progress": 100,
+  "started_at": 1793476979009,
+  "finished_at": 1793477007404,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938e-e215-734c-a518-a55351a05044/output/model.glb?Expires=4947004800&Signature=da9E-cjYzsqB5VjlfCoyW7OmHkjNZdCB9R60a6OTkmcvVaPQGzqTkfjpSVvnjaQtZ2n8VoonW46AA-gY2tfcu0F0mWkVBkkNTHdCVo7jKvFwowTvX7gfff0ddA2GlV8Q8VFJn~-5DhQwQZIAv6~4DBwyBTe0x6sxaGHiviQq8ajarZZzWQjrH~0MciFnlob6CIHMg6iVik9Fczh11GpbLDFXpcUS0bnFue3Gvngk2iVRchm47prccj6LtcsmPKpqNqBapDagPWqHZuUpODFqklS8CFk5mpJmYtdUzTBhpzdL6yx7xmmt2g2muDELHgLCyprYhgZv-OCJjj9hI4QrBA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938e-e215-734c-a518-a55351a05044/output/preview.png?Expires=4947004800&Signature=WX1EcoxN~j77-bM6~KxWZQ3bLyDTEP2h6MxUhImMl7yh2ed1fa9Zuyejr~uH7FW6RyGVef3dYT6gYI6NMs5Fa0KqvCNyXiMk9H0RsRXZuSDWQ9I2GrdSeUPl00~GhjwPbX31c6YfOg93H3dq8JZyUfOElA5O1ZqsvdUsPVZcI~KZpQesNAD2or-YpIzjTIZt9Gq6aglzhoHrOmUBpTsEjj-MSKo38oMQAZXFiTZZb6vIZFJOVTzVKd~~fIxqQOEsfPiFKI7XeK-mJHESlkFTO03GzSsQwF9sJAtYDAwQOthzzl1yrhYctt7jm0cdNuZI0o4U2NYnhxGYAoXownz3nw__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938e-e215-734c-a518-a55351a05044/output/texture_0.png?Expires=4947004800&Signature=ZGP-u1W-PA4acMCkcpXHvYM6VidGXysmrKPwVxYB5ZQg14CQqbaF3AFWimaQYzEjNHX6GaMjuXs2BAr14wbVLYhuTl2YSA6iEN~Uyo3LMNrhx1PDHWB7Fu-dBn4IQ4mo-YXJrg18vIzAnA0WMWKh2ldvfSo5jTlaRaHA63HWaz3J3SmJYvpClnF6YkUeMxTIbWQxI63qpcttnXXkBnQfihFzOnHamGxQpw1CtT~yvaY0NaHOS1AZnWK3Cs1wnQNEhc4g~UyjxQTnxaCXwOvn4lsfW7GMhj~jEV5yyU8MA1I0bfKIdNbqRjQOmfnbnc~8l7E5i2ifEO9eEaJAhYdcqw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

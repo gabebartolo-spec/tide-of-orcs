@@ -1,0 +1,23 @@
+{
+  "id": "01a19383-612f-71aa-8232-d8f06ec1746e",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 2085899718,
+  "prompt": "Short composite horn bow, a game item prop. Strongly recurved short limbs built from horn plates, a wrapped grip and a single taut string, no arrow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476224630,
+  "progress": 100,
+  "started_at": 1793476224637,
+  "finished_at": 1793476237040,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19383-612f-71aa-8232-d8f06ec1746e/output/model.glb?Expires=4947004800&Signature=flHZJQJ-tSJj7~yM3XtTMcZEB6TfQwou889r8fjGQ~KkKLyzq99VaxpBroZ9~wImK9rcoMcGDHGKsW-~0-3zJiE9mui0H8sQQeBOnqrxEuNBbfVKgsCXm9K2K4f0nzhq0DFYvmqh8Gn7ZbI8L7EQTZ9f~uGuxs08rUWDhBLw1YSRdAVo7IEPzOBLFkdUTvWTbi92Q26XEVwjvANiJqBvgTkeLe3xnIM0iLw2HWlas1aUz3oHYrfw8v3k7ZZOsKcccazi9zocqRUraRHqnV1oF0ci0Ufu74Qx~UIsquwOXYtTutjgqb9bAmFaV6v6Bxmi~ia7AfbfaZKeMuPu9OKqug__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19383-612f-71aa-8232-d8f06ec1746e/output/preview.png?Expires=4947004800&Signature=ooGClYWUqLvk0ZPzH79eV1pTdQKxCZMr4WLhobcyydVkzSLZWymYJZPmGKsFvfdSC8m9Gnp3GAt0C7cjiidqdpY0yCQEtuCiJufLwBflLsLMDD5AuwXh5PaVQ2JPeWR-19iZnTnloc8IBWrhnxrxHRj56FppbcNaYJteUB-WkOSe85SJr3O2SLErsyml7WpejA-O6pohDB9Q9kT5cmjpG94O5~wAw4lB6Wyh5yLfDd~4dr~8KVPoFCWlBw12QMQ3IgbvGFsznGLraM9OkyMEVshfZSd6YAG3-XmSoNoAf3v4vT5UWGdVqTWYToET9jVgc7xjEu~RNEJdU-HHUArCWw__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

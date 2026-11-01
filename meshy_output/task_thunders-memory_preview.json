@@ -1,0 +1,23 @@
+{
+  "id": "01a19385-e30f-745d-bf87-81277e4d0bb9",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 1719658448,
+  "prompt": "Mythic storm bracer, a game item prop. A forearm guard with a raised jagged lightning bolt and small copper coils, two straps, no arm inside. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476389123,
+  "progress": 100,
+  "started_at": 1793476389130,
+  "finished_at": 1793476403113,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19385-e30f-745d-bf87-81277e4d0bb9/output/model.glb?Expires=4947004800&Signature=pes97eiILLJ~~pxrokUfNciHJlQ3W3DhIydbSlz3P1yCBR~~M~XSym2veWtUQZJ0npQL~Vkq4dPJYe6v9PxKlNzIwAstfhbSUKkVsx4J4S4HFxHhPsKNDtpuHy9dIVNcTbkXBtZQZU9wyZ5Z5mYFK~gFJpK9K2AVOpfwmB4MFn4rjL3HJ2TAVyOGuPhMgppYmdivS-hD94YdLkq7tihhvdjDLLGH7UDQxFLv7V-o7HNskalGd5ncgr26pMc5mbHxdy1bZKNYch500c-b4jA01CVjce1vfZqk~8I68-FqH2wB-q-5XQ2JE-Mb8BtVMQwN0ciURUZ6UxHtPXQHSPh7XA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19385-e30f-745d-bf87-81277e4d0bb9/output/preview.png?Expires=4947004800&Signature=pyw-Hr1NhzrMj9NPwvMELDYNUMm-aczDLxsCr9v2JHbtFjidcX8vu1hP-cMd-yYJBqq~0GaHgp3BSdsa2P984R-7QmT1kq431aUzVvuDJNwP5eXXA-FFYKSKAYm-DDIUdacbsk-D4aRcKChBoOsZ5Wi4kfNrjVjhyUoBObO9GDg80eWbTQKl6RrEogHYY-~MkqDdZDSFi-LtVqHjgVSl515nMiArqTEDcsbUXSmRoJpt4KFcQZy1AQMP6tOH1lFh04eu6NZuF6Towg2~yquD-cp-aAKHxNzyh-t7sbKZbeg9xRAOIb-fS9ryAHfG~-TlGuMmKgMwcoR7zMJTTCTlIg__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

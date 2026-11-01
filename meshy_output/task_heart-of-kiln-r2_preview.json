@@ -1,0 +1,23 @@
+{
+  "id": "01a19557-8bee-7410-bfe2-6844f71efc93",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 3524530509,
+  "prompt": "Mythic kiln-fired clay arrow quiver, a game item prop, standing upright. One hollow cylindrical clay vessel, closed at the bottom and open at the top with a thick rim, fine glowing cracks across its surface, a thin strap hanging from the rim down one side, and five arrow shafts with ember-red heads rising vertically out of the open top. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793506906501,
+  "progress": 100,
+  "started_at": 1793506906508,
+  "finished_at": 1793506921895,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19557-8bee-7410-bfe2-6844f71efc93/output/model.glb?Expires=4947091200&Signature=TRMAW6gA5UZS7E0MyQKJObofUgBEF0gBPwy7ZFucRhMKf8YS2S-6oFLIKVx9kDnF4RGniHgbz25NQixyUM5iCPddSfqvabYExBsR0T2Pud~RX3y87z7g8cdVzSS4RAIDrU9wNyhxqdn4aG9FIzWSB7srix5MYl0FYD4rVIM1mwehEPXvCfUl8ZZ6mKRkyJKuD2KiLARqevQcvq8PtK2yOJvbi2vmy1LqkYr9JCXIbX9n0OGa4~A5h8tOt7rYhXr~saLfWrDK7MTJcpMT-ysd4EPuigGDk95JL9FAjyJtl0A-oHgy6QxV6GG1Ch11Qn0LNvizRQxW9HEFLTk3X099Jw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19557-8bee-7410-bfe2-6844f71efc93/output/preview.png?Expires=4947091200&Signature=pG7j1J~NS~27B0d6La6ZFkN3EVKI7al5K3GE5R4zWrCA0GsC3LgyiKcTzsMCJmhjTgp0FvFYzeSnJd0pVHE8VrutBKjq6eECNKtcGNvxCF68l16SP3AhofXGY3eCqrVFZiBnh4KvbeBStJ7Xowzjy7K77JbEg0-k732dNPNd~V~DehBNVtvjmnnCR469VMtPfOGwZWpi3tn5oJhrgsSGZBxp3lJqKovS2HSqjoWBIGJ92BA1PYBq9JkFv8Mw~wBKdG6-eRfjnXv279rS1INtLctZ4-isUe-UwWGXChmvUusZA7Drj4AETtwVQbszVGd5yZUZe6F1xZ7DNFUpHvJMiQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

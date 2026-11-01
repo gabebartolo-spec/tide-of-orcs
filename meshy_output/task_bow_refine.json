@@ -1,0 +1,27 @@
+{
+  "id": "01a1937c-257c-70d4-ad82-b0946195202f",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 4228016706,
+  "prompt": "Elven recurve bow, a game item prop. Smooth wooden limbs curving back at the tips, a leather-wrapped grip, a single taut string. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, no arrow, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Limbs pale sage-stained wood with subtle grain, grip wrapped in rust-brown leather, bone-coloured string and tips, small ochre accents.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793475750839,
+  "progress": 100,
+  "started_at": 1793475750848,
+  "finished_at": 1793475784867,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1937c-257c-70d4-ad82-b0946195202f/output/model.glb?Expires=4947004800&Signature=cQaxcaWRMV3-vSOiuEmGNCsf7rE9gPBANJEq1Sb4nuIxqWW5aTTcWY4GhAwGX9Ot-EwSGp4V5vCyZ1DUjDvPMm9fqhhZ2~qW0kcq9DQIuwGcv2vUTDH-1pwyruOBdcq9g75U39edHVfsBwpZuby3g91ozXj9MFTJRWiQEvhVsMe0zPp456tJGk0t8UriwxOMTr9mb3xH12Pwu81LFHLw0fSFuNqLA6rjtfau5Z72cP6Fw1ZIeVz9GA2puGqDLS288T8uVkIkoekCGXnvOP7rkXCxfY1xnS9L8DAksRaDQ1y104zoBJLnLB0eKD~85SuFBtU97SGNU5o56LTsAdIzIg__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1937c-257c-70d4-ad82-b0946195202f/output/preview.png?Expires=4947004800&Signature=gcnRmDLjswhY7dttVo7OHLbGuj73Arm~3ELaTl9fRTj4lydHv8sB8Um02nnYE7hIn1r0m-XEpjiakKly9ChYaynrzqGTvLgTiZLexAL9ZsqB-yxGXhdxJ6HAYnm6kH4z3wt-NmQgfP2LoKD-bnfqFdqdsWXVvuXOR4K3dbhcp8plVlSxtTZ9Ym8hBYzvBikl~UjjpMQxB-ekUohJncyCeXhQi1MUHZennhEHcqFDQxmTQ23yBcT2cfV9BfP9VWJSC4swivIEJIr8HnST2GViQUcbzzU9XxwQdgLG0jY6ojziB7keXJinVPEmwxqYTYHqDlS~xHxucfWrBvrHmXhFoQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1937c-257c-70d4-ad82-b0946195202f/output/texture_0.png?Expires=4947004800&Signature=Xrn6TuEr3MEHFeZ5FKIRdgDy4su9Zg-7UnRp~b8OU4RWJsk32cn3nW1f~VwC5AyHFZGDeI9V7PByE2htTmw9DuefIGZX0xaL4~4OljB4g2QwbbAd3v7RsRfKCvqalGE9MNPTC62Opip3LKdm3gajhhHoxfKqhhE6s~ljotxQpXyiDBu4fBjDJqziYCw-sXxktDUOcFQy0VoJF6xJrptUz1JHRp86yuiOMK4pWT88H3YozWxGcQOanIWPcI5hNfNlaFx5gsLCzisbej~NkW7yJGA7RpLzcNMVmnu6AdxF55kR7Jq2vgoV4g7VSKazcGEv1jqklPa1fiU0ixQMb8P~~g__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

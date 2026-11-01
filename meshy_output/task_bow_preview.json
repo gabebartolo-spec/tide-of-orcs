@@ -1,0 +1,23 @@
+{
+  "id": "01a19377-37da-749b-9803-56180a1dd16c",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 3675261630,
+  "prompt": "Elven recurve bow, a game item prop. Smooth wooden limbs curving back at the tips, a leather-wrapped grip, a single taut string. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, no arrow, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793475427854,
+  "progress": 100,
+  "started_at": 1793475427865,
+  "finished_at": 1793475441132,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19377-37da-749b-9803-56180a1dd16c/output/model.glb?Expires=4947004800&Signature=Dg3bM6TcMl3MNfCYiMhyajBKduLVUqBFW9~FepAEhvqaFZfW23IKH-SNJ7JGxLktjNi9QnxqnmccxqFmK6jodahVYA5RMG3~uK4aHM4LYZKRxAzz4jSiDfvcRGADPs-BCq9CJPvrOOeikIlcZnUetXdHJL6BAowjmq9Lk3D4ezGgNpqoz9X9cuaT~Thl8wYIq6VHsGNdyde0huhSs6kI5tdeL2qXgxb2t~YF86L7jPsL-vUPGwyPMy~Visf1Tp6rutJOu9hFLvvPiGsoGaQmFJyY1V1plJ2Li3DAuEbECyLH6JeTnEFRWxTdPU2nuO5BrTVC7mYrZSbswfsbJYCyrQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19377-37da-749b-9803-56180a1dd16c/output/preview.png?Expires=4947004800&Signature=BOtd5AZrzbweaAnwr6ZmutrdNJMf72pyOzdeXLoEeJq4JA4gKJ~cEHJXVVH3H~jdShe9YAeqJ1a0suntlRc0u33Z9uAgA45ulCEL2ZvArME0CNUv8cKrNjxeJPwm4IKIuEhQgnjrmdCJoVDhBKsHN6ZFu-I~GzIknODtzaVGSimYtjHOtLHh0JxaRKuL715uuH3Vkw6VebSp0jKMoubz8mhzJRVU05GSt-Mdz07op6nk0o4O~MXB3k67Nx4MP6kqXff8Yc0I7W4xZd-~OYYvX3-OwRH2-ucPrdczd7DFW1~qNWZmrO52B-B3JcLFx9dTcVhhAjk0NMdpinB4QKo0NQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

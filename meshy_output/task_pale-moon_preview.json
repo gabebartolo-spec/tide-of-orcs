@@ -1,0 +1,23 @@
+{
+  "id": "01a19386-1d1a-72ec-8351-a8ad00c6219d",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 2488839021,
+  "prompt": "Mythic pale moon charm pendant, a game item prop. A smooth crescent-moon disc hung on a short cord loop. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476403871,
+  "progress": 100,
+  "started_at": 1793476403877,
+  "finished_at": 1793476416105,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19386-1d1a-72ec-8351-a8ad00c6219d/output/model.glb?Expires=4947004800&Signature=akz1bs09m2yWWPgWLZmW0732zECn7EqtDlJwD5FkZDo5lSEDypfm-1wXYEhIWAEToBcpSbSGlW8qMZrXyBvl-LRCjGPkGGrBbltbwBLwpKsQn27wfQvP32kPjwo1w4MU5hSPSXKmbxLINEupy9EAupxyfZwpU6uSR29HhUYTQ8H28sCv4aIdV0GzkVb4I2rYWyz0Z09LK4iJtIm5ETdcvHXV-my9z5FBKqFY~tLi9rXqEM2U92zhaihSNRHtRlVtXp0IGfsTNBC41IPNhaqLEhhUQDmE2yTBUBLxBmkEEfK9PYki8HKa~GneIDBB9kbWBxJsnVgTpXLWxUJkUjcquQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19386-1d1a-72ec-8351-a8ad00c6219d/output/preview.png?Expires=4947004800&Signature=DRTbAGMoUQ1VlCpcsdDB6Npe9HBIoExnf0gUnipDFL-1RfcTuQBFXvaug9RCJGYfd7yZQw7C0A3j2J5gzBB3MuHakYxCq8yCuo1ZR1NNcySAHTPVP7IO261EoCLy1oPzSTbDuMimzjDO1YJQazd7yZPKAJLKfMEKuUp7VNn2-w4rPW9N2URyaD4sh1xREXCMfXko5YIO5GxeXq~4BEWWZwqYYKfVnSP7CGOItehhSR6R9czDssxaVyxosV3~2GHVGpWroQsnfmWKM~kYgMxV9ejU4O6shgkuWtbZ1-T0pUTAaoXoPrdhfR3nWIhzQsUV1AxP-qDpLhRcm66uZpdaVQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

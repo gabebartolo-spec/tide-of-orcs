@@ -1,0 +1,23 @@
+{
+  "id": "01a1955c-08a4-71f7-b2d8-4fa969216c8d",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 952437363,
+  "prompt": "Silver bracer, a game item prop, unbuckled and laid flat on the ground, outer face up, seen from above. A single tapered polished silver plate, wider at the elbow end and narrower at the wrist end, gently domed across its width, a five-pointed star engraved in its centre and a raised rim, with two leather straps lying splayed out flat to either side of it, each ending in a small buckle. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793507200557,
+  "progress": 100,
+  "started_at": 1793507200562,
+  "finished_at": 1793507214739,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1955c-08a4-71f7-b2d8-4fa969216c8d/output/model.glb?Expires=4947091200&Signature=L2-zYa4Gqq3SaUL0o6fX-Q8yD6Z89C6a5z~kDTf0RvdDPwCVaEPicW~GmfMbXXd77SHSl8Ds09I4-4uLUIV4d4nCj-23m-Zx4t9grX4h59JzNWyVyagYcwA2890SNh~zAQk0Md-ny5tHdo-2c4wyX4LVbUc-W1UAu5sSCRYbokdy2AuoY431oFXZ-Fzk5o9CqBcUDQ8X4XfRJQrEEBTjMhg3PGHOXhYsLcfclOoGcsBUx91PQDN1BOdffo6YgMrYFF6HalRw07fgufolqRttkq4x9i5vfwwB6p3SERObhR2gJ8LlQCLz5aU6n21rYpb-if54hEHGLlZvMCI7EeA61Q__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1955c-08a4-71f7-b2d8-4fa969216c8d/output/preview.png?Expires=4947091200&Signature=fyTqPJ2NWhGfgX3AesKlxkpTOsVTVyGet2noiqBslMIlg3L8YXOkdsFGR-vAku24tWWaxuMitJIQuiTlYEMkGspacPmE-4ljS-TXx~X9kTT3QQFUH2HkRo2fmO70ZbUHEyInqZf~BVYpahkzOKZrdYUsegqagMAGSe6g3IyFa6mc--E09T6VGHOdf9KlXTZPkOJBwulzMyCEGUwp8~ALZFHqYoq1Ky~GezEcX988l45LBViv7X-UL~P2OpD8F0ywTjm-1x0TEOvDC2w9LuNGo9V~n3xNgZLLv9ufhdjdJWMqgRUvUD3LDnHhIcYhjXh1pwbQkCbgIfmsZ8rMIV48rw__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

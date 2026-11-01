@@ -1,0 +1,27 @@
+{
+  "id": "01a1938d-daa3-738f-992a-123f4d535aec",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 2024012369,
+  "prompt": "Silver bracer, a game item prop. A smooth polished metal forearm guard with an engraved star and two buckled straps, no arm inside. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Pale bone-silver metal, an ochre engraved star, rust-brown leather straps.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476912284,
+  "progress": 100,
+  "started_at": 1793476912290,
+  "finished_at": 1793476941867,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938d-daa3-738f-992a-123f4d535aec/output/model.glb?Expires=4947004800&Signature=BpSMTe-CiLExN3G-4AVZCT4IaBDmaDL7Igjupt~AppOPnyg7LhBgdcu79HcQjHW~zfE-AaKhxDIh1OCozZlNe29V20GTX1zj2GWOIsxGzh-8Pi8BqPEiQiEl-lcIU~PelGIM7v-7JuhPd7fgqoxwwnFQGMJ~texMN9UwMzVzhfxBSqU~ZPgCXJB7cVCPNmPfmeAqSy3jNI3hoAHrl~PEJfXZyzxOcc8tClSdKDLtLt~gwH-PXomg7ynkliA00-hpBpWr6eLFmAT8JSWgthASR~R2cf0Ft1~BlBl~FxoC9l22c66g3GtVLPMP2joaVkb0Ry4pjB4cF-AwqFfJpaQipg__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938d-daa3-738f-992a-123f4d535aec/output/preview.png?Expires=4947004800&Signature=SpcLnJI2a3J8Xv4wETMUVICMZlmiNNzV2GeugwGygTd1Ko0E056CFaZ0yXxQZkmdpY-K7HizaUroiojge51BWIpvjj4mYWP~h~JX4LnCw462V9STH50xnpsJmwNe2wZ6GEpDUkpsLfGOpIqAnw250Q6jNRoNeVS~zlLvwM-VL6GQ-8g0mMR4niAg9FgD7u2drTaOc2kSnGxeeJrG1RqW60SE3hJm8iLC0UsOJ1ERvevCBjkYZcZx71S4-55uTIusvenoYn-SsM-CBHOZmfvSBMUKKYY1RAqNrloAHC2Wjt-w2E4Q8yzqBc2cnrF-PB5JCZ1s6ijviz5szlocegePWw__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938d-daa3-738f-992a-123f4d535aec/output/texture_0.png?Expires=4947004800&Signature=jjMDD65mEMX~UygyOGYMxydMFTyeFAleKZMAaDSWwITUYk5GhwFYOOpVQMVqKHfY7vdvgHvijLdvhMxAo~sfz-DMWlJipcV09n7eLmA6xtbJaAXuIlbXgjIgny9I5oMUrOoZyfDeUmiZzjTfPoHIE0ilZFNQntRT5PON6mdjXRw9dRQSRxtrGRcvA7gaR7AKdITVbIQGWXPi~zenVULp4Q0niq5AjlPO4YbDKgyof8pdL3i8t1-fDewpwKdoE0hdK5AhgZhP~CZfblgXHR5RZWAy7e6uEF4MsnLksiGOjf3fiUAnQoHNRBVgsT8nW5WW4eEsgBmnSdHMlf20LG8Duw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

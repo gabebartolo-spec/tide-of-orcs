@@ -1,0 +1,27 @@
+{
+  "id": "01a1938f-8974-7760-b2a2-ff8f31ccdd78",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 3681898570,
+  "prompt": "Mythic pale moon charm pendant, a game item prop. A smooth crescent-moon disc hung on a short cord loop. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Pale bone-white moon with a faint dusty sage glow, rust-brown cord, ochre tip.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793477021803,
+  "progress": 100,
+  "started_at": 1793477021810,
+  "finished_at": 1793477059988,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938f-8974-7760-b2a2-ff8f31ccdd78/output/model.glb?Expires=4947004800&Signature=NtfrpnDkhjz7snHhSN0J5dKqX2TCzKYWbXjGj3T3JL6SwJYNi1dh3NBOObHYGy~R~wfNZ9orvVcfgfu99iv3W6-lUswqxvSq26P~yPfkXH2rynssUfvqolZkDpqmqXFt~fcwv1EeuEhTRang4jSrLWAc04tvExuu5prooxxgzh1wj~5jDcFWw3j8Zet0kUSYWzIfQ8jvrP0oyWmnLqDGtoYYEKuWB64UtbOYprQ14Ck4TLmRVTnbMI2QYOmXTTUOG11OjLcFOCyi1Dv3qKm1jRWMBAAbEAcMvVu8xQzJnwTva9YwVxQpMWC5BIbR6dTp0NW1FGZrTTXf6FKFI-nc1A__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938f-8974-7760-b2a2-ff8f31ccdd78/output/preview.png?Expires=4947004800&Signature=A7PnX-47AP5rmew5cXywx2sbVtIBfTdZ8klQtjHfwz6liq4tj-NUBpd~CIsz5txfzwTJOSIrd9LY~VgDdjb5IkaqbRo5kGi0FLSAj2k-S038Z-4~NTQZmBS-6EhX6kQ3BIcr7FXNGbXim9JJlT3IK7JPF-LMtajaoRUizpYeFSVdjNEY8y311tHvFOJ644uHh0L4dndeUosEBO-ZX-0Ps0T43Fan1csmrTwYHM7XTQ6Ji~V4f6XJVfO2ZhCQf5xZ96lX1aKhOmLlaJaNeePo1llv0Xn7m2cIuSPRLiV4yJI3vSVHbfmQ3saPmLRvQCnDAyGKCaaaAlTsdryDScnohQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938f-8974-7760-b2a2-ff8f31ccdd78/output/texture_0.png?Expires=4947004800&Signature=Hfo6bdQeRktea0Ijgai2qanVvLxLSVWeirUZvcxOA2tHXMEvULuEivNZ6M5F7rvQ-sW1O~LGUgvAmv7DRnqZIURRPPIOH7T3SWoYp6rH0X54ctsbCvjmNHk7kgNGbyWtLpdyVmYKu218KeJVWtDmO3rH2Atd8-l~bAjnhsrIGIQx0WY7ymC1GG4SPADXxrSJI7R2YPDxGGSAg4WwrP57LtSqKHh35yI6D-5RndGSJC5I1SzoBVySW-Zcr1M1QIYUfl6E-StdT-CtCAMOGWL1BgEpF9s2GBG1OyBDP0~dDmwkp~mjrcZvlkQKbSPUo~eXx8dLEvD0Pnn~uiGChufE8w__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

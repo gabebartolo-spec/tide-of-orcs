@@ -1,0 +1,23 @@
+{
+  "id": "01a19383-d8ee-764b-84a2-5c5f47e58f4b",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 299817006,
+  "prompt": "Gilded ceremonial arrow quiver, a game item prop. A tapered tube with ornate raised bands and a star emblem, a strap, five fletched arrow shafts standing out of the mouth, no bow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476256110,
+  "progress": 100,
+  "started_at": 1793476256116,
+  "finished_at": 1793476269110,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19383-d8ee-764b-84a2-5c5f47e58f4b/output/model.glb?Expires=4947004800&Signature=ajc95LVQWcFUHGgw3y0CLvhOHYnZVwMXkvudouezOPz9y8-IPueDR-zC0-5vywnQF~bLAItnQHyWIHK3odZNZaH4-fxc5x0OsWM0vJ-rYNBGNPPrUF87AAgUtuX9QGCM8tpLrcJMMXOSFF8nVD0KPabaKuzrO8GbJpqRTix2UPcEMOym6r1qKoU9DsypLaAsL5BMKXESvr69hxNTHpyK57~6o4d3~-WV1eR2hxLKqkXqlreHDqC66z1dA6oegPlQNjFvOeRnAGEMLnZWIDrvegAU7oxMM7GeBsUELbtNvH7xHF-L61u-zpF4SuqXJxiYHfBvlNNy~YgjTcUsZwXIWQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19383-d8ee-764b-84a2-5c5f47e58f4b/output/preview.png?Expires=4947004800&Signature=jXFj7AjeD2EoEszu71DGiYYMViT7qE4hXxnL0qAHElWS9loJDP7vokWahq00QuBEvSFy53L0CQCHvG42SSe6he1cBxkinLlXNPZ0fmCHXR1wRRllqjssQrcsle1OlB5FuoLpd2gsrjga3BGt8JDHgs8sQGe92G~WTPSTdKW3MdCxizK5Y5jdB4yGLgkLAxrYGkJRYoramERJN2l092t-e6~jhzkcT3b1pVpGpGKmUKqMz3AvR0NUeUMn6nGKEjE5v~vZCNPPU~~e24jtvGu8dDL4cxe~oPnWJjkpgP5JzldmwOWsmAFrx8BJzZvP6lvj4bHAb1fkl47kHt4mjDylyg__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

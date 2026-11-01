@@ -1,0 +1,23 @@
+{
+  "id": "01a19385-fdae-76d3-a794-c4f62b64c08f",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 769943942,
+  "prompt": "Mythic oak bow, a game item prop. A bow carved from a gnarled oak branch with bark patches, a single taut string, three small wooden stakes hanging from the grip on cords, no arrow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476396296,
+  "progress": 100,
+  "started_at": 1793476396304,
+  "finished_at": 1793476410658,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19385-fdae-76d3-a794-c4f62b64c08f/output/model.glb?Expires=4947004800&Signature=A398n8G7PhRyuwTY2eRJ8UCGSStHpTjg5NTFhruNK~NHKfV~Jvwr8mwSE4-LjDxoDw1D4luVdpxrrNrZFfGwDHIjB7D2~G4mSqI6iK8kOsjCNdTG5RnAuhUngo4JWrlUiGXksT~B6-626yrd1xI2xRWH59YRRlNxPTSdavY64gFS~L77LHv4M4C5~YdBskDcvkYxcM8uZzJLFKT~rUyExfmZi-7Zf1mPf3JP40IbsAl7lq5-I~yrL8VY~bB4crWWCwUbS7fEArynCmjbOSWO9KpTBKsG1LCtgMo74fq5UFXH~c2P2029pYcJ4Q6h12LkugG-XE9YVvnN7QIOHfAEYg__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19385-fdae-76d3-a794-c4f62b64c08f/output/preview.png?Expires=4947004800&Signature=DvU~sBAInhJ60tmCkLMgbmvB4GDrXrCHkzrzm8oF6Y9pBrC4rsdhJznLoViUChdwxI-94QuT6KL5Y3x6gI4zgdVydgc36gnvDo2eqginQkdu6~N8iPp65bXSMB4opNXyOUrxTDgY5wPH0AHiXJgRxlFJyMsn~oB~heKh6CW44NLIFLoNkDtvn-W3~IGgmY15P7Dc942~A1KaILoH~HZE2BNBcXTuONYC1FmQgwFcJMwwm7WUgKZ5vZIqyJ1BCjtEcH3g764D8mViozO1X4euIkhqBpbF0TakG42CrK-OD-nAsnqOPsM5K9DDhjSqT8a-fXhEv0slfFvZ9MMHX5f43g__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

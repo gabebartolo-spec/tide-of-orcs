@@ -1,0 +1,27 @@
+{
+  "id": "01a1938f-c241-73bf-bf79-8dc6486bd8aa",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 1184277781,
+  "prompt": "Mythic heartwood splinter charm pendant, a game item prop. A jagged splinter of pale wood bound with cord, hung on a short cord loop. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Pale bone heartwood with a faint dusty sage glow at the tip, rust-brown cord binding, ochre knot.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793477036169,
+  "progress": 100,
+  "started_at": 1793477036175,
+  "finished_at": 1793477066729,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938f-c241-73bf-bf79-8dc6486bd8aa/output/model.glb?Expires=4947004800&Signature=Lagb-IWkUWSiGQjQaETGR8YNi9cosyCv7zx0Wyy98rGi1-8NL1bW~GlvZ8syPGARdhZQhNBYqLXnUCiRJqLmuIr2we2KJdzGPSVSk5fGiQ5Z5P~FpxbBctzOc4zrVGTZR6n5Go11sVANkSZcEIMb2iAuBHjx1QrYmvigfOoclMyn2JNmT48ev29juvrcCswZkJj98QTROSC3sQsHiBTN56hgoZv2qUOW5kcpUvGr2I3PwT2sLtE4-6ekLy4oGTU3mNxYkf5g~MJ672jiTCx5OiIuxgyBNA19PScC~4J3GWv1hNR3OdMfmngaeQ5bs6XEF0S~SRlp8M-E6fYZJzBrTg__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938f-c241-73bf-bf79-8dc6486bd8aa/output/preview.png?Expires=4947004800&Signature=LCEdex980H7Vzf8zyTLxEAy0dAkOIvuYYNqLvmxMaqPrQANnmUg2mbKWN3HNBUuK4SPcnQq1XRMHrJwQ-ivQsQl955KoojPX44LuHasaFAj0eoIzx8X09Ia0tg0UqSCR8l~5aD0NA4TydeN7fAQmboLBTLvU~3JY4OmML45jmT-rsUAhd1q3CidvWXEmraYu2a9HjYoIIjGdcRb5J0eigcrME-v9dSXfFjZWzv3urMWQ-K43kvHP9Y7HfeBLp~03jTca5FLwfnntMLg99BlPQPCfsAIrDvRUwXBemwteiWDje0XVWAah2uDhpDkg07XIGY5BLLYmyZV~1ZufikmWGA__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938f-c241-73bf-bf79-8dc6486bd8aa/output/texture_0.png?Expires=4947004800&Signature=hb3ZgNaR~jyA~DqHnh0GAB6BagE2qxD4zLGhmTwgF19x6YjqipEOWDlZfou00oc0D4FWRKAolm-rAAskjYEjsy9dBq22Ukdl9GyJ3CKY9Uy~KA7D9E13PO6dakLLmIUmJ355JN1SzF3~qr7IOI0Z0OA-F5296B2N5ebvSCqvPIUeIQmJaK5Wx9rtzbcXMpo2r6kiGhlBNWR07ZRNHKUbV2eqk-VHcDetPJbbwgRo1xy9jAbF3TnIl75WzKJlJdRnFzuQyOUYYMCMZNyOrLmFU6QsSweMg1uYHFSHMrcPZ8Rk1TU~C0LimxRyExlrSbuLsbe18FdscmVFzTzqg3Lkcg__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

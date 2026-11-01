@@ -1,0 +1,27 @@
+{
+  "id": "01a1938e-8813-73fd-9d10-8daacc33ca61",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 457354993,
+  "prompt": "Pair of root boots, a game item prop. Two sturdy knee-high boots wrapped in twisting tree roots, standing side by side, no legs. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Rust-brown leather wrapped in dusty sage roots, bone-coloured soles, ochre laces.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476955828,
+  "progress": 100,
+  "started_at": 1793476955835,
+  "finished_at": 1793476994960,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938e-8813-73fd-9d10-8daacc33ca61/output/model.glb?Expires=4947004800&Signature=nM3D2B~bmmzWx~L8fVGPXxE8TTlVq10wGVhLhEr76RAdBT57Q5tne5aTp7wAxnP0D7m6FqMCLd3lmd3JHjgTX6MGXCcaiOMvyGXV2oUNchkQBFHMSPInqVr5kJ4g~4e~DUM7FKAq9q8gRAtoxjrf0ioC29UToC6VKvG~BruZQsAwyhgsf3tKsWW47trFpEQwxMLcfyyZAKTIcbLCXr-2ZHoaFjYEsoaNWI3iCGAJW6GW0U-8XNrNc70h-dgiKMVUdWsd6FQj8UksmgwTKyUkDzLW3mTbjZ6-T-~OgShXbRNmYNgxFnIXFRin3WaY0czz2hK-lpNzRrv~fTi4QllULA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938e-8813-73fd-9d10-8daacc33ca61/output/preview.png?Expires=4947004800&Signature=XtDP~zbtJYQQurDlgipHbwnECtBRP9PM8KQgEjzf~GEvxJDB-8rAZzAxz5v2F8uOg3G~KRQU2bm3ugYg3KM3CAgKUTRTy1wB~J3~tUXnk3M0e6uYaGuQi2wXJgNWZcU8Rlgh02JyJiKxAL1LotN-ZAlvjPctM2LkUZ6nyShwCQ0ucoNr1s7GHOPSbpY6CJsCOf3B-b9Sg7cF7eAJmSFiYpNbWrpXBpmubX7EO1Uw11qFFi-gQ8DEdUxbXH9LyEVpRm3Mwi7TzZcAfb0MbdkdZr5PwVvq1Wg1Vmat8KWLknHKTPcdRp~A5cdV2tzQz4R9Ydc-LbBmYIQa5odmvyZpEQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938e-8813-73fd-9d10-8daacc33ca61/output/texture_0.png?Expires=4947004800&Signature=ZxLndYrzwp9RO5og9RhYeqkkynEHJVelMI4Fllf3NBHygxoYJhQkHGjt2rlD6wY~r5kY~wTHlVn7LpVCxM62Ms~D2WkPCk9pHcxpu0j0OHYfOsJJ0yyTiCW9fb2X-3TWG9UX3hA1HgvF3IFNIqNiYMvKg7vCVnxf41DAOYGqZw3IyR6Nh8XyQ4UMVkDIhapJHKVjclI9FO5JRpwhMqkv85wEx0tYRRGC8G0mE2OEsyQfzJ45V7OQWPWl~84YYBSkXN7V4PpMyI-ftfKgUEdYLuGtmglgOlJKAKEwYLWMLFwjy9ZAFozlO54GDxW9sUAbldv5mpJxyLCH7PAyqJq9ew__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

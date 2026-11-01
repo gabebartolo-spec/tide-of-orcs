@@ -1,0 +1,23 @@
+{
+  "id": "01a19385-2540-7446-87ae-c8479b0a8da7",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 1653336412,
+  "prompt": "Pair of windstep boots, a game item prop. Two light ankle boots with a small wing shape at each heel and pointed toes, standing side by side, no legs. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476342861,
+  "progress": 100,
+  "started_at": 1793476342867,
+  "finished_at": 1793476359894,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19385-2540-7446-87ae-c8479b0a8da7/output/model.glb?Expires=4947004800&Signature=otFpmw~ykotpqtM9dM0LWmuGi3TeDZICBKa0IMDRnqLOGnfbNNtsi7V9J5qbV3o1~gWkLddPLN5mTQdO60ksEV34hOQefUJv9OGAXj3hq6FvC~6Ex8Eb7qAi3TyC5qrHcTdPidlb-VkVzk0XEVGvFlsMZPwNBJvSWkToWQtBnkUxmhxnEGDgy6BRpDEM~4~MPZIcouEcA0GBxEt4NYDr7lWwdfNEY5XmQNnJ7ccOkUKXjpeLwHDN2RKwAagJmpMDH2yiNqsLAaLHs9Bhb~4zfyRtY8uECZpx69-y0mmqZ08CEew9MTt7JhbDeAW8~Rg5Z9F4KqLVVgCwnprudlgAUQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19385-2540-7446-87ae-c8479b0a8da7/output/preview.png?Expires=4947004800&Signature=P3g~L0fkxbzarGQ0ZX2vTlJhSaREcAZ3MAaLrPDC9BJYsApM6FDSIvmuZQR8Hx4Uh5u~kX-QBxRaX9ldE~uA066rEYE9z7ccjpWU2eaz-chQEETeqz5iTJcDYEeSKpsTfSM07OBagV8AM8u6F6QMMDuBuZIpti5sEfOjur-GqCSARvWUccqdZ2SC7v8qjiJ1siR3iRa3a3AOaF9R6-seA86Y8ELmORA9kCtqzMpQYFIPp-5xNukoLw0oNGIuuTqBqixNMuTnLrzazamzWH09F9wZZAomo9bzzJvEReJY28v0lqZsfQyx4zP23qhilxUlEryzjc6u~JbjjS232eVjfQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

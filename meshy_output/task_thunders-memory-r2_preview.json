@@ -1,0 +1,23 @@
+{
+  "id": "01a19557-d60c-738f-91d7-b8ad1b6631d8",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 2497916518,
+  "prompt": "Mythic storm vambrace, a game item prop, displayed outer face up at an angle. A tapered curved metal armour plate shaped like a small elongated shield for the forearm, wide and flared at the elbow end with a pointed edge, narrowing to a snug cuff at the wrist, a bold raised jagged lightning bolt embossed down the centre of the outer face, small copper coils ringing the wrist cuff, a raised rim all the way round, and two leather straps with buckles crossing beneath it. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793506925605,
+  "progress": 100,
+  "started_at": 1793506925609,
+  "finished_at": 1793506940234,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19557-d60c-738f-91d7-b8ad1b6631d8/output/model.glb?Expires=4947091200&Signature=TwVg0-biittI2zsh6ePX~iNJiVPGpZrNbnKBY4k5QKpb9LOfPdtbpH0MKjD44ukPYQuuLeBymp1OiU~PAy159kdnNjZUCGjm1AL9c8ZZlZzoFAeb5Prz7x~k1IEgpxMOBfa2jvUJOiQit9AqL79VD7KW4rL5Appbd9iY8sncRYDbEgTbonV2keGKwLayOWj0Awhk9fU0aftJGi3y9g0TrMN2gEpp2PGb-PZFck5iNeAx~6P-ixerLm2hLeBI7c042SHTACGsvz6YEoKTyYNUd1PZ7dhxTG9QJeX~0E-7cEd-NERRpeB6Vakb8FmB8e8nW6NC-AUPU20VnV~y1fB9HQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19557-d60c-738f-91d7-b8ad1b6631d8/output/preview.png?Expires=4947091200&Signature=kzprVkxSoSsDuS7fyXPO2uvM8C~X7kN~KrN8ENYikKwMqleOCBfbRjygyR2uLweitMQ5RZch5fWFbn7A5PGo-ngk2byz6K6lx2a6hddBgpO2NP3fA~zVlgIEx6n3cgskakEqUZckWoZMp7Oxs7FgFxw~8KaCST5TO0IJeOgKpvcZhOmHDfzDW7Sj~i-7NJS3cpgCd6Vd9~Q5SElQaRkXTU~g-Xg1V9MVegHFM0KeWwBChtaDF3jUFCQIVLh2C2ZbyhVA7reJ8VdUedL3WfFuBMCgtB88ULPPPjPhqdREyUeTxShp-~CruWQS2TRBYuk9vb3viFR5BlTpmOqAUcdoEA__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

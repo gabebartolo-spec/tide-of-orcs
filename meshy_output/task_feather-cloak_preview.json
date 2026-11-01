@@ -1,0 +1,23 @@
+{
+  "id": "01a19384-9a94-7726-a26d-27c0ae17a1a1",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 366504215,
+  "prompt": "Feather cloak, a game item prop, displayed standing as if worn by an invisible figure. Layered rows of feathers over the shoulders falling into cloth to the ground, a hood, a clasp at the throat, no body. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476304964,
+  "progress": 100,
+  "started_at": 1793476304970,
+  "finished_at": 1793476319966,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19384-9a94-7726-a26d-27c0ae17a1a1/output/model.glb?Expires=4947004800&Signature=PrjKpR6ulLiaWo79RcHaDFghf3LN77soe9NL0aRoQ1ZhhBcMMnHK-zjqjp843EE7cAGwnJf4dqwXVKs1tw5tK2nDcX5PoSQVL1ZmBlqLzyNhbEJgIFbXQXRdtoDdm-DgEjWuXAQ9V4DiWLThRxDd73iO1mxxj8kdBYxc5A4qZTpH4oTtqIkX4eNu5fTT5M2ADMa~YN6GV~z8m~Ky3AMQUr2Ina7KAiL4MBpqA~lbED0FPsDifsnIbNBEMrd3S~PpFMLNMbRL39t~rsj2yBhQvlvpfJzTg4MiRDBEh~HycfT7Nl30TPDFb1N0HpyrAywQuC4gNhIn0J15txBvGwtznQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19384-9a94-7726-a26d-27c0ae17a1a1/output/preview.png?Expires=4947004800&Signature=CBDcXDbDDltVMTvcHJNX32GB-YEI4VeYuwAh~qsuZxqZMBpjuFMsS-AMRJ2TGabEEycbABV5PM7jpfG2DOx7Z-gjFlZETlkfbfcEz7E7KX6hhUlImaDUlH~7KshtePN~gJ9YrzbQA3MBXU7BC5dCF6yHvWjTPxX24V4-NixDAZE3g02eQ1OO3MSQX7jiX~fs0RI9DY5kq6fvDoLAnuDxUaaIBMX0bhHMFykq~nm72xeTOgHgU~XKr4ABI3qJPBB0jhFOn1-UVKWIcTpdq1dcWh8fAc8zA~XgqnWTOzPvJg68XAR4o-RQY2nxkzb5chz4xPDqAAQKDOXV68-aUfzz2A__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

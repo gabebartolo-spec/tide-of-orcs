@@ -1,0 +1,23 @@
+{
+  "id": "01a19557-7247-7652-bd91-7e49fbde6eab",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 1201697418,
+  "prompt": "Birch-bark arrow quiver, a game item prop, standing upright. Exactly one plain cylindrical tube of birch bark, closed at the bottom and open at the top with a rolled rim, smooth sides all the way round, a thin cord hanging loosely from the rim down one side, and five fletched arrow shafts rising vertically out of the open top. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793506900029,
+  "progress": 100,
+  "started_at": 1793506900036,
+  "finished_at": 1793506912738,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19557-7247-7652-bd91-7e49fbde6eab/output/model.glb?Expires=4947091200&Signature=lg1~6fmFR5~MCokYhQzK-EQZ5NX~xOb~YOfUSGiXdhQ7ze47rCD9cVA4DL74VEzf5JdkTJ2dKiG5ngCgN26VybdNfifH~6xfBLesKmOtFhlmY98aTrRJSK3rYDFeJdzt2721LMWWQ80EzkmASmBYrifh~njN9kikz6B3vPmFTLl3goPLzcuFKQBOZjTR8GEMEwui9133BIQqXLiRngbPXmbkZeKM1V6tHUSr7OYtOX97lFG96lLuHvRqqrVW14ZeJ0RismGADtjvQeYPSPkLUOH5sJeBXFwXRLfUa0KwIkTMaypsVpBftUKazN2dDWWrcrusjjBTyeRJBY598bWOCQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19557-7247-7652-bd91-7e49fbde6eab/output/preview.png?Expires=4947091200&Signature=eDRYqBnbnhovssJaeghym-adC7x5awn1~Rwf-cSgna1fHnuJf30Y4fINYM1nNz4T-EXUFmXWe4lN7YqE7TL-LZbQNOv7BqQaeeYHbzYwLepDqwrMMjLbdouh4R1SqXzhkj0SW-CVIcffZErItcIOfSlG7XgAYjzn0hEVmXjGeLujfO17komfvpSs-XfkATPTlMNUyXUhcDabJlXCglUDwWCdsSRvkjxwcdxsZKhsJbRUQwWAHTytlvJpBsspA1zDnqMWXlTdi9-Vs-g09L7Towvnn~UeztDbVfy1NFj2E4XE1YFzheT0MXgyah9N2ZUFPHmRPloCnVKlaeVQjpEo3Q__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

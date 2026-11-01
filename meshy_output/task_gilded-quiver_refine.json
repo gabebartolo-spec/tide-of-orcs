@@ -1,0 +1,27 @@
+{
+  "id": "01a1938d-870e-73eb-a65c-f88518f77ceb",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 3759573698,
+  "prompt": "Gilded ceremonial arrow quiver, a game item prop. A tapered tube with ornate raised bands and a star emblem, a strap, five fletched arrow shafts standing out of the mouth, no bow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Deep dusty sage with ochre-gold bands and star emblem, rust-brown strap, bone fletching.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476889893,
+  "progress": 100,
+  "started_at": 1793476889900,
+  "finished_at": 1793476914641,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938d-870e-73eb-a65c-f88518f77ceb/output/model.glb?Expires=4947004800&Signature=B9ghCknPTS8eV2RSN29jOkoJ~Yi-KMSgkgRIl8cqVQHF~hBsxpiweFnntGwk4G8AO7iotelWkyIE~Du5jdtOSMtKFzEbpCh~I8UEKJM18JiyGYNcl5LjkLq--O1BpciNLHTWNjYko4x~LxOUIvQLwozwI4dxc5UpHd8uwVr7SwOvhlRXLuv8QKuoLUefR2TkDINk6QUzWFLVo94haMO0cyh0BB0CYtfC~ttoV5~3q3DeB3hofIq0yvu7gKxbq2Wd1Lz5iV8wkTgMzQtKB-nIbvFpqz6M7eqjoPErxvGOya0pODS12mWpr6ri7VhscYuBUn8rJ6iJpCZRrctyvaPgBQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938d-870e-73eb-a65c-f88518f77ceb/output/preview.png?Expires=4947004800&Signature=ofjCP8OKaT4SklUXjtgFaWLHut372Q~b~79IxJFOfQQF58NvuxiK18Ex09WeF5e1aT4Eguf85FF9rQjRRFenFB8MsB9vbRAceny9yKuFXzLnvQR9jTV16yifADRhH3kGnVek48REZ1A6kdtIJylgNIj3OjH2GXVDYH~c6T91-Hgzn1PrWlvZ4DF18mxGtLAGzapeeWS9-RZJNI9HDu344lyFfnx-EaxxGAm3T6H8Cxc6vH72mwjlcv5ORqYfsitE9rr6L7kPxlElfJ3phxiF1Tx1jsdMC2YZKCR6yT4dOhw1t0QzS02DR2lrAVH2CSFNZmgUBTpxnxJ2P3TYBldKlg__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938d-870e-73eb-a65c-f88518f77ceb/output/texture_0.png?Expires=4947004800&Signature=dKCAvQN0hx8FPp13VQ03r1ahMh81n6pHHFyixTH3kPS4bNLR35GBec-DB2GhP3xGq2FIwO4su9b3CyUmsKV0OW4NOzyxD8AIAORyvsp48d2GP2PfVPFJManIxL4kqE~1xVmSR4TC5DvGyr1xieAQoA1tsMncyaqZaaGIwBz7dOOq~PWUtNtFdtvSH9M7Ay6Dp0DngRKXHGtT0ogAdIj9MLqUtPSpS4rAg4hk9UV2k28zqJoIVoNcV-aa3LdgZZmKaStU8ZRmybS4UkU-6GgWChN1teJQLfjw3MBBHrBWvV43G-6Voop48n4iSlwC9qmQ1WIg6wvDERd0sYsRtotJOw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

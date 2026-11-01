@@ -1,0 +1,27 @@
+{
+  "id": "01a1938e-a470-7185-b708-d1562e20012c",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 2062824649,
+  "prompt": "Pair of ranger boots, a game item prop. Two knee-high laced leather boots with folded cuffs, standing side by side, no legs. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Rust-brown leather with ochre laces, dusty sage folded cuffs, bone-coloured soles.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793476963556,
+  "progress": 100,
+  "started_at": 1793476963560,
+  "finished_at": 1793476995472,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938e-a470-7185-b708-d1562e20012c/output/model.glb?Expires=4947004800&Signature=hutN~e-FxcH~e-YXhra0FIVUxavMSPmp7k02CueaQF-KYJqntBbEndhH1k1K72VjHVBtuQQ7uC8369LXs~-~Nzce0HlzEVN7cTkx9jiJoaGPsXQ~W4G8SNtu2Vkr-071bjsU0XxkNJqy1tFycp5biIhas5S1zcasNUT9hyDIsP5ul7klz1mX59arQl0NhYALPjwl~wSj52QIvSTvYeWm3XBIVikHtecgn6RYrJNoF57kQ~vkoTJa-Vj06nToEvkg59y0TRea234eHSX1t2r3zr7tZBYzZfE2Py-BmFGyhoFJo9nyApHil88NnSaQ6NZ~c~xT98eNLEg4JAltgw1xXg__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938e-a470-7185-b708-d1562e20012c/output/preview.png?Expires=4947004800&Signature=XbYuo3SE6PRXq69d5iQ17pPbPxDmglHrkalr6hc99x35GMQmq4e~xcgO7ZFpq-MD-kXavFcQqPABQJYNmXQCnvlM9bT8CSw6C34NL1DTpMJSoAIy3AiZ1NCtSIVb5VOMlqZOC4Oh3TCkv9VE27XjpHEWNET4TwkBMb2khitN4OcS~828rnSiuyfUSAfm1r4109Z5RDsdXCA7lOkluLTUyBqIhlG~KJnLGYLyiUCrppxAtd7aaoLWfsAgnhg9LvUS92~M-cBvGUzptVMCkQtglu7VLrooUNzQRd0IBXFnjI04MAMLH7wpLlz7CucKr1iXfTAGwvDtUh5rU9Bfr54emw__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1938e-a470-7185-b708-d1562e20012c/output/texture_0.png?Expires=4947004800&Signature=Tn-ltZHQ9gCKeNNqHpQbEVgJUTrriXoTo83DDDNf8H-DWFIA4kd60RHrBYnG0pMJ-6sSHTUYVoGmTmOEq2aXRtcTWSbWNY2vRUSa9nXz5iATsGNudPlR0WrvKrFJye17i5kD~BQpAmRp6QrDySzCRSnrLmXSbWeXbJFd9VQt-SAitnhIgqmWYsH8mGIPPsEDYRxEecEFO1BoQZRPFPcHoi~YF6PcDxyA3GWYzHQFZdXbZ7d8LqcwEhVCaMyXOaN8jBPPmtp2kom-GREo8~3AK3HfbgGIQpSZsk1ne7B-q9oYbD7fw-8hfy06imyV7Z9KPEKMMTmolSzOScTggRk0NA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}
