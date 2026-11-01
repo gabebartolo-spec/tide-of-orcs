@@ -1,0 +1,31 @@
+{
+  "id": "01a19599-0b66-75fd-bda9-5ff5bb7121db",
+  "type": "image-to-3d",
+  "name": "",
+  "art_style": "",
+  "object_prompt": "",
+  "style_prompt": "",
+  "negative_prompt": "",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy game prop, no outlines, no baked shadows. Reddish-amber heartwood splinter with warm wood grain, small bronze cap and ring, dark brown leather cord.",
+  "texture_image_url": "",
+  "text_style_prompt": "",
+  "image_style_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793511199397,
+  "progress": 100,
+  "started_at": 1793511199401,
+  "finished_at": 1793511224721,
+  "expires_at": 1793770424721,
+  "task_error": null,
+  "model_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19599-0b66-75fd-bda9-5ff5bb7121db/output/model.glb?Expires=1793770424&Signature=X-IyE-SQQge6Ql9wt1lCBScS1JlllSk~dkFbIPsw0uomU0KUxUmllB5b0TUfBA2CPCBEcsp9O8sDHJqLj5O3WNN1k0qfDZxjBUdGdNyAAefogpCjJMPGWPDa2NukBBWtUIXGUEYAKM-zjmRBzrGmJVYScR0uC8lTdpzARCkqiMYUKbtsXaQPdueKAt-jhAzrTQttttvVZEQyzDtced~hAOaTjaLFOJzlJIDz1~DC9DASivGeobe4FvllAxPGnPYXSyt9Wq1rHcojj-z191u~K9jq7fE9NGnOLe2kKB9MuzSho-hlZMqD3LtU1pQ2Db4Pqk5CBizCr9b6P6DLGAblcg__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19599-0b66-75fd-bda9-5ff5bb7121db/output/model.glb?Expires=1793770424&Signature=X-IyE-SQQge6Ql9wt1lCBScS1JlllSk~dkFbIPsw0uomU0KUxUmllB5b0TUfBA2CPCBEcsp9O8sDHJqLj5O3WNN1k0qfDZxjBUdGdNyAAefogpCjJMPGWPDa2NukBBWtUIXGUEYAKM-zjmRBzrGmJVYScR0uC8lTdpzARCkqiMYUKbtsXaQPdueKAt-jhAzrTQttttvVZEQyzDtced~hAOaTjaLFOJzlJIDz1~DC9DASivGeobe4FvllAxPGnPYXSyt9Wq1rHcojj-z191u~K9jq7fE9NGnOLe2kKB9MuzSho-hlZMqD3LtU1pQ2Db4Pqk5CBizCr9b6P6DLGAblcg__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19599-0b66-75fd-bda9-5ff5bb7121db/output/preview.png?Expires=1793770424&Signature=Wqh66kUXNzjgdbxAdBvdDoy48yP2dO7iD~lQsKKqAEzGjTjwBCi4AkQmlEJ1IXHN3H6QHeGheCL2A9qzIsLm7kW2z3jUL7THiDI87HuYQ0tAcz7wEpn~yaJur7OOaIvvkJeftfecF9iE7CDO3G8JRWUsev8WIEqt-1Co~dydz58KUQcpJmaVsSVZKXFiuxmnRQ2xPvy62W3tcdp0YsjhtY1gXtoKUXDd1lgpkbsfxOblghasvGH2aNGczk5mGKeYdZ0gx1SqIrZddr~CdjR9XDnBzX~cIqmWyfkAKGkRpN3LObtpfZ0NlcaQSz-wzXsIBowq0vi41QPXQ3HImuuI~A__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19599-0b66-75fd-bda9-5ff5bb7121db/output/texture_0.png?Expires=1793770424&Signature=HZmO9vltPbCfp6KkDNhH3dgDz~6ty3m9ckTmt0IL7qCtDAFN8EsLklAyaY~vYtrb52tUCef2g96iii8M3shjf0~7k7xErwqJO~swjrQcpMLE5Tznf2TIMaamfTLQs8yMIGwy9gMsODRQ35eeSLjiZRmf3VAKn5RR0J2ZG7tbrF5oOGaSkzC~ZUniRtUElKg9eOd0W3EPXpGuPRTQdJIA2seOX3aizNiBscY9LJePCxe~XsJK5cdLin3Mf5bg9RzMlbcgv46vY5F5qI7jkKpE79hzkkHpLR6SBmnghIP1Pth0EntCEMJrbRSyT2HgQ52vjf9eF5unnlOfx4fF9Q3KmQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 15
+}

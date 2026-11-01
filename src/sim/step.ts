@@ -1,4 +1,4 @@
-import { ARROWS, BARRICADE, FIELD, LOB, PLAYER, SOURCES, WAVE_LEN, waveHP, waveInterval, waveLoot, waveSpeedMult } from '../data/balance';
+import { ARROWS, BARRICADE, FIELD, LOB, ORC_WOB, PLAYER, SOURCES, WAVE_LEN, waveHP, waveInterval, waveLoot, waveSpeedMult } from '../data/balance';
 import { FIREBALL, ORC_KINDS, ORC_TYPES, OrcKind } from '../data/orcs';
 import { EventBus } from './events';
 import { Orc, Projectile, SimState, Wolf } from './state';
@@ -56,7 +56,7 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
   // orcs
   s.orcs.forEach((o) => {
     if (o.dead || run.fallen) return;
-    o.wob += dt * 8;
+    o.wob += dt * ORC_WOB;
     // Heart of the Kiln: burn never runs out on the field and grows the longer it burns
     if (o.burn > 0) { if (st.burnRamp) o.burnT += dt; else o.burn -= dt; o.hp -= st.dmg * SOURCES.burnFrac * st.burn * (1 + o.burnT * MYTHIC_FX.burnRampPerSec * st.echo) * takenMult(s, o) * dt; if (o.hp <= 0) { damage(s, ev, o, 0); return; } }
     if (o.bleed > 0) o.bleed -= dt;

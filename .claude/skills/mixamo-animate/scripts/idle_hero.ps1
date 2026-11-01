@@ -10,7 +10,7 @@ $clip="C:\Users\DANTE\Documents\tide-assets\mixamo\Standing Idle 03 Examine.fbx"
 Remove-Item Env:DIRECT, Env:FR, Env:ARROWPATH, Env:ARROWDBG, Env:RESTUP, Env:ARROWL, Env:WOFFS -ErrorAction SilentlyContinue
 $env:QUIVER=1; $env:INPLACE=1; $env:ORTHO=1.4; $env:GRIPSIDE="Left"; $env:BOWALIGN="up"
 $env:RMATCH="LeftShoulder,LeftArm,LeftForeArm,RightShoulder,RightArm,RightForeArm"
-$env:QFLOAT="0,0,0"; $env:QPOSE="-0.049,0.412,0.518,-0.18,-0.64,0.74"; $env:QLEN=0.32; $env:QBOB=0.015
+$env:QFLOAT="0,0,0"; $env:QPOSE="-0.049,0.412,0.518,-0.18,-0.64,0.74"; $env:QLEN=0.38; $env:QBOB=0.04
 $env:ARROWF=999
 $views = @("g0"); if($side){ $views += 90 }
 foreach($cr in $views){  # g0 = the field camera (GAMECAM=20); 90 = side check view

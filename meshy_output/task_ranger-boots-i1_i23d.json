@@ -1,0 +1,31 @@
+{
+  "id": "01a1959f-9668-72ed-af5d-3faa5f4ebd0f",
+  "type": "image-to-3d",
+  "name": "",
+  "art_style": "",
+  "object_prompt": "",
+  "style_prompt": "",
+  "negative_prompt": "",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy game prop, no outlines, no baked shadows. Rust-brown leather, sage-green folded cuffs, small bronze buckles, dark brown soles.",
+  "texture_image_url": "",
+  "text_style_prompt": "",
+  "image_style_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793511628179,
+  "progress": 100,
+  "started_at": 1793511628184,
+  "finished_at": 1793511676201,
+  "expires_at": 1793770876201,
+  "task_error": null,
+  "model_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1959f-9668-72ed-af5d-3faa5f4ebd0f/output/model.glb?Expires=1793770876&Signature=B-VJeapnmItIk5RKLgjt7ajor3WcIRFL4R0qq8GRO99Vbd-tmDtYjmYIXajGgbN0lEmO9GdW5R8GW~7epJ-c33ygo9nCvhzgHsv8f9XxzwO~8kpbUVTlCPHpvc~jN3Q-6kJHGVACJTh9V2AFWf9LPk2TClm~vW0llxZ1pW2c-T8hhblnFEB9QTj3qlJcSkP-VORQ8pt0Lg9q2Ed67kGQx~54oe0sZqAPEhmSSdI6zXlP1KHsAVwizHa44cz6BkBODns4eL8NFQ5t4Sl~D7WVKSfNNnMB65-eAh6aD99L0Mlks8m6XRrrqKHtLN6wvMDKp2ejchtcCxvogOy3aQCLuw__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1959f-9668-72ed-af5d-3faa5f4ebd0f/output/model.glb?Expires=1793770876&Signature=B-VJeapnmItIk5RKLgjt7ajor3WcIRFL4R0qq8GRO99Vbd-tmDtYjmYIXajGgbN0lEmO9GdW5R8GW~7epJ-c33ygo9nCvhzgHsv8f9XxzwO~8kpbUVTlCPHpvc~jN3Q-6kJHGVACJTh9V2AFWf9LPk2TClm~vW0llxZ1pW2c-T8hhblnFEB9QTj3qlJcSkP-VORQ8pt0Lg9q2Ed67kGQx~54oe0sZqAPEhmSSdI6zXlP1KHsAVwizHa44cz6BkBODns4eL8NFQ5t4Sl~D7WVKSfNNnMB65-eAh6aD99L0Mlks8m6XRrrqKHtLN6wvMDKp2ejchtcCxvogOy3aQCLuw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1959f-9668-72ed-af5d-3faa5f4ebd0f/output/preview.png?Expires=1793770876&Signature=F028e1hOVnd6zsRFz8fK3hG1NQyFnZ5lroIAqs2rKZT68kyrNNIznduIlPovjSo1YnNZvjcfWNC0nkshNpbFSqskJ91iPKAH8kMBfateWRNOHmKRiZirnaD9xsgz9yaEW9NE9uC~tJnUhcu~4LCNKD6ipCiufgRpham06fbDOse1pwpBG~DZ6EZgwuA8I9kt2uh3aho2AYzHU6I9--7DkJxS0gcS0ZHs-vWzmaSl4ZRM0wDUkXA6eesDfAuBTxhO9GribUFaZ4mjc1GDjSzMRKiaoNP~7TxQvwyyCiL4XHINQLRGxAlvNiggOdP8Ox-WZWD1vZP4B6h9h20OET1KcQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1959f-9668-72ed-af5d-3faa5f4ebd0f/output/texture_0.png?Expires=1793770876&Signature=pqt3uO~NJaFV15pjWf7jK1HmxVTM3CGOFotQ0j4doGqgWdD4CyEJOTaHGc3jb0ee7rp6B31M0n5W4SMi6jvHMkN9UfJe2Owg5gFqokSjlkaqOGKxdW1HlhnGfv9wNCYAAXtjpGVrpYVzDGmXpmfRRZu0-HGMKSs8ZZQ8imOKhYX3CsETa~9K09vNCYKpTNgHVwW1lGMZsDJl-RqSQwEEVWTemOGLJZNJmiJLI-95mI6tzNA8~-bD5avc31wGtpIs8RW0lytx0mJ90iuHrs0hT9ClTdZoUTa-CTc~fj~K1g0GLh3P9eoiZFh7WGcyuHSv4o8Ra9xIoOCeMIH71TFvFQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 15
+}

@@ -13,10 +13,10 @@ for it in "$@"; do
   c="meshy_output/${it}_${mode}_create.json"
   if [ -f "$c" ]; then echo "$it $mode: create already sent"; continue; fi
   if [ "$mode" = image ]; then
-    $M text-to-image create --prompt "$(ip $it)" --aspect-ratio 1:1 --async --save-json "$c" --operation-id "tb104-$it-image-1" $J >/dev/null 2>&1
+    $M text-to-image create --prompt "$(ip $it)" --aspect-ratio 1:1 --async --save-json "$c" --operation-id "tb131-$it-image-1" $J >/dev/null 2>&1
   else
     iid=$(python -c "import json;print(json.load(open('meshy_output/${it}_image_create.json'))['result'])")
-    $M image-to-3d create --input-task-id "$iid" --model-type smart-topology --target-polycount 3000 --should-texture true --enable-pbr false --texture-resolution 2k --texture-prompt "$(tp $it)" --data @meshy_output/i23d_data.json --target-formats glb --async --save-json "$c" --operation-id "tb104-$it-i23d-1" $J >/dev/null 2>&1
+    $M image-to-3d create --input-task-id "$iid" --model-type smart-topology --target-polycount 3000 --should-texture true --enable-pbr false --texture-resolution 2k --texture-prompt "$(tp $it)" --data @meshy_output/i23d_data.json --target-formats glb --async --save-json "$c" --operation-id "tb131-$it-i23d-1" $J >/dev/null 2>&1
   fi
   id=$(python -c "import json;print(json.load(open('$c')).get('result') or '')" 2>/dev/null); echo "$it $mode: create id [$id]"
   if [ -z "$id" ]; then echo "$it $mode: CREATE FAILED, marker removed"; cat "$c"; rm -f "$c"; fi

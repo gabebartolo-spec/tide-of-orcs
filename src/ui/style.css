@@ -1,5 +1,7 @@
 /* Layout: battlefield canvas on the left with a rally bar beneath it, a tabbed grove panel (skill tree / replant) on the right; stacks on phones. */
-/* Fonts ship with the game (latin subset, SIL OFL; licences in public/fonts/) so the desktop build works offline (TB-118) */
+/* Fonts ship with the game so the desktop build works offline (TB-118). Heartwood is the game's own display face, one weight, no italic
+   (built by tools/typeface, TB-135); Spectral stays as its fallback. The others are latin subsets under SIL OFL, licences in public/fonts/ */
+@font-face { font-family: "Heartwood"; font-style: normal; font-weight: 400; font-display: swap; src: url("./fonts/heartwood-400.woff2") format("woff2"); }
 @font-face { font-family: "Spectral"; font-style: normal; font-weight: 500; font-display: swap; src: url("./fonts/spectral-500.woff2") format("woff2"); }
 @font-face { font-family: "Spectral"; font-style: italic; font-weight: 500; font-display: swap; src: url("./fonts/spectral-500-italic.woff2") format("woff2"); }
 @font-face { font-family: "Spectral"; font-style: normal; font-weight: 700; font-display: swap; src: url("./fonts/spectral-700.woff2") format("woff2"); }
@@ -11,11 +13,13 @@
   --cream: #efe6d2; --cream-dim: #b9b09c;
   --sage: #8fa98a; --sage-deep: #6b8468;
   --amber: #e2a85b; --rose: #c76f6f; --lilac: #cdbdea; --moss: #7f8f52; --timber: #8a6a46;
-  --display: "Spectral", Georgia, serif;
+  --display: "Heartwood", "Spectral", Georgia, serif;
   --body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   color-scheme: dark;
 }
 html, body { height: 100%; }
+/* Heartwood has one weight and no italic: never let the browser fake bold or slant it */
+h1, h2, .stat .v, .big, .name { font-synthesis: none; }
 .auto { margin-left: auto; align-self: center; font-size: 12px; color: var(--cream-dim); }
 #build { margin-left: 12px; }
 body { margin: 0; background: var(--ink); color: var(--cream); font-family: var(--body); font-size: 14px; }
@@ -25,12 +29,12 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .wrap { display: flex; flex-direction: column; min-height: 100%; padding-block: 10px 16px;
   padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); gap: 12px; }
 header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px 22px; }
-header h1 { font-family: var(--display); font-weight: 500; font-size: 26px; margin: 0; letter-spacing: .01em; }
-header h1 em { color: var(--amber); font-style: italic; }
+header h1 { font-family: var(--display); font-weight: 400; font-size: 30px; margin: 0; letter-spacing: .01em; }
+header h1 em { color: var(--amber); font-style: normal; }
 .stats { display: flex; flex-wrap: wrap; gap: 8px 18px; font-variant-numeric: tabular-nums; margin-left: auto; }
 .stat { display: flex; align-items: baseline; gap: 6px; }
 .stat .k { font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: var(--cream-dim); }
-.stat .v { font-family: var(--display); font-size: 20px; font-weight: 700; }
+.stat .v { font-family: var(--display); font-size: 22px; font-weight: 400; }
 .stat .v.amber { color: var(--amber); } .stat .v.heart { color: var(--rose); }
 .main { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 14px; align-items: start; }
 .field { position: relative; width: 100%; aspect-ratio: 15 / 8; max-width: 100%; border-radius: 10px; overflow: hidden; background: var(--sage-deep); outline: 1px solid var(--line); }
@@ -38,9 +42,9 @@ header h1 em { color: var(--amber); font-style: italic; }
 .toast { position: absolute; left: 50%; top: 12px; transform: translateX(-50%); background: color-mix(in srgb, var(--ink) 85%, transparent); border: 1px solid var(--line); padding: 6px 14px; border-radius: 999px; font-size: 13px; pointer-events: none; opacity: 0; transition: opacity .3s; white-space: nowrap; }
 .toast.on { opacity: 1; }
 .fallen { position: absolute; inset: 0; background: color-mix(in srgb, var(--ink) 82%, transparent); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; text-align: center; padding: 20px; }
-.fallen h2 { font-family: var(--display); font-weight: 500; font-size: 30px; margin: 0; }
+.fallen h2 { font-family: var(--display); font-weight: 400; font-size: 34px; margin: 0; }
 .fallen p { margin: 0; color: var(--cream-dim); max-width: 44ch; line-height: 1.45; }
-.fallen .big { font-family: var(--display); font-size: 40px; color: var(--rose); font-weight: 700; }
+.fallen .big { font-family: var(--display); font-size: 44px; color: var(--rose); font-weight: 400; }
 .rally { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 8px; }
 .rally .hint { font-size: 12px; color: var(--cream-dim); flex: 1 1 200px; min-width: 0; }
 .deploy { background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; min-width: 150px; }
@@ -59,7 +63,7 @@ header h1 em { color: var(--amber); font-style: italic; }
 #tree { position: absolute; inset: 0; display: block; cursor: grab; width: 100%; height: 100%; touch-action: none; }
 #tree.dragging { cursor: grabbing; }
 .detail { border-top: 1px solid var(--line); padding: 12px 14px; min-height: 128px; display: flex; flex-direction: column; gap: 6px; }
-.detail .name { font-family: var(--display); font-size: 18px; font-weight: 700; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.detail .name { font-family: var(--display); font-size: 20px; font-weight: 400; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
 .detail .branch { font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: var(--cream-dim); }
 .detail .desc { line-height: 1.4; }
 .detail .row, .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 4px; }
@@ -68,9 +72,9 @@ header h1 em { color: var(--amber); font-style: italic; }
 .ghost { background: none; border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px; font-size: 12px; color: var(--cream-dim); }
 .ghost:hover { color: var(--cream); border-color: var(--cream-dim); }
 .prestige { padding: 16px 14px; display: flex; flex-direction: column; gap: 12px; line-height: 1.45; }
-.prestige h2 { font-family: var(--display); font-weight: 500; font-size: 22px; margin: 0; }
+.prestige h2 { font-family: var(--display); font-weight: 400; font-size: 25px; margin: 0; }
 .prestige p { margin: 0; color: var(--cream-dim); max-width: 60ch; }
-.prestige .big { font-family: var(--display); font-size: 34px; color: var(--rose); font-weight: 700; }
+.prestige .big { font-family: var(--display); font-size: 38px; color: var(--rose); font-weight: 400; }
 .prestige ul { margin: 0; padding-left: 18px; color: var(--cream-dim); }
 .treewrap { transition: filter .6s; }
 .treewrap.burning { filter: grayscale(1) brightness(.6); }
@@ -96,7 +100,7 @@ header h1 em { color: var(--amber); font-style: italic; }
 .item .slot { font-size: 10px; text-transform: uppercase; letter-spacing: .1em; color: var(--cream-dim); }
 .item .nm { font-size: 12px; line-height: 1.2; }
 .itemdetail { min-height: 96px; margin-bottom: 10px; }
-.itemdetail .name { font-family: var(--display); font-size: 18px; color: var(--rar, var(--cream)); }
+.itemdetail .name { font-family: var(--display); font-size: 20px; color: var(--rar, var(--cream)); }
 .itemdetail .affixes { margin: 6px 0; padding-left: 18px; }
 .r-common { --rar: var(--cream-dim); } .r-rare { --rar: var(--sage); } .r-epic { --rar: var(--lilac); } .r-legendary { --rar: var(--amber); } .r-mythic { --rar: var(--rose); }
 .satbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px; font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: var(--cream-dim); }

@@ -1,0 +1,16 @@
+{
+  "id": "01a1959e-8556-72aa-8859-cbd22d0e8535",
+  "type": "text-to-image",
+  "ai_model": "gpt-image-2",
+  "prompt": "Concept art of a single pair of fantasy elven ranger boots, a game item, standing side by side in three-quarter view, centred on a plain pale grey background. Mid-calf boots of rust-brown leather with a folded-over sage-green cuff, a few simple leather straps with small bronze buckles, sturdy dark soles. One pair only, a clear simple silhouette. No legs, no other objects. Stylised low-poly toy-miniature look, flat matte colours, soft even lighting, no outlines, no text. Palette: dusty sage, rust, ochre and bone.",
+  "status": "SUCCEEDED",
+  "progress": 100,
+  "created_at": 1793511556458,
+  "started_at": 1793511556465,
+  "finished_at": 1793511587710,
+  "expires_at": 1793770787710,
+  "image_urls": [
+    "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/uploads/image_01a1959e-8556-72aa-8859-cbd22d0e8535_0.png?Expires=1793770787&Signature=PUts6Thmp4FNFSS9GrSfQDEryC0vtfMUvT~i0-UW5hHB~Q7ImJDGZKsqYr4h~l~PZisBrEL~SFx65Q0RXIYRNR9zFIVRqgL-6tgDZlSxKQcGxb0OxAoy205N92I4tx-7AhFsg8Ajn3EYVo4gINHYJvIE~L3Lpuoxo252LIDmXnUh6hbtkj~WNvAVkoMRitu4oMnxTos3O1EaYlCkck35hpJQS0twsfoPhU0PzniJf7~Y0-72FRc4wS6DIW6ZiHMsY39wraiKTx1YMUZ1HNa-73LtZ6YkIxilbvhc-rIQUQbNJZCJtKlVQwF7pAnizGDGi0XktwS5wq6Td3PJ7CHmfQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "consumed_credits": 9
+}

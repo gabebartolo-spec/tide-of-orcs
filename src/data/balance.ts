@@ -4,13 +4,15 @@ export const FIELD = { w: 900, h: 480, barX: 150, barW: 14, elfX: 64 } as const;
 export const WAVE_LEN = 24;
 export const ORC_CAP = 160;
 export const STEP = 1 / 50;
+/** Radians per second an orc's bob phase (`wob`) advances while it acts. The sprite clock is wob / ORC_WOB seconds (TB-133). */
+export const ORC_WOB = 8;
 
 export const PLAYER = { baseDmg: 9, baseFireRate: 1.2, arrowSpeed: 520, critMult: 3, fanRad: 0.09, aimHomingRadius: 70 } as const;
 /** The elf's arcing shot: fired only while the player aims; lands on the aim circle and hits every orc inside it. */
 export const LOB = {
   cd: 2.5,          // seconds between shots before Quick Draw
   dmgMult: 3,       // × player damage, to every orc in the circle
-  radius: 40,       // circle radius before Wide Volley
+  radius: 20,       // circle radius before Wide Volley (40 hit 2–4 orcs per arrow at wave 1, TB-132)
   flight: 0.7,      // seconds in the air
   arc: 90,          // apex height, px
   pulseGap: 0.35,   // seconds between repeat strikes (Longshaft)

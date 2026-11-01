@@ -1,0 +1,16 @@
+{
+  "id": "01a19596-8b04-718f-859a-484b12ff5533",
+  "type": "text-to-image",
+  "ai_model": "gpt-image-2",
+  "prompt": "Concept art of a single fantasy elven throwing knife, a legendary game item, shown alone lying flat in side view, the blade pointing to the upper right, centred on a plain pale grey background. One clean straight-backed leaf-shaped steel blade with a pale silver-blue sheen and a thin fuller groove, a short crossguard of dark bronze, a grip wrapped in dark brown leather cord, and a small round bronze ring pommel. One knife only, a clear simple silhouette. No hand, no sheath, no stand, no other objects. Stylised low-poly toy-miniature look, flat matte colours, soft even lighting, no outlines, no text. Palette: dusty sage, rust, ochre and bone.",
+  "status": "SUCCEEDED",
+  "progress": 100,
+  "created_at": 1793511033628,
+  "started_at": 1793511033639,
+  "finished_at": 1793511058226,
+  "expires_at": 1793770258226,
+  "image_urls": [
+    "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/uploads/image_01a19596-8b04-718f-859a-484b12ff5533_0.png?Expires=1793770258&Signature=DACrreTltCMoeeMpQ48L~YlIUxqEasSeVRScufnmFlAeSdG10ywADTZyvbNwbIEhgjGBpr-0jfoXEl3wWZf-DGP0oPdnEHpSnd3YlaAzHwN67X3q~ENf42bihsgKUT~hHQKKxWu7Uz2Lz6U0PkO7qdITNl3SIalt8o8eEaJ1XUBXnVeY7Im3fODKGPVTCxEXVOfkeIlLefobc0RytS-X1A7S-owiGji7PobensiWyzwVV5ES~hX0yYecl32tD61KzFegiTuLiaCvI5LDXjYGId5HSt-5t1mhmCCc7bHil~AQ0bAo65DKtNW6Wv8X-neo1finl2kDQ43ko6twUDvG0A__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "consumed_credits": 9
+}
