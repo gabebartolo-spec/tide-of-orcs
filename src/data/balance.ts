@@ -81,6 +81,10 @@ export const UNIT_FX = { dmg: 1.3, rate: 1.15, critPerRank: 0.05, critMult0: 2, 
 /** The elf's crits: PLAYER.critMult + deadlyPerRank × Deadly Aim rank. */
 export const ELF_FX = { deadlyPerRank: 0.5 } as const;
 
+/** How a node line's ranks stack (TB-147, sim-only switch): add 0 multiplies per rank (m^r, today's rule); add 1 adds
+ *  inside the stat (1 + (m − 1) × r: two +25% ranks make +50%). Foe Fury and Swarm always multiply. */
+export const STACKING = { add: 0 };
+
 /** Per-rank multipliers and flat effects of tree nodes (SKILL-TREE.md effect column). */
 export const NODE_FX = {
   sharpDmg: 1.25, moonDmg: 1.6, drawRate: 1.15, critPerRank: 0.08, gleanLoot: 1.08, kinship: 1.2,

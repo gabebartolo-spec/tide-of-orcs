@@ -3,12 +3,13 @@ import { HW_NODES } from '../data/heartwood';
 import { BOSS_SCRIPT, BOSS_WAVE } from '../data/bosses';
 import { waveLoot } from '../data/balance';
 import { EventBus } from './events';
-import { buyHw, canBuyHw, hwAvailable, hwSpent } from './heartwood';
+import { buyHw, canBuyHw, hwAvailable, hwSpendable, hwSpent } from './heartwood';
 import { bossStep, bossesReady } from './boss';
 import { replant } from './prestige';
 import { createState, freshMeta, freshRun } from './state';
 
-const withHw = (hw: number, levels = {}) => createState(1, freshRun(), { ...freshMeta(), heartwood: hw, hwLevels: levels });
+/** A fallen run: Heartwood is spent only at a prestige (TB-149). */
+const withHw = (hw: number, levels = {}) => { const s = createState(1, freshRun(), { ...freshMeta(), heartwood: hw, hwLevels: levels }); s.run.fallen = true; return s; };
 
 describe('Heartwood tree (TB-053)', () => {
   it('ids are unique and every node has a cost per rank', () => {
@@ -20,7 +21,15 @@ describe('Heartwood tree (TB-053)', () => {
     expect(buyHw(s, ev, 'hw_dawn')).toBe(true); expect(buyHw(s, ev, 'hw_dawn')).toBe(true);
     expect(hwSpent(s.meta)).toBe(6); expect(hwAvailable(s.meta)).toBe(4); expect(s.meta.heartwood).toBe(10);
     expect(s.stats.dmg).toBe(dmg);
-    expect(canBuyHw(s.meta, 'hw_dawn')).toBe(false); // rank 3 costs 8
+    expect(hwSpendable(s)).toBe(5); // the fall's flat 1 counts before Replant pays it
+    expect(canBuyHw(s, 'hw_dawn')).toBe(false); // rank 3 costs 8
+  });
+  it('is spent only at a prestige, with the fall payout counted once (TB-149)', () => {
+    const s = withHw(1), ev = new EventBus(); s.run.fallen = false;
+    expect(canBuyHw(s, 'hw_dawn')).toBe(false); expect(buyHw(s, ev, 'hw_dawn')).toBe(false);
+    s.run.fallen = true; expect(buyHw(s, ev, 'hw_dawn')).toBe(true); // 1 banked + the fall's 1
+    expect(hwAvailable(s.meta)).toBe(-1); replant(s, ev);
+    expect(s.meta.heartwood).toBe(2); expect(hwAvailable(s.meta)).toBe(0); expect(hwSpendable(s)).toBe(0);
   });
   it('max rank stops buying', () => {
     const s = withHw(100), ev = new EventBus();

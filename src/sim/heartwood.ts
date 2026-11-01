@@ -1,5 +1,6 @@
 import { HW_FX, HW_NODE, HW_NODES, HwId } from '../data/heartwood';
 import { BOSS_WAVE } from '../data/bosses';
+import { PRESTIGE } from '../data/balance';
 import { EventBus } from './events';
 import { MetaState, SimState, recompute } from './state';
 import { placeVanguard } from './vanguard';
@@ -11,10 +12,14 @@ export const hwSpent = (m: MetaState): number =>
 export const hwAvailable = (m: MetaState): number => m.heartwood - hwSpent(m);
 export const hwCost = (m: MetaState, id: HwId): number | null => HW_NODE[id].costs[hwRank(m, id)] ?? null;
 export const hwUnlocked = (m: MetaState, id: HwId): boolean => (HW_NODE[id].req ?? []).every(([r, n]) => hwRank(m, r) >= n);
-export const canBuyHw = (m: MetaState, id: HwId): boolean => { const c = hwCost(m, id); return c !== null && hwUnlocked(m, id) && hwAvailable(m) >= c; };
+/** Heartwood is spent only at a prestige (director, 1 Nov): while the run is fallen (a fall or a voluntary replant).
+ *  The fall's flat payout counts at once, before Replant adds it to meta, so it can be spent on that Grove page. */
+export const hwPending = (s: SimState): number => (s.run.fallen ? PRESTIGE.fallGain : 0);
+export const hwSpendable = (s: SimState): number => hwAvailable(s.meta) + hwPending(s);
+export const canBuyHw = (s: SimState, id: HwId): boolean => { const c = hwCost(s.meta, id); return s.run.fallen && c !== null && hwUnlocked(s.meta, id) && hwSpendable(s) >= c; };
 
 export function buyHw(s: SimState, ev: EventBus, id: HwId): boolean {
-  if (!canBuyHw(s.meta, id)) return false;
+  if (!canBuyHw(s, id)) return false;
   s.meta.hwLevels[id] = hwRank(s.meta, id) + 1;
   recompute(s);
   ev.push({ t: 'hwBought', id });

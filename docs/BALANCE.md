@@ -134,6 +134,8 @@ Lives in `sim/run.ts`. Runs `src/sim/` headless at 50 steps/s and decides every 
 
 Loot flags (TB-108): `--hw hw_find:2,hw_fortune:1` starts with Heartwood ranks; `--bare` never wears gear; `--tune 'BOSS_WAVE.every=50,RARITY.weights.legendary.1=8'` overrides data for a sweep. Bosses are summoned when ready; the equip policy wears a set once 4+ of its slots are owned. The report ends with loot milestones (first drop, first of each rarity as run/minute/boss, first 6-piece set, bosses) and the run played on to its fall worn vs bare.
 
+Heartwood flag (TB-146): `--hwbuy` spends Heartwood on the fallen run, before Replant (Heartwood is spent only at a prestige, TB-149), on the cheapest affordable node until none is. The summary's `Milestones` line gives the first Heartwood purchase affordable and bought, nodes bought, and the first boss reached and cleared, each as run, run minute and play minute.
+
 Mythic flags (TB-128): `--mythic <id>` wears that mythic from the start and ends with its power played on removed (affixes kept); `--reroll` spends Glimmer each minute rerolling the lowest affix on the cheapest worn item.
 
 Report columns per minute: wave, starlight, kills/min, kills, wall %, vanguard count, nodes owned, HW, falls. Summary line gives the first fall wave, every fall wave in order (`Falls:`), replants, Heartwood, best wave. (Before TB-084 the "First fall" field printed the last fall.) Writes `sim/out/<policy>-<date>.md` unless `--quiet`. CI runs 30 minutes of greedy as a smoke test.
@@ -168,6 +170,73 @@ Director chose (c), a gentler `costWave` (2026-11-01). Sweep of `COST_WAVE.rate`
 | 1.00 (no wave scaling) | 37 | 36–37 (the ×1.30 HP ramp) | 50–51 | 9 | 66–70 |
 
 Applied 1.10: prices still rise slightly faster than loot, so the tree, not income alone, decides the reach; the first boss arrives after about 100 min of play instead of never.
+
+### TB-146 · Fresh-save milestones (2026-11-01, measured; no numbers changed)
+Branch tb-146 on TB-149, greedy, loot greedy, 180 min, seeds 1–4. "Run r" counts from 1; play minutes include every earlier run.
+
+| | Seed 1 | Seed 2 | Seed 3 | Seed 4 |
+|---|---|---|---|---|
+| First Heartwood purchase affordable (end of run 2) | 2.0 min | 1.9 min | 2.1 min | 1.8 min |
+| First boss reached, no Heartwood bought | run 20, 104.5 min | run 20, 98.1 min | run 19, 95.0 min | run 20, 96.3 min |
+| First boss reached, `--hwbuy` | run 20, 86.9 min | run 20, 81.2 min | run 20, 86.0 min | run 20, 81.9 min |
+| First boss cleared, `--hwbuy` | run 20, 87.6 min | run 21, 90.0 min | run 20, 86.8 min | run 20, 82.7 min |
+| Heartwood nodes bought in 180 min, `--hwbuy` | 12 | 13 | 12 | 12 |
+| Best wave in 180 min (none / `--hwbuy`) | 30 / 33 | 32 / 33 | 31 / 32 | 31 / 33 |
+
+What it says:
+- The first Heartwood buy comes early: Skip the Boring Bit costs 2, and the end of run 2 has 1 banked plus the fall's 1. Far Sight (2) and Dog Comes Too (3) follow within the next few falls.
+- After those, Heartwood arrives at 1 per fall until the first boss, so 18 runs (about 80 minutes) pass with roughly one purchase per two to four falls: the gap dev plan §8 #3 describes. Buying Heartwood moves the first boss 12–17 minutes earlier, not runs earlier: run 20 on every seed.
+- Every seed reaches wave 25 by run 19–20 and clears the first boss on the same run. Then six or more runs in a row fall at wave 27–28 (seed 1: runs 20–25): a plateau right after the boss.
+- The first boss is the real milestone and sits at 81–105 play minutes. TB-147 (additive stacking, price by power) is where to move it.
+
+### P-147 · Additive stacking inside a node line (2026-11-01, TB-147; dev plan §8 #2, #4)
+**Decided 2026-11-01 (director): keep multiply.** Ranks stay `m^r`; `STACKING.add` stays 0 and is kept only as a sim switch. The proposed add numbers below are rejected and kept as the record.
+The sim has a switch: `STACKING.add` in `balance.ts` (0 = today, every rank multiplies, `m^r`; 1 = ranks add inside the stat, `1 + (m − 1) × r`). Foe Fury and Swarm always multiply. The default is still 0, so the game has not changed. All four rows: greedy, `--hwbuy`, 180 min, seeds 1–4, ranges across seeds.
+
+| Rule | First boss reached | First boss cleared | Best wave in 180 min | Heartwood nodes bought |
+|---|---|---|---|---|
+| Multiply (today) | run 20, 81–87 min | 83–90 min | 32–33 | 12–13 |
+| Add, same per-rank numbers | run 31–33, 147–162 min | 156–175 min | 27 | 10 |
+| Add, matched at rank 5 | run 21, 91–95 min | 94–123 min | 29–30 | 11–12 |
+| **Add, matched at rank 6 (proposed)** | run 19–20, 84–91 min | 85–101 min | 30–31 | 12–13 |
+
+"Matched at rank r" picks the added bonus so rank r gives the same total as today: `(m^r − 1) / r` per rank.
+
+Proposed numbers (add, matched at rank 6):
+
+| Value | Today (multiply) | Proposed (add) | Rank 6 total, both | Rank 10 total, today → proposed |
+|---|---|---|---|---|
+| `NODE_FX.sharpDmg` | ×1.25 | +47% | ×3.8 | ×9.3 → ×5.7 |
+| `NODE_FX.drawRate` | ×1.15 | +22% | ×2.3 | (max 8) ×3.1 → ×2.8 |
+| `NODE_FX.wideRadius` | ×1.2 | +33% | (max 5) ×2.5 → ×2.7 | — |
+| `NODE_FX.knifeRate` | ×1.2 | +33% | (max 5) ×2.5 → ×2.7 | — |
+| `NODE_FX.boltDmg` | ×1.5 | +173% | (max 5) ×7.6 → ×9.7 | — |
+| `NODE_FX.gleanLoot` | ×1.08 | +9.8% | (max 5) ×1.47 → ×1.49 | — |
+| `SHOT_FX.dmg` (every arrow-type damage line) | ×1.3 | +64% | ×4.8 | — |
+| `UNIT_FX.dmg` / `UNIT_FX.rate` | ×1.3 / ×1.15 | +64% / +22% | ×4.8 / ×2.3 | — |
+| `BARRICADE.timberMult` | ×1.25 | +47% | ×3.8 | ×9.3 → ×5.7 |
+
+What it says:
+- Adding with today's numbers cuts the late tree in half: the first boss moves from about 85 to about 155 play minutes. Additive needs bigger per-rank numbers, not just the rule.
+- Matched at rank 6, pacing lands within a few minutes of today (first boss 84–91 against 81–87) and the best wave drops by 2. Early ranks are stronger and the 10-rank lines are weaker (Sharpened Tips at rank 10: ×5.7 instead of ×9.3), so the late tree stops outrunning the wave curve: the goal of dev plan §8 #2.
+- Under add, each rank gives the same flat bonus while its price still grows ×1.55–2.2, so value per starlight falls with depth and wide buying beats deep buying. That is the intended shape.
+- Sim gap: Fangs (`NODE_FX.fangsDmg`) and Drill (`VANGUARD.dmgPerDrill`) are read once at load into `UNIT_DMG`, so `--tune` cannot reach them. In these runs they added +40% / +30% per rank unchanged. Proposed for them: +88% / +64% (matched at rank 6).
+
+Price by power (§8 #4), starlight per +1% at rank 0, today:
+
+| Node | Base price | Per rank | Starlight per +1% |
+|---|---|---|---|
+| Sharpened Tips | 12 | +25% damage | 0.48 |
+| Seasoned Timber | 25 | +25% wall health | 1.0 |
+| Quick Draw | 30 | +15% rate | 2.0 |
+| Wide Volley | 40 | +20% radius | 2.0 |
+| Fangs | 90 | +40% wolf damage | 2.3 |
+| Nimble Wrist | 140 | +20% knife rate | 7.0 |
+| Keen Eye | 120 | +8% crit chance | 15 |
+| Iron Bolts | 2000 | +50% ballista damage | 40 |
+| Gleaning | 600 | +8% starlight | 75 |
+
+Damage and rate are the same lever for the elf's damage per second, yet Quick Draw costs four times as much per percent as Sharpened Tips. No price change is proposed yet. With multiply kept, this table is the per-rank power prices would be set against. Reproduce: `npx tsx sim/run.ts --minutes 180 --seed 1 --quiet --hwbuy --tune STACKING.add=1,NODE_FX.sharpDmg=1.47,NODE_FX.drawRate=1.22,NODE_FX.wideRadius=1.33,NODE_FX.knifeRate=1.33,NODE_FX.boltDmg=2.73,NODE_FX.gleanLoot=1.098,SHOT_FX.dmg=1.64,UNIT_FX.dmg=1.64,UNIT_FX.rate=1.22,BARRICADE.timberMult=1.47`.
 
 ### P-002 · Arrow arsenal numbers (TB-089, 2026-10-31, from the director's mechanics; not yet simmed)
 All in `ARROWS` (`src/data/balance.ts`). Rebound: jump 120, falloff 0.6 per bounce, bolt speed 420, hops 1 + rank. Shock: 3 targets, 0.3 × lob dmg, jump 90. Thunderclap: 0.5 s. Frost: 3 s, slow 0.2 + 0.05 × (rank − 1). Shatter: radius 50, 1.0 × dmg × 1.4^(rank − 1). Starfall: every 10th lob, 8 arrows, r 26, 0.6 s fall, 0.08 s stagger, lob damage each; each aims where its orc will be on landing, held no closer than the wall's face. Costs in SKILL-TREE.md. Sim run pending.

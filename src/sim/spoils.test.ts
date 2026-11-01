@@ -27,11 +27,11 @@ describe('Heartwood loot lines (TB-101)', () => {
     expect(lootMods(freshMeta().loot, st({}, { hw_find: 2, hw_fortune: 3 }))).toEqual({ itemFind: HW_FX.find[2], luck: HW_FX.fortune[3] });
   });
   it('lines need their prerequisites', () => {
-    const m = freshMeta(); m.heartwood = 1000;
-    expect(canBuyHw(m, 'hw_satchel')).toBe(false); m.hwLevels.hw_find = 1; expect(canBuyHw(m, 'hw_satchel')).toBe(true);
-    expect(canBuyHw(m, 'hw_tithe')).toBe(false); m.hwLevels.hw_find = 2; m.hwLevels.hw_fortune = 1; expect(canBuyHw(m, 'hw_tithe')).toBe(true);
-    expect(canBuyHw(m, 'hw_heirloom')).toBe(false); m.hwLevels.hw_fortune = 2; expect(canBuyHw(m, 'hw_heirloom')).toBe(true);
-    expect(canBuyHw(m, 'hw_glimmer')).toBe(false); m.hwLevels.hw_satchel = 1; expect(canBuyHw(m, 'hw_glimmer')).toBe(true);
+    const s = createState(1, freshRun(), { ...freshMeta(), heartwood: 1000 }), m = s.meta; s.run.fallen = true;
+    expect(canBuyHw(s, 'hw_satchel')).toBe(false); m.hwLevels.hw_find = 1; expect(canBuyHw(s, 'hw_satchel')).toBe(true);
+    expect(canBuyHw(s, 'hw_tithe')).toBe(false); m.hwLevels.hw_find = 2; m.hwLevels.hw_fortune = 1; expect(canBuyHw(s, 'hw_tithe')).toBe(true);
+    expect(canBuyHw(s, 'hw_heirloom')).toBe(false); m.hwLevels.hw_fortune = 2; expect(canBuyHw(s, 'hw_heirloom')).toBe(true);
+    expect(canBuyHw(s, 'hw_glimmer')).toBe(false); m.hwLevels.hw_satchel = 1; expect(canBuyHw(s, 'hw_glimmer')).toBe(true);
   });
   it('Deep Satchel holds 80', () => {
     expect(st().satchelCap).toBe(SATCHEL.base); expect(st({}, { hw_satchel: 1 }).satchelCap).toBe(SATCHEL.deep);
