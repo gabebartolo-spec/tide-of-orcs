@@ -1,20 +1,15 @@
 /* Layout: battlefield canvas on the left with a rally bar beneath it, a tabbed grove panel (skill tree / replant) on the right; stacks on phones. */
-/* Fonts ship with the game so the desktop build works offline (TB-118). Heartwood is the game's own display face, one weight, no italic
-   (built by tools/typeface, TB-135); Spectral stays as its fallback. The others are latin subsets under SIL OFL, licences in public/fonts/ */
+/* Fonts ship with the game so the desktop build works offline (TB-118). Heartwood, the game's own face (tools/typeface, TB-135), is the only
+   font: DOM and canvas alike, no fallback faces (TB-137). One weight, no italic. */
 @font-face { font-family: "Heartwood"; font-style: normal; font-weight: 400; font-display: swap; src: url("./fonts/heartwood-400.woff2") format("woff2"); }
-@font-face { font-family: "Spectral"; font-style: normal; font-weight: 500; font-display: swap; src: url("./fonts/spectral-500.woff2") format("woff2"); }
-@font-face { font-family: "Spectral"; font-style: italic; font-weight: 500; font-display: swap; src: url("./fonts/spectral-500-italic.woff2") format("woff2"); }
-@font-face { font-family: "Spectral"; font-style: normal; font-weight: 700; font-display: swap; src: url("./fonts/spectral-700.woff2") format("woff2"); }
-@font-face { font-family: "Atkinson Hyperlegible"; font-style: normal; font-weight: 400; font-display: swap; src: url("./fonts/atkinson-400.woff2") format("woff2"); }
-@font-face { font-family: "Atkinson Hyperlegible"; font-style: normal; font-weight: 700; font-display: swap; src: url("./fonts/atkinson-700.woff2") format("woff2"); }
 :root {
   /* Tokens mirror src/render/palette.ts and docs/ART-STYLE.md */
   --ink: #161d15; --ink-2: #1f281d; --ink-3: #2a3527; --line: #3b4a37;
   --cream: #efe6d2; --cream-dim: #b9b09c;
   --sage: #8fa98a; --sage-deep: #6b8468;
   --amber: #e2a85b; --rose: #c76f6f; --lilac: #cdbdea; --moss: #7f8f52; --timber: #8a6a46;
-  --display: "Heartwood", "Spectral", Georgia, serif;
-  --body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --display: "Heartwood";
+  --body: "Heartwood";
   color-scheme: dark;
 }
 html, body { height: 100%; }
@@ -22,7 +17,7 @@ html, body { height: 100%; }
 h1, h2, .stat .v, .big, .name { font-synthesis: none; }
 .auto { margin-left: auto; align-self: center; font-size: 12px; color: var(--cream-dim); }
 #build { margin-left: 12px; }
-body { margin: 0; background: var(--ink); color: var(--cream); font-family: var(--body); font-size: 14px; }
+body { font-synthesis: none; margin: 0; background: var(--ink); color: var(--cream); font-family: var(--body); font-size: 14px; }
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
 button { font: inherit; color: inherit; cursor: pointer; }
