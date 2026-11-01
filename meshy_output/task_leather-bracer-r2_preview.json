@@ -1,0 +1,23 @@
+{
+  "id": "01a1955b-d010-751b-bea5-4b04b68924b2",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 3235999834,
+  "prompt": "Archer's leather bracer, a game item prop, unbuckled and laid flat on the ground, outer face up, seen from above. A single tapered leather plate, wider at the elbow end and narrower at the wrist end, gently domed across its width, a simple embossed leaf motif down its centre and stitched edges, with two leather straps lying splayed out flat to either side of it, each ending in a small buckle. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793507186178,
+  "progress": 100,
+  "started_at": 1793507186184,
+  "finished_at": 1793507200085,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1955b-d010-751b-bea5-4b04b68924b2/output/model.glb?Expires=4947091200&Signature=F440xHWlMftJJW8zIaTBmC37ERqa3i5N-hLLPTGOP3OU61QyDRswvxXUjTRdqoSEUBpTrqzJj6cHeTBex-LhJNFYNTvpzgGGJWPW8EXgGUZrlbpjRXh8n1kibFkT-0djDGv0uXomB5sHg3-Za7-9u2J2hBS2hFKOcUnVEbsN2XnhYOcVa63ZGUpHNRda9py4HvEczPCFgTIarp~n6TLkG4K4-6sRencYnFsBh1ds~9jTnIdJK6KbZiCO0lAkc06p-f4yloA0juw1yYw1jkLQuO0phghutzatvxiWKd4c0dSDu4tDsuMLeu0XQecRASUHIYQA-mS2-ggl9OyiN7dOyA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1955b-d010-751b-bea5-4b04b68924b2/output/preview.png?Expires=4947091200&Signature=Qw3FZmCOVpuedk680Ig7eb3Wl2EoVhTncWsibrB0bKEbUtV9CrDLV14sZBTGaRumj~aCQAzICVcXt5xnfD1F90t-PHh3efVjZhBG75dzQcvAkPLpsDtzQYn7KtNwwkbOD~YNgn8BFlG73~CmHYkTUWvbzpCuIVWGSfFbt6H-bUxPqVs6UwFZTdA0-O6GAVCl6EK9BsJJzUZXbvPGN~vmELmEIiCw-fQ66S6OArajndSxcX9sll-EhlqjKNdmkYpR~2XWbznYkBrnsz-VFM3-X1ts9iNAEOS4Eqzk1ygjdoSezJGNI~dFIx8DDvke7oly-6ScgzOuXTqcFaychCa6Ow__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

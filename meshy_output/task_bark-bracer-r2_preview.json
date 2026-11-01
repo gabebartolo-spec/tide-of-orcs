@@ -1,0 +1,23 @@
+{
+  "id": "01a1955b-eac2-775a-8435-ecd9c006cda4",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 1689839434,
+  "prompt": "Bark bracer, a game item prop, unbuckled and laid flat on the ground, outer face up, seen from above. A single tapered plate of thick tree bark, wider at the elbow end and narrower at the wrist end, gently domed across its width, a small leaf growing from one edge and moss patches, with two twisted cords lying splayed out flat to either side of it, each ending in a small buckle. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793507193297,
+  "progress": 100,
+  "started_at": 1793507193303,
+  "finished_at": 1793507206509,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1955b-eac2-775a-8435-ecd9c006cda4/output/model.glb?Expires=4947091200&Signature=cZs0CLuPJE8H85YJeZ5KNWHG6WNOLm~Yxwotfa~qihUSULKksRyqI1SRMTGmRgrHIo9GMbIrbtAqdGq~YlvmtOUG2CiVux6U8bBmgzE8p1-WR1fAh0IdYhcZzMwxLNkuJJdRkZJK1EMWQtED56CCbfVRx-E4yVMDJBamHHf8FJL6JhwlPYG4v8uaPwTNUndd3QAW2EBkiT6DWuhmSdpxs9q4Gknlpi5KsEOKDq1Uzl-19QvNW1p~CGhHfPRG-gmxlPlosZHk2iVOZBe-UkyICH36hIWapIBa0WKHAz7gythiKopMjuoEC9HST86NPo-fN2dwFURRa-V1AlqCwRatig__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1955b-eac2-775a-8435-ecd9c006cda4/output/preview.png?Expires=4947091200&Signature=VuJg2gEeeOH-QcEoia9r72t-mToTU18EJLAgyR4vQbGANHPreVnXdD27ikq8v7r7nkx8HhWwta7o93iemOtetkeXbVqV~0edwLksFoIOvHGm6ubbHC1FcAhveWGCeuSns6MQLmvR1eKOJVC0wq3TPcO53TkXjfFxoOUOXLhpk-lhh1Q4a-Ok4CLMkRO5H6wMJSdT-EJQI-Zj-r0shGIEgxcs1nj9C8R-efRsXY3TjKcpr0i9ANGhbMjzfLSfAJ7DVAzmR4n7ulEHLFceIRWEm5qcka92DbCGNgwi1tPz0waq8XsixcHcJIzqxJ-6CAKlgnj4lkzyDEwCyaJ4QXkUWg__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

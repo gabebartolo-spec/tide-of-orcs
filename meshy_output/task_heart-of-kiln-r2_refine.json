@@ -1,0 +1,27 @@
+{
+  "id": "01a1955b-e435-7769-9a8b-5c5ef1745db4",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 3273785590,
+  "prompt": "Mythic kiln-fired clay arrow quiver, a game item prop, standing upright. One hollow cylindrical clay vessel, closed at the bottom and open at the top with a thick rim, fine glowing cracks across its surface, a thin strap hanging from the rim down one side, and five arrow shafts with ember-red heads rising vertically out of the open top. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Rust-red fired clay with glowing ochre cracks, bone-coloured arrow shafts, dusty sage strap.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793507191612,
+  "progress": 100,
+  "started_at": 1793507191619,
+  "finished_at": 1793507218927,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1955b-e435-7769-9a8b-5c5ef1745db4/output/model.glb?Expires=4947091200&Signature=aMHMny1xC7pZMrR~ry-psu90UeJW02A0lUDRUTF0eCy2Ymlmfcvc-rz4OeOAv3OXKf-h1koLQGRtLmWul2tAfHuzPx2ddO5SPcf0fjXK92SxrIxYQc-ttKHA84ehVV8~8K6N5zckVLyMHCng2rFRdNyAp9yvxXagUdRqBabTnCaGA33xO2FVjETBfZRDTFm~QfKPcybi9WulnWFiwoWI3GinpSWhcCQjVsqqVkIw9UOVLn-miCQSP8HM4ftHMScGGgdGRLQvvXslsMW310OgHJsPRw3DDb24-NdtrIgtj9DP7uU0Z51NutaWqL7TjmVKwWU1RK5h~feTowUH6o8oLQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1955b-e435-7769-9a8b-5c5ef1745db4/output/preview.png?Expires=4947091200&Signature=OVBLCVw9tI2LB-vxk3-z-h~ssdjynewTfrxjxTSpAhIKaINpAqCGvsopgelsA0Pou6x7g~gF2kdzWmGjfNB0W0Xahgl7~GZjT~XjDzDVUeXlmGvESUGkMr1zTofLgs5RqGLiXIq7JgJd~ieqDWynrP0pHYXaOFpeSg7m5nrcyTDb6o~mgMJj-pSbwLqdIEz-wS5vQzRajfp3JTS6KNnVR2n~8U84YTsLGOoYFMifB-K5SZNY2bJshjeWhVWp3JLz2YT5JH2qKZT-pXWimtLV0WMnLaW5F7C9S-olrKSqzgkO0z81~v-QoFB715eEegDyXvxmeDu1a7TLgF3dyf6N8w__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1955b-e435-7769-9a8b-5c5ef1745db4/output/texture_0.png?Expires=4947091200&Signature=fxN1~rfXGWMAn8h97D86XXjdwZnNbSiqWZdjkpcl3~0VThsQuX~J1sm0ARo68lunGcl2dOAuRQ79URcnuTvbvMAG~wjmuYy4KUQ3NFe5AuSbtIaJe2YhbdQmgcUHCWUQQ3N1loQiXqD3uaKoBczpUVQb1REbdSJdM2ARszES1GZT89WWqpLqER4qFNNHNunQCed~INUntaCXrhaehE2GAldEhhsR2chcaNxGBuwaiXC0j2PAiQYyF8uXNMn593A~BOH1ULr0o3L0RC1EwQVb~Xz861WXHzlsB7T0XsIGhikdKu0I-7orU4T4xew-xpQh8eDNjfi4QpWAGQHXf8SQzw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

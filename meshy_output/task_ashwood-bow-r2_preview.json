@@ -1,0 +1,23 @@
+{
+  "id": "01a19557-57d6-7223-a825-2414d9443a67",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 510739186,
+  "prompt": "Simple ashwood flatbow, a game item prop, standing upright. One pale wooden stave bent into a smooth shallow D-curve from tip to tip, wide flat limbs tapering to notched tips, a plain wrapped grip at the middle, and a single taut straight bowstring stretched tight between the two tips with clear open space between the string and the curved stave. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793506893410,
+  "progress": 100,
+  "started_at": 1793506893420,
+  "finished_at": 1793506906171,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19557-57d6-7223-a825-2414d9443a67/output/model.glb?Expires=4947091200&Signature=ciETaTPzgFC0~3lOlWO1J-u-xk9vb11GC6kz2R91mTouYSUxcoBE9KTLKTf3YccZfvwGo8A1q01CyLw2KinJE6UKqsLQEchgXNr8u2XEkKaEtPg0bGs4btU2uDMrCOl20NAN~LafB-k3p8hMOO2kPUD4bCkNyIi-5WLaLAEMk3ABRYc~wv5Oy~Vvvqwx9k6SBzJ4PTnu9Be-R1YKvzP7GljgvwM9~stp9S3aU40M~HNhsyMSwmHywP6-bTr7oeTalZli8S7npw82JZWawguOMlCsAom8KTT6nCi~dUP1le90HVtTUZ-V3PYEhE9GPhPAdfkPSf7wJ16xEnS6JXChvg__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19557-57d6-7223-a825-2414d9443a67/output/preview.png?Expires=4947091200&Signature=dFfxVPz4lPQynSdTRygcghvFZjbS9BR9nN8MIFTdUNV9F9~NkcUuUQ0dZ8Zq1Za7aWmqK45ccL4OxZh3Rx00XCq0qMTo5AXblhDj0NekfgIsmriDW8zye17GD9TYqhFaGYNWNiz7iwKWsRMCCSzLLlYGAuU6dJ-W9wrWXgmZ~ZPOuZOZ3th26ZOCTctiDishm69pPbuobhihOXBTL9cEXy9fHufrINa3h3jzLGPyJxoWL5WPkxzZN-JdY0tEwARf0qLHbmOUMTUWrw76vRq2UciAp~ZM64aV4C3-F~68Ouyvm1xMFgYu43GeQwB8KzVo0gW61lDn8iCQXZZjD0PpJA__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

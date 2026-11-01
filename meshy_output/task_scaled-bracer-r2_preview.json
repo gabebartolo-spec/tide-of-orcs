@@ -1,0 +1,23 @@
+{
+  "id": "01a19557-a5ac-7659-b2f8-6e4f2f4182b2",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 2895598207,
+  "prompt": "Scaled archer's vambrace, a game item prop, displayed outer face up at an angle. A tapered curved armour plate shaped like a small elongated shield for the forearm, wide and flared at the elbow end with a pointed edge, narrowing to a snug cuff at the wrist, its outer face covered in rows of overlapping small round scales, a raised rim all the way round, and two leather straps with buckles crossing beneath it. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793506918031,
+  "progress": 100,
+  "started_at": 1793506918036,
+  "finished_at": 1793506932735,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19557-a5ac-7659-b2f8-6e4f2f4182b2/output/model.glb?Expires=4947091200&Signature=Q~m8TkMBQpwMcoNi7VDYbkelNdeNtzzqhKnsngbFw3vlruUpwjKlc06ofuGUzWob2BOu6zIkByBejX-BkOgiAQ54zsbZQa0WRV30RsoYWcjLsu5ZsTTvGjTMrPwZiaiV7NYg3fvvWGjiCyiiXnNbGDKLyB1KDEVB0FJ3OX2BHGBbwu~j43Qlp7oN~0MLsgGrkLJRxQ8MLLVzuHLM9m1Lm0XOG67qoo6lzRk6sxXgXj-C26J79qWsN1AJa6knIJyG6uE6PQgEJNXphh-67pQGN8xzX7d-LG7ypIPw5OqePIcDOp5wk-KLZA-MJ9HZZ4prGyEx8t2Jn97Hd-ONaQIqkA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19557-a5ac-7659-b2f8-6e4f2f4182b2/output/preview.png?Expires=4947091200&Signature=hTPPNRDcIjtGa7Ttzf7klMZ62kFm8gByyA4Ti~UVse2Mk~pM0TMWn4wjPUz45agZqJB7j1qpL6E33O1CtZ2UXRmhJ1yfNI-JUxqDSvHXkJ9gLRTNAJDDrlnPHYMR6FDz-xgPYrOAMHK~4UkNAXSd1h3CBpYPvAZ846W8MqigkjdpWm47jtdPsAvyt-NaH0tcLNON2TiEsImBdelxIPRZkZ3Lx2VjCPI-cvHE8fO7KL-pdRQaWnEBWBWzrnqkfyI5wmqo8te0xheFbOyqy8nNRKcku8jTLS8e2F6B-Y9G587DMVZhu4dW7NdJTEuesSBeQBXrmtWw2KD-VTMLUNhSDg__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

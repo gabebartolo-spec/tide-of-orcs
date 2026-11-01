@@ -1,0 +1,23 @@
+{
+  "id": "01a1955c-3e94-7206-9482-09bb50035912",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 2637291746,
+  "prompt": "Mythic storm bracer, a game item prop, unbuckled and laid flat on the ground, outer face up, seen from above. A single tapered dark metal plate, wider at the elbow end and narrower at the wrist end, gently domed across its width, a bold raised jagged lightning bolt running down its centre and three small copper coils across the narrow end, with two leather straps lying splayed out flat to either side of it, each ending in a small buckle. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793507214576,
+  "progress": 100,
+  "started_at": 1793507214582,
+  "finished_at": 1793507231458,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1955c-3e94-7206-9482-09bb50035912/output/model.glb?Expires=4947091200&Signature=PycpIk8KjzvJbpH50tGLyeTLyluXMQZ07UdJraPp3Qy3O~JoSjXluGDaID-Kv-OM6CLe3QQQS7mD9gFes6Nm6W4NdIUOvyVanU1q73HAvGj-QuTgSYiT~CYcfne~VhJOVynkh0jOF3Up19czfxjLG32435QLoVV2LWbWvJpcf3gQ6aC6sIFC3RZlujZD65MJHItXhGCreuCVD~0aIkaqZ9sZRv8o6PgnNSn~Gau3EuCsDfBhFj2m7TXbQnhGwhbp-Wj2UDOuQxyRyR7ZPqTCOdSJ5IhZnreRfDZU8bww3dm5P7UgDmryOCFqgeKx~1-uEjOEZ9AiEVJiD1-cQDLFQg__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1955c-3e94-7206-9482-09bb50035912/output/preview.png?Expires=4947091200&Signature=aSY2lyPhzol53SoT2wH-gBogzFCIgLmgl0tIZinC8Y1S3bfINm~h0mhLCC5wcOmsahm8dYrjyCm2WErMGSCw58AVaYssL1r2rbj7mrRIGXUfwbCEb-dOAoh9u3nz3i43VZdgTNNnBm3leVXCtX2jbP1WEL92YFCv7m79hW5Qc-V0LM59Si9O9SM0QbTcal1wTyq-weMsr6SyNsNd8M7~dMbFbXiH8aS6T6NQFZ9K0v6vq4lGwFb-mgUYrdn0lF7oKR4UOH~nR9SGq~R1lwq~ItE7hYOa5JnjmPdwUbJo8KeESl0aDDmVlICIng0HXtz3sIsc1mY8SUCctJBlnRJg-g__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

@@ -1,0 +1,27 @@
+{
+  "id": "01a1955b-c911-739f-9c79-e670d2aa2294",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 1386143093,
+  "prompt": "Birch-bark arrow quiver, a game item prop, standing upright. Exactly one plain cylindrical tube of birch bark, closed at the bottom and open at the top with a rolled rim, smooth sides all the way round, a thin cord hanging loosely from the rim down one side, and five fletched arrow shafts rising vertically out of the open top. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Bone-white birch bark with small ochre dash marks, rust-brown cord strap, pale sage arrow shafts.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793507184559,
+  "progress": 100,
+  "started_at": 1793507184566,
+  "finished_at": 1793507209955,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1955b-c911-739f-9c79-e670d2aa2294/output/model.glb?Expires=4947091200&Signature=G5OQ-XBAJ~6m7nyEQ6-j-oE~kW8W5s7VX2dSYx6T~vRNYcBFYOHdzwV8qYOvxXpVQUiYUnf~O~vdjMbEpJJ2kP6jUI~LuF3b2uelsxufJ3SsyAGJtkFyDl4wa8WoCuPG2fupQPGd6z7Eb4F8p47syfBP93A3nwR1saF~HYh29qiCxmUzX48pSUmNejzkPyqeJKa0UkCNQh0sBo-Y-DoJzqJ6bU6fM-zgwn7C~EVZqREvym6xmUY~MqZ9mZGJV1xzQemN6DGoWgINKZUkyf7SvXsqjtJ56tCwvBFKTtBVU4X9iE0O2K9iJ-~9sMzsDh2pt3R3FLnB~SqqTyd6jZGAwA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1955b-c911-739f-9c79-e670d2aa2294/output/preview.png?Expires=4947091200&Signature=T5GLP1kTQYgun-y1R384okIyjDxGtNT9Ed0DdxKSve7TxZDQN~7TXKPgT~sPFqhzpIekDw-GUhvUKh8~lJTdblXNIpeY2ThtSZdK7HJXVHtFORy5Tdn4xXBSpZunTGL15neLXTc~1NWFQ~aIzzOspU2ZLV0f2OJxnt3c1KrW35lBDuuESmXnDf2RgMdB47SIoyYYtzYxB~81JcW5hyVA4hJDZQJq3-fDS4TVJVje5dP5Otflmdga6kxGlit6Q1XbUQ0YPLjyM2bQ5BDKjo1gfvnWRA8WOW48PJrl8gr-VfzqhGWyNzZXzOs9TpMfzipwXRD0k~f5fB82WzpYRl2Gqg__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1955b-c911-739f-9c79-e670d2aa2294/output/texture_0.png?Expires=4947091200&Signature=l2jUBb6T4cvZSpvo0GkulOfQnW6oi-LC7DVQ1mDcTRQB0mEw8E15gr-J39WZTcZcUVJJJwmAmbnyfT5a73gjNDhHYa4730fD7CbjmT5ySS30RfZzec9RcwuS6CXXt2Oh74kbLz04aBHZpLhseQaTl~d3nFHAps9hSFzAAIqfnZoGKPE2JLTTCs2hjze5rj-kKqIQmFiIGy5JjB81pHzpLmeyCxqnyGTrJ70glOFL7avKUWvkMxCk-IznBJEw9~3fnOOgL6ebX64XaNRvsBV5TahO858Z86IoiURiQKQICh6g2Ba3KrH2~Du48f3PJaM11yv9XZac2hohTL03TkejhQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

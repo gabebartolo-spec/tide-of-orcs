@@ -1,0 +1,23 @@
+{
+  "id": "01a1955c-24de-70bc-b36b-04c612f23ae1",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 1883897294,
+  "prompt": "Scaled bracer, a game item prop, unbuckled and laid flat on the ground, outer face up, seen from above. A single tapered plate, wider at the elbow end and narrower at the wrist end, gently domed across its width, its whole outer face covered in rows of overlapping small round scales, with two leather straps lying splayed out flat to either side of it, each ending in a small buckle. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793507207716,
+  "progress": 100,
+  "started_at": 1793507207723,
+  "finished_at": 1793507226576,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1955c-24de-70bc-b36b-04c612f23ae1/output/model.glb?Expires=4947091200&Signature=Fl61s3rda8ocbFKk0CX3g34UdHLxNBGFrBgmQyd5SqGzD7mQc2Beb6yZ3h93XgOkEhZkysVpr2l9dqkI-lJ~dU4vLcT0CqDAwZi30vBImp~5U7B7EE0voA4axaMn6t4rsBrFpjOlKt64hFgm0HjHVdWyUDV8rOag~bHWZmg7jMdrsLo3RPQOUkuEEj0jCpZOOR3wLAdUj3f0khEr7KIJ5elQbAU51o1n2u8RyzIUD6cgBLbz0~z3HToU4detbj2MwLUr632V96UQXpO2fytaaiQXtJII8kcoGryWZtSGRRstVr5CvW4w3CddENls8WZNm6bLh2~w-XVhhDe7f9JVtw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1955c-24de-70bc-b36b-04c612f23ae1/output/preview.png?Expires=4947091200&Signature=ZM7KGTdpF1H2qFHFuqAnPbnoF1neMfLAThVpVdBXp45cXJvXS7ZG9yIvZIfzys2S2OAzpQlXUQuNL8NB1OEKmcQ74YVJTCD02PlJmXsFQ~DCT6kkW5ucxt38DUqoUp07ZUWj~adkP5SULUTkI4nfWFmpDUgVvMSrKc3bw5NSyL9KJYqz-XygtECtEj8V28rkJmil5VmAPRlPygiIcEc7xh454b7I1mSj~VAb0IwII0l1G8UCWBsCapc4JYW3vYCJ1vJ2OVU-koKlsfRL66n5n6SBpiaCcRFL~Af0a~naK6OSDRRveL4zZkUk45Ks4cwL1GlPA3CSDbTSrZgZaFrg7g__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}
