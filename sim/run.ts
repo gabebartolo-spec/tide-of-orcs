@@ -101,17 +101,17 @@ function rallyIfLow(st: SimState, bus: EventBus, at: number): void {
 
 /**
  * dps policy (TB-040): starlight earned over a lookahead with this node bought, minus without, per starlight spent.
- * Each trial restarts from the run and meta on an empty field (the same as loading a save), with greedy rallying and no other buys.
+ * Each trial replants a copy of the fallen run and meta (the next run), with greedy rallying and no other buys.
  */
-const DPS = { lookahead: 120, every: 15, candidates: 6 } as const;
+const DPS = { lookahead: 120, candidates: 6 } as const;
 function trial(buyId: NodeId | null): number {
   const t = createState(seed * 7919 + s.tick, structuredClone(s.run), structuredClone(s.meta)), bus = new EventBus();
   if (buyId) buy(t, bus, buyId);
+  replant(t, bus); // the tree is bought between runs (TB-136), so the trial plays the next run
   const e0 = t.run.earned, n = Math.round(DPS.lookahead / STEP);
   for (let i = 0; i < n && !t.run.fallen; i++) { step(t, STEP, { aim: crowdAim(t, t.stats.radius) }, bus); if (i % 25 === 0) rallyIfLow(t, bus, 0.5); bus.drain(); }
   return t.run.earned - e0;
 }
-let dpsPick: NodeId | null = null, dpsAt = -Infinity;
 function dpsChoose(): NodeId | null {
   const opts = NODES.filter((n) => canBuy(s, n)).sort((a, b) => costOf(s, a) - costOf(s, b)).slice(0, DPS.candidates);
   if (!opts.length) return null;
@@ -122,21 +122,25 @@ function dpsChoose(): NodeId | null {
   return best ?? opts[0]!.id;
 }
 
-function decide(): void {
-  if (s.run.fallen) { if (canReplant(s)) { replant(s, ev); falls++; dpsAt = -Infinity; lastKills = 0; } return; }
-  if (bare && Object.keys(s.meta.loot.equipped).length) { s.meta.loot.equipped = {}; recompute(s); }
+/** Spend the fallen run's starlight: nodes are bought only between runs (TB-136), so the whole buy policy runs here. */
+function shop(): void {
   if (policy === 'nobuy') return;
-  rallyIfLow(s, ev, policy === 'wall' ? 0.9 : 0.5);
   if (policy === 'dps') {
-    // re-plan every DPS.every seconds of run time, and at once after a purchase or replant
-    if (s.run.runTime - dpsAt >= DPS.every) { dpsPick = dpsChoose(); dpsAt = s.run.runTime; }
-    if (dpsPick && buy(s, ev, dpsPick)) dpsAt = -Infinity;
+    for (let pick = dpsChoose(); pick && buy(s, ev, pick); pick = dpsChoose());
     return;
   }
-  // cheapest affordable node, with branch weighting
+  // cheapest affordable node, with branch weighting, until nothing is affordable
   const weight = (b: string) => (policy === 'wall' && (b === 'Barricade' || b === 'Vanguard') ? 0.5 : 1);
-  const opts = NODES.filter((n) => canBuy(s, n)).sort((a, b) => costOf(s, a) * weight(a.branch) - costOf(s, b) * weight(b.branch));
-  if (opts[0]) buy(s, ev, opts[0].id);
+  for (;;) {
+    const opts = NODES.filter((n) => canBuy(s, n)).sort((a, b) => costOf(s, a) * weight(a.branch) - costOf(s, b) * weight(b.branch));
+    if (!opts[0] || !buy(s, ev, opts[0].id)) return;
+  }
+}
+
+function decide(): void {
+  if (s.run.fallen) { shop(); if (canReplant(s)) { replant(s, ev); falls++; lastKills = 0; } return; }
+  if (bare && Object.keys(s.meta.loot.equipped).length) { s.meta.loot.equipped = {}; recompute(s); }
+  if (policy !== 'nobuy') rallyIfLow(s, ev, policy === 'wall' ? 0.9 : 0.5);
 }
 
 const total = Math.round((minutes * 60) / STEP);
