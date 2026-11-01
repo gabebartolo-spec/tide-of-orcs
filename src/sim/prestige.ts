@@ -34,7 +34,7 @@ export function replant(s: SimState, ev: EventBus, tier = s.meta.tier): number {
   s.run.tier = Math.max(1, Math.min(s.meta.tier, Math.floor(tier)));
   s.orcs.clear(); s.shots.clear(); s.vans.clear(); s.zones.clear();
   // run-only set and mythic state starts over with the run
-  s.knifeN = 0; s.freeRallyT = 0; s.starAcc = 0; s.starfallT = 0;
+  s.knifeN = 0; s.freeRallyT = 0;
   s.run.barHp = 0; startRun(s);
   ev.push({ t: 'replant', heartwood: hw, forced });
   return hw;

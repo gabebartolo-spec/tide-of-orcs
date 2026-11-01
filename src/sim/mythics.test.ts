@@ -1,14 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { Item } from '../data/loot';
 import { MYTHICS, MYTHIC_FX } from '../data/lootTables';
-import { PRESTIGE } from '../data/balance';
 import { EventBus } from './events';
-import { kill } from './combat';
+import { impact, lob, mythicMult } from './combat';
 import { barricadeHit } from './barricade';
 import { createState, freshMeta, freshRun, SimState } from './state';
 import { Levels } from './stats';
 import { pickUp } from './loot';
-import { gain, replant } from './prestige';
 import { noInputs, spawnOrc, step } from './step';
 
 /** A state wearing one mythic, with the given Grove levels. */
@@ -28,37 +26,39 @@ describe('mythic powers (TB-100)', () => {
     expect(wearing('starfall-cloak').stats.starCloak).toBe(1);
   });
 
-  it('The Last Knife: a knife that hits turns back and strikes on the way', () => {
+  it('The Last Knife: a knife marks its orc; arrows deal x2 to marked orcs', () => {
     const s = wearing('last-knife', { knives: 1 }), ev = new EventBus(), o = orcAt(s, 500, 300);
     o.hp = o.maxhp = 1e6; s.run.knifeT = 99; step(s, 0, noInputs, ev);
-    for (let i = 0; i < 60 && !first(s.shots, (p) => !!p.back); i++) step(s, 1 / 60, noInputs, ev);
-    const k = first(s.shots, (p) => p.kind === 'knife')!;
-    expect(k.back).toBe(true); expect(k.vx).toBeLessThan(0);
+    for (let i = 0; i < 60 && o.mark <= 0; i++) step(s, 1 / 60, noInputs, ev);
+    expect(o.mark).toBeGreaterThan(0); expect(o.mark).toBeLessThanOrEqual(MYTHIC_FX.knifeMarkSecs);
+    expect(mythicMult(s, o)).toBe(MYTHIC_FX.knifeMarkMult);
+    o.mark = 0; expect(mythicMult(s, o)).toBe(1);
   });
 
-  it('Heart of the Kiln: burn never runs out and ramps', () => {
-    const s = wearing('heart-of-kiln'), ev = new EventBus(), o = orcAt(s, 2000, 300);
-    o.hp = o.maxhp = 1e9; o.spd = 0; o.burn = 1;
-    for (let i = 0; i < 300; i++) step(s, 1 / 60, noInputs, ev);
-    expect(o.burn).toBe(1); expect(o.burnT).toBeCloseTo(5);
+  it('Heart of the Kiln: arrows deal +10% per second burned, capped', () => {
+    const s = wearing('heart-of-kiln'), o = orcAt(s, 900, 300);
+    o.burnT = 5; expect(mythicMult(s, o)).toBeCloseTo(1.5);
+    o.burnT = 60; expect(mythicMult(s, o)).toBeCloseTo(1 + MYTHIC_FX.burnRampMax);
   });
 
-  it("Thunder's Memory: ten stored storms make the next shot hit every orc", () => {
+  it("Thunder's Memory: after a storm the draw is twice as fast for a while", () => {
     const s = wearing('thunders-memory', { storm: 1 }), ev = new EventBus();
-    const a = orcAt(s, 600, 100), b = orcAt(s, 900, 500); a.hp = a.maxhp = b.hp = b.maxhp = 1e9;
-    s.run.thunder = MYTHIC_FX.thunderCharges - 1; s.run.stormT = 99; step(s, 0, noInputs, ev);
-    expect(s.run.thunder).toBe(MYTHIC_FX.thunderCharges);
-    s.run.shotT[0] = 99; step(s, 0, aim(700, 300), ev);
-    expect(s.run.thunder).toBe(0); expect(a.hp).toBeLessThan(1e9); expect(b.hp).toBeLessThan(1e9);
+    const o = orcAt(s, 700, 300); o.hp = o.maxhp = 1e9;
+    s.run.stormT = 99; step(s, 0, noInputs, ev);
+    expect(s.run.thunder).toBeCloseTo(MYTHIC_FX.thunderDrawSecs);
+    s.run.shotT[0] = s.stats.lobCd * MYTHIC_FX.thunderDraw; step(s, 0, aim(700, 300), ev);
+    expect(first(s.shots, (p) => p.kind === 'lob')).not.toBeNull();
+    const t = createState(1, { ...freshRun(), levels: { root: 1 } }), ev2 = new EventBus();
+    t.run.shotT[0] = t.stats.lobCd * MYTHIC_FX.thunderDraw; step(t, 0, aim(700, 300), ev2);
+    expect(first(t.shots, (p) => p.kind === 'lob')).toBeNull();
   });
 
-  it('Oakspine: a bolt through three orcs drives a stake that holds one orc', () => {
-    const s = wearing('oakspine', { ballista: 1 }), ev = new EventBus();
-    for (let i = 0; i < 3; i++) { const o = orcAt(s, 400 + i * 40, 260); o.hp = o.maxhp = 1e9; }
-    s.run.ballT = 99;
-    for (let i = 0; i < 90 && !first(s.zones, (z) => z.kind === 'stake'); i++) step(s, 1 / 60, noInputs, ev);
-    const z = first(s.zones, (q) => q.kind === 'stake')!; expect(z.life).toBeGreaterThan(0);
-    step(s, 1 / 60, noInputs, ev); expect(z.used).toBe(true);
+  it('Oakspine: the circle is 50% wider and a lob roots what it hits', () => {
+    const base = createState(1, { ...freshRun(), levels: { root: 1 } }), s = wearing('oakspine'), ev = new EventBus();
+    expect(s.stats.radius).toBeCloseTo(base.stats.radius * MYTHIC_FX.oakRadius);
+    const o = orcAt(s, 700, 300); o.hp = o.maxhp = 1e9;
+    impact(s, ev, { tx: 700, ty: 300, r: s.stats.radius, dmg: 1 });
+    expect(o.root).toBeCloseTo(MYTHIC_FX.oakRootSecs);
   });
 
   it('Pale Moon: faster draw with the Moonbow, each shot costs wall but never below the floor', () => {
@@ -70,26 +70,27 @@ describe('mythic powers (TB-100)', () => {
     expect(s.run.barHp).toBeCloseTo(s.stats.barMax * MYTHIC_FX.moonCostFloor);
   });
 
-  it('The First Wolf: companion damage stacks with run time, capped', () => {
-    const s = wearing('first-wolf', { wolf: 1 }), ev = new EventBus(), o = orcAt(s, s.wolf.x + 5, s.wolf.y);
-    o.hp = o.maxhp = 1e9; s.run.runTime = 1e4; s.wolf.biteT = 99; step(s, 0, noInputs, ev);
-    expect(o.maxhp - o.hp).toBeCloseTo(s.stats.wolf * (1 + MYTHIC_FX.wolfStack * MYTHIC_FX.wolfMax));
+  it('The First Wolf: arrows deal +25% per 15 s of the wave, up to 4 stacks', () => {
+    const s = wearing('first-wolf'), o = orcAt(s, 900, 300);
+    s.run.waveT = 14; expect(mythicMult(s, o)).toBe(1);
+    s.run.waveT = 30; expect(mythicMult(s, o)).toBeCloseTo(1.5);
+    s.run.waveT = 600; expect(mythicMult(s, o)).toBeCloseTo(1 + MYTHIC_FX.wolfStack * MYTHIC_FX.wolfMax);
   });
 
-  it('Heartwood Splinter: the wall stands again once; the fall still pays its flat 1', () => {
-    const s = wearing('heartwood-splinter'), ev = new EventBus();
-    s.run.wave = 30; s.run.kills = 500;
-    s.run.barHp = 1; barricadeHit(s, ev, 1e12, 300);
-    expect(s.run.fallen).toBe(false); expect(s.run.barHp).toBeCloseTo(s.stats.barMax * MYTHIC_FX.splinterFrac);
-    expect(gain()).toBe(PRESTIGE.fallGain);
+  it('Heartwood Splinter: arrows grow to x3 as the wall falls; the wall still falls', () => {
+    const s = wearing('heartwood-splinter'), ev = new EventBus(), o = orcAt(s, 900, 300), max = s.stats.barMax;
+    s.run.barHp = max; expect(mythicMult(s, o)).toBeCloseTo(1);
+    s.run.barHp = max * 0.55; expect(mythicMult(s, o)).toBeCloseTo(2);
+    s.run.barHp = max * MYTHIC_FX.splinterFloor; expect(mythicMult(s, o)).toBeCloseTo(MYTHIC_FX.splinterMaxMult);
     s.run.barHp = 1; barricadeHit(s, ev, 1e12, 300); expect(s.run.fallen).toBe(true);
-    replant(s, ev); expect(s.run.splinterUsed).toBe(false);
   });
 
-  it('Starfall Cloak: starlight gathered strikes the strongest orc; Item Find +15%', () => {
+  it('Starfall Cloak: a star arrow hits x4 over a 1.5x circle', () => {
     const s = wearing('starfall-cloak'), ev = new EventBus();
-    const big = orcAt(s, 900, 200), small = orcAt(s, 600, 300); big.hp = big.maxhp = 1e9; small.loot = MYTHIC_FX.starfallEvery;
-    kill(s, ev, small);
-    expect(big.hp).toBeCloseTo(1e9 - s.stats.dmg * MYTHIC_FX.starfallMult); expect(s.starfallT).toBe(MYTHIC_FX.starfallCd);
+    s.rng.next = () => 0.99; lob(s, 100, 300, 700, 300, undefined, ev);
+    const plain = first(s.shots, (p) => p.kind === 'lob')!, d = plain.dmg, r = plain.r; s.shots.release(plain);
+    s.rng.next = () => 0; lob(s, 100, 300, 700, 300, undefined, ev);
+    const star = first(s.shots, (p) => p.kind === 'lob')!;
+    expect(star.dmg).toBeCloseTo(d * MYTHIC_FX.starfallMult); expect(star.r).toBeCloseTo(r * MYTHIC_FX.starfallRadius);
   });
 });

@@ -19,8 +19,6 @@ export type SimEvent =
   /** Mythics (TB-100): Thunder's Memory's stored bolt hit the whole wave; a Starfall struck; a stake was driven; the wall stood again. */
   | { t: 'thunder' }
   | { t: 'starCloak'; x: number; y: number }
-  | { t: 'stake'; x: number; y: number }
-  | { t: 'splinter' }
   /** The elf looses a lob (`ignite` too when Fire Arrows is owned), or a throwing knife leaves the hand (audio only). */
   | { t: 'loose' }
   | { t: 'ignite' }
