@@ -99,14 +99,14 @@ export const MYTHICS: readonly MythicDef[] = [
   { id: 'starfall-cloak', name: 'Starfall Cloak', slot: 'cloak', lines: [on('starCloak'), on('itemFind', 0.15)] },
 ];
 
-/** Mythic power numbers (TB-100). Since TB-128 the seven besides Pale Moon feed the elf's lob (BALANCE P-128). */
+/** Mythic power numbers (TB-100). Since TB-128 each one widens the elf's circle or quickens her draw (BALANCE P-128). */
 export const MYTHIC_FX = {
-  knifeMarkSecs: 3, knifeMarkMult: 2,
-  burnRampPerSec: 0.1, burnRampMax: 1.5,
+  knifeDraw: 0.25,
+  kilnReach: 2,
   thunderDrawSecs: 15, thunderDraw: 0.4,
   oakRadius: 1.5, oakRootSecs: 0.5,
   moonDraw: 0.5, moonCost: 0.02, moonCostFloor: 0.1,
-  wolfEvery: 15, wolfStack: 0.25, wolfMax: 4,
-  splinterMaxMult: 3, splinterFloor: 0.1,
+  wolfEvery: 3, wolfDraw: 0.5, wolfMax: 4,
+  splinterDraw: 4, splinterFloor: 0.5,
   starfallChance: 0.5, starfallMult: 5, starfallRadius: 1.5,
 } as const;

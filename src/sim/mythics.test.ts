@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { Item } from '../data/loot';
 import { MYTHICS, MYTHIC_FX } from '../data/lootTables';
 import { EventBus } from './events';
-import { impact, lob, mythicMult } from './combat';
+import { drawMult, impact, lob } from './combat';
 import { barricadeHit } from './barricade';
 import { createState, freshMeta, freshRun, SimState } from './state';
 import { Levels } from './stats';
@@ -26,19 +26,19 @@ describe('mythic powers (TB-100)', () => {
     expect(wearing('starfall-cloak').stats.starCloak).toBe(1);
   });
 
-  it('The Last Knife: a knife marks its orc; arrows deal x2 to marked orcs', () => {
+  it('The Last Knife: a knife that lands brings the next arrow closer', () => {
     const s = wearing('last-knife', { knives: 1 }), ev = new EventBus(), o = orcAt(s, 500, 300);
-    o.hp = o.maxhp = 1e6; s.run.knifeT = 99; step(s, 0, noInputs, ev);
-    for (let i = 0; i < 60 && o.mark <= 0; i++) step(s, 1 / 60, noInputs, ev);
-    expect(o.mark).toBeGreaterThan(0); expect(o.mark).toBeLessThanOrEqual(MYTHIC_FX.knifeMarkSecs);
-    expect(mythicMult(s, o)).toBe(MYTHIC_FX.knifeMarkMult);
-    o.mark = 0; expect(mythicMult(s, o)).toBe(1);
+    o.hp = o.maxhp = 1e6; s.run.knifeT = 99; s.run.shotT[0] = 0; step(s, 0, noInputs, ev);
+    let t = 0; for (let i = 0; i < 60 && (s.run.shotT[0] ?? 0) <= t + 1e-9; i++) { t += 1 / 60; step(s, 1 / 60, noInputs, ev); }
+    expect(s.run.shotT[0]).toBeGreaterThanOrEqual(t + MYTHIC_FX.knifeDraw - 1e-9);
   });
 
-  it('Heart of the Kiln: arrows deal +10% per second burned, capped', () => {
-    const s = wearing('heart-of-kiln'), o = orcAt(s, 900, 300);
-    o.burnT = 5; expect(mythicMult(s, o)).toBeCloseTo(1.5);
-    o.burnT = 60; expect(mythicMult(s, o)).toBeCloseTo(1 + MYTHIC_FX.burnRampMax);
+  it('Heart of the Kiln: the circle catches burning orcs farther out', () => {
+    const s = wearing('heart-of-kiln'), ev = new EventBus(), r = 50;
+    const k = (1 + MYTHIC_FX.kilnReach) / 2, near = orcAt(s, 700 + r * k, 300), off = orcAt(s, 700, 300 + r * k);
+    near.hp = near.maxhp = off.hp = off.maxhp = 1e9; near.r = off.r = 0; near.burn = 5;
+    impact(s, ev, { tx: 700, ty: 300, r, dmg: 10 });
+    expect(near.hp).toBeLessThan(1e9); expect(off.hp).toBe(1e9);
   });
 
   it("Thunder's Memory: after a storm the draw is twice as fast for a while", () => {
@@ -70,18 +70,18 @@ describe('mythic powers (TB-100)', () => {
     expect(s.run.barHp).toBeCloseTo(s.stats.barMax * MYTHIC_FX.moonCostFloor);
   });
 
-  it('The First Wolf: arrows deal +25% per 15 s of the wave, up to 4 stacks', () => {
-    const s = wearing('first-wolf'), o = orcAt(s, 900, 300);
-    s.run.waveT = 14; expect(mythicMult(s, o)).toBe(1);
-    s.run.waveT = 30; expect(mythicMult(s, o)).toBeCloseTo(1.5);
-    s.run.waveT = 600; expect(mythicMult(s, o)).toBeCloseTo(1 + MYTHIC_FX.wolfStack * MYTHIC_FX.wolfMax);
+  it('The First Wolf: the draw quickens with every few seconds of the wave, capped', () => {
+    const s = wearing('first-wolf'), W = MYTHIC_FX;
+    s.run.waveT = W.wolfEvery - 0.1; expect(drawMult(s)).toBe(1);
+    s.run.waveT = W.wolfEvery * 2; expect(drawMult(s)).toBeCloseTo(1 / (1 + 2 * W.wolfDraw));
+    s.run.waveT = 600; expect(drawMult(s)).toBeCloseTo(1 / (1 + W.wolfMax * W.wolfDraw));
   });
 
-  it('Heartwood Splinter: arrows grow to x3 as the wall falls; the wall still falls', () => {
-    const s = wearing('heartwood-splinter'), ev = new EventBus(), o = orcAt(s, 900, 300), max = s.stats.barMax;
-    s.run.barHp = max; expect(mythicMult(s, o)).toBeCloseTo(1);
-    s.run.barHp = max * 0.55; expect(mythicMult(s, o)).toBeCloseTo(2);
-    s.run.barHp = max * MYTHIC_FX.splinterFloor; expect(mythicMult(s, o)).toBeCloseTo(MYTHIC_FX.splinterMaxMult);
+  it('Heartwood Splinter: the draw quickens as the wall falls; the wall still falls', () => {
+    const s = wearing('heartwood-splinter'), ev = new EventBus(), max = s.stats.barMax, W = MYTHIC_FX;
+    s.run.barHp = max; expect(drawMult(s)).toBeCloseTo(1);
+    s.run.barHp = max * (1 + W.splinterFloor) / 2; expect(drawMult(s)).toBeCloseTo(1 / (1 + (W.splinterDraw - 1) / 2));
+    s.run.barHp = max * W.splinterFloor; expect(drawMult(s)).toBeCloseTo(1 / W.splinterDraw);
     s.run.barHp = 1; barricadeHit(s, ev, 1e12, 300); expect(s.run.fallen).toBe(true);
   });
 
