@@ -6,7 +6,7 @@ approval is quoted from docs/log. Icons rendered from these files: icons/<stem>.
 
 | item id (slot) | file | approved |
 |---|---|---|
-| ashwood-bow (bow) | ashwood-bow-r2_refine.glb | 1 Nov, "yes all are approved" |
+| ashwood-bow (bow) | ashwood-bow-i1_i23d.glb | 1 Nov, "replace these too" |
 | yew-longbow (bow) | yew-longbow-i2_i23d.glb | 1 Nov, "replace" |
 | hornbow (bow) | hornbow_refine.glb | 1 Nov, "yes all are approved" |
 | ironbark-recurve (bow) | bow_refine.glb | 1 Nov, "Approve, quiver (5)" |
@@ -24,9 +24,9 @@ approval is quoted from docs/log. Icons rendered from these files: icons/<stem>.
 | dusk-cloak (cloak) | dusk-cloak_refine.glb | 1 Nov, "yes all are approved" |
 | soft-boots (boots) | soft-boots_refine.glb | 1 Nov, "yes all are approved" |
 | root-boots (boots) | root-boots_refine.glb | 1 Nov, "yes all are approved" |
-| ranger-boots (boots) | ranger-boots_refine.glb | 1 Nov, "yes all are approved" |
+| ranger-boots (boots) | ranger-boots-i1_i23d.glb | 1 Nov, "replace these too" |
 | windstep-boots (boots) | windstep-boots_refine.glb | 1 Nov, "yes all are approved" |
-| acorn-charm (charm) | acorn-charm_refine.glb | 1 Nov, "yes all are approved" |
+| acorn-charm (charm) | acorn-charm-i1_i23d.glb | 1 Nov, "replace these too" |
 | bone-charm (charm) | bone-charm_refine.glb | 1 Nov, "yes all are approved" |
 | amber-charm (charm) | amber-charm_refine.glb | 1 Nov, "yes all are approved" |
 | star-charm (charm) | star-charm_refine.glb | 1 Nov, "yes all are approved" |
@@ -35,7 +35,7 @@ approval is quoted from docs/log. Icons rendered from these files: icons/<stem>.
 | thunders-memory (mythic) | thunders-memory-i1_i23d.glb | 1 Nov, "Approve all five" |
 | oakspine (mythic) | oakspine_refine.glb | 1 Nov, "yes all are approved" |
 | pale-moon (mythic) | pale-moon_refine.glb | 1 Nov, "yes all are approved" |
-| first-wolf (mythic) | first-wolf_refine.glb | 1 Nov, "yes all are approved" |
+| first-wolf (mythic) | first-wolf-i1_i23d.glb | 1 Nov, "replace these too" |
 | heartwood-splinter (mythic) | heartwood-splinter-i1_i23d.glb | 1 Nov, "replace this too" |
 | starfall-cloak (mythic) | starfall-cloak_refine.glb | 1 Nov, "yes all are approved" |
 

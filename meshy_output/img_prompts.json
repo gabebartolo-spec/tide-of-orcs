@@ -34,5 +34,21 @@
  "yew-longbow-i2": {
   "base": "yew-longbow-i1",
   "image": "Concept art of a single fantasy elven longbow, a game item, shown alone in side view, standing diagonally from lower left to upper right, centred on a plain pale grey background. A tall thick-limbed longbow of warm golden-orange yew wood with clearly visible pale sapwood stripe along the limbs, a wide leather-wrapped grip in the middle, light bone-coloured nocks at both tips, and a taut pale bowstring tied to both nocks, running in one straight line from the top tip to the bottom tip, so bow and string form a closed D shape. The limbs are broad and chunky so the bow reads clearly at small size. One bow only, no arrow, no hand, no stand, no other objects. Stylised low-poly toy-miniature look, flat matte colours, soft even lighting, no outlines, no text. Palette: dusty sage, rust, ochre and bone."
+ },
+ "ashwood-bow-i1": {
+  "base": "ashwood-bow-i1",
+  "image": "Concept art of a single fantasy elven longbow, a game item, shown upright in side view, centred on a plain pale grey background. A thick, sturdy limb of pale cream ashwood with clearly visible width, gently recurved tips, a wide grip wrapped in rust-red leather, and a taut bowstring tied to both tips forming a clean D shape. One bow only, a bold clear silhouette. No arrow, no hand, no quiver, no other objects. Stylised low-poly toy-miniature look, flat matte colours, soft even lighting, no outlines, no text. Palette: dusty sage, rust, ochre and bone."
+ },
+ "ranger-boots-i1": {
+  "base": "ranger-boots-i1",
+  "image": "Concept art of a single pair of fantasy elven ranger boots, a game item, standing side by side in three-quarter view, centred on a plain pale grey background. Mid-calf boots of rust-brown leather with a folded-over sage-green cuff, a few simple leather straps with small bronze buckles, sturdy dark soles. One pair only, a clear simple silhouette. No legs, no other objects. Stylised low-poly toy-miniature look, flat matte colours, soft even lighting, no outlines, no text. Palette: dusty sage, rust, ochre and bone."
+ },
+ "first-wolf-i1": {
+  "base": "first-wolf-i1",
+  "image": "Concept art of a single pair of legendary fantasy wolf-hide boots, a game item, standing side by side in three-quarter view, centred on a plain pale grey background. Knee-high boots of grey-brown wolf hide with a thick ring of pale grey wolf fur around the top, a small carved bone wolf-head clasp on the side of each boot, dark leather soles. One pair only, a clear simple silhouette. No legs, no other objects. Stylised low-poly toy-miniature look, flat matte colours, soft even lighting, no outlines, no text. Palette: dusty sage, rust, ochre and bone."
+ },
+ "acorn-charm-i1": {
+  "base": "acorn-charm-i1",
+  "image": "Concept art of a single fantasy elven acorn charm pendant, a game item, shown in front view, centred on a plain pale grey background. A natural acorn with a textured scaly ochre-brown cap and a smooth glossy chestnut nut, the cap bound with a thin bronze band, hanging from a small bronze ring and a short loop of leather cord. One charm only, a clear simple silhouette. No hand, no chain pile, no other objects. Stylised low-poly toy-miniature look, flat matte colours, soft even lighting, no outlines, no text. Palette: dusty sage, rust, ochre and bone."
  }
 }

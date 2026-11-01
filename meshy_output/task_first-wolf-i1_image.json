@@ -1,0 +1,16 @@
+{
+  "id": "01a1959e-9916-75d4-949c-6bd83c6359db",
+  "type": "text-to-image",
+  "ai_model": "gpt-image-2",
+  "prompt": "Concept art of a single pair of legendary fantasy wolf-hide boots, a game item, standing side by side in three-quarter view, centred on a plain pale grey background. Knee-high boots of grey-brown wolf hide with a thick ring of pale grey wolf fur around the top, a small carved bone wolf-head clasp on the side of each boot, dark leather soles. One pair only, a clear simple silhouette. No legs, no other objects. Stylised low-poly toy-miniature look, flat matte colours, soft even lighting, no outlines, no text. Palette: dusty sage, rust, ochre and bone.",
+  "status": "SUCCEEDED",
+  "progress": 100,
+  "created_at": 1793511561508,
+  "started_at": 1793511561515,
+  "finished_at": 1793511591140,
+  "expires_at": 1793770791140,
+  "image_urls": [
+    "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/uploads/image_01a1959e-9916-75d4-949c-6bd83c6359db_0.png?Expires=1793770791&Signature=WKx9rFknSix63o~xhGvegHnSuHQLawAB~n1nNxFDy0spoCXzjXmspJJbWqr~pXnO2GOWoXaqPeBsp9CBPTFBM02Qen7QGXg~uVm9p0fEnBdiuwxRzeSJzmt-snigwoUw~sYO1TzHO~3BWTCowDBTRYbBurbzZB10gK70hSX5iZkCW~u9R-Vz5E153~MySLs8vtfEoEc02UKbht03KyRBVBcVXJJ6OKk50JV2ASxRvpfUK3PQK7zvTkTB06JBuWTs6slRTv-JtQAP0-kCSGl2U~mKJv6Wcq5vu1u6QDPkS-nl2WqQWZnwv~NICSDMbNLM4eKprEiGctSGPJephQ6iUQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "consumed_credits": 9
+}
