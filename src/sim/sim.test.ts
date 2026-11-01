@@ -11,7 +11,7 @@ import { bossesReady, summonBoss } from './boss';
 import { damage } from './combat';
 import { canRally, rally } from './vanguard';
 import { crowdAim } from './combat';
-import { canReplant, replant } from './prestige';
+import { canPullBack, canReplant, pullBack, replant } from './prestige';
 import { createRng } from './rng';
 
 /** A still, very tough orc at (x, y), for hit tests. */
@@ -183,6 +183,14 @@ describe('prestige', () => {
     const s = createState(1, { ...freshRun(), wave: 11 }, freshMeta());
     expect(canReplant(s)).toBe(false);
     s.run.wave = 12; expect(canReplant(s)).toBe(true);
+  });
+  it('pulling back from wave 12 ends the run like a fall (TB-136)', () => {
+    const ev = new EventBus(), s = createState(1, { ...freshRun(), wave: 11, kills: 500 }, freshMeta());
+    expect(pullBack(s, ev)).toBe(false); expect(s.run.fallen).toBe(false);
+    s.run.wave = 12; expect(canPullBack(s)).toBe(true);
+    expect(pullBack(s, ev)).toBe(true);
+    expect(s.run.fallen).toBe(true); expect(s.meta.bestWave).toBe(12); expect(canPullBack(s)).toBe(false);
+    expect(ev.drain().some((e) => e.t === 'barricadeFell' && e.chosen)).toBe(true);
   });
 });
 

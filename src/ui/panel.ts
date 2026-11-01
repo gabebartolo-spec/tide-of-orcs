@@ -48,6 +48,8 @@ export class Panel {
     // After a fall the field gives way to the Grove page (TB-136): the tree and satchel are spent between runs
     $('fallen-btn').onclick = () => { this.onCue('click'); this.setMode('camp'); this.setTab('grove'); };
     $('camp-go').onclick = () => this.doReplant();
+    $('btn-pullback').textContent = STR.pullBack;
+    $('btn-pullback').onclick = () => { this.onCue('click'); this.game.pullBack(); };
     $('btn-settings').onclick = () => { this.onCue('click'); this.setMode('settings'); this.setTab('settings'); };
     $('camp-close').onclick = () => { this.onCue('click'); this.setMode('run'); };
     $('btn-save').onclick = () => { game.save(); this.toast(STR.saved); };
@@ -86,6 +88,7 @@ export class Panel {
     if (!$('pane-satchel').hidden) this.satchel.update();
     for (const b of $('hw-tree').querySelectorAll<HTMLButtonElement>('button[data-hw]')) b.disabled = !canBuyHw(s.meta, b.dataset.hw as HwId);
     const g = gain(s), ok = s.run.wave >= PRESTIGE.voluntaryWave && g > 0 && !s.run.fallen;
+    $('btn-pullback').hidden = !ok;
     $('pr-gain').textContent = '+' + g; ($('pr-btn') as HTMLButtonElement).disabled = !ok;
     $('pr-req').textContent = ok ? STR.replantReady(s.meta.bestWave) : STR.replantFrom(PRESTIGE.voluntaryWave);
     const b = document.getElementById('buy-btn') as HTMLButtonElement | null; if (b) b.disabled = !canBuy(s, NODE[this.tree.selected]);
@@ -120,7 +123,7 @@ export class Panel {
       else if (e.t === 'vanguardFell') this.toast(STR.vanFalls(VAN_NAME[e.type as VanType]));
       else if (e.t === 'barricadeRegrow') this.toast(STR.regrow);
       else if (e.t === 'loot' && e.kept && LOOT_TOAST.includes(e.rarity)) { const it = this.game.state.meta.loot.items.find((i) => i.uid === e.uid); if (it) this.toast(STR.lootFound(itemName(it))); }
-      else if (e.t === 'barricadeFell') this.showFallen();
+      else if (e.t === 'barricadeFell') this.showFallen(e.chosen);
     }
   }
 
@@ -205,7 +208,8 @@ export class Panel {
     this.toast(STR.imported);
   }
 
-  private showFallen(): void {
+  private showFallen(chosen = false): void {
+    $('fallen-title').textContent = chosen ? STR.pulledTitle : STR.fallenTitle;
     const r = this.game.state.run;
     $('fallen-sum').textContent = STR.fallenSummary(r.wave, fmt(r.kills), Math.floor(r.runTime / 60));
     $('fallen-rate').textContent = STR.fallenRate(fmt(r.earned / Math.max(1, r.runTime / 60)), this.game.state.meta.bestWave);

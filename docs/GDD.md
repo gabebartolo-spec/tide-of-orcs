@@ -104,7 +104,7 @@ All companion damage scales with Kinship (×1.2/rank) and Heartwood. Kinship als
 
 ## 10. Prestige — Replant the Grove
 - **Forced:** the barricade falls → the run ends → the only run action is Replant (the Heartwood tree and Settings stay open, §3).
-- **Voluntary:** from wave 12 while the wall still stands (TB-136: the Grove page now opens only after a fall, so this is unreachable mid-run for now; open question).
+- **Voluntary:** from wave 12 while the wall still stands (TB-136): a header Replant button appears and ends the run as a fall does ("You leave the wall standing"), with the same Heartwood; the summary, Grove page and March again follow.
 - Heartwood gained = `max(1, floor((wave − 4) × 0.75) + floor(runKills / 400))`, so a fall at any wave pays at least one Heartwood (TB-080).
 - Each Heartwood earned: +12% starlight, +12% damage (player, companions, vanguard), +12% barricade HP and +12% vanguard HP, permanent. Spending it on the Heartwood tree never lowers this bonus.
 - Reset: tree ranks, starlight, wave, vanguard, companions, timers, Deep Roots charge. Keep: Heartwood, lifetime slain, best wave, prestige count, settings.
