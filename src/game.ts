@@ -5,7 +5,7 @@
 import { VanType } from './data/balance';
 import { NodeId } from './data/skillTree';
 import { EventBus } from './sim/events';
-import { canReplant, replant } from './sim/prestige';
+import { canPullBack, canReplant, pullBack, replant } from './sim/prestige';
 import { SimState, createState, freshMeta, freshRun, recompute } from './sim/state';
 import { Inputs, step } from './sim/step';
 import { buy } from './sim/tree';
@@ -80,6 +80,8 @@ export class GameController {
   summonBoss(): boolean { return summonBoss(this.state, this.events); }
   /** Preview intent (TB-127): loose the shaman's fireball from (sx, sy) onto (tx, ty). The shaman itself casts it once TB-087 lands. */
   castFireball(sx: number, sy: number, tx: number, ty: number): void { castFireball(this.state, this.events, sx, sy, tx, ty); }
+  canPullBack(): boolean { return canPullBack(this.state); }
+  pullBack(): boolean { return pullBack(this.state, this.events); }
   canReplant(): boolean { return canReplant(this.state); }
   replant(): number { const rec = runRecord(this.state, gain(this.state)); const hw = replant(this.state, this.events); appendTelemetry({ ...rec, heartwoodGained: hw, heartwoodTotal: this.state.meta.heartwood }); this.save(); return hw; }
   /** Finished-run records as an export file (TB-070). */

@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="stylesheet" href="/src/ui/style.css">
 </head>
-<body>
+<body data-mode="run">
 <div class="wrap">
   <header>
     <h1>Let's Hunt Some <em>Orc!</em></h1>
@@ -17,9 +17,11 @@
       <div class="stat"><span class="k" id="k-kills"></span><span class="v" id="st-kills">0</span></div>
       <div class="stat"><span class="k" id="k-heart"></span><span class="v heart" id="st-heart">0</span></div>
     </div>
+    <button class="ghost" id="btn-pullback" hidden></button>
+    <button class="ghost" id="btn-settings"></button>
   </header>
   <div class="main">
-    <div>
+    <div class="play">
       <div class="field">
         <canvas id="game"></canvas>
         <div class="toast" id="toast"></div>
@@ -40,6 +42,7 @@
       </div>
     </div>
     <div class="panel">
+      <div class="campbar"><h2 id="camp-title"></h2><button class="ghost" id="camp-close"></button><button class="buy" id="camp-go"></button></div>
       <div class="tabs" role="tablist">
         <button role="tab" id="tab-grove" aria-selected="true"></button>
         <button role="tab" id="tab-satchel" aria-selected="false"></button>

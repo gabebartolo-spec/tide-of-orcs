@@ -5,9 +5,7 @@ Status: **Current** (v1.3, synced with the code 31 Oct 2026). Core-loop sections
 ## 1. Fantasy and tone
 You are the last warden of a grove on the western edge of a wide plain. Between you and the orc tide stands a timber barricade. The tide comes from the east, forever, and one day the wall will fall. That day isn't a loss. The grove burns down to a seed, you carry back Heartwood, and the next wall stands longer.
 
-Mood words: patient, verdant, lamplit, unhurried.
-
-**Voice (TB-115, director's rename pass, 1 Nov 2026).** Every name is the elf's commentary on the orcs: dry, unimpressed, has done this before. Names are short plain words said out loud; no adjective + noun, no fantasy vocabulary, and the name never repeats the tooltip. The name is the joke; the description stays plain and factual (the manual). Mix shapes (one word, a question, a sentence, running gags like Lads and Management) so the tree reads as one person talking. Player-facing vocabulary: Teeth (currency orcs drop; code `starlight`), Grudge (prestige currency; code `heartwood`), Burn It Down (prestige; code `replant`), the Fence (code `barricade`), the Lads (code `vanguard`): a Lad (`spear`) and a Show-off (`blade`); orcs: Grunt, Little One (`runner`), Lump (`brute`), Fancy One (`elite`), Management (`boss`). Code ids and save fields keep the old names. A siege you will eventually lose and learn from. Never gritty, never grimdark. Orcs are weather.
+Mood words: patient, verdant, lamplit, unhurried. A siege you will eventually lose and learn from. Never gritty, never grimdark. Orcs are weather.
 
 ## 2. Core loop
 
@@ -37,7 +35,7 @@ A timber palisade at x=150 (14 px wide) across the full field height. It has hea
 - `barMax = 400 × (1 + 0.25 × Stout Timber) × 1.25^Seasoned Timber × heart` (BALANCE.md owns the numbers).
 - Orcs reaching `x ≤ barX + barW + r` stop and swing once per second. Each swing at the wall deals `wallMult × atk` = 10 × 0.025 × maxhp (TB-080: a bare run falls at wave 3–5). Damage scales with waves exactly as orc HP does, so the wall's relative pressure comes from *how many* orcs leak, not from a separate curve. One swing takes at most a quarter of the wall's max (TB-125), so even a late orc needs four swings to fell a full wall.
 - **Patient Hands** mends 1% of max per second per rank. **Thornwall** damages anyone hacking the wall for 20% of player damage per second per rank. **Deep Roots** regrows the wall to 50% once per run the moment it would fall.
-- **Fallen:** when HP hits 0 the sim freezes, the field shows "The barricade has fallen" with wave, slain, minutes held, items found by rarity with the best drop of the run (TB-103) and Heartwood carried back, and a single button: *Replant the grove*. Replant is the only *run* action: the tree, the rally bar and boss summoning are closed. The Heartwood tree (Replant tab) and Settings stay usable while fallen, by design.
+- **Fallen:** when HP hits 0 the sim freezes, the field shows "The barricade has fallen" with wave, slain, minutes held, items found by rarity with the best drop of the run (TB-103) and Heartwood carried back, and a single button: *Replant the grove*. Replant is the only *run* action: the rally bar and boss summoning are closed. Its button, *To the grove*, opens the Grove page (TB-136, director 1 Nov: "upgrade tree should be a separate page AFTER you die"): the Grove tree, the Satchel, the Heartwood tree and Settings, with *March again* to replant. Starlight is spent there and carries into the next run; Grove levels are kept.
 - Buying Seasoned Timber heals the wall by the amount of max HP it adds (growing the wall is new timber).
 - Screen shake on each hit scaled to damage fraction; splintered dark planks appear from the top as HP drops.
 
@@ -45,18 +43,18 @@ The field hint (`STR.hint`) reads: "Hold the barricade. Move your pointer over t
 
 ## 4. Waves and orcs
 - Waves are timed: one every 24 s regardless of kills. `wave` is the only difficulty driver.
-- At first only grunts march. Every other kind joins only when the player summons it with its Grove node (Little Ones → Lumps → Fancy Ones). Summoning is the risk-for-reward lever: more danger, more starlight. Falling is fine and expected; it feeds the replant loop.
-- **Boss waves (TB-081).** Every 50 waves (wave 50, 100, 150 …; P-108, was 10) a boss wave unlocks and waits; nothing happens until the player presses *Summon the boss wave*. It is a 60 s challenge: regular marching pauses and a fixed script of mini-waves marches in (a shield line, edge flankers, rams, a wedge, Management with two Fancy Ones, a scatter, a last push; `src/data/bosses.ts`). Slay every one before the minute ends and it pays 40 × the wave's loot in starlight; otherwise the stragglers keep marching as ordinary orcs and regular marching resumes. Unsummoned boss waves stack. Management marches only in boss waves.
-- Every kind has its own spawn clock and two nodes: **Fury** (+30% health, +40% starlight per rank) and **Swarm** (spawns 20% more often per rank). Grunts' are Eat Something and Bring Friends.
+- At first only grunts march. Every other kind joins only when the player summons it with its Grove node (Goblin Runners → Brutes → Blackguard). Summoning is the risk-for-reward lever: more danger, more starlight. Falling is fine and expected; it feeds the replant loop.
+- **Boss waves (TB-081).** Every 50 waves (wave 50, 100, 150 …; P-108, was 10) a boss wave unlocks and waits; nothing happens until the player presses *Summon the boss wave*. It is a 60 s challenge: regular marching pauses and a fixed script of mini-waves marches in (a shield line, edge flankers, rams, a wedge, the Warboss with two Blackguard, a scatter, a last push; `src/data/bosses.ts`). Slay every one before the minute ends and it pays 40 × the wave's loot in starlight; otherwise the stragglers keep marching as ordinary orcs and regular marching resumes. Unsummoned boss waves stack. The Warboss marches only in boss waves.
+- Every kind has its own spawn clock and two nodes: **Fury** (+30% health, +40% starlight per rank) and **Swarm** (spawns 20% more often per rank). Grunts' are War Drums and Call the Horde.
 - Spawn position: x = field width + 24, y uniform in [50, H−50]. Hard cap 160 live orcs.
 
 | Type | HP × | Speed | Loot × | Radius | Spawns every | Unlock |
 |---|---|---|---|---|---|---|
 | Grunt | 1.0 | 48 | 1.0 | 12 | 1 × wave interval | always |
-| Little One (runner: small, fast) | 0.55 | 78 | 0.7 | 9 | 1.5 × | Little Ones |
-| Lump (brute: slow, strong) | 3.2 | 34 | 3.0 | 16 | 4 × | Lumps |
-| Fancy One (elite, armoured) | 8 | 42 | 8 | 14 | 10 × | Fancy Ones |
-| Management (boss) | 28 | 26 | 30 | 24 | only in a boss wave | — |
+| Runner (small, fast) | 0.55 | 78 | 0.7 | 9 | 1.5 × | Goblin Runners |
+| Brute (slow, strong) | 3.2 | 34 | 3.0 | 16 | 4 × | Brutes |
+| Elite | 8 | 42 | 8 | 14 | 10 × | Blackguard |
+| Warboss | 28 | 26 | 30 | 24 | only in a boss wave | — |
 
 Speed scales ×(1 + 0.008·wave). All orcs swing once per second: a vanguard takes 2.5% of the orc's max HP, the wall takes 10× that (25%).
 
@@ -106,7 +104,7 @@ All companion damage scales with Kinship (×1.2/rank) and Heartwood. Kinship als
 
 ## 10. Prestige — Replant the Grove
 - **Forced:** the barricade falls → the run ends → the only run action is Replant (the Heartwood tree and Settings stay open, §3).
-- **Voluntary:** from wave 12 while the wall still stands, via the Replant tab.
+- **Voluntary:** from wave 12 while the wall still stands (TB-136): a header Replant button appears and ends the run as a fall does ("You leave the wall standing"), with the same Heartwood; the summary, Grove page and March again follow.
 - Heartwood gained = `max(1, floor((wave − 4) × 0.75) + floor(runKills / 400))`, so a fall at any wave pays at least one Heartwood (TB-080).
 - Each Heartwood earned: +12% starlight, +12% damage (player, companions, vanguard), +12% barricade HP and +12% vanguard HP, permanent. Spending it on the Heartwood tree never lowers this bonus.
 - Reset: tree ranks, starlight, wave, vanguard, companions, timers, Deep Roots charge. Keep: Heartwood, lifetime slain, best wave, prestige count, settings.
@@ -117,7 +115,8 @@ All companion damage scales with Kinship (×1.2/rank) and Heartwood. Kinship als
 - **Header:** title, Starlight, Wave, Slain (lifetime), Heartwood (shown as `available / earned` once any is spent). Tabular numerals.
 - **Field:** 15:8 canvas. Top-left: barricade health bar (timber → amber → rose as it drops) with numbers, and vanguard count once Muster is owned. Bottom: wave timer bar. Toast at top. Fallen overlay covers the field when the wall is down.
 - **Rally bar** under the field: the hint line plus Rally Spearman and (after the node) Rally Bladedancer buttons showing cost, and the *Summon the boss wave* button (waiting count, then a countdown and orcs left while it runs).
-- **Grove panel:** tabs The Grove / Replant / Settings. The tree is a 760×920 logical canvas shown in a 460 px tall view (380 px on narrow screens) with pan/zoom (TB-021); it opens at 1:1 on Waking (TB-082), branches are curved and the camera eases to the selected node (TB-066). Detail card below with branch, prerequisite, rank, description, cost and a single Learn/Improve button. Affordable nodes pulse amber. Click selects; click again buys. The Replant tab holds voluntary Replant and the Heartwood tree; Settings holds volume, motion, number format, save export/import and the playtest run log download (TB-070).
+- **Pages (TB-136):** `body[data-mode]` is `run` (the field fills the screen under the header, which shows the stats and a Settings button, and the rally bar), `camp` (after a fall: the Grove page, tabs The Grove / Satchel / Replant / Settings, *March again*) or `settings` (an overlay over the field, *Back to the field*). Panels and the field sit in a carved living-wood frame on a deep forest green with a faint gilded vine; buttons are carved plaques (ART-STYLE §UI wood).
+- **Grove page:** tabs The Grove / Satchel / Replant / Settings. The tree is a 760×920 logical canvas shown in a 460 px tall view (380 px on narrow screens) with pan/zoom (TB-021); it opens at 1:1 on Waking (TB-082), branches are curved and the camera eases to the selected node (TB-066). Detail card below with branch, prerequisite, rank, description, cost and a single Learn/Improve button. Affordable nodes pulse amber. Click selects; click again buys. The Replant tab holds voluntary Replant and the Heartwood tree; Settings holds volume, motion, number format, save export/import and the playtest run log download (TB-070).
 - **Mobile:** panel stacks under the field; tree view 380 px tall; touch targets ≥ 44 px on coarse pointers (TB-064). Mobile is off the roadmap until the PC web build is done; this layout is kept, not extended.
 - All copy through `src/data/strings.ts`.
 

@@ -46,7 +46,7 @@ export type SimEvent =
   | { t: 'bite'; x: number; y: number }
   | { t: 'barricadeHit'; y: number; amount: number; frac: number }
   | { t: 'barricadeRegrow' }
-  | { t: 'barricadeFell'; wave: number; kills: number; runTime: number; heartwood: number }
+  | { t: 'barricadeFell'; wave: number; kills: number; runTime: number; heartwood: number; chosen?: boolean }
   | { t: 'vanguardRallied'; type: string; x: number; y: number }
   | { t: 'vanguardHit'; x: number; y: number }
   | { t: 'vanguardFell'; type: string; x: number; y: number }

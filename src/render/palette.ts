@@ -1,6 +1,6 @@
 /** Colour tokens. Mirrors docs/ART-STYLE.md. Render code uses these, never hex literals. */
 export const P = {
-  ink: '#1b2130', ink2: '#242d3f', ink3: '#30394d', line: '#3e4a60',
+  ink: '#161d15', ink2: '#1f281d', ink3: '#2a3527', line: '#3b4a37',
   cream: '#efe6d2', creamDim: '#b9b09c',
   plain: '#7c9676', plainPatch: '#86a07e', plainLush: '#728d6c', plainWorn: '#8e9a72', plainBare: '#a09c80',
   tuft: '#5e7858', tuftLight: '#a3b993', rock: '#8f9597', rockLight: '#b7bbb6', groveSide: '#9fb391',
@@ -20,10 +20,10 @@ export const P = {
   aimLine: 'rgba(239,230,210,.25)',
   aimFill: 'rgba(239,230,210,.08)',
   wallBar: '#c9a06a', nodeOwned: '#2b3448', nodeLabelLocked: '#6b7383',
-  wallShade: 'rgba(20,26,36,.3)', burnGlow: 'rgba(226,168,91,.5)',
+  wallShade: 'rgba(18,24,16,.3)', burnGlow: 'rgba(226,168,91,.5)',
   // set-bonus ground (TB-099): Cinderground and Moonwells
   cinder: 'rgba(226,168,91,.22)', cinderEdge: 'rgba(199,111,111,.45)', moonwell: 'rgba(205,189,234,.2)', moonwellEdge: 'rgba(205,189,234,.6)',
   // mythic powers (TB-100): Oakspine's stake, Starfall's beam
   stake: '#8a6a45', starfall: 'rgba(205,189,234,.85)',
-  shadow: 'rgba(20,26,36,.25)', dim: 'rgba(27,33,48,.6)', dim45: 'rgba(27,33,48,.45)',
+  shadow: 'rgba(18,24,16,.25)', dim: 'rgba(22,29,21,.6)', dim45: 'rgba(22,29,21,.45)',
 } as const;

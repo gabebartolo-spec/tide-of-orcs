@@ -18,7 +18,7 @@ import { LOOT_TOAST } from '../data/lootTables';
 import { RARITIES } from '../data/loot';
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string): T => document.getElementById(id) as T;
-const VAN_NAME: Record<VanType, string> = { spear: 'Lad', blade: 'Show-off' };
+const VAN_NAME: Record<VanType, string> = { spear: 'Spearman', blade: 'Bladedancer' };
 
 export class Panel {
   private toastTimer = 0;
@@ -33,7 +33,8 @@ export class Panel {
     $('k-star').textContent = STR.starlight; $('k-wave').textContent = STR.wave; $('k-kills').textContent = STR.slain; $('k-heart').textContent = STR.heartwood;
     $('pr-gain-k').textContent = STR.replantGainK; $('pr-btn').textContent = STR.replantBtn;
     $('pr-each').innerHTML = STR.replantEach(Math.round(PRESTIGE.heartPerHW * 100)); $('pr-reset').textContent = STR.replantReset; $('pr-kept').textContent = STR.replantKept; $('btn-reset').textContent = STR.wipe; $('autosave').textContent = STR.autosave;
-    $('fallen-title').textContent = STR.fallenTitle; $('fallen-hw-k').textContent = STR.fallenHW; $('fallen-btn').textContent = STR.fallenBtn;
+    $('fallen-title').textContent = STR.fallenTitle; $('fallen-hw-k').textContent = STR.fallenHW; $('fallen-btn').textContent = STR.fallenToCamp;
+    $('camp-title').textContent = STR.campTitle; $('camp-go').textContent = STR.campGo; $('camp-close').textContent = STR.campClose; $('btn-settings').textContent = STR.tabSettings;
     $('dep-spear').querySelector('.n')!.textContent = STR.rallySpear; $('dep-blade').querySelector('.n')!.textContent = STR.rallyBlade;
     $('dep-boss').querySelector('.n')!.textContent = STR.summonBoss;
 
@@ -44,7 +45,13 @@ export class Panel {
     $('dep-spear').onclick = () => this.rally('spear'); $('dep-blade').onclick = () => this.rally('blade');
     $('dep-boss').onclick = () => { game.summonBoss(); };
     $('pr-btn').onclick = () => { if (game.canReplant() && !game.state.run.fallen) this.doReplant(); };
-    $('fallen-btn').onclick = () => this.doReplant();
+    // After a fall the field gives way to the Grove page (TB-136): the tree and satchel are spent between runs
+    $('fallen-btn').onclick = () => { this.onCue('click'); this.setMode('camp'); this.setTab('grove'); };
+    $('camp-go').onclick = () => this.doReplant();
+    $('btn-pullback').textContent = STR.pullBack;
+    $('btn-pullback').onclick = () => { this.onCue('click'); this.game.pullBack(); };
+    $('btn-settings').onclick = () => { this.onCue('click'); this.setMode('settings'); this.setTab('settings'); };
+    $('camp-close').onclick = () => { this.onCue('click'); this.setMode('run'); };
     $('btn-save').onclick = () => { game.save(); this.toast(STR.saved); };
     $('btn-reset').onclick = () => this.wipe();
     tree.canvas.addEventListener('click', (e) => {
@@ -61,7 +68,7 @@ export class Panel {
     });
     $('hw-title').textContent = STR.hwTitle;
     $('hw-tree').onclick = (e) => { const id = (e.target as HTMLElement).closest('button')?.dataset.hw as HwId | undefined; if (id && game.buyHw(id)) { this.toast(STR.hwBought(HW_NODE[id].name)); this.renderHw(); } };
-    this.renderDetail(); this.renderHw();
+    this.renderDetail(); this.renderHw(); this.setMode('run');
     if (game.state.run.fallen) this.showFallen();
   }
 
@@ -81,6 +88,7 @@ export class Panel {
     if (!$('pane-satchel').hidden) this.satchel.update();
     for (const b of $('hw-tree').querySelectorAll<HTMLButtonElement>('button[data-hw]')) b.disabled = !canBuyHw(s.meta, b.dataset.hw as HwId);
     const g = gain(s), ok = s.run.wave >= PRESTIGE.voluntaryWave && g > 0 && !s.run.fallen;
+    $('btn-pullback').hidden = !ok;
     $('pr-gain').textContent = '+' + g; ($('pr-btn') as HTMLButtonElement).disabled = !ok;
     $('pr-req').textContent = ok ? STR.replantReady(s.meta.bestWave) : STR.replantFrom(PRESTIGE.voluntaryWave);
     const b = document.getElementById('buy-btn') as HTMLButtonElement | null; if (b) b.disabled = !canBuy(s, NODE[this.tree.selected]);
@@ -115,7 +123,7 @@ export class Panel {
       else if (e.t === 'vanguardFell') this.toast(STR.vanFalls(VAN_NAME[e.type as VanType]));
       else if (e.t === 'barricadeRegrow') this.toast(STR.regrow);
       else if (e.t === 'loot' && e.kept && LOOT_TOAST.includes(e.rarity)) { const it = this.game.state.meta.loot.items.find((i) => i.uid === e.uid); if (it) this.toast(STR.lootFound(itemName(it))); }
-      else if (e.t === 'barricadeFell') this.showFallen();
+      else if (e.t === 'barricadeFell') this.showFallen(e.chosen);
     }
   }
 
@@ -132,6 +140,16 @@ export class Panel {
       <button class="buy" id="buy-btn" ${canBuy(s, n) ? '' : 'disabled'}>${maxed ? STR.complete : !un ? STR.locked : lvl ? STR.improve : STR.learn}</button></div>`;
     $('buy-btn').onclick = () => this.buy(n.id);
     this.tree.canvas.setAttribute('aria-label', STR.treeLabel(n.name));
+  }
+
+  /** run: the field fills the screen; camp: the Grove, Satchel and Replant pages after a fall; settings: an overlay mid-run. */
+  setMode(m: 'run' | 'camp' | 'settings'): void {
+    document.body.dataset.mode = m;
+    $('camp-go').hidden = m !== 'camp'; $('camp-close').hidden = m !== 'settings';
+    $('camp-title').textContent = m === 'settings' ? STR.tabSettings : STR.campTitle;
+    dispatchEvent(new Event('resize'));
+    // The tree canvas has no size while hidden, so draw it once the camp page has laid out
+    requestAnimationFrame(() => { this.tree.resize(); this.tree.draw(this.game.state, this.game.state.t); });
   }
 
   setTab(k: 'grove' | 'satchel' | 'prestige' | 'settings'): void {
@@ -190,7 +208,8 @@ export class Panel {
     this.toast(STR.imported);
   }
 
-  private showFallen(): void {
+  private showFallen(chosen = false): void {
+    $('fallen-title').textContent = chosen ? STR.pulledTitle : STR.fallenTitle;
     const r = this.game.state.run;
     $('fallen-sum').textContent = STR.fallenSummary(r.wave, fmt(r.kills), Math.floor(r.runTime / 60));
     $('fallen-rate').textContent = STR.fallenRate(fmt(r.earned / Math.max(1, r.runTime / 60)), this.game.state.meta.bestWave);
@@ -200,13 +219,13 @@ export class Panel {
     $('fallen-hw').textContent = '+' + gain(this.game.state); $('fallen').hidden = false;
   }
   private doReplant(): void {
-    const hw = this.game.replant(); $('fallen').hidden = true; this.tree.selected = 'sharp'; this.renderDetail(); this.renderHw(); this.setTab('grove');
+    const hw = this.game.replant(); $('fallen').hidden = true; this.tree.selected = 'sharp'; this.renderDetail(); this.renderHw(); this.setMode('run');
     this.toast(STR.replanted(hw));
   }
   private wipe(): void {
     const btn = $('btn-reset');
     if (!this.wipeArmed) { this.wipeArmed = true; btn.textContent = STR.wipeConfirm; setTimeout(() => { this.wipeArmed = false; btn.textContent = STR.wipe; }, 4000); return; }
-    this.game.wipe(); this.wipeArmed = false; btn.textContent = STR.wipe; $('fallen').hidden = true; this.tree.selected = 'sharp'; this.renderDetail(); this.renderHw(); this.toast(STR.freshDawn);
+    this.game.wipe(); this.wipeArmed = false; btn.textContent = STR.wipe; $('fallen').hidden = true; this.setMode('run'); this.tree.selected = 'sharp'; this.renderDetail(); this.renderHw(); this.toast(STR.freshDawn);
   }
 
   toast(msg: string): void {

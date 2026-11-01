@@ -54,7 +54,8 @@ function frame(now: number): void {
   while (acc >= STEP) { game.tick(STEP); acc -= STEP; }
   const events = game.events.drain();
   game.noteEvents(events); field.consume(events, game.state); panel.handleEvents(events); audio.consume(events);
-  if (!document.hidden) field.draw(game.state, dt, game.aim);
+  // the field is hidden (zero-size) on the camp pages, so skip its draw there (TB-136)
+  if (!document.hidden && document.body.dataset.mode !== 'camp') field.draw(game.state, dt, game.aim);
   treeWrap.classList.toggle('burning', field.ceremony.burning);
   hudT += dt; if (hudT > 0.15) { hudT = 0; panel.update(); tree.draw(game.state, game.state.t); } else if (tree.live) tree.draw(game.state, game.state.t);
   saveT += dt; if (saveT > 20) { saveT = 0; game.save(); }

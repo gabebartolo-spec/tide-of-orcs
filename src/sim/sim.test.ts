@@ -11,7 +11,7 @@ import { bossesReady, summonBoss } from './boss';
 import { damage } from './combat';
 import { canRally, rally } from './vanguard';
 import { crowdAim } from './combat';
-import { canReplant, replant } from './prestige';
+import { canPullBack, canReplant, pullBack, replant } from './prestige';
 import { createRng } from './rng';
 
 /** A still, very tough orc at (x, y), for hit tests. */
@@ -103,6 +103,7 @@ describe('simulation', () => {
 describe('tree', () => {
   it('buys when affordable and unlocked, refuses otherwise', () => {
     const s = createState(1); const ev = new EventBus();
+    s.run.fallen = true; // the Grove is bought between runs (TB-136)
     expect(canBuy(s, NODE.sharp)).toBe(false);
     s.run.starlight = 100;
     expect(buy(s, ev, 'draw')).toBe(false); // parent not owned
@@ -125,6 +126,15 @@ describe('tree', () => {
     expect([...kinds({})]).toEqual(['grunt']);
     expect(kinds({ runners: 1, brutes: 1 }).has('runner')).toBe(true);
   });
+  it('only between runs: the tree refuses a buy while the wall stands', () => {
+    const s = createState(1); const ev = new EventBus(); s.run.starlight = 100;
+    expect(buy(s, ev, 'sharp')).toBe(false);
+  });
+  it('the tree and banked starlight carry over a replant', () => {
+    const s = createState(1); const ev = new EventBus(); s.run.starlight = 100; s.run.fallen = true;
+    buy(s, ev, 'sharp'); replant(s, ev);
+    expect(s.run.levels.sharp).toBe(1); expect(s.run.starlight).toBe(88); expect(s.run.fallen).toBe(false);
+  });
   it('node price scales with the wave past 10', () => {
     const s = createState(1);
     expect(costOf(s, NODE.sharp)).toBe(12);
@@ -133,7 +143,7 @@ describe('tree', () => {
   });
   it('growing the wall heals the new timber', () => {
     const s = createState(1); const ev = new EventBus();
-    s.run.barHp = 200; s.run.starlight = 1000;
+    s.run.barHp = 200; s.run.starlight = 1000; s.run.fallen = true;
     buy(s, ev, 'timber');
     expect(s.stats.barMax).toBeCloseTo(500); expect(s.run.barHp).toBeCloseTo(300);
   });
@@ -144,7 +154,7 @@ describe('vanguard', () => {
     const s = createState(1); const ev = new EventBus();
     s.run.starlight = 1000;
     expect(canRally(s, 'spear')).toBe(false);
-    buy(s, ev, 'muster');
+    s.run.fallen = true; buy(s, ev, 'muster'); s.run.fallen = false;
     expect(rally(s, ev, 'spear')).toBe(true);
     expect(rally(s, ev, 'spear')).toBe(true);
     expect(rally(s, ev, 'spear')).toBe(false); // cap 2
@@ -153,7 +163,7 @@ describe('vanguard', () => {
   });
   it('spearmen keep the wall healthier over the first two minutes', () => {
     const a = run(9, 120);
-    const s = createState(9); const ev = new EventBus(); s.run.starlight = 200; buy(s, ev, 'muster'); rally(s, ev, 'spear'); rally(s, ev, 'spear');
+    const s = createState(9); const ev = new EventBus(); s.run.starlight = 200; s.run.fallen = true; buy(s, ev, 'muster'); s.run.fallen = false; rally(s, ev, 'spear'); rally(s, ev, 'spear');
     for (let i = 0; i < 120 / STEP; i++) step(s, STEP, aimed(s), ev);
     expect(s.run.barHp).toBeGreaterThanOrEqual(a.s.run.barHp);
     expect(s.run.kills).toBeGreaterThanOrEqual(a.s.run.kills); // the aimed bow already clears early waves
@@ -173,6 +183,14 @@ describe('prestige', () => {
     const s = createState(1, { ...freshRun(), wave: 11 }, freshMeta());
     expect(canReplant(s)).toBe(false);
     s.run.wave = 12; expect(canReplant(s)).toBe(true);
+  });
+  it('pulling back from wave 12 ends the run like a fall (TB-136)', () => {
+    const ev = new EventBus(), s = createState(1, { ...freshRun(), wave: 11, kills: 500 }, freshMeta());
+    expect(pullBack(s, ev)).toBe(false); expect(s.run.fallen).toBe(false);
+    s.run.wave = 12; expect(canPullBack(s)).toBe(true);
+    expect(pullBack(s, ev)).toBe(true);
+    expect(s.run.fallen).toBe(true); expect(s.meta.bestWave).toBe(12); expect(canPullBack(s)).toBe(false);
+    expect(ev.drain().some((e) => e.t === 'barricadeFell' && e.chosen)).toBe(true);
   });
 });
 
