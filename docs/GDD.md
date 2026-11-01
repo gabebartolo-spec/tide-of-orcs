@@ -39,8 +39,6 @@ A timber palisade at x=150 (14 px wide) across the full field height. It has hea
 - Buying Seasoned Timber heals the wall by the amount of max HP it adds (growing the wall is new timber).
 - Screen shake on each hit scaled to damage fraction; splintered dark planks appear from the top as HP drops.
 
-The field hint (`STR.hint`) reads: "Hold the barricade. Move your pointer over the field to aim the bow; it looses on its own. Rally vanguard with starlight to meet the tide in melee." On coarse pointers `STR.hintTouch` says "Touch and hold the field to aim the bow" instead.
-
 ## 4. Waves and orcs
 - Waves are timed: one every 24 s regardless of kills. `wave` is the only difficulty driver.
 - At first only grunts march. Every other kind joins only when the player summons it with its Grove node (Goblin Runners → Brutes → Blackguard). Summoning is the risk-for-reward lever: more danger, more starlight. Falling is fine and expected; it feeds the replant loop.
@@ -115,14 +113,14 @@ All companion damage scales with Kinship (×1.2/rank). Kinship also scales vangu
 ## 11. UI
 - **Header:** title, Starlight, Wave, Slain (lifetime), Heartwood (shown as `available / earned` once any is spent). Tabular numerals.
 - **Field:** 15:8 canvas. Top-left: barricade health bar (timber → amber → rose as it drops) with numbers, and vanguard count once Muster is owned. Bottom: wave timer bar. Toast at top. Fallen overlay covers the field when the wall is down.
-- **Rally bar** under the field: the hint line plus Rally Spearman and (after the node) Rally Bladedancer buttons showing cost, and the *Summon the boss wave* button (waiting count, then a countdown and orcs left while it runs).
+- **Rally bar** under the field: Rally Spearman and (after the node) Rally Bladedancer buttons showing cost, and the *Summon the boss wave* button (waiting count, then a countdown and orcs left while it runs).
 - **Pages (TB-136):** `body[data-mode]` is `run` (the field fills the screen under the header, which shows the stats and a Settings button, and the rally bar), `camp` (after a fall: the Grove page, tabs The Grove / Satchel / Replant / Settings, *March again*) or `settings` (an overlay over the field, *Back to the field*). Panels and the field sit in a carved living-wood frame on a deep forest green with a faint gilded vine; buttons are carved plaques (ART-STYLE §UI wood).
 - **Grove page:** tabs The Grove / Satchel / Replant / Settings. The tree is a 760×920 logical canvas shown in a 460 px tall view (380 px on narrow screens) with pan/zoom (TB-021); it opens at 1:1 on Waking (TB-082), branches are curved and the camera eases to the selected node (TB-066). Detail card below with branch, prerequisite, rank, description, cost and a single Learn/Improve button. Affordable nodes pulse amber. Click selects; click again buys. The Replant tab holds voluntary Replant and the Heartwood tree; Settings holds volume, motion, number format, save export/import and the playtest run log download (TB-070).
 - **Mobile:** panel stacks under the field; tree view 380 px tall; touch targets ≥ 44 px on coarse pointers (TB-064). Mobile is off the roadmap until the PC web build is done; this layout is kept, not extended.
 - All copy through `src/data/strings.ts`.
 
 ## 12. Onboarding (no tutorial)
-- First 10 s: the player's pointer drifts onto the field, the strike circle appears with its draw ring filling, and the first arrow arcs into it; the hint line confirms it. Orcs reach the wall and the health bar ticks.
+- First 10 s: the player's pointer drifts onto the field, the strike circle appears with its draw ring filling, and the first arrow arcs into it. Orcs reach the wall and the health bar ticks.
 - Sharpened Tips is pre-selected and affordable at 12 starlight. Muster is 50 and sits right next to the root.
 - First purchase of any new node fires a toast ("Grey Wolf joins the grove"); first rally fires "Spearman takes the field".
 - The Replant tab is visible from the start and says "Voluntary replant from wave 12", so the long goal is in view before the first fall explains the short one.

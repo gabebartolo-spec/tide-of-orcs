@@ -45,8 +45,7 @@ header h1 em { color: var(--amber); font-style: normal; }
 .fallen h2 { font-family: var(--display); font-weight: 400; font-size: 2.125rem; margin: 0; }
 .fallen p { margin: 0; color: var(--text-dim); max-width: 44ch; line-height: 1.45; }
 .fallen .big { font-family: var(--display); font-size: 2.75rem; color: var(--rose); font-weight: 400; }
-.rally { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; margin-top: 0.5rem; }
-.rally .hint { font-size: 0.875rem; color: var(--text-dim); flex: 1 1 12.5rem; min-width: 0; }
+.rally { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; justify-content: flex-end; margin-top: 0.5rem; }
 .deploy { background: var(--ink-2); border: 0.0625rem solid var(--line); border-radius: 0.5rem; padding: 0.5rem 0.75rem; display: flex; flex-direction: column; align-items: flex-start; gap: 0.125rem; min-width: 9.375rem; }
 .deploy:hover:not(:disabled) { border-color: var(--amber); }
 .deploy:disabled { opacity: .5; cursor: default; }
