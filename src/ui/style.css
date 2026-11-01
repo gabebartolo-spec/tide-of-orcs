@@ -7,7 +7,7 @@
 @font-face { font-family: "Atkinson Hyperlegible"; font-style: normal; font-weight: 700; font-display: swap; src: url("./fonts/atkinson-700.woff2") format("woff2"); }
 :root {
   /* Tokens mirror src/render/palette.ts and docs/ART-STYLE.md */
-  --ink: #1b2130; --ink-2: #242d3f; --ink-3: #30394d; --line: #3e4a60;
+  --ink: #161d15; --ink-2: #1f281d; --ink-3: #2a3527; --line: #3b4a37;
   --cream: #efe6d2; --cream-dim: #b9b09c;
   --sage: #8fa98a; --sage-deep: #6b8468;
   --amber: #e2a85b; --rose: #c76f6f; --lilac: #cdbdea; --moss: #7f8f52; --timber: #8a6a46;
@@ -55,7 +55,7 @@ header h1 em { color: var(--amber); font-style: italic; }
 .tabs button[aria-selected="true"] { color: var(--cream); border-bottom-color: var(--amber); }
 .tabs button:focus-visible, .buy:focus-visible, .ghost:focus-visible, .deploy:focus-visible, #tree:focus-visible { outline: 2px solid var(--amber); outline-offset: -2px; }
 .tab { display: flex; flex-direction: column; }
-.treewrap { position: relative; height: 460px; overflow: hidden; background: radial-gradient(ellipse at 50% 100%, #2b3448 0%, var(--ink-2) 70%); }
+.treewrap { position: relative; height: 460px; overflow: hidden; background: radial-gradient(ellipse at 50% 100%, var(--ink-3) 0%, var(--ink-2) 70%); }
 #tree { position: absolute; inset: 0; display: block; cursor: grab; width: 100%; height: 100%; touch-action: none; }
 #tree.dragging { cursor: grabbing; }
 .detail { border-top: 1px solid var(--line); padding: 12px 14px; min-height: 128px; display: flex; flex-direction: column; gap: 6px; }
@@ -126,3 +126,56 @@ header h1 em { color: var(--amber); font-style: italic; }
 #sat-count.flash { animation: count-flash 0.8s ease-out; }
 @keyframes line-in { from { opacity: 0.15; color: var(--amber); } }
 .affixes li.flash { animation: line-in 0.6s ease-out; }
+
+/* Living wood (TB-131): panels are carved heartwood. Bark rim and root-knot corners (wood/frame.svg), faint ring grain on
+   every face (wood/grain.svg), roots instead of rules (wood/root.svg), a sprout on the active tab (wood/sprout.svg).
+   Colours are the palette's timber tokens; nothing new. */
+:root { --bark: #5a4634; --timber-dark: #7a5c3c; --splinter: #4e3a28;
+  --grain: url("./wood/grain.svg"); --root: url("./wood/root.svg") repeat-x left center / 160px 10px; }
+/* Carved frame: Blender render (art/ui/carve.py), rendered at 1024px. Shipped at 512px; slice 125 keeps the knot and leaves whole; the border is the
+   plank's width and the image is drawn wider so the leaves lap over the corners of the content. */
+.panel, .field { border: 30px solid transparent; border-image: url("./wood/frame.png") 125 / 58px / 0 stretch; border-radius: 0; outline: 0; }
+.panel { background: var(--grain), var(--ink-2); background-clip: padding-box; }
+.field { aspect-ratio: auto; background-clip: padding-box; }
+.field canvas { aspect-ratio: 15 / 8; height: auto; }
+.tabs { border-bottom: 0; background: var(--root); background-position: left bottom; padding-bottom: 4px; }
+.tabs button { position: relative; border-bottom: 0; padding-top: 16px; }
+.tabs button[aria-selected="true"]::before { content: ""; position: absolute; left: 50%; top: 1px; width: 24px; height: 14px; margin-left: -12px; background: url("./wood/sprout.svg"); transform-origin: 50% 100%; animation: sprout .45s ease-out; }
+@keyframes sprout { from { transform: scale(.2); opacity: 0; } }
+.detail, .footer { border-top: 0; background: var(--root); background-position: left top; padding-top: 16px; }
+.treewrap { background: radial-gradient(ellipse at 50% 100%, var(--ink-3) 0%, transparent 70%), var(--grain); }
+/* Buttons are cut plaques: split-wood ends (clip-path), carved bevel from inset light and shade */
+.buy, .deploy, .ghost { clip-path: polygon(7px 0, calc(100% - 7px) 0, 100% 50%, calc(100% - 7px) 100%, 7px 100%, 0 50%); border-radius: 0; }
+.buy { background: var(--grain), linear-gradient(#ebb871, var(--amber) 55%, #c98f45); box-shadow: inset 0 1px 0 #f4d29b, inset 0 -2px 0 #9c6a33; padding-inline: 20px; }
+.buy:disabled { background: var(--grain), var(--ink-3); box-shadow: inset 0 1px 0 var(--line), inset 0 -2px 0 var(--ink); }
+.deploy, .ghost { border: 0; background: var(--grain), linear-gradient(var(--bark), var(--splinter)); box-shadow: inset 0 1px 0 var(--timber), inset 0 -2px 0 #3a2c1e; padding-inline: 18px; }
+.ghost { color: var(--cream); }
+.deploy:hover:not(:disabled), .ghost:hover { box-shadow: inset 0 1px 0 var(--amber), inset 0 -2px 0 #3a2c1e, inset 0 0 0 1px var(--amber); }
+.deploy.boss:not(:disabled) { box-shadow: inset 0 1px 0 var(--amber), inset 0 -2px 0 #3a2c1e, inset 0 0 0 1px var(--amber); }
+.item, .hwnode { background: var(--grain), var(--ink); border-color: var(--splinter); }
+.set select, .set input, .settings textarea { border-color: var(--splinter); }
+header h1 { padding-bottom: 8px; background: url("./wood/root.svg") no-repeat left bottom / 160px 10px; }
+@media (prefers-reduced-motion: reduce) { .tabs button[aria-selected="true"]::before { animation: none; } }
+
+/* Modes (TB-131). run: the field takes the screen, sized to fit the viewport at 15:8 under the header and rally bar.
+   camp: after a fall the field steps aside and the Grove, Satchel and Replant fill the page. settings: an overlay mid-run. */
+.main { grid-template-columns: 1fr; }
+.play { width: min(100%, calc((100vh - 150px) * 15 / 8 + 36px)); margin-inline: auto; }
+body:not([data-mode="camp"]) .panel { display: none; }
+body[data-mode="settings"] .panel { display: flex; position: fixed; z-index: 5; top: 50%; left: 50%; transform: translate(-50%, -50%); width: min(560px, calc(100vw - 24px)); max-height: calc(100vh - 24px); overflow: auto; }
+body[data-mode="settings"] .tabs { display: none; }
+body[data-mode="camp"] .play { display: none; }
+body[data-mode="camp"] .panel { width: min(1180px, 100%); margin-inline: auto; }
+body[data-mode="camp"] .treewrap { height: max(420px, calc(100vh - 330px)); }
+.campbar { display: flex; align-items: center; gap: 10px; padding: 6px 8px 10px; }
+.campbar h2 { font-family: var(--display); font-weight: 500; font-size: 22px; margin: 0 auto 0 0; }
+header #btn-settings { align-self: center; }
+
+/* Gilded vine (TB-131): a faint gold leaf-and-blossom tile behind the page and the camp pages */
+body { background-image: url("./wood/gilt.svg"); background-size: 320px 320px; }
+.panel { background-image: url("./wood/gilt.svg"), var(--grain); background-size: 320px 320px, auto; }
+body[data-mode="settings"]::after { content: ""; position: fixed; inset: 0; z-index: 4; background: var(--ink); opacity: .6; }
+/* Carved plaque (art/ui/carve.py button.png, 385x94): 9-slice with fill, ends cut 30px so the split points stay whole */
+.deploy, .ghost { clip-path: none; border: solid transparent; border-width: 8px 12px; border-image: url("./wood/button.png") 20 30 fill / 8px 12px stretch;
+  background: none; box-shadow: none; text-shadow: 0 1px 2px var(--ink); }
+.deploy:hover:not(:disabled), .ghost:hover, .deploy.boss:not(:disabled) { box-shadow: none; filter: brightness(1.18); }

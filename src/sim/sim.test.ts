@@ -103,6 +103,7 @@ describe('simulation', () => {
 describe('tree', () => {
   it('buys when affordable and unlocked, refuses otherwise', () => {
     const s = createState(1); const ev = new EventBus();
+    s.run.fallen = true; // the Grove is bought between runs (TB-131)
     expect(canBuy(s, NODE.sharp)).toBe(false);
     s.run.starlight = 100;
     expect(buy(s, ev, 'draw')).toBe(false); // parent not owned
@@ -125,6 +126,15 @@ describe('tree', () => {
     expect([...kinds({})]).toEqual(['grunt']);
     expect(kinds({ runners: 1, brutes: 1 }).has('runner')).toBe(true);
   });
+  it('only between runs: the tree refuses a buy while the wall stands', () => {
+    const s = createState(1); const ev = new EventBus(); s.run.starlight = 100;
+    expect(buy(s, ev, 'sharp')).toBe(false);
+  });
+  it('the tree and banked starlight carry over a replant', () => {
+    const s = createState(1); const ev = new EventBus(); s.run.starlight = 100; s.run.fallen = true;
+    buy(s, ev, 'sharp'); replant(s, ev);
+    expect(s.run.levels.sharp).toBe(1); expect(s.run.starlight).toBe(88); expect(s.run.fallen).toBe(false);
+  });
   it('node price scales with the wave past 10', () => {
     const s = createState(1);
     expect(costOf(s, NODE.sharp)).toBe(12);
@@ -133,7 +143,7 @@ describe('tree', () => {
   });
   it('growing the wall heals the new timber', () => {
     const s = createState(1); const ev = new EventBus();
-    s.run.barHp = 200; s.run.starlight = 1000;
+    s.run.barHp = 200; s.run.starlight = 1000; s.run.fallen = true;
     buy(s, ev, 'timber');
     expect(s.stats.barMax).toBeCloseTo(500); expect(s.run.barHp).toBeCloseTo(300);
   });
@@ -144,7 +154,7 @@ describe('vanguard', () => {
     const s = createState(1); const ev = new EventBus();
     s.run.starlight = 1000;
     expect(canRally(s, 'spear')).toBe(false);
-    buy(s, ev, 'muster');
+    s.run.fallen = true; buy(s, ev, 'muster'); s.run.fallen = false;
     expect(rally(s, ev, 'spear')).toBe(true);
     expect(rally(s, ev, 'spear')).toBe(true);
     expect(rally(s, ev, 'spear')).toBe(false); // cap 2
@@ -153,7 +163,7 @@ describe('vanguard', () => {
   });
   it('spearmen keep the wall healthier over the first two minutes', () => {
     const a = run(9, 120);
-    const s = createState(9); const ev = new EventBus(); s.run.starlight = 200; buy(s, ev, 'muster'); rally(s, ev, 'spear'); rally(s, ev, 'spear');
+    const s = createState(9); const ev = new EventBus(); s.run.starlight = 200; s.run.fallen = true; buy(s, ev, 'muster'); s.run.fallen = false; rally(s, ev, 'spear'); rally(s, ev, 'spear');
     for (let i = 0; i < 120 / STEP; i++) step(s, STEP, aimed(s), ev);
     expect(s.run.barHp).toBeGreaterThanOrEqual(a.s.run.barHp);
     expect(s.run.kills).toBeGreaterThanOrEqual(a.s.run.kills); // the aimed bow already clears early waves

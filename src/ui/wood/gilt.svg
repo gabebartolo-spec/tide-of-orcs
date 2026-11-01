@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" width="320" height="320">
+  <!-- Gilded vine tile (TB-131): a wandering stem with willow leaves and five-petal blossoms, drawn to wrap edge to edge -->
+  <defs>
+    <path id="lf" d="M0 0 C6 -7 18 -8 26 0 C18 8 6 7 0 0 Z M2 0 L22 0"/>
+    <g id="bl">
+      <circle r="2.2"/>
+      <g fill="none">
+        <ellipse cx="0" cy="-6" rx="3" ry="5"/><ellipse cx="0" cy="-6" rx="3" ry="5" transform="rotate(72)"/>
+        <ellipse cx="0" cy="-6" rx="3" ry="5" transform="rotate(144)"/><ellipse cx="0" cy="-6" rx="3" ry="5" transform="rotate(216)"/>
+        <ellipse cx="0" cy="-6" rx="3" ry="5" transform="rotate(288)"/>
+      </g>
+    </g>
+  </defs>
+  <g stroke="#e2a85b" stroke-width="1.1" fill="none" stroke-linecap="round" opacity=".16">
+    <path d="M-10 250 C40 230 60 180 110 170 S190 190 220 140 S270 60 330 70"/>
+    <path d="M110 170 C100 140 120 120 140 110"/>
+    <path d="M220 140 C245 150 260 180 250 205"/>
+    <path d="M60 330 C80 300 70 280 95 260"/>
+    <path d="M150 -10 C140 20 160 40 150 60"/>
+    <g fill="#e2a85b" fill-opacity=".35">
+      <use href="#lf" transform="translate(40 232) rotate(-40)"/>
+      <use href="#lf" transform="translate(75 195) rotate(150)"/>
+      <use href="#lf" transform="translate(160 178) rotate(20)"/>
+      <use href="#lf" transform="translate(205 160) rotate(-120)"/>
+      <use href="#lf" transform="translate(262 92) rotate(-70)"/>
+      <use href="#lf" transform="translate(290 70) rotate(15)"/>
+      <use href="#lf" transform="translate(128 116) rotate(-150)"/>
+      <use href="#lf" transform="translate(252 186) rotate(70)"/>
+      <use href="#lf" transform="translate(85 278) rotate(-60)"/>
+      <use href="#lf" transform="translate(152 32) rotate(200)"/>
+    </g>
+    <use href="#bl" transform="translate(140 110)" fill="#e2a85b"/>
+    <use href="#bl" transform="translate(250 205) scale(.8)" fill="#e2a85b"/>
+    <use href="#bl" transform="translate(95 260) scale(.9)" fill="#e2a85b"/>
+    <use href="#bl" transform="translate(150 60) scale(.7)" fill="#e2a85b"/>
+  </g>
+</svg>

@@ -5,10 +5,10 @@ Status: **Current** (v1.3, checked against `src/render/palette.ts` and `src/data
 ## Palette tokens (`src/render/palette.ts`)
 | Token | Hex | Use |
 |---|---|---|
-| ink | #1b2130 | Page background, night ground |
-| ink2 | #242d3f | Panels |
-| ink3 | #30394d | Raised controls, disabled |
-| line | #3e4a60 | Borders, locked edges |
+| ink | #161d15 | Page background, night ground |
+| ink2 | #1f281d | Panels |
+| ink3 | #2a3527 | Raised controls, disabled |
+| line | #3b4a37 | Borders, locked edges |
 | cream | #efe6d2 | Primary text, arrows, hit flash |
 | creamDim | #b9b09c | Secondary text, labels |
 | sage | #8fa98a | Plain highlight patches |
