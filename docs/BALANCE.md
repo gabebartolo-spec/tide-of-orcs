@@ -610,7 +610,7 @@ Tuning draft (2 Nov; director: "Draft numbers for me"). Two candidate sets per s
 | The First Wolf | `wolfEvery=5` | 0 / 0 | `wolfEvery=5, wolfStack=0.5` | +1 / 0 |
 | The First Wolf, stress test | `wolfEvery=1, wolfStack=1` (×5 lob damage from 4 s into every wave) | 0 / 0 | | |
 
-Proposed: Starfall Cloak set B (half the arrows fall as stars, ×5) and Thunder's Memory set B (15 s window, draw ×0.4). Both meet the +10% target.
+Applied (director 2 Nov, "Yes, both"): Starfall Cloak set B (half the arrows fall as stars, ×5) and Thunder's Memory set B (15 s window, draw ×0.4), now in `MYTHIC_FX` and the power text. Both meet the +10% target.
 
 Finding: extra lob damage is worth nothing. ×5 damage for 20 of every 24 s adds 0 waves; the powers that work all reach more orcs (Oakspine and Starfall widen the circle, Thunder and Pale Moon speed the draw). The lob already kills what it lands on, so the wall falls to the orcs it never reaches. Last Knife, Kiln, Splinter and First Wolf multiply damage only, so no numbers can bring them to target. Also note `WAVE_LEN` is 24 s: First Wolf as built (`wolfEvery=15`) never passes one stack.
 

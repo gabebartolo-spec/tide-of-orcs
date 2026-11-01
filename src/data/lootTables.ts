@@ -103,10 +103,10 @@ export const MYTHICS: readonly MythicDef[] = [
 export const MYTHIC_FX = {
   knifeMarkSecs: 3, knifeMarkMult: 2,
   burnRampPerSec: 0.1, burnRampMax: 1.5,
-  thunderDrawSecs: 6, thunderDraw: 0.5,
+  thunderDrawSecs: 15, thunderDraw: 0.4,
   oakRadius: 1.5, oakRootSecs: 0.5,
   moonDraw: 0.5, moonCost: 0.02, moonCostFloor: 0.1,
   wolfEvery: 15, wolfStack: 0.25, wolfMax: 4,
   splinterMaxMult: 3, splinterFloor: 0.1,
-  starfallChance: 0.25, starfallMult: 4, starfallRadius: 1.5,
+  starfallChance: 0.5, starfallMult: 5, starfallRadius: 1.5,
 } as const;
