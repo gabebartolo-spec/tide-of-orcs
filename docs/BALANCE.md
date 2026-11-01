@@ -143,6 +143,24 @@ Report columns per minute: wave, starlight, kills/min, kills, wall %, vanguard c
 
 ## Proposed
 
+### P-148 · Boss tiers: how hard each tier hits, and what it pays (2026-11-02, TB-148)
+Director chose *unlock across runs*: clearing a boss wave while at your highest tier unlocks the next for good; at March you pick any unlocked tier. Shipped switched off (`TIERS.max` 1). Each tier above 1 multiplies orc HP by `hp^(tier−1)`, starlight per kill and per boss by `loot^(tier−1)`, and boss Heartwood by `1 + hw × (tier−1)`, from wave 1.
+
+Sim: `npx tsx sim/run.ts --minutes 360 --hwbuy --quiet --tune TIERS.max=6,TIERS.hp=…,TIERS.loot=…,TIERS.hw=…`, seed 1, on TB-154 balance (main 2cad1a3). The bot marches at its highest tier after a run that cleared a boss, otherwise one tier lower (`--tiertop` always marches at the highest: it walls itself at the top tier, clears 3–5 bosses in 6 h and ends with *less* Heartwood than tiers off, 74–91 vs 128).
+
+| Set | hp | loot | hw | Tiers reached (play min) | Bosses | Heartwood at 6 h | Best wave | First mythic (min) | Starlight/min, last run |
+|---|---|---|---|---|---|---|---|---|---|
+| off | – | – | – | – | 26 | 128 | 37 | 247 | 8.1k |
+| B | 2 | 2 | 0.5 | t2 84, t3 110, t4 137, t5 146, t6 155 | 20 | 213 | 29 | 305 | 1.9M |
+| C | 3 | 3 | 0.5 | t2 84, t3 127, t4 136 | 21 | 162 | 30 | 136 | 820k |
+| D | 4 | 3 | 1 | t2 84, t3 127, t4 152 | 21 | 203 | 31 | 142 | 1.0M |
+| E | 2 | 2 | 1 | t2 84, t3 110, t4 137, t5 146, t6 171 | 23 | 318 | 29 | 186 | 1.6M |
+| F | 2 | 1.5 | 1 | t2 84, t3 127, t4 136, t5 160, t6 185 | 22 | 314 | 29 | 284 | 453k |
+
+Read: tier 2 always opens at the first boss clear (84 min). ×2 HP lets the bot climb to tier 6 in 2.5–3 h; ×3–×4 HP stalls at tier 4. Best wave drops (29–31 vs 37) because each tier is fought at higher orc HP, so best wave stops being the progress number and the tier takes over. Heartwood: `hw` 1 gives 2.5× tiers-off (314–318), `hw` 0.5 gives 1.3–1.7×. Starlight per minute at high tiers is 50–240× tiers-off; `loot` 1.5 (F) keeps it lowest while Heartwood holds. Higher `hp` (C, D) brings the first mythic forward (more boss loot rolls at tier 3–4).
+
+Proposed: **F** (`max 6, hp 2, loot 1.5, hw 1`): six tiers reached over ~3 h, the most Heartwood bar E, and the smallest starlight jump. Not in Current until the director picks.
+
 ### P-154 · Early game: no one-shots, thinner wall, harder orcs (2026-11-01, TB-154, applied)
 Director: arrows one-shot early orcs, the wall is far too healthy (no damage until wave 3), orcs hit far too soft. Before: lob 9 × 3 = 27 vs wave-1 grunt 10 HP (one shot to wave 7); wall 400, a wave-1 swing 2.5. Director chose the hard set: `LOB.dmgMult` 3 → 1, `BARRICADE.baseHp` 400 → 150, `BARRICADE.wallMult` 10 → 25 (wave-1 swing 6.25; vanguard damage unchanged, it reads `orcAtkFrac`).
 

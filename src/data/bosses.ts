@@ -25,3 +25,17 @@ export const BOSS_SCRIPT: readonly MiniWave[] = [
   { at: 32, kind: 'runner', ys: [0.1, 0.25, 0.4, 0.55, 0.7, 0.85] },   // a scatter
   { at: 40, kind: 'brute', ys: [0.2, 0.5, 0.8] },                      // the last push
 ];
+
+/** Boss tiers (TB-148, dev plan §8 #1, Nodebuster): clearing a boss wave while playing your highest tier unlocks the
+ *  next one for good; at March the player picks any tier unlocked. Each tier above the first multiplies orc HP and
+ *  starlight per kill, and boss Heartwood, from wave 1. `max: 1` keeps tiers off (P-148 proposes the numbers). */
+export const TIERS = {
+  max: 1,     // highest tier that can be unlocked; 1 = tiers off
+  hp: 1,      // orc HP × hp^(tier − 1)
+  loot: 1,    // starlight per kill and per boss clear × loot^(tier − 1)
+  hw: 0,      // boss Heartwood × (1 + hw × (tier − 1))
+};
+
+export const tierHp = (tier: number): number => TIERS.hp ** (tier - 1);
+export const tierLoot = (tier: number): number => TIERS.loot ** (tier - 1);
+export const tierHw = (tier: number): number => 1 + TIERS.hw * (tier - 1);
