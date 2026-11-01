@@ -1,5 +1,5 @@
-// 160-orc frame check (TB-150). With the dev server on :5199 (npm run dev -- --port 5199), run:
-//   node tools/perf160.mjs <width> <height> <uncapped 0|1> <cpu throttle> <debug port>
+// 160-orc frame check (TB-150). Start the dev server (npm run dev -- --port 5230), then run:
+//   TIDE_URL=http://localhost:5230/ node tools/perf160.mjs <width> <height> <uncapped 0|1> <cpu throttle> <debug port>
 // Real Chrome, headless, one window size, CSS scale 1; prints fps, frame and draw times as one JSON line.
 import { tmpdir } from 'node:os';
 import { spawn } from 'node:child_process';
@@ -13,7 +13,7 @@ let list; for (let i = 0; i < 40 && !list; i++) { await sleep(250); try { list =
 const ws = new WebSocket(list.find((t) => t.type === 'page').webSocketDebuggerUrl); await new Promise((r) => (ws.onopen = r));
 let id = 0; const pend = new Map(); ws.onmessage = (m) => { const d = JSON.parse(m.data); pend.get(d.id)?.(d); };
 const cdp = (method, params = {}) => new Promise((r) => { const i = ++id; pend.set(i, r); ws.send(JSON.stringify({ id: i, method, params })); });
-await cdp('Page.navigate', { url: 'http://localhost:5199/' }); await sleep(3000);
+await cdp('Page.navigate', { url: process.env.TIDE_URL ?? 'http://localhost:5230/' }); await sleep(3000);
 if (Number(throttle) > 1) await cdp('Emulation.setCPUThrottlingRate', { rate: Number(throttle) });
 const expr = `(async () => {
   const step = await import('/src/sim/step.ts'), data = await import('/src/data/balance.ts');

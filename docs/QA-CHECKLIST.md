@@ -128,23 +128,23 @@ Regression pass after sprites (TB-068 first sheet), bundled fonts (TB-118), the 
 
 Findings: favicon 404 (fixed here); TB-124 and TB-125 file run 2's two unfiled notes. Not covered: the desktop package (unchanged since TB-120 checked it on this commit), I1/I2 (settings untouched since run 2).
 
-## Run 4 (1 Nov 2026, dev build, claude): J1 at 1080p and 4K (TB-150)
-`node tools/perf160.mjs`: real Chrome (headless, CSS scale 1) on this PC (Ryzen 7 9700X; Chrome chose the integrated Radeon GPU, not the RTX 4070 Super). The field is held at 160 orcs (`ORC_CAP`) every frame with unkillable orcs spread over the field, so the elf, VFX and the sim tick run as in play. 2 s warm-up, then 6 s measured. Mid-range CPUs are stood in for by Chrome's CPU throttle (4× and 6× slower than this one). "Field canvas" is the game area beside the panel, in device pixels.
+## Run 4 (1 Nov 2026, dev build of main at f14f1d6, claude): J1 at 1080p and 4K (TB-150)
+`tools/perf160.mjs`: real Chrome (headless, CSS scale 1) on this PC (Ryzen 7 9700X; Chrome chose the integrated Radeon GPU, not the RTX 4070 Super). The field is held at 160 orcs (`ORC_CAP`) every frame with unkillable orcs spread over the field, so the elf, VFX and the sim tick run as in play. 2 s warm-up, then 6 s measured. Mid-range CPUs are stood in for by Chrome's CPU throttle (4× and 6× slower than this one). "Field canvas" is the game area beside the panel, in device pixels.
 
 | Window | Field canvas | CPU | fps | Frame median / p95 / p99 (ms) | `field.draw` median / p95 (ms) |
 |---|---|---|---|---|---|
-| 1920×1080 | 1458×778 | 1× | 120 (display cap) | 8.3 / 8.4 / 8.5 | 0.6 / 1.1 |
-| 1920×1080, uncapped | 1458×778 | 1× | 402 | 1.2 / 18 / 19 | 0.6 / 1.1 |
-| 3840×2160 | 3378×1802 | 1× | 117 (display cap) | 8.3 / 8.5 / 16.7 | 0.8 / 1.2 |
-| 3840×2160, uncapped | 3378×1802 | 1× | 235 | 1.4 / 19 / 36 | 0.7 / 1.6 |
-| 1920×1080 | 1458×778 | 4× slower | 104 | 8.3 / 16.7 / 25 | 4.3 / 6.4 |
-| 3840×2160 | 3378×1802 | 4× slower | 98 | 8.4 / 16.7 / 25 | 4.4 / 6.8 |
-| 1920×1080 | 1458×778 | 6× slower | 77 | 8.4 / 25 / 33 | 6.1 / 9.4 |
-| 3840×2160 | 3378×1802 | 6× slower | 60 | 16.7 / 33 / 42 | 7.6 / 17 |
+| 1920×1080 | 1768×943 | 1× | 119 (display cap 120) | 8.3 / 8.4 / 8.5 | 0.8 / 1.2 |
+| 1920×1080, uncapped | 1768×943 | 1× | 402 | 1.3 / 10 / 19 | 0.7 / 2.8 |
+| 3840×2160 | 3740×1995 | 1× | 92 | 8.4 / 16.7 / 16.8 | 0.8 / 1.2 |
+| 3840×2160, uncapped | 3740×1995 | 1× | 125 | 1.7 / 36 / 53 | 0.9 / 1.7 |
+| 1920×1080 | 1768×943 | 4× slower | 92 | 8.3 / 25 / 33 | 4.6 / 8.5 |
+| 3840×2160 | 3740×1995 | 4× slower | 90 | 8.4 / 25 / 33 | 4.7 / 8.6 |
+| 1920×1080 | 1768×943 | 6× slower | 70 | 8.4 / 33 / 42 | 6.5 / 14 |
+| 3840×2160 | 3740×1995 | 6× slower | 53 | 16.7 / 33 / 50 | 8.6 / 23 |
 
 | Check | Result | Evidence |
 |---|---|---|
 | J1 at 1080p | pass | 60 fps or better with 160 orcs at every CPU speed tried, down to 6× slower than this PC |
-| J1 at 4K | pass | 60 fps or better down to 4× slower; at 6× slower it averages 60 with p95 frames at 33 ms |
+| J1 at 4K | pass down to 4× slower | 90–92 fps at full speed and at 4× slower; at 6× slower it averages 53 fps |
 
-What it says: the cost is CPU, not pixels. Going from 1080p to 4K (2.9× the pixels) barely moves draw time at full speed (0.6 → 0.7 ms), but each step of CPU slowdown scales it. A mid-range desktop CPU (about 2× slower than a 9700X in one thread) sits between the 1× and 4× rows: comfortably over 60 fps at 4K. Not covered: a real mid-range PC, a discrete GPU path, and the Electron desktop build (same Chromium, so expected to match).
+What it says: the game's own drawing code costs the same at 4K as at 1080p (0.8 ms) and grows with a slower CPU. The pixels cost the browser instead. With no frame cap, 4K runs at 125 fps against 402 at 1080p, and 5% of 4K frames take over 36 ms on this integrated GPU. A mid-range desktop CPU (about 2× slower than a 9700X in one thread) sits between the 1× and 4× rows, so it is over 60 fps at 4K. Not covered: a real mid-range PC, the discrete GPU, and the Electron desktop build (same Chromium). A first pass ran by mistake against another worktree's dev server on port 5199. Those numbers are discarded, and the script now defaults to its own port.
