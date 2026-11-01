@@ -10,8 +10,8 @@ export const ORC_WOB = 8;
 export const PLAYER = { baseDmg: 9, baseFireRate: 1.2, arrowSpeed: 520, critMult: 3, fanRad: 0.09, aimHomingRadius: 70 } as const;
 /** The elf's arcing shot: fired only while the player aims; lands on the aim circle and hits every orc inside it. */
 export const LOB = {
-  cd: 2.5,          // seconds between shots before Quick Draw
-  dmgMult: 3,       // × player damage, to every orc in the circle
+  cd: 1.25,         // seconds between shots before Quick Draw (TB-154, was 2.5)
+  dmgMult: 1,       // × player damage, to every orc in the circle: 9 takes two shots for a wave-1 grunt (TB-154, was 3)
   radius: 20,       // circle radius before Wide Volley (40 hit 2–4 orcs per arrow at wave 1, TB-132)
   flight: 0.7,      // seconds in the air
   arc: 90,          // apex height, px
@@ -20,13 +20,13 @@ export const LOB = {
 } as const;
 
 export const BARRICADE = {
-  baseHp: 400,
+  baseHp: 150,          // TB-154 (director 1 Nov), was 400
   timberMult: 1.25,     // per Seasoned Timber rank
   regenPerRank: 0.01,   // fraction of max per second per Patient Hands rank
   spikesPerRank: 0.2,   // fraction of player dmg per second per Thornwall rank
   bulwarkFrac: 0.5,     // Deep Roots regrow fraction
   orcAtkFrac: 0.025,     // orc dps to vanguard = this × orc maxhp
-  wallMult: 10,         // the wall takes this × an orc's hit: a bare run falls at wave 3–4 (TB-080)
+  wallMult: 25,         // the wall takes this × an orc's hit: 6.25 a swing at wave 1 (TB-154, was 10)
   orcSwing: 1.0,        // seconds between orc swings
   maxHitFrac: 0.25,     // one hit takes at most this × the wall's max, so late orcs can't one-shot it (TB-125)
 } as const;
