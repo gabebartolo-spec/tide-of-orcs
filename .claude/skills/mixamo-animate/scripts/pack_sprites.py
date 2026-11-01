@@ -28,8 +28,8 @@ ANIMS = {
     "orc.runner.attack": (15, True, "orc.runner", 2.4),
     "orc.brute": (30, True, "orc.brute", 2.4),  # radius 16 (orcs.ts) already makes it bigger than a grunt
     "orc.brute.attack": (15, True, "orc.brute", 2.4),
-    "elf": (10, False, "elf", 3.0),  # idle loop, every 3rd clip frame (build_sprites.ps1)
-    "elf.attack": (15, False, "elf", 3.0),
+    "elf": (30, False, "elf", 3.0),  # idle loop, every clip frame (TB-144)
+    "elf.attack": (30, False, "elf", 3.0),  # all 32 frames; field.ts scrubs it with the bow charge
     "orc.wolfrider.attack": (15, True, "orc.wolfrider.attack", 2.6),  # no walk clip: the attack is its own body key; frames from wolfrider/render_wr_sheet.py
 }
 anchors = json.load(open(os.path.join(src, "anchors.json"), encoding="utf-8-sig"))
