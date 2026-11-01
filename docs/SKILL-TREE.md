@@ -129,7 +129,7 @@ Lists live in `src/save/schema.ts`; each migration drops the keys from `run.leve
 interface Stats {
   dmg: number;            // 9 × 1.25^sharp
   fireRate: number;       // 1.2 × 1.15^draw  (ranger/warden volleys / s; the elf lobs)
-  lobCd: number;          // 2.5 / 1.15^draw  (seconds between the elf's lobs)
+  lobCd: number;          // 1.25 / 1.15^draw  (seconds between the elf's lobs)
   radius: number;         // 40 × 1.2^wide    (strike circle, px)
   arrows: number;         // 1 + multi        (lobs per shot; arrows per ranger volley)
   pierce: number;         // pierce           (extra lob strikes; ranger arrow pierce)

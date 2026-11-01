@@ -59,18 +59,18 @@ describe('simulation', () => {
     expect(a.s.run.starlight).toBe(b.s.run.starlight);
     expect(a.s.run.kills).toBe(b.s.run.kills);
   });
-  it('spawns orcs, kills some and earns starlight within a minute', () => {
-    const { s, ev } = run(1, 60);
-    expect(s.run.kills).toBeGreaterThan(5);
-    expect(s.run.starlight).toBeGreaterThan(10);
-    expect(s.run.wave).toBe(3);
+  it('spawns orcs, kills some and earns starlight before the first fall', () => {
+    const { s, ev } = run(1, 20);
+    expect(s.run.kills).toBeGreaterThan(0);
+    expect(s.run.starlight).toBeGreaterThan(0);
+    expect(s.run.wave).toBe(1);
     expect(ev.drain().some((e) => e.t === 'kill')).toBe(true);
   });
   it('the barricade takes damage and eventually falls with no purchases', () => {
     const { s } = run(2, 20 * 60);
     expect(s.run.fallen).toBe(true);
     expect(s.run.barHp).toBe(0);
-    expect(s.run.wave).toBeGreaterThanOrEqual(3); expect(s.run.wave).toBeLessThanOrEqual(4); // a bare run falls at wave 3–4 (TB-080)
+    expect(s.run.wave).toBeGreaterThanOrEqual(2); expect(s.run.wave).toBeLessThanOrEqual(3); // a bare run falls at wave 2–3 (TB-154)
   });
   it('a fallen run stops ticking', () => {
     const { s } = run(2, 20 * 60); const t = s.t; const ev = new EventBus();
@@ -96,7 +96,7 @@ describe('simulation', () => {
   });
   it('Wide Volley widens the circle 20% per rank; Quick Draw shortens the draw', () => {
     expect(deriveStats({ root: 1, wide: 2 }).radius / deriveStats({ root: 1 }).radius).toBeCloseTo(1.44);
-    expect(deriveStats({ root: 1, draw: 1 }).lobCd).toBeCloseTo(2.5 / 1.15);
+    expect(deriveStats({ root: 1, draw: 1 }).lobCd).toBeCloseTo(1.25 / 1.15);
   });
 });
 
@@ -143,9 +143,9 @@ describe('tree', () => {
   });
   it('growing the wall heals the new timber', () => {
     const s = createState(1); const ev = new EventBus();
-    s.run.barHp = 200; s.run.starlight = 1000; s.run.fallen = true;
+    s.run.barHp = 100; s.run.starlight = 1000; s.run.fallen = true;
     buy(s, ev, 'timber');
-    expect(s.stats.barMax).toBeCloseTo(500); expect(s.run.barHp).toBeCloseTo(300);
+    expect(s.stats.barMax).toBeCloseTo(187.5); expect(s.run.barHp).toBeCloseTo(137.5);
   });
 });
 

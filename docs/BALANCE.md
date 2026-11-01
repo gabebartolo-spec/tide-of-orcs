@@ -23,7 +23,7 @@ Crowd control (TB-126, P-126): a stun or root is never topped up or lengthened w
 
 ### The elf's lob (TB-079)
 ```
-lobCd   = 2.5 / 1.15^draw          seconds between shots; fires only while aimed
+lobCd   = 1.25 / 1.15^draw         seconds between shots; fires only while aimed
 radius  = 20 × 1.2^wide            strike circle, px (40 until TB-132)
 dmg     = 3 × player dmg           to every orc within radius + orc radius
 flight  = 0.7 s, apex 90 px; Longshaft repeat strikes 0.35 s apart; Split Shot arrows land within 0.6 × radius
@@ -43,7 +43,7 @@ Rangers and Wardens keep straight volleys at `fireRate = 1.2 × 1.15^draw` per s
 - Storm: 4× dmg × kin per jump, 6 s cooldown, 5 targets, 140 px jump radius, seeks from 200 px past the wall.
 - Hawk: 2.5× dmg × kin, 4 s, 60 px radius. Treant: 3× dmg × kin, 3 s, 160 px from the wall.
 - Ballista: 40 × 1.5^bolt × kin every 4 s, infinite pierce. Knives: 5 × 1.35^nimble × kin every 1.4 s ÷ 1.2^nimble.
-- Moonbow: the strike circle settles on the nearest orc within 70 px of the aim point (`aimHomingRadius`). The lob's reward for aiming is `LOB.dmgMult` 3 to every orc in the circle.
+- Moonbow: the strike circle settles on the nearest orc within 70 px of the aim point (`aimHomingRadius`). The lob's reward for aiming is `LOB.dmgMult` 1 (×1 player damage) to every orc in the circle: a wave-1 grunt takes two lobs, wave 5 three (TB-154, director 2026-11-01; was 3, one shot to wave 7).
 - Node multipliers (`NODE_FX` in `src/data/balance.ts`): Sharpen ×1.25^r dmg, Moonbow ×1.6 dmg, Quick Draw ×1.15^r fire rate and ÷1.15^r lob cooldown, Wide Volley ×1.2^r radius, Keen Eye +0.08 crit per rank, Gleaning ×1.15^r starlight, Kinship ×1.2^r companion and vanguard dmg, Fangs ×1.4^r wolf dmg, Nimble Wrist ×1.2^r knife rate and ×1.35^r knife dmg, Iron Bolts ×1.5^r ballista dmg. Per-kind Fury/Swarm (incl. War Drums and Call the Horde for grunts) are `FOE_FX` in `src/data/orcs.ts`: ×1.3^r hp, ×1.4^r loot, ×1.2^r spawn rate.
 
 #### Other constants in `src/data/` (reference, not previously listed)
@@ -62,17 +62,18 @@ Rangers and Wardens keep straight volleys at `fireRate = 1.2 × 1.15^draw` per s
 
 ### Barricade
 ```
-barMax   = 400 × (1 + 0.25 × hw_timber) × 1.25^timber
+barMax   = 150 × (1 + 0.25 × hw_timber) × 1.25^timber        (TB-154: was 400)
+wall hit = 25 × atk = 25 × 0.025 × orc maxhp per swing        (TB-154: wallMult was 10)
 regen    = 0.01 × repair × barMax per second
 spikes   = 0.2 × spikes × dmg per second to each orc hacking the wall
 Deep Roots: once per run, regrow to 0.5 × barMax instead of falling
 ```
 | timber | barMax |
 |---|---|
-| 0 | 400 |
-| 3 | 781 |
-| 5 | 1,221 |
-| 10 | 3,725 |
+| 0 | 150 |
+| 3 | 293 |
+| 5 | 458 |
+| 10 | 1,397 |
 
 ### Vanguard
 ```
@@ -99,9 +100,9 @@ Status measured 31 Oct 2026 at 8791ac2, seed 1, 25 min, player model `crowdAim` 
 
 | Target | Value | Status |
 |---|---|---|
-| First purchase | ≤ 30 s | met: 16 s (greedy) |
+| First purchase | ≤ 30 s | first run: 14–16 starlight by its fall at ~36 s with front-orc aim, so one Sharp rank at the first Replant (nodes are bought only between runs, TB-136) |
 | Muster affordable | ≤ 2 min | met: 50 starlight earned by 56 s (greedy never buys it in run 1) |
-| First barricade fall, first run | wave 4–6, minute 1.5–2.5 (TB-080 `wallMult` 10: early runs are short on purpose; director, 2026-10-31) | met: wave 5, minute 1.6–1.8 (greedy and dps, seeds 1–3, TB-054) |
+| First barricade fall, first run | wave 2–3, under a minute (TB-154 hard set: early runs are short on purpose; director, 2026-11-01) | met: wave 2 at 0.5 min, runs 1–7 fall at wave 2–4 in ~25 s (greedy, seed 1, 60 min, TB-154) |
 | A spearman earns its keep | buys at least as many seconds of wall life per starlight as a Seasoned Timber rank (median over waves 3/6/10/14, seeds 1–3) | met, barely: median ratio 1.06, 7 of 12 cases ≥ 1 at `wallMult` 10 (`sim/spearman.ts`, TB-086); was 1.5 before TB-080 |
 | Breakout | a run passes wave 15 within 15 min of total play | met: greedy after 4–6 short runs (6–12 min), that run falls at wave 24–26 (TB-054) |
 | Bare archer, no purchases, holds | ≥ 4 waves | met (falls wave 4–5) |
@@ -141,6 +142,22 @@ Mythic flags (TB-128): `--mythic <id>` wears that mythic from the start and ends
 Report columns per minute: wave, starlight, kills/min, kills, wall %, vanguard count, nodes owned, HW, falls. Summary line gives the first fall wave, every fall wave in order (`Falls:`), replants, Heartwood, best wave. (Before TB-084 the "First fall" field printed the last fall.) Writes `sim/out/<policy>-<date>.md` unless `--quiet`. CI runs 30 minutes of greedy as a smoke test.
 
 ## Proposed
+
+### P-154 · Early game: no one-shots, thinner wall, harder orcs (2026-11-01, TB-154, applied)
+Director: arrows one-shot early orcs, the wall is far too healthy (no damage until wave 3), orcs hit far too soft. Before: lob 9 × 3 = 27 vs wave-1 grunt 10 HP (one shot to wave 7); wall 400, a wave-1 swing 2.5. Director chose the hard set: `LOB.dmgMult` 3 → 1, `BARRICADE.baseHp` 400 → 150, `BARRICADE.wallMult` 10 → 25 (wave-1 swing 6.25; vanguard damage unchanged, it reads `orcAtkFrac`).
+
+`npm run balance -- --minutes 60 --hwbuy --quiet --tune …`, greedy, seed 1 (the bot takes its first wall damage at wave 1 even before):
+
+| Set | Runs 1–7 fall (wave@min) | Best wave | Heartwood | Bosses |
+|---|---|---|---|---|
+| before | 3@1.1, 3@1, 5@0.8, 5@0.8, 5@0.9, 6@1.5, 7@1.7 | 21 | 16 | 0 |
+| lob ×1 only | 3@0.9, 3@0.8, 4@0.7, 5@0.8, 5@1.1, 6@1.3, 6@1.4 | 20 | 18 | 0 |
+| mild 250 / ×15 | 2@0.6, 2@0.6, 4@0.5 ×5 | 20 | 21 | 0 |
+| mid 200 / ×20 | 2@0.5, 2@0.5, 4@0.4 ×5 | 19 | 22 | 0 |
+| hard 150 / ×25 | 2@0.5, 2@0.4, 3@0.4 ×4, 4@0.4 | 19 | 24 | 0 |
+| **hard + `LOB.cd` 1.25 (applied)** | 2@0.5, 2@0.5, 3@0.4, 4@0.4, 3@0.4, 3@0.4, 4@0.4 | 19 | 21 | 0 |
+
+Bare first run, seeds 1–3 (`createState` + `step`, no buys): the hard set alone killed 1–3 orcs and earned 2–6 starlight before falling at 28 s, below the 12 for the first Sharp rank even when aiming at the front orc. Director then chose a faster lob, `LOB.cd` 2.5 → 1.25 (Quick Draw scales from it; the elf's damage per second is ⅔ of before all game). Front-orc aim: 7–8 kills, 14–16 starlight (one buy), falls at wave 2 around 36 s. The first orc reaches the wall at 18 s on every set, so the wall now takes damage in wave 1.
 
 ### P-142 · Tree-gated progress: Heartwood from bosses, no passive, Gleaning deeper (2026-11-01, TB-142)
 Director: early game too easy, first runs too long, Gleaning a no-brainer that snowballs, Heartwood too easy. Chosen and applied (now in Current): a fall pays a flat 1 HW; bosses pay the rest (`bossHw = 3 × floor(w / 25)`, 3 at wave 25, 6 at 50; halved after Heartwood Splinter); boss waves every 25; no passive `heart` bonus; Gleaning moves under War Drums (root → Call the Horde → War Drums → Gleaning), 5 ranks, base 600, growth 2.2, +8% per rank.

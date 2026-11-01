@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { PRESTIGE, costWave, nodeCost, vanBaseHp, vanCost, waveHP, waveInterval, waveLoot } from './balance';
-import { BARRICADE } from './balance';
+import { BARRICADE, LOB, PLAYER } from './balance';
 
 // Reference table from docs/BALANCE.md. Change the doc first, then these.
 describe('wave formulas', () => {
@@ -34,9 +34,12 @@ describe('economy', () => {
 });
 
 describe('barricade and vanguard', () => {
-  it('a wave-1 grunt swing is 0.25 damage against a 400 hp wall', () => {
-    expect(waveHP(1) * BARRICADE.orcAtkFrac).toBeCloseTo(0.25);
-    expect(BARRICADE.baseHp).toBe(400);
+  it('a wave-1 grunt swing takes 6.25 off a 150 hp wall (TB-154)', () => {
+    expect(waveHP(1) * BARRICADE.orcAtkFrac * BARRICADE.wallMult).toBeCloseTo(6.25);
+    expect(BARRICADE.baseHp).toBe(150);
+  });
+  it('the lob takes two shots to kill a wave-1 grunt (TB-154)', () => {
+    expect(Math.ceil(waveHP(1) / (PLAYER.baseDmg * LOB.dmgMult))).toBe(2);
   });
   it('spearman at wave 1 costs 12 and has 50 hp', () => {
     expect(vanCost('spear', 1)).toBeCloseTo(12);
