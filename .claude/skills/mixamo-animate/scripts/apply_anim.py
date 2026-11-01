@@ -166,6 +166,23 @@ for spec in filter(None, os.environ.get("WOFFS", "").split(";")):  # world-axis 
         nm = Matrix.Translation(t) @ R @ Matrix.Translation(-t) @ wm
         pb.matrix = tgt.matrix_world.inverted() @ nm; _unscale(pb); bpy.context.view_layer.update()
         pb.keyframe_insert("rotation_quaternion", frame=f)
+for spec in filter(None, os.environ.get("WYAW", "").split(";")):  # b1,b2>ref = bones held upright at their modelled orientation, turned only by ref's heading (world Z yaw); b1,b2 share it, so the head stays rigid on the neck
+    bns, rn = spec.split(">"); rb = tgt.pose.bones[rn]; W3 = tgt.matrix_world.to_3x3().normalized(); yaws = []
+    for f in range(f0, f1 + 1):
+        sc.frame_set(f); bpy.context.view_layer.update()
+        d = (W3 @ rb.matrix.to_3x3().normalized() @ rb.bone.matrix_local.to_3x3().inverted() @ W3.inverted()) @ Vector((1, 0, 0)); yaw = math.atan2(d.y, d.x) if d.xy.length > 1e-6 else 0.0; yaws.append(math.degrees(yaw))  # heading from the shoulder line (stays level when the chest hunches)
+        Y = W3.inverted() @ Matrix.Rotation(yaw, 3, "Z") @ W3
+        for bn in bns.split(","):
+            pb = tgt.pose.bones[bn]; bpy.context.view_layer.update()
+            pb.matrix = Matrix.Translation(pb.matrix.translation) @ (Y @ pb.bone.matrix_local.to_3x3()).to_4x4(); _unscale(pb); bpy.context.view_layer.update()
+            pb.keyframe_insert("rotation_quaternion", frame=f)
+    print("WYAW", rn, "yaw deg min/max", round(min(yaws), 1), round(max(yaws), 1), [round(y) for y in yaws[::3]])
+for bn in filter(None, os.environ.get("WLEVEL", "").split(",")):  # hold the bone at its modelled orientation in world space (head stays level whatever the spine does)
+    pb = tgt.pose.bones[bn]
+    for f in range(f0, f1 + 1):
+        sc.frame_set(f); bpy.context.view_layer.update()
+        pb.matrix = Matrix.Translation(pb.matrix.translation) @ pb.bone.matrix_local.to_3x3().to_4x4(); _unscale(pb); bpy.context.view_layer.update()
+        pb.keyframe_insert("rotation_quaternion", frame=f)
 for spec in filter(None, os.environ.get("ARMSET", "").split(";")):  # Side:side,fwd = turn the upper arm so its MEAN direction matches a reference clip's (ELBOW probe angles), keeping the swing about it
     s, e = spec.split(":"); sd, fw = (math.radians(float(v)) for v in e.split(",")); B = tgt.pose.bones; W = tgt.matrix_world; pb = B[f"mixamorig:{s}Arm"]
     m = Vector()
