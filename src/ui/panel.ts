@@ -12,7 +12,7 @@ import { bossesReady, canSummonBoss } from '../sim/boss';
 import { BOSS_WAVE } from '../data/bosses';
 import { NumberFormat, fmt, setNumberFormat } from './format';
 import { HW_NODE, HW_NODES, HwId } from '../data/heartwood';
-import { canBuyHw, hwAvailable, hwCost, hwRank, hwUnlocked } from '../sim/heartwood';
+import { canBuyHw, hwCost, hwPending, hwRank, hwSpendable, hwUnlocked } from '../sim/heartwood';
 import { SatchelPane, itemName } from './satchel';
 import { LOOT_TOAST } from '../data/lootTables';
 import { RARITIES } from '../data/loot';
@@ -74,19 +74,19 @@ export class Panel {
 
   /** Heartwood tree list on the Replant tab. Rebuilt on purchase and replant; update() refreshes the buttons. */
   renderHw(): void {
-    const m = this.game.state.meta;
+    const s = this.game.state, m = s.meta;
     $('hw-tree').innerHTML = HW_NODES.map((n) => { const r = hwRank(m, n.id), c = hwCost(m, n.id); return `
       <div class="hwnode"><div><div class="name">${n.name} <span class="desc">${STR.hwRank(r, n.costs.length)}</span></div><div class="desc">${n.desc}</div>${hwUnlocked(m, n.id) ? '' : `<div class="desc">${STR.hwNeeds((n.req ?? []).map(([r, k]) => `${HW_NODE[r].name} ${k}`).join(', '))}</div>`}</div>
-      <button class="buy" data-hw="${n.id}" ${canBuyHw(m, n.id) ? '' : 'disabled'}>${c === null ? STR.complete : STR.hwCost(c)}</button></div>`; }).join('');
+      <button class="buy" data-hw="${n.id}" ${canBuyHw(s, n.id) ? '' : 'disabled'}>${c === null ? STR.complete : STR.hwCost(c)}</button></div>`; }).join('');
   }
 
   /** Called ~6 Hz. */
   update(): void {
     const s = this.game.state;
-    $('st-star').textContent = fmt(s.run.starlight); $('st-wave').textContent = String(s.run.wave); $('st-kills').textContent = fmt(s.meta.lifetimeKills); $('st-heart').textContent = STR.heartAvail(hwAvailable(s.meta), s.meta.heartwood);
-    $('hw-body').textContent = STR.hwBody(hwAvailable(s.meta));
+    $('st-star').textContent = fmt(s.run.starlight); $('st-wave').textContent = String(s.run.wave); $('st-kills').textContent = fmt(s.meta.lifetimeKills); $('st-heart').textContent = STR.heartAvail(hwSpendable(s), s.meta.heartwood + hwPending(s));
+    $('hw-body').textContent = s.run.fallen ? STR.hwBody(hwSpendable(s)) : STR.hwClosed(hwSpendable(s));
     if (!$('pane-satchel').hidden) this.satchel.update();
-    for (const b of $('hw-tree').querySelectorAll<HTMLButtonElement>('button[data-hw]')) b.disabled = !canBuyHw(s.meta, b.dataset.hw as HwId);
+    for (const b of $('hw-tree').querySelectorAll<HTMLButtonElement>('button[data-hw]')) b.disabled = !canBuyHw(s, b.dataset.hw as HwId);
     const g = gain(), ok = s.run.wave >= PRESTIGE.voluntaryWave && g > 0 && !s.run.fallen;
     $('btn-pullback').hidden = !ok;
     $('pr-gain').textContent = '+' + g; ($('pr-btn') as HTMLButtonElement).disabled = !ok;

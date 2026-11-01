@@ -164,3 +164,4 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-146 | Sim: measure runs and minutes to the first Heartwood purchase and to the first boss on a fresh save (dev plan §8 #3) | sim | — | — | todo |
 | TB-147 | Balance: sim additive stacking inside a node line against today's per-rank multiply, and check prices against node power; propose in BALANCE `## Proposed` (dev plan §8 #2, #4) | balance | 146 | — | todo |
 | TB-148 | Design: boss tiers, each boss beaten steps up orc stats and Teeth together (dev plan §8 #1). Needs the director's yes (GDD core loop) | design | — | — | todo, director |
+| TB-149 | Heartwood spent only at a prestige (director, 1 Nov): `canBuyHw` needs a fallen run; the fall's flat 1 counts before Replant pays it; closed-tree text mid-run | sim/ui | — | claude | review |
