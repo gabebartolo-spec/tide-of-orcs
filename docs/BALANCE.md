@@ -134,6 +134,8 @@ Lives in `sim/run.ts`. Runs `src/sim/` headless at 50 steps/s and decides every 
 
 Loot flags (TB-108): `--hw hw_find:2,hw_fortune:1` starts with Heartwood ranks; `--bare` never wears gear; `--tune 'BOSS_WAVE.every=50,RARITY.weights.legendary.1=8'` overrides data for a sweep. Bosses are summoned when ready; the equip policy wears a set once 4+ of its slots are owned. The report ends with loot milestones (first drop, first of each rarity as run/minute/boss, first 6-piece set, bosses) and the run played on to its fall worn vs bare.
 
+Heartwood flag (TB-146): `--hwbuy` spends Heartwood on the fallen run, before Replant (Heartwood is spent only at a prestige, TB-149), on the cheapest affordable node until none is. The summary's `Milestones` line gives the first Heartwood purchase affordable and bought, nodes bought, and the first boss reached and cleared, each as run, run minute and play minute.
+
 Mythic flags (TB-128): `--mythic <id>` wears that mythic from the start and ends with its power played on removed (affixes kept); `--reroll` spends Glimmer each minute rerolling the lowest affix on the cheapest worn item.
 
 Report columns per minute: wave, starlight, kills/min, kills, wall %, vanguard count, nodes owned, HW, falls. Summary line gives the first fall wave, every fall wave in order (`Falls:`), replants, Heartwood, best wave. (Before TB-084 the "First fall" field printed the last fall.) Writes `sim/out/<policy>-<date>.md` unless `--quiet`. CI runs 30 minutes of greedy as a smoke test.
@@ -168,6 +170,24 @@ Director chose (c), a gentler `costWave` (2026-11-01). Sweep of `COST_WAVE.rate`
 | 1.00 (no wave scaling) | 37 | 36–37 (the ×1.30 HP ramp) | 50–51 | 9 | 66–70 |
 
 Applied 1.10: prices still rise slightly faster than loot, so the tree, not income alone, decides the reach; the first boss arrives after about 100 min of play instead of never.
+
+### TB-146 · Fresh-save milestones (2026-11-01, measured; no numbers changed)
+Branch tb-146 on TB-149, greedy, loot greedy, 180 min, seeds 1–4. "Run r" counts from 1; play minutes include every earlier run.
+
+| | Seed 1 | Seed 2 | Seed 3 | Seed 4 |
+|---|---|---|---|---|
+| First Heartwood purchase affordable (end of run 2) | 2.0 min | 1.9 min | 2.1 min | 1.8 min |
+| First boss reached, no Heartwood bought | run 20, 104.5 min | run 20, 98.1 min | run 19, 95.0 min | run 20, 96.3 min |
+| First boss reached, `--hwbuy` | run 20, 86.9 min | run 20, 81.2 min | run 20, 86.0 min | run 20, 81.9 min |
+| First boss cleared, `--hwbuy` | run 20, 87.6 min | run 21, 90.0 min | run 20, 86.8 min | run 20, 82.7 min |
+| Heartwood nodes bought in 180 min, `--hwbuy` | 12 | 13 | 12 | 12 |
+| Best wave in 180 min (none / `--hwbuy`) | 30 / 33 | 32 / 33 | 31 / 32 | 31 / 33 |
+
+What it says:
+- The first Heartwood buy comes early: Skip the Boring Bit costs 2, and the end of run 2 has 1 banked plus the fall's 1. Far Sight (2) and Dog Comes Too (3) follow within the next few falls.
+- After those, Heartwood arrives at 1 per fall until the first boss, so 18 runs (about 80 minutes) pass with roughly one purchase per two to four falls: the gap dev plan §8 #3 describes. Buying Heartwood moves the first boss 12–17 minutes earlier, not runs earlier: run 20 on every seed.
+- Every seed reaches wave 25 by run 19–20 and clears the first boss on the same run. Then six or more runs in a row fall at wave 27–28 (seed 1: runs 20–25): a plateau right after the boss.
+- The first boss is the real milestone and sits at 81–105 play minutes. TB-147 (additive stacking, price by power) is where to move it.
 
 ### P-002 · Arrow arsenal numbers (TB-089, 2026-10-31, from the director's mechanics; not yet simmed)
 All in `ARROWS` (`src/data/balance.ts`). Rebound: jump 120, falloff 0.6 per bounce, bolt speed 420, hops 1 + rank. Shock: 3 targets, 0.3 × lob dmg, jump 90. Thunderclap: 0.5 s. Frost: 3 s, slow 0.2 + 0.05 × (rank − 1). Shatter: radius 50, 1.0 × dmg × 1.4^(rank − 1). Starfall: every 10th lob, 8 arrows, r 26, 0.6 s fall, 0.08 s stagger, lob damage each; each aims where its orc will be on landing, held no closer than the wall's face. Costs in SKILL-TREE.md. Sim run pending.
