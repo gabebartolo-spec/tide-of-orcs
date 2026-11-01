@@ -1,0 +1,16 @@
+{
+  "id": "01a19597-866a-7410-8e15-169831a33de4",
+  "type": "text-to-image",
+  "ai_model": "gpt-image-2",
+  "prompt": "Concept art of a single fantasy charm, a legendary game item, shown alone in front view and centred on a plain pale grey background. A pendant: a long sharp splinter of glowing reddish-amber heartwood with visible wood grain, its top bound in a small bronze cap with a ring, hanging from a short loop of dark leather cord; a faint warm glow along the grain. One pendant only, a clear simple silhouette. No neck, no hand, no stand, no other objects. Stylised low-poly toy-miniature look, flat matte colours, soft even lighting, no outlines, no text. Palette: dusty sage, rust, ochre and bone.",
+  "status": "SUCCEEDED",
+  "progress": 100,
+  "created_at": 1793511097977,
+  "started_at": 1793511097983,
+  "finished_at": 1793511123388,
+  "expires_at": 1793770323388,
+  "image_urls": [
+    "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/uploads/image_01a19597-866a-7410-8e15-169831a33de4_0.png?Expires=1793770323&Signature=RKy-5YiSfDxr6bSD5MP6~9YhUYlBV9eV~Xf2Zj4xII1Vb1g9uNTnr-YMaVH9nedtmTWG2lkjSZj275IHq3LV5lxigVayr90sgb322oMMqVUCjRWHtogF7Ebzn4Wf8OLg7Z0bSDyc2NOvecrNLiXw779qrjdFJlyMEGMLYNZu1dHDWVy9z5fP4o3r6lfwb5Mjkk7HJ2Ds81TA37NKTgNpo72eF-UjSlPkzzh-Evp1xH04taAxslSpM-Tn91wSVIq3i4Jjeo~T5Iyc~NJvWBxbIzWhQDn1-SCQWY3KhzSoc8bPTqmZuX0vQshrJS2glSAeQbXWs1JQgh7g12no8t4KCw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "consumed_credits": 9
+}

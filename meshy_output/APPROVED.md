@@ -7,7 +7,7 @@ approval is quoted from docs/log. Icons rendered from these files: icons/<stem>.
 | item id (slot) | file | approved |
 |---|---|---|
 | ashwood-bow (bow) | ashwood-bow-r2_refine.glb | 1 Nov, "yes all are approved" |
-| yew-longbow (bow) | yew-longbow_refine.glb | 1 Nov, "yes all are approved" |
+| yew-longbow (bow) | yew-longbow-i2_i23d.glb | 1 Nov, "replace" |
 | hornbow (bow) | hornbow_refine.glb | 1 Nov, "yes all are approved" |
 | ironbark-recurve (bow) | bow_refine.glb | 1 Nov, "Approve, quiver (5)" |
 | hide-quiver (quiver) | hide-quiver_refine.glb | 1 Nov, "yes all are approved" |
@@ -30,13 +30,13 @@ approval is quoted from docs/log. Icons rendered from these files: icons/<stem>.
 | bone-charm (charm) | bone-charm_refine.glb | 1 Nov, "yes all are approved" |
 | amber-charm (charm) | amber-charm_refine.glb | 1 Nov, "yes all are approved" |
 | star-charm (charm) | star-charm_refine.glb | 1 Nov, "yes all are approved" |
-| last-knife (mythic) | last-knife_refine.glb | 1 Nov, "yes all are approved" |
+| last-knife (mythic) | last-knife-i1_i23d.glb | 1 Nov, "make a new model for this weird knife" |
 | heart-of-kiln (mythic) | heart-of-kiln-r2_refine.glb | 1 Nov, "yes all are approved" |
 | thunders-memory (mythic) | thunders-memory-i1_i23d.glb | 1 Nov, "Approve all five" |
 | oakspine (mythic) | oakspine_refine.glb | 1 Nov, "yes all are approved" |
 | pale-moon (mythic) | pale-moon_refine.glb | 1 Nov, "yes all are approved" |
 | first-wolf (mythic) | first-wolf_refine.glb | 1 Nov, "yes all are approved" |
-| heartwood-splinter (mythic) | heartwood-splinter_refine.glb | 1 Nov, "yes all are approved" |
+| heartwood-splinter (mythic) | heartwood-splinter-i1_i23d.glb | 1 Nov, "replace this too" |
 | starfall-cloak (mythic) | starfall-cloak_refine.glb | 1 Nov, "yes all are approved" |
 
 Route that worked for open shells (bracers): Text-to-Image reference (gpt-image-2, 9 cr) -> Image-to-3D smart

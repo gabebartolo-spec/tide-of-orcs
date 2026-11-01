@@ -162,5 +162,17 @@
  "thunders-memory-r3": {
   "prompt": "Mythic storm bracer, a game item prop, unbuckled and laid flat on the ground, outer face up, seen from above. A single tapered dark metal plate, wider at the elbow end and narrower at the wrist end, gently domed across its width, a bold raised jagged lightning bolt running down its centre and three small copper coils across the narrow end, with two leather straps lying splayed out flat to either side of it, each ending in a small buckle. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
   "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Dusk blue-sage metal, an ochre-gold lightning bolt, rust-brown copper coils and straps, bone edge."
+ },
+ "last-knife-i1": {
+  "texture": "Hand-painted flat colours, soft low-poly toy game prop, no outlines, no baked shadows. Pale silver-blue steel blade with a thin fuller, dark bronze crossguard and ring pommel, grip wrapped in dark brown leather cord."
+ },
+ "heartwood-splinter-i1": {
+  "texture": "Hand-painted flat colours, soft low-poly toy game prop, no outlines, no baked shadows. Reddish-amber heartwood splinter with warm wood grain, small bronze cap and ring, dark brown leather cord."
+ },
+ "yew-longbow-i1": {
+  "texture": "Hand-painted flat colours, soft low-poly toy game prop, no outlines, no baked shadows. Warm golden-orange yew wood with a pale sapwood stripe, tan leather grip, bone-coloured nocks, pale bowstring."
+ },
+ "yew-longbow-i2": {
+  "texture": "Hand-painted flat colours, soft low-poly toy game prop, no outlines, no baked shadows. Warm golden-orange yew wood with a pale sapwood stripe, tan leather grip, bone-coloured nocks, pale bowstring."
  }
 }

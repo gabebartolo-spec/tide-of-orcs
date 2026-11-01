@@ -18,5 +18,21 @@
  "thunders-memory-i1": {
   "base": "thunders-memory",
   "image": "Concept art of a single fantasy archer's bracer, a game item, shown alone in three-quarter view and centred on a plain pale grey background. It is an open curved forearm guard, a tapered half-cylinder of dark iron, wider at the elbow end and narrower at the wrist, its open inner side turned slightly toward the viewer so the hollow inside is visible; a raised jagged lightning bolt down the outer face and three copper coils ringing the wrist end; two leather straps with buckles holding it closed. No arm, no hand, no stand, no other objects. Stylised low-poly toy-miniature look, flat matte colours, soft even lighting, no outlines, no text. Palette: dusty sage, rust, ochre and bone."
+ },
+ "last-knife-i1": {
+  "base": "last-knife-i1",
+  "image": "Concept art of a single fantasy elven throwing knife, a legendary game item, shown alone lying flat in side view, the blade pointing to the upper right, centred on a plain pale grey background. One clean straight-backed leaf-shaped steel blade with a pale silver-blue sheen and a thin fuller groove, a short crossguard of dark bronze, a grip wrapped in dark brown leather cord, and a small round bronze ring pommel. One knife only, a clear simple silhouette. No hand, no sheath, no stand, no other objects. Stylised low-poly toy-miniature look, flat matte colours, soft even lighting, no outlines, no text. Palette: dusty sage, rust, ochre and bone."
+ },
+ "heartwood-splinter-i1": {
+  "base": "heartwood-splinter-i1",
+  "image": "Concept art of a single fantasy charm, a legendary game item, shown alone in front view and centred on a plain pale grey background. A pendant: a long sharp splinter of glowing reddish-amber heartwood with visible wood grain, its top bound in a small bronze cap with a ring, hanging from a short loop of dark leather cord; a faint warm glow along the grain. One pendant only, a clear simple silhouette. No neck, no hand, no stand, no other objects. Stylised low-poly toy-miniature look, flat matte colours, soft even lighting, no outlines, no text. Palette: dusty sage, rust, ochre and bone."
+ },
+ "yew-longbow-i1": {
+  "base": "yew-longbow-i1",
+  "image": "Concept art of a single fantasy elven longbow, a game item, shown alone in side view, standing diagonally from lower left to upper right, centred on a plain pale grey background. A tall thick-limbed longbow of warm golden-orange yew wood with clearly visible pale sapwood stripe along the limbs, a wide leather-wrapped grip in the middle, light bone-coloured nocks at both tips, and a taut pale bowstring. The limbs are broad and chunky so the bow reads clearly at small size. One bow only, no arrow, no hand, no stand, no other objects. Stylised low-poly toy-miniature look, flat matte colours, soft even lighting, no outlines, no text. Palette: dusty sage, rust, ochre and bone."
+ },
+ "yew-longbow-i2": {
+  "base": "yew-longbow-i1",
+  "image": "Concept art of a single fantasy elven longbow, a game item, shown alone in side view, standing diagonally from lower left to upper right, centred on a plain pale grey background. A tall thick-limbed longbow of warm golden-orange yew wood with clearly visible pale sapwood stripe along the limbs, a wide leather-wrapped grip in the middle, light bone-coloured nocks at both tips, and a taut pale bowstring tied to both nocks, running in one straight line from the top tip to the bottom tip, so bow and string form a closed D shape. The limbs are broad and chunky so the bow reads clearly at small size. One bow only, no arrow, no hand, no stand, no other objects. Stylised low-poly toy-miniature look, flat matte colours, soft even lighting, no outlines, no text. Palette: dusty sage, rust, ochre and bone."
  }
 }
