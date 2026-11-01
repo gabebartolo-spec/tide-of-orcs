@@ -81,10 +81,13 @@ const firsts: Record<string, string> = {}; let bosses = 0, firstDrop = '-', firs
 const at = (i: number) => (i * STEP / 60).toFixed(1);
 /** Wave the current run falls at with the worn gear changed by `strip`, played on from a copy with no more buys (bosses skipped).
  *  Starlight over a window was useless here: kills are capped by spawns, so gear barely moved it. */
+const snap = () => ({ run: structuredClone(s.run), meta: structuredClone(s.meta), tick: s.tick });
+let runStart = snap();
 function gearTrial(strip: (l: SimState['meta']['loot']) => void): number {
-  const meta = structuredClone(s.meta); strip(meta.loot);
-  const t = createState(seed * 7919 + s.tick, structuredClone(s.run), meta), bus = new EventBus();
-  const n = Math.round(3600 / STEP);
+  // replay the last run from its start (TB-128): the end-of-sim state is often a half-broken wall that falls whatever the gear
+  const meta = structuredClone(runStart.meta); meta.loot = structuredClone(s.meta.loot); strip(meta.loot);
+  const t = createState(seed * 7919 + runStart.tick, structuredClone(runStart.run), meta), bus = new EventBus();
+  const n = Math.round(7200 / STEP);
   for (let i = 0; i < n && !t.run.fallen; i++) { step(t, STEP, { aim: crowdAim(t, t.stats.radius) }, bus); if (i % 25 === 0) rallyIfLow(t, bus, 0.5); bus.drain(); }
   return t.run.wave;
 }
@@ -166,7 +169,7 @@ function decide(i: number): void {
     // Heartwood is spent only at a prestige (TB-149): on the fallen run, before Replant starts the next one
     if (hwSpendable(s) >= cheapestHw) mark('hwAfford', i);
     if (doHwBuy) { const before = hwBought; spendHw(); if (hwBought > before) mark('hwBuy', i); }
-    if (canReplant(s)) { replant(s, ev, tierTop || clearedRun ? s.meta.tier : s.run.tier - 1); falls++; lastKills = 0; hitRun = false; clearedRun = false; }
+    if (canReplant(s)) { replant(s, ev, tierTop || clearedRun ? s.meta.tier : s.run.tier - 1); falls++; runStart = snap(); lastKills = 0; hitRun = false; clearedRun = false; }
     return;
   }
   if (bare && Object.keys(s.meta.loot.equipped).length) { s.meta.loot.equipped = {}; recompute(s); }
@@ -199,7 +202,7 @@ const header = `# Balance run · policy=${policy} loot=${lootPolicy} seed=${seed
 const summary = `
 First fall at wave ${fallWave}. Falls (wave@run minutes): ${fallWaves.length ? fallWaves.map((w, i) => `${w}@${fallMins[i]}${fallTiers[i]! > 1 ? '/t' + fallTiers[i] : ''}`).join(', ') : '-'}. Replants: ${falls}. First wall damage (wave, per run): ${firstHits.join(', ') || '-'}. Heartwood: ${s.meta.heartwood}. Best wave: ${s.meta.bestWave}.
 Milestones (TB-146): first Heartwood purchase affordable: ${ms.hwAfford}. First bought${doHwBuy ? '' : ' (no --hwbuy)'}: ${ms.hwBuy}. Heartwood nodes bought: ${hwBought}. First boss reached: ${ms.bossReady}. First boss cleared: ${ms.bossClear}.
-Tiers (TB-148): ${tierAt.length ? tierAt.join('; ') : 'none unlocked'}. Starlight earned per run minute, last run: ${Math.round(s.run.earned / Math.max(1, s.run.runTime / 60))}.
+Tiers (TB-148): ${tierAt.length ? tierAt.join('; ') : 'none unlocked'}. Starlight earned per run minute, last run: ${Math.round(s.run.earned / Math.max(1, s.run.runTime / 60))}. Sources owned, last run: ${(['wolf', 'knives', 'fire', 'storm', 'ballista', 'moon'] as const).filter((k) => runStart.run.levels[k]).join(' ') || '-'}.
 `;
 const worn = equippedItems(s.meta.loot), withGear = gearTrial(() => {}), noGear = gearTrial((l) => { l.equipped = {}; });
 const myth = worn.filter((x) => x.rarity === 'mythic'), noMyth = myth.length ? gearTrial((l) => { for (const x of myth) delete l.equipped[x.slot]; }) : 0;

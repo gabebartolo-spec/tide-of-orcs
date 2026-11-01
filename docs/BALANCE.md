@@ -536,7 +536,24 @@ First measurement (before TB-132 and TB-136):
 | Starfall Cloak | 74 / 74 / 75 / 74 | 74.3 | 0 / 0 / 0 / 0 |
 
 Read: no mythic power moves the wave beyond seed noise (±4); Heartwood Splinter costs ~5 waves (traced in the re-run: its halved Heartwood). Rerolls are near free: Glimmer piles up faster than the doubling cost (2 × 2^n) drains it, and better affixes buy no waves. Late orc HP grows ~30% per wave, so a power worth +3 waves must be about ×2.2 damage; P-100's numbers are an order of magnitude short of that.
-Open: the director sets the target a mythic should be worth (waves), then each `MYTHIC_FX` number is scaled to hit it and `REROLL` is steepened to match.
+Target (director, 2 Nov): a mythic power is worth about +10% best wave, about +3 waves at today's best wave of ~29.
+
+Re-run 2 Nov on set F tiers, with a fixed trial: the play-on trial used to start from the end-of-sim state, often a half-broken wall at tier 6 that fell within a wave whatever the gear. It now replays the last run from its start with the power on and off (`gearTrial` in `sim/run.ts`). 300 min, seeds 1 / 2. "×10" multiplies each power's main numbers by about 10 (`--tune`, listed below). The bot owned every source in its last run (wolf, knives, fire, storm, ballista, moon), so no power was idle for want of its source.
+
+| Power | Worth, today's numbers | Worth, ×10 | ×10 tune |
+|---|---|---|---|
+| The Last Knife | 0 / 0 | 0 / 0 | `knifeBackLife=10` |
+| Heart of the Kiln | +1 / 0 | 0 / +1 | `burnRampPerSec=1` |
+| Thunder's Memory | 0 / +2 | 0 / +1 | `thunderCharges=3,thunderMult=30` |
+| Oakspine | 0 / −1 | −1 / +1 | `stakeAfter=1,stakeSecs=30,stakeR=40` |
+| Sliver of the Pale Moon | +4 / +3 | +12 / +13 | `moonDraw=0.1,moonCost=0` |
+| The First Wolf | +1 / 0 | 0 / 0 | `wolfStack=2.5,wolfEvery=5` |
+| Heartwood Splinter | 0 / 0 | 0 / +1 | `splinterFrac=1,splinterHw=1` |
+| Starfall Cloak | 0 / 0 | +1 / 0 | `starfallEvery=10,starfallMult=50` |
+
+Worn gear against bare is also +0 to −1 waves in the same replay. Tiers off (`TIERS.max=1`, seed 1, ×10) gives the same flat 0 to +2, so the tiers are not what hides the powers.
+
+Read: Pale Moon already meets the target at today's numbers (+3 to +4, 10–14%) and needs no change. The other seven cannot reach it by scaling numbers: ten times the numbers still adds 0 to +1 wave. Each one boosts a side source (knives, burn, storm, ballista stakes, wolf, one wall refill, one strike on one orc), while the fall is set by the elf's lob against the crowd; only Pale Moon, which doubles the lob cadence, touches that. `knifeBackLife` is also the wrong lever: a returning knife reaches the elf well inside 3 s, so a longer life changes nothing (×1 and ×10 runs are identical).
 
 ### P-108 · Loot pacing: rarer bosses and rarer top drops (2026-11-01, TB-108) · applied
 Director (1 Nov): make bosses rarer; "candidate C looks okay, just make it like 20% slower"; approved "Yes, apply P-108" (1 Nov). Applied (G), now in Current and the data:
