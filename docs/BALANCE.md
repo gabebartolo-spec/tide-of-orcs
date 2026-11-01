@@ -190,6 +190,7 @@ What it says:
 - The first boss is the real milestone and sits at 81–105 play minutes. TB-147 (additive stacking, price by power) is where to move it.
 
 ### P-147 · Additive stacking inside a node line (2026-11-01, TB-147; dev plan §8 #2, #4)
+**Decided 2026-11-01 (director): keep multiply.** Ranks stay `m^r`; `STACKING.add` stays 0 and is kept only as a sim switch. The proposed add numbers below are rejected and kept as the record.
 The sim has a switch: `STACKING.add` in `balance.ts` (0 = today, every rank multiplies, `m^r`; 1 = ranks add inside the stat, `1 + (m − 1) × r`). Foe Fury and Swarm always multiply. The default is still 0, so the game has not changed. All four rows: greedy, `--hwbuy`, 180 min, seeds 1–4, ranges across seeds.
 
 | Rule | First boss reached | First boss cleared | Best wave in 180 min | Heartwood nodes bought |
@@ -235,7 +236,7 @@ Price by power (§8 #4), starlight per +1% at rank 0, today:
 | Iron Bolts | 2000 | +50% ballista damage | 40 |
 | Gleaning | 600 | +8% starlight | 75 |
 
-Damage and rate are the same lever for the elf's damage per second, yet Quick Draw costs four times as much per percent as Sharpened Tips. No price change is proposed yet: the per-rank power above changes if the add rule is chosen, so prices come after that decision. Reproduce: `npx tsx sim/run.ts --minutes 180 --seed 1 --quiet --hwbuy --tune STACKING.add=1,NODE_FX.sharpDmg=1.47,NODE_FX.drawRate=1.22,NODE_FX.wideRadius=1.33,NODE_FX.knifeRate=1.33,NODE_FX.boltDmg=2.73,NODE_FX.gleanLoot=1.098,SHOT_FX.dmg=1.64,UNIT_FX.dmg=1.64,UNIT_FX.rate=1.22,BARRICADE.timberMult=1.47`.
+Damage and rate are the same lever for the elf's damage per second, yet Quick Draw costs four times as much per percent as Sharpened Tips. No price change is proposed yet. With multiply kept, this table is the per-rank power prices would be set against. Reproduce: `npx tsx sim/run.ts --minutes 180 --seed 1 --quiet --hwbuy --tune STACKING.add=1,NODE_FX.sharpDmg=1.47,NODE_FX.drawRate=1.22,NODE_FX.wideRadius=1.33,NODE_FX.knifeRate=1.33,NODE_FX.boltDmg=2.73,NODE_FX.gleanLoot=1.098,SHOT_FX.dmg=1.64,UNIT_FX.dmg=1.64,UNIT_FX.rate=1.22,BARRICADE.timberMult=1.47`.
 
 ### P-002 · Arrow arsenal numbers (TB-089, 2026-10-31, from the director's mechanics; not yet simmed)
 All in `ARROWS` (`src/data/balance.ts`). Rebound: jump 120, falloff 0.6 per bounce, bolt speed 420, hops 1 + rank. Shock: 3 targets, 0.3 × lob dmg, jump 90. Thunderclap: 0.5 s. Frost: 3 s, slow 0.2 + 0.05 × (rank − 1). Shatter: radius 50, 1.0 × dmg × 1.4^(rank − 1). Starfall: every 10th lob, 8 arrows, r 26, 0.6 s fall, 0.08 s stagger, lob damage each; each aims where its orc will be on landing, held no closer than the wall's face. Costs in SKILL-TREE.md. Sim run pending.
