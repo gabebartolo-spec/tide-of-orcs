@@ -116,7 +116,7 @@ export class Particles {
       g.stroke();
     }
     for (let i = 0; i < this.np; i++) { const p = this.parts[i]!; g.globalAlpha = Math.max(0, Math.min(1, p.life)); g.fillStyle = p.c; g.fillRect(p.x, p.y, p.r, p.r); }
-    g.globalAlpha = 1; g.font = '700 12px "Atkinson Hyperlegible", sans-serif'; g.textAlign = 'center';
+    g.globalAlpha = 1; g.font = '12px Heartwood'; g.textAlign = 'center';
     for (let i = 0; i < this.nt; i++) { const t = this.texts[i]!; g.globalAlpha = Math.min(1, t.life * 1.5); g.fillStyle = t.c; g.fillText(t.s, t.x, t.y); }
     g.globalAlpha = 1;
   }
