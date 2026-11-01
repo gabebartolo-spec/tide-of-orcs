@@ -64,7 +64,8 @@
         </div>
       </div>
       <div class="tab" id="pane-prestige" hidden>
-        <div class="prestige">
+        <div class="prestige split">
+          <div class="col">
           <h2 id="pr-title"></h2>
           <p id="pr-body"></p>
           <div><div class="stat"><span class="k" id="pr-gain-k"></span></div><div class="big" id="pr-gain">0</div></div>
@@ -75,13 +76,17 @@
             <li id="pr-req"></li>
           </ul>
           <div class="row"><button class="buy" id="pr-btn" disabled></button></div>
+          </div>
+          <div class="col">
           <h2 id="hw-title"></h2>
           <p id="hw-body"></p>
           <div class="hwtree" id="hw-tree"></div>
+          </div>
         </div>
       </div>
       <div class="tab" id="pane-settings" hidden>
-        <div class="prestige settings">
+        <div class="prestige settings split">
+          <div class="col">
           <label class="set"><span id="set-vol-k"></span><input type="range" id="set-vol" min="0" max="1" step="0.05"></label>
           <label class="set"><span id="set-motion-k"></span><select id="set-motion"><option value="sys"></option><option value="full"></option><option value="reduced"></option></select></label>
           <label class="set"><span id="set-num-k"></span><select id="set-num"><option value="short"></option><option value="sci"></option></select></label>
@@ -89,9 +94,12 @@
           <p id="set-save-hint"></p>
           <textarea id="set-blob" rows="4" spellcheck="false"></textarea>
           <div class="row"><button class="ghost" id="btn-export"></button><button class="ghost" id="btn-import"></button></div>
+          </div>
+          <div class="col">
           <h2 id="set-tel-k"></h2>
           <p id="set-tel-hint"></p>
           <div class="row"><button class="ghost" id="btn-telemetry"></button></div>
+          </div>
         </div>
       </div>
       <div class="footer">
