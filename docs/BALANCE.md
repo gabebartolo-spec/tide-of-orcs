@@ -598,6 +598,22 @@ Built (2 Nov): replay trial, `npm run balance -- --minutes 300 --seed N --quiet 
 
 Read: against the +10% target (~+3 waves at a wave-25 fall) only Oakspine gets there on both seeds; Thunder's Memory and Starfall Cloak reach it on one. Splinter and First Wolf add nothing: the bot's wall rarely sits low long before it falls, and tier-6 waves end before many 15 s stacks build. Every power is now on the lob, so further tuning is numbers in `MYTHIC_FX` only.
 
+Tuning draft (2 Nov; director: "Draft numbers for me"). Two candidate sets per short power, replay trial as above (`--tune`, seeds 1 / 2). Power-off fall waves move ±2 between runs of the same seed, so read only gains seen on both seeds.
+
+| Power | Set A | A worth | Set B | B worth |
+|---|---|---|---|---|
+| Starfall Cloak | `starfallChance=0.4` | 0 / +3 | `starfallChance=0.5, starfallMult=5` | **+3 / +3** |
+| Thunder's Memory | `thunderDrawSecs=10` | 0 / +2 | `thunderDrawSecs=15, thunderDraw=0.4` | **+2 / +3** |
+| Heart of the Kiln | `burnRampPerSec=0.25, burnRampMax=2` | +2 / +1 | `burnRampPerSec=0.5, burnRampMax=3` | +1 / +1 |
+| The Last Knife | `knifeMarkSecs=6` | 0 / 0 | `knifeMarkSecs=6, knifeMarkMult=3` | +1 / −1 |
+| Heartwood Splinter | `splinterFloor=0.5` | +1 / 0 | `splinterFloor=0.5, splinterMaxMult=4` | 0 / +1 |
+| The First Wolf | `wolfEvery=5` | 0 / 0 | `wolfEvery=5, wolfStack=0.5` | +1 / 0 |
+| The First Wolf, stress test | `wolfEvery=1, wolfStack=1` (×5 lob damage from 4 s into every wave) | 0 / 0 | | |
+
+Proposed: Starfall Cloak set B (half the arrows fall as stars, ×5) and Thunder's Memory set B (15 s window, draw ×0.4). Both meet the +10% target.
+
+Finding: extra lob damage is worth nothing. ×5 damage for 20 of every 24 s adds 0 waves; the powers that work all reach more orcs (Oakspine and Starfall widen the circle, Thunder and Pale Moon speed the draw). The lob already kills what it lands on, so the wall falls to the orcs it never reaches. Last Knife, Kiln, Splinter and First Wolf multiply damage only, so no numbers can bring them to target. Also note `WAVE_LEN` is 24 s: First Wolf as built (`wolfEvery=15`) never passes one stack.
+
 ### P-108 · Loot pacing: rarer bosses and rarer top drops (2026-11-01, TB-108) · applied
 Director (1 Nov): make bosses rarer; "candidate C looks okay, just make it like 20% slower"; approved "Yes, apply P-108" (1 Nov). Applied (G), now in Current and the data:
 - `BOSS_WAVE.every` 10 → 50 (bosses.ts). A boss wave unlocks at wave 50, 100 …; runs fall near wave 85, so this is one boss per late run, about 1.9 per hour of play.
