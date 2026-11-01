@@ -199,7 +199,8 @@ export class FieldRenderer {
     const frac = barFrac(s);
     g.fillStyle = P.wallShade; g.fillRect(BAR_X + 4, 0, BAR_W + 4, H);
     for (let y = 0; y < H; y += 18) {
-      const alive = y / H < frac || Math.random() < frac;
+      // each plank breaks at a fixed point (golden-ratio scatter), so damage never flickers frame to frame
+      const alive = y / H < frac || ((y / 18) * 0.618034) % 1 < frac;
       g.fillStyle = alive ? (y % 36 ? P.timber : P.timberDark) : P.timberSplinter;
       g.fillRect(BAR_X, y, BAR_W, 16);
       g.fillStyle = P.timberBand; g.fillRect(BAR_X + 2, y - 2, BAR_W - 4, 3);
