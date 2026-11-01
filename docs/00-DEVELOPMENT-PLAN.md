@@ -1,8 +1,8 @@
 # Let's Hunt Some Orc! — Development Plan (repo: tide-of-orcs)
 
-**Version 1.7 · 2 Nov 2026 · Owner: Gabe**
+**Version 1.8 · 2 Nov 2026 · Owner: Gabe**
 
-v1.1 replaced the river (no fail state) with a barricade that can fall, forced Replant on a fall, and starlight-bought melee vanguard. v1.2 recorded M2 done and offline progress removed. v1.3 (31 Oct, evening) syncs with the code: M1 and M2 done, M3 done (TB-054 closed: `wallMult` 10 kept, targets reset; TB-085, TB-086 re-runs), M4 done except music and assets. v1.4 (1 Nov) syncs again: the arrow arsenal and the whole loot stack are on main, the tree grew to 104 nodes, the game is titled A Lot of Orcs (TB-115), and the M5 bug bash has run twice. v1.5 (1 Nov, night) adds §8, design directions from the active-incremental research (TB-145). v1.6 (1 Nov, late) drops the public release, Steam and testers from the roadmap: the team is the director and Claude. The itch page stays private (Restricted) as a proof of concept, kept up to date and ready to go live only if the director chooses; a commercial release is a maybe for later. `docs/prototype.html` (published as the Tide of Orcs artifact) is the original concept for tone and the core loop; mechanics have diverged since (GDD §14), and the docs now win over it. v1.7 (2 Nov) adds M4.10, the 2 Nov director's list (boss tiers, price by power, one-page camp, early-game tuning, mythics onto reach), and closes the open number questions in M4.5, M4.6 and §8.
+v1.1 replaced the river (no fail state) with a barricade that can fall, forced Replant on a fall, and starlight-bought melee vanguard. v1.2 recorded M2 done and offline progress removed. v1.3 (31 Oct, evening) syncs with the code: M1 and M2 done, M3 done (TB-054 closed: `wallMult` 10 kept, targets reset; TB-085, TB-086 re-runs), M4 done except music and assets. v1.4 (1 Nov) syncs again: the arrow arsenal and the whole loot stack are on main, the tree grew to 104 nodes, the game is titled A Lot of Orcs (TB-115), and the M5 bug bash has run twice. v1.5 (1 Nov, night) adds §8, design directions from the active-incremental research (TB-145). v1.6 (1 Nov, late) drops the public release, Steam and testers from the roadmap: the team is the director and Claude. The itch page stays private (Restricted) as a proof of concept, kept up to date and ready to go live only if the director chooses; a commercial release is a maybe for later. `docs/prototype.html` (published as the Tide of Orcs artifact) is the original concept for tone and the core loop; mechanics have diverged since (GDD §14), and the docs now win over it. v1.7 (2 Nov) adds M4.10, the 2 Nov director's list (boss tiers, price by power, one-page camp, early-game tuning, mythics onto reach), and closes the open number questions in M4.5, M4.6 and §8. v1.8 (2 Nov, late) adds phone controls for the itch web build (TB-155) and the start-of-run elf flash fix to M4.10, narrows the mobile note in M5, and records the itch build of main at 8d20894. Open work: TB-068 (sprite sheets) and TB-087 (new orcs, waiting on the director's edits to P-087).
 
 ## 1. Vision
 
@@ -128,21 +128,23 @@ Orcs drop gear; six worn slots, a satchel, affixes, sets and mythic powers feed 
 - Performance at 1080p and 4K TB-150 (PR #95, QA run 4): 160 orcs at 119 fps (1080p) and 92 fps (4K); 60 fps holds at 4K down to a 4× slower CPU.
 - Private itch page TB-073 (PR #96, #98): copy, three 1080p screenshots, kept Restricted.
 
-### M4.10 — Director's list (2 Nov) · **done**
+### M4.10 — Director's list (2 Nov) · **done except TB-087**
 - Early game tuning TB-154 (PR #101): no one-shot lobs, wall 150, `wallMult` 25 (BALANCE P-154).
 - Camp pages fit one screen TB-153 (PR #102): Satchel, Replant and Settings never scroll; only the skill tree pans.
 - Boss tiers, unlocked across runs TB-148 (PR #103, save v10): clear a boss at your highest tier to unlock the next; pick any unlocked tier at March. Set F in Current: orc HP ×2, starlight ×1.5 and boss Heartwood ×t per tier, up to 6.
 - Price by power TB-151 (PRs #105, #108): G1 applied, Quick Draw 12, Keen Eye 30, Nimble Wrist 46 (BALANCE P-151).
 - Arrow arsenal simmed TB-089 (PR #107): P-002 numbers kept.
 - Mythics onto reach TB-128 (PRs #109–#114, 7409e52): all eight mythics now give the elf reach (faster draw or a wider catch), because the sim showed reach, not lob damage, decides the fall. Starfall and Thunder set B, reach versions of Knife, Kiln, Splinter and First Wolf (BALANCE P-128).
-- New orcs TB-087: draft in BALANCE P-087 (PR #104), waiting on the director's edits.
+- Phone controls for the itch web build TB-155 (PR #117, e4911f2; director 2 Nov, "phones only"): hold-to-aim with the circle lifted above the finger, second finger free for Rally, portrait asks for landscape, short-landscape layout for run and camp. TB-153's no-scroll rule stays for PC. Itch page set Mobile friendly, Landscape.
+- Start-of-run flash fixed (PR #116, a1083b4): the old vector elf no longer shows while the sprite atlas loads.
+- New orcs TB-087: draft in BALANCE P-087 (PR #104), waiting on the director's edits. **Only open M4.10 item.**
 
 ### M5 — Polish · bug bash run twice
-- Private itch page as a proof of concept (TB-073, `docs/ITCH-PAGE.md`; builds via `itch.yml`): kept Restricted and up to date with each milestone; it goes public only if the director chooses.
+- Private itch page as a proof of concept (TB-073, `docs/ITCH-PAGE.md`; builds via `itch.yml`): kept Restricted and up to date with each milestone; it goes public only if the director chooses. Latest build: main 8d20894 to `html5-dev`, 2 Nov (all of M4.10 so far). Milestone tags stop at `m1`; later builds go out by manual workflow run.
 - Save import/export (done in TB-065), version migration test suite (TB-140: every old save v1–v8 loads and plays).
 - Bug bash (TB-075, `docs/QA-CHECKLIST.md`): runs 1 and 2 done (PRs #33, #37); their bugs became TB-112–117. Performance: no frame spikes in a visible browser with 160 orcs (TB-113); measured at 1080p and 4K with CPU throttling as a mid-range stand-in (TB-150, QA run 4): passes. Not yet on real mid-range hardware.
 
-Mobile is out of the roadmap (director, 31 Oct): the game is built for PC first; a mobile port comes after it is perfect on PC. TB-064/TB-078 layout work stays in the code.
+A full mobile port stays out of the roadmap (director, 31 Oct): the game is built for PC first. The itch web build does play on phones in landscape since TB-155 (2 Nov); TB-064/TB-078 layout work stays in the code.
 **Done when:** the director calls it finished.
 
 ## 5. Definition of done (any task)
