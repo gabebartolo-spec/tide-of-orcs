@@ -42,3 +42,6 @@ Captured from the real game at 1920 × 1080 (headless Chrome over CDP, sim-progr
 | `itch/3-grove.png` | The Grove page between runs: the full skill tree around Waking |
 
 Cover image (630 × 500) is not made yet; it needs art, not a crop.
+
+## Status
+Saved on itch 1 Nov: title, tagline, description, genre, tags, 1280 × 720, Mobile friendly off; the director uploaded the three screenshots. Visibility stays **Restricted**: only the director makes the page public.
