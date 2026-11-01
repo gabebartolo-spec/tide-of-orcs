@@ -27,7 +27,7 @@ export class Panel {
 
   constructor(private game: GameController, private tree: TreeRenderer) {
     // static copy
-    $('hint').textContent = matchMedia('(pointer: coarse)').matches ? STR.hintTouch : STR.hint; $('tab-grove').textContent = STR.tabGrove; $('tab-prestige').textContent = STR.tabReplant;
+    $('tab-grove').textContent = STR.tabGrove; $('tab-prestige').textContent = STR.tabReplant;
     $('pr-title').textContent = STR.replantTitle; $('pr-body').textContent = STR.replantBody;
     $('btn-save').textContent = STR.saveNow;
     $('k-star').textContent = STR.starlight; $('k-wave').textContent = STR.wave; $('k-kills').textContent = STR.slain; $('k-heart').textContent = STR.heartwood;
