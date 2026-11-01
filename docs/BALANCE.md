@@ -569,6 +569,20 @@ Worn gear against bare is also +0 to −1 waves in the same replay. Tiers off (`
 
 Read: Pale Moon already meets the target at today's numbers (+3 to +4, 10–14%) and needs no change. The other seven cannot reach it by scaling numbers: ten times the numbers still adds 0 to +1 wave. Each one boosts a side source (knives, burn, storm, ballista stakes, wolf, one wall refill, one strike on one orc), while the fall is set by the elf's lob against the crowd; only Pale Moon, which doubles the lob cadence, touches that. `knifeBackLife` is also the wrong lever: a returning knife reaches the elf well inside 3 s, so a longer life changes nothing (×1 and ×10 runs are identical).
 
+Draft lob reworks (2 Nov; director chose "draft lob reworks": each weak power keeps its theme but feeds the elf's lob; edit freely, no code until approved). Sizing: Pale Moon's ×2 cadence is worth +3 to +4, so each draft aims at about ×2 lob power on average while its condition holds. Worth is arithmetic from that rule, not simmed; each gets the replay trial once built.
+
+| Power | New text (player-facing) | Numbers (MYTHIC_FX) | Average lob gain | Cost / condition |
+|---|---|---|---|---|
+| The Last Knife | Orcs your knives hit are marked for 3 s; your arrows deal double damage to marked orcs. | `knifeMarkSecs=3, knifeMarkMult=2` | ×1.6–2 (most of the crowd is knifed late) | needs Throwing Knives |
+| Heart of the Kiln | Your arrows deal 10% more damage for every second the orc has burned, up to +150%. | `burnRampPerSec=0.1, burnRampMax=1.5` | ×1.8–2.2 on burning orcs | needs fire; nothing on unburnt orcs |
+| Thunder's Memory | Each storm charges the bow: for 6 s after a storm strikes, you draw twice as fast. | `thunderDrawSecs=6, thunderDraw=0.5` | ×2 for the share of time charged (~60–90% with a full Stormcaller line) | needs storm |
+| Oakspine | Your strike circle is 50% wider; orcs it hits are rooted 0.5 s. | `oakRadius=1.5, oakRootSecs=0.5` | ×2.25 area against a crowd, less on a thin field | none; weak on bosses |
+| The First Wolf | The pack hunts with you: your arrows deal 25% more damage for every 15 s of the wave, up to 4 times. | `wolfEvery=15, wolfStack=0.25, wolfMax=4` (same numbers, now on the lob, reset each wave) | ×1.5–2 (×2 from 60 s into a wave) | slow start each wave |
+| Heartwood Splinter | The wall feeds the bow: your arrows deal up to triple damage as the wall loses health (×1 full, ×3 at 10%). | `splinterMaxMult=3, splinterFloor=0.1` | ×1–3, about ×2 in the late waves that decide the fall | no second life, no Heartwood penalty |
+| Starfall Cloak | Each arrow has a 25% chance to fall as a star: four times the damage in a circle half again as wide. Item Find +15%. | `starfallChance=0.25, starfallMult=4, starfallRadius=1.5` | ×1.75 damage, more with the wider circle | none |
+
+Old powers retire with these (`knifeBackLife`, the stand-again, stored Thunder bolt, stakes, companion stacking, Starfall every 100 starlight). Item names, slots and drop rules stay. Save: worn mythics keep their id, so no migration.
+
 ### P-108 · Loot pacing: rarer bosses and rarer top drops (2026-11-01, TB-108) · applied
 Director (1 Nov): make bosses rarer; "candidate C looks okay, just make it like 20% slower"; approved "Yes, apply P-108" (1 Nov). Applied (G), now in Current and the data:
 - `BOSS_WAVE.every` 10 → 50 (bosses.ts). A boss wave unlocks at wave 50, 100 …; runs fall near wave 85, so this is one boss per late run, about 1.9 per hour of play.
