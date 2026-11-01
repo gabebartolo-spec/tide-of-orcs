@@ -159,7 +159,7 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-141 | Barricade planks flicker: below the HP line each plank re-rolled `Math.random() < frac` every frame, so a damaged wall strobed. Each plank now has a fixed break point (golden-ratio scatter), so damage reads steady | render | — | claude | done e02cef3 |
 | TB-142 | Tree-gated balance (P-142): Heartwood only from bosses (every 25 waves) plus a flat 1 per fall, no Heartwood passive, Gleaning moved under War Drums and weakened to +8%/rank × 5 | balance | — | claude | done 3276a16 |
 | TB-143 | Scale the game to a 4K screen: all UI sizes in rem off a root font that grows from 16 px at 1080p to 32 px at 3840×2160; tree canvas draws in layout px at full backing resolution | render | — | claude | done aad928f |
-| TB-144 | Research synthesis: design directions from the active-incremental research written into the dev plan §8 | docs | — | claude | review (branch tb-144-research-synthesis) |
-| TB-145 | Sim: measure runs and minutes to the first Heartwood purchase and to the first boss on a fresh save (dev plan §8 #3) | sim | — | — | todo |
-| TB-146 | Balance: sim additive stacking inside a node line against today's per-rank multiply, and check prices against node power; propose in BALANCE `## Proposed` (dev plan §8 #2, #4) | balance | 145 | — | todo |
-| TB-147 | Design: boss tiers, each boss beaten steps up orc stats and Teeth together (dev plan §8 #1). Needs the director's yes (GDD core loop) | design | — | — | todo, director |
+| TB-145 | Research synthesis: design directions from the active-incremental research written into the dev plan §8 | docs | — | claude | review (branch tb-144-research-synthesis) |
+| TB-146 | Sim: measure runs and minutes to the first Heartwood purchase and to the first boss on a fresh save (dev plan §8 #3) | sim | — | — | todo |
+| TB-147 | Balance: sim additive stacking inside a node line against today's per-rank multiply, and check prices against node power; propose in BALANCE `## Proposed` (dev plan §8 #2, #4) | balance | 146 | — | todo |
+| TB-148 | Design: boss tiers, each boss beaten steps up orc stats and Teeth together (dev plan §8 #1). Needs the director's yes (GDD core loop) | design | — | — | todo, director |
