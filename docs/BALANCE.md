@@ -144,6 +144,21 @@ Report columns per minute: wave, starlight, kills/min, kills, wall %, vanguard c
 
 ## Proposed
 
+### P-151 · Price by power: cheaper Quick Draw, Keen Eye and Nimble Wrist (2026-11-02, TB-151)
+P-147's table showed Quick Draw, Keen Eye and Nimble Wrist cost 4–30× more per percent than Sharpened Tips. Two price sets against today, greedy, `--hwbuy`, 300 min, seeds 1–3 (set F tiers). Reproduce with `npx tsx sim/run.ts --minutes 300 --seed 1 --quiet --hwbuy --cost draw=12,crit=30,knifespd=46`.
+
+| Set | Quick Draw | Keen Eye | Nimble Wrist | Tier 2 unlocked | Nodes at 120 min | Best wave |
+|---|---|---|---|---|---|---|
+| Today | 30 (2.0 per 1%) | 120 (15) | 140 (7.0) | run 25–27, 84–97 min | 203–221 | 29 |
+| G1, near Fangs | 12 (0.8) | 30 (3.75) | 46 (2.3) | run 24–25, 81–85 min | 219–240 | 28–29 |
+| G2, level with Tips | 7 (0.48) | 8 (1.0) | 10 (0.5) | run 23–24, 79–82 min | 227–256 | 28–29 |
+
+What it says:
+- Price changes on these three nodes barely move pacing: G2, the deepest cut, unlocks tier 2 about 9 minutes sooner and buys about 15% more nodes by minute 120. Best wave is held at 28–29 by the tier walls either way.
+- Pricing by power is a feel and fairness fix, not a pacing lever: the player stops seeing a 4× worse deal on Quick Draw for the same damage per second.
+- Proposed: G1 (Quick Draw 12, Keen Eye 30, Nimble Wrist 46). It evens the per-percent price within ~2× of Tips without making every rate node near free.
+- Sim note: `--cost id=base` sets a run-tree node's base price for a sweep.
+
 ### P-087 · Four new orcs: draft for the director to edit (2026-11-02, TB-087)
 Draft only (director, 2 Nov: "Draft for me to edit"). Nothing is built or simmed. Each follows the rule in GDD §4: it marches only once its Grove node summons it, and has its own Fury and Swarm nodes (+30% health and +40% starlight, +20% spawn per rank), so the player chooses the danger. Stats are in grunt units like `ORC_TYPES` (hp × wave HP, loot × wave loot, `every` × the grunt interval). The field is 900 wide with the wall at x 150.
 

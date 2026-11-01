@@ -11,6 +11,7 @@
  * Boss tiers (TB-148): Replant marches at the highest tier unlocked after a run that cleared a boss, else one tier lower
  * (--tiertop: always the highest); tune TIERS.max/hp/loot/hw to turn them on. The tiers line
  * reports when each tier unlocked, and each fall shows its tier (wave@minutes/tier).
+ * --cost draw=12,crit=60 sets those run-tree nodes' base price for a sweep (TB-151).
  * Plays the pure sim with a scripted buy/rally policy and prints a per-minute markdown table.
  * Writes sim/out/<policy>-<date>.md unless --quiet.
  */
@@ -51,6 +52,7 @@ for (const kv of arg('tune', '').split(',').filter(Boolean)) {
   const obj = keys.reduce<Record<string, unknown>>((o, k) => (o === TUNE ? TUNE[k] : o[k]) as Record<string, unknown>, TUNE);
   obj[last] = Number(v);
 }
+for (const kv of arg('cost', '').split(',').filter(Boolean)) { const [k, v] = kv.split('='); (NODES.find((x) => x.id === k) as { base: number }).base = Number(v); }
 for (const kv of arg('hw', '').split(',').filter(Boolean)) { const [k, v] = kv.split(':'); s.meta.hwLevels[k as HwId] = Number(v); }
 /** --mythic: a forced mythic, kept worn and locked so the equip policy never swaps it out. */
 const forced = MYTHICS.find((m) => m.id === arg('mythic', '')), doReroll = args.includes('--reroll');
