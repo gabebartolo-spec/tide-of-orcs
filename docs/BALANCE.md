@@ -144,6 +144,22 @@ Report columns per minute: wave, starlight, kills/min, kills, wall %, vanguard c
 
 ## Proposed
 
+### P-087 · Four new orcs: draft for the director to edit (2026-11-02, TB-087)
+Draft only (director, 2 Nov: "Draft for me to edit"). Nothing is built or simmed. Each follows the rule in GDD §4: it marches only once its Grove node summons it, and has its own Fury and Swarm nodes (+30% health and +40% starlight, +20% spawn per rank), so the player chooses the danger. Stats are in grunt units like `ORC_TYPES` (hp × wave HP, loot × wave loot, `every` × the grunt interval). The field is 900 wide with the wall at x 150.
+
+| Orc | hp | speed | loot | radius | every | What it does | Answer the player has |
+|---|---|---|---|---|---|---|---|
+| Berserker | 2.5 | 40 | 3.5 | 14 | 6 | Below half health it rages: speed ×1.8 and its wall hit ×2 | Kill it in one strike or keep the circle on it; a half-hurt berserker is the worst outcome |
+| Wolf rider | 2.0 | 90 | 3.0 | 15 | 5 | The fastest orc. It leaps the first vanguard it meets instead of stopping to fight. When the wolf dies the rider falls off as a grunt where it fell (pays its own grunt loot) | Aim ahead of it; vanguard cannot hold it alone |
+| Shaman | 2.0 | 36 | 4.0 | 12 | 9 | Halts 180 short of the wall (x 330) and every 4 s lobs a fireball (`FIREBALL`, radius 24) at the nearest vanguard, or at the wall if none stand: 3 × a grunt hit, so the wall takes it × `wallMult` like any hit | It never comes closer, so only aim or companions reach it |
+| War drummer | 4.0 | 30 | 6.0 | 16 | 14 | Halts 260 short of the wall (x 410) and drums: every orc within 100 marches 30% faster and hits 30% harder (two drummers do not stack). It never hits the wall | A priority target that does no harm alone |
+
+Grove nodes, continuing the summon chain after Blackguard (`elites`): `berserkers` 3000 → `wolfriders` 5000 → `shamans` 8000 → `drummers` 12000 starlight, each with Fury and Swarm at 5 ranks, base cost ×1.33 the unlock, growth 2.4 as today. Draft order: the two melee kinds first (berserker, wolf rider), then the two that stand back and change how you aim (shaman, drummer).
+
+Boss waves: none of the four join `BOSS_SCRIPT` in this draft.
+
+To settle before the build: each behaviour, the halt distances, the chain order and costs. Then the sim checks each against Blackguard on starlight per second of wall life, the same test a spearman passed (TB-086).
+
 ### P-148 · Boss tiers: how hard each tier hits, and what it pays (2026-11-02, TB-148)
 Director chose *unlock across runs*: clearing a boss wave while at your highest tier unlocks the next for good; at March you pick any unlocked tier. Shipped switched off (`TIERS.max` 1); set F moved to Current 2026-11-02. Each tier above 1 multiplies orc HP by `hp^(tier−1)`, starlight per kill and per boss by `loot^(tier−1)`, and boss Heartwood by `1 + hw × (tier−1)`, from wave 1.
 
