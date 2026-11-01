@@ -4,3 +4,5 @@ sim/out
 .DS_Store
 *.local
 release
+tools/typeface/out
+__pycache__
