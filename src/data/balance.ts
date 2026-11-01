@@ -10,7 +10,7 @@ export const PLAYER = { baseDmg: 9, baseFireRate: 1.2, arrowSpeed: 520, critMult
 export const LOB = {
   cd: 2.5,          // seconds between shots before Quick Draw
   dmgMult: 3,       // × player damage, to every orc in the circle
-  radius: 40,       // circle radius before Wide Volley
+  radius: 20,       // circle radius before Wide Volley (40 hit 2–4 orcs per arrow at wave 1, TB-132)
   flight: 0.7,      // seconds in the air
   arc: 90,          // apex height, px
   pulseGap: 0.35,   // seconds between repeat strikes (Longshaft)

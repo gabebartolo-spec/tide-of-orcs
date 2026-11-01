@@ -24,7 +24,7 @@ Crowd control (TB-126, P-126): a stun or root is never topped up or lengthened w
 ### The elf's lob (TB-079)
 ```
 lobCd   = 2.5 / 1.15^draw          seconds between shots; fires only while aimed
-radius  = 40 × 1.2^wide            strike circle, px
+radius  = 20 × 1.2^wide            strike circle, px (40 until TB-132)
 dmg     = 3 × player dmg           to every orc within radius + orc radius
 flight  = 0.7 s, apex 90 px; Longshaft repeat strikes 0.35 s apart; Split Shot arrows land within 0.6 × radius
 ```
