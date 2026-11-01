@@ -6,6 +6,8 @@
  * The loot policy also chases sets: once four or more slots of one set are owned, it wears them.
  * --mythic last-knife wears that mythic from the start (affixes rolled at the ilvl cap) and reports waves with its power off (TB-128).
  * --reroll spends Glimmer each minute rerolling the lowest affix on worn items while affordable (TB-128).
+ * --hwbuy spends Heartwood after each fall on the cheapest affordable node (TB-146). The milestones line reports the first
+ * Heartwood purchase (affordable, and bought when --hwbuy) and the first boss reached and cleared: run, run minute, play minute.
  * Plays the pure sim with a scripted buy/rally policy and prints a per-minute markdown table.
  * Writes sim/out/<policy>-<date>.md unless --quiet.
  */
@@ -18,7 +20,7 @@ import { buy, canBuy, costOf } from '../src/sim/tree';
 import { canRally, rally } from '../src/sim/vanguard';
 import { canReplant, replant } from '../src/sim/prestige';
 import { NODES, NodeId } from '../src/data/skillTree';
-import { BARRICADE, COST_WAVE, NODE_FX, PLAYER, STEP, waveHP } from '../src/data/balance';
+import { BARRICADE, COST_WAVE, NODE_FX, PLAYER, SHOT_FX, STACKING, STEP, UNIT_FX, waveHP } from '../src/data/balance';
 import { BOSS_WAVE } from '../src/data/bosses';
 import { AFFIX, DROP, MYTHIC_FX, MYTHICS, RARITY } from '../src/data/lootTables';
 import { SLOTS } from '../src/data/loot';
@@ -28,7 +30,8 @@ import { ownedAffixes, rollAffixes } from '../src/sim/lootRoll';
 import { summonBoss } from '../src/sim/boss';
 import { setCounts } from '../src/sim/gear';
 import { recompute } from '../src/sim/state';
-import { HwId } from '../src/data/heartwood';
+import { HW_NODES, HwId } from '../src/data/heartwood';
+import { buyHw, canBuyHw, hwCost, hwSpendable } from '../src/sim/heartwood';
 
 type Policy = 'greedy' | 'wall' | 'dps' | 'nobuy';
 const args = process.argv.slice(2);
@@ -39,7 +42,7 @@ const lootPolicy = arg('loot', 'greedy') as EquipPolicy; let drops = 0;
 
 const s = createState(seed); const ev = new EventBus(); s.lootPolicy = lootPolicy;
 const bare = args.includes('--bare');
-const TUNE: Record<string, unknown> = { BOSS_WAVE, RARITY, DROP, AFFIX, MYTHIC_FX, PLAYER, BARRICADE, NODE_FX, COST_WAVE };
+const TUNE: Record<string, unknown> = { BOSS_WAVE, RARITY, DROP, AFFIX, MYTHIC_FX, PLAYER, BARRICADE, NODE_FX, COST_WAVE, STACKING, SHOT_FX, UNIT_FX };
 for (const kv of arg('tune', '').split(',').filter(Boolean)) {
   const [path, v] = kv.split('='), keys = path!.split('.'), last = keys.pop()!;
   const obj = keys.reduce<Record<string, unknown>>((o, k) => (o === TUNE ? TUNE[k] : o[k]) as Record<string, unknown>, TUNE);
@@ -137,8 +140,28 @@ function shop(): void {
   }
 }
 
-function decide(): void {
-  if (s.run.fallen) { shop(); if (canReplant(s)) { replant(s, ev); falls++; lastKills = 0; } return; }
+/** TB-146 milestones: "run r, run min m, play min p". */
+const doHwBuy = args.includes('--hwbuy'), cheapestHw = Math.min(...HW_NODES.map((n) => n.costs[0]!));
+const ms: Record<'hwAfford' | 'hwBuy' | 'bossReady' | 'bossClear', string> = { hwAfford: '-', hwBuy: '-', bossReady: '-', bossClear: '-' };
+let hwBought = 0;
+const mark = (k: keyof typeof ms, i: number) => { if (ms[k] === '-') ms[k] = `run ${falls + 1}, run min ${(s.run.runTime / 60).toFixed(1)}, play min ${at(i)}`; };
+function spendHw(): void {
+  for (;;) {
+    const n = HW_NODES.filter((x) => canBuyHw(s, x.id)).sort((a, b) => hwCost(s.meta, a.id)! - hwCost(s.meta, b.id)!)[0];
+    if (!n || !buyHw(s, ev, n.id)) return;
+    hwBought++;
+  }
+}
+
+function decide(i: number): void {
+  if (s.run.fallen) {
+    shop();
+    // Heartwood is spent only at a prestige (TB-149): on the fallen run, before Replant starts the next one
+    if (hwSpendable(s) >= cheapestHw) mark('hwAfford', i);
+    if (doHwBuy) { const before = hwBought; spendHw(); if (hwBought > before) mark('hwBuy', i); }
+    if (canReplant(s)) { replant(s, ev); falls++; lastKills = 0; }
+    return;
+  }
   if (bare && Object.keys(s.meta.loot.equipped).length) { s.meta.loot.equipped = {}; recompute(s); }
   if (policy !== 'nobuy') rallyIfLow(s, ev, policy === 'wall' ? 0.9 : 0.5);
 }
@@ -146,8 +169,8 @@ function decide(): void {
 const total = Math.round((minutes * 60) / STEP);
 for (let i = 0; i < total; i++) {
   step(s, STEP, { aim: crowdAim(s, s.stats.radius) }, ev); // player model: aims at the thickest crowd
-  if (i % 25 === 0) decide();
-  for (const e of ev.drain()) if (e.t === 'bossReady') summonBoss(s, ev); else if (e.t === 'bossEnd') bosses++; else if (e.t === 'loot') {
+  if (i % 25 === 0) decide(i);
+  for (const e of ev.drain()) if (e.t === 'bossReady') { mark('bossReady', i); summonBoss(s, ev); } else if (e.t === 'bossEnd') { bosses++; if (e.cleared) mark('bossClear', i); } else if (e.t === 'loot') {
     drops++; if (firstDrop === '-') firstDrop = at(i);
     firsts[e.rarity] ??= `run ${falls + 1}, min ${at(i)}, boss ${bosses}`;
   } else if (e.t === 'barricadeFell') { if (fallWave === '-') fallWave = String(e.wave); fallWaves.push(e.wave); fallMins.push(Math.round(e.runTime / 6) / 10); }
@@ -165,6 +188,7 @@ for (let i = 0; i < total; i++) {
 const header = `# Balance run · policy=${policy} loot=${lootPolicy} seed=${seed} minutes=${minutes}\n\n| min | wave | starlight | kills/min | kills | wall | vanguard | nodes | HW | falls | drops | satchel | gear |\n|---|---|---|---|---|---|---|---|---|---|---|---|---|\n`;
 const summary = `
 First fall at wave ${fallWave}. Falls (wave@run minutes): ${fallWaves.length ? fallWaves.map((w, i) => `${w}@${fallMins[i]}`).join(', ') : '-'}. Replants: ${falls}. Heartwood: ${s.meta.heartwood}. Best wave: ${s.meta.bestWave}.
+Milestones (TB-146): first Heartwood purchase affordable: ${ms.hwAfford}. First bought${doHwBuy ? '' : ' (no --hwbuy)'}: ${ms.hwBuy}. Heartwood nodes bought: ${hwBought}. First boss reached: ${ms.bossReady}. First boss cleared: ${ms.bossClear}.
 `;
 const worn = equippedItems(s.meta.loot), withGear = gearTrial(() => {}), noGear = gearTrial((l) => { l.equipped = {}; });
 const myth = worn.filter((x) => x.rarity === 'mythic'), noMyth = myth.length ? gearTrial((l) => { for (const x of myth) delete l.equipped[x.slot]; }) : 0;
