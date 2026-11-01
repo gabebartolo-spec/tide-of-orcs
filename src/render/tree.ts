@@ -4,6 +4,9 @@ import { SimState } from '../sim/state';
 import { canBuy, rankOf, unlocked } from '../sim/tree';
 import { P } from './palette';
 
+/** The UI scale: root font size over the 16 px it has at 1920×1080 and below (style.css, TB-143). */
+export const uiScale = (): number => parseFloat(getComputedStyle(document.documentElement).fontSize) / 16 || 1;
+
 /** Skill tree canvas with pan (drag) and zoom (wheel / pinch). Camera is view state only. */
 export class TreeRenderer {
   private g: CanvasRenderingContext2D;
@@ -19,6 +22,8 @@ export class TreeRenderer {
   private lastDraw = 0;
   /** Camera moved by pan or zoom since the last draw. */
   private stale = false;
+  /** CSS px per layout px: the root font size over its 16 px base (TB-143). */
+  private ui = 1;
 
   constructor(readonly canvas: HTMLCanvasElement) {
     this.g = canvas.getContext('2d')!;
@@ -42,7 +47,7 @@ export class TreeRenderer {
 
   private onMove(e: PointerEvent): void {
     const p = this.pts.get(e.pointerId); if (!p) return;
-    const dx = e.clientX - p.x, dy = e.clientY - p.y;
+    const dx = (e.clientX - p.x) / this.ui, dy = (e.clientY - p.y) / this.ui;
     if (this.pts.size === 2) {
       const [a, b] = [...this.pts.values()];
       const other = (a === p ? b : a)!;
@@ -59,14 +64,15 @@ export class TreeRenderer {
   }
 
   private local(e: { clientX: number; clientY: number }): [number, number] {
-    const r = this.canvas.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top];
+    const r = this.canvas.getBoundingClientRect(); return [(e.clientX - r.left) / this.ui, (e.clientY - r.top) / this.ui];
   }
 
   resize(): void {
     const r = this.canvas.getBoundingClientRect(); if (!r.width || !r.height) return;
-    const first = this.vw === 1, k = r.width / this.vw;
-    this.vw = r.width; this.vh = r.height; this.dpr = devicePixelRatio || 1;
-    this.canvas.width = Math.round(r.width * this.dpr); this.canvas.height = Math.round(r.height * this.dpr);
+    // Work in 1080p layout px (CSS px ÷ the UI scale, TB-143), so legend, labels and camera framing grow with the window
+    this.ui = uiScale(); const first = this.vw === 1, k = r.width / this.ui / this.vw;
+    this.vw = r.width / this.ui; this.vh = r.height / this.ui; this.dpr = (devicePixelRatio || 1) * this.ui;
+    this.canvas.width = Math.round(r.width * (devicePixelRatio || 1)); this.canvas.height = Math.round(r.height * (devicePixelRatio || 1));
     // Keep the same framing when the panel resizes: scale zoom with width.
     this.cam = first ? startCamera(this.vw, this.vh) : clampCamera({ ...this.cam, z: this.cam.z * k }, this.vw, this.vh);
   }
