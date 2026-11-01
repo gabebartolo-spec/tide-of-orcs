@@ -4,6 +4,8 @@ export const FIELD = { w: 900, h: 480, barX: 150, barW: 14, elfX: 64 } as const;
 export const WAVE_LEN = 24;
 export const ORC_CAP = 160;
 export const STEP = 1 / 50;
+/** Radians per second an orc's bob phase (`wob`) advances while it acts. The sprite clock is wob / ORC_WOB seconds (TB-131). */
+export const ORC_WOB = 8;
 
 export const PLAYER = { baseDmg: 9, baseFireRate: 1.2, arrowSpeed: 520, critMult: 3, fanRad: 0.09, aimHomingRadius: 70 } as const;
 /** The elf's arcing shot: fired only while the player aims; lands on the aim circle and hits every orc inside it. */
