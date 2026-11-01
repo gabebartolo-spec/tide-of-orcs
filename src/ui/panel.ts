@@ -9,7 +9,7 @@ import { canBuy, costOf, rankOf, unlocked } from '../sim/tree';
 import { canRally, rallyCost } from '../sim/vanguard';
 import { gain } from '../sim/prestige';
 import { bossesReady, canSummonBoss } from '../sim/boss';
-import { BOSS_WAVE } from '../data/bosses';
+import { BOSS_WAVE, TIERS } from '../data/bosses';
 import { fitPages } from './fit';
 import { NumberFormat, fmt, setNumberFormat } from './format';
 import { HW_NODE, HW_NODES, HwId } from '../data/heartwood';
@@ -25,6 +25,8 @@ export class Panel {
   private toastTimer = 0;
   private wipeArmed = false;
   private satchel: SatchelPane;
+  /** Boss tier picked for the next March (TB-148); 0 means the highest unlocked. */
+  private pickTier = 0;
 
   constructor(private game: GameController, private tree: TreeRenderer) {
     // static copy
@@ -50,6 +52,8 @@ export class Panel {
     // After a fall the field gives way to the Grove page (TB-136): the tree and satchel are spent between runs
     $('fallen-btn').onclick = () => { this.onCue('click'); this.setMode('camp'); this.setTab('grove'); };
     $('camp-go').onclick = () => this.doReplant();
+    $('tier-down').textContent = '‹'; $('tier-up').textContent = '›'; $('tier-down').setAttribute('aria-label', STR.tierDown); $('tier-up').setAttribute('aria-label', STR.tierUp);
+    $('tier-down').onclick = () => this.stepTier(-1); $('tier-up').onclick = () => this.stepTier(1);
     $('btn-pullback').textContent = STR.pullBack;
     $('btn-pullback').onclick = () => { this.onCue('click'); this.game.pullBack(); };
     $('btn-settings').onclick = () => { this.onCue('click'); this.setMode('settings'); this.setTab('settings'); };
@@ -85,7 +89,7 @@ export class Panel {
   /** Called ~6 Hz. */
   update(): void {
     const s = this.game.state;
-    $('st-star').textContent = fmt(s.run.starlight); $('st-wave').textContent = String(s.run.wave); $('st-kills').textContent = fmt(s.meta.lifetimeKills); $('st-heart').textContent = STR.heartAvail(hwSpendable(s), s.meta.heartwood + hwPending(s));
+    $('st-star').textContent = fmt(s.run.starlight); $('st-wave').textContent = s.run.tier > 1 ? STR.waveTide(s.run.wave, STR.tideName(s.run.tier)) : String(s.run.wave); $('st-kills').textContent = fmt(s.meta.lifetimeKills); $('st-heart').textContent = STR.heartAvail(hwSpendable(s), s.meta.heartwood + hwPending(s));
     $('hw-body').textContent = s.run.fallen ? STR.hwBody(hwSpendable(s)) : STR.hwClosed(hwSpendable(s));
     if (!$('pane-satchel').hidden) this.satchel.update();
     for (const b of $('hw-tree').querySelectorAll<HTMLButtonElement>('button[data-hw]')) b.disabled = !canBuyHw(s, b.dataset.hw as HwId);
@@ -95,7 +99,16 @@ export class Panel {
     $('pr-req').textContent = ok ? STR.replantReady(s.meta.bestWave) : STR.replantFrom(PRESTIGE.voluntaryWave);
     const b = document.getElementById('buy-btn') as HTMLButtonElement | null; if (b) b.disabled = !canBuy(s, NODE[this.tree.selected]);
     this.rallyButton('spear', $('dep-spear')); const bl = $('dep-blade'); bl.hidden = !s.stats.champion; if (s.stats.champion) this.rallyButton('blade', bl);
-    this.bossButton();
+    this.bossButton(); this.tierPicker();
+  }
+
+  private tier(): number { const top = this.game.state.meta.tier; return this.pickTier > 0 ? Math.min(this.pickTier, top) : top; }
+  private stepTier(d: number): void { this.onCue('click'); this.pickTier = Math.max(1, Math.min(this.game.state.meta.tier, this.tier() + d)); this.tierPicker(); }
+  private tierPicker(): void {
+    const top = this.game.state.meta.tier, t = this.tier();
+    $('camp-tier').hidden = top <= 1 || TIERS.max <= 1 || document.body.dataset.mode !== 'camp';
+    $('tier-name').textContent = STR.tideName(t);
+    ($('tier-down') as HTMLButtonElement).disabled = t <= 1; ($('tier-up') as HTMLButtonElement).disabled = t >= top;
   }
 
   private bossButton(): void {
@@ -119,7 +132,8 @@ export class Panel {
       else if (e.t === 'kill' && e.kind === 'boss') this.toast(STR.bossFalls);
       else if (e.t === 'bossReady') this.toast(STR.bossReady);
       else if (e.t === 'bossStart') this.toast(STR.bossStart);
-      else if (e.t === 'bossEnd') this.toast(e.cleared ? STR.bossCleared(fmt(e.loot), e.hw) : STR.bossFailed);
+      // a tier unlocks on the same step a boss is cleared: one toast says both
+      else if (e.t === 'bossEnd') { const up = events.find((x) => x.t === 'tierUnlocked'); this.toast(e.cleared ? STR.bossCleared(fmt(e.loot), e.hw) + (up && up.t === 'tierUnlocked' ? ' ' + STR.tierUnlocked(STR.tideName(up.tier)) : '') : STR.bossFailed); }
       else if (e.t === 'bought' && e.firstRank && e.id !== 'sharp') this.toast(STR.joins(NODE[e.id as keyof typeof NODE].name));
       else if (e.t === 'vanguardRallied') this.toast(STR.takesField(VAN_NAME[e.type as VanType]));
       else if (e.t === 'vanguardFell') this.toast(STR.vanFalls(VAN_NAME[e.type as VanType]));
@@ -221,7 +235,7 @@ export class Panel {
     $('fallen-hw').textContent = '+' + gain(); $('fallen').hidden = false;
   }
   private doReplant(): void {
-    const hw = this.game.replant(); $('fallen').hidden = true; this.tree.selected = 'sharp'; this.renderDetail(); this.renderHw(); this.setMode('run');
+    const hw = this.game.replant(this.tier()); $('fallen').hidden = true; this.tree.selected = 'sharp'; this.renderDetail(); this.renderHw(); this.setMode('run');
     this.toast(STR.replanted(hw));
   }
   private wipe(): void {

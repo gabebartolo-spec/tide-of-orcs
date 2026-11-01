@@ -8,6 +8,9 @@
  * --reroll spends Glimmer each minute rerolling the lowest affix on worn items while affordable (TB-128).
  * --hwbuy spends Heartwood after each fall on the cheapest affordable node (TB-146). The milestones line reports the first
  * Heartwood purchase (affordable, and bought when --hwbuy) and the first boss reached and cleared: run, run minute, play minute.
+ * Boss tiers (TB-148): Replant marches at the highest tier unlocked after a run that cleared a boss, else one tier lower
+ * (--tiertop: always the highest); tune TIERS.max/hp/loot/hw to turn them on. The tiers line
+ * reports when each tier unlocked, and each fall shows its tier (wave@minutes/tier).
  * Plays the pure sim with a scripted buy/rally policy and prints a per-minute markdown table.
  * Writes sim/out/<policy>-<date>.md unless --quiet.
  */
@@ -21,7 +24,7 @@ import { canRally, rally } from '../src/sim/vanguard';
 import { canReplant, replant } from '../src/sim/prestige';
 import { NODES, NodeId } from '../src/data/skillTree';
 import { BARRICADE, COST_WAVE, LOB, NODE_FX, PLAYER, SHOT_FX, STACKING, STEP, UNIT_FX, waveHP } from '../src/data/balance';
-import { BOSS_WAVE } from '../src/data/bosses';
+import { BOSS_WAVE, TIERS } from '../src/data/bosses';
 import { AFFIX, DROP, MYTHIC_FX, MYTHICS, RARITY } from '../src/data/lootTables';
 import { SLOTS } from '../src/data/loot';
 import { barFrac } from '../src/sim/barricade';
@@ -42,7 +45,7 @@ const lootPolicy = arg('loot', 'greedy') as EquipPolicy; let drops = 0;
 
 const s = createState(seed); const ev = new EventBus(); s.lootPolicy = lootPolicy;
 const bare = args.includes('--bare');
-const TUNE: Record<string, unknown> = { BOSS_WAVE, RARITY, DROP, AFFIX, MYTHIC_FX, PLAYER, LOB, BARRICADE, NODE_FX, COST_WAVE, STACKING, SHOT_FX, UNIT_FX };
+const TUNE: Record<string, unknown> = { BOSS_WAVE, TIERS, RARITY, DROP, AFFIX, MYTHIC_FX, PLAYER, LOB, BARRICADE, NODE_FX, COST_WAVE, STACKING, SHOT_FX, UNIT_FX };
 for (const kv of arg('tune', '').split(',').filter(Boolean)) {
   const [path, v] = kv.split('='), keys = path!.split('.'), last = keys.pop()!;
   const obj = keys.reduce<Record<string, unknown>>((o, k) => (o === TUNE ? TUNE[k] : o[k]) as Record<string, unknown>, TUNE);
@@ -94,7 +97,9 @@ function chaseSet(): void {
   if (changed) recompute(s);
 }
 const rows: string[] = []; let falls = 0, fallWave = '-', lastKills = 0;
-const fallWaves: number[] = [], fallMins: number[] = [];
+const fallWaves: number[] = [], fallMins: number[] = [], fallTiers: number[] = [], tierAt: string[] = [];
+const tierTop = args.includes('--tiertop');
+let clearedRun = false;
 
 /** Keep the wall: rally when it's under the threshold and we can afford it. */
 function rallyIfLow(st: SimState, bus: EventBus, at: number): void {
@@ -159,7 +164,7 @@ function decide(i: number): void {
     // Heartwood is spent only at a prestige (TB-149): on the fallen run, before Replant starts the next one
     if (hwSpendable(s) >= cheapestHw) mark('hwAfford', i);
     if (doHwBuy) { const before = hwBought; spendHw(); if (hwBought > before) mark('hwBuy', i); }
-    if (canReplant(s)) { replant(s, ev); falls++; lastKills = 0; hitRun = false; }
+    if (canReplant(s)) { replant(s, ev, tierTop || clearedRun ? s.meta.tier : s.run.tier - 1); falls++; lastKills = 0; hitRun = false; clearedRun = false; }
     return;
   }
   if (bare && Object.keys(s.meta.loot.equipped).length) { s.meta.loot.equipped = {}; recompute(s); }
@@ -172,10 +177,11 @@ for (let i = 0; i < total; i++) {
   step(s, STEP, { aim: crowdAim(s, s.stats.radius) }, ev); // player model: aims at the thickest crowd
   if (!hitRun && s.run.barHp < s.stats.barMax) { hitRun = true; firstHits.push(s.run.wave); } // TB-154: wave the wall first takes damage, per run
   if (i % 25 === 0) decide(i);
-  for (const e of ev.drain()) if (e.t === 'bossReady') { mark('bossReady', i); summonBoss(s, ev); } else if (e.t === 'bossEnd') { bosses++; if (e.cleared) mark('bossClear', i); } else if (e.t === 'loot') {
+  for (const e of ev.drain()) if (e.t === 'bossReady') { mark('bossReady', i); summonBoss(s, ev); } else if (e.t === 'bossEnd') { bosses++; if (e.cleared) { mark('bossClear', i); clearedRun = true; } } else if (e.t === 'loot') {
     drops++; if (firstDrop === '-') firstDrop = at(i);
     firsts[e.rarity] ??= `run ${falls + 1}, min ${at(i)}, boss ${bosses}`;
-  } else if (e.t === 'barricadeFell') { if (fallWave === '-') fallWave = String(e.wave); fallWaves.push(e.wave); fallMins.push(Math.round(e.runTime / 6) / 10); }
+  } else if (e.t === 'barricadeFell') { if (fallWave === '-') fallWave = String(e.wave); fallWaves.push(e.wave); fallMins.push(Math.round(e.runTime / 6) / 10); fallTiers.push(s.run.tier); }
+  else if (e.t === 'tierUnlocked') tierAt.push(`${e.tier} at run ${falls + 1}, play min ${at(i)}`);
   if (i % Math.round(60 / STEP) === 0) {
     if (!bare) chaseSet();
     keepForced(); if (doReroll && !bare) rerollWorn();
@@ -189,8 +195,9 @@ for (let i = 0; i < total; i++) {
 
 const header = `# Balance run · policy=${policy} loot=${lootPolicy} seed=${seed} minutes=${minutes}\n\n| min | wave | starlight | kills/min | kills | wall | vanguard | nodes | HW | falls | drops | satchel | gear |\n|---|---|---|---|---|---|---|---|---|---|---|---|---|\n`;
 const summary = `
-First fall at wave ${fallWave}. Falls (wave@run minutes): ${fallWaves.length ? fallWaves.map((w, i) => `${w}@${fallMins[i]}`).join(', ') : '-'}. Replants: ${falls}. First wall damage (wave, per run): ${firstHits.join(', ') || '-'}. Heartwood: ${s.meta.heartwood}. Best wave: ${s.meta.bestWave}.
+First fall at wave ${fallWave}. Falls (wave@run minutes): ${fallWaves.length ? fallWaves.map((w, i) => `${w}@${fallMins[i]}${fallTiers[i]! > 1 ? '/t' + fallTiers[i] : ''}`).join(', ') : '-'}. Replants: ${falls}. First wall damage (wave, per run): ${firstHits.join(', ') || '-'}. Heartwood: ${s.meta.heartwood}. Best wave: ${s.meta.bestWave}.
 Milestones (TB-146): first Heartwood purchase affordable: ${ms.hwAfford}. First bought${doHwBuy ? '' : ' (no --hwbuy)'}: ${ms.hwBuy}. Heartwood nodes bought: ${hwBought}. First boss reached: ${ms.bossReady}. First boss cleared: ${ms.bossClear}.
+Tiers (TB-148): ${tierAt.length ? tierAt.join('; ') : 'none unlocked'}. Starlight earned per run minute, last run: ${Math.round(s.run.earned / Math.max(1, s.run.runTime / 60))}.
 `;
 const worn = equippedItems(s.meta.loot), withGear = gearTrial(() => {}), noGear = gearTrial((l) => { l.equipped = {}; });
 const myth = worn.filter((x) => x.rarity === 'mythic'), noMyth = myth.length ? gearTrial((l) => { for (const x of myth) delete l.equipped[x.slot]; }) : 0;

@@ -35,6 +35,8 @@ export const migrations: Record<number, (s: AnySave) => AnySave> = {
   7: (s) => ({ ...s, version: 8, run: { ...(s.run as object), thunder: 0, splinterUsed: false, freeRallyUsed: false } }),
   /** v8 → v9: Heirloom (TB-101); no item named yet. */
   8: (s) => { const m = s.meta as { loot: object }; return { ...s, version: 9, meta: { ...m, loot: { ...m.loot, heirloom: null } } }; },
+  /** v9 → v10: boss tiers (TB-148); only the base tier unlocked, the run plays it. */
+  9: (s) => ({ ...s, version: 10, run: { ...(s.run as object), tier: 1 }, meta: { ...(s.meta as object), tier: 1 } }),
 };
 
 export function migrate(raw: unknown): Save {

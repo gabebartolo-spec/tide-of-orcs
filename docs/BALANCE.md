@@ -56,6 +56,7 @@ Rangers and Wardens keep straight volleys at `fireRate = 1.2 × 1.15^draw` per s
 | `VANGUARD.walkSpeed`, `engageRange` | 60 px/s; orcs within r + 18 px engage a vanguard | balance.ts |
 | `ORC_TYPES` | hp/speed/loot/radius/spawn multiples per kind (GDD §4) | orcs.ts |
 | `BOSS_WAVE`, `BOSS_SCRIPT` | every 25 waves, 60 s, clear loot 40 × waveLoot, clear Heartwood 3 per 25 waves (`hwPerTier`); 8 mini-waves, 28 orcs | bosses.ts |
+| `TIERS` | max 6, hp 2, loot 1.5, hw 1: at tier t orc HP × 2^(t−1), starlight per kill and boss clear × 1.5^(t−1), boss Heartwood × t; a boss cleared at your highest tier unlocks the next (P-148 set F, director 2026-11-02) | bosses.ts |
 | `HW_FX` | Early Dawn +2 waves/rank, Stout Timber +0.25/rank, Warlords +0.5/rank | heartwood.ts |
 | `SKY` (render only) | 600 s day cycle, dusk alpha 0.85, two hill bands, lamp radius 150 | presentation.ts |
 | `AUDIO`, `CUES` (audio only) | gains, ducking, per-cue throttles | audio.ts |
@@ -142,6 +143,24 @@ Mythic flags (TB-128): `--mythic <id>` wears that mythic from the start and ends
 Report columns per minute: wave, starlight, kills/min, kills, wall %, vanguard count, nodes owned, HW, falls. Summary line gives the first fall wave, every fall wave in order (`Falls:`), replants, Heartwood, best wave. (Before TB-084 the "First fall" field printed the last fall.) Writes `sim/out/<policy>-<date>.md` unless `--quiet`. CI runs 30 minutes of greedy as a smoke test.
 
 ## Proposed
+
+### P-148 · Boss tiers: how hard each tier hits, and what it pays (2026-11-02, TB-148)
+Director chose *unlock across runs*: clearing a boss wave while at your highest tier unlocks the next for good; at March you pick any unlocked tier. Shipped switched off (`TIERS.max` 1); set F moved to Current 2026-11-02. Each tier above 1 multiplies orc HP by `hp^(tier−1)`, starlight per kill and per boss by `loot^(tier−1)`, and boss Heartwood by `1 + hw × (tier−1)`, from wave 1.
+
+Sim: `npx tsx sim/run.ts --minutes 360 --hwbuy --quiet --tune TIERS.max=6,TIERS.hp=…,TIERS.loot=…,TIERS.hw=…`, seed 1, on TB-154 balance (main 2cad1a3). The bot marches at its highest tier after a run that cleared a boss, otherwise one tier lower (`--tiertop` always marches at the highest: it walls itself at the top tier, clears 3–5 bosses in 6 h and ends with *less* Heartwood than tiers off, 74–91 vs 128).
+
+| Set | hp | loot | hw | Tiers reached (play min) | Bosses | Heartwood at 6 h | Best wave | First mythic (min) | Starlight/min, last run |
+|---|---|---|---|---|---|---|---|---|---|
+| off | – | – | – | – | 26 | 128 | 37 | 247 | 8.1k |
+| B | 2 | 2 | 0.5 | t2 84, t3 110, t4 137, t5 146, t6 155 | 20 | 213 | 29 | 305 | 1.9M |
+| C | 3 | 3 | 0.5 | t2 84, t3 127, t4 136 | 21 | 162 | 30 | 136 | 820k |
+| D | 4 | 3 | 1 | t2 84, t3 127, t4 152 | 21 | 203 | 31 | 142 | 1.0M |
+| E | 2 | 2 | 1 | t2 84, t3 110, t4 137, t5 146, t6 171 | 23 | 318 | 29 | 186 | 1.6M |
+| F | 2 | 1.5 | 1 | t2 84, t3 127, t4 136, t5 160, t6 185 | 22 | 314 | 29 | 284 | 453k |
+
+Read: tier 2 always opens at the first boss clear (84 min). ×2 HP lets the bot climb to tier 6 in 2.5–3 h; ×3–×4 HP stalls at tier 4. Best wave drops (29–31 vs 37) because each tier is fought at higher orc HP, so best wave stops being the progress number and the tier takes over. Heartwood: `hw` 1 gives 2.5× tiers-off (314–318), `hw` 0.5 gives 1.3–1.7×. Starlight per minute at high tiers is 50–240× tiers-off; `loot` 1.5 (F) keeps it lowest while Heartwood holds. Higher `hp` (C, D) brings the first mythic forward (more boss loot rolls at tier 3–4).
+
+Proposed: **F** (`max 6, hp 2, loot 1.5, hw 1`): six tiers reached over ~3 h, the most Heartwood bar E, and the smallest starlight jump. Director picked F (2026-11-02); now in Current.
 
 ### P-154 · Early game: no one-shots, thinner wall, harder orcs (2026-11-01, TB-154, applied)
 Director: arrows one-shot early orcs, the wall is far too healthy (no damage until wave 3), orcs hit far too soft. Before: lob 9 × 3 = 27 vs wave-1 grunt 10 HP (one shot to wave 7); wall 400, a wave-1 swing 2.5. Director chose the hard set: `LOB.dmgMult` 3 → 1, `BARRICADE.baseHp` 400 → 150, `BARRICADE.wallMult` 10 → 25 (wave-1 swing 6.25; vanguard damage unchanged, it reads `orcAtkFrac`).

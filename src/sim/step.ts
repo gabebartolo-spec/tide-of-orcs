@@ -6,7 +6,7 @@ import { MYTHIC_FX, SET_FX } from '../data/lootTables';
 import { FX, addZone, bounce, damage, rootOrc, impact, lob, nearestOrc, rollFx, shoot, starfall, takenMult, unitHit, volley } from './combat';
 import { barricadeHit, barricadeRegen } from './barricade';
 import { bossStep } from './boss';
-import { BOSS_WAVE } from '../data/bosses';
+import { BOSS_WAVE, tierHp, tierLoot } from '../data/bosses';
 import { engagedVanguard, hurtVanguard, vanguardStep } from './vanguard';
 
 /** Player aim: the pointer's position on the field, or null when the player is not aiming. The elf only shoots while aimed. */
@@ -21,10 +21,10 @@ export function spawnOrc(s: SimState, kind: OrcKind, y?: number, champ = false):
   const w = s.run.wave, F = s.stats.foes[kind];
   const o = s.orcs.alloc(); if (!o) { if (champ && s.run.boss) s.run.boss.left--; return false; }
   const T = ORC_TYPES[kind];
-  const hp = waveHP(w) * T.hp * F.hp;
+  const hp = waveHP(w) * T.hp * F.hp * tierHp(s.run.tier);
   o.kind = kind; o.x = W + 24; o.y = y ?? 50 + s.rng.next() * (H - 100);
   o.hp = hp; o.maxhp = hp; o.spd = T.speed * waveSpeedMult(w); o.r = T.radius; o.atk = hp * BARRICADE.orcAtkFrac;
-  o.loot = waveLoot(w) * T.loot * F.loot;
+  o.loot = waveLoot(w) * T.loot * F.loot * tierLoot(s.run.tier);
   o.dead = false; o.burn = 0; o.bleed = 0; o.slow = 0; o.pin = 0; o.root = 0; o.burnT = 0; o.chill = 0; o.stun = 0; o.hitT = 0; o.wob = s.rng.next() * 6.28; o.swingT = s.rng.next(); o.champ = champ;
   return true;
 }

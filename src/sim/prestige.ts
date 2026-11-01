@@ -22,7 +22,8 @@ export function pullBack(s: SimState, ev: EventBus): boolean {
   return true;
 }
 
-export function replant(s: SimState, ev: EventBus): number {
+/** tier: the boss tier the next run plays at (TB-148), clamped to those unlocked; the highest unlocked if omitted. */
+export function replant(s: SimState, ev: EventBus, tier = s.meta.tier): number {
   if (!canReplant(s)) return 0;
   const hw = gain(), forced = s.run.fallen;
   s.meta.heartwood += hw; s.meta.prestiges++; s.meta.bestWave = Math.max(s.meta.bestWave, s.run.wave);
@@ -30,6 +31,7 @@ export function replant(s: SimState, ev: EventBus): number {
   // The Grove tree and banked starlight carry into the next run (TB-136): the tree is bought only between runs
   const levels = s.run.levels, starlight = s.run.starlight;
   s.run = freshRun(); s.run.levels = levels; s.run.starlight = starlight;
+  s.run.tier = Math.max(1, Math.min(s.meta.tier, Math.floor(tier)));
   s.orcs.clear(); s.shots.clear(); s.vans.clear(); s.zones.clear();
   // run-only set and mythic state starts over with the run
   s.knifeN = 0; s.freeRallyT = 0; s.starAcc = 0; s.starfallT = 0;

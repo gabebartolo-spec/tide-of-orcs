@@ -171,6 +171,10 @@ body[data-mode="camp"] .play { display: none; }
 body[data-mode="camp"] .panel { width: min(73.75rem, 100%); margin-inline: auto; }
 .campbar { display: flex; align-items: center; gap: 0.625rem; padding: 0.375rem 0.5rem 0.625rem; }
 .campbar h2 { font-family: var(--display); font-weight: 500; font-size: 1.375rem; margin: 0 auto 0 0; }
+/* Boss tier picker (TB-148): shown once a second tier is unlocked */
+.tierpick { display: flex; align-items: center; gap: 0.375rem; }
+.tierpick[hidden] { display: none; }
+.tierpick #tier-name { min-width: 7.5rem; text-align: center; font-family: var(--display); color: var(--amber); }
 header #btn-settings { align-self: center; }
 
 /* Gilded vine (TB-136): a faint gold leaf-and-blossom tile behind the page and the camp pages */
