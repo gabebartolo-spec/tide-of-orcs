@@ -15,6 +15,7 @@ import { orcAnimT, orcState, orcSwingT, swingClipT, vanState } from './actorStat
 import { Ground, decorImg } from './ground';
 import { Ambience } from './ambience';
 import { textScale } from './textScale';
+import { Interp } from './interp';
 import { GROUND, LOOT_VFX, ORC_SPRITE, SKY, VFX, dusk } from '../data/presentation';
 import { SLOTS } from '../data/loot';
 import { setTiers } from '../sim/gear';
@@ -44,6 +45,8 @@ export class FieldRenderer {
   reducedMotion = false;
   readonly ceremony = new Ceremony();
   readonly sprites = new Sprites();
+  /** Draws movers between sim steps (TB-194); main.ts snaps it and sets alpha. */
+  readonly interp = new Interp();
   private ground = new Ground();
   private ambience = new Ambience(BAR_X + BAR_W);
   /** Animation clock for sprite frames. */
@@ -254,20 +257,7 @@ export class FieldRenderer {
     for (const o of orcs) { this.orc(s, o); if (o.burn > 0 && !this.reducedMotion && Math.random() < A.flameRate * dt) this.fx.flame(o.x + (Math.random() - 0.5) * o.r, o.y, Math.random() < 0.5 ? P.fire : P.amber); }
 
     this.drawBeams(dt);
-    s.shots.forEach((a) => {
-      if (a.kind === 'lob') { this.lob(a); return; }
-      if (a.kind === 'fireball') { this.fireball(a, dt); return; }
-      if (a.kind === 'star') { this.star(a); return; }
-      if (a.kind === 'bounce') { g.fillStyle = P.arcaneGlow; g.beginPath(); g.arc(a.x, a.y, A.orbR * 2.2, 0, 6.28); g.fill(); g.fillStyle = P.arcane; g.beginPath(); g.arc(a.x, a.y, A.orbR * 1.4, 0, 6.28); g.fill(); g.fillStyle = P.arcaneCore; g.beginPath(); g.arc(a.x, a.y, A.orbR * 0.7, 0, 6.28); g.fill(); }
-      const l = a.kind === 'bolt' ? 22 : a.kind === 'knife' ? 8 : a.kind === 'bounce' ? VFX.arrows.boltLen : 14, n = Math.hypot(a.vx, a.vy) || 1, ux = a.vx / n, uy = a.vy / n;
-      g.strokeStyle = a.kind === 'bolt' ? P.bark : a.kind === 'knife' ? P.knife : a.kind === 'bounce' ? P.arcane : P.cream; g.lineWidth = a.kind === 'bolt' || a.kind === 'bounce' ? 3 : 1.5;
-      if (!this.reducedMotion) {
-        const T = VFX.trail, ghosts = T[a.kind], step = n * T.gap;
-        for (let i = 1; i <= ghosts; i++) { const bx = a.x - ux * step * i, by = a.y - uy * step * i; g.globalAlpha = T.alpha * (1 - (i - 1) / ghosts); g.beginPath(); g.moveTo(bx, by); g.lineTo(bx - ux * l, by - uy * l); g.stroke(); }
-        g.globalAlpha = 1;
-      }
-      g.beginPath(); g.moveTo(a.x, a.y); g.lineTo(a.x - ux * l, a.y - uy * l); g.stroke();
-    });
+    s.shots.forEach((a) => { const d = this.interp.off(a); g.translate(d.dx, d.dy); this.shot(a, dt); g.translate(-d.dx, -d.dy); });
     if (this.puffs.length) {
       g.save(); g.shadowColor = P.fireGlow; g.shadowBlur = VFX.fireball.glow;
       for (const pf of this.puffs) { const k = pf.life / pf.max, r = pf.r * (1.4 - 0.5 * k); g.globalAlpha = Math.min(1, k * 1.5); g.fillStyle = k > 0.66 ? P.fireCore : k > 0.33 ? P.ember : P.fire; g.beginPath(); g.arc(pf.x, pf.y, r, 0, 6.28); g.fill(); }
@@ -287,7 +277,7 @@ export class FieldRenderer {
       g.globalAlpha = sm.life / VFX.stormLife; g.strokeStyle = P.sparkGlow; g.lineWidth = A.boltGlow; g.stroke(); g.strokeStyle = P.spark; g.lineWidth = A.boltW; g.stroke(); g.globalAlpha = 1;
     }
     if (s.stats.hawk) {  // TB-068: flapping hawk sprite centred on the bird, facing its heading (x moves by -sin a); bark diamond until the sheet loads
-      const h = s.hawk; g.save(); g.translate(h.x, h.y); if (Math.sin(h.a) > 0) g.scale(-1, 1);
+      const h = s.hawk, i = this.interp.off(h); g.save(); g.translate(h.x + i.dx, h.y + i.dy); if (Math.sin(h.a) > 0) g.scale(-1, 1);
       if (!this.sprites.draw(g, 'hawk', this.clock, 0, 0, ACTOR_R)) { g.fillStyle = P.bark; g.beginPath(); g.moveTo(-12, 0); g.lineTo(0, -3); g.lineTo(12, 0); g.lineTo(0, 3); g.closePath(); g.fill(); }
       g.restore();
     }
@@ -418,8 +408,25 @@ export class FieldRenderer {
     if (!this.reducedMotion) { g.globalAlpha = VFX.trail.alpha; g.beginPath(); g.moveTo(a.x, a.y - a.h - L); g.lineTo(a.x, a.y - a.h - L * 5); g.stroke(); g.globalAlpha = 1; }
   }
 
+  /** One projectile at its sim position (the caller offsets it for interpolation). */
+  private shot(a: Projectile, dt: number): void {
+    const g = this.g, A = VFX.arrows;
+    if (a.kind === 'lob') { this.lob(a); return; }
+    if (a.kind === 'fireball') { this.fireball(a, dt); return; }
+    if (a.kind === 'star') { this.star(a); return; }
+    if (a.kind === 'bounce') { g.fillStyle = P.arcaneGlow; g.beginPath(); g.arc(a.x, a.y, A.orbR * 2.2, 0, 6.28); g.fill(); g.fillStyle = P.arcane; g.beginPath(); g.arc(a.x, a.y, A.orbR * 1.4, 0, 6.28); g.fill(); g.fillStyle = P.arcaneCore; g.beginPath(); g.arc(a.x, a.y, A.orbR * 0.7, 0, 6.28); g.fill(); }
+    const l = a.kind === 'bolt' ? 22 : a.kind === 'knife' ? 8 : a.kind === 'bounce' ? VFX.arrows.boltLen : 14, n = Math.hypot(a.vx, a.vy) || 1, ux = a.vx / n, uy = a.vy / n;
+    g.strokeStyle = a.kind === 'bolt' ? P.bark : a.kind === 'knife' ? P.knife : a.kind === 'bounce' ? P.arcane : P.cream; g.lineWidth = a.kind === 'bolt' || a.kind === 'bounce' ? 3 : 1.5;
+    if (!this.reducedMotion) {
+      const T = VFX.trail, ghosts = T[a.kind], step = n * T.gap;
+      for (let i = 1; i <= ghosts; i++) { const bx = a.x - ux * step * i, by = a.y - uy * step * i; g.globalAlpha = T.alpha * (1 - (i - 1) / ghosts); g.beginPath(); g.moveTo(bx, by); g.lineTo(bx - ux * l, by - uy * l); g.stroke(); }
+      g.globalAlpha = 1;
+    }
+    g.beginPath(); g.moveTo(a.x, a.y); g.lineTo(a.x - ux * l, a.y - uy * l); g.stroke();
+  }
+
   private orc(s: SimState, o: Orc): void {
-    const g = this.g, wind = this.windUp(o); g.save(); g.translate(o.x + wind.dx, o.y);
+    const g = this.g, wind = this.windUp(o), d = this.interp.off(o); g.save(); g.translate(o.x + d.dx + wind.dx, o.y + d.dy);
     g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, o.r * 0.9, o.r * 0.9, o.r * 0.35, 0, 0, 6.28); g.fill();
     // Burning or chilled: the orc's own body takes the colour and a soft rim of it, so shading still reads (TB-089).
     const tint = o.burn > 0 ? P.fireTint : o.chill > 0 ? P.frostTint : '', glow = o.burn > 0 ? P.fire : o.chill > 0 ? P.frost : '';
@@ -443,7 +450,7 @@ export class FieldRenderer {
 
   /** Companion wolf (TB-160): runs while it closes on its target, the bite clip scrubbed by the bite cooldown; faces its target. */
   private wolf(s: SimState, w: Wolf): void {
-    const g = this.g; g.save(); g.translate(w.x, w.y); g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 8, 12, 4, 0, 0, 6.28); g.fill();
+    const g = this.g, i = this.interp.off(w); g.save(); g.translate(w.x + i.dx, w.y + i.dy); g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 8, 12, 4, 0, 0, 6.28); g.fill();
     if (w.tx < w.x - 2) g.scale(-1, 1);
     const d = Math.hypot(w.tx - w.x, w.ty - w.y), near = !!nearestOrc(s, w.x, w.y, (o) => Math.hypot(o.x - w.x, o.y - w.y) < SOURCES.wolf.reach), t = near ? Math.min(1, w.biteT / SOURCES.wolf.biteCd) * this.sprites.duration('wolf.attack') * 0.999 : this.clock;
     this.sprites.drawActor(g, 'wolf', near ? 'attack' : d > 2 ? 'walk' : 'idle', t, 0, 8, ACTOR_R); g.restore();
@@ -469,7 +476,7 @@ export class FieldRenderer {
   }
 
   private van(s: SimState, v: Vanguard): void {
-    const g = this.g, T = VANGUARD[v.type]; g.save(); g.translate(v.x, v.y); if (v.face < 0) g.scale(-1, 1);
+    const g = this.g, T = VANGUARD[v.type]; const i = this.interp.off(v); g.save(); g.translate(v.x + i.dx, v.y + i.dy); if (v.face < 0) g.scale(-1, 1);
     g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 16, 12, 4, 0, 0, 6.28); g.fill();
     const vst = vanState(s, v), vt = vst === 'attack' ? swingClipT(v.swingT, T.cd, this.sprites.duration(`van.${v.type}.attack`), VFX.strike[v.type]) : this.clock;
     this.sprites.drawActor(g, `van.${v.type}`, vst, vt, 0, 16, ACTOR_R, v.hitT > 0);

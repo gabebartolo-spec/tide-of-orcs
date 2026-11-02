@@ -1,31 +1,31 @@
 # Render every approved clip from the field camera (GAMECAM 20, CAMROT 0) into tide-assets\sprites\frames\<key>_N.png,
 # then pack_sprites.py builds public/sprites/sheet_orcs.webp + sheet_elf.webp + atlas.json. Each entry repeats its approved recipe's env exactly;
 # only the camera, ORTHO (one per actor so walk and attack share a pixel scale), RES and frames differ.
-param([string[]]$Only = @())
+param([string[]]$Only = @(), [string]$Frames = "", [switch]$Missing)  # -Frames: render into another frames dir; -Missing: only frames with no png yet (TB-194)
 $s = $PSScriptRoot; $bl = "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe"; $a = "C:\Users\DANTE\Documents\tide-assets"; $mx = "$a\mixamo"
 $o = "$a\sprites\frames"; New-Item -ItemType Directory -Force $o | Out-Null
 $vars = "WYAW", "RMATCH", "SWING", "MIRR", "H1", "MPH", "HINGE", "FREEZE", "WOFFS", "OFFS", "REST", "ARMSET", "ELBOWSET", "ARMTWIST", "DIRECT", "INPLACE", "ALIGN", "GRIP2", "CLIP", "CLIPDBG", "ELBOW", "HPROBE", "LHPROBE", "AMP", "DAMP", "ABD", "HIDE", "FOCUS",
   "QUIVER", "QFLOAT", "QPOSE", "QLEN", "QBOB", "ARROWF", "ARROWL", "RESTUP", "BOWALIGN", "GRIPSIDE", "ARROWPATH", "ARROWDBG",  # elf hero (bow + floating quiver)
   "FMATCH", "FINGSRC", "MPROBE", "MALLETAXIS", "MALLETMAX", "MALLETFORE", "MALLETSET"  # bladedancer daggers
-$even = { param($n) (0..($n - 1) | Where-Object { $_ % 2 -eq 0 }) -join "," }
+$all = { param($n) (0..($n - 1)) -join "," }  # TB-194: every clip frame (attacks were even frames only, 15 fps)
 $jobs = @(
   @{ key = "orc.grunt"; m = "$a\grunt2\grunt2u.blend"; c = "$mx\Sword And Shield Walk.fbx"; ortho = "2.4"; fr = (0..32 -join ","); env = @{  # walk_grunt.ps1 (v19)
       RMATCH = "RightShoulder,RightArm,RightForeArm,RightHand"; SWING = "mixamorig:LeftArm:1;mixamorig:LeftForeArm:1"; H1 = "1"; MPH = "2"; HINGE = "world"; FREEZE = "mixamorig:RightShoulder,mixamorig:RightHand"
       MIRR = "mixamorig:LeftArm>mixamorig:RightArm:2.8;mixamorig:LeftForeArm>mixamorig:RightForeArm:1"
       WOFFS = "mixamorig:LeftArm:1,0,0,-25;mixamorig:RightArm:1,0,0,-17;mixamorig:RightForeArm:1,0,0,18;mixamorig:RightHand:1,0,0,20" } },
-  @{ key = "orc.grunt.attack"; m = "$a\grunt2\grunt2u.blend"; c = "$mx\Standing Melee Attack Downward AS100.fbx"; ortho = "2.4"; fr = (& $even 69); env = @{  # attack_grunt.ps1 (v3)
+  @{ key = "orc.grunt.attack"; m = "$a\grunt2\grunt2u.blend"; c = "$mx\Standing Melee Attack Downward AS100.fbx"; ortho = "2.4"; fr = (& $all 69); env = @{  # attack_grunt.ps1 (v3)
       RMATCH = "RightShoulder,RightArm,RightForeArm,RightHand,LeftArm,LeftForeArm"; WOFFS = "mixamorig:RightArm:0,1,0,-45;mixamorig:RightHand:0,1,0,15" } },
   @{ key = "van.spear"; m = "$a\elf_spearman\spearman_1h_mid.blend"; c = "$mx\Sword And Shield Walk.fbx"; ortho = "2.6"; fr = (0..32 -join ","); env = @{  # walk_spearman_1h.ps1 (v16)
       RMATCH = "RightShoulder,RightArm,RightForeArm,RightHand"; SWING = "mixamorig:LeftArm:1;mixamorig:LeftForeArm:0"; H1 = "1"; MPH = "2"; HINGE = "world"; FREEZE = "mixamorig:RightShoulder,mixamorig:RightHand"
       MIRR = "mixamorig:LeftArm>mixamorig:RightArm:2.0;mixamorig:LeftForeArm>mixamorig:RightForeArm:1"
       WOFFS = "mixamorig:RightArm:1,0,0,-5;mixamorig:RightForeArm:1,0,0,10;mixamorig:RightHand:1,0,0,40;mixamorig:RightHand:0,0,1,130"
       ARMSET = "Left:18.6,-15.6"; ELBOWSET = "Left:37"; ARMTWIST = "Left:17.1,22.7" } },
-  @{ key = "van.spear.attack"; m = "$a\elf_spearman\spearman_2h_g0.08.blend"; c = "$mx\Bayonet Stab AS100.fbx"; ortho = "2.6"; fr = (& $even 99); env = @{  # attack_spearman.ps1 (v1)
+  @{ key = "van.spear.attack"; m = "$a\elf_spearman\spearman_2h_g0.08.blend"; c = "$mx\Bayonet Stab AS100.fbx"; ortho = "2.6"; fr = (& $all 99); env = @{  # attack_spearman.ps1 (v1)
       RMATCH = "RightShoulder,RightArm,RightForeArm,RightHand,LeftShoulder,LeftArm,LeftForeArm,LeftHand"; INPLACE = "1"; ALIGN = "Left:-0.607,-0.5,0.618;Right:0.012,-0.004,1.0"; GRIP2 = "1" } },
   @{ key = "orc.berserker"; m = "$a\berserker\berserker_split.blend"; c = "$mx\Orc Walk.fbx"; ortho = "2.0"; fr = (0..35 -join ","); env = @{  # walk_berserker.ps1 (v1)
       RMATCH = "LeftShoulder,LeftArm,LeftForeArm,LeftHand,RightShoulder,RightArm,RightForeArm,RightHand"; INPLACE = "1"; GRIP2 = "1"
       WOFFS = "mixamorig:LeftHand:0,0,1,90;mixamorig:RightHand:0,0,1,-90;mixamorig:LeftHand:1,0,0,-20;mixamorig:RightHand:1,0,0,-20" } },
-  @{ key = "orc.berserker.attack"; m = "$a\berserker\berserker_split.blend"; c = "$mx\Standing Melee Attack Downward AS100.fbx"; ortho = "2.0"; fr = (& $even 69); env = @{  # attack_berserker.ps1 (v1)
+  @{ key = "orc.berserker.attack"; m = "$a\berserker\berserker_split.blend"; c = "$mx\Standing Melee Attack Downward AS100.fbx"; ortho = "2.0"; fr = (& $all 69); env = @{  # attack_berserker.ps1 (v1)
       RMATCH = "LeftShoulder,LeftArm,LeftForeArm,LeftHand,RightShoulder,RightArm,RightForeArm,RightHand"; INPLACE = "1"; GRIP2 = "1" } },
   @{ key = "orc.drummer"; m = "$a\drummer\drummer_up.blend"; c = "$mx\Orc Walk.fbx"; ortho = "2.0"; fr = (0..35 -join ","); env = @{  # walk_drummer.ps1 (v2: drum tilted +35 deg in the blend); walk only, no attack
       RMATCH = "LeftShoulder,LeftArm,LeftForeArm,LeftHand,RightShoulder,RightArm,RightForeArm,RightHand"; INPLACE = "1"
@@ -33,22 +33,22 @@ $jobs = @(
   @{ key = "orc.shaman"; m = "$a\shaman\shaman_cut2.blend"; c = "$mx\Sword And Shield Walk.fbx"; ortho = "2.0"; fr = (0..32 -join ","); env = @{  # walk_shaman.ps1 (v4)
       RMATCH = "RightShoulder,RightArm,RightForeArm,RightHand"; SWING = "mixamorig:LeftArm:1;mixamorig:LeftForeArm:0"; H1 = "1"; MPH = "2"; HINGE = "world"; FREEZE = "mixamorig:RightShoulder"
       MIRR = "mixamorig:LeftArm>mixamorig:RightArm:1.0;mixamorig:LeftForeArm>mixamorig:RightForeArm:0.5"; REST = "mixamorig:RightArm,mixamorig:RightForeArm,mixamorig:RightHand" } },
-  @{ key = "orc.shaman.attack"; m = "$a\shaman\shaman_cut2.blend"; c = "$mx\Standing 1H Magic Attack 01 MIRROR AS100.fbx"; ortho = "2.0"; fr = (& $even 69); env = @{  # cast_shaman.ps1 (v2)
+  @{ key = "orc.shaman.attack"; m = "$a\shaman\shaman_cut2.blend"; c = "$mx\Standing 1H Magic Attack 01 MIRROR AS100.fbx"; ortho = "2.0"; fr = (& $all 69); env = @{  # cast_shaman.ps1 (v2)
       RMATCH = "RightShoulder,RightArm,RightForeArm,RightHand,LeftShoulder,LeftArm,LeftForeArm,LeftHand"; REST = "mixamorig:RightArm,mixamorig:RightForeArm,mixamorig:RightHand"; FREEZE = "mixamorig:RightShoulder"
       INPLACE = "1"; WOFFS = "mixamorig:RightArm:1,0,0,-15" } },
   @{ key = "orc.runner"; m = "$a/runner/runner_split.blend"; c = "$mx/Orc Walk.fbx"; ortho = "1.8"; fr = (0..35 -join ","); env = @{  # walk_runner.ps1 (v2); ORTHO 1.8 = the attack's, so both share a pixel scale
       WYAW = "mixamorig:Neck,mixamorig:Head>mixamorig:Spine2"; RMATCH = "Spine,LeftShoulder,LeftArm,LeftForeArm,LeftHand,RightShoulder,RightArm,RightForeArm,RightHand"; INPLACE = "1"; GRIP2 = "1"; WOFFS = "mixamorig:RightHand:0,0,1,-60" } },
-  @{ key = "orc.runner.attack"; m = "$a/runner/runner_split.blend"; c = "$mx/Standing Melee Attack Downward AS100.fbx"; ortho = "1.8"; fr = (& $even 69); env = @{  # attack_runner.ps1 (v4)
+  @{ key = "orc.runner.attack"; m = "$a/runner/runner_split.blend"; c = "$mx/Standing Melee Attack Downward AS100.fbx"; ortho = "1.8"; fr = (& $all 69); env = @{  # attack_runner.ps1 (v4)
       WYAW = "mixamorig:Neck,mixamorig:Head>mixamorig:Spine2"; RMATCH = "Spine,LeftShoulder,LeftArm,LeftForeArm,LeftHand,RightShoulder,RightArm,RightForeArm,RightHand"; INPLACE = "1"; GRIP2 = "1"; WOFFS = "mixamorig:RightHand:0,0,1,-60" } },
   @{ key = "orc.brute"; m = "$a/brute/brute_split.blend"; c = "$mx/Orc Walk.fbx"; ortho = "2.3"; fr = (0..35 -join ","); env = @{  # walk_brute.ps1 (v1); ORTHO 2.3 = the attack's, so both share a pixel scale
       WYAW = "mixamorig:Neck,mixamorig:Head>mixamorig:Spine2"; RMATCH = "Spine,LeftShoulder,LeftArm,LeftForeArm,LeftHand,RightShoulder,RightArm,RightForeArm,RightHand"; INPLACE = "1"; GRIP2 = "1"; WOFFS = "mixamorig:LeftHand:0,0,1,90;mixamorig:LeftHand:0,1,0,30;mixamorig:LeftHand:1,0,0,15" } },
-  @{ key = "orc.brute.attack"; m = "$a/brute/brute_split.blend"; c = "$mx/Standing Melee Attack Downward AS100.fbx"; ortho = "2.3"; fr = (& $even 69); env = @{  # attack_brute.ps1 (v1)  (LeftHand WOFFS = club off the left arm)
+  @{ key = "orc.brute.attack"; m = "$a/brute/brute_split.blend"; c = "$mx/Standing Melee Attack Downward AS100.fbx"; ortho = "2.3"; fr = (& $all 69); env = @{  # attack_brute.ps1 (v1)  (LeftHand WOFFS = club off the left arm)
       WYAW = "mixamorig:Neck,mixamorig:Head>mixamorig:Spine2"; RMATCH = "Spine,LeftShoulder,LeftArm,LeftForeArm,LeftHand,RightShoulder,RightArm,RightForeArm,RightHand"; INPLACE = "1"; GRIP2 = "1"; WOFFS = "mixamorig:LeftHand:0,0,1,90;mixamorig:LeftHand:0,1,0,30;mixamorig:LeftHand:1,0,0,15" } },
   @{ key = "van.blade"; m = "$a\elf_bladedancer\bladedancer_dagger.blend"; c = "$mx\Walking XBot.fbx"; ortho = "2.6"; fr = (0..36 -join ","); env = @{  # walk_bladedancer.ps1 (v5); frame 37 = frame 0
       RMATCH = "LeftShoulder,LeftArm,LeftForeArm,LeftHand,RightShoulder,RightArm,RightForeArm,RightHand"; INPLACE = "1"; FMATCH = "Left,Right"
       FINGSRC = "$mx\Dual Weapon Combo AS100.fbx|1|" + ((@("Thumb1", "Thumb2", "Thumb3", "Index1", "Index2", "Index3") | ForEach-Object { "mixamorig:LeftHand$_,mixamorig:RightHand$_" }) -join ",")
       MPROBE = "Left:-19.26,-16.07,-1.19;Right:20.13,-15.04,-0.88"; MALLETAXIS = "fore"; MALLETMAX = "0"; MALLETFORE = "1"; MALLETSET = "Left:0,1,0;Right:0,1,0" } },
-  @{ key = "van.blade.attack"; m = "$a\elf_bladedancer\bladedancer_dagger.blend"; c = "$mx\Dual Weapon Combo AS100.fbx"; ortho = "2.6"; fr = (& $even 110); env = @{ DIRECT = "1"; INPLACE = "1" } },  # SKILL.md bladedancer attack v1
+  @{ key = "van.blade.attack"; m = "$a\elf_bladedancer\bladedancer_dagger.blend"; c = "$mx\Dual Weapon Combo AS100.fbx"; ortho = "2.6"; fr = (& $all 110); env = @{ DIRECT = "1"; INPLACE = "1" } },  # SKILL.md bladedancer attack v1
   # Elf hero: `elf` is the idle loop (the elf never walks). Standing Idle 03 Examine is 153 unique frames (153 = frame 0), slow motion,
   # every frame at 30 fps (TB-144; was every 3rd at 10 fps), ~1.7 MB sheet. Quiver pinned with QPOSE to the attack's measured spot.
   @{ key = "elf"; m = "$a\elf_hero\hero27.blend"; c = "$mx\Standing Idle 03 Examine.fbx"; ortho = "1.6"; fr = (0..152 -join ","); env = @{  # idle_hero.ps1 (v1)
@@ -68,7 +68,8 @@ foreach ($j in $jobs) {
   if ($Only.Count -and $Only -notcontains $j.key) { continue }
   foreach ($v in $vars) { Remove-Item "Env:$v" -ErrorAction SilentlyContinue }
   foreach ($k in $j.env.Keys) { Set-Item "Env:$k" $j.env[$k] }
-  $env:GAMECAM = "20"; $env:CAMROT = "0"; $env:ORTHO = $j.ortho; $env:RES = "512"; $env:ANCHOR = "1"; $env:FR = $j.fr
+  $fr = $j.fr; if ($Missing) { $fr = ($fr -split "," | Where-Object { -not (Test-Path "$o\$($j.key)_$_.png") }) -join ","; if (-not $fr) { "$($j.key) complete"; continue } }
+  $env:GAMECAM = "20"; $env:CAMROT = "0"; $env:ORTHO = $j.ortho; $env:RES = "512"; $env:ANCHOR = "1"; $env:FR = $fr
   $out = & "$s\hid.ps1" $bl -b --factory-startup --python "$s\apply_anim.py" $j.m $j.c "$o\$($j.key)" | Select-String "^ANCHOR|Error"  # hid.ps1: no Blender window on the screen
   "$($j.key) $out"
   # stringify: a MatchInfo piped into Select-String passes through unmatched (empty groups -> 0,0 anchors). Numeric groups only: the elf's

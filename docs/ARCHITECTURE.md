@@ -4,7 +4,7 @@ Status: **Current** (v1.3, checked against the code 31 Oct 2026). Module boundar
 
 ## Principles
 1. Simulation is pure and deterministic given `(save, seed, inputs, dt)`. Rendering and UI are observers.
-2. Fixed-step sim (50 Hz) decoupled from render (rAF). Render interpolates nothing; 50 Hz is enough for this art style.
+2. Fixed-step sim (50 Hz) decoupled from render (rAF, its own `performance.now` timestamp, frame dt clamped to 0.25 s so a stall never spirals). Render interpolates movers (TB-194, `src/render/interp.ts`): before the last sim step of a frame the loop snapshots orc, vanguard, shot, wolf and hawk positions, and the field draws each at `prev + (now − prev) · acc/STEP` (a jump over `INTERP.snap` snaps). The sim stays pure; the snapshot lives in render. Without it a 50 Hz sim on a 60 Hz screen moved actors 0 or 1 step per frame (45 % jitter, 137 % at 144 Hz).
 3. Data over code: tree, orc types, boss script, Heartwood tree, strings, audio cues, palette are plain objects in `src/data/` (palette in `src/render/palette.ts`).
 4. Zero per-frame allocation in hot paths: pooled orcs/arrows/vanguard, typed arrays where it pays off.
 

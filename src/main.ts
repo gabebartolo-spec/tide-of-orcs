@@ -22,7 +22,7 @@ addEventListener('pointerdown', () => audio.unlock(), { capture: true });
 addEventListener('keydown', () => audio.unlock(), { capture: true });
 
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-const applyMotion = () => { field.reducedMotion = game.settings.reducedMotion ?? reduced.matches; tree.reducedMotion = field.reducedMotion; };
+const applyMotion = () => { field.reducedMotion = game.settings.reducedMotion ?? reduced.matches; tree.reducedMotion = field.reducedMotion; document.documentElement.toggleAttribute('data-calm', field.reducedMotion); };
 applyMotion(); reduced.addEventListener('change', applyMotion);
 panel.onSettings = () => { applyVolume(); applyMotion(); };
 panel.onCue = (c) => audio.play(c);
@@ -76,7 +76,9 @@ function frame(now: number): void {
   acc += dt * field.timeScale;
   // the field holds still while the replant ceremony plays
   if (field.ceremony.active) acc = 0;
-  while (acc >= STEP) { game.tick(STEP); acc -= STEP; }
+  // TB-194: snapshot movers before the last step, then draw them `acc / STEP` of the way from there to now (render/interp.ts)
+  while (acc >= STEP) { if (acc < 2 * STEP) field.interp.snap(game.state); game.tick(STEP); acc -= STEP; }
+  field.interp.alpha = acc / STEP;
   const events = game.events.drain();
   game.noteEvents(events); field.consume(events, game.state); panel.handleEvents(events); audio.consume(events);
   // the field is hidden (zero-size) on the camp pages, so skip its draw there (TB-136)

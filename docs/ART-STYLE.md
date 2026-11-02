@@ -95,6 +95,7 @@ The plain reads as natural, calm grassland, not a flat board. Layout is seeded (
 - Storm: jittered lilac polyline, 0.35 s fade.
 - Affordable node: amber ring, 0.5–1.0 alpha sine at 4 rad/s. Rally buttons: border turns amber on hover when affordable.
 - Replant: tree desaturates, amber particles rise, one seed falls, field fades up through a #e2a85b-tinted overlay. ≤ 4 s.
+- UI eases (TB-194): camp pages and tabs fade in over 200 ms (`--ui-in`); the fallen overlay and toasts fade in over 200 ms and out over 150 ms (`--ui-out`), the toast also drops 6 px into place. Opacity only on pages and tabs. All off under reduced motion (`data-calm` on `<html>`, from the Motion setting).
 - Reduced motion: no bob, no pulse, no shake; replant becomes a 300 ms cross-fade.
 
 ## Attack and hit VFX (TB-088)
