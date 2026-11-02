@@ -471,7 +471,7 @@ export class FieldRenderer {
   }
 
   private van(s: SimState, v: Vanguard): void {
-    const g = this.g, T = VANGUARD[v.type]; g.save(); g.translate(v.x, v.y);
+    const g = this.g, T = VANGUARD[v.type]; g.save(); g.translate(v.x, v.y); if (v.face < 0) g.scale(-1, 1);
     g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 16, 12, 4, 0, 0, 6.28); g.fill();
     const vst = vanState(s, v), vt = vst === 'attack' ? swingClipT(v.swingT, T.cd, this.sprites.duration(`van.${v.type}.attack`), VFX.strike[v.type]) : this.clock;
     if (this.sprites.drawActor(g, `van.${v.type}`, vst, vt, 0, 16, ACTOR_R, v.hitT > 0)) { this.vanBar(v); g.restore(); return; }
@@ -489,6 +489,7 @@ export class FieldRenderer {
 
   private vanBar(v: Vanguard): void {
     const g = this.g;
+    if (v.face < 0) g.scale(-1, 1);  // undo van()'s facing flip so the bar drains right to left
     if (v.hp < v.maxhp) { g.fillStyle = P.dim; g.fillRect(-12, -26, 24, 3); g.fillStyle = P.spear; g.fillRect(-12, -26, 24 * Math.max(0, v.hp / v.maxhp), 3); }
   }
 }

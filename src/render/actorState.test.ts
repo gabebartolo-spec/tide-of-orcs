@@ -9,7 +9,7 @@ import { Sprites } from './sprites';
 
 type S = ReturnType<typeof createState>;
 const orcAt = (s: S, x: number, y: number) => { const o = s.orcs.alloc()!; Object.assign(o, { kind: 'grunt', x, y, hp: 10, maxhp: 10, r: 12, dead: false }); return o; };
-const vanAt = (s: S, x: number, tx: number, y: number) => { const v = s.vans.alloc()!; Object.assign(v, { type: 'spear', x, tx, y, hp: 10, maxhp: 10 }); return v; };
+const vanAt = (s: S, x: number, tx: number, y: number) => { const v = s.vans.alloc()!; Object.assign(v, { type: 'spear', x, tx, y, ty: y, mv: x < tx, hp: 10, maxhp: 10 }); return v; };
 
 describe('actor sprite state', () => {
   it('an orc walks on the plain and swings at the wall or a vanguard', () => {
@@ -19,7 +19,7 @@ describe('actor sprite state', () => {
     vanAt(s, 300, 300, 300);
     expect(orcState(s, orcAt(s, 300 + VANGUARD.engageRange, 300))).toBe('attack');
   });
-  it('a vanguard walks to its stand, swings at an orc in reach and otherwise holds', () => {
+  it('a vanguard walks while it marches, swings at an orc in reach and otherwise holds', () => {
     const s = createState(1);
     expect(vanState(s, vanAt(s, 200, 260, 100))).toBe('walk');
     const v = vanAt(s, 260, 260, 300);

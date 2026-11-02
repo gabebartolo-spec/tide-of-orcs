@@ -37,6 +37,7 @@ export const VANGUARD = {
   baseCap: 2,
   hpPerShield: 1.3, dmgPerDrill: 1.3, mendPerRank: 0.03,
   walkSpeed: 60, standX: 44, laneGap: 70, engageRange: 18,
+  closeIn: 0.8,  // a marching vanguard stops at this × its reach (+ the orc's radius) from its target (TB-156)
   spear: { cost: 6, hp: 5, dmg: 1.6 * (50 / 15) / 0.8, cd: 50 / 15, reach: 28, cleave: false },
   blade: { cost: 18, hp: 4, dmg: 1.4 * (55 / 15) / 0.45, cd: 55 / 15, reach: 34, cleave: true },
 } as const;

@@ -12,13 +12,12 @@ export function orcState(s: SimState, o: Orc): ActorState {
  *  real speed, offset per orc. Adding wob to a clock instead played clips at 9x (TB-133). */
 export const orcAnimT = (o: Orc): number => o.wob / ORC_WOB;
 
-/** A vanguard walks to its stand, swings while an orc is in reach, and otherwise holds its stance. */
+/** A vanguard swings while an orc is in reach, walks while it marches (TB-156), and otherwise holds its stance. */
 export function vanState(s: SimState, v: Vanguard): ActorState {
-  if (v.x < v.tx) return 'walk';
   const reach = VANGUARD[v.type].reach;
   let near = false;
   s.orcs.forEach((o) => { if (!near && !o.dead && Math.hypot(o.x - v.x, o.y - v.y) < reach + o.r) near = true; });
-  return near ? 'attack' : 'idle';
+  return near ? 'attack' : v.mv ? 'walk' : 'idle';
 }
 
 /**
