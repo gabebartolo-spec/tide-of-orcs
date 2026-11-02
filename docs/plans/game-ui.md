@@ -1,4 +1,4 @@
-# A UI that looks like a game, not a website (TB-195) — DRAFT plan
+﻿# A UI that looks like a game, not a website (TB-195) — DRAFT plan
 
 Director, 3 Nov: "make it wayyy sexier, not this ai slop POWERPOINT presentation shit … a UI that looks like a game, not a website."
 
@@ -47,6 +47,6 @@ and every input answers back.
 Each step ends with screenshots and a short screen capture (GIF) at 1080p and 4K, sent to the director before the next step.
 
 ## 5. Open choices for the director
-1. **Reference game:** which feel is closest to what you want: Kingdom Rush (bright, chunky), Hades (painterly, glowing), or Diablo (dark, heavy)?
+1. ~~Reference game~~ **Decided (director, 3 Nov): Hades** (painterly, glowing, light and particles everywhere).
 2. **Keep the carved-wood material** and make it richer, or move to a new material (e.g. dark leather with elven gold filigree)?
 3. **UI sounds:** generate a set with ElevenLabs (you run it, or I write the prompts list), yes or no.
