@@ -161,6 +161,8 @@ describe('vanguard', () => {
     spawnOrc(s, 'grunt', FIELD.h / 2); let o = null as null | ReturnType<typeof nearestOrcTo>; s.orcs.forEach((x) => { o = x; }); o!.dead = false;
     o!.x = (FIELD.barX + FIELD.w) / 2 + 5; expect(nearestOrcTo(s, v!)).toBeNull();
     o!.x = (FIELD.barX + FIELD.w) / 2 - 5; expect(nearestOrcTo(s, v!)).toBe(o);
+    v!.face = -1; s.orcs.release(o!); step(s, STEP, aimed(s), ev); v!.x = v!.tx; v!.y = v!.ty;
+    s.orcs.forEach((x) => { x.x = FIELD.w; }); step(s, STEP, aimed(s), ev); expect(v!.face).toBe(1);
   });
   it('Muster keeps the line full; the fallen return after the respawn timer', () => {
     const s = createState(1); const ev = new EventBus();
