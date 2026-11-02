@@ -12,7 +12,11 @@ const field = new FieldRenderer(fieldCanvas);
 const tree = new TreeRenderer(document.getElementById('tree') as HTMLCanvasElement);
 const panel = new Panel(game, tree);
 const audio = new AudioEngine();
-audio.setVolume(game.settings.volume);
+// Mute (TB-196): M toggles sound; automated browsers (agents' screenshots) start muted.
+let muted = navigator.webdriver;
+const applyVolume = (): void => audio.setVolume(muted ? 0 : game.settings.volume);
+applyVolume();
+addEventListener('keydown', (e) => { if ((e.key === 'm' || e.key === 'M') && !(e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement)) { muted = !muted; applyVolume(); } });
 // Browsers block audio until the first gesture.
 addEventListener('pointerdown', () => audio.unlock(), { capture: true });
 addEventListener('keydown', () => audio.unlock(), { capture: true });
@@ -20,7 +24,7 @@ addEventListener('keydown', () => audio.unlock(), { capture: true });
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 const applyMotion = () => { field.reducedMotion = game.settings.reducedMotion ?? reduced.matches; tree.reducedMotion = field.reducedMotion; };
 applyMotion(); reduced.addEventListener('change', applyMotion);
-panel.onSettings = () => { audio.setVolume(game.settings.volume); applyMotion(); };
+panel.onSettings = () => { applyVolume(); applyMotion(); };
 panel.onCue = (c) => audio.play(c);
 
 
