@@ -1,4 +1,4 @@
-# Elf military encampment (TB-188) — DRAFT plan
+﻿# Elf military encampment (TB-188) — DRAFT plan
 
 Director, 3 Nov: the grove props are gone (TB-187). The area behind the wall becomes an elf military encampment with a
 **bowyer, a forge, a kitchen and a training area, each upgradable.** This plan proposes how. Nothing is built until the
@@ -35,13 +35,12 @@ the field opens its card with its levels, costs and the next upgrade. The skill 
    Tests pin each effect. BALANCE ## Proposed holds the costs, with balance sims (`npm run balance`).
 2. **TB-188b UI:** click a building → its card (upgrade, cost, effect). A "Camp" section on the Replant tab lists all four.
 3. **TB-188c Placeholder art:** palette-token vector drawings of each building at levels 0/1/3, so the loop plays before the final art.
-4. **TB-188d Final art:** buildings as sprites at the game angle (GAMECAM 20), like the fence. The source is free Sketchfab CC BY
-   models or Tripo; every frame is screened, then sent to the director before packing.
+4. **TB-188d Final art:** buildings as sprites at the game angle (GAMECAM 20), like the fence. The source is Meshy; every frame is screened, then sent to the director before packing.
 5. **TB-188e Life:** idle animations (sparks, smoke, dummy hits) and upgrade moments (build dust, banner raise, sound).
 
 ## 4. Open choices for the director
 1. ~~Currency~~ **Decided (director, 3 Nov): Heartwood plus special farmable materials dropped by common enemies.** Buildings
    are permanent. Each building has its own material, e.g. bowyer = sinew/heartstring, forge = orc iron, kitchen = game meat,
    training = straw/hide. Grunts and other common orcs drop them during a run, and they are kept across runs. Drop rates go to BALANCE ## Proposed.
-2. **Art source:** free Sketchfab models (no spend) or Tripo (credits, needs a written yes).
-3. **Levels:** 3 per building (recommended: three looks to draw) or 5.
+2. ~~Art source~~ **Decided (director, 3 Nov): Meshy** (the director named it, which is the spend yes for this job).
+3. ~~Levels~~ **Decided (director, 3 Nov): 3 per building.**
