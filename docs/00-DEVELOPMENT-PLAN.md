@@ -154,7 +154,7 @@ Orcs drop gear; six worn slots, a satchel, affixes, sets and mythic powers feed 
 ### M5 — Polish · bug bash run twice
 - Private itch page as a proof of concept (TB-073, `docs/ITCH-PAGE.md`; builds via `itch.yml`): kept Restricted and up to date with each milestone; it goes public only if the director chooses. Latest build: main bdc029f to `html5-dev`, 3 Nov (M4.10 and M4.11 complete). Milestone tags stop at `m1`; later builds go out by manual workflow run.
 - Save import/export (done in TB-065), version migration test suite (TB-140: every old save v1–v10 migrates to v11 and plays).
-- Bug bash (TB-075, `docs/QA-CHECKLIST.md`): runs 1 and 2 done (PRs #33, #37); their bugs became TB-112–117. Performance: no frame spikes in a visible browser with 160 orcs (TB-113); measured at 1080p and 4K with CPU throttling as a mid-range stand-in (TB-150, QA run 4): passes. Not yet on real mid-range hardware.
+- Bug bash (TB-075, `docs/QA-CHECKLIST.md`): runs 1 and 2 done (PRs #33, #37); run 5 (3 Nov) re-checked boss tiers, the four late orcs, all sprites, checkpoints and boss-only Heartwood, and 160 orcs of all eight kinds: 60 fps at 1080p and 4K down to a 2× slower CPU, 58–61 fps at 1080p 4× (headroom down, TB-183); findings TB-180–186; their bugs became TB-112–117. Performance: no frame spikes in a visible browser with 160 orcs (TB-113); measured at 1080p and 4K with CPU throttling as a mid-range stand-in (TB-150, QA run 4): passes. Not yet on real mid-range hardware.
 
 A full mobile port stays out of the roadmap (director, 31 Oct): the game is built for PC first. The itch web build does play on phones in landscape since TB-155 (2 Nov); TB-064/TB-078 layout work stays in the code.
 **Done when:** the director calls it finished.

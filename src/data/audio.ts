@@ -73,7 +73,7 @@ export const CUES: Record<Cue, { gain: number; gap: number; duck?: boolean }> = 
   salvage: { gain: 0.55, gap: 0.05 },
   reroll: { gain: 0.55, gap: 0.05 },
   setRise: { gain: 0.8, gap: 0.5, duck: true },
-  // Orc war drum (ElevenLabs); no sim event plays it yet, the drummer unit is not in the sim
+  // Orc war drum (ElevenLabs); the drummer is in the sim (TB-087) but no sim event plays this cue yet (TB-182)
   warDrum: { gain: 1, gap: 0.4 },
 };
 
