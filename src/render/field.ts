@@ -1,7 +1,7 @@
-import { ARROWS, BARRICADE, FIELD, LOB, VANGUARD, WAVE_LEN } from '../data/balance';
+import { ARROWS, BARRICADE, FIELD, LOB, SOURCES, VANGUARD, WAVE_LEN } from '../data/balance';
 import { FIREBALL, ORC_TYPES, OrcKind } from '../data/orcs';
 import { SimEvent } from '../sim/events';
-import { Orc, Projectile, SimState, Vanguard } from '../sim/state';
+import { Orc, Projectile, SimState, Vanguard, Wolf } from '../sim/state';
 import { barFrac } from '../sim/barricade';
 import { engagedVanguard } from '../sim/vanguard';
 import { P } from './palette';
@@ -424,9 +424,15 @@ export class FieldRenderer {
     return w;
   }
 
-  private wolf(w: { x: number; y: number }): void {
-    const g = this.g; g.save(); g.translate(w.x, w.y); g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 8, 12, 4, 0, 0, 6.28); g.fill(); g.fillStyle = P.wolf; g.beginPath(); g.ellipse(0, 0, 13, 7, 0, 0, 6.28); g.fill(); g.beginPath(); g.arc(11, -4, 5, 0, 6.28); g.fill(); g.restore();
+  /** Companion wolf (TB-160): runs while it closes on its target, the bite clip scrubbed by the bite cooldown; faces its target. */
+  private wolf(w: Wolf): void {
+    const g = this.g; g.save(); g.translate(w.x, w.y); g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 8, 12, 4, 0, 0, 6.28); g.fill();
+    if (w.tx < w.x - 2) g.scale(-1, 1);
+    const near = Math.hypot(w.tx - w.x, w.ty - w.y) < SOURCES.wolf.reach, t = near ? Math.min(1, w.biteT / SOURCES.wolf.biteCd) * this.sprites.duration('wolf.attack') * 0.999 : this.clock;
+    if (this.sprites.drawActor(g, 'wolf', near ? 'attack' : 'walk', t, 0, 8, ACTOR_R) || this.sprites.loading) { g.restore(); return; }
+    g.fillStyle = P.wolf; g.beginPath(); g.ellipse(0, 0, 13, 7, 0, 0, 6.28); g.fill(); g.beginPath(); g.arc(11, -4, 5, 0, 6.28); g.fill(); g.restore();
   }
+
 
   /** Thunderclap sparks, set-bonus marks (bleed, pin, root) and health bar, shared by the vector and sprite orc. */
   private orcBars(o: Orc): void {
