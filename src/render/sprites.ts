@@ -68,10 +68,18 @@ export class Sprites {
    * approved clip is enough to replace the vector actor.
    */
   drawActor(g: CanvasRenderingContext2D, key: string, state: ActorState, t: number, x: number, y: number, r: number, flash = false, tint = '', glow = '', blur = 0): boolean {
-    const atk = key + '.attack', go = (k: string, tt: number): boolean => this.draw(g, k, tt, x, y, r, flash, tint, glow, blur);
-    if (state === 'attack') return go(atk, t) || go(key, t);
-    if (state === 'walk' && go(key, t)) return true;
-    return go(key, 0) || go(atk, 0);
+    const atk = this.atkKey(key);
+    if (state === 'attack') return this.draw(g, atk, t, x, y, r, flash, tint, glow, blur) || this.draw(g, key, t, x, y, r, flash, tint, glow, blur);
+    if (state === 'walk' && this.draw(g, key, t, x, y, r, flash, tint, glow, blur)) return true;
+    return this.draw(g, key, 0, x, y, r, flash, tint, glow, blur) || this.draw(g, atk, 0, x, y, r, flash, tint, glow, blur);
+  }
+
+  /** `key.attack`, built once per key so drawing builds no strings (TB-183). */
+  private atkKeys = new Map<string, string>();
+  private atkKey(key: string): string {
+    let a = this.atkKeys.get(key);
+    if (a === undefined) { a = key + '.attack'; this.atkKeys.set(key, a); }
+    return a;
   }
 
   /** Length of one loop of `key` in seconds (0 when it has no sprite). Lets a caller play a clip in step with a sim timer,
@@ -88,7 +96,7 @@ export class Sprites {
     if (!a || !img) return false;
     const [fx, fy, fw, fh] = a.frames[frameAt(a, t)]!;
     const h = a.hPerR * r, w = h * (fw / fh), dx = x - w * a.ax, dy = y - h * a.ay;
-    const f = [flash ? 'brightness(2.2)' : '', glow ? `drop-shadow(0 0 ${blur}px ${glow})` : ''].filter(Boolean).join(' ');
+    const f = flash || glow ? [flash ? 'brightness(2.2)' : '', glow ? `drop-shadow(0 0 ${blur}px ${glow})` : ''].filter(Boolean).join(' ') : '';
     if (f) g.filter = f;
     g.drawImage(img, fx, fy, fw, fh, dx, dy, w, h);
     if (f) g.filter = 'none';
