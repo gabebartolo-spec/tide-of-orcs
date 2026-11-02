@@ -19,7 +19,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { SimState, createState } from '../src/sim/state';
 import { EventBus } from '../src/sim/events';
 import { step } from '../src/sim/step';
-import { crowdAim } from '../src/sim/combat';
+
 import { buy, canBuy, costOf } from '../src/sim/tree';
 import { canRally, rally } from '../src/sim/vanguard';
 import { canReplant, replant } from '../src/sim/prestige';
@@ -76,6 +76,15 @@ function rerollWorn(): void {
   if (changed) recompute(s);
 }
 recompute(s);
+/** Player model (TB-164): aim at the orc nearest the wall, led by its walk over the lob's flight, as the director plays.
+ *  The old densest-crowd aim shot the spawn edge and landed behind moving orcs: the wall took hits from wave 1
+ *  where the director's first hit is wave 3. */
+function frontAim(st: SimState): { x: number; y: number } | null {
+  let b: { x: number; y: number; spd: number } | null = null;
+  st.orcs.forEach((o) => { if (!o.dead && (!b || o.x < b.x)) b = o; });
+  const f = b as { x: number; y: number; spd: number } | null;
+  return f ? { x: f.x - f.spd * LOB.flight, y: f.y } : null;
+}
 /** Loot milestones: rarity → "run r, min m, boss b"; the first 6-piece set; bosses fought. */
 const firsts: Record<string, string> = {}; let bosses = 0, firstDrop = '-', firstSix = '-';
 const at = (i: number) => (i * STEP / 60).toFixed(1);
@@ -88,7 +97,7 @@ function gearTrial(strip: (l: SimState['meta']['loot']) => void): number {
   const meta = structuredClone(runStart.meta); meta.loot = structuredClone(s.meta.loot); strip(meta.loot);
   const t = createState(seed * 7919 + runStart.tick, structuredClone(runStart.run), meta), bus = new EventBus();
   const n = Math.round(7200 / STEP);
-  for (let i = 0; i < n && !t.run.fallen; i++) { step(t, STEP, { aim: crowdAim(t, t.stats.radius) }, bus); if (i % 25 === 0) rallyIfLow(t, bus, 0.5); bus.drain(); }
+  for (let i = 0; i < n && !t.run.fallen; i++) { step(t, STEP, { aim: frontAim(t) }, bus); if (i % 25 === 0) rallyIfLow(t, bus, 0.5); bus.drain(); }
   return t.run.wave;
 }
 /** Sim-only set chase: wear the best owned piece in each slot of the set with the most owned slots, once that is four or more. */
@@ -122,7 +131,7 @@ function trial(buyId: NodeId | null): number {
   if (buyId) buy(t, bus, buyId);
   replant(t, bus); // the tree is bought between runs (TB-136), so the trial plays the next run
   const e0 = t.run.earned, n = Math.round(DPS.lookahead / STEP);
-  for (let i = 0; i < n && !t.run.fallen; i++) { step(t, STEP, { aim: crowdAim(t, t.stats.radius) }, bus); if (i % 25 === 0) rallyIfLow(t, bus, 0.5); bus.drain(); }
+  for (let i = 0; i < n && !t.run.fallen; i++) { step(t, STEP, { aim: frontAim(t) }, bus); if (i % 25 === 0) rallyIfLow(t, bus, 0.5); bus.drain(); }
   return t.run.earned - e0;
 }
 function dpsChoose(): NodeId | null {
@@ -179,7 +188,7 @@ function decide(i: number): void {
 const total = Math.round((minutes * 60) / STEP);
 const firstHits: number[] = []; let hitRun = false;
 for (let i = 0; i < total; i++) {
-  step(s, STEP, { aim: crowdAim(s, s.stats.radius) }, ev); // player model: aims at the thickest crowd
+  step(s, STEP, { aim: frontAim(s) }, ev); // player model: frontAim
   if (!hitRun && s.run.barHp < s.stats.barMax) { hitRun = true; firstHits.push(s.run.wave); } // TB-154: wave the wall first takes damage, per run
   if (i % 25 === 0) decide(i);
   for (const e of ev.drain()) if (e.t === 'bossReady') { mark('bossReady', i); summonBoss(s, ev); } else if (e.t === 'bossEnd') { bosses++; if (e.cleared) { mark('bossClear', i); clearedRun = true; } } else if (e.t === 'loot') {
