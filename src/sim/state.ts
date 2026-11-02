@@ -35,6 +35,8 @@ export interface Projectile {
 export interface Zone { live: boolean; kind: 'cinder' | 'moonwell'; x: number; y: number; r: number; life: number; used: boolean }
 export interface Wolf { x: number; y: number; tx: number; ty: number; biteT: number }
 export interface Vanguard {
+  /** A line slot that respawns (TB-167); Standing Orders extras do not. */
+  line: boolean;
   live: boolean; type: VanType; x: number; y: number;
   /** Home stand at the wall (its lane); it returns here when the field is clear (TB-156). */
   tx: number; ty: number;
@@ -79,7 +81,9 @@ export interface SimState {
   hawk: { x: number; y: number; a: number };
   zones: Pool<Zone>;
   /** Run-only set state, not saved (TB-099): knives thrown toward the next Fan, Rootwarden's free-rally window. */
-  knifeN: number; freeRallyT: number;
+  knifeN: number;
+  /** Seconds left on each fallen line vanguard's return (TB-167). */
+  vanRespawn: number[];
   /** Run-only mythic state, not saved (TB-100): starlight toward the next Starfall and its cooldown. */
 }
 
@@ -92,7 +96,7 @@ export function freshMeta(): MetaState { return { heartwood: 0, lifetimeKills: 0
 const makeOrc = (): Orc => ({ live: false, kind: 'grunt', x: 0, y: 0, hp: 0, maxhp: 0, spd: 0, r: 0, loot: 0, atk: 0, dead: false, burn: 0, hitT: 0, wob: 0, swingT: 0, champ: false, bleed: 0, slow: 0, pin: 0, root: 0, chill: 0, stun: 0 });
 const makeShot = (): Projectile => ({ live: false, kind: 'arrow', x: 0, y: 0, vx: 0, vy: 0, dmg: 0, pierce: 0, life: 0, fx: 0, crit: 0, critX: 1, target: null, hit: new Set(), sx: 0, sy: 0, tx: 0, ty: 0, t: 0, h: 0, r: 0, back: false });
 const makeZone = (): Zone => ({ live: false, kind: 'cinder', x: 0, y: 0, r: 0, life: 0, used: false });
-const makeVan = (): Vanguard => ({ live: false, type: 'spear', x: 0, y: 0, tx: 0, ty: 0, mv: false, face: 1, hp: 0, maxhp: 0, swingT: 0, hitT: 0 });
+const makeVan = (): Vanguard => ({ live: false, type: 'spear', line: false, x: 0, y: 0, tx: 0, ty: 0, mv: false, face: 1, hp: 0, maxhp: 0, swingT: 0, hitT: 0 });
 
 export function createState(seed = 1, run: RunState = freshRun(), meta: MetaState = freshMeta()): SimState {
   const s: SimState = {
@@ -102,7 +106,7 @@ export function createState(seed = 1, run: RunState = freshRun(), meta: MetaStat
     pack: [],
     hawk: { x: 300, y: 100, a: 0 },
     zones: new Pool<Zone>(SET_FX.zoneCap, makeZone),
-    knifeN: 0, freeRallyT: 0,
+    knifeN: 0, vanRespawn: [],
   };
   if (s.run.barHp < 0) s.run.barHp = s.stats.barMax;
   return s;

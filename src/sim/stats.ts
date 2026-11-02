@@ -28,7 +28,7 @@ export interface Stats {
   // barricade
   barMax: number; barRegen: number; spikes: number; bulwark: boolean;
   // vanguard
-  muster: boolean; vanCap: number; vanHp: number; vanDmg: number; vanMend: number; champion: boolean;
+  muster: boolean; vanCap: number; vanHp: number; vanDmg: number; vanMend: number; vanRespawn: number; champion: boolean;
   // set bonuses (TB-099): 0 = off; numbers from SET_FX, applied by applyGear
   bleedAmp: number; knifeFan: number; burn: number; burnSpread: number; cinder: number;
   chain: number; chainJump: number; rebound: number; stormCd: number;
@@ -132,6 +132,7 @@ export function deriveStats(lv: Levels, hw: HwLevels = {}): Stats {
     vanHp: fx(VANGUARD.hpPerShield, L('shield')),
     vanDmg: kin,
     vanMend: VANGUARD.mendPerRank * L('mend'),
+    vanRespawn: fx(VANGUARD.respawnPerRank, L('swiftmuster')),
     champion: L('champion') > 0,
     bleedAmp: 0, knifeFan: 0, burn: fx(SHOT_FX.dmg, L('kindle')), burnSpread: 0, cinder: 0,
     chain: SOURCES.storm.targets, chainJump: SOURCES.storm.jump, rebound: 0, stormCd: SOURCES.storm.cd,

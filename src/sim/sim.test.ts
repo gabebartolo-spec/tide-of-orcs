@@ -9,7 +9,8 @@ import { FIELD, STEP, waveLoot } from '../data/balance';
 import { BOSS_WAVE, bossHw } from '../data/bosses';
 import { bossesReady, summonBoss } from './boss';
 import { damage } from './combat';
-import { canRally, rally } from './vanguard';
+import { hurtVanguard } from './vanguard';
+import { VANGUARD } from '../data/balance';
 import { crowdAim } from './combat';
 import { canPullBack, canReplant, pullBack, replant } from './prestige';
 import { createRng } from './rng';
@@ -150,20 +151,21 @@ describe('tree', () => {
 });
 
 describe('vanguard', () => {
-  it('needs Muster, starlight and a free slot', () => {
+  it('Muster keeps the line full; the fallen return after the respawn timer', () => {
     const s = createState(1); const ev = new EventBus();
-    s.run.starlight = 1000;
-    expect(canRally(s, 'spear')).toBe(false);
-    s.run.fallen = true; buy(s, ev, 'muster'); s.run.fallen = false;
-    expect(rally(s, ev, 'spear')).toBe(true);
-    expect(rally(s, ev, 'spear')).toBe(true);
-    expect(rally(s, ev, 'spear')).toBe(false); // cap 2
-    expect(canRally(s, 'blade')).toBe(false); // no champion
+    step(s, STEP, aimed(s), ev); expect(s.vans.count).toBe(0);
+    s.run.starlight = 1000; s.run.fallen = true; buy(s, ev, 'muster'); s.run.fallen = false;
+    step(s, STEP, aimed(s), ev); expect(s.vans.count).toBe(2);
+    let v = null as null | Parameters<typeof hurtVanguard>[2]; s.vans.forEach((x) => { v ??= x; });
+    hurtVanguard(s, ev, v!, 1e9); expect(s.vans.count).toBe(1);
+    for (let t = 0; t < VANGUARD.respawn - 1; t += STEP) step(s, STEP, aimed(s), ev);
+    expect(s.vans.count).toBe(1);
+    for (let t = 0; t < 2; t += STEP) step(s, STEP, aimed(s), ev);
     expect(s.vans.count).toBe(2);
   });
   it('spearmen keep the wall healthier over the first two minutes', () => {
     const a = run(9, 120);
-    const s = createState(9); const ev = new EventBus(); s.run.starlight = 200; s.run.fallen = true; buy(s, ev, 'muster'); s.run.fallen = false; rally(s, ev, 'spear'); rally(s, ev, 'spear');
+    const s = createState(9); const ev = new EventBus(); s.run.starlight = 1000; s.run.fallen = true; buy(s, ev, 'muster'); s.run.fallen = false;
     for (let i = 0; i < 120 / STEP; i++) step(s, STEP, aimed(s), ev);
     expect(s.run.barHp).toBeGreaterThanOrEqual(a.s.run.barHp);
     expect(s.run.kills).toBeGreaterThanOrEqual(a.s.run.kills); // the aimed bow already clears early waves

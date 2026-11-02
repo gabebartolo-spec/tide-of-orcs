@@ -50,7 +50,6 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
   barricadeRegen(s, dt);
   vanguardStep(s, ev, dt);
   zoneStep(s, dt);
-  if (s.freeRallyT > 0) s.freeRallyT = Math.max(0, s.freeRallyT - dt);
 
   // orcs
   s.orcs.forEach((o) => {

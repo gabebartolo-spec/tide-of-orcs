@@ -9,7 +9,6 @@ import { createState, freshMeta, freshRun, SimState } from './state';
 import { Levels } from './stats';
 import { pickUp } from './loot';
 import { noInputs, spawnOrc, step } from './step';
-import { rallyCost } from './vanguard';
 
 /** A state wearing n pieces of one set, with the given Grove levels. */
 const wearing = (set: string, n: number, levels: Levels = {}): SimState => {
@@ -80,12 +79,13 @@ describe('set bonuses (TB-099)', () => {
     expect(o.root).toBeGreaterThan(0);
   });
 
-  it('Rootwarden: once per run, the wall below a quarter makes rallies free', () => {
+  it('Rootwarden: once per run, the wall below a quarter brings the fallen line back at once', () => {
     const s = wearing('rootwarden', 6), ev = new EventBus();
+    s.vanRespawn.push(9, 5);
     s.run.barHp = s.stats.barMax * 0.3; barricadeHit(s, ev, s.stats.barMax * 0.1, 300);
-    expect(s.freeRallyT).toBe(SET_FX.freeRallySecs); expect(rallyCost(s, 'spear')).toBe(0);
-    s.freeRallyT = 0; barricadeHit(s, ev, 1, 300);
-    expect(s.freeRallyT).toBe(0); expect(rallyCost(s, 'spear')).toBeGreaterThan(0);
+    expect(s.vanRespawn).toEqual([0, 0]);
+    s.vanRespawn.push(9); barricadeHit(s, ev, 1, 300);
+    expect(s.vanRespawn[2]).toBe(9);
   });
 
   it('one hit takes at most a quarter of the wall, so a late orc cannot fell a full wall (TB-125)', () => {

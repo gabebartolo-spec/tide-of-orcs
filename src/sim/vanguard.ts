@@ -1,39 +1,44 @@
-import { FIELD, VANGUARD, VanType, vanBaseHp, vanCost } from '../data/balance';
+import { FIELD, VANGUARD, VanType, vanBaseHp } from '../data/balance';
 import { EventBus } from './events';
 import { Orc, SimState, Vanguard } from './state';
 import { damage, unitHit } from './combat';
 
-/** Starlight a rally costs now: nothing while Rootwarden's free window is open (TB-099). */
-export const rallyCost = (s: SimState, type: VanType): number => (s.freeRallyT > 0 ? 0 : vanCost(type, s.run.wave));
-
-export function canRally(s: SimState, type: VanType): boolean {
-  if (s.run.fallen || !s.stats.muster) return false;
-  if (type === 'blade' && !s.stats.champion) return false;
-  if (s.vans.count >= s.stats.vanCap) return false;
-  return s.run.starlight >= rallyCost(s, type);
+/** Which kind fills the next line slot: with Bladedancer, half the line (rounded down) are blades. */
+function lineType(s: SimState): VanType {
+  if (!s.stats.champion) return 'spear';
+  let blades = 0; s.vans.forEach((v) => { if (v.line && v.type === 'blade') blades++; });
+  return blades < Math.floor(s.stats.vanCap / 2) ? 'blade' : 'spear';
 }
 
-export function rally(s: SimState, ev: EventBus, type: VanType): boolean {
-  if (!canRally(s, type)) return false;
-  const v = placeVanguard(s, type); if (!v) return false;
-  s.run.starlight -= rallyCost(s, type);
-  ev.push({ t: 'vanguardRallied', type, x: v.x, y: v.y });
-  return true;
-}
+const laneY = (lane: number): number => FIELD.h / 2 + (lane % 2 ? 1 : -1) * Math.ceil(lane / 2) * VANGUARD.laneGap;
 
-/** Put a vanguard on the field at no cost and regardless of the line cap (rally, Standing Orders). */
-export function placeVanguard(s: SimState, type: VanType): Vanguard | null {
+/** Put a vanguard on the field at no cost and regardless of the line cap (line slots, Standing Orders). */
+export function placeVanguard(s: SimState, type: VanType, line = false): Vanguard | null {
+  const used = new Set<number>(); s.vans.forEach((o) => used.add(o.ty));
   const v = s.vans.alloc(); if (!v) return null;
-  const lane = s.vans.count - 1;
+  let lane = 0; while (used.has(laneY(lane))) lane++;
   const hp = vanBaseHp(type, s.run.wave) * s.stats.vanHp;
-  v.type = type; v.x = FIELD.barX + 10; v.tx = FIELD.barX + VANGUARD.standX;
-  v.y = v.ty = FIELD.h / 2 + (lane % 2 ? 1 : -1) * Math.ceil(lane / 2) * VANGUARD.laneGap; v.mv = true; v.face = 1;
+  v.type = type; v.line = line; v.x = FIELD.barX + 10; v.tx = FIELD.barX + VANGUARD.standX;
+  v.y = v.ty = laneY(lane); v.mv = true; v.face = 1;
   v.hp = hp; v.maxhp = hp; v.swingT = 0; v.hitT = 0;
   return v;
 }
 
+/** The standing line (TB-167): Muster keeps vanCap vanguard on the field; each one that falls returns after a timer. */
+function lineStep(s: SimState, ev: EventBus, dt: number): void {
+  const q = s.vanRespawn;
+  if (!s.stats.muster || s.run.fallen) { q.length = 0; return; }
+  for (let i = q.length - 1; i >= 0; i--) if ((q[i]! -= dt) <= 0) q.splice(i, 1);
+  let line = 0; s.vans.forEach((v) => { if (v.line) line++; });
+  while (line + q.length < s.stats.vanCap) {
+    const type = lineType(s), v = placeVanguard(s, type, true); if (!v) break;
+    ev.push({ t: 'vanguardRallied', type, x: v.x, y: v.y }); line++;
+  }
+}
+
 export function vanguardStep(s: SimState, ev: EventBus, dt: number): void {
   const st = s.stats;
+  lineStep(s, ev, dt);
   s.vans.forEach((v: Vanguard) => {
     const U = st.units[v.type];
     march(s, v, VANGUARD.walkSpeed * U.spd * dt);
@@ -82,5 +87,5 @@ export function engagedVanguard(s: SimState, o: Orc): Vanguard | null {
 export function hurtVanguard(s: SimState, ev: EventBus, v: Vanguard, amount: number): void {
   v.hp -= amount; v.hitT = 0.12;
   ev.push({ t: 'vanguardHit', x: v.x, y: v.y });
-  if (v.hp <= 0) { ev.push({ t: 'vanguardFell', type: v.type, x: v.x, y: v.y }); s.vans.release(v); }
+  if (v.hp <= 0) { ev.push({ t: 'vanguardFell', type: v.type, x: v.x, y: v.y }); if (v.line) s.vanRespawn.push(VANGUARD.respawn * s.stats.vanRespawn); s.vans.release(v); }
 }

@@ -12,7 +12,7 @@ export function barricadeHit(s: SimState, ev: EventBus, amount: number, y: numbe
   ev.push({ t: 'barricadeHit', y, amount, frac: barFrac(s) });
   // Rootwarden 6: once per run, a wall below a quarter opens a window of free rallies
   if (s.stats.freeRally && !s.run.freeRallyUsed && run.barHp > 0 && barFrac(s) < SET_FX.freeRallyBelow) {
-    s.run.freeRallyUsed = true; s.freeRallyT = SET_FX.freeRallySecs; ev.push({ t: 'freeRally', secs: SET_FX.freeRallySecs });
+    s.run.freeRallyUsed = true; s.vanRespawn.fill(0); ev.push({ t: 'freeRally', secs: 0 }); // the fallen line returns at once (TB-167)
   }
   if (run.barHp > 0) return;
   if (s.stats.bulwark && !run.bulwarkUsed) {

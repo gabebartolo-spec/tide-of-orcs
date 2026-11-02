@@ -21,7 +21,6 @@ import { EventBus } from '../src/sim/events';
 import { step } from '../src/sim/step';
 
 import { buy, canBuy, costOf } from '../src/sim/tree';
-import { canRally, rally } from '../src/sim/vanguard';
 import { canReplant, replant } from '../src/sim/prestige';
 import { NODES, NodeId } from '../src/data/skillTree';
 import { BARRICADE, COST_WAVE, LOB, NODE_FX, PLAYER, SHOT_FX, STACKING, STEP, UNIT_FX, waveHP } from '../src/data/balance';
@@ -97,7 +96,7 @@ function gearTrial(strip: (l: SimState['meta']['loot']) => void): number {
   const meta = structuredClone(runStart.meta); meta.loot = structuredClone(s.meta.loot); strip(meta.loot);
   const t = createState(seed * 7919 + runStart.tick, structuredClone(runStart.run), meta), bus = new EventBus();
   const n = Math.round(7200 / STEP);
-  for (let i = 0; i < n && !t.run.fallen; i++) { step(t, STEP, { aim: frontAim(t) }, bus); if (i % 25 === 0) rallyIfLow(t, bus, 0.5); bus.drain(); }
+  for (let i = 0; i < n && !t.run.fallen; i++) { step(t, STEP, { aim: frontAim(t) }, bus); bus.drain(); }
   return t.run.wave;
 }
 /** Sim-only set chase: wear the best owned piece in each slot of the set with the most owned slots, once that is four or more. */
@@ -115,12 +114,6 @@ const fallWaves: number[] = [], fallMins: number[] = [], fallTiers: number[] = [
 const tierTop = args.includes('--tiertop');
 let clearedRun = false;
 
-/** Keep the wall: rally when it's under the threshold and we can afford it. */
-function rallyIfLow(st: SimState, bus: EventBus, at: number): void {
-  if (barFrac(st) < 0.5 && canRally(st, 'blade')) rally(st, bus, 'blade');
-  else if (barFrac(st) < at && canRally(st, 'spear')) rally(st, bus, 'spear');
-}
-
 /**
  * dps policy (TB-040): starlight earned over a lookahead with this node bought, minus without, per starlight spent.
  * Each trial replants a copy of the fallen run and meta (the next run), with greedy rallying and no other buys.
@@ -131,7 +124,7 @@ function trial(buyId: NodeId | null): number {
   if (buyId) buy(t, bus, buyId);
   replant(t, bus); // the tree is bought between runs (TB-136), so the trial plays the next run
   const e0 = t.run.earned, n = Math.round(DPS.lookahead / STEP);
-  for (let i = 0; i < n && !t.run.fallen; i++) { step(t, STEP, { aim: frontAim(t) }, bus); if (i % 25 === 0) rallyIfLow(t, bus, 0.5); bus.drain(); }
+  for (let i = 0; i < n && !t.run.fallen; i++) { step(t, STEP, { aim: frontAim(t) }, bus); bus.drain(); }
   return t.run.earned - e0;
 }
 function dpsChoose(): NodeId | null {
@@ -182,7 +175,6 @@ function decide(i: number): void {
     return;
   }
   if (bare && Object.keys(s.meta.loot.equipped).length) { s.meta.loot.equipped = {}; recompute(s); }
-  if (policy !== 'nobuy') rallyIfLow(s, ev, policy === 'wall' ? 0.9 : 0.5);
 }
 
 const total = Math.round((minutes * 60) / STEP);
