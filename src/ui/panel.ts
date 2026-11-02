@@ -6,7 +6,6 @@ import { GameController } from '../game';
 import { TreeRenderer } from '../render/tree';
 import { stepNode, tabOrder } from '../render/treeNav';
 import { canBuy, costOf, rankOf, unlocked } from '../sim/tree';
-import { canRally, rallyCost } from '../sim/vanguard';
 import { gain } from '../sim/prestige';
 import { bossesReady, canSummonBoss } from '../sim/boss';
 import { BOSS_WAVE, TIERS } from '../data/bosses';
@@ -38,7 +37,6 @@ export class Panel {
     $('pr-each').innerHTML = STR.replantEach(PRESTIGE.fallGain); $('pr-reset').textContent = STR.replantReset; $('pr-kept').textContent = STR.replantKept; $('btn-reset').textContent = STR.wipe; $('autosave').textContent = STR.autosave;
     $('fallen-title').textContent = STR.fallenTitle; $('fallen-hw-k').textContent = STR.fallenHW; $('fallen-btn').textContent = STR.fallenToCamp;
     $('camp-title').textContent = STR.campTitle; $('camp-go').textContent = STR.campGo; $('camp-close').textContent = STR.campClose; $('btn-settings').textContent = STR.tabSettings;
-    $('dep-spear').querySelector('.n')!.textContent = STR.rallySpear; $('dep-blade').querySelector('.n')!.textContent = STR.rallyBlade;
     $('dep-boss').querySelector('.n')!.textContent = STR.summonBoss;
 
     $('tab-settings').textContent = STR.tabSettings; $('tab-satchel').textContent = STR.tabSatchel;
@@ -46,7 +44,6 @@ export class Panel {
     fitPages([$('pane-satchel'), $('pane-prestige'), $('pane-settings')]);
     $('tab-grove').onclick = () => { this.onCue('click'); this.setTab('grove'); }; $('tab-prestige').onclick = () => { this.onCue('click'); this.setTab('prestige'); }; $('tab-settings').onclick = () => { this.onCue('click'); this.setTab('settings'); };
     this.initSettings();
-    $('dep-spear').onclick = () => this.rally('spear'); $('dep-blade').onclick = () => this.rally('blade');
     $('dep-boss').onclick = () => { game.summonBoss(); };
     $('pr-btn').onclick = () => { if (game.canReplant() && !game.state.run.fallen) this.doReplant(); };
     // After a fall the field gives way to the Grove page (TB-136): the tree and satchel are spent between runs
@@ -98,7 +95,6 @@ export class Panel {
     $('pr-gain').textContent = '+' + g; ($('pr-btn') as HTMLButtonElement).disabled = !ok;
     $('pr-req').textContent = ok ? STR.replantReady(s.meta.bestWave) : STR.replantFrom(PRESTIGE.voluntaryWave);
     const b = document.getElementById('buy-btn') as HTMLButtonElement | null; if (b) b.disabled = !canBuy(s, NODE[this.tree.selected]);
-    this.rallyButton('spear', $('dep-spear')); const bl = $('dep-blade'); bl.hidden = !s.stats.champion; if (s.stats.champion) this.rallyButton('blade', bl);
     this.bossButton(); this.tierPicker();
   }
 
@@ -118,14 +114,6 @@ export class Panel {
     el.querySelector('.c')!.textContent = b ? STR.bossLeft(Math.ceil(BOSS_WAVE.secs - b.t), b.left) : STR.bossReadyN(n);
   }
 
-  private rallyButton(type: VanType, el: HTMLElement): void {
-    const s = this.game.state, c = el.querySelector('.c')!, btn = el as HTMLButtonElement;
-    if (!s.stats.muster) { btn.disabled = true; c.textContent = STR.learnMuster; c.className = 'c dim'; return; }
-    const full = s.vans.count >= s.stats.vanCap, cost = rallyCost(s, type);
-    btn.disabled = !canRally(s, type);
-    c.textContent = full ? STR.lineFull : STR.starlightCost(fmt(cost)); c.className = 'c' + (btn.disabled ? ' dim' : '');
-  }
-
   handleEvents(events: ReturnType<GameController['events']['drain']>): void {
     for (const e of events) {
       if (e.t === 'wave') this.toast(STR.waveN(e.wave));
@@ -135,7 +123,6 @@ export class Panel {
       // a tier unlocks on the same step a boss is cleared: one toast says both
       else if (e.t === 'bossEnd') { const up = events.find((x) => x.t === 'tierUnlocked'); this.toast(e.cleared ? STR.bossCleared(fmt(e.loot), e.hw) + (up && up.t === 'tierUnlocked' ? ' ' + STR.tierUnlocked(STR.tideName(up.tier)) : '') : STR.bossFailed); }
       else if (e.t === 'bought' && e.firstRank && e.id !== 'sharp') this.toast(STR.joins(NODE[e.id as keyof typeof NODE].name));
-      else if (e.t === 'vanguardRallied') this.toast(STR.takesField(VAN_NAME[e.type as VanType]));
       else if (e.t === 'vanguardFell') this.toast(STR.vanFalls(VAN_NAME[e.type as VanType]));
       else if (e.t === 'barricadeRegrow') this.toast(STR.regrow);
       else if (e.t === 'loot' && e.kept && LOOT_TOAST.includes(e.rarity)) { const it = this.game.state.meta.loot.items.find((i) => i.uid === e.uid); if (it) this.toast(STR.lootFound(itemName(it))); }
@@ -144,7 +131,6 @@ export class Panel {
   }
 
   private buy(id: keyof typeof NODE): void { if (this.game.buy(id)) this.renderDetail(); }
-  private rally(type: VanType): void { if (!this.game.rally(type) && this.game.state.vans.count >= this.game.state.stats.vanCap) this.toast(STR.lineFullToast); }
 
   renderDetail(): void {
     const s = this.game.state, n = NODE[this.tree.selected], lvl = rankOf(s, n.id), cost = costOf(s, n), maxed = lvl >= n.max, un = unlocked(s, n);

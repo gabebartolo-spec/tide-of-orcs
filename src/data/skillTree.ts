@@ -11,7 +11,7 @@ export type NodeId =
   | 'runners' | 'runfury' | 'runswarm' | 'brutes' | 'brutefury' | 'bruteswarm'
   | 'elites' | 'elitefury' | 'eliteswarm'
   | 'timber' | 'repair' | 'spikes' | 'bulwark'
-  | 'muster' | 'shield' | 'drill' | 'ranks' | 'mend' | 'champion'
+  | 'muster' | 'shield' | 'drill' | 'ranks' | 'mend' | 'champion' | 'swiftmuster'
   | 'hunter' | 'scavenger' | 'trophy' | 'sharpeyes' | 'hoard' | 'resonance' | 'echo'
   // TB-111
   | 'kindle' | 'wildfire' | 'firechance' | 'frostchance' | 'static' | 'shockchance' | 'rebdmg' | 'rebchance' | 'moondmg' | 'moonreach' | 'moonchance' | 'stardmg' | 'starcount' | 'starchance' | 'knifedmg' | 'knifefan' | 'boltpin' | 'windlass' | 'deadly' | 'wolfrate' | 'wolfcrit' | 'wolfcritx' | 'wolfspd' | 'rangerdmg' | 'rangerrate' | 'rangercrit' | 'rangercritx' | 'wardendmg' | 'wardenrate' | 'wardencrit' | 'wardencritx' | 'hawkdmg' | 'hawkrate' | 'hawkcrit' | 'hawkcritx' | 'treantdmg' | 'treantrate' | 'treantcrit' | 'treantcritx' | 'spearrate' | 'spearcrit' | 'spearcritx' | 'spearspd' | 'bladedmg' | 'bladerate' | 'bladecrit' | 'bladecritx' | 'bladespd';
@@ -76,12 +76,12 @@ export const NODES: readonly SkillNode[] = [
   n('repair', 'Patient Hands', 'Barricade', 'timber', 5, 90, 2.0, 338, 764, 'Barricade mends 1% of its health per second per rank.'),
   n('spikes', 'Thornwall', 'Barricade', 'timber', 5, 150, 2.1, 370, 852, 'Orcs hacking at the wall take 20% of your arrow damage per second per rank.'),
   n('bulwark', 'Deep Roots', 'Barricade', 'repair', 1, 2400, 1, 194, 724, 'Once per run, a falling barricade regrows to half health.'),
-  n('muster', 'Muster', 'Vanguard', 'root', 1, 50, 1, 466, 676, 'Rally spearmen with starlight. They hold the line until they fall. Up to 2 at once.'),
+  n('muster', 'Muster', 'Vanguard', 'root', 1, 50, 1, 466, 676, 'Two spearmen hold the line. Each one that falls returns after 12 seconds.'),
   n('shield', 'Shieldwall', 'Vanguard', 'muster', 5, 110, 1.9, 322, 644, 'Vanguard +30% health per rank.'),
   n('drill', 'Spear Drill', 'Vanguard', 'muster', 5, 130, 1.9, 306, 548, 'Spearmen +30% damage per rank.'),
   n('ranks', 'Close Ranks', 'Vanguard', 'shield', 3, 400, 2.6, 194, 628, '+1 vanguard may stand at once.'),
   n('mend', 'Field Mending', 'Vanguard', 'drill', 3, 350, 2.4, 210, 516, 'Vanguard recover 3% health per second per rank.'),
-  n('champion', 'Bladedancer', 'Vanguard', 'ranks', 1, 2200, 1, 162, 428, 'Rally bladedancers: costlier, faster, their strikes cleave every orc in reach.'),
+  n('champion', 'Bladedancer', 'Vanguard', 'ranks', 1, 2200, 1, 162, 428, 'Half the line become bladedancers: faster, their strikes cleave every orc in reach.'),
   // Spoils (TB-101): loot inside a run; costs proposed in BALANCE P-101
   n('hunter', "Hunter's Eye", 'Spoils', 'root', 1, 120, 1, 546, 940, '+5% chance to strike for triple damage.'),
   n('scavenger', 'Scavenger', 'Spoils', 'hunter', 1, 150, 1, 418, 1004, 'Salvage gives 50% more Glimmer this run.'),
@@ -130,6 +130,7 @@ export const NODES: readonly SkillNode[] = [
   n('treantrate', 'Restless Roots', 'Companions', 'treant', 5, 1960, 1.9, 828, 173, 'Treant strikes 15% more often per rank.'),
   n('treantcrit', 'Old Wrath', 'Companions', 'treant', 5, 2240, 2.0, 904, 266, 'Treant stamps: +5% chance per rank to crit for double damage.'),
   n('treantcritx', 'Crushing Stamp', 'Companions', 'treantcrit', 5, 2800, 2.0, 982, 322, 'Treant crits +50% damage per rank.'),
+  n('swiftmuster', 'Swift Muster', 'Vanguard', 'muster', 5, 140, 1.9, 520, 640, 'Fallen vanguard return 15% sooner per rank.'),
   n('spearrate', 'Spear Rhythm', 'Vanguard', 'muster', 5, 168, 1.9, 412, 702, 'Spearmen strikes 15% more often per rank.'),
   n('spearcrit', 'Spear Point', 'Vanguard', 'muster', 5, 192, 2.0, 455, 617, 'Spearman strikes: +5% chance per rank to crit for double damage.'),
   n('spearcritx', 'Deep Thrust', 'Vanguard', 'spearcrit', 5, 240, 2.0, 443, 558, 'Spearmen crits +50% damage per rank.'),

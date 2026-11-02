@@ -2,8 +2,6 @@
 export const STR = {
   title: "Let's Hunt Some Orc!",
   barricade: 'Barricade', vanguard: 'Vanguard',
-  rallySpear: 'Rally Spearman', rallyBlade: 'Rally Bladedancer', learnMuster: 'Learn Muster', lineFull: 'Line is full', lineFullToast: 'The line is full',
-  takesField: (name: string) => `${name} takes the field`,
   vanFalls: (name: string) => `A ${name.toLowerCase()} falls`,
   regrow: 'Deep roots: the barricade regrows!',
   fallenTitle: 'The barricade has fallen',
@@ -50,7 +48,7 @@ export const STR = {
   heirloom: 'Make heirloom', unheirloom: 'Not heirloom', heirloomMark: ' · heirloom',
   hwNeeds: (names: string) => `Needs ${names}`,
   lootFound: (name: string) => `${name} found`,
-  pinned: 'pinned', freeRally: 'Free rally!',
+  pinned: 'pinned', freeRally: 'The line reforms!',
   setsWorn: 'Sets', setProgress: (name: string, n: number) => `${name} ${n}/6`,
   /** Set bonus lines at 2, 4 and 6 pieces (TB-099). */
   setFx: {

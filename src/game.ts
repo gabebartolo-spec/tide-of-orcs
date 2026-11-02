@@ -2,7 +2,6 @@
  * GameController: the only thing allowed to call into sim/ from the UI.
  * Owns the SimState, the event bus, and save/load.
  */
-import { VanType } from './data/balance';
 import { NodeId } from './data/skillTree';
 import { EventBus } from './sim/events';
 import { canPullBack, canReplant, pullBack, replant } from './sim/prestige';
@@ -13,7 +12,6 @@ import { summonBoss } from './sim/boss';
 import { castFireball } from './sim/combat';
 import { buyHw } from './sim/heartwood';
 import { HwId } from './data/heartwood';
-import { rally } from './sim/vanguard';
 import { equip, reroll, salvage, setFilter, toggleHeirloom, toggleLock } from './sim/loot';
 import { ownedAffixes } from './sim/lootRoll';
 import { Rarity } from './data/loot';
@@ -51,7 +49,6 @@ export class GameController {
   setAim(x: number, y: number): void { this.aim = { x, y }; }
   clearAim(): void { this.aim = null; }
   buy(id: NodeId): boolean { return buy(this.state, this.events, id); }
-  rally(type: VanType): boolean { return rally(this.state, this.events, type); }
   buyHw(id: HwId): boolean { const ok = buyHw(this.state, this.events, id); if (ok) this.save(); return ok; }
   /** Satchel intents (TB-096): equipping recomputes Stats; every change saves. */
   equipItem(uid: string): boolean {

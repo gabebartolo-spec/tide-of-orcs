@@ -66,7 +66,7 @@ export const SET_FX = {
   ballRate: 0.25, boltFirst: 0.5, boltShove: 30, pinSecs: 2, pinMult: 2,
   moonRate: 0.25, moonCritMult: 1.5, wellSecs: 3, wellHeal: 0.02,
   petDmg: 0.2, petHaste: 0.25, nearWall: 220, extraWolves: 1, rootSecs: 1.5,
-  barMax: 0.15, barRegen: 0.005, freeRallyBelow: 0.25, freeRallySecs: 10,
+  barMax: 0.15, barRegen: 0.005, freeRallyBelow: 0.25,
   /** Most Cinderground patches and Moonwells alive at once. */
   zoneCap: 48,
 } as const;
