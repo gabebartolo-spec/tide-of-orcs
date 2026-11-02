@@ -46,7 +46,7 @@ Run `npm run lint && npm run test` before every commit. Do not commit if either 
 
 ## Non-negotiable design rules
 
-1. **The only fail state is the barricade falling, and it always pays out Heartwood (at least 1).** Nothing else reduces progress. A fallen run freezes; Replant is its only run action (the Heartwood tree and Settings stay usable).
+1. **The only fail state is the barricade falling, and it costs no progress.** Heartwood drops only from cleared boss waves; a fall pays none (director, 2 Nov, TB-171). Nothing else reduces progress. A fallen run freezes; Replant is its only run action (the Heartwood tree and Settings stay usable).
 2. **Incremental, aim-to-play.** The elf shoots only while the player aims: the pointer over the plain places a strike circle, and the bow lobs an arcing arrow there on its own cadence (1.25 s before Quick Draw); everything in the circle takes damage. With no aim the elf holds fire; companions and vanguard always fight on their own. There is no offline progress: nothing accrues while the game is closed or the tab is hidden. There is no click-to-shoot and no tap bonus, ever.
 3. **Every number lives in `src/data/` or `docs/BALANCE.md` formulas.** No magic numbers in systems code.
 4. **Skill tree is data.** Nodes are declared in `src/data/skillTree.ts`, matching `docs/SKILL-TREE.md`. Systems read effects from the derived `Stats` object, never from node ids.

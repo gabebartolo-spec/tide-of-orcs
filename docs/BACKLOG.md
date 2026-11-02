@@ -184,3 +184,4 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-168 | Remove vector stand-in shapes; actors draw only from sprites (director 2 Nov) | render | — | claude | done (cae614f, PR 132) |
 | TB-169 | Vanguard only advance on orcs past halfway (director 2 Nov) | sim | — | claude | done (1f9c58f, PR 133) |
 | TB-170 | Vanguard turn back to face the field once home (director 2 Nov) | sim | — | claude | done (5031cc4, PR 134) |
+| TB-171 | Heartwood only from bosses (director 2 Nov): a fall or voluntary replant pays 0 (`PRESTIGE.fallGain`), rule 1 reworded; voluntary Replant no longer gated on a payout | balance | — | claude | in PR |

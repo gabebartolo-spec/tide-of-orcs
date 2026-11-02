@@ -168,7 +168,7 @@ A full mobile port stays out of the roadmap (director, 31 Oct): the game is buil
 |---|---|
 | Balance plateau: player stalls before prestige unlocks | Headless simulator from M0; prestige threshold tuned by sim, not vibes |
 | Aiming feels like a chore, or the field feels dead when the player looks away | The lob is steady and forgiving (1.25 s, wide circle) so aiming is placement, not clicking; companions and vanguard keep fighting; each node has a battlefield-visible effect |
-| The fail state feels like wasted time | Heartwood pays at least 1 from any wave (floor since TB-080); the fallen screen shows what the run earned before it shows the button; ceremony ≤ 4 s and skippable |
+| The fail state feels like wasted time | Heartwood comes only from bosses (TB-171); the fallen screen shows what the run earned before it shows the button; ceremony ≤ 4 s and skippable |
 | Canvas perf on phones with 200 orcs | Fixed-step sim, object pools, no per-frame allocations, batched draws by colour |
 | Scope creep into "full tower defence" | Pillars 1 & 2; out-of-scope list is explicit |
 | Save corruption in the wild | Versioned schema + migration tests + export/import |
