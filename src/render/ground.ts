@@ -51,9 +51,16 @@ export function layoutGround(seed: number = GROUND.seed): GroundLayout {
     for (let k = count(rng, R.pebbles); k > 0; k--) L.rocks.push({ x: clampX(x + near(rng, r * 3)), y: clampY(y + near(rng, r * 1.5)), r: span(rng, R.pebbleR), squash: sq });
   }
   const PL = GROUND.plants, kinds = Object.keys(PL.h) as PlantKind[];
-  const plant = (x: number, y: number): void => { L.plants.push({ x: clampX(x), y: clampY(y), kind: kinds[Math.floor(rng.next() * kinds.length)]!, flip: rng.next() < 0.5 }); };
-  for (let i = 0; i < PL.clusters; i++) { const [x, y] = pt(); for (let k = count(rng, PL.per); k > 0; k--) plant(x + near(rng, PL.spread), y + near(rng, PL.spread * 0.6)); }
-  for (let i = 0; i < PL.singles; i++) { const [x, y] = pt(); plant(x, y); }
+  const plant = (x: number, y: number, kind: PlantKind): void => { L.plants.push({ x: clampX(x), y: clampY(y), kind, flip: rng.next() < 0.5 }); };
+  // meadow drifts: each is one species, spaced evenly along a border band (alternating top/bottom)
+  const flowers = kinds.filter(k => k !== 'grass'), band = H * PL.edge, slot = (W - x0) / Math.ceil(PL.drifts / 2);
+  for (let i = 0; i < PL.drifts; i++) {
+    const top = i % 2 === 0, cx = x0 + slot * (Math.floor(i / 2) + 0.5 + (top ? 0 : 0.5)) + near(rng, slot * 0.15);
+    const cy = top ? band * (0.35 + rng.next() * 0.3) : H - band * (0.35 + rng.next() * 0.3), kind = flowers[i % flowers.length]!;
+    for (let k = count(rng, PL.per); k > 0; k--) plant(cx + near(rng, PL.driftW / 2), cy + near(rng, PL.driftH), kind);
+    for (let k = 3; k > 0; k--) plant(cx + near(rng, PL.driftW * 0.7), cy + near(rng, PL.driftH * 1.6), 'grass');
+  }
+  for (let i = 0; i < PL.lane; i++) plant(x0 + rng.next() * (W - x0), band + rng.next() * (H - band * 2), 'grass');
   for (let i = 0; i < PL.patches; i++) { const [x, y] = pt(); L.patches.push({ x: clampX(x), y: clampY(y) }); }
   L.tufts.sort((a, b) => a.y - b.y); L.rocks.sort((a, b) => a.y - b.y); L.plants.sort((a, b) => a.y - b.y);
   return L;
@@ -67,7 +74,7 @@ function blobs(g: CanvasRenderingContext2D, list: Blob[], fill: string): void {
 }
 
 /** Decor sprites (public/decor). Loaded once; `null` until ready, so callers fall back to vector art. */
-const DECOR = ['chamomile', 'foliage', 'grass', 'viola', 'snowdrop1', 'snowdrop2', 'snowdrop6', 'weeds', 'logpile', 'fence', 'turf'] as const;
+const DECOR = ['chamomile', 'foliage', 'grass', 'viola', 'snowdrop1', 'snowdrop2', 'snowdrop6', 'weeds', 'logpile', 'fence'] as const;
 const imgs = new Map<string, HTMLImageElement>();
 let started = false;
 function loadDecor(): void {
@@ -85,15 +92,6 @@ function sprite(g: CanvasRenderingContext2D, im: HTMLImageElement, x: number, y:
 
 function paint(g: CanvasRenderingContext2D, L: GroundLayout): void {
   g.fillStyle = P.plain; g.fillRect(-PAD, -PAD, W + PAD * 2, H + PAD * 2);
-  const turf = decorImg('turf');
-  if (turf) {
-    // the grass-and-weeds texture is the whole plain (director 2 Nov); it carries its own flowers and stones,
-    // so the vector patches, rocks, tufts and plant sprites stay off (too busy on top of it)
-    const T = GROUND.turf, pat = g.createPattern(turf, 'repeat')!;
-    pat.setTransform(new DOMMatrix().scale(T.tile / turf.width, T.tile * T.squash / turf.height));
-    g.fillStyle = pat; g.fillRect(-PAD, -PAD, W + PAD * 2, H + PAD * 2);
-    return;
-  }
   blobs(g, L.lush, P.plainLush); blobs(g, L.worn, P.plainWorn); blobs(g, L.bare, P.plainBare);
   const weeds = decorImg('weeds'), PL = GROUND.plants;
   if (weeds) { const ph = PL.patchW * weeds.height / weeds.width; for (const p of L.patches) sprite(g, weeds, p.x, p.y + ph / 2, ph); }
