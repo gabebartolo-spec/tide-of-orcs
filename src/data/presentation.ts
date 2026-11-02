@@ -67,6 +67,10 @@ export const GROUND = {
   tufts: { clusters: 26, per: [3, 6], spread: 18, singles: 40, blades: [4, 7], h: [6, 12], lean: 0.6, width: 1.4 },
   /** Small rocks: count (half sit on worn patches), radius, y squash, pebbles beside each, pebble radius. */
   rocks: { n: 18, r: [2.6, 5.5], squash: 0.62, pebbles: [0, 3], pebbleR: [1, 1.8] },
+  /** Sketchfab plant sprites (public/decor, TB-162): clusters, plants per cluster, scatter, loose singles; height (units) per kind; turf patches and their width. */
+  plants: { clusters: 12, per: [2, 4], spread: 16, singles: 14, h: { chamomile: 28, foliage: 26, grass: 16, viola: 22, snowdrop1: 15, snowdrop2: 18, snowdrop6: 16 }, patches: 6, patchW: 44 },
+  /** Log-pile barricade: segment draw width, vertical step between stacked segments (units). */
+  logs: { w: 30, step: 10 },
 } as const;
 
 /** Loot moments (TB-105, plan §11). Lives in seconds, sizes in field units.
