@@ -1,3 +1,4 @@
+import { checkpointFor } from '../data/balance';
 import { freshLoot } from '../data/loot';
 import { CURRENT_VERSION, RETIRED_NODE_IDS, RETIRED_V3, RETIRED_V4, Save } from './schema';
 
@@ -37,6 +38,8 @@ export const migrations: Record<number, (s: AnySave) => AnySave> = {
   8: (s) => { const m = s.meta as { loot: object }; return { ...s, version: 9, meta: { ...m, loot: { ...m.loot, heirloom: null } } }; },
   /** v9 → v10: boss tiers (TB-148); only the base tier unlocked, the run plays it. */
   9: (s) => ({ ...s, version: 10, run: { ...(s.run as object), tier: 1 }, meta: { ...(s.meta as object), tier: 1 } }),
+  /** v10 → v11: checkpoints (TB-159); granted for the best wave already reached. */
+  10: (s) => { const m = s.meta as { bestWave?: number }; return { ...s, version: 11, meta: { ...m, checkpoint: checkpointFor(m.bestWave ?? 1) } }; },
 };
 
 export function migrate(raw: unknown): Save {

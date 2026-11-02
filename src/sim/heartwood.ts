@@ -29,7 +29,7 @@ export function buyHw(s: SimState, ev: EventBus, id: HwId): boolean {
 /** Apply the run-start Heartwood nodes to a fresh run. Boss waves skipped by Early Dawn are not owed. */
 export function startRun(s: SimState): void {
   const m = s.meta;
-  s.run.wave = 1 + HW_FX.dawnWaves * hwRank(m, 'hw_dawn');
+  s.run.wave = Math.max(m.checkpoint, 1 + HW_FX.dawnWaves * hwRank(m, 'hw_dawn'));
   s.run.bossDone = Math.floor(s.run.wave / BOSS_WAVE.every);
   if (hwRank(m, 'hw_wolf')) s.run.levels.wolf = 1;
   recompute(s); s.run.barHp = s.stats.barMax;

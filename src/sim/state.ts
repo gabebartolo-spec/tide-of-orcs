@@ -64,7 +64,9 @@ export interface RunState {
 }
 /** heartwood: all Heartwood ever earned (spent on the Heartwood tree; no passive bonus since P-142); hwLevels: ranks bought;
  *  tier: the highest boss tier unlocked (TB-148). */
-export interface MetaState { heartwood: number; lifetimeKills: number; bestWave: number; prestiges: number; hwLevels: HwLevels; loot: LootMeta; tier: number }
+export interface MetaState { heartwood: number; lifetimeKills: number; bestWave: number; prestiges: number; hwLevels: HwLevels; loot: LootMeta; tier: number;
+  /** Wave the next run starts at: one past the last checkpoint wave cleared (TB-159). 1 = none yet. */
+  checkpoint: number }
 
 export interface SimState {
   tick: number; t: number;
@@ -91,7 +93,7 @@ export function freshRun(): RunState {
   return { wave: 1, waveT: 0, runTime: 0, starlight: 0, earned: 0, kills: 0, levels: { root: 1 }, barHp: -1, bulwarkUsed: false, fallen: false, bossDone: 0, boss: null, thunder: 0, splinterUsed: false, freeRallyUsed: false,
     foeT: {}, stormT: 0, shotT: [0, 0, 0], knifeT: 0, hawkT: 0, treantT: 0, ballT: 0, tier: 1 };
 }
-export function freshMeta(): MetaState { return { heartwood: 0, lifetimeKills: 0, bestWave: 1, prestiges: 0, hwLevels: {}, loot: freshLoot(), tier: 1 }; }
+export function freshMeta(): MetaState { return { heartwood: 0, lifetimeKills: 0, bestWave: 1, prestiges: 0, hwLevels: {}, loot: freshLoot(), tier: 1, checkpoint: 1 }; }
 
 const makeOrc = (): Orc => ({ live: false, kind: 'grunt', x: 0, y: 0, hp: 0, maxhp: 0, spd: 0, r: 0, loot: 0, atk: 0, dead: false, burn: 0, hitT: 0, wob: 0, swingT: 0, champ: false, bleed: 0, slow: 0, pin: 0, root: 0, chill: 0, stun: 0 });
 const makeShot = (): Projectile => ({ live: false, kind: 'arrow', x: 0, y: 0, vx: 0, vy: 0, dmg: 0, pierce: 0, life: 0, fx: 0, crit: 0, critX: 1, target: null, hit: new Set(), sx: 0, sy: 0, tx: 0, ty: 0, t: 0, h: 0, r: 0, back: false });

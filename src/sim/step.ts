@@ -1,4 +1,4 @@
-import { ARROWS, BARRICADE, FIELD, LOB, ORC_WOB, PLAYER, SOURCES, WAVE_LEN, waveHP, waveInterval, waveLoot, waveSpeedMult } from '../data/balance';
+import { ARROWS, BARRICADE, FIELD, LOB, ORC_WOB, PLAYER, SOURCES, WAVE_LEN, checkpointFor, waveHP, waveInterval, waveLoot, waveSpeedMult } from '../data/balance';
 import { FIREBALL, ORC_KINDS, ORC_TYPES, OrcKind } from '../data/orcs';
 import { EventBus } from './events';
 import { Orc, Projectile, SimState, Wolf } from './state';
@@ -36,7 +36,7 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
   s.tick++; s.t += dt; run.runTime += dt;
 
   run.waveT += dt;
-  if (run.waveT >= WAVE_LEN) { run.waveT -= WAVE_LEN; run.wave++; s.meta.bestWave = Math.max(s.meta.bestWave, run.wave); ev.push({ t: 'wave', wave: run.wave }); if (run.wave % BOSS_WAVE.every === 0) ev.push({ t: 'bossReady' }); }
+  if (run.waveT >= WAVE_LEN) { run.waveT -= WAVE_LEN; run.wave++; s.meta.bestWave = Math.max(s.meta.bestWave, run.wave); s.meta.checkpoint = Math.max(s.meta.checkpoint, checkpointFor(run.wave)); ev.push({ t: 'wave', wave: run.wave }); if (run.wave % BOSS_WAVE.every === 0) ev.push({ t: 'bossReady' }); }
 
   // each kind marches on its own clock from its join wave (TB-158); a boss wave pauses them all and plays its script instead
   bossStep(s, ev, dt);

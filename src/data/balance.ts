@@ -2,6 +2,10 @@
 
 export const FIELD = { w: 900, h: 480, barX: 150, barW: 14, elfX: 64 } as const;
 export const WAVE_LEN = 24;
+/** Checkpoints (TB-159): clearing every `every`-th wave lets later runs start just past it (0 = off). */
+export const CHECKPOINT = { every: 10 };
+/** The wave a run starts at once `best` has been reached: one past the last checkpoint cleared. */
+export const checkpointFor = (best: number): number => CHECKPOINT.every ? Math.floor((best - 1) / CHECKPOINT.every) * CHECKPOINT.every + 1 : 1;
 export const ORC_CAP = 160;
 export const STEP = 1 / 50;
 /** Radians per second an orc's bob phase (`wob`) advances while it acts. The sprite clock is wob / ORC_WOB seconds (TB-133). */

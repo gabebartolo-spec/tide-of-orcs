@@ -8,6 +8,7 @@ import { v6 } from './fixtures/v6';
 import { v7 } from './fixtures/v7';
 import { v8 } from './fixtures/v8';
 import { v9 } from './fixtures/v9';
+import { v10 } from './fixtures/v10';
 import { migrate } from './migrate';
 import { CURRENT_VERSION, Save, defaultSettings } from './schema';
 import { exportSave, importSave } from './storage';
@@ -15,8 +16,8 @@ import { EventBus } from '../sim/events';
 import { SimState, createState, freshMeta, freshRun } from '../sim/state';
 import { step } from '../sim/step';
 
-/** Every save version a shipped build ever wrote (TB-140). v2–v9 were played and saved by the build of their day. */
-const OLD: Record<string, object> = { v1, v2, v3, v4, v5, v6, v7, v8, v9 };
+/** Every save version a shipped build ever wrote (TB-140). v2–v10 were played and saved by the build of their day. */
+const OLD: Record<string, object> = { v1, v2, v3, v4, v5, v6, v7, v8, v9, v10 };
 
 /** Load a migrated save the way GameController does (src/game.ts): fresh defaults under the saved fields. */
 const load = (save: Save): SimState => createState(7, { ...freshRun(), ...save.run }, { ...freshMeta(), ...save.meta });
@@ -56,6 +57,10 @@ describe('every old save loads and plays', () => {
       expect(importSave(exportSave(out))).toEqual(JSON.parse(JSON.stringify(out)));
     });
   }
+  it('grants the checkpoint for the best wave an old save reached (TB-159)', () => {
+    expect(migrate(JSON.parse(JSON.stringify(v10))).meta.checkpoint).toBe(11);
+    expect(migrate(JSON.parse(JSON.stringify(v9))).meta.checkpoint).toBe(11);
+  });
   it('keeps the progress an old save carried', () => {
     for (const fixture of [v2, v5, v8]) {
       const save = migrate(JSON.parse(JSON.stringify(fixture)));
