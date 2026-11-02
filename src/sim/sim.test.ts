@@ -129,7 +129,7 @@ describe('tree', () => {
   it('fury ranks toughen one kind and raise its starlight; swarm speeds its spawns', () => {
     const st = deriveStats({ root: 1, drums: 2, runners: 1, runswarm: 1 });
     expect(st.foes.grunt.hp).toBeCloseTo(1.69); expect(st.foes.grunt.loot).toBeCloseTo(1.96);
-    expect(st.foes.runner.hp).toBe(1); expect(st.foes.runner.spawn).toBeCloseTo(2.4); expect(st.foes.runner.loot).toBeCloseTo(1.5);
+    expect(st.foes.runner.hp).toBe(1); expect(st.foes.runner.spawn).toBeCloseTo(2.4); expect(st.foes.runner.loot).toBeCloseTo(2.5);
     expect(st.foes.brute.on).toBe(false); expect(st.foes.brute.spawn).toBe(0.5); expect(st.foes.grunt.spawn).toBe(1);
   });
   it('runners join from wave 5, brutes from 10, Blackguard from 20; summoning doubles a kind (TB-158)', () => {

@@ -47,16 +47,16 @@ Layout coordinates are for a 1400×1320 tree canvas, root at (700, 890) (TB-163)
 | elites | Blackguard | Grove | brutes | 1 | 1500 | — | 1120 | 1200 | Armoured elite orcs join the tide. |
 | elitefury | Elite Fury | Grove | elites | 5 | 2000 | 2.4 | 1174 | 1231 | Elites have +30% health and drop +40% starlight per rank. |
 | eliteswarm | Elite Swarm | Grove | elites | 5 | 2000 | 2.4 | 1178 | 1179 | Elites march 20% more often per rank. |
-| berserkers | Berserkers | Grove | elites | 1 | 3000 | — | 1250 | 1222 | Berserkers march four times as often (they trickle in on their own from wave 25), each worth +50% starlight. |
+| berserkers | Berserkers | Grove | elites | 1 | 2400 | — | 1250 | 1222 | Berserkers march four times as often (they trickle in on their own from wave 25), each worth +150% starlight. |
 | berserkfury | Berserker Fury | Grove | berserkers | 5 | 4000 | 2.4 | 1300 | 1262 | Berserkers have +30% health and drop +40% starlight per rank. |
 | berserkswarm | Berserker Swarm | Grove | berserkers | 5 | 4000 | 2.4 | 1310 | 1200 | Berserkers march 20% more often per rank. |
-| wolfriders | Wolf Riders | Grove | berserkers | 1 | 5000 | — | 1270 | 1130 | Wolf riders march four times as often (they trickle in on their own from wave 30), each worth +50% starlight. |
+| wolfriders | Wolf Riders | Grove | berserkers | 1 | 4000 | — | 1270 | 1130 | Wolf riders march four times as often (they trickle in on their own from wave 30), each worth +150% starlight. |
 | riderfury | Rider Fury | Grove | wolfriders | 5 | 6670 | 2.4 | 1340 | 1150 | Wolf riders have +30% health and drop +40% starlight per rank. |
 | riderswarm | Rider Swarm | Grove | wolfriders | 5 | 6670 | 2.4 | 1330 | 1085 | Wolf riders march 20% more often per rank. |
-| shamans | Shamans | Grove | wolfriders | 1 | 8000 | — | 1250 | 1040 | Shamans march four times as often (they trickle in on their own from wave 35), each worth +50% starlight. |
+| shamans | Shamans | Grove | wolfriders | 1 | 6400 | — | 1250 | 1040 | Shamans march four times as often (they trickle in on their own from wave 35), each worth +150% starlight. |
 | shamanfury | Shaman Fury | Grove | shamans | 5 | 10670 | 2.4 | 1310 | 1020 | Shamans have +30% health and drop +40% starlight per rank. |
 | shamanswarm | Shaman Swarm | Grove | shamans | 5 | 10670 | 2.4 | 1240 | 980 | Shamans march 20% more often per rank. |
-| drummers | War Drummers | Grove | shamans | 1 | 12000 | — | 1180 | 1080 | War drummers march four times as often (they trickle in on their own from wave 40), each worth +50% starlight. |
+| drummers | War Drummers | Grove | shamans | 1 | 9600 | — | 1180 | 1080 | War drummers march four times as often (they trickle in on their own from wave 40), each worth +150% starlight. |
 | drummerfury | Drummer Fury | Grove | drummers | 5 | 16000 | 2.4 | 1170 | 1020 | War drummers have +30% health and drop +40% starlight per rank. |
 | drummerswarm | Drummer Swarm | Grove | drummers | 5 | 16000 | 2.4 | 1120 | 1060 | War drummers march 20% more often per rank. |
 | timber | Seasoned Timber | Barricade | root | 10 | 25 | 1.6 | 570 | 960 | Barricade +25% health per rank. |
