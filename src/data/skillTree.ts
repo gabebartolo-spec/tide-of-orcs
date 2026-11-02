@@ -43,7 +43,7 @@ export const NODES: readonly SkillNode[] = [
   n('moon', 'Moonbow', 'Bow', 'multi', 1, 3200, 1, 210, 220, 'One shot in four is a moon shot: the circle settles onto the nearest orc and strikes +60% harder.'),
   n('bounce', 'Rebound', 'Bow', 'pierce', 4, 1200, 2.2, 434, 220, 'One shot in four looses a magic bolt that leaps to 2 more orcs, +1 per rank; each leap hits softer.'),
   n('starfall', 'Starfall', 'Bow', 'moon', 1, 6000, 1, 178, 108, 'One shot in ten also rains 8 arrows on orcs across the plain.'),
-  n('wolf', 'Grey Wolf', 'Companions', 'root', 1, 70, 1, 674, 588, 'A wolf runs the plain and savages the nearest orc.'),
+  n('wolf', 'Grey Wolf', 'Companions', 'muster', 1, 200, 1, 674, 588, 'A wolf runs the plain and savages the nearest orc.'),
   n('fangs', 'Fangs', 'Companions', 'wolf', 5, 90, 1.9, 754, 476, 'Wolf bites +40% harder per rank.'),
   n('ranger', 'Ranger', 'Companions', 'wolf', 1, 350, 1, 642, 364, 'A second archer joins you behind the wall.'),
   n('warden', 'Warden', 'Companions', 'ranger', 1, 2800, 1, 658, 236, 'A third archer, veteran of older wars.'),

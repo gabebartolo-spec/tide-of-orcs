@@ -11,8 +11,9 @@ describe('tree tab order (TB-116)', () => {
     const seen = order.slice(1).map((id) => NODE[id].branch).filter((b, i, a) => b !== a[i - 1]);
     expect(seen).toEqual((Object.keys(BRANCH_COLOR) as Branch[]).filter((b) => NODES.some((n) => n.branch === b && n.parent)));
   });
-  it('puts every parent before its children', () => {
-    for (const n of NODES) if (n.parent) expect(order.indexOf(n.parent)).toBeLessThan(order.indexOf(n.id));
+  it('puts every parent before its children within a branch', () => {
+    // A branch hung off another branch (Grey Wolf under Muster, TB-157) keeps legend order instead.
+    for (const n of NODES) if (n.parent && NODE[n.parent].branch === n.branch) expect(order.indexOf(n.parent)).toBeLessThan(order.indexOf(n.id));
   });
   it('steps forward and back, and returns null at the ends', () => {
     expect(stepNode(order, 'root', 1)).toBe(order[1]); expect(stepNode(order, order[1]!, -1)).toBe('root');

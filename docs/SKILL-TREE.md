@@ -18,7 +18,7 @@ Layout coordinates are for a 1288×1262 tree canvas, root at (674, 748). Six bra
 | moon | Moonbow | Bow | multi | 1 | 3200 | — | 210 | 220 | One shot in four is a moon shot: the circle settles onto the nearest orc and strikes +60% harder. |
 | bounce | Rebound | Bow | pierce | 4 | 1200 | 2.2 | 434 | 220 | One shot in four looses a magic bolt that leaps to 2 more orcs, +1 per rank; each leap hits softer. |
 | starfall | Starfall | Bow | moon | 1 | 6000 | — | 178 | 108 | One shot in ten also rains 8 arrows on orcs across the plain. |
-| wolf | Grey Wolf | Companions | root | 1 | 70 | — | 674 | 588 | A wolf runs the plain and savages the nearest orc. |
+| wolf | Grey Wolf | Companions | muster | 1 | 200 | — | 674 | 588 | A wolf runs the plain and savages the nearest orc. |
 | fangs | Fangs | Companions | wolf | 5 | 90 | 1.9 | 754 | 476 | Wolf bites +40% harder per rank. |
 | ranger | Ranger | Companions | wolf | 1 | 350 | — | 642 | 364 | A second archer joins you behind the wall. |
 | warden | Warden | Companions | ranger | 1 | 2800 | — | 658 | 236 | A third archer, veteran of older wars. |
