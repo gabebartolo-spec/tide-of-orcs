@@ -21,18 +21,18 @@ Names below are the design names (GDD). The UI speaks the TB-121 voice (`src/dat
 ## C. Barricade and the fail state (GDD §3, design rule 1)
 - C1 Orcs reaching the wall stop and swing; the health bar drops, shakes, splinters show.
 - C2 At 0 HP the sim freezes, the fallen overlay shows wave, slain, minutes, Heartwood carried back (0 unless a boss fell) and one button.
-- C3 While fallen: tree buys, rally and boss summon are refused; Heartwood tree and Settings still work.
-- C4 Replant pays out, resets the run, keeps Heartwood, lifetime slain, best wave, prestige count, settings.
+- C3 While fallen: boss summon is refused; the Grove page opens (TB-136) and the tree, Satchel, Heartwood tree and Settings work there. Tree buys are refused while the wall stands.
+- C4 Replant pays no Heartwood (TB-171: only cleared bosses pay), resets the run to the last checkpoint (every 5 waves, TB-172) at the chosen boss tier (TB-148), keeps Heartwood, Grove levels, banked starlight, lifetime slain, best wave, prestige count, settings.
 - C5 Deep Roots regrows the wall to 50% once per run.
 
 ## D. Waves, summons, boss (GDD §4)
 - D1 A new wave every 24 s regardless of kills.
-- D2 Runner, Brute and Blackguard only spawn after their summon node.
+- D2 Runner, Brute and Blackguard only spawn after their summon node; berserker, wolf rider, shaman and war drummer join from waves 25, 30, 35, 40 (TB-087).
 - D3 At wave 10 the boss button waits; summoning runs a 60 s challenge and regular marching pauses.
 - D4 Live orcs never exceed 160.
 
 ## E. Vanguard and companions (GDD §5, §7)
-- E1 Rally Spearman takes starlight and puts a spearman on the field; first rally fires its toast.
+- E1 Vanguard owned in the tree take the field on their own (there is no rally intent since TB-136); each targets a different orc and they spread along the wall (TB-173).
 - E2 Wolf, Ranger, Warden, Hawk, Treant, knives and ballista attack on their own once bought.
 - E3 Per-unit nodes (TB-111) change the unit's damage, rate, crit and speed in play.
 
@@ -148,3 +148,39 @@ Findings: favicon 404 (fixed here); TB-124 and TB-125 file run 2's two unfiled n
 | J1 at 4K | pass down to 4× slower | 90–92 fps at full speed and at 4× slower; at 6× slower it averages 53 fps |
 
 What it says: the game's own drawing code costs the same at 4K as at 1080p (0.8 ms) and grows with a slower CPU. The pixels cost the browser instead. With no frame cap, 4K runs at 125 fps against 402 at 1080p, and 5% of 4K frames take over 36 ms on this integrated GPU. A mid-range desktop CPU (about 2× slower than a 9700X in one thread) sits between the 1× and 4× rows, so it is over 60 fps at 4K. Not covered: a real mid-range PC, the discrete GPU, and the Electron desktop build (same Chromium). A first pass ran by mistake against another worktree's dev server on port 5199. Those numbers are discarded, and the script now defaults to its own port.
+
+## Run 5 (3 Nov 2026, dev build of main at 2e9abb3, claude, browser pane visible)
+Full pass after boss tiers (TB-148), the four late orcs (TB-087, TB-175 tuning), sprites for every actor (TB-068), checkpoints every 5 waves (TB-172), vanguard spread (TB-173) and Heartwood only from bosses (TB-171). Late waves reached by loading `sim/out/player48.json` (levels, meta, wave 48) through the dev handle. `npm run lint`, `npm run test` (224 tests) and `npm run build` pass.
+
+| Check | Result | Evidence |
+|---|---|---|
+| A1, C2–C4, D3, D4 | pass | Soak from a wipe, 60,000 ticks aiming at the front orc, buying everything while fallen: 11 falls (waves 2–21), each paid 0 Heartwood; restarts at checkpoints 1, 6, 11, 16, 21. 0 invariant violations; boss summon refused while fallen |
+| D2 (new orcs) | pass | Soak from the wave-48 player, 40,000 ticks: berserker, wolf rider, shaman and war drummer marched beside the old four and the boss; live orcs peaked at exactly 160 |
+| TB-171 | pass | 34 falls, all 0 Heartwood; two uncleared bosses (waves 50, 52) paid 0 |
+| TB-148 | pass | Tier picker on the Grove page ("Second Tide", ‹ ›); the header names the tide; unlock on a clear covered by `tiers.test.ts` |
+| TB-172 | pass, see TB-184 | Checkpoint rises to 51 on reaching wave 51; every March starts there. From the wave-48 player each run fell at 51–52 within a minute, 23 times in a row |
+| E1, E2, TB-173 | pass | Vanguard hold the wall spread top to bottom and step out to different orcs; wolf, hawk (flight sprite), ranger, warden, knives, ballista fight |
+| Sprites | pass | Field at wave 51: grunt, runner, brute, berserker (also drawn for elite), wolf rider, shaman, drummer, boss (brute sheet), elf, vanguard, wolf, hawk from the sheets. Drummer has one clip (TB-186) |
+| H1, H2 | pass | Reload restores wave, levels, best wave, mode. Export, wipe, import at wave 51, tier 2, checkpoint 51: save diff empty (v11) |
+| I3 | pass | No console errors or warnings in the session |
+| Audio | fail, open | `warDrum` cue never plays (TB-182) |
+| J1 | pass at 1× and 2×; marginal at 4× | Table below |
+
+J1, `tools/perf160.mjs` (now all eight kinds, TB-180), same PC and method as run 4 (Ryzen 7 9700X, Chrome on the integrated Radeon). **No real mid-range PC was available; the CPU throttle is again the stand-in.**
+
+| Window | CPU | fps | Frame median / p95 / p99 (ms) | `field.draw` median / p95 (ms) |
+|---|---|---|---|---|
+| 1920×1080 | 1× | 120 (cap) | 8.3 / 8.4 / 8.5 | 1.3 / 1.7 |
+| 1920×1080, uncapped | 1× | 250 | 1.8 / 19 / 22 | 1.0 / 2.2 |
+| 3840×2160 | 1× | 86 | 8.4 / 16.7 / 16.8 | 1.4 / 3.1 |
+| 3840×2160, uncapped | 1× | 144 | 2.2 / 37 / 40 | 1.2 / 4.7 |
+| 1920×1080 | 2× slower | 113 | 8.3 / 16.6 / 25 | 2.7 / 6.3 |
+| 3840×2160 | 2× slower | 88 | 8.4 / 25 / 42 | 3.8 / 18 |
+| 1920×1080 | 4× slower | 58–61 | 16.7 / 33 / 50–58 | 7.7–7.8 / 21 |
+| 3840×2160 | 4× slower | 37 | 25 / 58 / 83 | 11 / 34 |
+| 1920×1080 | 6× slower | 24 | 42 / 83 / 125 | 20 / 49 |
+| 3840×2160 | 6× slower | 33 | 25 / 67 / 75 | 18 / 41 |
+
+Same 1080p 4× run with fewer kinds: old four kinds 73 fps (draw 6.1 ms), grunts only 78 fps (5.7 ms), against 92 fps in run 4. The new kinds cost about 1.7 ms of draw at 4×, and the field got dearer since run 4 anyway (TB-183). A mid-range CPU (about 2× slower than this one, run 4's reasoning) holds 60 fps or better at 1080p and 4K.
+
+Findings: TB-180 and TB-181 fixed; TB-182 (drum cue), TB-183 (perf headroom), TB-184 (checkpoint stall, director), TB-185 (CLAUDE.md lists `rally`), TB-186 (drummer one clip, director). C3, C4, D2 and E1 above were rewritten to match TB-136, TB-167, TB-171, TB-172 and TB-087.
