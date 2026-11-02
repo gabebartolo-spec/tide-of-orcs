@@ -56,6 +56,10 @@ export class FieldRenderer {
   private orcBuf: Orc[] = [];
   private wind = { dx: 0, dy: 0 };
   private sim: SimState | null = null;
+  /** This frame's base transform (scale and shake offset): actors set theirs from it instead of save/translate/restore (TB-183). */
+  private base = { sx: 1, sy: 1, ex: 0, ey: 0 };
+  /** Sprite keys per orc kind, built once so the draw loop builds no strings (TB-183). */
+  private orcKeys = new Map<string, { key: string; atk: string }>();
   /** Loot moments (TB-105): drop beams, the equip glow on the bow, the set-bonus leaf ring, the mythic screen-edge shimmer and slow-motion clock. */
   private beams: { x: number; y: number; life: number; max: number; c: string; ground: boolean; spiral: boolean; k: number }[] = [];
   /** Legendary/mythic field flash (TB-192): seconds left, peak alpha, colour. */
@@ -196,6 +200,7 @@ export class FieldRenderer {
     const sh = this.reducedMotion ? 0 : this.shake;
     const shx = sh ? (Math.random() - 0.5) * 6 * sh : 0, shy = sh ? (Math.random() - 0.5) * 4 * sh : 0;
     g.setTransform(sx, 0, 0, sy, shx * sx, shy * sy);
+    const bt = this.base; bt.sx = sx; bt.sy = sy; bt.ex = shx * sx; bt.ey = shy * sy;
 
     // plain
     this.ground.draw(g, this.canvas.width, this.canvas.height);
@@ -259,9 +264,9 @@ export class FieldRenderer {
     this.drawBeams(dt);
     s.shots.forEach((a) => { const d = this.interp.off(a); g.translate(d.dx, d.dy); this.shot(a, dt); g.translate(-d.dx, -d.dy); });
     if (this.puffs.length) {
-      g.save(); g.shadowColor = P.fireGlow; g.shadowBlur = VFX.fireball.glow;
+      g.shadowColor = P.fireGlow; g.shadowBlur = VFX.fireball.glow;  // set and cleared by hand: restore() with a shadow set is dear (TB-183)
       for (const pf of this.puffs) { const k = pf.life / pf.max, r = pf.r * (1.4 - 0.5 * k); g.globalAlpha = Math.min(1, k * 1.5); g.fillStyle = k > 0.66 ? P.fireCore : k > 0.33 ? P.ember : P.fire; g.beginPath(); g.arc(pf.x, pf.y, r, 0, 6.28); g.fill(); }
-      g.restore(); g.globalAlpha = 1;
+      g.shadowBlur = 0; g.shadowColor = P.noShadow; g.globalAlpha = 1;
     }
     for (const im of this.impacts) { const k = im.life / IMPACT_LIFE; g.globalAlpha = k; g.strokeStyle = P.cream; g.lineWidth = 2; g.beginPath(); g.arc(im.x, im.y, im.r * (1.15 - 0.15 * k), 0, 6.28); g.stroke(); g.globalAlpha = 1; }
     for (const sm of this.storms) {
@@ -384,7 +389,7 @@ export class FieldRenderer {
       g.globalAlpha = 1;
       if (Math.random() < F.embers * dt) this.fx.flame(a.x + (Math.random() - 0.5) * F.r, ay, Math.random() < 0.5 ? P.fire : P.ember);
     }
-    g.save(); g.shadowColor = P.fireGlow; g.shadowBlur = F.glow; g.fillStyle = P.fire; g.beginPath(); g.arc(a.x, ay, F.r, 0, 6.28); g.fill(); g.restore();
+    g.shadowColor = P.fireGlow; g.shadowBlur = F.glow; g.fillStyle = P.fire; g.beginPath(); g.arc(a.x, ay, F.r, 0, 6.28); g.fill(); g.shadowBlur = 0; g.shadowColor = P.noShadow;
     g.fillStyle = P.ember; g.beginPath(); g.arc(a.x, ay, F.r * 0.65, 0, 6.28); g.fill();
     g.fillStyle = P.fireCore; g.beginPath(); g.arc(a.x - F.r * 0.1, ay - F.r * 0.1, F.r * 0.35, 0, 6.28); g.fill();
   }
@@ -426,14 +431,23 @@ export class FieldRenderer {
   }
 
   private orc(s: SimState, o: Orc): void {
-    const g = this.g, wind = this.windUp(o), d = this.interp.off(o); g.save(); g.translate(o.x + d.dx + wind.dx, o.y + d.dy);
+    const g = this.g, wind = this.windUp(o), d = this.interp.off(o); this.at(o.x + d.dx + wind.dx, o.y + d.dy, false);
     g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, o.r * 0.9, o.r * 0.9, o.r * 0.35, 0, 0, 6.28); g.fill();
     // Burning or chilled: the orc's own body takes the colour and a soft rim of it, so shading still reads (TB-089).
     const tint = o.burn > 0 ? P.fireTint : o.chill > 0 ? P.frostTint : '', glow = o.burn > 0 ? P.fire : o.chill > 0 ? P.frost : '';
-    const key = `orc.${ORC_SPRITE[o.kind] ?? o.kind}`;
-    const ost = orcState(s, o), ot = ost === 'attack' ? orcSwingT(o, this.sprites.duration(`${key}.attack`), VFX.strike.orc) : orcAnimT(o);
-    this.sprites.drawActor(g, key, ost, ot, 0, o.r * 0.9, o.r, o.hitT > 0, tint, glow, VFX.arrows.rimBlur);
-    this.orcBars(o); g.restore();
+    let k = this.orcKeys.get(o.kind);
+    if (!k) { const key = `orc.${ORC_SPRITE[o.kind] ?? o.kind}`; k = { key, atk: key + '.attack' }; this.orcKeys.set(o.kind, k); }
+    const ost = orcState(s, o), ot = ost === 'attack' ? orcSwingT(o, this.sprites.duration(k.atk), VFX.strike.orc) : orcAnimT(o);
+    this.sprites.drawActor(g, k.key, ost, ot, 0, o.r * 0.9, o.r, o.hitT > 0, tint, glow, VFX.arrows.rimBlur);
+    this.orcBars(o); this.at(0, 0, false);
+  }
+
+  /** Set the transform to the frame's base translated to (x, y), mirrored when `flip`: the same matrix save/translate/scale
+   *  would build, without the per-actor save/restore cost (TB-183). (0, 0, false) puts the base back. */
+  private at(x: number, y: number, flip: boolean): void {
+    const b = this.base, g = this.g; g.setTransform(b.sx, 0, 0, b.sy, b.ex, b.ey);
+    if (x || y) g.translate(x, y);
+    if (flip) g.scale(-1, 1);
   }
 
   /** Wind-up: an engaged orc leans away from its target (the boss rises) over the last part of its swing. Zero while walking or under reduced motion. Reads sim, never writes. */
@@ -476,11 +490,11 @@ export class FieldRenderer {
   }
 
   private van(s: SimState, v: Vanguard): void {
-    const g = this.g, T = VANGUARD[v.type]; const i = this.interp.off(v); g.save(); g.translate(v.x + i.dx, v.y + i.dy); if (v.face < 0) g.scale(-1, 1);
+    const g = this.g, T = VANGUARD[v.type]; const i = this.interp.off(v); this.at(v.x + i.dx, v.y + i.dy, v.face < 0);
     g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 16, 12, 4, 0, 0, 6.28); g.fill();
     const vst = vanState(s, v), vt = vst === 'attack' ? swingClipT(v.swingT, T.cd, this.sprites.duration(`van.${v.type}.attack`), VFX.strike[v.type]) : this.clock;
     this.sprites.drawActor(g, `van.${v.type}`, vst, vt, 0, 16, ACTOR_R, v.hitT > 0);
-    this.vanBar(v); g.restore();
+    this.vanBar(v); this.at(0, 0, false);
   }
 
   private vanBar(v: Vanguard): void {

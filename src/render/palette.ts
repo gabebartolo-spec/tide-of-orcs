@@ -1,5 +1,7 @@
 /** Colour tokens. Mirrors docs/ART-STYLE.md. Render code uses these, never hex literals. */
 export const P = {
+  /** Canvas default shadowColor, restored by hand after a glow (TB-183). */
+  noShadow: 'rgba(0, 0, 0, 0)',
   ink: '#161d15', ink2: '#1f281d', ink3: '#2a3527', line: '#3b4a37',
   cream: '#efe6d2', creamDim: '#b9b09c', text: '#ecdcb4', textDim: '#d2bd92',
   plain: '#7c9676', plainPatch: '#86a07e', plainLush: '#728d6c', plainWorn: '#8e9a72', plainBare: '#a09c80',
