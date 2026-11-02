@@ -50,7 +50,7 @@ export const SOURCES = {
   treant: { cd: 3, mult: 3, range: 160 },
   ballista: { cd: 4, base: 40, speed: 760 },
   knives: { cd: 1.4, base: 5, speed: 640 },
-  wolf: { base: 6, biteCd: 0.5, speed: 210, reach: 22 },
+  wolf: { base: 4, biteCd: 0.5, speed: 210, reach: 22 },
   archerDmgFrac: 0.7, archerOffsetY: 90,
 } as const;
 

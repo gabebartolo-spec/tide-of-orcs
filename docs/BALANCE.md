@@ -144,6 +144,9 @@ Report columns per minute: wave, starlight, kills/min, kills, wall %, vanguard c
 
 ## Proposed
 
+### TB-157 · Grey Wolf nerf (2026-11-02) · applied
+**Decided 2026-11-02 (director): price 70→200, bite 6→4, node moved under Muster** (was off the root), so it is no longer a first buy. `npm run balance` (greedy, default seed) before and after: identical, first fall wave 2, best wave 2, 60 replants, sources owned none. The greedy sim falls at wave 2 at 0.5 run-minutes on every build back to P-151, so it never reaches the wolf and cannot measure this change; the director reports the real game reaches wave 5 untouched with no upgrades. That sim/game gap is open.
+
 ### P-151 · Price by power: cheaper Quick Draw, Keen Eye and Nimble Wrist (2026-11-02, TB-151) · applied
 **Decided 2026-11-02 (director): apply G1.** Quick Draw 12, Keen Eye 30, Nimble Wrist 46 are now the base prices in `src/data/skillTree.ts` and SKILL-TREE.md.
 P-147's table showed Quick Draw, Keen Eye and Nimble Wrist cost 4–30× more per percent than Sharpened Tips. Two price sets against today, greedy, `--hwbuy`, 300 min, seeds 1–3 (set F tiers). Reproduce with `npx tsx sim/run.ts --minutes 300 --seed 1 --quiet --hwbuy --cost draw=12,crit=30,knifespd=46`.
