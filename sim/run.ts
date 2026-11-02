@@ -15,6 +15,7 @@
  * Plays the pure sim with a scripted buy/rally policy and prints a per-minute markdown table.
  * Writes sim/out/<policy>-<date>.md unless --quiet.
  */
+import { ORC_TYPES } from '../src/data/orcs';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { SimState, createState } from '../src/sim/state';
 import { EventBus } from '../src/sim/events';
@@ -45,7 +46,7 @@ const lootPolicy = arg('loot', 'greedy') as EquipPolicy; let drops = 0;
 
 const s = createState(seed); const ev = new EventBus(); s.lootPolicy = lootPolicy;
 const bare = args.includes('--bare');
-const TUNE: Record<string, unknown> = { BOSS_WAVE, TIERS, RARITY, DROP, AFFIX, MYTHIC_FX, PLAYER, LOB, BARRICADE, NODE_FX, COST_WAVE, STACKING, SHOT_FX, UNIT_FX, CHECKPOINT };
+const TUNE: Record<string, unknown> = { BOSS_WAVE, TIERS, RARITY, DROP, AFFIX, MYTHIC_FX, PLAYER, LOB, BARRICADE, NODE_FX, COST_WAVE, STACKING, SHOT_FX, UNIT_FX, CHECKPOINT, ORC_TYPES };
 for (const kv of arg('tune', '').split(',').filter(Boolean)) {
   const [path, v] = kv.split('='), keys = path!.split('.'), last = keys.pop()!;
   const obj = keys.reduce<Record<string, unknown>>((o, k) => (o === TUNE ? TUNE[k] : o[k]) as Record<string, unknown>, TUNE);

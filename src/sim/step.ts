@@ -1,5 +1,5 @@
-import { ARROWS, BARRICADE, FIELD, LOB, ORC_WOB, PLAYER, SOURCES, WAVE_LEN, checkpointFor, waveHP, waveInterval, waveLoot, waveSpeedMult } from '../data/balance';
-import { FIREBALL, ORC_KINDS, ORC_TYPES, OrcKind } from '../data/orcs';
+import { ARROWS, BARRICADE, FIELD, VANGUARD, LOB, ORC_WOB, PLAYER, SOURCES, WAVE_LEN, checkpointFor, waveHP, waveInterval, waveLoot, waveSpeedMult } from '../data/balance';
+import { FIREBALL, ORC_FX, ORC_KINDS, ORC_TYPES, OrcKind } from '../data/orcs';
 import { EventBus } from './events';
 import { Orc, Projectile, SimState, Wolf } from './state';
 import { MYTHIC_FX, SET_FX } from '../data/lootTables';
@@ -8,6 +8,7 @@ import { barricadeHit, barricadeRegen } from './barricade';
 import { bossStep } from './boss';
 import { BOSS_WAVE, tierHp, tierLoot } from '../data/bosses';
 import { engagedVanguard, hurtVanguard, vanguardStep } from './vanguard';
+import { fireballLands, shamanCast } from './shaman';
 
 /** Player aim: the pointer's position on the field, or null when the player is not aiming. The elf only shoots while aimed. */
 export interface Inputs { aim: { x: number; y: number } | null }
@@ -17,16 +18,17 @@ const H = FIELD.h, W = FIELD.w, BAR_X = FIELD.barX, BAR_W = FIELD.barW, ELF_X = 
 const dist = (ax: number, ay: number, bx: number, by: number): number => Math.hypot(ax - bx, ay - by);
 
 /** March one orc in from the right edge, at height y (random if omitted). Returns false when the field is full. */
-export function spawnOrc(s: SimState, kind: OrcKind, y?: number, champ = false): boolean {
+export function spawnOrc(s: SimState, kind: OrcKind, y?: number, champ = false): Orc | null {
   const w = s.run.wave, F = s.stats.foes[kind];
-  const o = s.orcs.alloc(); if (!o) { if (champ && s.run.boss) s.run.boss.left--; return false; }
+  const o = s.orcs.alloc(); if (!o) { if (champ && s.run.boss) s.run.boss.left--; return null; }
   const T = ORC_TYPES[kind];
   const hp = waveHP(w) * T.hp * F.hp * tierHp(s.run.tier);
   o.kind = kind; o.x = W + 24; o.y = y ?? 50 + s.rng.next() * (H - 100);
   o.hp = hp; o.maxhp = hp; o.spd = T.speed * waveSpeedMult(w); o.r = T.radius; o.atk = hp * BARRICADE.orcAtkFrac;
   o.loot = waveLoot(w) * T.loot * F.loot * tierLoot(s.run.tier);
   o.dead = false; o.burn = 0; o.bleed = 0; o.slow = 0; o.pin = 0; o.root = 0; o.chill = 0; o.stun = 0; o.hitT = 0; o.wob = s.rng.next() * 6.28; o.swingT = s.rng.next(); o.champ = champ;
-  return true;
+  o.leapt = false; o.castT = s.rng.next() * FIREBALL.every; o.drum = false;
+  return o;
 }
 
 /* ---------- one fixed step ---------- */
@@ -51,7 +53,12 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
   vanguardStep(s, ev, dt);
   zoneStep(s, dt);
 
-  // orcs
+  // orcs: a war drummer's beat quickens those near it (one drum's worth, never stacked)
+  s.orcs.forEach((o) => { o.drum = false; });
+  s.orcs.forEach((d) => {
+    if (d.dead || d.kind !== 'drummer') return;
+    s.orcs.forEach((o) => { if (!o.dead && o !== d && (o.x - d.x) ** 2 + (o.y - d.y) ** 2 < ORC_FX.drumReach ** 2) o.drum = true; });
+  });
   s.orcs.forEach((o) => {
     if (o.dead || run.fallen) return;
     o.wob += dt * ORC_WOB;
@@ -65,20 +72,35 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
     if (o.stun > 0) { o.stun -= dt; return; }
     const pace = o.chill > 0 ? 1 - st.slow : 1;
     if (o.chill > 0) o.chill -= dt;
-    const v = engagedVanguard(s, o);
+    // TB-087: a raging berserker runs and hits harder; a drum's beat quickens step and blow
+    const rage = o.kind === 'berserker' && o.hp < o.maxhp * ORC_FX.rageAt, drum = o.drum ? 1 + ORC_FX.drumBoost : 1;
+    const hit = o.atk * BARRICADE.orcSwing * drum * (rage ? ORC_FX.rageHit : 1), walk = drum * (rage ? ORC_FX.rageSpeed : 1);
+    // the shaman and the war drummer hold back from the wall; the shaman lobs fire, the drummer never strikes
+    const halt = o.kind === 'shaman' ? ORC_FX.shamanHalt : o.kind === 'drummer' ? ORC_FX.drummerHalt : 0;
+    if (halt && o.x <= BAR_X + BAR_W + halt) {
+      o.x = BAR_X + BAR_W + halt;
+      if (o.kind === 'shaman') { o.castT -= dt * pace; if (o.castT <= 0) { o.castT = FIREBALL.every; shamanCast(s, ev, o); } }
+      return;
+    }
+    const v = halt ? null : engagedVanguard(s, o);
+    if (v && o.kind === 'wolfrider' && !o.leapt) {
+      // the rider's wolf leaps its first vanguard and lands beyond it
+      o.leapt = true; o.x = Math.max(BAR_X + BAR_W + o.r, v.x - o.r - VANGUARD.engageRange - 4); ev.push({ t: 'riderLeap', x: o.x, y: o.y });
+      return;
+    }
     if (v) {
       o.swingT += dt * pace;
-      if (o.swingT >= BARRICADE.orcSwing) { o.swingT = 0; ev.push({ t: 'orcSwing', kind: o.kind, x: o.x, y: o.y, tx: v.x, ty: v.y, r: o.r }); hurtVanguard(s, ev, v, o.atk * BARRICADE.orcSwing); }
+      if (o.swingT >= BARRICADE.orcSwing) { o.swingT = 0; ev.push({ t: 'orcSwing', kind: o.kind, x: o.x, y: o.y, tx: v.x, ty: v.y, r: o.r }); hurtVanguard(s, ev, v, hit); }
       return;
     }
     if (o.x <= BAR_X + BAR_W + o.r) {
       o.x = BAR_X + BAR_W + o.r; o.swingT += dt * pace;
-      if (o.swingT >= BARRICADE.orcSwing) { o.swingT = 0; ev.push({ t: 'orcSwing', kind: o.kind, x: o.x, y: o.y, tx: BAR_X + BAR_W, ty: o.y, r: o.r }); barricadeHit(s, ev, o.atk * BARRICADE.orcSwing * BARRICADE.wallMult, o.y); }
+      if (o.swingT >= BARRICADE.orcSwing) { o.swingT = 0; ev.push({ t: 'orcSwing', kind: o.kind, x: o.x, y: o.y, tx: BAR_X + BAR_W, ty: o.y, r: o.r }); barricadeHit(s, ev, hit * BARRICADE.wallMult, o.y); }
       if (st.spikes > 0) damage(s, ev, o, st.dmg * st.spikes * dt);
       return;
     }
     if (o.pin > 0 || o.root > 0) return;
-    o.x -= o.spd * pace * (o.slow > 0 ? 1 - SET_FX.slow : 1) * dt;
+    o.x -= o.spd * walk * pace * (o.slow > 0 ? 1 - SET_FX.slow : 1) * dt;
   });
   if (run.fallen) return;
 
@@ -173,10 +195,10 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
   // projectiles
   s.shots.forEach((a: Projectile) => {
     if (a.kind === 'fireball') {
-      // The shaman's fireball (TB-127): the lob's parabola on its own timings; lands as a strike event, no damage yet (TB-087).
+      // The shaman's fireball (TB-127): the lob's parabola on its own timings; burns every vanguard in its circle, or the wall (TB-087).
       a.t += dt; const u = Math.min(1, a.t / FIREBALL.flight);
       a.x = a.sx + (a.tx - a.sx) * u; a.y = a.sy + (a.ty - a.sy) * u; a.h = FIREBALL.arc * 4 * u * (1 - u);
-      if (a.t >= FIREBALL.flight) { ev.push({ t: 'fireballStrike', x: a.tx, y: a.ty, r: a.r }); s.shots.release(a); }
+      if (a.t >= FIREBALL.flight) { ev.push({ t: 'fireballStrike', x: a.tx, y: a.ty, r: a.r }); fireballLands(s, ev, a); s.shots.release(a); }
       return;
     }
     if (a.kind === 'lob') {

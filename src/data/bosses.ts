@@ -26,6 +26,20 @@ export const BOSS_SCRIPT: readonly MiniWave[] = [
   { at: 40, kind: 'brute', ys: [0.2, 0.5, 0.8] },                      // the last push
 ];
 
+/** The escort a boss wave gains from each tier on (TB-087, director 3 Nov): every orc kind marches in boss stages by difficulty. */
+export const TIER_ESCORT: readonly (MiniWave & { tier: number })[] = [
+  { tier: 2, at: 12, kind: 'berserker', ys: [0.25, 0.75] },            // beside the rams
+  { tier: 3, at: 30, kind: 'wolfrider', ys: [0.15, 0.85] },            // riders round the flanks
+  { tier: 4, at: 18, kind: 'shaman', ys: [0.3, 0.7] },                 // fire behind the wedge
+  { tier: 5, at: 24, kind: 'drummer', ys: [0.44, 0.56] },              // drums beside the Warboss
+];
+
+const scripts: MiniWave[][] = [];
+/** The boss wave played at a tier: BOSS_SCRIPT plus every escort up to that tier, in marching order. */
+export function bossScript(tier: number): readonly MiniWave[] {
+  return (scripts[tier] ??= [...BOSS_SCRIPT, ...TIER_ESCORT.filter((e) => e.tier <= tier)].sort((a, b) => a.at - b.at));
+}
+
 /** Boss tiers (TB-148, dev plan §8 #1, Nodebuster): clearing a boss wave while playing your highest tier unlocks the
  *  next one for good; at March the player picks any tier unlocked. Each tier above the first multiplies orc HP and
  *  starlight per kill, and boss Heartwood, from wave 1. `max: 1` keeps tiers off (P-148 proposes the numbers). */

@@ -87,7 +87,7 @@ export function cueFor(e: SimEvent): Cue | null {
     case 'knife': return 'knife';
     case 'ignite': return 'ignite';
     case 'hit': return 'arrowHit';
-    case 'kill': return e.kind === 'boss' || e.kind === 'brute' || e.kind === 'elite' ? 'bruteDeath' : 'orcDeath';
+    case 'kill': return e.kind === 'boss' || e.kind === 'brute' || e.kind === 'elite' || e.kind === 'drummer' ? 'bruteDeath' : 'orcDeath';
     case 'barricadeHit': return e.frac < AUDIO.creakFrac ? 'wallCreak' : 'wallThud';
     case 'barricadeFell': return 'wallFall';
     case 'bossStart': return 'bossRoar';

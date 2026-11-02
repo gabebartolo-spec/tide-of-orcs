@@ -5,7 +5,7 @@ import { AFFIXES, AFFIX_NEEDS, AffixDef, BASES, DROP, Feature, MYTHICS, RARITY, 
 import { Rng } from './rng';
 import { Stats } from './stats';
 
-export const LOOT_TIER: Record<OrcKind, number> = { grunt: 1, runner: 2, brute: 3, elite: 4, boss: 5 };
+export const LOOT_TIER: Record<OrcKind, number> = { grunt: 1, runner: 2, brute: 3, elite: 4, berserker: 4, wolfrider: 4, shaman: 4, drummer: 4, boss: 5 };
 /** bump: rarity steps added after the roll (Boss Hoard), never past legendary. has: which affixes may roll (default all). */
 export interface LootMods { itemFind: number; luck: number; bump?: number; has?: AffixFilter }
 export type AffixFilter = (a: AffixDef) => boolean;
