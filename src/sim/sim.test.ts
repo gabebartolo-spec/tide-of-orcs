@@ -5,7 +5,7 @@ import { Inputs, noInputs, step } from './step';
 import { deriveStats } from './stats';
 import { buy, canBuy, costOf } from './tree';
 import { NODE, NODES } from '../data/skillTree';
-import { FIELD, STEP, waveLoot } from '../data/balance';
+import { FIELD, STEP, WAVE_LEN, checkpointFor, waveLoot } from '../data/balance';
 import { BOSS_WAVE, bossHw } from '../data/bosses';
 import { bossesReady, summonBoss } from './boss';
 import { damage } from './combat';
@@ -99,6 +99,19 @@ describe('simulation', () => {
   it('Wide Volley widens the circle 20% per rank; Quick Draw shortens the draw', () => {
     expect(deriveStats({ root: 1, wide: 2 }).radius / deriveStats({ root: 1 }).radius).toBeCloseTo(1.44);
     expect(deriveStats({ root: 1, draw: 1 }).lobCd).toBeCloseTo(1.25 / 1.15);
+  });
+});
+
+describe('checkpoints (TB-159)', () => {
+  it('clearing wave 10, 20 … sets the next run to start one past it', () => {
+    expect([1, 10, 11, 20, 21, 34].map(checkpointFor)).toEqual([1, 1, 11, 11, 21, 31]);
+    const s = createState(1); const ev = new EventBus(); s.run.wave = 10; s.run.waveT = WAVE_LEN - STEP / 2;
+    step(s, STEP, noInputs, ev); expect(s.run.wave).toBe(11); expect(s.meta.checkpoint).toBe(11);
+    s.run.fallen = true; replant(s, ev); expect(s.run.wave).toBe(11);
+  });
+  it('a checkpoint never goes back down', () => {
+    const s = createState(1); const ev = new EventBus(); s.meta.checkpoint = 21; s.run.wave = 10; s.run.waveT = WAVE_LEN - STEP / 2;
+    step(s, STEP, noInputs, ev); expect(s.meta.checkpoint).toBe(21);
   });
 });
 

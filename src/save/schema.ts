@@ -1,6 +1,6 @@
 import { MetaState, RunState } from '../sim/state';
 
-export const CURRENT_VERSION = 10;
+export const CURRENT_VERSION = 11;
 
 /** Node ids removed from the tree; v1 to v2 drops them from saved levels. */
 export const RETIRED_NODE_IDS = ['tide', 'current', 'flood', 'silt', 'roots'] as const;
@@ -10,7 +10,7 @@ export const RETIRED_V3 = ['banners'] as const;
 export const RETIRED_V4 = ['warboss', 'bossfury', 'bossswarm', 'bounty'] as const;
 
 export interface SaveV10 {
-  version: 10;
+  version: 11;
   savedAt: number;
   run: RunState;
   meta: MetaState;
