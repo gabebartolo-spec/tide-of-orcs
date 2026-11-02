@@ -9,7 +9,8 @@ import { FIELD, STEP, waveLoot } from '../data/balance';
 import { BOSS_WAVE, bossHw } from '../data/bosses';
 import { bossesReady, summonBoss } from './boss';
 import { damage } from './combat';
-import { hurtVanguard } from './vanguard';
+import { hurtVanguard, nearestOrcTo } from './vanguard';
+import { spawnOrc } from './step';
 import { VANGUARD } from '../data/balance';
 import { crowdAim } from './combat';
 import { canPullBack, canReplant, pullBack, replant } from './prestige';
@@ -84,7 +85,7 @@ describe('simulation', () => {
     expect(s.shots.count).toBe(1);
     let tx = 0, ty = 0; s.shots.forEach((a) => { tx = a.tx; ty = a.ty; });
     expect([tx, ty]).toEqual([700, 200]);
-    s.orcs.forEach((o) => { o.dead = true; });
+    const old: Parameters<typeof s.orcs.release>[0][] = []; s.orcs.forEach((o) => old.push(o)); old.forEach((o) => s.orcs.release(o));
     const near = spawnAt(s, 700 + s.stats.radius - 5, 200), mid = spawnAt(s, 700, 200), far = spawnAt(s, 700 + s.stats.radius + 40, 200);
     for (let i = 0; i < 1 / STEP; i++) step(s, STEP, noInputs, ev);
     expect(near.hp).toBeLessThan(near.maxhp); expect(mid.hp).toBeLessThan(mid.maxhp); expect(far.hp).toBe(far.maxhp);
@@ -151,6 +152,16 @@ describe('tree', () => {
 });
 
 describe('vanguard', () => {
+  it('only advance on orcs past halfway (TB-169)', () => {
+    const s = createState(1); const ev = new EventBus();
+    step(s, STEP, aimed(s), ev);
+    s.run.starlight = 1000; s.run.fallen = true; buy(s, ev, 'muster'); s.run.fallen = false; step(s, STEP, aimed(s), ev);
+    let v = null as null | Parameters<typeof nearestOrcTo>[1]; s.vans.forEach((x) => { v ??= x; });
+    const old: Parameters<typeof s.orcs.release>[0][] = []; s.orcs.forEach((o) => old.push(o)); old.forEach((o) => s.orcs.release(o));
+    spawnOrc(s, 'grunt', FIELD.h / 2); let o = null as null | ReturnType<typeof nearestOrcTo>; s.orcs.forEach((x) => { o = x; }); o!.dead = false;
+    o!.x = (FIELD.barX + FIELD.w) / 2 + 5; expect(nearestOrcTo(s, v!)).toBeNull();
+    o!.x = (FIELD.barX + FIELD.w) / 2 - 5; expect(nearestOrcTo(s, v!)).toBe(o);
+  });
   it('Muster keeps the line full; the fallen return after the respawn timer', () => {
     const s = createState(1); const ev = new EventBus();
     step(s, STEP, aimed(s), ev); expect(s.vans.count).toBe(0);
