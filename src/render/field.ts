@@ -14,7 +14,7 @@ import { Sprites } from './sprites';
 import { orcAnimT, orcState, orcSwingT, swingClipT, vanState } from './actorState';
 import { Ground, decorImg } from './ground';
 import { Ambience } from './ambience';
-import { GROUND, GROVE_DECOR, LOOT_VFX, SKY, VFX, dusk } from '../data/presentation';
+import { GROUND, GROVE_DECOR, LOOT_VFX, ORC_SPRITE, SKY, VFX, dusk } from '../data/presentation';
 import { SLOTS } from '../data/loot';
 import { setTiers } from '../sim/gear';
 
@@ -413,8 +413,9 @@ export class FieldRenderer {
     g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, o.r * 0.9, o.r * 0.9, o.r * 0.35, 0, 0, 6.28); g.fill();
     // Burning or chilled: the orc's own body takes the colour and a soft rim of it, so shading still reads (TB-089).
     const tint = o.burn > 0 ? P.fireTint : o.chill > 0 ? P.frostTint : '', glow = o.burn > 0 ? P.fire : o.chill > 0 ? P.frost : '';
-    const ost = orcState(s, o), ot = ost === 'attack' ? orcSwingT(o, this.sprites.duration(`orc.${o.kind}.attack`), VFX.strike.orc) : orcAnimT(o);
-    this.sprites.drawActor(g, `orc.${o.kind}`, ost, ot, 0, o.r * 0.9, o.r, o.hitT > 0, tint, glow, VFX.arrows.rimBlur);
+    const key = `orc.${ORC_SPRITE[o.kind] ?? o.kind}`;
+    const ost = orcState(s, o), ot = ost === 'attack' ? orcSwingT(o, this.sprites.duration(`${key}.attack`), VFX.strike.orc) : orcAnimT(o);
+    this.sprites.drawActor(g, key, ost, ot, 0, o.r * 0.9, o.r, o.hitT > 0, tint, glow, VFX.arrows.rimBlur);
     this.orcBars(o); g.restore();
   }
 
