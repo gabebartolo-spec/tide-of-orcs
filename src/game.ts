@@ -75,7 +75,7 @@ export class GameController {
   lockItem(uid: string): boolean { const ok = toggleLock(this.state.meta.loot, uid); if (ok) this.save(); return ok; }
   setLootFilter(r: Rarity): boolean { const ok = setFilter(this.state.meta.loot, r); if (ok) this.save(); return ok; }
   summonBoss(): boolean { return summonBoss(this.state, this.events); }
-  /** Preview intent (TB-127): loose the shaman's fireball from (sx, sy) onto (tx, ty). The shaman itself casts it once TB-087 lands. */
+  /** Preview intent (TB-127): loose a shaman's fireball from (sx, sy) onto (tx, ty). In play the shaman casts it itself (`sim/shaman.ts`, TB-087). */
   castFireball(sx: number, sy: number, tx: number, ty: number): void { castFireball(this.state, this.events, sx, sy, tx, ty); }
   canPullBack(): boolean { return canPullBack(this.state); }
   pullBack(): boolean { return pullBack(this.state, this.events); }
