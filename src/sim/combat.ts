@@ -1,5 +1,6 @@
 import { ARROWS, FIELD, LOB, PLAYER } from '../data/balance';
 import { FIREBALL } from '../data/orcs';
+import { spawnOrc } from './step';
 import { EventBus } from './events';
 import { Orc, ProjectileKind, SimState, Zone, recompute } from './state';
 import { UnitFx } from './stats';
@@ -49,6 +50,11 @@ export function kill(s: SimState, ev: EventBus, o: Orc): void {
     n.burn = s.stats.burnSecs; ev.push({ t: 'burnSpread', x: o.x, y: o.y, tx: n.x, ty: n.y });
   }
   dropLoot(s, ev, o);
+  // TB-087: a slain wolf rider's orc fights on afoot as a grunt (a boss-wave rider's grunt still counts toward the wave)
+  if (o.kind === 'wolfrider') {
+    const g = spawnOrc(s, 'grunt', o.y, o.champ);
+    if (g) { g.x = o.x; if (g.champ && s.run.boss) s.run.boss.left++; }
+  }
 }
 
 /** Roll this kill's drop (TB-094) and pick it up; re-derive stats if what is worn changed. */
@@ -118,11 +124,11 @@ export function drawMult(s: SimState): number {
 }
 
 /** Orc shaman (TB-127): a fireball lobbed from the staff at (sx, sy) onto (tx, ty). Flies like the elf's lob on FIREBALL's
- *  timings and lands as a `fireballStrike`; it deals no damage until TB-087 gives the shaman its numbers. */
-export function castFireball(s: SimState, ev: EventBus, sx: number, sy: number, tx: number, ty: number): void {
+ *  timings and lands as a `fireballStrike` dealing `dmg` (TB-087, shaman.ts). */
+export function castFireball(s: SimState, ev: EventBus, sx: number, sy: number, tx: number, ty: number, dmg = 0): void {
   const p = s.shots.alloc(); if (!p) return;
   p.kind = 'fireball'; p.sx = p.x = sx; p.sy = p.y = sy; p.tx = tx; p.ty = ty; p.t = 0; p.h = 0; p.vx = p.vy = 0;
-  p.r = FIREBALL.radius; p.dmg = 0; p.fx = 0; p.crit = 0; p.critX = 1; p.pierce = 0; p.life = Infinity; p.target = null; p.hit.clear(); p.back = false;
+  p.r = FIREBALL.radius; p.dmg = dmg; p.fx = 0; p.crit = 0; p.critX = 1; p.pierce = 0; p.life = Infinity; p.target = null; p.hit.clear(); p.back = false;
   ev.push({ t: 'fireballCast', x: sx, y: sy, tx, ty });
 }
 

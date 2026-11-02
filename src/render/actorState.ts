@@ -1,3 +1,4 @@
+import { ORC_FX } from '../data/orcs';
 import { BARRICADE, FIELD, ORC_WOB, VANGUARD } from '../data/balance';
 import { engagedVanguard } from '../sim/vanguard';
 import { Orc, SimState, Vanguard } from '../sim/state';
@@ -5,6 +6,9 @@ import { ActorState } from './sprites';
 
 /** Which sprite loop an orc plays: it swings while at the wall or held by a vanguard (the same tests as the sim's orc step). */
 export function orcState(s: SimState, o: Orc): ActorState {
+  // a halted shaman casts and a halted war drummer drums (TB-087)
+  const halt = o.kind === 'shaman' ? ORC_FX.shamanHalt : o.kind === 'drummer' ? ORC_FX.drummerHalt : 0;
+  if (halt) return o.x <= FIELD.barX + FIELD.barW + halt ? 'attack' : 'walk';
   return o.x <= FIELD.barX + FIELD.barW + o.r || engagedVanguard(s, o) ? 'attack' : 'walk';
 }
 

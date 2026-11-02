@@ -66,6 +66,10 @@ const FOE_NODES: Partial<Record<OrcKind, [NodeId | null, NodeId, NodeId]>> = {
   runner: ['runners', 'runfury', 'runswarm'],
   brute: ['brutes', 'brutefury', 'bruteswarm'],
   elite: ['elites', 'elitefury', 'eliteswarm'],
+  berserker: ['berserkers', 'berserkfury', 'berserkswarm'],
+  wolfrider: ['wolfriders', 'riderfury', 'riderswarm'],
+  shaman: ['shamans', 'shamanfury', 'shamanswarm'],
+  drummer: ['drummers', 'drummerfury', 'drummerswarm'],
 };
 
 /** A node line's factor at rank r (TB-147): m^r, or 1 + (m − 1) × r when STACKING.add (floored at 0.1 for shrinking lines). */

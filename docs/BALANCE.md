@@ -191,6 +191,17 @@ Boss waves (director 3 Nov): the escort grows with tier. Tier 1 keeps today's `B
 
 Director 3 Nov: all four behaviours and halt distances kept as drafted; arrival by wave (TB-158 rule), not summon-only; boss escort by tier as above. Still open, to be simmed and proposed: the join wave for each kind and the Grove chain order and costs (draft 3000 / 5000 / 8000 / 12000). The sim checks each against Blackguard on starlight per second of wall life, the same test a spearman passed (TB-086).
 
+**Built 3 Nov (TB-087), first sim.** All four kinds, behaviours, the tier escort and the twelve Grove nodes (draft costs; Fury and Swarm at 4/3 of the summon price) are in. Join waves are the draft 25 / 30 / 35 / 40 for now. Sim: 60 min, greedy policy, Heartwood bought, seed 1; rows at minute 40 and 50 (wave reached, starlight banked, wall left):
+
+| join waves | min 40 | min 50 | note |
+|---|---|---|---|
+| none (new orcs off) | w27, 147k, 100% | w28, 321k, 100% | baseline |
+| 20 / 25 / 30 / 35 | w27, 58k, 100% | w31, 758k, 59% | wave-20 berserkers hurt early, then pay big |
+| 25 / 30 / 35 / 40 (draft) | w27, 147k, 100% | w29, 457k, 100% | +42% starlight, wall untouched |
+| 30 / 40 / 50 / 60 | w27, 147k, 100% | w28, 321k, 100% | same as none: sim never gets there |
+
+Limit: the sim player tops out near wave 31–35 in an hour, so shamans and drummers barely march in any run; their join waves need a longer or later-start sim to judge. Costs untested for the same reason (the greedy player never affords 3000+ Grove nodes before wave 30).
+
 ### P-148 · Boss tiers: how hard each tier hits, and what it pays (2026-11-02, TB-148)
 Director chose *unlock across runs*: clearing a boss wave while at your highest tier unlocks the next for good; at March you pick any unlocked tier. Shipped switched off (`TIERS.max` 1); set F moved to Current 2026-11-02. Each tier above 1 multiplies orc HP by `hp^(tier−1)`, starlight per kill and per boss by `loot^(tier−1)`, and boss Heartwood by `1 + hw × (tier−1)`, from wave 1.
 

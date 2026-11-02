@@ -1,4 +1,4 @@
-import { BOSS_SCRIPT, BOSS_WAVE, TIERS, bossHw, tierHw, tierLoot } from '../data/bosses';
+import { BOSS_WAVE, bossScript, TIERS, bossHw, tierHw, tierLoot } from '../data/bosses';
 import { HW_FX } from '../data/heartwood';
 import { hwRank } from './heartwood';
 import { FIELD, waveLoot } from '../data/balance';
@@ -15,7 +15,7 @@ export const canSummonBoss = (s: SimState): boolean => !s.run.fallen && !s.run.b
 export function summonBoss(s: SimState, ev: EventBus): boolean {
   if (!canSummonBoss(s)) return false;
   s.run.bossDone++;
-  s.run.boss = { t: 0, next: 0, left: BOSS_SCRIPT.reduce((n, m) => n + m.ys.length, 0) };
+  s.run.boss = { t: 0, next: 0, left: bossScript(s.run.tier).reduce((n, m) => n + m.ys.length, 0) };
   ev.push({ t: 'bossStart' });
   return true;
 }
@@ -24,8 +24,9 @@ export function summonBoss(s: SimState, ev: EventBus): boolean {
 export function bossStep(s: SimState, ev: EventBus, dt: number): void {
   const b = s.run.boss; if (!b) return;
   b.t += dt;
-  while (b.next < BOSS_SCRIPT.length && BOSS_SCRIPT[b.next]!.at <= b.t) {
-    const m = BOSS_SCRIPT[b.next++]!;
+  const script = bossScript(s.run.tier);
+  while (b.next < script.length && script[b.next]!.at <= b.t) {
+    const m = script[b.next++]!;
     for (const y of m.ys) spawnOrc(s, m.kind, y * FIELD.h, true);
   }
   const cleared = b.left <= 0;

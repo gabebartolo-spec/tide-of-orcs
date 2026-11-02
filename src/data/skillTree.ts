@@ -10,6 +10,7 @@ export type NodeId =
   | 'glean' | 'horde' | 'drums'
   | 'runners' | 'runfury' | 'runswarm' | 'brutes' | 'brutefury' | 'bruteswarm'
   | 'elites' | 'elitefury' | 'eliteswarm'
+  | 'berserkers' | 'berserkfury' | 'berserkswarm' | 'wolfriders' | 'riderfury' | 'riderswarm' | 'shamans' | 'shamanfury' | 'shamanswarm' | 'drummers' | 'drummerfury' | 'drummerswarm'
   | 'timber' | 'repair' | 'spikes' | 'bulwark'
   | 'muster' | 'shield' | 'drill' | 'ranks' | 'mend' | 'champion' | 'swiftmuster'
   | 'hunter' | 'scavenger' | 'trophy' | 'sharpeyes' | 'hoard' | 'resonance' | 'echo'
@@ -72,6 +73,18 @@ export const NODES: readonly SkillNode[] = [
   n('elites', 'Blackguard', 'Grove', 'brutes', 1, 1500, 1, 1120, 1200, 'Blackguard march four times as often (they trickle in on their own from wave 20), each worth +50% starlight.'),
   n('elitefury', 'Elite Fury', 'Grove', 'elites', 5, 2000, 2.4, 1174, 1231, 'Elites have +30% health and drop +40% starlight per rank.'),
   n('eliteswarm', 'Elite Swarm', 'Grove', 'elites', 5, 2000, 2.4, 1178, 1179, 'Elites march 20% more often per rank.'),
+  n('berserkers', 'Berserkers', 'Grove', 'elites', 1, 3000, 1, 1250, 1222, 'Berserkers march four times as often (they trickle in on their own from wave 25), each worth +50% starlight.'),
+  n('berserkfury', 'Berserker Fury', 'Grove', 'berserkers', 5, 4000, 2.4, 1300, 1262, 'Berserkers have +30% health and drop +40% starlight per rank.'),
+  n('berserkswarm', 'Berserker Swarm', 'Grove', 'berserkers', 5, 4000, 2.4, 1310, 1200, 'Berserkers march 20% more often per rank.'),
+  n('wolfriders', 'Wolf Riders', 'Grove', 'berserkers', 1, 5000, 1, 1270, 1130, 'Wolf riders march four times as often (they trickle in on their own from wave 30), each worth +50% starlight.'),
+  n('riderfury', 'Rider Fury', 'Grove', 'wolfriders', 5, 6670, 2.4, 1340, 1150, 'Wolf riders have +30% health and drop +40% starlight per rank.'),
+  n('riderswarm', 'Rider Swarm', 'Grove', 'wolfriders', 5, 6670, 2.4, 1330, 1085, 'Wolf riders march 20% more often per rank.'),
+  n('shamans', 'Shamans', 'Grove', 'wolfriders', 1, 8000, 1, 1250, 1040, 'Shamans march four times as often (they trickle in on their own from wave 35), each worth +50% starlight.'),
+  n('shamanfury', 'Shaman Fury', 'Grove', 'shamans', 5, 10670, 2.4, 1310, 1020, 'Shamans have +30% health and drop +40% starlight per rank.'),
+  n('shamanswarm', 'Shaman Swarm', 'Grove', 'shamans', 5, 10670, 2.4, 1240, 980, 'Shamans march 20% more often per rank.'),
+  n('drummers', 'War Drummers', 'Grove', 'shamans', 1, 12000, 1, 1180, 1080, 'War drummers march four times as often (they trickle in on their own from wave 40), each worth +50% starlight.'),
+  n('drummerfury', 'Drummer Fury', 'Grove', 'drummers', 5, 16000, 2.4, 1170, 1020, 'War drummers have +30% health and drop +40% starlight per rank.'),
+  n('drummerswarm', 'Drummer Swarm', 'Grove', 'drummers', 5, 16000, 2.4, 1120, 1060, 'War drummers march 20% more often per rank.'),
   n('timber', 'Seasoned Timber', 'Barricade', 'root', 10, 25, 1.6, 570, 960, 'Barricade +25% health per rank.'),
   n('repair', 'Patient Hands', 'Barricade', 'timber', 5, 90, 2.0, 430, 980, 'Barricade mends 1% of its health per second per rank.'),
   n('spikes', 'Thornwall', 'Barricade', 'timber', 5, 150, 2.1, 537, 1013, 'Orcs hacking at the wall take 20% of your arrow damage per second per rank.'),
