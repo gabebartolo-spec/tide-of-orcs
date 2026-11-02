@@ -230,7 +230,7 @@ export class FieldRenderer {
     if (s.stats.treant) { g.fillStyle = P.treantTrunk; g.fillRect(BAR_X + 40, H / 2 + 10, 14, 34); g.fillStyle = P.treantLeaf; g.beginPath(); g.arc(BAR_X + 47, H / 2 + 2, 22, 0, 6.28); g.fill(); g.fillStyle = P.treantLeaf2; g.beginPath(); g.arc(BAR_X + 40, H / 2 - 6, 14, 0, 6.28); g.fill(); }
 
     const drawn = Math.min(1, (s.run.shotT[0] ?? 0) / s.stats.lobCd), aiming = aim !== null && aim.x > BAR_X + BAR_W && !s.run.fallen;
-    this.elf(ELF_X, H / 2, false, aiming && !this.reducedMotion ? drawn * VFX.bow.pull : 0, aiming ? drawn : -1);
+    this.elf(ELF_X, H / 2, false, aiming ? drawn : -1);
     this.gearFx();
     if (aim && aiming) this.reticle(aim.x, aim.y, s.stats.radius, drawn);
     if (s.stats.archers >= 1) this.elf(ELF_X - 10, H / 2 - 90, true);
@@ -411,21 +411,12 @@ export class FieldRenderer {
 
   private orc(s: SimState, o: Orc): void {
     const g = this.g, wind = this.windUp(o); g.save(); g.translate(o.x + wind.dx, o.y);
-    const bob = (this.reducedMotion ? 0 : Math.sin(o.wob) * 1.5) - wind.dy;
     g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, o.r * 0.9, o.r * 0.9, o.r * 0.35, 0, 0, 6.28); g.fill();
     // Burning or chilled: the orc's own body takes the colour and a soft rim of it, so shading still reads (TB-089).
     const tint = o.burn > 0 ? P.fireTint : o.chill > 0 ? P.frostTint : '', glow = o.burn > 0 ? P.fire : o.chill > 0 ? P.frost : '';
     const ost = orcState(s, o), ot = ost === 'attack' ? orcSwingT(o, this.sprites.duration(`orc.${o.kind}.attack`), VFX.strike.orc) : orcAnimT(o);
-    if (this.sprites.drawActor(g, `orc.${o.kind}`, ost, ot, 0, o.r * 0.9, o.r, o.hitT > 0, tint, glow, VFX.arrows.rimBlur)) { this.orcBars(o); g.restore(); return; }
-    g.fillStyle = o.hitT > 0 ? P.cream : o.kind === 'boss' ? P.boss : o.kind === 'elite' ? P.elite : o.kind === 'brute' ? P.brute : P.orc;
-    if (glow) { g.shadowColor = glow; g.shadowBlur = VFX.arrows.rimBlur; }
-    g.beginPath(); g.ellipse(0, bob, o.r, o.r * 1.05, 0, 0, 6.28); g.fill(); g.shadowBlur = 0;
-    if (tint && o.hitT <= 0) { g.fillStyle = tint; g.fill(); }
-    g.fillStyle = P.tusk; g.fillRect(-o.r * 0.55, bob - o.r * 0.15, o.r * 0.32, o.r * 0.22); g.fillRect(o.r * 0.2, bob - o.r * 0.15, o.r * 0.32, o.r * 0.22);
-    g.fillStyle = P.cream; g.fillRect(-o.r * 0.42, bob + o.r * 0.3, o.r * 0.14, o.r * 0.3); g.fillRect(o.r * 0.28, bob + o.r * 0.3, o.r * 0.14, o.r * 0.3);
-    if (o.kind === 'boss') { g.fillStyle = P.amber; g.beginPath(); g.moveTo(-o.r * 0.8, -o.r * 0.7); g.lineTo(-o.r * 0.4, -o.r * 1.4); g.lineTo(0, -o.r * 0.8); g.lineTo(o.r * 0.4, -o.r * 1.4); g.lineTo(o.r * 0.8, -o.r * 0.7); g.closePath(); g.fill(); }
-    this.orcBars(o);
-    g.restore();
+    this.sprites.drawActor(g, `orc.${o.kind}`, ost, ot, 0, o.r * 0.9, o.r, o.hitT > 0, tint, glow, VFX.arrows.rimBlur);
+    this.orcBars(o); g.restore();
   }
 
   /** Wind-up: an engaged orc leans away from its target (the boss rises) over the last part of its swing. Zero while walking or under reduced motion. Reads sim, never writes. */
@@ -445,12 +436,10 @@ export class FieldRenderer {
     const g = this.g; g.save(); g.translate(w.x, w.y); g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 8, 12, 4, 0, 0, 6.28); g.fill();
     if (w.tx < w.x - 2) g.scale(-1, 1);
     const d = Math.hypot(w.tx - w.x, w.ty - w.y), near = !!nearestOrc(s, w.x, w.y, (o) => Math.hypot(o.x - w.x, o.y - w.y) < SOURCES.wolf.reach), t = near ? Math.min(1, w.biteT / SOURCES.wolf.biteCd) * this.sprites.duration('wolf.attack') * 0.999 : this.clock;
-    if (this.sprites.drawActor(g, 'wolf', near ? 'attack' : d > 2 ? 'walk' : 'idle', t, 0, 8, ACTOR_R) || this.sprites.loading) { g.restore(); return; }
-    g.fillStyle = P.wolf; g.beginPath(); g.ellipse(0, 0, 13, 7, 0, 0, 6.28); g.fill(); g.beginPath(); g.arc(11, -4, 5, 0, 6.28); g.fill(); g.restore();
+    this.sprites.drawActor(g, 'wolf', near ? 'attack' : d > 2 ? 'walk' : 'idle', t, 0, 8, ACTOR_R); g.restore();
   }
 
-
-  /** Thunderclap sparks, set-bonus marks (bleed, pin, root) and health bar, shared by the vector and sprite orc. */
+  /** Thunderclap sparks, set-bonus marks (bleed, pin, root) and health bar. */
   private orcBars(o: Orc): void {
     const g = this.g;
     if (o.stun > 0) { const A = VFX.arrows, sp = this.reducedMotion ? 0 : this.clock * A.stunSpin; g.fillStyle = P.spark; for (let i = 0; i < 3; i++) { const t = sp + i * 2.09; g.fillRect(Math.cos(t) * A.stunOrbit * 1.6 - 1.5, -o.r - 6 + Math.sin(t) * A.stunOrbit * 0.5 - 1.5, 3, 3); } }
@@ -462,33 +451,19 @@ export class FieldRenderer {
 
   /** `draw` is the bow's charge (0..1) while the player aims, -1 otherwise. The sprite elf plays its idle loop (`elf`) at rest
    *  and its draw clip (`elf.attack`) in step with the charge, so the string is at full draw as the lob leaves. */
-  private elf(x: number, y: number, dim: boolean, pull = 0, draw = -1): void {
+  private elf(x: number, y: number, dim: boolean, draw = -1): void {
     const g = this.g; g.save(); g.translate(x, y); if (dim) g.globalAlpha = 0.85;
     g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 16, 12, 4, 0, 0, 6.28); g.fill();
     const key = dim ? 'archer' : 'elf', aiming = draw >= 0, t = aiming ? Math.min(draw, 0.999) * this.sprites.duration(key + '.attack') : this.clock;
-    if (this.sprites.drawActor(g, key, aiming ? 'attack' : 'walk', t, 0, 16, ACTOR_R) || this.sprites.loading) { g.restore(); return; }
-    g.fillStyle = dim ? P.archerCloak : P.elfCloak; g.beginPath(); g.moveTo(-9, 14); g.lineTo(9, 14); g.lineTo(5, -6); g.lineTo(-5, -6); g.closePath(); g.fill();
-    g.fillStyle = P.lilac; g.beginPath(); g.arc(0, -12, 7, 0, 6.28); g.fill();
-    g.strokeStyle = P.cream; g.lineWidth = 2; g.beginPath(); g.arc(12, 0, 16, -1.3, 1.3); g.stroke();
-    g.beginPath(); g.moveTo(16, -15); g.lineTo(16 - pull, 0); g.lineTo(16, 15); g.lineWidth = 1; g.stroke();
-    g.restore();
+    this.sprites.drawActor(g, key, aiming ? 'attack' : 'walk', t, 0, 16, ACTOR_R); g.restore();
   }
 
   private van(s: SimState, v: Vanguard): void {
     const g = this.g, T = VANGUARD[v.type]; g.save(); g.translate(v.x, v.y); if (v.face < 0) g.scale(-1, 1);
     g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 16, 12, 4, 0, 0, 6.28); g.fill();
     const vst = vanState(s, v), vt = vst === 'attack' ? swingClipT(v.swingT, T.cd, this.sprites.duration(`van.${v.type}.attack`), VFX.strike[v.type]) : this.clock;
-    if (this.sprites.drawActor(g, `van.${v.type}`, vst, vt, 0, 16, ACTOR_R, v.hitT > 0)) { this.vanBar(v); g.restore(); return; }
-    g.fillStyle = v.hitT > 0 ? P.cream : v.type === 'spear' ? P.spear : P.blade; g.beginPath(); g.moveTo(-9, 14); g.lineTo(9, 14); g.lineTo(6, -6); g.lineTo(-6, -6); g.closePath(); g.fill();
-    g.fillStyle = P.lilac; g.beginPath(); g.arc(0, -12, 7, 0, 6.28); g.fill();
-    g.strokeStyle = P.cream; g.lineWidth = 2; g.beginPath();
-    const u = this.reducedMotion ? 0 : Math.min(1, v.swingT / T.cd);
-    if (T.cleave) { const f = u * VFX.blade.fold, sn = Math.sin(f) * 18, c = Math.cos(f); g.moveTo(8, -4); g.lineTo(8 + 18 * c, -14 + sn); g.moveTo(8, 4); g.lineTo(8 + 18 * c, 14 - sn); }
-    else { const d = u * VFX.spear.draw; g.moveTo(6 - d, 8 + d * 0.67); g.lineTo(30 - d, -8 + d * 0.67); }
-    g.stroke();
-    if (v.type === 'spear') { g.fillStyle = P.timber; g.beginPath(); g.arc(-10, 2, 7, 0, 6.28); g.fill(); }
-    this.vanBar(v);
-    g.restore();
+    this.sprites.drawActor(g, `van.${v.type}`, vst, vt, 0, 16, ACTOR_R, v.hitT > 0);
+    this.vanBar(v); g.restore();
   }
 
   private vanBar(v: Vanguard): void {
