@@ -184,5 +184,6 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-168 | Remove vector stand-in shapes; actors draw only from sprites (director 2 Nov) | render | — | claude | done (cae614f, PR 132) |
 | TB-169 | Vanguard only advance on orcs past halfway (director 2 Nov) | sim | — | claude | done (1f9c58f, PR 133) |
 | TB-170 | Vanguard turn back to face the field once home (director 2 Nov) | sim | — | claude | done (5031cc4, PR 134) |
-| TB-172 | Checkpoint every 5 waves, was 10 (director 2 Nov): `CHECKPOINT.every` 10 → 5; saved checkpoints rise on the next wave cleared, no migration | balance | — | claude | in PR |
+| TB-174 | Grove matches the plain (director 2 Nov): one ground both sides of the wall, Sketchfab grove decor behind the elf (`GROVE_DECOR`), dusk tint and sun shafts cut (they hazed the field); a 0-size canvas no longer throws in `Ground.draw` | render | — | claude | in PR |
+| TB-172 | Checkpoint every 5 waves, was 10 (director 2 Nov): `CHECKPOINT.every` 10 → 5; saved checkpoints rise on the next wave cleared, no migration | balance | — | claude | done (PR 139) |
 | TB-171 | Heartwood only from bosses (director 2 Nov): a fall or voluntary replant pays 0 (`PRESTIGE.fallGain`), rule 1 reworded; voluntary Replant no longer gated on a payout | balance | — | claude | done (PR 138) |

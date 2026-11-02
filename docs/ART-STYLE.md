@@ -13,7 +13,6 @@ Status: **Current** (v1.3, checked against `src/render/palette.ts` and `src/data
 | creamDim | #b9b09c | Secondary text, labels |
 | sage | #8fa98a | Plain highlight patches |
 | sageDeep | #6b8468 | Plain base (field is #7c9676 / #86a07e patches) |
-| groveSide | #9fb391 | The grove behind the wall |
 | sand | #c9b78a | Wall's inner edge, fireball dust ring |
 | ember | #ffb061 | Fireball body, ember sparks, cooling puffs (TB-127) |
 | fireCore | #fff1c8 | Fireball pale core, strike flash |
@@ -36,7 +35,6 @@ Status: **Current** (v1.3, checked against `src/render/palette.ts` and `src/data
 | plainLush, plainWorn, plainBare | #728d6c, #8e9a72, #a09c80 | Ground (TB-098): lusher grass drifts, worn dry grass, barren earth core |
 | tuft, tuftLight | #5e7858, #a3b993 | Grass tuft blades (dark, sunlit) |
 | rock, rockLight | #8f9597, #b7bbb6 | Small rocks and pebbles, their top highlight |
-| plainDusk | #5f6f72 | Dusk tint over the plain |
 | hillFar, hillNear | #5a7058, #4f644d | Parallax hill bands |
 | lamp, lampClear | amber 20%, amber 0% | Lamplight on the grove bank at night |
 | grove | #9fc48f | Grove branch, Deep Roots regrow burst |
@@ -65,11 +63,12 @@ Rules: semantic colours (amber = money, timber = the wall, rose = permanent/dang
 - Strike circle (TB-079): a disc of radius `stats.radius` (40 px × 1.2^Wide Volley) filled `aimFill` and outlined `aimLine`, with a cream ring that fills clockwise from the top as the bow draws; a dotted `aimLine` arc from the elf traces the lob's flight. In flight a lob is a short shaft along its arc with a ground shadow; on landing a cream ring flashes at the circle. The OS cursor is hidden over the field (`cursor: none`). Nothing is drawn when the pointer is over the grove side or the wall has fallen.
 
 ## Ground (TB-098)
-The plain reads as natural, calm grassland, not a flat board. Layout is seeded (`GROUND.seed`, `src/data/presentation.ts`) and painted once to an offscreen canvas in `src/render/ground.ts`, repainted only when the canvas size or DPR changes, then blitted each frame (no per-frame decoration cost). A strip `GROUND.wallGap` wide in front of the wall stays clear.
+The plain reads as natural, calm grassland, not a flat board. Layout is seeded (`GROUND.seed`, `src/data/presentation.ts`) and painted once to an offscreen canvas in `src/render/ground.ts`, repainted only when the canvas size or DPR changes, then blitted each frame (no per-frame decoration cost). One ground covers both sides of the wall (TB-174): the grove behind the elf is the same grass as the plain; only the wall and a strip `GROUND.wallGap` wide in front of it stay clear.
 - Layers, bottom up: plain base; lusher drifts (`plainLush`); worn dry-grass patches (`plainWorn`) with a smaller barren-earth core (`plainBare`); rocks; tufts. Patches are clusters of squashed ellipses (same soft-ellipse language as the actors) feathered by a few stacked low-alpha passes, so edges are soft without a blur filter.
 - Tufts: 4–7 curved blades fanning from one root, mostly `tuft` with about a third `tuftLight`; some grouped in clumps, some single. Kept low-contrast so orcs, blood, VFX and the strike circle read on top.
 - Rocks: flat-ink shadow offset down-right, `rock` body, `rockLight` top-left highlight, 0–3 pebbles beside each; half sit on worn patches, where ground is thin.
-- The dusk tint and hills still draw over the ground each frame.
+- Hills draw over the ground each frame. No colour wash sits over the field (TB-174): the dusk tint and the sun shafts were cut because they muted every colour; dusk now shows only as brighter motes and the lamplight on the bank.
+- Grove decor (TB-174, `GROVE_DECOR`): Sketchfab models rendered at the game angle to `public/decor` (elf house, autumn tree, pine, stump, chest, alchemist's chest, lantern, arch), drawn behind every unit along the grove's top and bottom bands and far-left edge, so the elf, archer and ballista spots stay clear.
 
 ## Typography
 - Display: **Heartwood**, the game's own elf hand (TB-135). One weight (400), no italic: the title's "Orc!" is amber, not slanted, and big numbers are not bold. `font-synthesis: none` (on body) stops the browser faking either. There is no fallback face (TB-137): every glyph the game shows must exist in Heartwood (97 now, incl. · × − – … ∞ →); add new ones to `glyphs.py` before using them in text.
@@ -156,5 +155,5 @@ Vector draws stay the baseline so the game is always playable without assets. M4
 
 ## M4 presentation additions
 - Parallax: two bands of distant hills (sageDeep darkened) scrolling very slowly.
-- Day/night: a 10-minute cycle tinting the plain between day (#7c9676) and dusk (#5f6f72) with lamplight on the bank at night (amber radial, 20% alpha).
+- Day/night: a 10-minute cycle; at dusk the motes brighten and lamplight glows on the bank (amber radial, 20% alpha). No tint over the plain (cut in TB-174, it muted the colours).
 - Audio palette: wooden, breathy, watery. Wooden thuds for wall hits, a low horn on rally, a long creak-and-crash when the wall falls. Wind loop always under everything.

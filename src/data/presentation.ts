@@ -2,8 +2,6 @@
 export const SKY = {
   /** Seconds for one full day-dusk-day cycle. */
   dayCycle: 600,
-  /** Peak dusk tint over the plain (keeps the patches readable). */
-  duskAlpha: 0.85,
   /** Hill bands, far to near: scroll speed (units/s), crest height, bump width, top of band. */
   hills: [{ speed: 2, h: 26, w: 140, y: 0 }, { speed: 5, h: 18, w: 90, y: 14 }],
   /** Lamplight radius on the grove bank at full night. */
@@ -54,6 +52,19 @@ export const VFX = {
   treantShake: 0.2, impactLife: 0.3, stormLife: 0.35, zoneFade: 0.6, zoneSquash: 0.45, textLife: 0.9, textRise: 28,
 } as const;
 
+/** Grove decor on the elf's side of the wall (TB-174): sprite, centre x, base y (feet), height; field units, back to front.
+ *  Kept to the top and bottom bands and the far left edge so the elf, archers and ballista lanes stay clear. */
+export const GROVE_DECOR = [
+  { k: 'autumntree', x: 120, y: 92, h: 92 },
+  { k: 'elfhouse', x: 52, y: 120, h: 70 },
+  { k: 'lantern', x: 18, y: 178, h: 58 },
+  { k: 'stump', x: 14, y: 300, h: 44 },
+  { k: 'chest', x: 22, y: 402, h: 18 },
+  { k: 'alchchest', x: 108, y: 418, h: 46 },
+  { k: 'arch', x: 46, y: 474, h: 66 },
+  { k: 'pine', x: 124, y: 478, h: 70 },
+] as const;
+
 /** Field ground (TB-098, ART-STYLE §Ground). Seeded layout painted once to an offscreen canvas; field units. Ranges are [min, max]. */
 export const GROUND = {
   seed: 0x6a7e31,
@@ -92,6 +103,4 @@ export const LOOT_VFX = {
 export const AMBIENCE = {
   /** Motes: count, core radius, halo scale, drift speed, glow pulse rate; alpha by day and at full dusk. */
   motes: { n: 50, r: [0.9, 1.8], halo: 4, speed: 7, pulse: 1.3, day: 0.55, night: 1 },
-  /** Sun shafts slanting down from the top edge: count, width, slant (x per y), peak alpha by day, sway rate. */
-  shafts: { n: 4, w: [50, 95], slant: 0.42, alpha: 0.09, sway: 0.12 },
 } as const;
