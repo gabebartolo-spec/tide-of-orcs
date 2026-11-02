@@ -36,7 +36,7 @@ tide-of-orcs/
                         orcs (engage → wall → advance), elf lob, rangers, knives, ballista, storm, wolf, hawk, treant, projectiles, cleanup
       combat.ts         nearestOrc(), damage(), kill(), shoot(), lob(), impact(), volley(), crowdAim() (player model for tests/sim)
       barricade.ts      barFrac(), barricadeHit() (damaged → Deep Roots → fallen), barricadeRegen()
-      vanguard.ts       canRally(), rally(), placeVanguard(), vanguardStep(), engagedVanguard(), hurtVanguard()
+      vanguard.ts       placeVanguard(), vanguardStep(), engagedVanguard(), hurtVanguard()
       boss.ts           bossesReady(), canSummonBoss(), summonBoss(), bossStep()
       heartwood.ts      hwRank(), hwSpent(), hwAvailable(), hwCost(), canBuyHw(), buyHw(), startRun()
       events.ts         SimEvent union, EventBus (capped array, drained once per frame)
@@ -51,7 +51,7 @@ tide-of-orcs/
       camera.ts         tree camera: pan, zoom, clamp below the legend strip, ease (TB-021, TB-066, TB-117)
       tree.ts           skill tree canvas, curved branches, hit-test, camera ease to selection
     ui/
-      panel.ts          page modes run / camp / settings (body[data-mode], setMode; TB-136), tabs (Grove / Satchel / Replant / Settings), detail card, rally bar, boss button, fallen overlay + run summary,
+      panel.ts          page modes run / camp / settings (body[data-mode], setMode; TB-136), tabs (Grove / Satchel / Replant / Settings), detail card, boss button, fallen overlay + run summary,
                         Heartwood tree, settings, toasts, HUD numbers
       fit.ts            camp pages fit one screen (TB-153): scales a tab's content down when it still overflows after layout
       format.ts         number formatting (short / scientific)
@@ -126,8 +126,8 @@ The seed lives only inside `rng`; the save version lives in the save, not in Sim
 - Reduced motion: the Settings override (`settings.reducedMotion`, null = follow `prefers-reduced-motion`); render modules check `reducedMotion`.
 
 ## UI
-Plain DOM, no framework. `ui/panel.ts` renders the detail card with template strings and owns the rally bar, the boss button, the fallen overlay, the Heartwood tree and Settings, and creates `ui/satchel.ts` (SatchelPane: worn slots, satchel grid, item detail and its controls; each item shows a 128 px WebP icon from `public/items/<id>.webp`, rendered from its approved Meshy model and centred by `meshy_output/centre_icons.py`, looked up by `data/itemArt.ts` as the mythic id or else the base id, with the `ui/glyphs.ts` slot SVG as fallback); it dispatches intents to `GameController`, which is the only thing allowed to call into `sim/`:
-`tick(dt)`, `setAim(x, y)` / `clearAim()`, `buy(id)`, `rally(type)`, `summonBoss()`, `buyHw(id)`, `equipItem(uid)`, `salvageItem(uid)`, `lockItem(uid)`, `setLootFilter(rarity)`, `canPullBack()`, `pullBack()`, `canReplant()`, `replant()`, `telemetry()`, `toSave()`, `save()`, `exportSave()`, `importSave(str)`, `wipe()`.
+Plain DOM, no framework. `ui/panel.ts` renders the detail card with template strings and owns the boss button, the fallen overlay, the Heartwood tree and Settings, and creates `ui/satchel.ts` (SatchelPane: worn slots, satchel grid, item detail and its controls; each item shows a 128 px WebP icon from `public/items/<id>.webp`, rendered from its approved Meshy model and centred by `meshy_output/centre_icons.py`, looked up by `data/itemArt.ts` as the mythic id or else the base id, with the `ui/glyphs.ts` slot SVG as fallback); it dispatches intents to `GameController`, which is the only thing allowed to call into `sim/`:
+`tick(dt)`, `setAim(x, y)` / `clearAim()`, `buy(id)`, `summonBoss()`, `buyHw(id)`, `equipItem(uid)`, `salvageItem(uid)`, `lockItem(uid)`, `setLootFilter(rarity)`, `canPullBack()`, `pullBack()`, `canReplant()`, `replant()`, `telemetry()`, `toSave()`, `save()`, `exportSave()`, `importSave(str)`, `wipe()`.
 `[hidden] { display: none !important }` is in `style.css` because the standalone build has no host reset.
 
 ## Testing

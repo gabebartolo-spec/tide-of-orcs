@@ -58,7 +58,7 @@ Run `npm run lint && npm run test` before every commit. Do not commit if either 
 
 - `src/sim/` is pure: no DOM, no canvas, no `Date.now()`. It takes `dt` and a seeded RNG. This is what tests and the balance simulator run.
 - `src/render/` reads sim state and draws. It never mutates sim state.
-- `src/ui/` is the DOM panel (tree, rally bar, fallen overlay, prestige, settings). It dispatches intents (`buy`, `rally`, `replant`, `setAim`, `clearAim`, `summonBoss`, `buyHw`) to `GameController` in `src/game.ts`, which is the only caller into `src/sim/`.
+- `src/ui/` is the DOM panel (tree, satchel, boss button, fallen overlay, prestige, settings). It dispatches intents (`buy`, `replant`, `setAim`, `clearAim`, `summonBoss`, `buyHw`, satchel intents such as `equipItem`) to `GameController` in `src/game.ts`, which is the only caller into `src/sim/`.
 - One file per entity type or system. Named exports. No default exports.
 - Tests live beside the code as `*.test.ts`. Every formula in `BALANCE.md` `## Current` has a test; the wave curves are pinned at waves 1, 10, 25, 50.
 - Commit messages: `area: what changed` (`sim: summon brutes (TB-080)`, `tree: moonbow homing`). Reference the backlog id (`TB-012`).
