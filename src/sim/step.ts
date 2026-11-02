@@ -69,12 +69,12 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
     const v = engagedVanguard(s, o);
     if (v) {
       o.swingT += dt * pace;
-      if (o.swingT >= BARRICADE.orcSwing) { o.swingT = 0; ev.push({ t: 'orcSwing', kind: o.kind, x: o.x, y: o.y, tx: v.x, ty: v.y, r: o.r }); hurtVanguard(s, ev, v, o.atk); }
+      if (o.swingT >= BARRICADE.orcSwing) { o.swingT = 0; ev.push({ t: 'orcSwing', kind: o.kind, x: o.x, y: o.y, tx: v.x, ty: v.y, r: o.r }); hurtVanguard(s, ev, v, o.atk * BARRICADE.orcSwing); }
       return;
     }
     if (o.x <= BAR_X + BAR_W + o.r) {
       o.x = BAR_X + BAR_W + o.r; o.swingT += dt * pace;
-      if (o.swingT >= BARRICADE.orcSwing) { o.swingT = 0; ev.push({ t: 'orcSwing', kind: o.kind, x: o.x, y: o.y, tx: BAR_X + BAR_W, ty: o.y, r: o.r }); barricadeHit(s, ev, o.atk * BARRICADE.wallMult, o.y); }
+      if (o.swingT >= BARRICADE.orcSwing) { o.swingT = 0; ev.push({ t: 'orcSwing', kind: o.kind, x: o.x, y: o.y, tx: BAR_X + BAR_W, ty: o.y, r: o.r }); barricadeHit(s, ev, o.atk * BARRICADE.orcSwing * BARRICADE.wallMult, o.y); }
       if (st.spikes > 0) damage(s, ev, o, st.dmg * st.spikes * dt);
       return;
     }

@@ -26,17 +26,19 @@ export const BARRICADE = {
   spikesPerRank: 0.2,   // fraction of player dmg per second per Thornwall rank
   bulwarkFrac: 0.5,     // Deep Roots regrow fraction
   orcAtkFrac: 0.025,     // orc dps to vanguard = this × orc maxhp
-  wallMult: 25,         // the wall takes this × an orc's hit: 6.25 a swing at wave 1 (TB-154, was 10)
-  orcSwing: 1.0,        // seconds between orc swings
+  wallMult: 25,         // the wall takes this × an orc's hit per second: 6.25/s at wave 1 (TB-154, was 10)
+  orcSwing: 35 / 15,    // seconds between orc swings = the orc attack clip, played once per swing (TB-161, was 1.0); a swing hits for atk × orcSwing
   maxHitFrac: 0.25,     // one hit takes at most this × the wall's max, so late orcs can't one-shot it (TB-125)
 } as const;
 
+// TB-161: vanguard swing cd = its attack clip's length (frames / 15 fps), so the clip plays once per hit at real speed;
+// dmg is scaled by the same factor so damage per second matches the old 0.8 s / 0.45 s swings.
 export const VANGUARD = {
   baseCap: 2,
   hpPerShield: 1.3, dmgPerDrill: 1.3, mendPerRank: 0.03,
   walkSpeed: 60, standX: 44, laneGap: 70, engageRange: 18,
-  spear: { cost: 6, hp: 5, dmg: 1.6, cd: 0.8, reach: 28, cleave: false },
-  blade: { cost: 18, hp: 4, dmg: 1.4, cd: 0.45, reach: 34, cleave: true },
+  spear: { cost: 6, hp: 5, dmg: 1.6 * (50 / 15) / 0.8, cd: 50 / 15, reach: 28, cleave: false },
+  blade: { cost: 18, hp: 4, dmg: 1.4 * (55 / 15) / 0.45, cd: 55 / 15, reach: 34, cleave: true },
 } as const;
 export type VanType = 'spear' | 'blade';
 
