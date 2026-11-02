@@ -32,7 +32,8 @@ ANIMS = {
     "elf.attack": (30, False, "elf", 3.0),  # all 32 frames; field.ts scrubs it with the bow charge
     "wolf": (25, False, "wolf", 1.6),  # TB-160 companion run, blam's CC BY Sketchfab wolf retextured; ortho 2.4 is a stand-in (the gltf is 1/100 scale)
     "wolf.attack": (25, False, "wolf", 1.6),  # all 33 bite frames; field.ts scrubs it with the bite cooldown
-    "orc.wolfrider.attack": (15, True, "orc.wolfrider.attack", 2.6),  # no walk clip: the attack is its own body key; frames from wolfrider/render_wr_sheet.py
+    "orc.wolfrider": (25, True, "orc.wolfrider", 2.6),  # run v8 (director 3 Nov): companion wolf run copied onto the rider wolf, orc at rest; frames from wolfrider/render_wr_sheet.py STEP=1
+    "orc.wolfrider.attack": (15, True, "orc.wolfrider", 2.6),  # shares the run body key, same ortho 1.4
 }
 anchors = json.load(open(os.path.join(src, "anchors.json"), encoding="utf-8-sig"))
 
