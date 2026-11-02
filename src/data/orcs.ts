@@ -12,8 +12,8 @@ export const ORC_TYPES: Readonly<Record<OrcKind, OrcType>> = {
   elite: { kind: 'elite', hp: 8, speed: 42, loot: 8, radius: 14, every: 10, from: 20 },
   // TB-087 (P-087): join waves chosen by the director 3 Nov
   berserker: { kind: 'berserker', hp: 2.5, speed: 40, loot: 3.5, radius: 14, every: 6, from: 25 },
-  wolfrider: { kind: 'wolfrider', hp: 2.0, speed: 90, loot: 3.0, radius: 15, every: 5, from: 30 },
-  shaman: { kind: 'shaman', hp: 2.0, speed: 36, loot: 4.0, radius: 12, every: 9, from: 35 },
+  wolfrider: { kind: 'wolfrider', hp: 1.7, speed: 90, loot: 3.0, radius: 15, every: 5, from: 30 },
+  shaman: { kind: 'shaman', hp: 2.0, speed: 36, loot: 4.0, radius: 12, every: 10, from: 35 },
   drummer: { kind: 'drummer', hp: 4.0, speed: 30, loot: 6.0, radius: 16, every: 14, from: 40 },
   boss: { kind: 'boss', hp: 28, speed: 26, loot: 30, radius: 24, every: 0, from: 0 }, // marches only in a boss wave
 };
@@ -29,7 +29,7 @@ export const ORC_FX = {
   /** Shaman and war drummer stop this far from the wall. */
   shamanHalt: 180, drummerHalt: 260,
   /** War drummer: orcs within reach march and hit this much harder (one drum's worth, never stacked). */
-  drumReach: 100, drumBoost: 0.3,
+  drumReach: 100, drumBoost: 0.25,
 } as const;
 
 /** Per rank of a kind's two nodes: Fury (health and starlight) and Swarm (spawn rate). A kind that joins on its own marches at

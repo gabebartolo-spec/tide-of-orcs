@@ -65,7 +65,7 @@ The four later kinds (TB-087, P-087; values in `ORC_FX` and `FIREBALL`, `src/dat
 - **Berserker:** below half health it rages: moves ×1.8 and hits ×2.
 - **Wolf rider:** the wolf leaps the first vanguard it meets and lands beyond it. Slay it and the orc fights on afoot as a grunt.
 - **Shaman:** halts 180 units from the wall and every 4 s lobs a fireball (0.9 s aloft) at the nearest vanguard, or at the wall when none stand. It burns every vanguard within 24 units for three grunt swings.
-- **War drummer:** halts 260 units from the wall. Orcs within 100 units march and hit 30% harder; drums never stack.
+- **War drummer:** halts 260 units from the wall. Orcs within 100 units march and hit 25% harder; drums never stack.
 
 ## 5. Vanguard (melee, bought with starlight)
 Vanguard are not tree nodes. **Muster** unlocks the rally bar under the field; each rally spends starlight on one unit that walks from the wall to x = barX + 44 and holds a lane (H/2, then ±70, ±140 …) until killed. Cap: 2 + Close Ranks. They are lost on Replant.
