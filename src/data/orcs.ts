@@ -10,7 +10,7 @@ export const ORC_TYPES: Readonly<Record<OrcKind, OrcType>> = {
   runner: { kind: 'runner', hp: 0.55, speed: 78, loot: 0.7, radius: 9, every: 1.5, from: 5 },
   brute: { kind: 'brute', hp: 3.2, speed: 34, loot: 3.0, radius: 16, every: 4, from: 10 },
   elite: { kind: 'elite', hp: 8, speed: 42, loot: 8, radius: 14, every: 10, from: 20 },
-  // TB-087 (P-087): join waves are sim placeholders until the director picks them
+  // TB-087 (P-087): join waves chosen by the director 3 Nov
   berserker: { kind: 'berserker', hp: 2.5, speed: 40, loot: 3.5, radius: 14, every: 6, from: 25 },
   wolfrider: { kind: 'wolfrider', hp: 2.0, speed: 90, loot: 3.0, radius: 15, every: 5, from: 30 },
   shaman: { kind: 'shaman', hp: 2.0, speed: 36, loot: 4.0, radius: 12, every: 9, from: 35 },

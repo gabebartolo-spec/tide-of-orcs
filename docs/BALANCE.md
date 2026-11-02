@@ -191,7 +191,7 @@ Boss waves (director 3 Nov): the escort grows with tier. Tier 1 keeps today's `B
 
 Director 3 Nov: all four behaviours and halt distances kept as drafted; arrival by wave (TB-158 rule), not summon-only; boss escort by tier as above. Still open, to be simmed and proposed: the join wave for each kind and the Grove chain order and costs (draft 3000 / 5000 / 8000 / 12000). The sim checks each against Blackguard on starlight per second of wall life, the same test a spearman passed (TB-086).
 
-**Built 3 Nov (TB-087), first sim.** All four kinds, behaviours, the tier escort and the twelve Grove nodes (draft costs; Fury and Swarm at 4/3 of the summon price) are in. Join waves are the draft 25 / 30 / 35 / 40 for now. Sim: 60 min, greedy policy, Heartwood bought, seed 1; rows at minute 40 and 50 (wave reached, starlight banked, wall left):
+**Built 3 Nov (TB-087), first sim.** All four kinds, behaviours, the tier escort and the twelve Grove nodes (draft costs; Fury and Swarm at 4/3 of the summon price) are in. Join waves 25 / 30 / 35 / 40 (director chose the draft, 3 Nov). Sim: 60 min, greedy policy, Heartwood bought, seed 1; rows at minute 40 and 50 (wave reached, starlight banked, wall left):
 
 | join waves | min 40 | min 50 | note |
 |---|---|---|---|
