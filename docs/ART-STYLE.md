@@ -20,6 +20,8 @@ Status: **Current** (v1.3, checked against `src/render/palette.ts` and `src/data
 | timber / timberDark | #8a6a46 / #7a5c3c | Barricade planks (alternating) |
 | timberSplinter | #4e3a28 | Broken planks shown from the top as HP drops |
 | timberBand | #5a4634 | Cross-bands on the wall, bark, hawk, bolts |
+| treeWood / treeWoodLit | #5c4630 / #9a7650 | Skill-tree boughs and their lit core (TB-163) |
+| treeGlow | rgba(205,189,234,.22) | Arcane halo round grown skill-tree wood (TB-163) |
 | spear | #8fb7c9 | Spearman cloak, vanguard HP bars, Vanguard branch |
 | blade | #cdbdea | Bladedancer cloak (shares lilac) |
 | amber | #e2a85b | Starlight, affordable pulse, buy and rally buttons, boss crown, burn, wall bar when under 50% |
@@ -143,6 +145,10 @@ Carved living wood, not a template: no cards, glows or gradients standing in for
 - `frame.png` (512 px, from a 1024 px render) is a 9-slice: `border-image: url(frame.png) 125 / 58px / 0 stretch` on a 30 px border, so knots and leaves stay whole and lap over the content.
 - `button.png` (385×94, alpha-cropped from the render at half size) skins `.deploy` and `.ghost`: `border-image 20 30 fill / 8px 12px`. Build the plaque as a coarse quad grid: an ngon cap pinches at its centre under subdivision, and a fine grid clamps the bevel flat. `.buy` stays amber: the one gold action on a page.
 - Roots (`root.svg`) replace rules, a sprout (`sprout.svg`) marks the active tab.
+
+## Arcane skill tree (TB-163)
+
+The node layout draws a tree: Waking is the trunk base, Muster and Grey Wolf the trunk, Bow / Companions / Armoury the canopy boughs, Vanguard the low left bough, Barricade / Spoils / Grove the roots. Each link is a faint `line` outline until its node is owned, then wood grows along it (`TREE_VIEW.growRate`) in `treeGlow` halo, `treeWood` body, `treeWoodLit` core and a thin vein in the branch colour. Width is `woodBase + woodPerNode·√(nodes carried)`, so the trunk is thickest. Two `spark` motes drift outward along each grown link. Reduced motion: wood snaps grown, no motes.
 
 ## Asset pipeline (tools Gabe has: Tripo, Cascadeur, ElevenLabs)
 Vector draws stay the baseline so the game is always playable without assets. M4 may upgrade actors to **pre-rendered sprite sheets** on top of the same palette:
