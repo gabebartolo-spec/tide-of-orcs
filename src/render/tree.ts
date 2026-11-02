@@ -1,10 +1,10 @@
 import { BRANCH_COLOR, BRANCH_LABEL, NODE, NODES, NodeId, SkillNode, TREE_VIEW } from '../data/skillTree';
-import { Camera, centreOn, clampCamera, easeToward, startCamera, panBy, toWorld, zoomAt } from './camera';
+import { Camera, centreOn, clampCamera, easeToward, startCamera, panBy, toWorld, wholeCamera, zoomAt } from './camera';
 import { SimState } from '../sim/state';
 import { canBuy, rankOf, unlocked } from '../sim/tree';
 import { P } from './palette';
 
-/** The UI scale: root font size over the 16 px it has at 1920×1080 and below (style.css, TB-143). */
+/** The UI scale: root font size over 16 px (style.css, TB-143); 1.25 at 1920×1080 since TB-191, times Settings › Text size. */
 export const uiScale = (): number => parseFloat(getComputedStyle(document.documentElement).fontSize) / 16 || 1;
 
 /** Nodes each link carries (the child and all below it): sets how thick its wood is, so the trunk is thickest (TB-163). */
@@ -43,13 +43,17 @@ export class TreeRenderer {
   private grown = new Map<NodeId, number>();
   private growing = false;
   private lastT = 0;
+  /** Full-screen view (TB-189): the whole tree fits the window and the camera stays fixed. */
+  private full = false;
+  /** The normal view's camera, restored when full screen closes. */
+  private saved: Camera | null = null;
 
   constructor(readonly canvas: HTMLCanvasElement) {
     this.g = canvas.getContext('2d')!;
     new ResizeObserver(() => this.resize()).observe(canvas);
     this.resize();
     canvas.addEventListener('wheel', (e) => {
-      e.preventDefault(); this.target = null; const [sx, sy] = this.local(e);
+      e.preventDefault(); if (this.full) return; this.target = null; const [sx, sy] = this.local(e);
       this.cam = zoomAt(this.cam, sx, sy, e.deltaY < 0 ? TREE_VIEW.wheelStep : 1 / TREE_VIEW.wheelStep, this.vw, this.vh); this.stale = true;
     }, { passive: false });
     canvas.addEventListener('pointerdown', (e) => {
@@ -67,6 +71,7 @@ export class TreeRenderer {
   private onMove(e: PointerEvent): void {
     const p = this.pts.get(e.pointerId); if (!p) return;
     const dx = (e.clientX - p.x) / this.ui, dy = (e.clientY - p.y) / this.ui;
+    if (this.full) { this.moved += Math.hypot(dx, dy); p.x = e.clientX; p.y = e.clientY; return; } // fixed camera: no pan or pinch
     if (this.pts.size === 2) {
       const [a, b] = [...this.pts.values()];
       const other = (a === p ? b : a)!;
@@ -93,7 +98,20 @@ export class TreeRenderer {
     this.vw = r.width / this.ui; this.vh = r.height / this.ui; this.dpr = (devicePixelRatio || 1) * this.ui;
     this.canvas.width = Math.round(r.width * (devicePixelRatio || 1)); this.canvas.height = Math.round(r.height * (devicePixelRatio || 1));
     // Keep the same framing when the panel resizes: scale zoom with width.
+    if (this.full) { this.cam = wholeCamera(this.vw, this.vh); this.target = null; return; }
     this.cam = first ? startCamera(this.vw, this.vh) : clampCamera({ ...this.cam, z: this.cam.z * k }, this.vw, this.vh);
+  }
+
+  /** Enter or leave the full-screen view (TB-189). The caller resizes the canvas box first; this refits the camera. */
+  setFull(on: boolean): void {
+    if (on === this.full) return;
+    if (on) this.saved = this.target ?? this.cam;
+    this.full = on; this.target = null; this.vw = 1; // force a fresh fit on the next resize
+    const r = this.canvas.getBoundingClientRect(); if (!r.width || !r.height) return;
+    this.ui = uiScale(); this.vw = r.width / this.ui; this.vh = r.height / this.ui; this.dpr = (devicePixelRatio || 1) * this.ui;
+    this.canvas.width = Math.round(r.width * (devicePixelRatio || 1)); this.canvas.height = Math.round(r.height * (devicePixelRatio || 1));
+    this.cam = on ? wholeCamera(this.vw, this.vh) : this.saved ? clampCamera(this.saved, this.vw, this.vh) : startCamera(this.vw, this.vh);
+    this.stale = true;
   }
 
   /** True while the camera is easing or was just panned/zoomed, so the caller should draw this frame. */
@@ -102,6 +120,7 @@ export class TreeRenderer {
   /** Select a node and ease the camera to centre it (snaps under reduced motion). */
   select(id: NodeId): void {
     this.selected = id;
+    if (this.full) return; // every node is already on screen
     const n = NODE[id], t = centreOn(this.cam, n.x, n.y, this.vw, this.vh);
     if (this.reducedMotion) { this.cam = t; this.target = null; } else { this.target = t; this.lastDraw = performance.now(); }
   }
@@ -115,14 +134,11 @@ export class TreeRenderer {
     return null;
   }
 
-  /** The arcane tree (TB-163): a faint outline of every link, then bark that grows along each bought link with a lit edge,
+  /** The arcane tree (TB-163, neon TB-190): a dim neon glow along every locked link, then bark that grows along each bought link with a lit edge,
    *  an arcane vein in its branch colour, and sparkles drifting out along it. */
   private wood(s: SimState, t: number): void {
     const c = this.g, first = this.grown.size === 0, now = performance.now(), dt = Math.min(0.1, (now - this.lastT) / 1000); this.lastT = now;
     this.growing = false; c.lineCap = 'round';
-    c.strokeStyle = P.line; c.globalAlpha = 0.45; c.lineWidth = 1.5; c.beginPath();
-    for (const l of LINKS) { c.moveTo(l.p.x, l.p.y); c.quadraticCurveTo(l.cx, l.cy, l.n.x, l.n.y); }
-    c.stroke();
     const grown: { l: Link; g: number }[] = [];
     for (const l of LINKS) {
       const want = rankOf(s, l.n.id) > 0 ? 1 : 0, had = this.grown.get(l.n.id) ?? (first ? want : 0);
@@ -135,6 +151,17 @@ export class TreeRenderer {
       c.beginPath(); c.moveTo(l.p.x, l.p.y);
       c.quadraticCurveTo(l.p.x + (l.cx - l.p.x) * g, l.p.y + (l.cy - l.p.y) * g, at(l.p.x, l.cx, l.n.x, g), at(l.p.y, l.cy, l.n.y, g));
     };
+    // Locked links (TB-190): one batched path, a dim violet glow with a faint core, so the paths ahead read without shouting
+    c.globalAlpha = 1; c.beginPath();
+    for (const l of LINKS) if ((this.grown.get(l.n.id) ?? 0) < 1) { c.moveTo(l.p.x, l.p.y); c.quadraticCurveTo(l.cx, l.cy, l.n.x, l.n.y); }
+    c.strokeStyle = P.neonDim; c.lineWidth = 6; c.stroke();
+    c.strokeStyle = P.neonDimCore; c.lineWidth = 1.5; c.stroke();
+    // Owned links: a wide soft neon halo that breathes slowly (still under reduced motion), then the wood inside it
+    const pulse = this.reducedMotion ? 1 : 1 - TREE_VIEW.pulseDepth * (0.5 + 0.5 * Math.sin(t * TREE_VIEW.pulseRate));
+    c.strokeStyle = P.neonHalo; c.globalAlpha = pulse;
+    for (const { l, g } of grown) { part(l, g); c.lineWidth = l.w + TREE_VIEW.neonHalo; c.stroke(); }
+    c.strokeStyle = P.neonGlow; c.globalAlpha = 0.6 * pulse;
+    for (const { l, g } of grown) { part(l, g); c.lineWidth = l.w + 5; c.stroke(); }
     c.globalAlpha = 1; c.strokeStyle = P.treeGlow;
     for (const { l, g } of grown) { part(l, g); c.lineWidth = l.w + 6; c.stroke(); }
     c.strokeStyle = P.treeWood;
@@ -143,6 +170,15 @@ export class TreeRenderer {
     for (const { l, g } of grown) { part(l, g); c.lineWidth = Math.max(1, l.w * 0.35); c.stroke(); }
     c.globalAlpha = 0.85; c.lineWidth = 1.2;
     for (const { l, g } of grown) { part(l, g); c.strokeStyle = BRANCH_COLOR[l.n.branch]; c.stroke(); }
+    // Neon core over the wood, then light flowing outward along it (dashes sliding from parent to child)
+    c.strokeStyle = P.neonCore; c.globalAlpha = 0.55 + 0.35 * pulse;
+    for (const { l, g } of grown) { part(l, g); c.lineWidth = Math.max(1.2, l.w * 0.22); c.stroke(); }
+    if (!this.reducedMotion && grown.length) {
+      c.strokeStyle = P.neonFlow; c.globalAlpha = 0.75;
+      c.setLineDash([TREE_VIEW.flowDash, TREE_VIEW.flowGap]); c.lineDashOffset = -(t * TREE_VIEW.flowSpeed) % (TREE_VIEW.flowDash + TREE_VIEW.flowGap);
+      for (const { l, g } of grown) { part(l, g); c.lineWidth = Math.max(1.5, l.w * 0.3); c.stroke(); }
+      c.setLineDash([]); c.lineDashOffset = 0;
+    }
     if (!this.reducedMotion) {
       c.fillStyle = P.spark;
       for (const { l, g } of grown) for (let k = 0; k < 2; k++) {
@@ -175,11 +211,11 @@ export class TreeRenderer {
       if (canBuy(s, n)) { c.beginPath(); c.arc(n.x, n.y, r + 5, 0, 6.28); c.strokeStyle = P.amber; c.lineWidth = 1; c.globalAlpha = this.reducedMotion ? 0.8 : 0.5 + 0.5 * Math.sin(t * 4); c.stroke(); c.globalAlpha = 1; }
       if (keyFocus && n.id === this.selected) { c.beginPath(); c.arc(n.x, n.y, r + 9, 0, 6.28); c.strokeStyle = P.cream; c.lineWidth = 2; c.setLineDash([4, 3]); c.stroke(); c.setLineDash([]); }
       c.fillStyle = un ? P.text : P.nodeLabelLocked; c.font = '14px Heartwood'; c.textAlign = 'center'; c.shadowColor = P.ink; c.shadowBlur = 4; c.fillText(n.name, n.x, n.y + r + 15); c.shadowBlur = 0;
-      if (n.max > 1) { c.fillStyle = maxed ? P.ink : P.text; c.font = '13px Heartwood'; c.fillText(`${lvl}/${n.max}`, n.x, n.y + 4); }
+      if (n.max > 1) { c.fillStyle = maxed ? P.ink : P.text; c.font = '14px Heartwood'; c.fillText(`${lvl}/${n.max}`, n.x, n.y + 4); }
     }
     c.setTransform(k, 0, 0, k, 0, 0); // legend stays in screen space, on its own strip so nodes pan under it, not through it (TB-117)
     c.fillStyle = P.ink2; c.fillRect(0, 0, this.vw, TREE_VIEW.legendH); c.fillStyle = P.line; c.fillRect(0, TREE_VIEW.legendH - 1, this.vw, 1);
-    let lx = 14; c.font = '13px Heartwood'; c.textAlign = 'left';
+    let lx = 14; c.font = '14px Heartwood'; c.textAlign = 'left';
     for (const k of Object.keys(BRANCH_COLOR) as (keyof typeof BRANCH_COLOR)[]) { c.fillStyle = BRANCH_COLOR[k]; c.fillRect(lx, 14, 8, 8); c.fillStyle = P.textDim; const label = BRANCH_LABEL[k].toUpperCase(); c.fillText(label, lx + 12, 22); lx += c.measureText(label).width + 30; }
   }
 }

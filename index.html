@@ -25,6 +25,7 @@
       <div class="field">
         <canvas id="game"></canvas>
         <div class="toast" id="toast"></div>
+        <div class="lootbanners" id="loot-banners" aria-live="polite"></div>
         <div class="fallen" id="fallen" hidden>
           <h2 id="fallen-title"></h2>
           <p id="fallen-sum"></p>
@@ -47,7 +48,7 @@
         <button role="tab" id="tab-settings" aria-selected="false"></button>
       </div>
       <div class="tab" id="pane-grove">
-        <div class="treewrap"><canvas id="tree" tabindex="0"></canvas></div>
+        <div class="treewrap"><canvas id="tree" tabindex="0"></canvas><button class="ghost treefull" id="tree-full" type="button"></button></div>
         <div class="detail" id="detail" aria-live="polite"></div>
       </div>
       <div class="tab" id="pane-satchel" hidden>
@@ -87,6 +88,7 @@
           <div class="col">
           <label class="set"><span id="set-vol-k"></span><input type="range" id="set-vol" min="0" max="1" step="0.05"></label>
           <label class="set"><span id="set-motion-k"></span><select id="set-motion"><option value="sys"></option><option value="full"></option><option value="reduced"></option></select></label>
+          <label class="set"><span id="set-text-k"></span><input type="range" id="set-text" min="0.8" max="1.6" step="0.1"><output id="set-text-v"></output></label>
           <label class="set"><span id="set-num-k"></span><select id="set-num"><option value="short"></option><option value="sci"></option></select></label>
           <h2 id="set-save-k"></h2>
           <p id="set-save-hint"></p>

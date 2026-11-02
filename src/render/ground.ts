@@ -78,7 +78,7 @@ function blobs(g: CanvasRenderingContext2D, list: Blob[], fill: string): void {
 }
 
 /** Decor sprites (public/decor). Loaded once; `null` until ready, so callers fall back to vector art. */
-const DECOR = ['logpile', 'fence', 'elfhouse', 'autumntree', 'pine', 'stump', 'chest', 'alchchest', 'lantern', 'arch'] as const;
+const DECOR = ['fence'] as const;
 export type DecorKey = (typeof DECOR)[number];
 const imgs = new Map<string, HTMLImageElement>();
 let started = false;

@@ -4,6 +4,7 @@ import { AFFIXES, BASES, MYTHICS, SETS } from '../data/lootTables';
 import { STR } from '../data/strings';
 import { GameController } from '../game';
 import { glyph } from './glyphs';
+import { ITEM_ICON_DIR, ITEM_ICON_IDS } from '../data/itemArt';
 import { itemScore, rerollCost, salvageGlimmer } from '../sim/loot';
 import { setCounts, setTiers } from '../sim/gear';
 import type { Cue } from '../data/audio';
@@ -36,6 +37,8 @@ export class SatchelPane {
   private sig = '';
 
   constructor(private game: GameController, private onCue: (c: Cue) => void = () => {}) {
+    // warm the icon cache so a run's first drop banner shows its picture at once (TB-192; 32 small WebPs)
+    for (const id of ITEM_ICON_IDS) new Image().src = `${import.meta.env.BASE_URL}${ITEM_ICON_DIR}/${id}.webp`;
     $('sat-title').textContent = STR.satchelTitle; $('sat-worn-k').textContent = STR.satchelWorn;
     const pick = (e: Event) => { const uid = (e.target as HTMLElement).closest<HTMLElement>('[data-uid]')?.dataset.uid; if (uid) { this.selected = uid; this.render(); } };
     $('sat-worn').onclick = pick; $('sat-grid').onclick = pick;

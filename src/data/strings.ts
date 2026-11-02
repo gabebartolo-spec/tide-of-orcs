@@ -11,6 +11,7 @@ export const STR = {
   fallenHW: 'Heartwood carried back', pulledTitle: 'You leave the wall standing', pullBack: 'Replant', fallenBtn: 'Replant the grove',
   starlight: 'Starlight', wave: 'Wave', slain: 'Slain', heartwood: 'Heartwood',
   campTitle: 'Between runs', campGo: 'March again', campClose: 'Back to the field', fallenToCamp: 'To the grove',
+  treeFull: 'Full screen', treeFullLabel: 'Show the whole skill tree full screen', treeClose: 'Close  ✕', treeCloseLabel: 'Close the full-screen skill tree (Esc)',
   tabGrove: 'The Grove', tabReplant: 'Replant',
   learn: 'Learn', improve: 'Improve', locked: 'Locked', complete: 'Complete', fullyGrown: 'Fully grown',
   needs: (parent: string) => `needs ${parent}`,
@@ -48,6 +49,8 @@ export const STR = {
   heirloom: 'Make heirloom', unheirloom: 'Not heirloom', heirloomMark: ' · heirloom',
   hwNeeds: (names: string) => `Needs ${names}`,
   lootFound: (name: string) => `${name} found`,
+  /** Satchel tab badge (TB-192): items kept since it was last opened. */
+  newItems: (n: number) => `${n} new`,
   pinned: 'pinned', freeRally: 'The line reforms!',
   setsWorn: 'Sets', setProgress: (name: string, n: number) => `${name} ${n}/6`,
   /** Set bonus lines at 2, 4 and 6 pieces (TB-099). */
@@ -83,7 +86,7 @@ export const STR = {
     bossDmg: 'damage to bosses', eliteDmg: 'damage to elites', fireDmg: 'fire arrow damage', burnDur: 'burn time',
     stormDmg: 'storm arrow damage', stormChain: 'storm chains', homingDmg: 'moon arrow damage', critDmg: 'crit damage',
   } as Record<string, string>,
-  setVolume: 'Volume', setMotion: 'Motion', setNumbers: 'Numbers',
+  setVolume: 'Volume', setMotion: 'Motion', setNumbers: 'Numbers', setText: 'Text size',
   motionSystem: 'Follow system', motionFull: 'Full', motionReduced: 'Reduced',
   numShort: 'Short (1.25M)', numSci: 'Scientific (1.25e6)',
   setTel: 'Playtest data', telHint: 'Each finished run is logged on this device only. Download the file and send it to the developer if you are testing.', telBtn: 'Download run log', telNone: 'No finished runs yet', telSaved: (n: number) => `Saved ${n} run${n === 1 ? '' : 's'}`,

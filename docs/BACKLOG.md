@@ -1,4 +1,4 @@
-# Backlog
+﻿# Backlog
 
 Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>`. Owner is an agent name or `gabe`. One PR per row.
 
@@ -185,11 +185,19 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-169 | Vanguard only advance on orcs past halfway (director 2 Nov) | sim | — | claude | done (1f9c58f, PR 133) |
 | TB-180 | Perf: `tools/perf160.mjs` never advanced its kind index, so every 160-orc run (QA run 4 too) drew one kind; it now cycles all eight incl. the TB-087 four and holds the wall so shaman fire cannot freeze the run (QA run 5) | perf | 150 | claude | done (bf84fc4) |
 | TB-181 | Stale comments: `game.castFireball` said the shaman does not cast yet; the war-drum cue said the drummer is not in the sim (QA run 5) | audio | 087 | claude | done (e5ca4b5) |
-| TB-182 | Audio: the war-drum cue (`warDrum`, ElevenLabs) never plays; no sim event fires when a drummer halts and drums. Needs a cadence (per beat, or once when it halts) (QA run 5) | audio | 087 | — | open |
+| TB-182 | Audio: the war-drum cue (`warDrum`, ElevenLabs) never plays; no sim event fires when a drummer halts and drums. Needs a cadence (per beat, or once when it halts) (QA run 5). Director 3 Nov: every beat; drumBeat event every 0.8 s plays it | audio | 087 | claude | done |
 | TB-183 | Perf: 160-orc headroom shrank since run 4. All eight kinds, 1080p at 4× CPU throttle: 58–61 fps (run 4: 92, one kind), 6×: 24 fps; `field.draw` median 7.7 ms at 4× against 6.1 for the old four kinds and 5.7 grunts only. 1× and 2× still hold 60 fps at 1080p and 4K. Profile `field.draw` (QA run 5) | perf | 180 | — | open |
 | TB-184 | Checkpoint stall (QA run 5, soak from the wave-48 player): checkpoint 51, March at the highest tier (2) by default, each run falls at wave 51–52 within a minute, 23 runs in a row, 0 Heartwood (falls pay none, next boss wave 75). Intended grind, or should March default to tier 1 / checkpoints step back? | balance | 172 | claude | proposed P-184 (BALANCE ## Proposed): set F lifts the wave-48 player to 53; 55+ needs a new late progression source |
-| TB-185 | Docs drift: `CLAUDE.md` still lists a `rally` intent (gone since TB-167); QA-CHECKLIST C3, C4, D2, E1 were stale (fixed in run 5) | docs | 167 | — | open (CLAUDE.md part) |
+| TB-185 | Docs drift: `CLAUDE.md` still lists a `rally` intent (gone since TB-167); QA-CHECKLIST C3, C4, D2, E1 were stale (fixed in run 5) | docs | 167 | claude | done (CLAUDE.md + ARCHITECTURE.md rally refs removed) |
 | TB-186 | Art: the war drummer has one clip (`orc.drummer`, no `.attack`), so it plays the same loop marching and halted drumming (QA run 5) | art | 068 | — | open (director) |
+| TB-187 | Remove the grove props (director 3 Nov: "look awful"): `GROVE_DECOR` and its nine Sketchfab sprites (elf house, trees, stump, chests, lantern, arch, unused log pile) gone; the fence stays | art | 174 | claude | done |
+| TB-191 | Text readable on a 4K TV (director 3 Nov: "hard to read … very small"): root font 1/54 of the window height (20 px at 1080p, 40 px at 4K), smallest text 0.875rem (1.62% of screen height), canvas text follows; Settings › Text size 80–160% (save v12) | ui | 143 | claude | done |
+| TB-188 | Elf military encampment behind the wall: bowyer, forge, kitchen, training area, each upgradable. Plan: docs/plans/elf-encampment.md (DRAFT) | design | 187 | claude | planning |
+| TB-189 | Full-screen skill tree (director 3 Nov: "we need to be able to see it all"): a Full screen button on the Grove opens the tree over the window with every node fitted at once beside the detail card; buying works; Esc or Close returns | ui | 163 | claude | done |
+| TB-190 | Neon arcane links (director 3 Nov): links glow as neon arcane light, bright with a slow pulse and flowing light on owned paths, dim on locked ones; `neon*` palette tokens; still under reduced motion | ui | 163 | claude | done |
+| TB-193 | Specialisation paths: Serpent (archery), Fox (vanguard/companions), Magpie (economy), each with an item set and a mythic weapon. Plan: docs/plans/specialisation.md (DRAFT) | design | — | claude | planning |
+| TB-195 | Game-feel UI (director 3 Nov: "looks like a website"): HUD, tooltip plates, juice kit, tokens, satchel object, battle report, UI sounds. Plan: docs/plans/game-ui.md (DRAFT) | ui | 194 | claude | planning |
+| TB-192 | Item hype (director 3 Nov: "icons way too small, impossible to know when you got a drop"): 88 px satchel/worn cards with rarity frames, every drop stands a rarity-scaled light pillar, a drop banner (icon, rarity, name), a Satchel tab "n new" badge, legendary/mythic shake + field flash | ui | 105 | claude | done dc2c614 |
 | TB-175 | Late orcs toned down (director 3 Nov: "do them all, test it all"): wolf rider health first (director picked health, wall at wave 46 ~70 s), drums and shaman casts trimmed; arena + 4-hour sims | balance | 087 | claude | done (set A applied: rider hp 1.7, drumBoost 0.25, shaman every 10) |
 | TB-170 | Vanguard turn back to face the field once home (director 2 Nov) | sim | — | claude | done (5031cc4, PR 134) |
 | TB-174 | Grove matches the plain (director 2 Nov): one ground both sides of the wall, Sketchfab grove decor behind the elf (`GROVE_DECOR`), dusk tint and sun shafts cut (they hazed the field); a 0-size canvas no longer throws in `Ground.draw` | render | — | claude | done (dbe7eed, PR 141) |

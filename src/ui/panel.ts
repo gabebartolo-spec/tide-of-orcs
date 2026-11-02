@@ -14,8 +14,11 @@ import { NumberFormat, fmt, setNumberFormat } from './format';
 import { HW_NODE, HW_NODES, HwId } from '../data/heartwood';
 import { canBuyHw, hwCost, hwPending, hwRank, hwSpendable, hwUnlocked } from '../sim/heartwood';
 import { SatchelPane, itemName } from './satchel';
+import { glyph } from './glyphs';
+import { LOOT_BANNER } from '../data/presentation';
 import { LOOT_TOAST } from '../data/lootTables';
 import { RARITIES } from '../data/loot';
+import { applyTextScale } from '../render/textScale';
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string): T => document.getElementById(id) as T;
 const VAN_NAME: Record<VanType, string> = { spear: 'Spearman', blade: 'Bladedancer' };
@@ -39,8 +42,8 @@ export class Panel {
     $('camp-title').textContent = STR.campTitle; $('camp-go').textContent = STR.campGo; $('camp-close').textContent = STR.campClose; $('btn-settings').textContent = STR.tabSettings;
     $('dep-boss').querySelector('.n')!.textContent = STR.summonBoss;
 
-    $('tab-settings').textContent = STR.tabSettings; $('tab-satchel').textContent = STR.tabSatchel;
-    this.satchel = new SatchelPane(game, (c) => this.onCue(c)); $('tab-satchel').onclick = () => { this.onCue('click'); this.setTab('satchel'); this.satchel.render(); };
+    $('tab-settings').textContent = STR.tabSettings; $('tab-satchel').innerHTML = `${STR.tabSatchel}<span class="badge" id="sat-new" hidden></span>`;
+    this.satchel = new SatchelPane(game, (c) => this.onCue(c)); $('tab-satchel').onclick = () => { this.onCue('click'); this.setTab('satchel'); this.satchel.render(); this.markNew(0); };
     fitPages([$('pane-satchel'), $('pane-prestige'), $('pane-settings')]);
     $('tab-grove').onclick = () => { this.onCue('click'); this.setTab('grove'); }; $('tab-prestige').onclick = () => { this.onCue('click'); this.setTab('prestige'); }; $('tab-settings').onclick = () => { this.onCue('click'); this.setTab('settings'); };
     this.initSettings();
@@ -69,6 +72,10 @@ export class Panel {
       if (e.key === 'Tab') { const id = stepNode(order, tree.selected, e.shiftKey ? -1 : 1); if (!id) return; e.preventDefault(); this.onCue('click'); tree.select(id); this.renderDetail(); }
       else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); const id = tree.selected; if (canBuy(game.state, NODE[id])) this.buy(id); else this.onCue('denied'); }
     });
+    // Full-screen tree (TB-189): the button toggles it, Esc closes it; buying and the detail card work the same inside it
+    $('tree-full').onclick = () => { this.onCue('click'); this.setTreeFull(!document.body.classList.contains('tree-full')); };
+    addEventListener('keydown', (e) => { if (e.key === 'Escape' && document.body.classList.contains('tree-full')) { e.preventDefault(); this.setTreeFull(false); } });
+    this.setTreeFull(false);
     $('hw-title').textContent = STR.hwTitle;
     $('hw-tree').onclick = (e) => { const id = (e.target as HTMLElement).closest('button')?.dataset.hw as HwId | undefined; if (id && game.buyHw(id)) { this.toast(STR.hwBought(HW_NODE[id].name)); this.renderHw(); } };
     this.renderDetail(); this.renderHw(); this.setMode('run');
@@ -125,9 +132,23 @@ export class Panel {
       else if (e.t === 'bought' && e.firstRank && e.id !== 'sharp') this.toast(STR.joins(NODE[e.id as keyof typeof NODE].name));
       else if (e.t === 'vanguardFell') this.toast(STR.vanFalls(VAN_NAME[e.type as VanType]));
       else if (e.t === 'barricadeRegrow') this.toast(STR.regrow);
-      else if (e.t === 'loot' && e.kept && LOOT_TOAST.includes(e.rarity)) { const it = this.game.state.meta.loot.items.find((i) => i.uid === e.uid); if (it) this.toast(STR.lootFound(itemName(it))); }
+      else if (e.t === 'loot' && e.kept && LOOT_TOAST.includes(e.rarity)) { const it = this.game.state.meta.loot.items.find((i) => i.uid === e.uid); if (it) { this.lootBanner(it); this.markNew(this.newItems + 1); } }
       else if (e.t === 'barricadeFell') this.showFallen(e.chosen);
     }
+  }
+
+  /** Items kept since the Satchel was last opened (TB-192); a session count, not saved, so no schema change. */
+  private newItems = 0;
+  private markNew(n: number): void { this.newItems = n; const b = $('sat-new'); b.hidden = n === 0; b.textContent = STR.newItems(n); }
+
+  /** A kept drop's card (TB-192): icon, name and rarity under the toast, for LOOT_BANNER.life seconds by rarity. */
+  private lootBanner(it: Parameters<typeof itemName>[0]): void {
+    const box = $('loot-banners'), el = document.createElement('div');
+    el.className = `lootbanner r-${it.rarity}`;
+    el.innerHTML = `${glyph(it.slot, it, true)}<span class="txt"><span class="rar">${STR.rarityName[it.rarity] ?? it.rarity}</span><span class="nm">${STR.lootFound(itemName(it))}</span></span>`;
+    box.prepend(el);
+    while (box.children.length > LOOT_BANNER.max) box.lastElementChild!.remove();
+    setTimeout(() => el.remove(), (LOOT_BANNER.life[it.rarity] ?? LOOT_BANNER.life.common!) * 1000);
   }
 
   private buy(id: keyof typeof NODE): void { if (this.game.buy(id)) this.renderDetail(); }
@@ -136,7 +157,7 @@ export class Panel {
     const s = this.game.state, n = NODE[this.tree.selected], lvl = rankOf(s, n.id), cost = costOf(s, n), maxed = lvl >= n.max, un = unlocked(s, n);
     $('detail').innerHTML = `
       <div class="branch" style="color:${BRANCH_COLOR[n.branch]}">${BRANCH_LABEL[n.branch]}${n.parent && !un ? ' · ' + STR.needs(NODE[n.parent].name) : ''}</div>
-      <div class="name"><span>${n.name}</span><span style="font-size:0.8125rem;color:var(--cream-dim)">${n.max > 1 ? STR.rank(lvl, n.max) : lvl ? STR.learned : ''}</span></div>
+      <div class="name"><span>${n.name}</span><span style="font-size:0.875rem;color:var(--cream-dim)">${n.max > 1 ? STR.rank(lvl, n.max) : lvl ? STR.learned : ''}</span></div>
       <div class="desc">${n.desc}</div>
       <div class="row"><span style="font-variant-numeric:tabular-nums;color:var(--amber)">${maxed ? STR.fullyGrown : n.base === 0 ? '' : STR.starlightCost(fmt(cost))}</span>
       <button class="buy" id="buy-btn" ${canBuy(s, n) ? '' : 'disabled'}>${maxed ? STR.complete : !un ? STR.locked : lvl ? STR.improve : STR.learn}</button></div>`;
@@ -146,6 +167,7 @@ export class Panel {
 
   /** run: the field fills the screen; camp: the Grove, Satchel and Replant pages after a fall; settings: an overlay mid-run. */
   setMode(m: 'run' | 'camp' | 'settings'): void {
+    if (m !== 'camp') this.setTreeFull(false);
     document.body.dataset.mode = m;
     $('camp-go').hidden = m !== 'camp'; $('camp-close').hidden = m !== 'settings';
     $('camp-title').textContent = m === 'settings' ? STR.tabSettings : STR.campTitle;
@@ -154,7 +176,16 @@ export class Panel {
     requestAnimationFrame(() => { this.tree.resize(); this.tree.draw(this.game.state, this.game.state.t); });
   }
 
+  /** Show the whole skill tree over the window, or return to the normal Grove view (TB-189). */
+  setTreeFull(on: boolean): void {
+    document.body.classList.toggle('tree-full', on);
+    const b = $('tree-full'); b.textContent = on ? STR.treeClose : STR.treeFull; b.setAttribute('aria-label', on ? STR.treeCloseLabel : STR.treeFullLabel);
+    this.tree.setFull(on); this.tree.draw(this.game.state, this.game.state.t);
+    if (on) this.tree.canvas.focus();
+  }
+
   setTab(k: 'grove' | 'satchel' | 'prestige' | 'settings'): void {
+    if (k !== 'grove') this.setTreeFull(false);
     for (const t of ['grove', 'satchel', 'prestige', 'settings'] as const) { $('pane-' + t).hidden = k !== t; $('tab-' + t).setAttribute('aria-selected', String(k === t)); }
   }
 
@@ -164,7 +195,7 @@ export class Panel {
   onCue: (c: Cue) => void = () => {};
 
   private initSettings(): void {
-    $('set-vol-k').textContent = STR.setVolume; $('set-motion-k').textContent = STR.setMotion; $('set-num-k').textContent = STR.setNumbers;
+    $('set-vol-k').textContent = STR.setVolume; $('set-motion-k').textContent = STR.setMotion; $('set-num-k').textContent = STR.setNumbers; $('set-text-k').textContent = STR.setText;
     const mo = $<HTMLSelectElement>('set-motion').options; mo[0]!.text = STR.motionSystem; mo[1]!.text = STR.motionFull; mo[2]!.text = STR.motionReduced;
     const no = $<HTMLSelectElement>('set-num').options; no[0]!.text = STR.numShort; no[1]!.text = STR.numSci;
     $('set-save-k').textContent = STR.setSave; $('set-save-hint').textContent = STR.exportHint;
@@ -172,6 +203,7 @@ export class Panel {
     this.syncSettings();
     $<HTMLInputElement>('set-vol').oninput = (e) => { this.game.settings.volume = Number((e.target as HTMLInputElement).value); this.settingsChanged(); };
     $<HTMLSelectElement>('set-motion').onchange = (e) => { const v = (e.target as HTMLSelectElement).value; this.game.settings.reducedMotion = v === 'sys' ? null : v === 'reduced'; this.settingsChanged(); };
+    $<HTMLInputElement>('set-text').oninput = (e) => { this.game.settings.textScale = Number((e.target as HTMLInputElement).value); this.settingsChanged(); };
     $<HTMLSelectElement>('set-num').onchange = (e) => { this.game.settings.numberFormat = (e.target as HTMLSelectElement).value as NumberFormat; this.settingsChanged(); };
     $('btn-export').onclick = () => {
       const blob = this.game.exportSave(), box = $<HTMLTextAreaElement>('set-blob'); box.value = blob; box.select();
@@ -193,6 +225,8 @@ export class Panel {
     $<HTMLInputElement>('set-vol').value = String(set.volume);
     $<HTMLSelectElement>('set-motion').value = set.reducedMotion === null ? 'sys' : set.reducedMotion ? 'reduced' : 'full';
     $<HTMLSelectElement>('set-num').value = set.numberFormat;
+    $<HTMLInputElement>('set-text').value = String(set.textScale); $('set-text-v').textContent = `${Math.round(set.textScale * 100)}%`;
+    applyTextScale(set.textScale);
     setNumberFormat(set.numberFormat);
   }
 

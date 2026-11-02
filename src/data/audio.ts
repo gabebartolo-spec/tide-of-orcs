@@ -73,7 +73,7 @@ export const CUES: Record<Cue, { gain: number; gap: number; duck?: boolean }> = 
   salvage: { gain: 0.55, gap: 0.05 },
   reroll: { gain: 0.55, gap: 0.05 },
   setRise: { gain: 0.8, gap: 0.5, duck: true },
-  // Orc war drum (ElevenLabs); the drummer is in the sim (TB-087) but no sim event plays this cue yet (TB-182)
+  // Orc war drum (ElevenLabs), on every drumBeat (TB-182)
   warDrum: { gain: 1, gap: 0.4 },
 };
 
@@ -102,6 +102,7 @@ export function cueFor(e: SimEvent): Cue | null {
     case 'shatter': return 'shatter';
     case 'starfall': return 'starfall';
     case 'fireballCast': return 'fireballCast';
+    case 'drumBeat': return 'warDrum';
     case 'fireballStrike': return 'fireballHit'
     case 'loot': return e.kept ? LOOT_CUE[e.rarity] ?? 'lootDrop' : null;
     case 'replant': return 'replant';

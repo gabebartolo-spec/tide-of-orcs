@@ -19,7 +19,7 @@ export interface Orc {
   chill: number; stun: number;
   /** Marched in a boss wave: the challenge is cleared when none are left. */
   champ: boolean;
-  /** TB-087: a wolf rider has leapt its one vanguard; a shaman's seconds to its next fireball; within a war drummer's beat this step. */
+  /** TB-087: a wolf rider has leapt its one vanguard; a shaman's seconds to its next fireball (a drummer's to its next beat); within a war drummer's beat this step. */
   leapt: boolean; castT: number; drum: boolean;
 }
 export type ProjectileKind = 'arrow' | 'knife' | 'bolt' | 'lob' | 'bounce' | 'star' | 'fireball';

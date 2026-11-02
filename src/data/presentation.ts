@@ -56,19 +56,6 @@ export const VFX = {
   treantShake: 0.2, impactLife: 0.3, stormLife: 0.35, zoneFade: 0.6, zoneSquash: 0.45, textLife: 0.9, textRise: 28,
 } as const;
 
-/** Grove decor on the elf's side of the wall (TB-174): sprite, centre x, base y (feet), height; field units, back to front.
- *  Kept to the top and bottom bands and the far left edge so the elf, archers and ballista lanes stay clear. */
-export const GROVE_DECOR = [
-  { k: 'autumntree', x: 120, y: 92, h: 92 },
-  { k: 'elfhouse', x: 52, y: 120, h: 70 },
-  { k: 'lantern', x: 18, y: 178, h: 58 },
-  { k: 'stump', x: 14, y: 300, h: 44 },
-  { k: 'chest', x: 22, y: 402, h: 18 },
-  { k: 'alchchest', x: 108, y: 418, h: 46 },
-  { k: 'arch', x: 46, y: 474, h: 66 },
-  { k: 'pine', x: 124, y: 478, h: 70 },
-] as const;
-
 /** Field ground (TB-098, ART-STYLE §Ground). Seeded layout painted once to an offscreen canvas; field units. Ranges are [min, max]. */
 export const GROUND = {
   seed: 0x6a7e31,
@@ -97,8 +84,12 @@ export const GROUND = {
  *  beam: how long each rarity's light column stands; common only glints. motes: burst on the drop. foot: beam base below the corpse centre.
  *  mythic: hold (sim frozen), then slow (sim at slowScale), then the screen-edge shimmer's life. Reduced motion keeps beams, glows and rings but drops motes, pulse, spin and slow-motion. */
 export const LOOT_VFX = {
-  glint: [4, 60], beam: { rare: 1, epic: 1.5, legendary: 2, mythic: 3 }, motes: { rare: 2, epic: 8, legendary: 14, mythic: 22 }, moteSpeed: 90,
-  foot: 10, beamH: 110, beamW: 8, beamAlpha: 0.7, pulse: 9, spiral: 6, spin: 5, rise: 60, ringR: 34, groundAlpha: 0.25,
+  glint: [4, 60], beam: { common: 1.2, rare: 2.5, epic: 3, legendary: 3.5, mythic: 4.5 }, motes: { common: 0, rare: 6, epic: 12, legendary: 20, mythic: 30 }, moteSpeed: 90,
+  /** TB-192: every drop stands a pillar; height and width scale by rarity (beamH × k, beamW × k), so rarer reads at a glance. */
+  scale: { common: 0.6, rare: 1.3, epic: 1.7, legendary: 2.2, mythic: 2.8 },
+  /** TB-192: legendary and mythic add a screen shake (0–1 added to the field shake) and a full-field flash of their colour (alpha, seconds). */
+  shake: { legendary: 0.45, mythic: 0.8 }, flash: { legendary: 0.22, mythic: 0.35 }, flashLife: 0.45,
+  foot: 10, beamH: 140, beamW: 16, beamAlpha: 0.8, core: 0.25, pulse: 9, spiral: 6, spin: 5, rise: 60, ringR: 34, groundAlpha: 0.25,
   mythic: { hold: 0.5, slow: 0.5, slowScale: 0.6, edge: 1.5, edgeW: 14, flicker: 20 },
   equip: 1, equipW: 4, leafLife: 2, leafN: 10, leafR: 30, leafSpin: 1.6,
 } as const;
@@ -107,4 +98,11 @@ export const LOOT_VFX = {
 export const AMBIENCE = {
   /** Motes: count, core radius, halo scale, drift speed, glow pulse rate; alpha by day and at full dusk. */
   motes: { n: 50, r: [0.9, 1.8], halo: 4, speed: 7, pulse: 1.3, day: 0.55, night: 1 },
+} as const;
+
+/** Drop banner (TB-192): the DOM card under the wave toast that shows a kept drop's icon, name and rarity.
+ *  life: seconds on screen by rarity (every kept drop gets one); max: banners stacked at once. */
+export const LOOT_BANNER = {
+  life: { common: 3, rare: 3.5, epic: 4, legendary: 5, mythic: 6 } as Record<string, number>,
+  max: 3,
 } as const;

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { TREE_CANVAS, TREE_VIEW } from '../data/skillTree';
-import { centreOn, easeToward, fitCamera, panBy, startCamera, toWorld, zoomAt } from './camera';
+import { NODES, TREE_CANVAS, TREE_VIEW } from '../data/skillTree';
+import { centreOn, easeToward, fitCamera, panBy, startCamera, toWorld, wholeCamera, zoomAt } from './camera';
 
 const VW = 380, VH = 460, FIT = VW / TREE_CANVAS.w, TOP = TREE_VIEW.legendH;
 
@@ -42,5 +42,18 @@ describe('tree camera', () => {
     expect(wx).toBeCloseTo(380); expect(wy).toBeCloseTo(600);
     const half = easeToward({ x: 0, y: 0, z: 1 }, { x: 10, y: 20, z: 1 }, 0.5);
     expect(half).toEqual({ x: 5, y: 10, z: 1 });
+  });
+});
+
+describe('wholeCamera (TB-189)', () => {
+  it('shows every node below the legend strip', () => {
+    for (const [vw, vh] of [[1920, 1080], [1600, 1080], [1280, 720], [900, 1000]] as const) {
+      const c = wholeCamera(vw, vh);
+      for (const n of NODES) {
+        const sx = (n.x - c.x) * c.z, sy = (n.y - c.y) * c.z;
+        expect(sx).toBeGreaterThanOrEqual(0); expect(sx).toBeLessThanOrEqual(vw);
+        expect(sy).toBeGreaterThanOrEqual(TREE_VIEW.legendH); expect(sy).toBeLessThanOrEqual(vh);
+      }
+    }
   });
 });
