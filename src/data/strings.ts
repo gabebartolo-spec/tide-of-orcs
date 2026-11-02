@@ -84,7 +84,7 @@ export const STR = {
     bossDmg: 'damage to bosses', eliteDmg: 'damage to elites', fireDmg: 'fire arrow damage', burnDur: 'burn time',
     stormDmg: 'storm arrow damage', stormChain: 'storm chains', homingDmg: 'moon arrow damage', critDmg: 'crit damage',
   } as Record<string, string>,
-  setVolume: 'Volume', setMotion: 'Motion', setNumbers: 'Numbers',
+  setVolume: 'Volume', setMotion: 'Motion', setNumbers: 'Numbers', setText: 'Text size',
   motionSystem: 'Follow system', motionFull: 'Full', motionReduced: 'Reduced',
   numShort: 'Short (1.25M)', numSci: 'Scientific (1.25e6)',
   setTel: 'Playtest data', telHint: 'Each finished run is logged on this device only. Download the file and send it to the developer if you are testing.', telBtn: 'Download run log', telNone: 'No finished runs yet', telSaved: (n: number) => `Saved ${n} run${n === 1 ? '' : 's'}`,

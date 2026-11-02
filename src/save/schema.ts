@@ -1,6 +1,6 @@
 import { MetaState, RunState } from '../sim/state';
 
-export const CURRENT_VERSION = 11;
+export const CURRENT_VERSION = 12;
 
 /** Node ids removed from the tree; v1 to v2 drops them from saved levels. */
 export const RETIRED_NODE_IDS = ['tide', 'current', 'flood', 'silt', 'roots'] as const;
@@ -10,13 +10,13 @@ export const RETIRED_V3 = ['banners'] as const;
 export const RETIRED_V4 = ['warboss', 'bossfury', 'bossswarm', 'bounty'] as const;
 
 export interface SaveV10 {
-  version: 11;
+  version: 12;
   savedAt: number;
   run: RunState;
   meta: MetaState;
-  settings: { volume: number; reducedMotion: boolean | null; numberFormat: 'short' | 'sci' };
+  settings: { volume: number; reducedMotion: boolean | null; numberFormat: 'short' | 'sci'; textScale: number };
 }
 /** v1 had the same shape but could hold retired node ids in run.levels. */
 export type Save = SaveV10;
 
-export const defaultSettings = (): SaveV10['settings'] => ({ volume: 0.7, reducedMotion: null, numberFormat: 'short' });
+export const defaultSettings = (): SaveV10['settings'] => ({ volume: 0.7, reducedMotion: null, numberFormat: 'short', textScale: 1 });
