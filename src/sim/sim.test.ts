@@ -103,8 +103,8 @@ describe('simulation', () => {
 });
 
 describe('checkpoints (TB-159)', () => {
-  it('clearing wave 10, 20 … sets the next run to start one past it', () => {
-    expect([1, 10, 11, 20, 21, 34].map(checkpointFor)).toEqual([1, 1, 11, 11, 21, 31]);
+  it('clearing wave 5, 10 … sets the next run to start one past it (TB-172)', () => {
+    expect([1, 5, 6, 10, 11, 34].map(checkpointFor)).toEqual([1, 1, 6, 6, 11, 31]);
     const s = createState(1); const ev = new EventBus(); s.run.wave = 10; s.run.waveT = WAVE_LEN - STEP / 2;
     step(s, STEP, noInputs, ev); expect(s.run.wave).toBe(11); expect(s.meta.checkpoint).toBe(11);
     s.run.fallen = true; replant(s, ev); expect(s.run.wave).toBe(11);
