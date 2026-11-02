@@ -105,7 +105,7 @@ export const NODE_FX = {
 /** A fall (or a voluntary replant) pays no Heartwood: it drops only from cleared bosses (director 2 Nov, TB-171). */
 export const PRESTIGE = { voluntaryWave: 12, fallGain: 0 } as const;
 
-export const HP_RAMP = { from: 15, rate: 1.3 } as const;
+export const HP_RAMP = { from: 15, rate: 1.2 } as const;
 export const waveHP = (w: number): number =>
   10 * Math.pow(1.17, Math.min(w, HP_RAMP.from) - 1) * Math.pow(HP_RAMP.rate, Math.max(0, w - HP_RAMP.from));
 export const waveLoot = (w: number): number => 2 * Math.pow(1.13, w - 1);
