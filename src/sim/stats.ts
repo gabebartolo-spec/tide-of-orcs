@@ -20,7 +20,7 @@ export interface Stats {
   /** Per-unit nodes (TB-111) for companions and vanguard. */
   units: Record<Unit, UnitFx>;
   starMult: number;
-  /** Per orc kind: summoned yet, and its Fury/Swarm multipliers. The Warboss never marches; he comes only with a boss wave. */
+  /** Per orc kind: summon node owned, and its spawn/health/loot multipliers. When a kind marches is set by ORC_TYPES.from. */
   foes: Record<OrcKind, Foe>;
   kin: number; wolf: number; archers: number; hawk: boolean; treant: boolean;
   knives: { rate: number; dmg: number } | null;
@@ -112,8 +112,10 @@ export function deriveStats(lv: Levels, hw: HwLevels = {}): Stats {
     units,
     starMult: fx(NODE_FX.gleanLoot, L('glean')),
     foes: { boss: { on: false, hp: 1, loot: 1, spawn: 1 }, ...Object.fromEntries(Object.entries(FOE_NODES).map(([k, [on, fury, swarm]]) => [k, {
-      on: on === null || L(on) > 0,
-      hp: Math.pow(FOE_FX.hp, L(fury)), loot: Math.pow(FOE_FX.loot, L(fury)), spawn: Math.pow(FOE_FX.spawn, L(swarm)),
+      on: on !== null && L(on) > 0,
+      hp: Math.pow(FOE_FX.hp, L(fury)),
+      loot: Math.pow(FOE_FX.loot, L(fury)) * (on && L(on) ? FOE_FX.summonLoot : 1),
+      spawn: Math.pow(FOE_FX.spawn, L(swarm)) * (on && L(on) ? FOE_FX.summonSpawn : 1),
     }])) } as Record<OrcKind, Foe>,
     kin,
     wolf: L('wolf') ? SOURCES.wolf.base * units.wolf.dmg * kin : 0,
