@@ -27,7 +27,7 @@ upgrade level, so the camp grows visibly as the player invests. That is the GDD'
 | Kitchen | The wall and economy | + wall max HP %, + wall regen, + starlight % |
 | Training area | Vanguard | + vanguard HP and damage %, − respawn time |
 
-Each building gets its own node row on the Heartwood tree, so systems still read only `Stats` (CLAUDE.md rule 4). Clicking a building on
+Each building's levels live beside the Heartwood tree (paid with Heartwood plus its material), so systems still read only `Stats` (CLAUDE.md rule 4). Clicking a building on
 the field opens its card with its levels, costs and the next upgrade. The skill tree stays as it is.
 
 ## 3. Build steps (one backlog row and one PR each)
@@ -40,7 +40,8 @@ the field opens its card with its levels, costs and the next upgrade. The skill 
 5. **TB-188e Life:** idle animations (sparks, smoke, dummy hits) and upgrade moments (build dust, banner raise, sound).
 
 ## 4. Open choices for the director
-1. **Currency:** Heartwood, so buildings are permanent across runs (recommended: the camp keeps growing; Heartwood now buys
-   only five nodes), or starlight, so the camp is rebuilt each run like the skill tree.
+1. ~~Currency~~ **Decided (director, 3 Nov): Heartwood plus special farmable materials dropped by common enemies.** Buildings
+   are permanent. Each building has its own material, e.g. bowyer = sinew/heartstring, forge = orc iron, kitchen = game meat,
+   training = straw/hide. Grunts and other common orcs drop them during a run, and they are kept across runs. Drop rates go to BALANCE ## Proposed.
 2. **Art source:** free Sketchfab models (no spend) or Tripo (credits, needs a written yes).
 3. **Levels:** 3 per building (recommended: three looks to draw) or 5.

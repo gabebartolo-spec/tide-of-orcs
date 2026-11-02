@@ -44,7 +44,7 @@ Each mythic gets a Meshy icon like the existing ones (public/items), and its own
 4. **TB-193d Art:** three path sigils, six set-item icons (or more) and three mythic icons. Meshy (the existing icon pipeline) or free models.
 
 ## 6. Open choices for the director
-1. **Choice timing:** pick at each replant, changeable every run (recommended), or a permanent choice.
-2. **Exclusive drops:** path items drop only on their path (recommended), or always.
+1. ~~Choice timing~~ **Decided (director, 3 Nov):** chosen before each prestige (Replant), changeable every run.
+2. ~~Exclusive drops~~ **Decided (director, 3 Nov):** path items drop only while their path is chosen.
 3. **Fox mythic slot:** charm (simple) or a new vanguard weapon slot (more work: a new slot means a save migration and UI).
 4. **Icon art spend:** Meshy credits for nine or more icons, yes or no.
