@@ -41,8 +41,8 @@ A timber palisade at x=150 (14 px wide) across the full field height. It has hea
 
 ## 4. Waves and orcs
 - Waves are timed: one every 24 s regardless of kills. `wave` is the only difficulty driver.
-- **Join by wave (TB-158, director 2 Nov).** Grunts march from wave 1; runners join the tide on their own from wave 5, brutes from wave 10, Blackguard from wave 20. Until summoned, a kind that joins on its own marches at half its rate (director 2 Nov retune: runners at full rate walled runs at wave 10–11). Its summon node (Goblin Runners, Brutes, Blackguard) doubles its base rate (×4 over unsummoned) and makes each one worth +50% starlight; Fury and Swarm ranks stack on top. Summoning is the risk-for-reward lever: more danger, more starlight. Falling is fine and expected; it feeds the replant loop.
-- **Boss waves (TB-081).** Every 25 waves (wave 25, 50, 75 …; P-142, was 50) a boss wave unlocks and waits; nothing happens until the player presses *Summon the boss wave*. It is a 60 s challenge: regular marching pauses and a fixed script of mini-waves marches in (a shield line, edge flankers, rams, a wedge, the Warboss with two Blackguard, a scatter, a last push; `src/data/bosses.ts`). Slay every one before the minute ends and it pays 40 × the wave's loot in starlight and 3 Heartwood per 25 waves (3 at wave 25, 6 at 50), the only source of Heartwood (TB-171); otherwise the stragglers keep marching as ordinary orcs and regular marching resumes. Unsummoned boss waves stack. The Warboss marches only in boss waves.
+- **Join by wave (TB-158, director 2 Nov).** Grunts march from wave 1; runners join the tide on their own from wave 5, brutes from wave 10, Blackguard from wave 20, berserkers from 25, wolf riders from 30, shamans from 35, war drummers from 40 (TB-087, director 3 Nov). Until summoned, a kind that joins on its own marches at half its rate (director 2 Nov retune: runners at full rate walled runs at wave 10–11). Its summon node (Goblin Runners, Brutes, Blackguard, Berserkers, Wolf Riders, Shamans, War Drummers) doubles its base rate (×4 over unsummoned) and makes each one worth +50% starlight; Fury and Swarm ranks stack on top. Summoning is the risk-for-reward lever: more danger, more starlight. Falling is fine and expected; it feeds the replant loop.
+- **Boss waves (TB-081).** Every 25 waves (wave 25, 50, 75 …; P-142, was 50) a boss wave unlocks and waits; nothing happens until the player presses *Summon the boss wave*. It is a 60 s challenge: regular marching pauses and a fixed script of mini-waves marches in (a shield line, edge flankers, rams, a wedge, the Warboss with two Blackguard, a scatter, a last push; `src/data/bosses.ts`). Slay every one before the minute ends and it pays 40 × the wave's loot in starlight and 3 Heartwood per 25 waves (3 at wave 25, 6 at 50), the only source of Heartwood (TB-171); otherwise the stragglers keep marching as ordinary orcs and regular marching resumes. Unsummoned boss waves stack. The Warboss marches only in boss waves. From tier 2 the boss wave gains an escort by tier (TB-087): two berserkers beside the rams (tier 2), two wolf riders round the flanks (3), two shamans behind the wedge (4), two war drummers beside the Warboss (5) (`TIER_ESCORT`).
 - **Boss tiers (TB-148, director 2026-11-01: unlock across runs).** Clearing a boss wave while playing your highest unlocked tier unlocks the next tier for good (`meta.tier`). At *March again* the player picks any unlocked tier, shown as a named tide (First Tide, Second Tide …) beside the wave. A higher tier multiplies every orc's health and starlight from wave 1 and the boss Heartwood (`TIERS` in `src/data/bosses.ts`, formulas in BALANCE.md). A lower tier unlocks nothing. Six tiers, set F (director 2026-11-02): ×2 orc health, ×1.5 starlight, +100% boss Heartwood per tier; numbers in BALANCE.md P-148.
 - Every kind has its own spawn clock and two nodes: **Fury** (+30% health, +40% starlight per rank) and **Swarm** (spawns 20% more often per rank). Grunts' are War Drums and Call the Horde.
 - Spawn position: x = field width + 24, y uniform in [50, H−50]. Hard cap 160 live orcs.
@@ -53,9 +53,19 @@ A timber palisade at x=150 (14 px wide) across the full field height. It has hea
 | Runner (small, fast) | 0.55 | 78 | 0.7 | 9 | 1.5 × | wave 5 (Goblin Runners) |
 | Brute (slow, strong) | 3.2 | 34 | 3.0 | 16 | 4 × | wave 10 (Brutes) |
 | Elite | 8 | 42 | 8 | 14 | 10 × | wave 20 (Blackguard) |
+| Berserker | 2.5 | 40 | 3.5 | 14 | 6 × | wave 25 (Berserkers) |
+| Wolf rider | 2.0 | 90 | 3.0 | 15 | 5 × | wave 30 (Wolf Riders) |
+| Shaman | 2.0 | 36 | 4.0 | 12 | 9 × | wave 35 (Shamans) |
+| War drummer | 4.0 | 30 | 6.0 | 16 | 14 × | wave 40 (War Drummers) |
 | Warboss | 28 | 26 | 30 | 24 | only in a boss wave | — |
 
 Speed scales ×(1 + 0.008·wave). All orcs swing once per second: a vanguard takes 2.5% of the orc's max HP, the wall takes 10× that (25%).
+
+The four later kinds (TB-087, P-087; values in `ORC_FX` and `FIREBALL`, `src/data/orcs.ts`):
+- **Berserker:** below half health it rages: moves ×1.8 and hits ×2.
+- **Wolf rider:** the wolf leaps the first vanguard it meets and lands beyond it. Slay it and the orc fights on afoot as a grunt.
+- **Shaman:** halts 180 units from the wall and every 4 s lobs a fireball (0.9 s aloft) at the nearest vanguard, or at the wall when none stand. It burns every vanguard within 24 units for three grunt swings.
+- **War drummer:** halts 260 units from the wall. Orcs within 100 units march and hit 30% harder; drums never stack.
 
 ## 5. Vanguard (melee, bought with starlight)
 Vanguard are not tree nodes. **Muster** unlocks the rally bar under the field; each rally spends starlight on one unit that walks from the wall to x = barX + 44 and holds a lane (H/2, then ±70, ±140 …) until killed. Cap: 2 + Close Ranks. They are lost on Replant.
