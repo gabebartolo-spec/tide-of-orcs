@@ -14,7 +14,7 @@ The single-file prototype (`docs/prototype.html`) proves the loop. The plan belo
 
 ## 2. Pillars (every decision checks against these)
 
-1. **Losing feeds the grove.** The barricade falling is the only fail state and it always pays Heartwood. There is never a loss with nothing to show. No decay, no timers that hurt.
+1. **Losing feeds the grove.** The barricade falling is the only fail state and it costs no progress: Heartwood comes from cleared boss waves and is kept for good (TB-171). No decay, no timers that hurt.
 2. **The tree is the game; the wall is the clock.** Buying a node is the core verb and each node visibly changes the battlefield. Starlight spent on vanguard buys time; starlight spent on nodes buys the next run.
 3. **Watchable and hands-light.** The field is pleasant to watch and companions and vanguard fight on their own, but the game does not idle: nothing progresses without the player aiming the bow.
 4. **Short feedback loops, long horizon.** A new node every 1–3 minutes early; prestige runs of 30–60 minutes; weeks of content through prestige scaling.
@@ -143,7 +143,7 @@ Orcs drop gear; six worn slots, a satchel, affixes, sets and mythic powers feed 
 - Vanguard TB-156, TB-167, TB-169, TB-170: a standing line at the wall that respawns on a timer (Swift Muster shortens it), walks out only to orcs past halfway, and turns back to face the field once home. Rally buttons gone.
 - Grey Wolf TB-160, TB-157: an animated 3D-rendered wolf sprite (blam, CC BY) with run and bite; it costs 200, bites for 4 and sits under Muster.
 - Orcs join by wave TB-158 (PR #135): runners from wave 5, brutes from 10, Blackguard from 20, at half rate until summoned; a summon node makes its kind march ×4 as often and drop +50% starlight.
-- Checkpoints TB-159 (PR #136, save v11): clearing wave 10, 20, 30 … starts later runs one wave past it. Sim 60 min: best wave 18 → 32. Known: a fast fall loop at wave 12 farms Heartwood (director kept it for now).
+- Checkpoints TB-159 (PR #136, save v11): clearing wave 10, 20, 30 … starts later runs one wave past it. Sim 60 min: best wave 18 → 32. The wave-12 fall farm is gone: a fall pays no Heartwood since TB-171.
 - Field TB-162, TB-165, TB-166, TB-168: log-pile barricade, drawn meadow flowers, motes and sun shafts; 3D plants and all vector stand-ins removed. TB-174: one ground both sides of the wall, grove decor behind the elf, dusk tint and sun shafts cut.
 - Animation speed TB-161: attacks play once per real hit at true speed.
 - Open: TB-163 (arcane tree layout).

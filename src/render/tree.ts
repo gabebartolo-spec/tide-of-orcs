@@ -1,4 +1,4 @@
-import { BRANCH_COLOR, BRANCH_LABEL, NODE, NODES, NodeId, TREE_VIEW } from '../data/skillTree';
+import { BRANCH_COLOR, BRANCH_LABEL, NODE, NODES, NodeId, SkillNode, TREE_VIEW } from '../data/skillTree';
 import { Camera, centreOn, clampCamera, easeToward, startCamera, panBy, toWorld, zoomAt } from './camera';
 import { SimState } from '../sim/state';
 import { canBuy, rankOf, unlocked } from '../sim/tree';
@@ -6,6 +6,21 @@ import { P } from './palette';
 
 /** The UI scale: root font size over the 16 px it has at 1920×1080 and below (style.css, TB-143). */
 export const uiScale = (): number => parseFloat(getComputedStyle(document.documentElement).fontSize) / 16 || 1;
+
+/** Nodes each link carries (the child and all below it): sets how thick its wood is, so the trunk is thickest (TB-163). */
+const carried = new Map<NodeId, number>();
+for (const n of NODES) for (let p: SkillNode | undefined = n; p; p = p.parent ? NODE[p.parent] : undefined) carried.set(p.id, (carried.get(p.id) ?? 0) + 1);
+const TRUNK = new Set<NodeId>(['root', 'muster', 'wolf']);
+/** A link's curve control point: links rising off the trunk run up it before bending out; the rest bow gently. */
+const ctrl = (p: SkillNode, n: SkillNode): [number, number] =>
+  TRUNK.has(p.id) && n.y < p.y ? [p.x, p.y + (n.y - p.y) * TREE_VIEW.trunkRise]
+    : [(p.x + n.x) / 2 - (n.y - p.y) * TREE_VIEW.bow, (p.y + n.y) / 2 + (n.x - p.x) * TREE_VIEW.bow];
+const LINKS = NODES.filter((n) => n.parent).map((n, i) => {
+  const p = NODE[n.parent!], [cx, cy] = ctrl(p, n);
+  return { n, p, cx, cy, w: TREE_VIEW.woodBase + TREE_VIEW.woodPerNode * Math.sqrt(carried.get(n.id)!), seed: (i * 0.618) % 1 };
+});
+type Link = (typeof LINKS)[number];
+const at = (a: number, c: number, b: number, u: number): number => (1 - u) * (1 - u) * a + 2 * (1 - u) * u * c + u * u * b;
 
 /** Skill tree canvas with pan (drag) and zoom (wheel / pinch). Camera is view state only. */
 export class TreeRenderer {
@@ -24,6 +39,10 @@ export class TreeRenderer {
   private stale = false;
   /** CSS px per layout px: the root font size over its 16 px base (TB-143). */
   private ui = 1;
+  /** How far each bought link has grown, 0..1 (view state only); links owned on the first draw start grown. */
+  private grown = new Map<NodeId, number>();
+  private growing = false;
+  private lastT = 0;
 
   constructor(readonly canvas: HTMLCanvasElement) {
     this.g = canvas.getContext('2d')!;
@@ -78,7 +97,7 @@ export class TreeRenderer {
   }
 
   /** True while the camera is easing or was just panned/zoomed, so the caller should draw this frame. */
-  get live(): boolean { return !!this.target || this.stale; }
+  get live(): boolean { return !!this.target || this.stale || this.growing || (!this.reducedMotion && this.canvas.offsetParent !== null); }
 
   /** Select a node and ease the camera to centre it (snaps under reduced motion). */
   select(id: NodeId): void {
@@ -96,6 +115,44 @@ export class TreeRenderer {
     return null;
   }
 
+  /** The arcane tree (TB-163): a faint outline of every link, then bark that grows along each bought link with a lit edge,
+   *  an arcane vein in its branch colour, and sparkles drifting out along it. */
+  private wood(s: SimState, t: number): void {
+    const c = this.g, first = this.grown.size === 0, now = performance.now(), dt = Math.min(0.1, (now - this.lastT) / 1000); this.lastT = now;
+    this.growing = false; c.lineCap = 'round';
+    c.strokeStyle = P.line; c.globalAlpha = 0.45; c.lineWidth = 1.5; c.beginPath();
+    for (const l of LINKS) { c.moveTo(l.p.x, l.p.y); c.quadraticCurveTo(l.cx, l.cy, l.n.x, l.n.y); }
+    c.stroke();
+    const grown: { l: Link; g: number }[] = [];
+    for (const l of LINKS) {
+      const want = rankOf(s, l.n.id) > 0 ? 1 : 0, had = this.grown.get(l.n.id) ?? (first ? want : 0);
+      const g = this.reducedMotion ? want : want > had ? Math.min(1, had + dt * TREE_VIEW.growRate) : want;
+      this.grown.set(l.n.id, g); if (g !== want) this.growing = true;
+      if (g > 0) grown.push({ l, g });
+    }
+    // de Casteljau split: just the first g of the curve
+    const part = (l: Link, g: number): void => {
+      c.beginPath(); c.moveTo(l.p.x, l.p.y);
+      c.quadraticCurveTo(l.p.x + (l.cx - l.p.x) * g, l.p.y + (l.cy - l.p.y) * g, at(l.p.x, l.cx, l.n.x, g), at(l.p.y, l.cy, l.n.y, g));
+    };
+    c.globalAlpha = 1; c.strokeStyle = P.treeGlow;
+    for (const { l, g } of grown) { part(l, g); c.lineWidth = l.w + 6; c.stroke(); }
+    c.strokeStyle = P.treeWood;
+    for (const { l, g } of grown) { part(l, g); c.lineWidth = l.w; c.stroke(); }
+    c.strokeStyle = P.treeWoodLit; c.globalAlpha = 0.7;
+    for (const { l, g } of grown) { part(l, g); c.lineWidth = Math.max(1, l.w * 0.35); c.stroke(); }
+    c.globalAlpha = 0.85; c.lineWidth = 1.2;
+    for (const { l, g } of grown) { part(l, g); c.strokeStyle = BRANCH_COLOR[l.n.branch]; c.stroke(); }
+    if (!this.reducedMotion) {
+      c.fillStyle = P.spark;
+      for (const { l, g } of grown) for (let k = 0; k < 2; k++) {
+        const u = ((t * TREE_VIEW.sparkSpeed + l.seed + k / 2) % 1) * g, a = Math.sin(u * Math.PI);
+        c.globalAlpha = 0.9 * a; c.beginPath(); c.arc(at(l.p.x, l.cx, l.n.x, u), at(l.p.y, l.cy, l.n.y, u), 1.2 + a, 0, 6.283); c.fill();
+      }
+    }
+    c.globalAlpha = 1; c.lineCap = 'butt';
+  }
+
   draw(s: SimState, t: number): void {
     this.stale = false;
     if (this.target) {
@@ -106,8 +163,7 @@ export class TreeRenderer {
     const c = this.g, k = this.dpr, z = this.cam.z * k;
     c.setTransform(k, 0, 0, k, 0, 0); c.clearRect(0, 0, this.vw, this.vh);
     c.setTransform(z, 0, 0, z, -this.cam.x * z, -this.cam.y * z);
-    c.lineWidth = 2;
-    for (const n of NODES) if (n.parent) { const p = NODE[n.parent]; const un = unlocked(s, n); c.strokeStyle = un ? BRANCH_COLOR[n.branch] : P.line; c.globalAlpha = un ? 0.6 : 0.5; c.beginPath(); c.moveTo(p.x, p.y); c.quadraticCurveTo((p.x + n.x) / 2 - (n.y - p.y) * TREE_VIEW.bow, (p.y + n.y) / 2 + (n.x - p.x) * TREE_VIEW.bow, n.x, n.y); c.stroke(); }
+    this.wood(s, t);
     c.globalAlpha = 1;
     const keyFocus = this.canvas.matches(':focus-visible');
     for (const n of NODES) {
