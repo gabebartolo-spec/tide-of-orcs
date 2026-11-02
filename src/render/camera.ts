@@ -16,6 +16,16 @@ export function fitCamera(vw: number, vh: number): Camera {
   return clampCamera({ x: 0, y: 0, z: vw / TREE_CANVAS.w }, vw, vh);
 }
 
+/** Zoom that shows the whole tree, width and height, below the legend strip (full-screen view, TB-189). */
+export const wholeZoom = (vw: number, vh: number): number =>
+  Math.min(vw / TREE_CANVAS.w, (vh - TREE_VIEW.legendH) / TREE_CANVAS.h) * TREE_VIEW.wholeMargin;
+
+/** Every node at once: the whole tree centred in the view below the legend (TB-189). Fixed: the full view does not pan or zoom. */
+export function wholeCamera(vw: number, vh: number): Camera {
+  const z = wholeZoom(vw, vh), top = TREE_VIEW.legendH / z;
+  return { x: -(vw / z - TREE_CANVAS.w) / 2, y: -top - (vh / z - top - TREE_CANVAS.h) / 2, z };
+}
+
 /** Keep zoom in range relative to fit, and keep the tree from leaving the viewport or rising under the legend strip. */
 export function clampCamera(c: Camera, vw: number, vh: number): Camera {
   const fit = vw / TREE_CANVAS.w;
