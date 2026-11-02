@@ -67,7 +67,7 @@ function blobs(g: CanvasRenderingContext2D, list: Blob[], fill: string): void {
 }
 
 /** Decor sprites (public/decor). Loaded once; `null` until ready, so callers fall back to vector art. */
-const DECOR = ['chamomile', 'foliage', 'grass', 'viola', 'snowdrop1', 'snowdrop2', 'snowdrop6', 'weeds', 'logpile'] as const;
+const DECOR = ['chamomile', 'foliage', 'grass', 'viola', 'snowdrop1', 'snowdrop2', 'snowdrop6', 'weeds', 'logpile', 'fence', 'turf'] as const;
 const imgs = new Map<string, HTMLImageElement>();
 let started = false;
 function loadDecor(): void {
@@ -85,6 +85,15 @@ function sprite(g: CanvasRenderingContext2D, im: HTMLImageElement, x: number, y:
 
 function paint(g: CanvasRenderingContext2D, L: GroundLayout): void {
   g.fillStyle = P.plain; g.fillRect(-PAD, -PAD, W + PAD * 2, H + PAD * 2);
+  const turf = decorImg('turf');
+  if (turf) {
+    // the grass-and-weeds texture is the whole plain (director 2 Nov); it carries its own flowers and stones,
+    // so the vector patches, rocks, tufts and plant sprites stay off (too busy on top of it)
+    const T = GROUND.turf, pat = g.createPattern(turf, 'repeat')!;
+    pat.setTransform(new DOMMatrix().scale(T.tile / turf.width, T.tile * T.squash / turf.height));
+    g.fillStyle = pat; g.fillRect(-PAD, -PAD, W + PAD * 2, H + PAD * 2);
+    return;
+  }
   blobs(g, L.lush, P.plainLush); blobs(g, L.worn, P.plainWorn); blobs(g, L.bare, P.plainBare);
   const weeds = decorImg('weeds'), PL = GROUND.plants;
   if (weeds) { const ph = PL.patchW * weeds.height / weeds.width; for (const p of L.patches) sprite(g, weeds, p.x, p.y + ph / 2, ph); }

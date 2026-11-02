@@ -71,8 +71,10 @@ export const GROUND = {
   rocks: { n: 18, r: [2.6, 5.5], squash: 0.62, pebbles: [0, 3], pebbleR: [1, 1.8] },
   /** Sketchfab plant sprites (public/decor, TB-162): clusters, plants per cluster, scatter, loose singles; height (units) per kind; turf patches and their width. */
   plants: { clusters: 12, per: [2, 4], spread: 16, singles: 14, h: { chamomile: 28, foliage: 26, grass: 16, viola: 22, snowdrop1: 15, snowdrop2: 18, snowdrop6: 16 }, patches: 6, patchW: 44 },
-  /** Log-pile barricade: segment draw width, vertical step between stacked segments (units). */
-  logs: { w: 30, step: 10 },
+  /** Fence barricade (director 2 Nov, Sketchfab "the fence"): panel draw width, vertical step between stacked panels (units). */
+  fence: { w: 30, step: 22 },
+  /** Ground texture: tile size (units) and vertical squash for the plain's tilt. */
+  turf: { tile: 160, squash: 0.7 },
 } as const;
 
 /** Loot moments (TB-105, plan §11). Lives in seconds, sizes in field units.
