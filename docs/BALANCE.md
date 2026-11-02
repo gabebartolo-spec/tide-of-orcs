@@ -751,3 +751,6 @@ Seed 3, 25 sim hours, greedy (falls are waves; the stalling tune is `BOSS_WAVE.e
 | No re-stun, plus immune for 0.25× / 1× the hold after | 80–83 | 83 | 81–85 / 80–83 | no |
 
 Applied: no re-stun or re-root while held. It costs 4–6 late waves on this seed, because the top waves came from orcs frozen in place rather than from kills; an immunity window after the hold costs more and adds per-orc state.
+
+### TB-177 · Summon bonus +150%, new summons 20% cheaper (director 3 Nov, applied)
+`FOE_FX.summonLoot` 1.5 → 2.5 (every summoned kind pays +150% starlight). Grove unlocks `berserkers` 2400, `wolfriders` 4000, `shamans` 6400, `drummers` 9600 (were 3000 / 5000 / 8000 / 12000). Greedy, 240 min, seeds 1–3, best wave: old 49 / 49 / 48; +150% alone 49 / 49 / 49; +150% and cheaper 49 / 49 / 50; never summoning 53 / 53 / 50. A light change: summoning still trails never-summoning by ~2 waves, because ×4 spawn outgrows the loot. `sim/run.ts` `--tune` now reaches `FOE_FX`.

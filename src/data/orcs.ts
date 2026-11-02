@@ -34,4 +34,4 @@ export const ORC_FX = {
 
 /** Per rank of a kind's two nodes: Fury (health and starlight) and Swarm (spawn rate). A kind that joins on its own marches at
  *  half rate until its summon node (TB-158), which doubles its base rate and adds half again to its starlight. */
-export const FOE_FX = { hp: 1.3, loot: 1.4, spawn: 1.2, unsummonedSpawn: 0.5, summonSpawn: 2, summonLoot: 1.5 } as const;
+export const FOE_FX = { hp: 1.3, loot: 1.4, spawn: 1.2, unsummonedSpawn: 0.5, summonSpawn: 2, summonLoot: 2.5 } as const;
