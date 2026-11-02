@@ -144,6 +144,18 @@ Report columns per minute: wave, starlight, kills/min, kills, wall %, vanguard c
 
 ## Proposed
 
+### P-175 · Late orcs toned down (2026-11-03, TB-175)
+Director: tone down wolf riders, drummers and shamans; riders lose health; wall at wave 46 about 70 s. Arena, `--load sim/out/player48.json --wave 46 --tide --orcs grunt:0 --secs 180`, 40 seeds, mean seconds the wall stands (±10 s noise):
+
+| Set | Changes | Wave 46 |
+|---|---|---|
+| Today | rider hp 2.0, `drumBoost` 0.3, shaman `every` 9 | 55 |
+| Riders | rider hp 1.7 | 83 |
+| A | rider hp 1.7, `drumBoost` 0.25, shaman `every` 10 | 68 |
+| — | rider hp 1.4 / speed 70 / every 7; `drumBoost` 0.15; `FIREBALL.gruntHits` 2 | 80 / 75 / 64; 63; 55 |
+
+4-hour greedy runs, seeds 1–3, best wave: today 48, 49, 53; Riders 49, 48, 48; A 49, 49, 48; B (rider hp 1.6, `drumBoost` 0.2, shaman `every` 12) 50, 49, 50. No set moves the stall: orc health ×1.2 per wave (`HP_RAMP`) sets it, so a late-orc cut buys seconds at one wave, not waves. Logs `sim/out/tone/`.
+
 ### TB-164 · Sim player aims at the front orc, led (2026-11-02) · applied
 The greedy sim fell at wave 2 at 0.5 run-minutes with the wall hit in wave 1; the director takes no damage until wave 3 with no upgrades. Cause: the sim's player model aimed at the densest crowd's current spot. The lob flies 0.7 s, so a grunt (48/s) walks 34 px and a runner 55 px out of the 20 px circle before it lands, and the densest crowd sits at the spawn edge, not at the wall.
 `sim/run.ts` now aims at the orc nearest the wall, led by its speed × `LOB.flight`. Default greedy, 30 min, seed 1:

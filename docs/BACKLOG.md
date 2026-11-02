@@ -183,6 +183,7 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-167 | Standing vanguard line: units hold the wall, respawn on a timer, Swift Muster node; rally buttons gone | sim/ui | — | claude | done (fc28c85, PR 131) |
 | TB-168 | Remove vector stand-in shapes; actors draw only from sprites (director 2 Nov) | render | — | claude | done (cae614f, PR 132) |
 | TB-169 | Vanguard only advance on orcs past halfway (director 2 Nov) | sim | — | claude | done (1f9c58f, PR 133) |
+| TB-175 | Late orcs toned down (director 3 Nov: "do them all, test it all"): wolf rider health first (director picked health, wall at wave 46 ~70 s), drums and shaman casts trimmed; arena + 4-hour sims | balance | 087 | claude | doing |
 | TB-170 | Vanguard turn back to face the field once home (director 2 Nov) | sim | — | claude | done (5031cc4, PR 134) |
 | TB-174 | Grove matches the plain (director 2 Nov): one ground both sides of the wall, Sketchfab grove decor behind the elf (`GROVE_DECOR`), dusk tint and sun shafts cut (they hazed the field); a 0-size canvas no longer throws in `Ground.draw` | render | — | claude | done (dbe7eed, PR 141) |
 | TB-173 | Vanguard spread (director 2 Nov): each vanguard targets a different orc, and vanguard push apart under `VANGUARD.spread` | sim | — | claude | done (PR 140) |
