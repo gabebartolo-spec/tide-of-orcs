@@ -106,3 +106,21 @@ export const LOOT_BANNER = {
   life: { common: 3, rare: 3.5, epic: 4, legendary: 5, mythic: 6 } as Record<string, number>,
   max: 3,
 } as const;
+
+/** Skill-tree lighting (TB-190b, ART-STYLE §Arcane skill tree). World px at zoom 1; rates per second. Render-only. */
+export const TREE_LIGHT = {
+  /** Bloom round owned links, drawn additively into a cached layer: [extra width over the wood, alpha], widest first. */
+  bloom: [[34, 0.05], [18, 0.1], [8, 0.22]] as readonly (readonly [number, number])[],
+  /** Light pool under each owned node: radius and centre alpha. */
+  poolR: 52, poolA: 0.32,
+  /** The cached glow breathes: rate (rad/s) and depth (0..1). */
+  breathRate: 1.3, breathDepth: 0.25,
+  /** Core line over the wood: width as a share of the wood, minimum px, alpha. */
+  coreK: 0.28, coreMin: 1.3, coreA: 0.9,
+  /** Pulses run root→tip: tree depth crossed per second, depth units between pulses, head radius, hot centre radius. */
+  pulseRate: 2.2, pulseGap: 5, pulseR: 9, pulseCore: 2.4,
+  /** Drifting motes along owned links: per link, laps/s, sideways sway (px) and sway rate, radius. */
+  motes: 3, moteSpeed: 0.12, moteSway: 7, moteSwayRate: 1.7, moteR: 1.6,
+  /** Burst along the path when a node is bought: particles per link, speed (px/s), life (s), radius, drag (1/s), cap. */
+  burstPer: 30, burstSpeed: 95, burstLife: 1.3, burstR: 3.6, burstDrag: 2.2, burstCap: 600,
+} as const;

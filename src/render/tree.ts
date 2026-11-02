@@ -2,7 +2,8 @@ import { BRANCH_COLOR, BRANCH_LABEL, NODE, NODES, NodeId, SkillNode, TREE_VIEW }
 import { Camera, centreOn, clampCamera, easeToward, startCamera, panBy, toWorld, wholeCamera, zoomAt } from './camera';
 import { SimState } from '../sim/state';
 import { canBuy, rankOf, unlocked } from '../sim/tree';
-import { P } from './palette';
+import { BRANCH_LIGHT, P } from './palette';
+import { TREE_LIGHT as L } from '../data/presentation';
 
 /** The UI scale: root font size over 16 px (style.css, TB-143); 1.25 at 1920×1080 since TB-191, times Settings › Text size. */
 export const uiScale = (): number => parseFloat(getComputedStyle(document.documentElement).fontSize) / 16 || 1;
@@ -20,6 +21,12 @@ const LINKS = NODES.filter((n) => n.parent).map((n, i) => {
   return { n, p, cx, cy, w: TREE_VIEW.woodBase + TREE_VIEW.woodPerNode * Math.sqrt(carried.get(n.id)!), seed: (i * 0.618) % 1 };
 });
 type Link = (typeof LINKS)[number];
+/** Links from the root to each node (root first), and each node's depth below the root, for pulses and buy bursts. */
+const DEPTH = new Map<NodeId, number>();
+for (const n of NODES) { let d = 0; for (let p = n; p.parent; p = NODE[p.parent]) d++; DEPTH.set(n.id, d); }
+const MAX_DEPTH = Math.max(...DEPTH.values());
+const LINK_OF = new Map(LINKS.map((l) => [l.n.id, l] as const));
+interface Mote { x: number; y: number; vx: number; vy: number; life: number; col: string }
 const at = (a: number, c: number, b: number, u: number): number => (1 - u) * (1 - u) * a + 2 * (1 - u) * u * c + u * u * b;
 
 /** Skill tree canvas with pan (drag) and zoom (wheel / pinch). Camera is view state only. */
@@ -47,6 +54,12 @@ export class TreeRenderer {
   private full = false;
   /** The normal view's camera, restored when full screen closes. */
   private saved: Camera | null = null;
+  /** Cached additive glow (bloom + light pools) of owned links (TB-190b); rebuilt only when the camera, size or owned set changes. */
+  private glow = document.createElement('canvas');
+  private glowKey = '';
+  /** Ranks seen on the last draw, to burst light along the path of a node just bought. */
+  private ranks = new Map<NodeId, number>();
+  private burst: Mote[] = [];
 
   constructor(readonly canvas: HTMLCanvasElement) {
     this.g = canvas.getContext('2d')!;
@@ -146,47 +159,114 @@ export class TreeRenderer {
       this.grown.set(l.n.id, g); if (g !== want) this.growing = true;
       if (g > 0) grown.push({ l, g });
     }
+    this.spawnBursts(s, first);
     // de Casteljau split: just the first g of the curve
     const part = (l: Link, g: number): void => {
       c.beginPath(); c.moveTo(l.p.x, l.p.y);
       c.quadraticCurveTo(l.p.x + (l.cx - l.p.x) * g, l.p.y + (l.cy - l.p.y) * g, at(l.p.x, l.cx, l.n.x, g), at(l.p.y, l.cy, l.n.y, g));
     };
-    // Locked links (TB-190): one batched path, a dim violet glow with a faint core, so the paths ahead read without shouting
+    // Unowned links: dim, thin and still, one batched path
     c.globalAlpha = 1; c.beginPath();
     for (const l of LINKS) if ((this.grown.get(l.n.id) ?? 0) < 1) { c.moveTo(l.p.x, l.p.y); c.quadraticCurveTo(l.cx, l.cy, l.n.x, l.n.y); }
-    c.strokeStyle = P.neonDim; c.lineWidth = 6; c.stroke();
-    c.strokeStyle = P.neonDimCore; c.lineWidth = 1.5; c.stroke();
-    // Owned links: a wide soft neon halo that breathes slowly (still under reduced motion), then the wood inside it
-    const pulse = this.reducedMotion ? 1 : 1 - TREE_VIEW.pulseDepth * (0.5 + 0.5 * Math.sin(t * TREE_VIEW.pulseRate));
-    c.strokeStyle = P.neonHalo; c.globalAlpha = pulse;
-    for (const { l, g } of grown) { part(l, g); c.lineWidth = l.w + TREE_VIEW.neonHalo; c.stroke(); }
-    c.strokeStyle = P.neonGlow; c.globalAlpha = 0.6 * pulse;
-    for (const { l, g } of grown) { part(l, g); c.lineWidth = l.w + 5; c.stroke(); }
-    c.globalAlpha = 1; c.strokeStyle = P.treeGlow;
-    for (const { l, g } of grown) { part(l, g); c.lineWidth = l.w + 6; c.stroke(); }
+    c.strokeStyle = P.linkDim; c.lineWidth = 1.2; c.stroke();
+    // Bloom and light pools: cached, laid on additively, breathing slowly (steady under reduced motion)
+    this.drawGlow(grown);
+    // Wood body and its lit edge, then the hot core in the branch light
     c.strokeStyle = P.treeWood;
     for (const { l, g } of grown) { part(l, g); c.lineWidth = l.w; c.stroke(); }
-    c.strokeStyle = P.treeWoodLit; c.globalAlpha = 0.7;
-    for (const { l, g } of grown) { part(l, g); c.lineWidth = Math.max(1, l.w * 0.35); c.stroke(); }
-    c.globalAlpha = 0.85; c.lineWidth = 1.2;
-    for (const { l, g } of grown) { part(l, g); c.strokeStyle = BRANCH_COLOR[l.n.branch]; c.stroke(); }
-    // Neon core over the wood, then light flowing outward along it (dashes sliding from parent to child)
-    c.strokeStyle = P.neonCore; c.globalAlpha = 0.55 + 0.35 * pulse;
-    for (const { l, g } of grown) { part(l, g); c.lineWidth = Math.max(1.2, l.w * 0.22); c.stroke(); }
-    if (!this.reducedMotion && grown.length) {
-      c.strokeStyle = P.neonFlow; c.globalAlpha = 0.75;
-      c.setLineDash([TREE_VIEW.flowDash, TREE_VIEW.flowGap]); c.lineDashOffset = -(t * TREE_VIEW.flowSpeed) % (TREE_VIEW.flowDash + TREE_VIEW.flowGap);
-      for (const { l, g } of grown) { part(l, g); c.lineWidth = Math.max(1.5, l.w * 0.3); c.stroke(); }
-      c.setLineDash([]); c.lineDashOffset = 0;
-    }
-    if (!this.reducedMotion) {
-      c.fillStyle = P.spark;
-      for (const { l, g } of grown) for (let k = 0; k < 2; k++) {
-        const u = ((t * TREE_VIEW.sparkSpeed + l.seed + k / 2) % 1) * g, a = Math.sin(u * Math.PI);
-        c.globalAlpha = 0.9 * a; c.beginPath(); c.arc(at(l.p.x, l.cx, l.n.x, u), at(l.p.y, l.cy, l.n.y, u), 1.2 + a, 0, 6.283); c.fill();
+    c.strokeStyle = P.treeWoodLit; c.globalAlpha = 0.6;
+    for (const { l, g } of grown) { part(l, g); c.lineWidth = Math.max(1, l.w * 0.45); c.stroke(); }
+    c.globalCompositeOperation = 'lighter'; c.globalAlpha = L.coreA;
+    for (const { l, g } of grown) { part(l, g); c.strokeStyle = BRANCH_LIGHT[l.n.branch]; c.lineWidth = Math.max(L.coreMin, l.w * L.coreK); c.stroke(); }
+    c.strokeStyle = P.lightHot; c.globalAlpha = 0.55;
+    for (const { l, g } of grown) { part(l, g); c.lineWidth = Math.max(0.8, l.w * L.coreK * 0.4); c.stroke(); }
+    if (!this.reducedMotion) { this.pulses(grown, t); this.motes(grown, t); this.bursts(dt); }
+    c.globalCompositeOperation = 'source-over'; c.globalAlpha = 1; c.lineCap = 'butt';
+  }
+
+  /** Bloom strokes and node light pools, rendered once into an offscreen layer per camera/size/owned-set and blitted additively. */
+  private drawGlow(grown: { l: Link; g: number }[]): void {
+    const c = this.g, W = this.canvas.width, H = this.canvas.height, z = this.cam.z * this.dpr;
+    const key = `${W}x${H}|${this.cam.x.toFixed(2)},${this.cam.y.toFixed(2)},${z.toFixed(4)}|` + grown.map(({ l, g }) => l.n.id + (g < 1 ? g.toFixed(2) : '')).join(',');
+    if (key !== this.glowKey) {
+      this.glowKey = key;
+      if (this.glow.width !== W || this.glow.height !== H) { this.glow.width = W; this.glow.height = H; }
+      const o = this.glow.getContext('2d')!;
+      o.setTransform(1, 0, 0, 1, 0, 0); o.clearRect(0, 0, W, H);
+      o.setTransform(z, 0, 0, z, -this.cam.x * z, -this.cam.y * z); o.globalCompositeOperation = 'lighter'; o.lineCap = 'round';
+      const owned = new Set<NodeId>(['root']);
+      for (const { l, g } of grown) if (g >= 1) owned.add(l.n.id);
+      for (const id of owned) {
+        const n = NODE[id], r = L.poolR, gr = o.createRadialGradient(n.x, n.y, 0, n.x, n.y, r);
+        gr.addColorStop(0, BRANCH_LIGHT[n.branch]); gr.addColorStop(1, P.glowClear);
+        o.globalAlpha = L.poolA; o.fillStyle = gr; o.beginPath(); o.arc(n.x, n.y, r, 0, 6.283); o.fill();
+      }
+      for (const [extra, a] of L.bloom) {
+        o.globalAlpha = a;
+        for (const { l, g } of grown) {
+          o.beginPath(); o.moveTo(l.p.x, l.p.y);
+          o.quadraticCurveTo(l.p.x + (l.cx - l.p.x) * g, l.p.y + (l.cy - l.p.y) * g, at(l.p.x, l.cx, l.n.x, g), at(l.p.y, l.cy, l.n.y, g));
+          o.strokeStyle = BRANCH_LIGHT[l.n.branch]; o.lineWidth = l.w + extra; o.stroke();
+        }
       }
     }
-    c.globalAlpha = 1; c.lineCap = 'butt';
+    c.save(); c.setTransform(1, 0, 0, 1, 0, 0); c.globalCompositeOperation = 'lighter';
+    c.globalAlpha = this.reducedMotion ? 1 : 1 - L.breathDepth * (0.5 + 0.5 * Math.sin(performance.now() / 1000 * L.breathRate));
+    c.drawImage(this.glow, 0, 0); c.restore();
+  }
+
+  /** Light pulses surging from the root outward: each owned link carries the head while it is at that link's depth. */
+  private pulses(grown: { l: Link; g: number }[], t: number): void {
+    const c = this.g, period = MAX_DEPTH + L.pulseGap, h = (t * L.pulseRate) % period;
+    for (const { l, g } of grown) {
+      const d = DEPTH.get(l.n.id)!, u = h - (d - 1); if (u < 0 || u >= 1 || u > g) continue;
+      const x = at(l.p.x, l.cx, l.n.x, u), y = at(l.p.y, l.cy, l.n.y, u);
+      c.fillStyle = BRANCH_LIGHT[l.n.branch]; c.globalAlpha = 0.35; c.beginPath(); c.arc(x, y, L.pulseR + l.w * 0.5, 0, 6.283); c.fill();
+      c.globalAlpha = 0.6; c.beginPath(); c.arc(x, y, L.pulseR * 0.45 + l.w * 0.3, 0, 6.283); c.fill();
+      c.fillStyle = P.lightHot; c.globalAlpha = 0.95; c.beginPath(); c.arc(x, y, L.pulseCore + l.w * 0.15, 0, 6.283); c.fill();
+    }
+  }
+
+  /** Motes drifting outward along owned links, swaying off the line and fading in and out. */
+  private motes(grown: { l: Link; g: number }[], t: number): void {
+    const c = this.g;
+    for (const { l, g } of grown) {
+      c.fillStyle = BRANCH_LIGHT[l.n.branch];
+      for (let k = 0; k < L.motes; k++) {
+        const u = ((t * L.moteSpeed + l.seed + k / L.motes) % 1) * g, a = Math.sin(u * Math.PI);
+        const dx = l.n.x - l.p.x, dy = l.n.y - l.p.y, len = Math.hypot(dx, dy) || 1, sw = Math.sin(t * L.moteSwayRate + k * 2.1 + l.seed * 9) * L.moteSway;
+        const x = at(l.p.x, l.cx, l.n.x, u) - (dy / len) * sw, y = at(l.p.y, l.cy, l.n.y, u) + (dx / len) * sw;
+        c.globalAlpha = 0.25 * a; c.beginPath(); c.arc(x, y, L.moteR * 3, 0, 6.283); c.fill();
+        c.globalAlpha = 0.9 * a; c.beginPath(); c.arc(x, y, L.moteR, 0, 6.283); c.fill();
+      }
+    }
+  }
+
+  /** On a buy, scatter light along every link from the root to the node bought. */
+  private spawnBursts(s: SimState, first: boolean): void {
+    for (const n of NODES) {
+      const r = rankOf(s, n.id), was = this.ranks.get(n.id) ?? r; this.ranks.set(n.id, r);
+      if (first || this.reducedMotion || r <= was) continue;
+      for (let id: NodeId | null = n.id; id; id = NODE[id].parent) {
+        const l = LINK_OF.get(id); if (!l) break;
+        for (let k = 0; k < L.burstPer && this.burst.length < L.burstCap; k++) {
+          const u = Math.random(), a = Math.random() * 6.283, v = L.burstSpeed * (0.3 + Math.random() * 0.7);
+          this.burst.push({ x: at(l.p.x, l.cx, l.n.x, u), y: at(l.p.y, l.cy, l.n.y, u), vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: L.burstLife * (0.6 + Math.random() * 0.4), col: BRANCH_LIGHT[n.branch] });
+        }
+      }
+    }
+  }
+
+  private bursts(dt: number): void {
+    const c = this.g, drag = Math.exp(-L.burstDrag * dt);
+    this.burst = this.burst.filter((m) => (m.life -= dt) > 0);
+    for (const m of this.burst) {
+      m.x += m.vx * dt; m.y += m.vy * dt; m.vx *= drag; m.vy *= drag;
+      const a = Math.min(1, m.life / L.burstLife * 1.5);
+      c.fillStyle = m.col; c.globalAlpha = 0.3 * a; c.beginPath(); c.arc(m.x, m.y, L.burstR * 2.5, 0, 6.283); c.fill();
+      c.fillStyle = P.lightHot; c.globalAlpha = a; c.beginPath(); c.arc(m.x, m.y, L.burstR * 0.6, 0, 6.283); c.fill();
+    }
+    if (this.burst.length) this.growing = true;
   }
 
   draw(s: SimState, t: number): void {
