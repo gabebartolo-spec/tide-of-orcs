@@ -283,7 +283,11 @@ export class FieldRenderer {
       }
       g.globalAlpha = sm.life / VFX.stormLife; g.strokeStyle = P.sparkGlow; g.lineWidth = A.boltGlow; g.stroke(); g.strokeStyle = P.spark; g.lineWidth = A.boltW; g.stroke(); g.globalAlpha = 1;
     }
-    if (s.stats.hawk) { const h = s.hawk; g.save(); g.translate(h.x, h.y); g.fillStyle = P.bark; g.beginPath(); g.moveTo(-12, 0); g.lineTo(0, -3); g.lineTo(12, 0); g.lineTo(0, 3); g.closePath(); g.fill(); g.restore(); }
+    if (s.stats.hawk) {  // TB-068: flapping hawk sprite centred on the bird, facing its heading (x moves by -sin a); bark diamond until the sheet loads
+      const h = s.hawk; g.save(); g.translate(h.x, h.y); if (Math.sin(h.a) > 0) g.scale(-1, 1);
+      if (!this.sprites.draw(g, 'hawk', this.clock, 0, 0, ACTOR_R)) { g.fillStyle = P.bark; g.beginPath(); g.moveTo(-12, 0); g.lineTo(0, -3); g.lineTo(12, 0); g.lineTo(0, 3); g.closePath(); g.fill(); }
+      g.restore();
+    }
 
     this.ambience.motesDraw(g, this.clock, n, this.reducedMotion);
     this.fx.draw(g);
