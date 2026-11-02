@@ -48,6 +48,8 @@ export const STR = {
   heirloom: 'Make heirloom', unheirloom: 'Not heirloom', heirloomMark: ' · heirloom',
   hwNeeds: (names: string) => `Needs ${names}`,
   lootFound: (name: string) => `${name} found`,
+  /** Satchel tab badge (TB-192): items kept since it was last opened. */
+  newItems: (n: number) => `${n} new`,
   pinned: 'pinned', freeRally: 'The line reforms!',
   setsWorn: 'Sets', setProgress: (name: string, n: number) => `${name} ${n}/6`,
   /** Set bonus lines at 2, 4 and 6 pieces (TB-099). */

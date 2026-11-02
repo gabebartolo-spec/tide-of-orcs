@@ -14,6 +14,8 @@ import { NumberFormat, fmt, setNumberFormat } from './format';
 import { HW_NODE, HW_NODES, HwId } from '../data/heartwood';
 import { canBuyHw, hwCost, hwPending, hwRank, hwSpendable, hwUnlocked } from '../sim/heartwood';
 import { SatchelPane, itemName } from './satchel';
+import { glyph } from './glyphs';
+import { LOOT_BANNER } from '../data/presentation';
 import { LOOT_TOAST } from '../data/lootTables';
 import { RARITIES } from '../data/loot';
 import { applyTextScale } from '../render/textScale';
@@ -40,8 +42,8 @@ export class Panel {
     $('camp-title').textContent = STR.campTitle; $('camp-go').textContent = STR.campGo; $('camp-close').textContent = STR.campClose; $('btn-settings').textContent = STR.tabSettings;
     $('dep-boss').querySelector('.n')!.textContent = STR.summonBoss;
 
-    $('tab-settings').textContent = STR.tabSettings; $('tab-satchel').textContent = STR.tabSatchel;
-    this.satchel = new SatchelPane(game, (c) => this.onCue(c)); $('tab-satchel').onclick = () => { this.onCue('click'); this.setTab('satchel'); this.satchel.render(); };
+    $('tab-settings').textContent = STR.tabSettings; $('tab-satchel').innerHTML = `${STR.tabSatchel}<span class="badge" id="sat-new" hidden></span>`;
+    this.satchel = new SatchelPane(game, (c) => this.onCue(c)); $('tab-satchel').onclick = () => { this.onCue('click'); this.setTab('satchel'); this.satchel.render(); this.markNew(0); };
     fitPages([$('pane-satchel'), $('pane-prestige'), $('pane-settings')]);
     $('tab-grove').onclick = () => { this.onCue('click'); this.setTab('grove'); }; $('tab-prestige').onclick = () => { this.onCue('click'); this.setTab('prestige'); }; $('tab-settings').onclick = () => { this.onCue('click'); this.setTab('settings'); };
     this.initSettings();
@@ -126,9 +128,23 @@ export class Panel {
       else if (e.t === 'bought' && e.firstRank && e.id !== 'sharp') this.toast(STR.joins(NODE[e.id as keyof typeof NODE].name));
       else if (e.t === 'vanguardFell') this.toast(STR.vanFalls(VAN_NAME[e.type as VanType]));
       else if (e.t === 'barricadeRegrow') this.toast(STR.regrow);
-      else if (e.t === 'loot' && e.kept && LOOT_TOAST.includes(e.rarity)) { const it = this.game.state.meta.loot.items.find((i) => i.uid === e.uid); if (it) this.toast(STR.lootFound(itemName(it))); }
+      else if (e.t === 'loot' && e.kept && LOOT_TOAST.includes(e.rarity)) { const it = this.game.state.meta.loot.items.find((i) => i.uid === e.uid); if (it) { this.lootBanner(it); this.markNew(this.newItems + 1); } }
       else if (e.t === 'barricadeFell') this.showFallen(e.chosen);
     }
+  }
+
+  /** Items kept since the Satchel was last opened (TB-192); a session count, not saved, so no schema change. */
+  private newItems = 0;
+  private markNew(n: number): void { this.newItems = n; const b = $('sat-new'); b.hidden = n === 0; b.textContent = STR.newItems(n); }
+
+  /** A kept drop's card (TB-192): icon, name and rarity under the toast, for LOOT_BANNER.life seconds by rarity. */
+  private lootBanner(it: Parameters<typeof itemName>[0]): void {
+    const box = $('loot-banners'), el = document.createElement('div');
+    el.className = `lootbanner r-${it.rarity}`;
+    el.innerHTML = `${glyph(it.slot, it, true)}<span class="txt"><span class="rar">${STR.rarityName[it.rarity] ?? it.rarity}</span><span class="nm">${STR.lootFound(itemName(it))}</span></span>`;
+    box.prepend(el);
+    while (box.children.length > LOOT_BANNER.max) box.lastElementChild!.remove();
+    setTimeout(() => el.remove(), (LOOT_BANNER.life[it.rarity] ?? LOOT_BANNER.life.common!) * 1000);
   }
 
   private buy(id: keyof typeof NODE): void { if (this.game.buy(id)) this.renderDetail(); }
