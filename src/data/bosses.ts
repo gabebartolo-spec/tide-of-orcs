@@ -8,7 +8,7 @@ export const BOSS_WAVE = {
   hwPerTier: 3,   // …and hwPerTier × (wave ÷ every) Heartwood: 3 at wave 25, 6 at 50 (P-142)
 } as const;
 
-/** Heartwood a cleared boss pays at this wave (P-142). The only Heartwood beyond a fall's flat 1. */
+/** Heartwood a cleared boss pays at this wave (P-142). The only source of Heartwood (TB-171). */
 export const bossHw = (wave: number): number => BOSS_WAVE.hwPerTier * Math.max(1, Math.floor(wave / BOSS_WAVE.every));
 
 /** One mini-wave: at `at` seconds into the challenge, one orc of `kind` per entry of `ys` (fraction of field height). */

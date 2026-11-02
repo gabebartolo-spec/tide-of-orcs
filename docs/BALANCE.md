@@ -94,7 +94,7 @@ cap = 2 + ranks        mend = 0.03 × mend × maxhp per second
 - `starMult = 1.08^glean` (Gleaning sits under War Drums, 5 ranks; P-142). Heartwood gives no passive bonus (P-142): it is only spent on the Heartwood tree.
 
 ### Prestige
-- Forced on barricade fall; voluntary from wave 12. A fall or voluntary replant pays a flat `PRESTIGE.fallGain` = 1 HW (rule 1). All other Heartwood drops from cleared boss waves: `bossHw(w) = 3 × max(1, floor(w / 25))`, halved (min 1) once Heartwood Splinter has stood the wall again (P-142).
+- Forced on barricade fall; voluntary from wave 12. A fall or voluntary replant pays `PRESTIGE.fallGain` = 0 HW (TB-171, director 2 Nov). All Heartwood drops from cleared boss waves: `bossHw(w) = 3 × max(1, floor(w / 25))`, halved (min 1) once Heartwood Splinter has stood the wall again (P-142).
 
 ### Pacing targets (what the sim must hit)
 Status measured 31 Oct 2026 at 8791ac2, seed 1, 25 min, player model `crowdAim` (except "no aim"). Greedy falls: waves 5, 5, 7, 5, 24 (minutes 1.6, 3.3, 5.8, 7.6, 16.9). Nobuy falls: wave 4 at 1.5 min, then waves 5–6 every ~2 min (13 falls). No aim at all: falls at wave 2–3 every ~0.8 min.

@@ -21,14 +21,14 @@ describe('Heartwood tree (TB-053)', () => {
     expect(buyHw(s, ev, 'hw_dawn')).toBe(true); expect(buyHw(s, ev, 'hw_dawn')).toBe(true);
     expect(hwSpent(s.meta)).toBe(6); expect(hwAvailable(s.meta)).toBe(4); expect(s.meta.heartwood).toBe(10);
     expect(s.stats.dmg).toBe(dmg);
-    expect(hwSpendable(s)).toBe(5); // the fall's flat 1 counts before Replant pays it
+    expect(hwSpendable(s)).toBe(4); // a fall pays no Heartwood (TB-171)
     expect(canBuyHw(s, 'hw_dawn')).toBe(false); // rank 3 costs 8
   });
-  it('is spent only at a prestige, with the fall payout counted once (TB-149)', () => {
-    const s = withHw(1), ev = new EventBus(); s.run.fallen = false;
+  it('is spent only at a prestige; a fall adds none (TB-149, TB-171)', () => {
+    const s = withHw(2), ev = new EventBus(); s.run.fallen = false;
     expect(canBuyHw(s, 'hw_dawn')).toBe(false); expect(buyHw(s, ev, 'hw_dawn')).toBe(false);
-    s.run.fallen = true; expect(buyHw(s, ev, 'hw_dawn')).toBe(true); // 1 banked + the fall's 1
-    expect(hwAvailable(s.meta)).toBe(-1); replant(s, ev);
+    s.run.fallen = true; expect(buyHw(s, ev, 'hw_dawn')).toBe(true); // 2 banked, the fall adds none
+    expect(hwAvailable(s.meta)).toBe(0); replant(s, ev);
     expect(s.meta.heartwood).toBe(2); expect(hwAvailable(s.meta)).toBe(0); expect(hwSpendable(s)).toBe(0);
   });
   it('max rank stops buying', () => {

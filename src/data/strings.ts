@@ -94,7 +94,7 @@ export const STR = {
   barricadeHud: (hp: string, max: string) => `BARRICADE ${hp} / ${max}`,
   vanguardHud: (n: number, cap: number) => `VANGUARD ${n} / ${cap}`,
   replantGainK: 'Heartwood on replant', replantBtn: 'Replant',
-  replantEach: (fall: number) => `A fall pays <strong>${fall} Heartwood</strong>. Bosses drop the rest.`,
+  replantEach: (fall: number) => `Heartwood drops only from bosses. A fall pays <strong>${fall}</strong>.`,
   replantReset: 'Reset: skills, starlight, wave, vanguard and companions.',
   replantKept: 'Kept: Heartwood, total slain, best wave.',
   hwTitle: 'Heartwood tree',

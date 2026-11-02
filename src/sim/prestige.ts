@@ -6,14 +6,14 @@ import { hwRank, startRun } from './heartwood';
 import { HW_FX } from '../data/heartwood';
 import { growHeirloom } from './loot';
 
-/** Heartwood a fall or a voluntary replant pays: a flat 1 (rule 1). Bosses pay the rest as they fall (P-142). */
+/** Heartwood a fall or a voluntary replant pays: none since TB-171. Only cleared bosses pay Heartwood. */
 export const gain = (): number => PRESTIGE.fallGain;
 /** Voluntary replant: from wave 12 while the wall still stands. Forced replant: whenever the wall has fallen. */
-export const canReplant = (s: SimState): boolean => s.run.fallen || (s.run.wave >= PRESTIGE.voluntaryWave && gain() > 0);
+export const canReplant = (s: SimState): boolean => s.run.fallen || (s.run.wave >= PRESTIGE.voluntaryWave);
 
 /** Voluntary replant mid-run (TB-136): from wave 12 the elf may leave a standing wall. The run ends as a fall does, so
  *  the summary and the Grove page follow, and Heartwood is the same as a fall at this wave. */
-export const canPullBack = (s: SimState): boolean => !s.run.fallen && s.run.wave >= PRESTIGE.voluntaryWave && gain() > 0;
+export const canPullBack = (s: SimState): boolean => !s.run.fallen && s.run.wave >= PRESTIGE.voluntaryWave;
 
 export function pullBack(s: SimState, ev: EventBus): boolean {
   if (!canPullBack(s)) return false;

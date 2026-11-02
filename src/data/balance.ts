@@ -101,8 +101,8 @@ export const NODE_FX = {
   fangsDmg: 1.4, knifeRate: 1.2, boltDmg: 1.5,
 } as const;
 
-/** A fall (or a voluntary replant) pays a flat fallGain Heartwood (rule 1); real Heartwood drops from bosses (P-142). */
-export const PRESTIGE = { voluntaryWave: 12, fallGain: 1 } as const;
+/** A fall (or a voluntary replant) pays no Heartwood: it drops only from cleared bosses (director 2 Nov, TB-171). */
+export const PRESTIGE = { voluntaryWave: 12, fallGain: 0 } as const;
 
 export const HP_RAMP = { from: 15, rate: 1.3 } as const;
 export const waveHP = (w: number): number =>

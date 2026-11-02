@@ -20,7 +20,7 @@ Names below are the design names (GDD). The UI speaks the TB-121 voice (`src/dat
 
 ## C. Barricade and the fail state (GDD §3, design rule 1)
 - C1 Orcs reaching the wall stop and swing; the health bar drops, shakes, splinters show.
-- C2 At 0 HP the sim freezes, the fallen overlay shows wave, slain, minutes, Heartwood (at least 1) and one button.
+- C2 At 0 HP the sim freezes, the fallen overlay shows wave, slain, minutes, Heartwood carried back (0 unless a boss fell) and one button.
 - C3 While fallen: tree buys, rally and boss summon are refused; Heartwood tree and Settings still work.
 - C4 Replant pays out, resets the run, keeps Heartwood, lifetime slain, best wave, prestige count, settings.
 - C5 Deep Roots regrows the wall to 50% once per run.
