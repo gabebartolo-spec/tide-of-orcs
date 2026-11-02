@@ -10,7 +10,7 @@ Two sections. `## Current` is what ships and is human-owned. `## Proposed` is wh
 
 ### Orc scaling (w = wave)
 ```
-hp(w)       = 10 × 1.17^(min(w,15)−1) × 1.30^max(0, w−15)   ramp from wave 15 (P-001)
+hp(w)       = 10 × 1.17^(min(w,15)−1) × 1.20^max(0, w−15)   ramp from wave 15 (P-001; ×1.30 until director 3 Nov)
 loot(w)     = 2  × 1.13^(w−1)
 interval(w) = max(0.3, 2.0 × 0.93^(w−1))   seconds between grunt spawns; kind k every interval × every_k / 1.2^swarm_k; paused during a boss wave
 boss wave: unlocks every 25 waves, 60 s script, clear bonus = 40 × waveLoot(w) × starMult × (1 + 0.5 × hw_boss rank) starlight and bossHw(w) = 3 × floor(w / 25) Heartwood (P-142)
@@ -34,8 +34,8 @@ Rangers and Wardens keep straight volleys at `fireRate = 1.2 × 1.15^draw` per s
 |---|---|---|---|---|---|
 | 1 | 10 | 2 | 2.00 | 0.25 | 2.5 |
 | 10 | 41.1 | 6.0 | 1.04 | 1.03 | 10.3 |
-| 25 | 1,242 | 37.6 | 0.35 | 31.0 | 310 |
-| 50 | 876,233 | 797.8 | 0.30 | 21,906 | 219,058 |
+| 25 | 558 | 37.6 | 0.35 | 14.0 | 140 |
+| 50 | 53,204 | 797.8 | 0.30 | 1,330 | 13,301 |
 
 ### Player and sources
 - Base damage 9, base fire rate 1.2 volleys/s (rangers/wardens only; the elf lobs), arrow speed 520, crit ×3. (9 since P-001, 2026-10-30; v1.0 had 4 and 1.1; raised because the bare archer's 4.4 dps was below wave-1 incoming HP of 5 hp/s and the river had been hiding it.)

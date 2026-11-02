@@ -7,8 +7,8 @@ describe('wave formulas', () => {
   it.each([
     [1, 10, 2, 2.0],
     [10, 40.9, 6.0, 1.04],
-    [25, 1242, 37.6, 0.35],
-    [50, 876233, 795, 0.3],
+    [25, 558, 37.6, 0.35],
+    [50, 53204, 795, 0.3],
   ])('wave %i → hp %f loot %f interval %f', (w, hp, loot, iv) => {
     expect(waveHP(w)).toBeCloseTo(hp, hp > 1000 ? -2 : hp > 100 ? -1 : 0);
     expect(waveLoot(w)).toBeCloseTo(loot, loot > 100 ? -1 : 0);
