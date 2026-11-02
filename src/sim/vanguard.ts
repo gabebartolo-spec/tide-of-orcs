@@ -75,7 +75,7 @@ function march(s: SimState, v: Vanguard, step: number): void {
   const gx = o ? o.x : v.tx, gy = o ? o.y : v.ty, stop = o ? VANGUARD[v.type].reach * VANGUARD.closeIn + o.r : 0;
   const dx = gx - v.x, dy = gy - v.y, d = Math.hypot(dx, dy), go = Math.min(step, d - stop);
   v.mv = go > 1e-6;
-  if (!v.mv) return;
+  if (!v.mv) { if (!o) v.face = 1; return; }  // home again: turn back to face the field (TB-170)
   v.x += (dx / d) * go; v.y += (dy / d) * go;
   if (Math.abs(dx) > 1e-6) v.face = dx > 0 ? 1 : -1;
 }
