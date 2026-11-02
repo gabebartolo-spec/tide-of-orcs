@@ -69,7 +69,7 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | Id | Task | Area | Depends | Owner | Status |
 |---|---|---|---|---|---|
 | TB-060 | Sprite-sheet loader with atlas JSON and vector fallback; draw actors from sheets when present | render | M2 | claude | done 47e4010 |
-| TB-068 | Tripo models + Cascadeur loops → sheets for orcs, elf, vanguard, companions (ART-STYLE §Asset pipeline) | art | 060 | gabe, claude | doing (in game: every orc kind, elf, both vanguard, wolf; elite draws the berserker sheet and the boss the brute sheet via `ORC_SPRITE`, director 3 Nov; still vector: hawk) |
+| TB-068 | Tripo models + Cascadeur loops → sheets for orcs, elf, vanguard, companions (ART-STYLE §Asset pipeline) | art | 060 | gabe, claude | doing (in game: every orc kind, elf, both vanguard, wolf; elite draws the berserker sheet and the boss the brute sheet via `ORC_SPRITE`, director 3 Nov; wolf rider run v8 approved 3 Nov (blam wolf run copied onto the rider wolf, orc at rest); still vector: hawk) |
 | TB-069 | ElevenLabs SFX set (16) + ambient bed, exported per ART-STYLE | audio | — | claude | SFX done b3e4c5f (16 cues, OGG+MP3, −16 LUFS; loose, knife, bossRoar, click, denied wired); ambient bed done (30 s seamless loop, take A, director pick); `ignite` plays on the elf's release with Fire Arrows (director call); `warDrum` cue added 1 Nov (100 credits, acked), unwired until the drummer unit exists |
 | TB-061 | Parallax hills, day/night tint, bank lamplight | render | 018 | claude | done 71d05f4 |
 | TB-062 | Audio engine: ambient loop, SFX map from events, ducking | audio | 019,069 | claude | done 09b60cf |
