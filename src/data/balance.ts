@@ -2,8 +2,8 @@
 
 export const FIELD = { w: 900, h: 480, barX: 150, barW: 14, elfX: 64 } as const;
 export const WAVE_LEN = 24;
-/** Checkpoints (TB-159): clearing every `every`-th wave lets later runs start just past it (0 = off). */
-export const CHECKPOINT = { every: 10 };
+/** Checkpoints (TB-159; every 5 since TB-172): clearing every `every`-th wave lets later runs start just past it (0 = off). */
+export const CHECKPOINT = { every: 5 };
 /** The wave a run starts at once `best` has been reached: one past the last checkpoint cleared. */
 export const checkpointFor = (best: number): number => CHECKPOINT.every ? Math.floor((best - 1) / CHECKPOINT.every) * CHECKPOINT.every + 1 : 1;
 export const ORC_CAP = 160;
