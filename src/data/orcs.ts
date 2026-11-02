@@ -17,6 +17,6 @@ export const ORC_TYPES: Readonly<Record<OrcKind, OrcType>> = {
  *  Damage, cast cadence and the shaman's own stats come with its wave design (TB-087). */
 export const FIREBALL = { flight: 0.9, arc: 55, radius: 24 } as const;
 
-/** Per rank of a kind's two nodes: Fury (health and starlight) and Swarm (spawn rate). Its summon node (TB-158) doubles
- *  how often it marches and adds half again to its starlight. */
-export const FOE_FX = { hp: 1.3, loot: 1.4, spawn: 1.2, summonSpawn: 2, summonLoot: 1.5 } as const;
+/** Per rank of a kind's two nodes: Fury (health and starlight) and Swarm (spawn rate). A kind that joins on its own marches at
+ *  half rate until its summon node (TB-158), which doubles its base rate and adds half again to its starlight. */
+export const FOE_FX = { hp: 1.3, loot: 1.4, spawn: 1.2, unsummonedSpawn: 0.5, summonSpawn: 2, summonLoot: 1.5 } as const;

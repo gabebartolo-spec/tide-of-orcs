@@ -117,7 +117,7 @@ describe('tree', () => {
     const st = deriveStats({ root: 1, drums: 2, runners: 1, runswarm: 1 });
     expect(st.foes.grunt.hp).toBeCloseTo(1.69); expect(st.foes.grunt.loot).toBeCloseTo(1.96);
     expect(st.foes.runner.hp).toBe(1); expect(st.foes.runner.spawn).toBeCloseTo(2.4); expect(st.foes.runner.loot).toBeCloseTo(1.5);
-    expect(st.foes.brute.on).toBe(false); expect(st.foes.brute.spawn).toBe(1);
+    expect(st.foes.brute.on).toBe(false); expect(st.foes.brute.spawn).toBe(0.5); expect(st.foes.grunt.spawn).toBe(1);
   });
   it('runners join from wave 5, brutes from 10, Blackguard from 20; summoning doubles a kind (TB-158)', () => {
     const count = (wave: number, lv: Record<string, number> = {}) => {
@@ -133,7 +133,7 @@ describe('tree', () => {
     const w5 = count(5); expect(w5('runner')).toBeGreaterThan(0); expect(w5('brute')).toBe(0);
     const w10 = count(10); expect(w10('brute')).toBeGreaterThan(0); expect(w10('elite')).toBe(0);
     expect(count(20)('elite')).toBeGreaterThan(0);
-    expect(count(5, { runners: 1 })('runner')).toBeGreaterThan(w5('runner') * 1.5);
+    expect(count(5, { runners: 1 })('runner')).toBeGreaterThan(w5('runner') * 3);
   });
   it('only between runs: the tree refuses a buy while the wall stands', () => {
     const s = createState(1); const ev = new EventBus(); s.run.starlight = 100;

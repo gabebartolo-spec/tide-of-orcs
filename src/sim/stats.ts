@@ -115,7 +115,7 @@ export function deriveStats(lv: Levels, hw: HwLevels = {}): Stats {
       on: on !== null && L(on) > 0,
       hp: Math.pow(FOE_FX.hp, L(fury)),
       loot: Math.pow(FOE_FX.loot, L(fury)) * (on && L(on) ? FOE_FX.summonLoot : 1),
-      spawn: Math.pow(FOE_FX.spawn, L(swarm)) * (on && L(on) ? FOE_FX.summonSpawn : 1),
+      spawn: Math.pow(FOE_FX.spawn, L(swarm)) * (on === null ? 1 : L(on) ? FOE_FX.summonSpawn : FOE_FX.unsummonedSpawn),
     }])) } as Record<OrcKind, Foe>,
     kin,
     wolf: L('wolf') ? SOURCES.wolf.base * units.wolf.dmg * kin : 0,
