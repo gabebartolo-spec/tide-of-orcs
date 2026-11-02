@@ -27,9 +27,8 @@ export const P = {
   wallBar: '#c9a06a', nodeOwned: '#2b3448', nodeLabelLocked: '#a8997a',
   // arcane tree (TB-163): bark, its lit edge, the glow round grown wood
   treeWood: '#5c4630', treeWoodLit: '#9a7650', treeGlow: 'rgba(205,189,234,.22)',
-  // neon arcane links (TB-190): wide soft halo, bright core and flowing light on owned links; a dim glow on locked ones
-  neonHalo: 'rgba(170,130,255,.24)', neonGlow: 'rgba(196,166,255,.6)', neonCore: '#f1ecff', neonFlow: '#ffffff',
-  neonDim: 'rgba(155,107,214,.18)', neonDimCore: 'rgba(190,160,240,.38)',
+  // skill-tree light (TB-190b): white-hot core and pulse heads, the still line of a locked link, the clear end of a glow gradient
+  lightHot: '#fff8ec', linkDim: 'rgba(205,189,234,.26)', glowClear: 'rgba(0,0,0,0)',
   wallShade: 'rgba(18,24,16,.3)', burnGlow: 'rgba(226,168,91,.5)',
   // set-bonus ground (TB-099): Cinderground and Moonwells
   cinder: 'rgba(226,168,91,.22)', cinderEdge: 'rgba(199,111,111,.45)', moonwell: 'rgba(205,189,234,.2)', moonwellEdge: 'rgba(205,189,234,.6)',
@@ -37,3 +36,8 @@ export const P = {
   stake: '#8a6a45', starfall: 'rgba(205,189,234,.85)',
   shadow: 'rgba(18,24,16,.25)', dim: 'rgba(22,29,21,.6)', dim45: 'rgba(22,29,21,.45)',
 } as const;
+
+/** Skill-tree light per branch (TB-190b): the saturated glow colour of owned links, their bloom, motes and light pools. */
+export const BRANCH_LIGHT: Readonly<Record<'Bow' | 'Companions' | 'Armoury' | 'Grove' | 'Barricade' | 'Vanguard' | 'Spoils', string>> = {
+  Bow: '#b98cff', Companions: '#ffb35a', Armoury: '#ff6f5e', Grove: '#8ff07a', Barricade: '#ffc46e', Vanguard: '#6fd2ff', Spoils: '#ffe98a',
+};

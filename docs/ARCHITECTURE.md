@@ -49,7 +49,7 @@ tide-of-orcs/
       particles.ts      preallocated pools (squares, blood droplets, strokes, ground splats, text) fed by events; sizes in `data/presentation.ts` VFX
       ceremony.ts       replant ceremony: burn, seed, dawn; skippable (TB-051)
       camera.ts         tree camera: pan, zoom, clamp below the legend strip, ease, whole-tree fit (TB-021, TB-066, TB-117, TB-189)
-      tree.ts           skill tree canvas, curved branches, neon links (TB-190), hit-test, camera ease to selection, full-screen fit (TB-189)
+      tree.ts           skill tree canvas, curved branches, lit links: cached bloom, pulses, motes, buy bursts (TB-190b), hit-test, camera ease to selection, full-screen fit (TB-189)
     ui/
       panel.ts          page modes run / camp / settings (body[data-mode], setMode; TB-136), tabs (Grove / Satchel / Replant / Settings), detail card, boss button, fallen overlay + run summary,
                         Heartwood tree, settings, toasts, HUD numbers

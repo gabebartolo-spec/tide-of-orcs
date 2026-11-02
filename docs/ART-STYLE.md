@@ -22,9 +22,8 @@ Status: **Current** (v1.3, checked against `src/render/palette.ts` and `src/data
 | timberBand | #5a4634 | Cross-bands on the wall, bark, hawk, bolts |
 | treeWood / treeWoodLit | #5c4630 / #9a7650 | Skill-tree boughs and their lit core (TB-163) |
 | treeGlow | rgba(205,189,234,.22) | Arcane halo round grown skill-tree wood (TB-163) |
-| neonHalo / neonGlow | rgba(170,130,255,.24) / rgba(196,166,255,.6) | Neon arcane light round owned skill-tree links: wide soft halo, tighter glow (TB-190) |
-| neonCore / neonFlow | #f1ecff / #ffffff | Bright neon core over owned wood; the light that flows outward along it (TB-190) |
-| neonDim / neonDimCore | rgba(155,107,214,.18) / rgba(190,160,240,.38) | Dim neon glow and faint core along locked links (TB-190) |
+| lightHot / linkDim / glowClear | #fff8ec / rgba(205,189,234,.26) / rgba(0,0,0,0) | Hot white core of owned tree links; thin still line of locked links; transparent gradient stop (TB-190b) |
+| BRANCH_LIGHT | Bow #b98cff, Companions #ffb35a, Armoury #ff6f5e, Grove #8ff07a, Barricade #ffc46e, Vanguard #6fd2ff, Spoils #ffe98a | Per-branch light colour for skill-tree bloom, pools, pulses and motes (TB-190b) |
 | spear | #8fb7c9 | Spearman cloak, vanguard HP bars, Vanguard branch |
 | blade | #cdbdea | Bladedancer cloak (shares lilac) |
 | amber | #e2a85b | Starlight, affordable pulse, buy and rally buttons, boss crown, burn, wall bar when under 50% |
@@ -153,7 +152,7 @@ Carved living wood, not a template: no cards, glows or gradients standing in for
 
 The node layout draws a tree: Waking is the trunk base, Muster and Grey Wolf the trunk, Bow / Companions / Armoury the canopy boughs, Vanguard the low left bough, Barricade / Spoils / Grove the roots. Each link is a faint `line` outline until its node is owned, then wood grows along it (`TREE_VIEW.growRate`) in `treeGlow` halo, `treeWood` body, `treeWoodLit` core and a thin vein in the branch colour. Width is `woodBase + woodPerNode·√(nodes carried)`, so the trunk is thickest. Two `spark` motes drift outward along each grown link. Reduced motion: wood snaps grown, no motes.
 
-**Neon arcane links (TB-190).** Every link is lit as neon arcane light. Locked links: one batched path in `neonDim` (6 px) with a `neonDimCore` hairline, so the paths ahead read quietly. Owned links: a wide `neonHalo` (wood + `TREE_VIEW.neonHalo` px) and a tighter `neonGlow` under the wood, then a `neonCore` line over it. The halo breathes slowly (`pulseRate` rad/s, `pulseDepth`) and short `neonFlow` dashes (`flowDash` / `flowGap`) slide outward from parent to child at `flowSpeed` px/s. Layered strokes only, no `shadowBlur`, so it stays cheap. Reduced motion: no pulse, no flow; the glow stays at full strength.
+**Tree lighting (TB-190b, Hades-like painterly glow).** Locked links: one batched thin, still `linkDim` line. Owned links: a wide additive bloom (`'lighter'`, `TREE_LIGHT.bloom` width/alpha layers) in the branch's `BRANCH_LIGHT` colour plus a soft light pool under each owned node, both rendered to a cached offscreen layer rebuilt only when camera, size or owned set change, then blitted with a slow breath. Over the wood: a branch-colour core and a `lightHot` hairline. Light pulses travel root to tip along owned links (cascading by depth), motes drift along them, and buying a node throws a particle burst along its path. Reduced motion keeps the glow, drops pulses, motes and bursts. All numbers in `TREE_LIGHT` (`src/data/presentation.ts`).
 
 **Full-screen tree (TB-189).** A Full screen button at the top right of the Grove tree covers the window with the Grove pane: the whole tree fits beside the detail card (`TREE_VIEW.wholeMargin` of the space), the camera stays fixed (no pan or zoom), and clicking selects and buys as usual. Close or Esc returns to the normal view and its camera.
 
