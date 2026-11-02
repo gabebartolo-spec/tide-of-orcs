@@ -59,14 +59,17 @@ export function vanguardStep(s: SimState, ev: EventBus, dt: number): void {
   });
 }
 
-/** The live orc nearest this vanguard, or null when the field is clear. */
+/** Vanguard only advance on orcs that have crossed halfway from the field's edge to the barricade (TB-169). */
+const HALF_X = (FIELD.barX + FIELD.w) / 2;
+
+/** The live orc past halfway nearest this vanguard, or null when none has come that close. */
 export function nearestOrcTo(s: SimState, v: Vanguard): Orc | null {
   let best: Orc | null = null, bd = Infinity;
-  s.orcs.forEach((o) => { if (o.dead) return; const d = Math.hypot(o.x - v.x, o.y - v.y); if (d < bd) { bd = d; best = o; } });
+  s.orcs.forEach((o) => { if (o.dead || o.x > HALF_X) return; const d = Math.hypot(o.x - v.x, o.y - v.y); if (d < bd) { bd = d; best = o; } });
   return best;
 }
 
-/** March (TB-156): walk to the nearest orc until it is in reach, or back to the home stand when the field is clear. */
+/** March (TB-156): walk to the nearest orc until it is in reach, or back to the home stand when no orc is past halfway. */
 function march(s: SimState, v: Vanguard, step: number): void {
   const o = nearestOrcTo(s, v);
   const gx = o ? o.x : v.tx, gy = o ? o.y : v.ty, stop = o ? VANGUARD[v.type].reach * VANGUARD.closeIn + o.r : 0;
