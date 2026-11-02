@@ -20,7 +20,7 @@ import { buy, canBuy, costOf } from '../src/sim/tree';
 import { barFrac } from '../src/sim/barricade';
 import { NODES, NodeId } from '../src/data/skillTree';
 import { STEP, VanType } from '../src/data/balance';
-import { ORC_KINDS, ORC_TYPES, OrcKind } from '../src/data/orcs';
+import { FIREBALL, ORC_FX, ORC_KINDS, ORC_TYPES, OrcKind } from '../src/data/orcs';
 import { BOSS_WAVE } from '../src/data/bosses';
 
 const args = process.argv.slice(2);
@@ -30,7 +30,7 @@ const loaded = arg('load', '') ? JSON.parse(readFileSync(arg('load', ''), 'utf-8
 const wave = Number(arg('wave', String(loaded?.wave ?? 40))), secs = Number(arg('secs', '120')), seeds = Number(arg('seeds', '3')), budget = Number(arg('budget', '0'));
 const tide = args.includes('--tide'), vs = arg('vs', '') as OrcKind | '';
 const vans = arg('vans', '').split(',').filter(Boolean) as VanType[];
-const TUNE: Record<string, unknown> = { ORC_TYPES, BOSS_WAVE };
+const TUNE: Record<string, unknown> = { ORC_TYPES, ORC_FX, FIREBALL, BOSS_WAVE };
 for (const kv of arg('tune', '').split(',').filter(Boolean)) {
   const [path, v] = kv.split('='), keys = path!.split('.'), last = keys.pop()!;
   const obj = keys.reduce<Record<string, unknown>>((o, k) => (o === TUNE ? TUNE[k] : o[k]) as Record<string, unknown>, TUNE);
