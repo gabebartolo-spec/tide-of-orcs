@@ -1,6 +1,7 @@
 /** Render-side particles, strokes, blood splats and floating text, fed by sim events. Never touches sim state.
  *  Every pool is preallocated at construction and recycled in place (TB-088): no allocation per frame. */
 import { VFX } from '../data/presentation';
+import { textScale } from './textScale';
 
 /** Flames off a burning orc, per the prototype: ~15 sparks/s rising 40 px/s, 0.4 s life. */
 export const FLAME = { rate: 15, rise: 40, drift: 20, life: 0.4, size: 2, lift: 6 } as const;
@@ -116,7 +117,7 @@ export class Particles {
       g.stroke();
     }
     for (let i = 0; i < this.np; i++) { const p = this.parts[i]!; g.globalAlpha = Math.max(0, Math.min(1, p.life)); g.fillStyle = p.c; g.fillRect(p.x, p.y, p.r, p.r); }
-    g.globalAlpha = 1; g.font = '15px Heartwood'; g.textAlign = 'center';
+    g.globalAlpha = 1; g.font = `${15 * textScale()}px Heartwood`; g.textAlign = 'center';
     for (let i = 0; i < this.nt; i++) { const t = this.texts[i]!; g.globalAlpha = Math.min(1, t.life * 1.5); g.fillStyle = t.c; g.fillText(t.s, t.x, t.y); }
     g.globalAlpha = 1;
   }

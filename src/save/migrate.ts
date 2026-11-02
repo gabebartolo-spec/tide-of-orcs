@@ -40,6 +40,8 @@ export const migrations: Record<number, (s: AnySave) => AnySave> = {
   9: (s) => ({ ...s, version: 10, run: { ...(s.run as object), tier: 1 }, meta: { ...(s.meta as object), tier: 1 } }),
   /** v10 → v11: checkpoints (TB-159); granted for the best wave already reached. */
   10: (s) => { const m = s.meta as { bestWave?: number }; return { ...s, version: 11, meta: { ...m, checkpoint: checkpointFor(m.bestWave ?? 1) } }; },
+  /** v11 → v12: Settings › Text size (TB-191); old saves keep 100 %. */
+  11: (s) => ({ ...s, version: 12, settings: { ...(s.settings as object), textScale: 1 } }),
 };
 
 export function migrate(raw: unknown): Save {

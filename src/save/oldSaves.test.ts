@@ -59,6 +59,7 @@ describe('every old save loads and plays', () => {
   }
   it('grants the checkpoint for the best wave an old save reached (TB-159)', () => {
     expect(migrate(JSON.parse(JSON.stringify(v10))).meta.checkpoint).toBe(11);
+    expect(migrate(JSON.parse(JSON.stringify(v10))).settings.textScale).toBe(1);
     expect(migrate(JSON.parse(JSON.stringify(v9))).meta.checkpoint).toBe(11);
   });
   it('keeps the progress an old save carried', () => {

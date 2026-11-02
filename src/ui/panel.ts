@@ -16,6 +16,7 @@ import { canBuyHw, hwCost, hwPending, hwRank, hwSpendable, hwUnlocked } from '..
 import { SatchelPane, itemName } from './satchel';
 import { LOOT_TOAST } from '../data/lootTables';
 import { RARITIES } from '../data/loot';
+import { applyTextScale } from '../render/textScale';
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string): T => document.getElementById(id) as T;
 const VAN_NAME: Record<VanType, string> = { spear: 'Spearman', blade: 'Bladedancer' };
@@ -136,7 +137,7 @@ export class Panel {
     const s = this.game.state, n = NODE[this.tree.selected], lvl = rankOf(s, n.id), cost = costOf(s, n), maxed = lvl >= n.max, un = unlocked(s, n);
     $('detail').innerHTML = `
       <div class="branch" style="color:${BRANCH_COLOR[n.branch]}">${BRANCH_LABEL[n.branch]}${n.parent && !un ? ' · ' + STR.needs(NODE[n.parent].name) : ''}</div>
-      <div class="name"><span>${n.name}</span><span style="font-size:0.8125rem;color:var(--cream-dim)">${n.max > 1 ? STR.rank(lvl, n.max) : lvl ? STR.learned : ''}</span></div>
+      <div class="name"><span>${n.name}</span><span style="font-size:0.875rem;color:var(--cream-dim)">${n.max > 1 ? STR.rank(lvl, n.max) : lvl ? STR.learned : ''}</span></div>
       <div class="desc">${n.desc}</div>
       <div class="row"><span style="font-variant-numeric:tabular-nums;color:var(--amber)">${maxed ? STR.fullyGrown : n.base === 0 ? '' : STR.starlightCost(fmt(cost))}</span>
       <button class="buy" id="buy-btn" ${canBuy(s, n) ? '' : 'disabled'}>${maxed ? STR.complete : !un ? STR.locked : lvl ? STR.improve : STR.learn}</button></div>`;
@@ -164,7 +165,7 @@ export class Panel {
   onCue: (c: Cue) => void = () => {};
 
   private initSettings(): void {
-    $('set-vol-k').textContent = STR.setVolume; $('set-motion-k').textContent = STR.setMotion; $('set-num-k').textContent = STR.setNumbers;
+    $('set-vol-k').textContent = STR.setVolume; $('set-motion-k').textContent = STR.setMotion; $('set-num-k').textContent = STR.setNumbers; $('set-text-k').textContent = STR.setText;
     const mo = $<HTMLSelectElement>('set-motion').options; mo[0]!.text = STR.motionSystem; mo[1]!.text = STR.motionFull; mo[2]!.text = STR.motionReduced;
     const no = $<HTMLSelectElement>('set-num').options; no[0]!.text = STR.numShort; no[1]!.text = STR.numSci;
     $('set-save-k').textContent = STR.setSave; $('set-save-hint').textContent = STR.exportHint;
@@ -172,6 +173,7 @@ export class Panel {
     this.syncSettings();
     $<HTMLInputElement>('set-vol').oninput = (e) => { this.game.settings.volume = Number((e.target as HTMLInputElement).value); this.settingsChanged(); };
     $<HTMLSelectElement>('set-motion').onchange = (e) => { const v = (e.target as HTMLSelectElement).value; this.game.settings.reducedMotion = v === 'sys' ? null : v === 'reduced'; this.settingsChanged(); };
+    $<HTMLInputElement>('set-text').oninput = (e) => { this.game.settings.textScale = Number((e.target as HTMLInputElement).value); this.settingsChanged(); };
     $<HTMLSelectElement>('set-num').onchange = (e) => { this.game.settings.numberFormat = (e.target as HTMLSelectElement).value as NumberFormat; this.settingsChanged(); };
     $('btn-export').onclick = () => {
       const blob = this.game.exportSave(), box = $<HTMLTextAreaElement>('set-blob'); box.value = blob; box.select();
@@ -193,6 +195,8 @@ export class Panel {
     $<HTMLInputElement>('set-vol').value = String(set.volume);
     $<HTMLSelectElement>('set-motion').value = set.reducedMotion === null ? 'sys' : set.reducedMotion ? 'reduced' : 'full';
     $<HTMLSelectElement>('set-num').value = set.numberFormat;
+    $<HTMLInputElement>('set-text').value = String(set.textScale); $('set-text-v').textContent = `${Math.round(set.textScale * 100)}%`;
+    applyTextScale(set.textScale);
     setNumberFormat(set.numberFormat);
   }
 
