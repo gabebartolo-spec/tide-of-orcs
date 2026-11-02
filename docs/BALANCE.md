@@ -176,7 +176,7 @@ What it says:
 - Sim note: `--cost id=base` sets a run-tree node's base price for a sweep.
 
 ### P-087 · Four new orcs: draft for the director to edit (2026-11-02, TB-087)
-Draft only (director, 2 Nov: "Draft for me to edit"). Nothing is built or simmed. Each follows the rule in GDD §4: it marches only once its Grove node summons it, and has its own Fury and Swarm nodes (+30% health and +40% starlight, +20% spawn per rank), so the player chooses the danger. Stats are in grunt units like `ORC_TYPES` (hp × wave HP, loot × wave loot, `every` × the grunt interval). The field is 900 wide with the wall at x 150.
+Director reviewed 3 Nov (decisions below); not built or simmed yet. Each joins the tide on its own from a set wave at half rate, like runners, brutes and Blackguard since TB-158 (GDD §4), its Grove summon node makes it march more often, and it has its own Fury and Swarm nodes (+30% health and +40% starlight, +20% spawn per rank), so the player chooses the danger. Stats are in grunt units like `ORC_TYPES` (hp × wave HP, loot × wave loot, `every` × the grunt interval). The field is 900 wide with the wall at x 150.
 
 | Orc | hp | speed | loot | radius | every | What it does | Answer the player has |
 |---|---|---|---|---|---|---|---|
@@ -187,9 +187,9 @@ Draft only (director, 2 Nov: "Draft for me to edit"). Nothing is built or simmed
 
 Grove nodes, continuing the summon chain after Blackguard (`elites`): `berserkers` 3000 → `wolfriders` 5000 → `shamans` 8000 → `drummers` 12000 starlight, each with Fury and Swarm at 5 ranks, base cost ×1.33 the unlock, growth 2.4 as today. Draft order: the two melee kinds first (berserker, wolf rider), then the two that stand back and change how you aim (shaman, drummer).
 
-Boss waves: none of the four join `BOSS_SCRIPT` in this draft.
+Boss waves (director 3 Nov): the escort grows with tier. Tier 1 keeps today's `BOSS_SCRIPT`; tier 2 adds berserkers, tier 3 wolf riders, tier 4 shamans, tiers 5–6 war drummers beside the Warboss.
 
-To settle before the build: each behaviour, the halt distances, the chain order and costs. Then the sim checks each against Blackguard on starlight per second of wall life, the same test a spearman passed (TB-086).
+Director 3 Nov: all four behaviours and halt distances kept as drafted; arrival by wave (TB-158 rule), not summon-only; boss escort by tier as above. Still open, to be simmed and proposed: the join wave for each kind and the Grove chain order and costs (draft 3000 / 5000 / 8000 / 12000). The sim checks each against Blackguard on starlight per second of wall life, the same test a spearman passed (TB-086).
 
 ### P-148 · Boss tiers: how hard each tier hits, and what it pays (2026-11-02, TB-148)
 Director chose *unlock across runs*: clearing a boss wave while at your highest tier unlocks the next for good; at March you pick any unlocked tier. Shipped switched off (`TIERS.max` 1); set F moved to Current 2026-11-02. Each tier above 1 multiplies orc HP by `hp^(tier−1)`, starlight per kill and per boss by `loot^(tier−1)`, and boss Heartwood by `1 + hw × (tier−1)`, from wave 1.

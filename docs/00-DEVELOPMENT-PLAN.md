@@ -137,7 +137,7 @@ Orcs drop gear; six worn slots, a satchel, affixes, sets and mythic powers feed 
 - Mythics onto reach TB-128 (PRs #109–#114, 7409e52): all eight mythics now give the elf reach (faster draw or a wider catch), because the sim showed reach, not lob damage, decides the fall. Starfall and Thunder set B, reach versions of Knife, Kiln, Splinter and First Wolf (BALANCE P-128).
 - Phone controls for the itch web build TB-155 (PR #117, e4911f2; director 2 Nov, "phones only"): hold-to-aim with the circle lifted above the finger, second finger free for Rally, portrait asks for landscape, short-landscape layout for run and camp. TB-153's no-scroll rule stays for PC. Itch page set Mobile friendly, Landscape.
 - Start-of-run flash fixed (PR #116, a1083b4): the old vector elf no longer shows while the sprite atlas loads.
-- New orcs TB-087: draft in BALANCE P-087 (PR #104), waiting on the director's edits. **Only open M4.10 item.**
+- New orcs TB-087: P-087 reviewed by the director 3 Nov (behaviours kept, join by wave, boss escort grows by tier); join waves and Grove costs go to the sim at build. **Only open M4.10 item.**
 
 ### M4.11 — Director's playtest (2 Nov) · **done**
 - Vanguard TB-156, TB-167, TB-169, TB-170: a standing line at the wall that respawns on a timer (Swift Muster shortens it), walks out only to orcs past halfway, and turns back to face the field once home. TB-173: each vanguard targets a different orc and they step apart. Rally buttons gone.
