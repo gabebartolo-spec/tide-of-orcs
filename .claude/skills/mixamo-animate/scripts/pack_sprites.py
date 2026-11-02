@@ -1,5 +1,5 @@
 # Pack build_sprites.ps1 frames into two sheets + one atlas (ART-STYLE §Asset pipeline, src/render/sprites.ts).
-# orc.* keys go to sheet_orcs.webp, everything else (elf, vanguard) to sheet_elf.webp; each anim names its image in the atlas.
+# orc.* keys (and hawk) go to sheet_orcs.webp, everything else (elf, vanguard) to sheet_elf.webp; each anim names its image in the atlas.
 # python pack_sprites.py <frames dir> <public/sprites dir>
 # Frames are <key>_<N>.png (RES 512, field camera); anchors.json maps key -> [x px, y px, ortho] of the ground under the rig origin.
 # Each anim is cropped to the union of its frames' alpha, scaled to PX_PER_M, mirrored for orcs (they march screen-left),
@@ -10,7 +10,7 @@ from PIL import Image
 src, dst = sys.argv[1], sys.argv[2]
 RES, PX_PER_M, SHEET_W, PAD = 512, 110, 2048, 2
 SHEETS = {"orcs": "sheet_orcs.webp", "elf": "sheet_elf.webp"}  # TB-129: one 2 MB sheet each instead of one shared sheet over budget
-def sheet_of(key): return SHEETS["orcs" if key.startswith("orc.") else "elf"]
+def sheet_of(key): return SHEETS["orcs" if key.startswith("orc.") or key == "hawk" else "elf"]  # hawk: the elf sheet is full (2028 KB)
 # key: (fps, mirror, body key, body height in actor radii). Vector actors: orc ~2.4 r with feet, elf/vanguard 36 units at radius 12.
 ANIMS = {
     "orc.grunt": (30, True, "orc.grunt", 2.4),
@@ -32,6 +32,7 @@ ANIMS = {
     "elf.attack": (30, False, "elf", 3.0),  # all 32 frames; field.ts scrubs it with the bow charge
     "wolf": (25, False, "wolf", 1.6),  # TB-160 companion run, blam's CC BY Sketchfab wolf retextured; ortho 2.4 is a stand-in (the gltf is 1/100 scale)
     "wolf.attack": (25, False, "wolf", 1.6),  # all 33 bite frames; field.ts scrubs it with the bite cooldown
+    "hawk": (30, False, "hawk", 3.0),  # TB-068 companion flight v1 (director 3 Nov): OSU CC BY Sketchfab hawk, its own Wings Flapping clip, frames 0-29 (render_hawk.py VIEW=game YAW=90); anchor = bird centre
     "orc.wolfrider": (25, True, "orc.wolfrider", 2.6),  # run v8 (director 3 Nov): companion wolf run copied onto the rider wolf, orc at rest; frames from wolfrider/render_wr_sheet.py STEP=1
     "orc.wolfrider.attack": (15, True, "orc.wolfrider", 2.6),  # shares the run body key, same ortho 1.4
 }
