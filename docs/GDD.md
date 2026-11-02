@@ -65,7 +65,7 @@ Vanguard are not tree nodes. **Muster** unlocks the rally bar under the field; e
 | Spearman | Muster | 6 × loot(wave) | 5 × waveHP(wave) × 1.3^Shieldwall | 1.6 × player dmg × 1.3^Spear Drill × Kinship (crit, rate and speed nodes, SKILL-TREE TB-111) | 0.8 s | 28 | One target |
 | Bladedancer | Bladedancer node | 18 × loot(wave) | 4 × waveHP(wave) × 1.3^Shieldwall | 1.4 × player dmg × 1.3^Blade Drill × Kinship | 0.45 s | 34 | Cleaves every orc in reach |
 
-Orcs within `r + 18` px of a vanguard engage it instead of advancing, swinging once per second for `atk`. **Field Mending** heals vanguard 3%/s per rank. Rally costs scale with wave, so a late reinforcement is a real decision. Both buttons show cost, grey out when unaffordable or the line is full ("Line is full"), and say "Learn Muster" before the node is owned.
+Each vanguard marches on a different orc while there are enough past halfway, and vanguard closer than `VANGUARD.spread` (26 px) step apart, so two never merge into one figure (TB-173). Orcs within `r + 18` px of a vanguard engage it instead of advancing, swinging once per second for `atk`. **Field Mending** heals vanguard 3%/s per rank. Rally costs scale with wave, so a late reinforcement is a real decision. Both buttons show cost, grey out when unaffordable or the line is full ("Line is full"), and say "Learn Muster" before the node is owned.
 
 Design intent: vanguard are the *reactive* spend. The tree is the *investment* spend. A good player rallies when the wall dips under half, and buys nodes when it's quiet.
 

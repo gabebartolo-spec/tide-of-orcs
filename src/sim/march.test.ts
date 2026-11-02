@@ -33,3 +33,18 @@ describe('vanguard march (TB-156)', () => {
     expect(v.face).toBe(1); o.dead = true; run(s, 0.2); expect(v.face).toBe(-1);
   });
 });
+
+describe('vanguard spread (TB-173)', () => {
+  it('two vanguard go for two different orcs', () => {
+    const s = createState(1), a = placeVanguard(s, 'spear')!, b = placeVanguard(s, 'spear')!;
+    const o1 = orcAt(s, 400, FIELD.h / 2), o2 = orcAt(s, 420, FIELD.h / 2 + 120);
+    run(s, 10);
+    const near = (v: typeof a) => (Math.hypot(o1.x - v.x, o1.y - v.y) < Math.hypot(o2.x - v.x, o2.y - v.y) ? o1 : o2);
+    expect(near(a)).not.toBe(near(b));
+  });
+  it('two vanguard on one orc never stand in the same spot', () => {
+    const s = createState(1), a = placeVanguard(s, 'spear')!, b = placeVanguard(s, 'spear')!;
+    orcAt(s, 400, FIELD.h / 2 + 35); run(s, 10);
+    expect(Math.hypot(a.x - b.x, a.y - b.y)).toBeGreaterThan(VANGUARD.spread * 0.9);
+  });
+});
