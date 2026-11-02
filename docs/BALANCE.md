@@ -144,8 +144,20 @@ Report columns per minute: wave, starlight, kills/min, kills, wall %, vanguard c
 
 ## Proposed
 
+### TB-164 · Sim player aims at the front orc, led (2026-11-02) · applied
+The greedy sim fell at wave 2 at 0.5 run-minutes with the wall hit in wave 1; the director takes no damage until wave 3 with no upgrades. Cause: the sim's player model aimed at the densest crowd's current spot. The lob flies 0.7 s, so a grunt (48/s) walks 34 px and a runner 55 px out of the 20 px circle before it lands, and the densest crowd sits at the spawn edge, not at the wall.
+`sim/run.ts` now aims at the orc nearest the wall, led by its speed × `LOB.flight`. Default greedy, 30 min, seed 1:
+
+| Player model | First wall hit | First fall | Best wave |
+|---|---|---|---|
+| Densest crowd, unled (old) | wave 1 | wave 2 @ 0.5 min | 2 |
+| Densest crowd, led | wave 2 | wave 2 @ 0.7 min | 11 |
+| Front orc, led (new) | wave 3 | wave 3 @ 1.1 min | 12 |
+
+The first wall hit now matches the director's wave 3. Earlier balance entries were measured with the old model; re-run any you rely on.
+
 ### TB-157 · Grey Wolf nerf (2026-11-02) · applied
-**Decided 2026-11-02 (director): price 70→200, bite 6→4, node moved under Muster** (was off the root), so it is no longer a first buy. `npm run balance` (greedy, default seed) before and after: identical, first fall wave 2, best wave 2, 60 replants, sources owned none. The greedy sim falls at wave 2 at 0.5 run-minutes on every build back to P-151, so it never reaches the wolf and cannot measure this change; the director reports the real game reaches wave 5 untouched with no upgrades. That sim/game gap is open.
+**Decided 2026-11-02 (director): price 70→200, bite 6→4, node moved under Muster** (was off the root), so it is no longer a first buy. `npm run balance` (greedy, default seed) before and after: identical, first fall wave 2, best wave 2, 60 replants, sources owned none. The greedy sim falls at wave 2 at 0.5 run-minutes on every build back to P-151, so it never reaches the wolf and cannot measure this change; the director reports the real game reaches wave 5 untouched with no upgrades. That sim/game gap was the player model: see TB-164.
 
 ### P-151 · Price by power: cheaper Quick Draw, Keen Eye and Nimble Wrist (2026-11-02, TB-151) · applied
 **Decided 2026-11-02 (director): apply G1.** Quick Draw 12, Keen Eye 30, Nimble Wrist 46 are now the base prices in `src/data/skillTree.ts` and SKILL-TREE.md.
