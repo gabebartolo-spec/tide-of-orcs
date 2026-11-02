@@ -11,7 +11,7 @@ import { fmt } from '../ui/format';
 import { STR } from '../data/strings';
 import { Ceremony } from './ceremony';
 import { Sprites } from './sprites';
-import { orcAnimT, orcState, vanState } from './actorState';
+import { orcAnimT, orcState, orcSwingT, swingClipT, vanState } from './actorState';
 import { Ground, decorImg } from './ground';
 import { GROUND, LOOT_VFX, SKY, VFX, dusk } from '../data/presentation';
 import { SLOTS } from '../data/loot';
@@ -411,7 +411,8 @@ export class FieldRenderer {
     g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, o.r * 0.9, o.r * 0.9, o.r * 0.35, 0, 0, 6.28); g.fill();
     // Burning or chilled: the orc's own body takes the colour and a soft rim of it, so shading still reads (TB-089).
     const tint = o.burn > 0 ? P.fireTint : o.chill > 0 ? P.frostTint : '', glow = o.burn > 0 ? P.fire : o.chill > 0 ? P.frost : '';
-    if (this.sprites.drawActor(g, `orc.${o.kind}`, orcState(s, o), orcAnimT(o), 0, o.r * 0.9, o.r, o.hitT > 0, tint, glow, VFX.arrows.rimBlur)) { this.orcBars(o); g.restore(); return; }
+    const ost = orcState(s, o), ot = ost === 'attack' ? orcSwingT(o, this.sprites.duration(`orc.${o.kind}.attack`), VFX.strike.orc) : orcAnimT(o);
+    if (this.sprites.drawActor(g, `orc.${o.kind}`, ost, ot, 0, o.r * 0.9, o.r, o.hitT > 0, tint, glow, VFX.arrows.rimBlur)) { this.orcBars(o); g.restore(); return; }
     g.fillStyle = o.hitT > 0 ? P.cream : o.kind === 'boss' ? P.boss : o.kind === 'elite' ? P.elite : o.kind === 'brute' ? P.brute : P.orc;
     if (glow) { g.shadowColor = glow; g.shadowBlur = VFX.arrows.rimBlur; }
     g.beginPath(); g.ellipse(0, bob, o.r, o.r * 1.05, 0, 0, 6.28); g.fill(); g.shadowBlur = 0;
@@ -472,7 +473,8 @@ export class FieldRenderer {
   private van(s: SimState, v: Vanguard): void {
     const g = this.g, T = VANGUARD[v.type]; g.save(); g.translate(v.x, v.y);
     g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 16, 12, 4, 0, 0, 6.28); g.fill();
-    if (this.sprites.drawActor(g, `van.${v.type}`, vanState(s, v), this.clock, 0, 16, ACTOR_R, v.hitT > 0)) { this.vanBar(v); g.restore(); return; }
+    const vst = vanState(s, v), vt = vst === 'attack' ? swingClipT(v.swingT, T.cd, this.sprites.duration(`van.${v.type}.attack`), VFX.strike[v.type]) : this.clock;
+    if (this.sprites.drawActor(g, `van.${v.type}`, vst, vt, 0, 16, ACTOR_R, v.hitT > 0)) { this.vanBar(v); g.restore(); return; }
     g.fillStyle = v.hitT > 0 ? P.cream : v.type === 'spear' ? P.spear : P.blade; g.beginPath(); g.moveTo(-9, 14); g.lineTo(9, 14); g.lineTo(6, -6); g.lineTo(-6, -6); g.closePath(); g.fill();
     g.fillStyle = P.lilac; g.beginPath(); g.arc(0, -12, 7, 0, 6.28); g.fill();
     g.strokeStyle = P.cream; g.lineWidth = 2; g.beginPath();
