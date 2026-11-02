@@ -3,7 +3,7 @@
 # only the camera, ORTHO (one per actor so walk and attack share a pixel scale), RES and frames differ.
 param([string[]]$Only = @(), [string]$Frames = "", [switch]$Missing)  # -Frames: render into another frames dir; -Missing: only frames with no png yet (TB-194)
 $s = $PSScriptRoot; $bl = "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe"; $a = "C:\Users\DANTE\Documents\tide-assets"; $mx = "$a\mixamo"
-$o = "$a\sprites\frames"; New-Item -ItemType Directory -Force $o | Out-Null
+$o = if ($Frames) { $Frames } else { "$a\sprites\frames" }; New-Item -ItemType Directory -Force $o | Out-Null
 $vars = "WYAW", "RMATCH", "SWING", "MIRR", "H1", "MPH", "HINGE", "FREEZE", "WOFFS", "OFFS", "REST", "ARMSET", "ELBOWSET", "ARMTWIST", "DIRECT", "INPLACE", "ALIGN", "GRIP2", "CLIP", "CLIPDBG", "ELBOW", "HPROBE", "LHPROBE", "AMP", "DAMP", "ABD", "HIDE", "FOCUS",
   "QUIVER", "QFLOAT", "QPOSE", "QLEN", "QBOB", "ARROWF", "ARROWL", "RESTUP", "BOWALIGN", "GRIPSIDE", "ARROWPATH", "ARROWDBG",  # elf hero (bow + floating quiver)
   "FMATCH", "FINGSRC", "MPROBE", "MALLETAXIS", "MALLETMAX", "MALLETFORE", "MALLETSET"  # bladedancer daggers
