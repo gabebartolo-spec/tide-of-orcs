@@ -18,15 +18,15 @@ if (Number(throttle) > 1) await cdp('Emulation.setCPUThrottlingRate', { rate: Nu
 const expr = `(async () => {
   const step = await import('/src/sim/step.ts'), data = await import('/src/data/balance.ts');
   const { game, field } = window.__tide, s = game.state; s.run.fallen = false;
-  const kinds = ['grunt','grunt','grunt','runner','runner','brute','elite']; let k = 0;
-  const fill = () => { while (s.orcs.count < data.ORC_CAP) { if (!step.spawnOrc(s, kinds[k % 7])) break; } for (const o of s.orcs.items) if (o.live && o.hp < 1e8) { o.hp = o.maxhp = 1e9; o.x = 170 + 720 * ((k++ * 0.618) % 1); } };
+  const kinds = ['grunt','grunt','grunt','runner','runner','brute','elite','berserker','wolfrider','shaman','drummer']; let k = 0;
+  const fill = () => { s.run.fallen = false; s.run.barHp = s.stats.barMax; while (s.orcs.count < data.ORC_CAP) { if (!step.spawnOrc(s, kinds[k++ % kinds.length])) break; } for (const o of s.orcs.items) if (o.live && o.hp < 1e8) { o.hp = o.maxhp = 1e9; o.x = 170 + 720 * ((k++ * 0.618) % 1); } };
   const gl = document.createElement('canvas').getContext('webgl'), ext = gl && gl.getExtension('WEBGL_debug_renderer_info');
   const draws = []; const d0 = field.draw.bind(field); field.draw = (...a) => { const t = performance.now(); d0(...a); draws.push(performance.now() - t); };
   const ts = []; let on = true; const loop = (t) => { fill(); ts.push(t); if (on) requestAnimationFrame(loop); }; requestAnimationFrame(loop);
   await new Promise(r => setTimeout(r, 2000)); ts.length = 0; draws.length = 0;
   await new Promise(r => setTimeout(r, 6000)); on = false;
   const dt = ts.slice(1).map((t, i) => t - ts[i]).sort((a, b) => a - b), q = (a, p) => +a[Math.floor(a.length * p)].toFixed(2); draws.sort((a, b) => a - b);
-  return JSON.stringify({ canvas: [field.canvas.width, field.canvas.height], live: s.orcs.count, mode: document.body.dataset.mode ?? null,
+  return JSON.stringify({ canvas: [field.canvas.width, field.canvas.height], live: s.orcs.count, kinds: [...new Set(s.orcs.items.filter((o) => o.live).map((o) => o.kind))].length, mode: document.body.dataset.mode ?? null,
     fps: +(1000 * (ts.length - 1) / (ts.at(-1) - ts[0])).toFixed(1), frameMs: { med: q(dt, .5), p95: q(dt, .95), p99: q(dt, .99) },
     drawMs: { med: q(draws, .5), p95: q(draws, .95) }, gpu: ext ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : 'none' });
 })()`;
