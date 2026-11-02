@@ -38,10 +38,10 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
   run.waveT += dt;
   if (run.waveT >= WAVE_LEN) { run.waveT -= WAVE_LEN; run.wave++; s.meta.bestWave = Math.max(s.meta.bestWave, run.wave); ev.push({ t: 'wave', wave: run.wave }); if (run.wave % BOSS_WAVE.every === 0) ev.push({ t: 'bossReady' }); }
 
-  // each summoned kind marches on its own clock; a boss wave pauses them all and plays its script instead
+  // each kind marches on its own clock from its join wave (TB-158); a boss wave pauses them all and plays its script instead
   bossStep(s, ev, dt);
   for (const k of ORC_KINDS) {
-    const F = st.foes[k]; if (!F.on || run.boss) continue;
+    const F = st.foes[k], from = ORC_TYPES[k].from; if (!from || run.wave < from || run.boss) continue;
     const iv = waveInterval(run.wave) * ORC_TYPES[k].every / F.spawn;
     run.foeT[k] = (run.foeT[k] ?? 0) + dt;
     while ((run.foeT[k] ?? 0) >= iv) { run.foeT[k]! -= iv; spawnOrc(s, k); }
