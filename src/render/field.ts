@@ -12,8 +12,8 @@ import { STR } from '../data/strings';
 import { Ceremony } from './ceremony';
 import { Sprites } from './sprites';
 import { orcAnimT, orcState, vanState } from './actorState';
-import { Ground } from './ground';
-import { LOOT_VFX, SKY, VFX, dusk } from '../data/presentation';
+import { Ground, decorImg } from './ground';
+import { GROUND, LOOT_VFX, SKY, VFX, dusk } from '../data/presentation';
 import { SLOTS } from '../data/loot';
 import { setTiers } from '../sim/gear';
 
@@ -197,7 +197,17 @@ export class FieldRenderer {
     // barricade
     const frac = barFrac(s);
     g.fillStyle = P.wallShade; g.fillRect(BAR_X + 4, 0, BAR_W + 4, H);
-    for (let y = 0; y < H; y += 18) {
+    const logs = decorImg('logpile');
+    if (logs) {
+      // stacked log-pile segments (TB-162), top to bottom so each overlaps the one behind it
+      const L = GROUND.logs, lh = L.w * logs.height / logs.width;
+      for (let i = 0, y = -lh / 2; y < H; i++, y += L.step) {
+        const alive = y / H < frac || (i * 0.618034) % 1 < frac;  // same fixed break scatter as the planks
+        g.globalAlpha = alive ? 1 : 0.3;
+        g.drawImage(logs, BAR_X + BAR_W / 2 - L.w / 2 + (alive ? 0 : 5), y, L.w, lh);
+      }
+      g.globalAlpha = 1;
+    } else for (let y = 0; y < H; y += 18) {
       // each plank breaks at a fixed point (golden-ratio scatter), so damage never flickers frame to frame
       const alive = y / H < frac || ((y / 18) * 0.618034) % 1 < frac;
       g.fillStyle = alive ? (y % 36 ? P.timber : P.timberDark) : P.timberSplinter;
