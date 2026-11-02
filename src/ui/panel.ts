@@ -69,6 +69,10 @@ export class Panel {
       if (e.key === 'Tab') { const id = stepNode(order, tree.selected, e.shiftKey ? -1 : 1); if (!id) return; e.preventDefault(); this.onCue('click'); tree.select(id); this.renderDetail(); }
       else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); const id = tree.selected; if (canBuy(game.state, NODE[id])) this.buy(id); else this.onCue('denied'); }
     });
+    // Full-screen tree (TB-189): the button toggles it, Esc closes it; buying and the detail card work the same inside it
+    $('tree-full').onclick = () => { this.onCue('click'); this.setTreeFull(!document.body.classList.contains('tree-full')); };
+    addEventListener('keydown', (e) => { if (e.key === 'Escape' && document.body.classList.contains('tree-full')) { e.preventDefault(); this.setTreeFull(false); } });
+    this.setTreeFull(false);
     $('hw-title').textContent = STR.hwTitle;
     $('hw-tree').onclick = (e) => { const id = (e.target as HTMLElement).closest('button')?.dataset.hw as HwId | undefined; if (id && game.buyHw(id)) { this.toast(STR.hwBought(HW_NODE[id].name)); this.renderHw(); } };
     this.renderDetail(); this.renderHw(); this.setMode('run');
@@ -146,6 +150,7 @@ export class Panel {
 
   /** run: the field fills the screen; camp: the Grove, Satchel and Replant pages after a fall; settings: an overlay mid-run. */
   setMode(m: 'run' | 'camp' | 'settings'): void {
+    if (m !== 'camp') this.setTreeFull(false);
     document.body.dataset.mode = m;
     $('camp-go').hidden = m !== 'camp'; $('camp-close').hidden = m !== 'settings';
     $('camp-title').textContent = m === 'settings' ? STR.tabSettings : STR.campTitle;
@@ -154,7 +159,16 @@ export class Panel {
     requestAnimationFrame(() => { this.tree.resize(); this.tree.draw(this.game.state, this.game.state.t); });
   }
 
+  /** Show the whole skill tree over the window, or return to the normal Grove view (TB-189). */
+  setTreeFull(on: boolean): void {
+    document.body.classList.toggle('tree-full', on);
+    const b = $('tree-full'); b.textContent = on ? STR.treeClose : STR.treeFull; b.setAttribute('aria-label', on ? STR.treeCloseLabel : STR.treeFullLabel);
+    this.tree.setFull(on); this.tree.draw(this.game.state, this.game.state.t);
+    if (on) this.tree.canvas.focus();
+  }
+
   setTab(k: 'grove' | 'satchel' | 'prestige' | 'settings'): void {
+    if (k !== 'grove') this.setTreeFull(false);
     for (const t of ['grove', 'satchel', 'prestige', 'settings'] as const) { $('pane-' + t).hidden = k !== t; $('tab-' + t).setAttribute('aria-selected', String(k === t)); }
   }
 

@@ -274,3 +274,10 @@ button, select, .tabs { touch-action: manipulation; }
   .settings textarea { height: 3.5rem; }
 }
 body[data-mode="camp"] .tab.fitscroll:not([hidden]) { overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+
+/* Full-screen skill tree (TB-189): the Grove pane covers the window, the whole tree fits beside the detail card. */
+.treefull { position: absolute; top: 0.25rem; right: 0.5rem; z-index: 1; padding: 0.25rem 0.625rem; font-size: 0.8125rem; background: var(--ink-2); }
+body.tree-full #pane-grove { position: fixed; inset: 0; z-index: 30; display: flex; flex-direction: row; background: var(--ink); }
+body.tree-full #pane-grove .treewrap { flex: 1 1 0; min-width: 0; height: auto; }
+body.tree-full #pane-grove .detail { flex: 0 0 22rem; min-height: 0; overflow: auto; border-top: 0; border-left: 0.0625rem solid var(--line); padding: 1.25rem 1rem; justify-content: flex-start; }
+body.tree-full #pane-grove .detail .name { font-size: 1.5rem; }

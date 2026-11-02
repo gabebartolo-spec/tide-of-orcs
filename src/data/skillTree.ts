@@ -166,7 +166,12 @@ export const TREE_VIEW = { startZoom: 1, focusX: 700, focusY: 890, minZoom: 0.6,
   legendH: 34,
   /** Arcane tree (TB-163): wood width = woodBase + woodPerNode × √(nodes it carries); growth rate of a newly bought link (1/s);
    *  sparkle speed along grown wood (laps/s); how far up a trunk node's upward links run before they bend out (fraction). */
-  woodBase: 1.5, woodPerNode: 1.7, growRate: 2.5, sparkSpeed: 0.3, trunkRise: 0.6 } as const;
+  woodBase: 1.5, woodPerNode: 1.7, growRate: 2.5, sparkSpeed: 0.3, trunkRise: 0.6,
+  /** Full-screen view (TB-189): share of the screen the whole tree fills. */
+  wholeMargin: 0.96,
+  /** Neon links (TB-190): halo width over the wood (px), pulse rate (rad/s) and depth (0..1), flow dash and gap (px),
+   *  flow speed (px/s). */
+  neonHalo: 14, pulseRate: 1.6, pulseDepth: 0.35, flowDash: 10, flowGap: 34, flowSpeed: 26 } as const;
 
 export const BRANCH_COLOR: Readonly<Record<Branch, string>> = { Bow: '#cdbdea', Companions: '#e2a85b', Armoury: '#c76f6f', Grove: '#9fc48f', Barricade: '#c9a06a', Vanguard: '#8fb7c9', Spoils: '#e8d9a0' };
 /** What the player reads for each branch; the Branch values stay as code names. */
