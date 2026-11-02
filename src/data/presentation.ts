@@ -69,6 +69,11 @@ export const GROUND = {
   tufts: { clusters: 26, per: [3, 6], spread: 18, singles: 40, blades: [4, 7], h: [6, 12], lean: 0.6, width: 1.4 },
   /** Small rocks: count (half sit on worn patches), radius, y squash, pebbles beside each, pebble radius. */
   rocks: { n: 18, r: [2.6, 5.5], squash: 0.62, pebbles: [0, 3], pebbleR: [1, 1.8] },
+  /** Sunlit pale-green drifts that vary the greens (TB-166): count, blobs, radius, squash, scatter. */
+  sunlit: { n: 8, blobs: [4, 7], r: [16, 30], squash: 0.45, spread: 38 },
+  /** Vector meadow flowers (TB-166): drifts along the top/bottom borders (edge = band depth as a fraction of H), flowers per
+   *  drift, drift size; loose singles in the lane; petal radius; stem height; weight per kind. */
+  flowers: { drifts: 16, per: [24, 36], driftW: 90, driftH: 22, edge: 0.22, lane: 40, r: [2.4, 3.8], stem: [3, 8], kinds: { daisy: 4, violet: 3, buttercup: 2, blossom: 1 } },
   /** Fence barricade (director 2 Nov, Sketchfab "the fence"): panel draw width, vertical step between stacked panels (units). */
   fence: { w: 30, step: 22 },
 } as const;
@@ -81,4 +86,12 @@ export const LOOT_VFX = {
   foot: 10, beamH: 110, beamW: 8, beamAlpha: 0.7, pulse: 9, spiral: 6, spin: 5, rise: 60, ringR: 34, groundAlpha: 0.25,
   mythic: { hold: 0.5, slow: 0.5, slowScale: 0.6, edge: 1.5, edgeW: 14, flicker: 20 },
   equip: 1, equipW: 4, leafLife: 2, leafN: 10, leafR: 30, leafSpin: 1.6,
+} as const;
+
+/** Field ambience (TB-166): glowing fairy motes and soft sun shafts. Render-only; field units, seconds. */
+export const AMBIENCE = {
+  /** Motes: count, core radius, halo scale, drift speed, glow pulse rate; alpha by day and at full dusk. */
+  motes: { n: 50, r: [0.9, 1.8], halo: 4, speed: 7, pulse: 1.3, day: 0.55, night: 1 },
+  /** Sun shafts slanting down from the top edge: count, width, slant (x per y), peak alpha by day, sway rate. */
+  shafts: { n: 4, w: [50, 95], slant: 0.42, alpha: 0.09, sway: 0.12 },
 } as const;

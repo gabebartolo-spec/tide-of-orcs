@@ -8,7 +8,9 @@ type Range = readonly [number, number];
 export interface Blob { x: number; y: number; r: number; squash: number }
 export interface Tuft { x: number; y: number; blades: { a: number; h: number; light: boolean }[] }
 export interface Rock { x: number; y: number; r: number; squash: number }
-export interface GroundLayout { lush: Blob[]; worn: Blob[]; bare: Blob[]; tufts: Tuft[]; rocks: Rock[] }
+export type FlowerKind = keyof typeof GROUND.flowers.kinds;
+export interface Flower { x: number; y: number; kind: FlowerKind; r: number; stem: number; rot: number }
+export interface GroundLayout { lush: Blob[]; sunlit: Blob[]; worn: Blob[]; bare: Blob[]; tufts: Tuft[]; rocks: Rock[]; flowers: Flower[] }
 
 const span = (rng: Rng, [a, b]: Range): number => a + rng.next() * (b - a);
 const count = (rng: Rng, [a, b]: Range): number => a + Math.floor(rng.next() * (b - a + 1));
@@ -30,9 +32,10 @@ function tuft(rng: Rng, x: number, y: number): Tuft {
 
 /** Deterministic ground layout for a seed: pure data, so it is testable without a canvas. */
 export function layoutGround(seed: number = GROUND.seed): GroundLayout {
-  const rng = createRng(seed), L: GroundLayout = { lush: [], worn: [], bare: [], tufts: [], rocks: [] };
+  const rng = createRng(seed), L: GroundLayout = { lush: [], sunlit: [], worn: [], bare: [], tufts: [], rocks: [], flowers: [] };
   const pt = (): [number, number] => [x0 + rng.next() * (W - x0), rng.next() * H];
   for (let i = 0; i < GROUND.lush.n; i++) { const [x, y] = pt(); drift(rng, L.lush, x, y, GROUND.lush); }
+  for (let i = 0; i < GROUND.sunlit.n; i++) { const [x, y] = pt(); drift(rng, L.sunlit, x, y, GROUND.sunlit); }
   const wornAt: [number, number][] = [];
   for (let i = 0; i < GROUND.worn.n; i++) {
     const [x, y] = pt(); wornAt.push([x, y]); drift(rng, L.worn, x, y, GROUND.worn);
@@ -48,7 +51,19 @@ export function layoutGround(seed: number = GROUND.seed): GroundLayout {
     L.rocks.push({ x: clampX(x), y: clampY(y), r, squash: sq });
     for (let k = count(rng, R.pebbles); k > 0; k--) L.rocks.push({ x: clampX(x + near(rng, r * 3)), y: clampY(y + near(rng, r * 1.5)), r: span(rng, R.pebbleR), squash: sq });
   }
-  L.tufts.sort((a, b) => a.y - b.y); L.rocks.sort((a, b) => a.y - b.y);
+  // meadow: flower drifts strung along the top and bottom borders, a few loose singles in the fighting lane
+  const F = GROUND.flowers, kinds = Object.entries(F.kinds) as [FlowerKind, number][], total = kinds.reduce((t, [, w]) => t + w, 0);
+  const pick = (): FlowerKind => { let r = rng.next() * total; for (const [k, w] of kinds) if ((r -= w) < 0) return k; return kinds[0]![0]; };
+  const flower = (x: number, y: number, kind: FlowerKind, scale = 1): void => { L.flowers.push({ x: clampX(x), y: clampY(y), kind, r: span(rng, F.r) * scale, stem: span(rng, F.stem) * scale, rot: rng.next() * 1.26 }); };
+  const band = H * F.edge, slot = (W - x0) / Math.ceil(F.drifts / 2);
+  for (let i = 0; i < F.drifts; i++) {
+    const top = i % 2 === 0, cx = x0 + slot * (Math.floor(i / 2) + 0.5 + (top ? 0 : 0.5)) + near(rng, slot * 0.2);
+    const cy = top ? band * (0.25 + rng.next() * 0.5) : H - band * (0.25 + rng.next() * 0.5), main = pick();
+    // each drift leans on one kind with a sprinkle of others, so it reads as a wild meadow
+    for (let k = count(rng, F.per); k > 0; k--) flower(cx + near(rng, F.driftW / 2), cy + near(rng, F.driftH), rng.next() < 0.7 ? main : pick());
+  }
+  for (let i = 0; i < F.lane; i++) flower(x0 + rng.next() * (W - x0), band + rng.next() * (H - band * 2), pick(), 0.75);
+  L.tufts.sort((a, b) => a.y - b.y); L.rocks.sort((a, b) => a.y - b.y); L.flowers.sort((a, b) => a.y - b.y);
   return L;
 }
 
@@ -72,7 +87,7 @@ export const decorImg = (k: (typeof DECOR)[number]): HTMLImageElement | null => 
 
 function paint(g: CanvasRenderingContext2D, L: GroundLayout): void {
   g.fillStyle = P.plain; g.fillRect(-PAD, -PAD, W + PAD * 2, H + PAD * 2);
-  blobs(g, L.lush, P.plainLush); blobs(g, L.worn, P.plainWorn); blobs(g, L.bare, P.plainBare);
+  blobs(g, L.lush, P.plainLush); blobs(g, L.sunlit, P.plainSun); blobs(g, L.worn, P.plainWorn); blobs(g, L.bare, P.plainBare);
   for (const r of L.rocks) {
     g.fillStyle = P.shadow; g.beginPath(); g.ellipse(r.x + r.r * 0.25, r.y + r.r * r.squash * 0.55, r.r * 1.1, r.r * r.squash * 0.7, 0, 0, 6.28); g.fill();
     g.fillStyle = P.rock; g.beginPath(); g.ellipse(r.x, r.y, r.r, r.r * r.squash, 0, 0, 6.28); g.fill();
@@ -89,6 +104,31 @@ function paint(g: CanvasRenderingContext2D, L: GroundLayout): void {
     g.stroke();
   }
   g.lineCap = 'butt';
+  flowers(g, L.flowers);
+}
+
+const PETAL: Record<FlowerKind, string> = { daisy: P.daisy, violet: P.violet, buttercup: P.buttercup, blossom: P.blossom };
+
+/** Stems, a leaf each, then five petals round a heart; back to front so nearer flowers overlap. */
+function flowers(g: CanvasRenderingContext2D, list: Flower[]): void {
+  g.lineWidth = 0.9; g.lineCap = 'round'; g.strokeStyle = P.tuft; g.beginPath();
+  for (const f of list) { g.moveTo(f.x, f.y); g.lineTo(f.x, f.y - f.stem); }
+  g.stroke(); g.lineCap = 'butt';
+  g.fillStyle = P.tuft; g.beginPath();
+  for (const f of list) { const ly = f.y - f.stem * 0.4; g.moveTo(f.x + f.r * 1.4, ly); g.ellipse(f.x + f.r * 0.7, ly, f.r * 0.7, f.r * 0.28, -0.5, 0, 6.28); }
+  g.fill();
+  for (const f of list) {
+    const hx = f.x, hy = f.y - f.stem;
+    g.fillStyle = P.shadow; g.beginPath(); g.ellipse(hx + 0.4, hy + 0.6, f.r * 1.2, f.r * 0.7, 0, 0, 6.28); g.fill();
+    g.fillStyle = PETAL[f.kind]; g.beginPath();
+    for (let k = 0; k < 5; k++) {
+      const a = f.rot + k * 1.2566, px = hx + Math.cos(a) * f.r * 0.62, py = hy + Math.sin(a) * f.r * 0.45;
+      g.moveTo(px + f.r * 0.5, py); g.ellipse(px, py, f.r * 0.5, f.r * 0.36, a, 0, 6.28);
+    }
+    g.fill();
+    g.fillStyle = f.kind === 'daisy' || f.kind === 'buttercup' ? P.flowerHeart : P.flowerHeartPale;
+    g.beginPath(); g.arc(hx, hy, f.r * 0.32, 0, 6.28); g.fill();
+  }
 }
 
 /** The plain, pre-rendered once per canvas size (field rect plus shake padding), then blitted each frame. */

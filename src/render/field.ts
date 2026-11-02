@@ -13,6 +13,7 @@ import { Ceremony } from './ceremony';
 import { Sprites } from './sprites';
 import { orcAnimT, orcState, orcSwingT, swingClipT, vanState } from './actorState';
 import { Ground, decorImg } from './ground';
+import { Ambience } from './ambience';
 import { GROUND, LOOT_VFX, SKY, VFX, dusk } from '../data/presentation';
 import { SLOTS } from '../data/loot';
 import { setTiers } from '../sim/gear';
@@ -43,6 +44,7 @@ export class FieldRenderer {
   readonly ceremony = new Ceremony();
   readonly sprites = new Sprites();
   private ground = new Ground();
+  private ambience = new Ambience(BAR_X + BAR_W);
   /** Animation clock for sprite frames. */
   private clock = 0;
   /** Reused draw-order buffers and wind-up scratch (no per-frame allocation). */
@@ -283,6 +285,8 @@ export class FieldRenderer {
     }
     if (s.stats.hawk) { const h = s.hawk; g.save(); g.translate(h.x, h.y); g.fillStyle = P.bark; g.beginPath(); g.moveTo(-12, 0); g.lineTo(0, -3); g.lineTo(12, 0); g.lineTo(0, 3); g.closePath(); g.fill(); g.restore(); }
 
+    this.ambience.motesDraw(g, this.clock, n, this.reducedMotion);
+    this.ambience.shaftsDraw(g, this.clock, n, this.reducedMotion);
     this.fx.draw(g);
 
     // HUD overlays (no shake)

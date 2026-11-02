@@ -3,6 +3,11 @@ export const P = {
   ink: '#161d15', ink2: '#1f281d', ink3: '#2a3527', line: '#3b4a37',
   cream: '#efe6d2', creamDim: '#b9b09c', text: '#ecdcb4', textDim: '#d2bd92',
   plain: '#7c9676', plainPatch: '#86a07e', plainLush: '#728d6c', plainWorn: '#8e9a72', plainBare: '#a09c80',
+  plainSun: '#8eab7b',
+  // meadow flowers (TB-166): petals and hearts
+  daisy: '#f6f2e4', violet: '#9b7fd0', buttercup: '#f2c64c', blossom: '#e9a0bb', flowerHeart: '#e8b84a', flowerHeartPale: '#f6e7a8',
+  // ambience (TB-166): fairy motes and sun shafts
+  mote: '#d6efff', moteGlow: 'rgba(150,205,255,.28)', shaft: 'rgba(255,241,196,1)', shaftClear: 'rgba(255,241,196,0)',
   tuft: '#5e7858', tuftLight: '#a3b993', rock: '#8f9597', rockLight: '#b7bbb6', groveSide: '#9fb391',
   timber: '#8a6a46', timberDark: '#7a5c3c', timberSplinter: '#4e3a28', timberBand: '#5a4634', sand: '#c9b78a',
   amber: '#e2a85b', rose: '#c76f6f', lilac: '#cdbdea',
