@@ -295,6 +295,21 @@ What it says:
 - Every seed reaches wave 25 by run 19–20 and clears the first boss on the same run. Then six or more runs in a row fall at wave 27–28 (seed 1: runs 20–25): a plateau right after the boss.
 - The first boss is the real milestone and sits at 81–105 play minutes. TB-147 (additive stacking, price by power) is where to move it.
 
+### TB-146 · Dev plan §8 #6 gate re-check (2026-11-03, measured; no numbers changed)
+On main 2e9abb3 (TB-175 late orcs, HP_RAMP after wave 15, four new orcs at 25/30/35/40, TB-171 Heartwood only from cleared bosses). Greedy, loot greedy, seeds 1–4. Fresh: 180 min, with and without `--hwbuy`. Full tree: 120 min, `--hw hw_dawn:5,hw_wolf:1,hw_timber:3,hw_orders:2,hw_boss:3,hw_find:3,hw_fortune:3,hw_satchel:1,hw_tithe:1,hw_heirloom:1,hw_glimmer:1` (all 11 nodes at max).
+
+| | Seed 1 | Seed 2 | Seed 3 | Seed 4 |
+|---|---|---|---|---|
+| Fresh, first boss reached | run 34, 35.7 min | run 35, 36.5 min | run 37, 34.6 min | run 39, 37.3 min |
+| Fresh, first boss cleared | run 34, 36.4 min | run 35, 37.3 min | run 38, 37.0 min | run 39, 38.0 min |
+| Full tree, first boss reached | run 19, 28.6 min | run 29, 24.6 min | run 26, 24.2 min | run 32, 25.2 min |
+| Full tree, first boss cleared | run 19, 29.3 min | run 30, 27.1 min | run 27, 26.6 min | run 33, 27.8 min |
+
+What it says:
+- **(a) passes.** Every fresh save reaches and clears the first boss, at 35–38 play minutes (1 Nov: 81–90). `--hwbuy` changes nothing before the boss: with TB-171 a fall pays no Heartwood, so the first Heartwood is the boss's own, and the with/without rows are identical. Runs 6–33 sit at waves 12–13 (0.5–1 min each) before a climb to 25.
+- **(b) passes.** The full tree saves 8–12 minutes but does not skip the boss: 19–32 runs still pass first, mostly falling at waves 15–17, and on seeds 2–4 the first meeting at wave 25 is a fall (wave 25@1.7–1.9 min) with the clear one run later. Only seed 1 clears it on first meeting. Run 1 is unaffected (falls at wave 3–4).
+- The boss is a wall in both cases; after it, runs climb to waves 40–50 within the 2–3 h window.
+
 ### P-147 · Additive stacking inside a node line (2026-11-01, TB-147; dev plan §8 #2, #4)
 **Decided 2026-11-01 (director): keep multiply.** Ranks stay `m^r`; `STACKING.add` stays 0 and is kept only as a sim switch. The proposed add numbers below are rejected and kept as the record.
 The sim has a switch: `STACKING.add` in `balance.ts` (0 = today, every rank multiplies, `m^r`; 1 = ranks add inside the stat, `1 + (m − 1) × r`). Foe Fury and Swarm always multiply. The default is still 0, so the game has not changed. All four rows: greedy, `--hwbuy`, 180 min, seeds 1–4, ranges across seeds.
