@@ -54,7 +54,9 @@ export class FieldRenderer {
   private wind = { dx: 0, dy: 0 };
   private sim: SimState | null = null;
   /** Loot moments (TB-105): drop beams, the equip glow on the bow, the set-bonus leaf ring, the mythic screen-edge shimmer and slow-motion clock. */
-  private beams: { x: number; y: number; life: number; max: number; c: string; ground: boolean; spiral: boolean }[] = [];
+  private beams: { x: number; y: number; life: number; max: number; c: string; ground: boolean; spiral: boolean; k: number }[] = [];
+  /** Legendary/mythic field flash (TB-192): seconds left, peak alpha, colour. */
+  private flash = 0; private flashA = 0; private flashC: string = P.cream;
   private glow = { t: 0, c: P.cream as string };
   private leaves = 0; private edge = 0; private slow = 0; private tiers = -1;
   private worn: Partial<Record<string, string>> = {};
@@ -123,15 +125,17 @@ export class FieldRenderer {
     }
   }
 
-  /** A drop: common glints; rarer items stand a beam in their colour, epic with a mote spiral, legendary and mythic with a lit ground ring; mythic also holds, slows and shimmers the screen edge. */
+  /** A drop (TB-192): every rarity stands a pillar in its colour, taller and wider by rarity; common also glints, epic gets a mote spiral,
+   *  legendary and mythic a lit ground ring, a screen shake and a field flash; mythic also holds, slows and shimmers the screen edge. */
   private lootDrop(x: number, y: number, rarity: string): void {
-    const L = LOOT_VFX, c = RAR_C[rarity] ?? P.cream;
-    if (rarity === 'common') { this.fx.burst(x, y - 6, c, L.glint[0], L.glint[1]); return; }
-    const life = L.beam[rarity as keyof typeof L.beam] ?? L.beam.rare, ground = rarity === 'legendary' || rarity === 'mythic';
-    this.beams.push({ x, y: y + L.foot, life, max: life, c, ground, spiral: rarity === 'epic' });
+    const L = LOOT_VFX, c = RAR_C[rarity] ?? P.cream, r = rarity as keyof typeof L.scale;
+    const life = L.beam[r] ?? L.beam.rare, ground = rarity === 'legendary' || rarity === 'mythic';
+    this.beams.push({ x, y: y + L.foot, life, max: life, c, ground, spiral: rarity === 'epic', k: L.scale[r] ?? 1 });
+    if (rarity === 'common') this.fx.burst(x, y - 6, c, L.glint[0], L.glint[1]);
+    if (ground) { const g = r as keyof typeof L.flash; this.flash = L.flashLife; this.flashA = L.flash[g]; this.flashC = c; }
     if (this.reducedMotion) return;
-    this.fx.burst(x, y, c, L.motes[rarity as keyof typeof L.motes] ?? 0, L.moteSpeed);
-    if (ground) this.fx.ring(x, y + L.foot, L.ringR, c, 2, life * 0.5);
+    this.fx.burst(x, y, c, L.motes[r] ?? 0, L.moteSpeed);
+    if (ground) { this.fx.ring(x, y + L.foot, L.ringR * L.scale[r], c, 3, life * 0.5); this.shake = Math.min(1, this.shake + L.shake[r as keyof typeof L.shake]); }
     if (rarity === 'mythic') { this.edge = L.mythic.edge; this.slow = L.mythic.hold + L.mythic.slow; }
   }
 
@@ -299,6 +303,7 @@ export class FieldRenderer {
     g.fillText(STR.barricadeHud(fmt(Math.max(0, s.run.barHp)), fmt(s.stats.barMax)), 12, 21 + 13 * ts); g.shadowBlur = 0;
     if (s.stats.muster) g.fillText(STR.vanguardHud(s.vans.count, s.stats.vanCap), 12, 21 + 25 * ts);
     g.fillStyle = P.dim45; g.fillRect(0, H - 5, W, 5); g.fillStyle = P.amber; g.fillRect(0, H - 5, W * (s.run.waveT / WAVE_LEN), 5);
+    if (this.flash > 0) { this.flash -= dt; g.globalAlpha = Math.max(0, this.flash / LOOT_VFX.flashLife) * this.flashA; g.fillStyle = this.flashC; g.fillRect(0, 0, W, H); g.globalAlpha = 1; }
     if (this.edge > 0) { const M = LOOT_VFX.mythic; g.globalAlpha = (this.edge / M.edge) * (0.6 + 0.4 * Math.sin(this.clock * M.flicker)); g.strokeStyle = P.rose; g.lineWidth = M.edgeW; g.strokeRect(M.edgeW / 2, M.edgeW / 2, W - M.edgeW, H - M.edgeW); g.globalAlpha = 1; }
     this.ceremony.draw(g, dt);
   }
@@ -308,11 +313,13 @@ export class FieldRenderer {
     const g = this.g, L = LOOT_VFX, rm = this.reducedMotion;
     for (let i = this.beams.length - 1; i >= 0; i--) {
       const b = this.beams[i]!; b.life -= dt; if (b.life <= 0) { this.beams.splice(i, 1); continue; }
-      const k = b.life / b.max, w = L.beamW * (rm ? 1 : 1 + 0.25 * Math.sin(this.clock * L.pulse));
-      if (b.ground) { g.globalAlpha = L.groundAlpha * k; g.fillStyle = b.c; g.beginPath(); g.ellipse(b.x, b.y, L.ringR, L.ringR * 0.4, 0, 0, 6.28); g.fill(); }
-      const gr = g.createLinearGradient(0, b.y, 0, b.y - L.beamH); gr.addColorStop(0, b.c); gr.addColorStop(1, 'transparent');
-      g.globalAlpha = Math.min(1, k * 2) * L.beamAlpha; g.fillStyle = gr; g.fillRect(b.x - w / 2, b.y - L.beamH, w, L.beamH);
-      if (b.spiral && !rm) { g.fillStyle = b.c; for (let j = 0; j < L.spiral; j++) { const t = this.clock * L.spin + (j * 6.28) / L.spiral, yy = b.y - ((this.clock * L.rise + (j * L.beamH) / L.spiral) % L.beamH); g.fillRect(b.x + Math.cos(t) * w - 1.5, yy - 1.5, 3, 3); } }
+      const k = b.life / b.max, h = L.beamH * b.k, w = L.beamW * b.k * (rm ? 1 : 1 + 0.25 * Math.sin(this.clock * L.pulse)), a = Math.min(1, k * 2);
+      if (b.ground) { g.globalAlpha = L.groundAlpha * k; g.fillStyle = b.c; g.beginPath(); g.ellipse(b.x, b.y, L.ringR * b.k, L.ringR * b.k * 0.4, 0, 0, 6.28); g.fill(); }
+      const gr = g.createLinearGradient(0, b.y, 0, b.y - h); gr.addColorStop(0, b.c); gr.addColorStop(1, 'transparent');
+      g.globalAlpha = a * L.beamAlpha; g.fillStyle = gr; g.fillRect(b.x - w / 2, b.y - h, w, h);
+      // a bright core down the middle so the pillar reads against any ground
+      g.globalAlpha = a * L.beamAlpha; g.fillStyle = P.cream; g.fillRect(b.x - (w * L.core) / 2, b.y - h * 0.8, w * L.core, h * 0.8);
+      if (b.spiral && !rm) { g.fillStyle = b.c; for (let j = 0; j < L.spiral; j++) { const t = this.clock * L.spin + (j * 6.28) / L.spiral, yy = b.y - ((this.clock * L.rise + (j * h) / L.spiral) % h); g.fillRect(b.x + Math.cos(t) * w - 1.5, yy - 1.5, 3, 3); } }
       g.globalAlpha = 1;
     }
   }
