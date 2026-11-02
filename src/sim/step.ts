@@ -57,6 +57,7 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
   s.orcs.forEach((o) => { o.drum = false; });
   s.orcs.forEach((d) => {
     if (d.dead || d.kind !== 'drummer') return;
+    d.castT = Math.min(d.castT, ORC_FX.drumEvery) - dt; if (d.castT <= 0) { d.castT += ORC_FX.drumEvery; ev.push({ t: 'drumBeat', x: d.x, y: d.y }); }
     s.orcs.forEach((o) => { if (!o.dead && o !== d && (o.x - d.x) ** 2 + (o.y - d.y) ** 2 < ORC_FX.drumReach ** 2) o.drum = true; });
   });
   s.orcs.forEach((o) => {

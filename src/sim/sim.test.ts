@@ -290,3 +290,15 @@ describe('boss waves (TB-081)', () => {
     expect(bossHw(10)).toBe(3); expect(bossHw(25)).toBe(3); expect(bossHw(50)).toBe(6); expect(bossHw(99)).toBe(9);
   });
 });
+
+describe('war drummer beat (TB-182)', () => {
+  it('a live drummer emits a drumBeat every ORC_FX.drumEvery seconds', async () => {
+    const { ORC_FX } = await import('../data/orcs');
+    const s = createState(1, freshRun()), ev = new EventBus();
+    spawnOrc(s, 'drummer');
+    let beats = 0;
+    for (let t = 0; t < 8; t += STEP) { step(s, STEP, noInputs, ev); beats += ev.drain().filter((e) => e.t === 'drumBeat').length; }
+    expect(beats).toBeGreaterThanOrEqual(Math.floor(8 / ORC_FX.drumEvery) - 1);
+    expect(beats).toBeLessThanOrEqual(Math.ceil(8 / ORC_FX.drumEvery) + 1);
+  });
+});

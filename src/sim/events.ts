@@ -42,6 +42,7 @@ export type SimEvent =
   | { t: 'fireballStrike'; x: number; y: number; r: number }
   /** A wolf rider leapt a vanguard (TB-087). */
   | { t: 'riderLeap'; x: number; y: number }
+  | { t: 'drumBeat'; x: number; y: number }
   | { t: 'hawkDive'; x: number; y: number }
   | { t: 'treantStamp'; x: number; y: number }
   | { t: 'bite'; x: number; y: number }
