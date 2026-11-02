@@ -27,7 +27,7 @@ export function placeVanguard(s: SimState, type: VanType): Vanguard | null {
   const lane = s.vans.count - 1;
   const hp = vanBaseHp(type, s.run.wave) * s.stats.vanHp;
   v.type = type; v.x = FIELD.barX + 10; v.tx = FIELD.barX + VANGUARD.standX;
-  v.y = FIELD.h / 2 + (lane % 2 ? 1 : -1) * Math.ceil(lane / 2) * VANGUARD.laneGap;
+  v.y = v.ty = FIELD.h / 2 + (lane % 2 ? 1 : -1) * Math.ceil(lane / 2) * VANGUARD.laneGap; v.mv = true; v.face = 1;
   v.hp = hp; v.maxhp = hp; v.swingT = 0; v.hitT = 0;
   return v;
 }
@@ -36,7 +36,7 @@ export function vanguardStep(s: SimState, ev: EventBus, dt: number): void {
   const st = s.stats;
   s.vans.forEach((v: Vanguard) => {
     const U = st.units[v.type];
-    if (v.x < v.tx) v.x = Math.min(v.tx, v.x + VANGUARD.walkSpeed * U.spd * dt);
+    march(s, v, VANGUARD.walkSpeed * U.spd * dt);
     if (v.hitT > 0) v.hitT -= dt;
     if (st.vanMend > 0 && v.hp < v.maxhp) v.hp = Math.min(v.maxhp, v.hp + v.maxhp * st.vanMend * dt);
     const T = VANGUARD[v.type]; v.swingT += dt * U.rate;
@@ -52,6 +52,24 @@ export function vanguardStep(s: SimState, ev: EventBus, dt: number): void {
     });
     if (hitAny) v.swingT = 0;
   });
+}
+
+/** The live orc nearest this vanguard, or null when the field is clear. */
+export function nearestOrcTo(s: SimState, v: Vanguard): Orc | null {
+  let best: Orc | null = null, bd = Infinity;
+  s.orcs.forEach((o) => { if (o.dead) return; const d = Math.hypot(o.x - v.x, o.y - v.y); if (d < bd) { bd = d; best = o; } });
+  return best;
+}
+
+/** March (TB-156): walk to the nearest orc until it is in reach, or back to the home stand when the field is clear. */
+function march(s: SimState, v: Vanguard, step: number): void {
+  const o = nearestOrcTo(s, v);
+  const gx = o ? o.x : v.tx, gy = o ? o.y : v.ty, stop = o ? VANGUARD[v.type].reach * VANGUARD.closeIn + o.r : 0;
+  const dx = gx - v.x, dy = gy - v.y, d = Math.hypot(dx, dy), go = Math.min(step, d - stop);
+  v.mv = go > 1e-6;
+  if (!v.mv) return;
+  v.x += (dx / d) * go; v.y += (dy / d) * go;
+  if (Math.abs(dx) > 1e-6) v.face = dx > 0 ? 1 : -1;
 }
 
 /** Called by the orc step: returns the vanguard this orc is engaging, if any. */
