@@ -30,6 +30,8 @@ export const ORC_FX = {
   shamanHalt: 180, drummerHalt: 260,
   /** War drummer: orcs within reach march and hit this much harder (one drum's worth, never stacked). */
   drumReach: 100, drumBoost: 0.25,
+  /** Seconds between a war drummer's beats (the drumBeat event and its sound; the boost itself is steady). */
+  drumEvery: 0.8,
 } as const;
 
 /** Per rank of a kind's two nodes: Fury (health and starlight) and Swarm (spawn rate). A kind that joins on its own marches at
