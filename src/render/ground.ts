@@ -16,8 +16,11 @@ const span = (rng: Rng, [a, b]: Range): number => a + rng.next() * (b - a);
 const count = (rng: Rng, [a, b]: Range): number => a + Math.floor(rng.next() * (b - a + 1));
 /** Roughly normal offset (sum of two uniforms), so clusters thin out at the edges. */
 const near = (rng: Rng, s: number): number => (rng.next() + rng.next() - 1) * s;
-const x0 = FIELD.barX + FIELD.barW + GROUND.wallGap;
-const clampX = (x: number): number => Math.min(W - 2, Math.max(x0, x));
+// one ground both sides of the wall (TB-174); only the strip from the wall to `wallGap` past it stays clear
+const gapL = FIELD.barX, gapR = FIELD.barX + FIELD.barW + GROUND.wallGap, gapW = gapR - gapL;
+const clampX = (x: number): number => { const c = Math.min(W - 2, Math.max(2, x)); return c <= gapL || c >= gapR ? c : c < gapL + gapW / 2 ? gapL : gapR; };
+/** A uniform x over the ground, skipping the wall strip. */
+const across = (u: number): number => { const x = u * (W - gapW); return x < gapL ? x : x + gapW; };
 const clampY = (y: number): number => Math.min(H - 2, Math.max(2, y));
 
 function drift(rng: Rng, out: Blob[], cx: number, cy: number, c: { blobs: Range; r: Range; squash: number; spread: number }, scale = 1): void {
@@ -33,7 +36,7 @@ function tuft(rng: Rng, x: number, y: number): Tuft {
 /** Deterministic ground layout for a seed: pure data, so it is testable without a canvas. */
 export function layoutGround(seed: number = GROUND.seed): GroundLayout {
   const rng = createRng(seed), L: GroundLayout = { lush: [], sunlit: [], worn: [], bare: [], tufts: [], rocks: [], flowers: [] };
-  const pt = (): [number, number] => [x0 + rng.next() * (W - x0), rng.next() * H];
+  const pt = (): [number, number] => [across(rng.next()), rng.next() * H];
   for (let i = 0; i < GROUND.lush.n; i++) { const [x, y] = pt(); drift(rng, L.lush, x, y, GROUND.lush); }
   for (let i = 0; i < GROUND.sunlit.n; i++) { const [x, y] = pt(); drift(rng, L.sunlit, x, y, GROUND.sunlit); }
   const wornAt: [number, number][] = [];
@@ -55,14 +58,14 @@ export function layoutGround(seed: number = GROUND.seed): GroundLayout {
   const F = GROUND.flowers, kinds = Object.entries(F.kinds) as [FlowerKind, number][], total = kinds.reduce((t, [, w]) => t + w, 0);
   const pick = (): FlowerKind => { let r = rng.next() * total; for (const [k, w] of kinds) if ((r -= w) < 0) return k; return kinds[0]![0]; };
   const flower = (x: number, y: number, kind: FlowerKind, scale = 1): void => { L.flowers.push({ x: clampX(x), y: clampY(y), kind, r: span(rng, F.r) * scale, stem: span(rng, F.stem) * scale, rot: rng.next() * 1.26 }); };
-  const band = H * F.edge, slot = (W - x0) / Math.ceil(F.drifts / 2);
+  const band = H * F.edge, slot = W / Math.ceil(F.drifts / 2);
   for (let i = 0; i < F.drifts; i++) {
-    const top = i % 2 === 0, cx = x0 + slot * (Math.floor(i / 2) + 0.5 + (top ? 0 : 0.5)) + near(rng, slot * 0.2);
+    const top = i % 2 === 0, cx = slot * (Math.floor(i / 2) + 0.5 + (top ? 0 : 0.5)) + near(rng, slot * 0.2);
     const cy = top ? band * (0.25 + rng.next() * 0.5) : H - band * (0.25 + rng.next() * 0.5), main = pick();
     // each drift leans on one kind with a sprinkle of others, so it reads as a wild meadow
     for (let k = count(rng, F.per); k > 0; k--) flower(cx + near(rng, F.driftW / 2), cy + near(rng, F.driftH), rng.next() < 0.7 ? main : pick());
   }
-  for (let i = 0; i < F.lane; i++) flower(x0 + rng.next() * (W - x0), band + rng.next() * (H - band * 2), pick(), 0.75);
+  for (let i = 0; i < F.lane; i++) flower(across(rng.next()), band + rng.next() * (H - band * 2), pick(), 0.75);
   L.tufts.sort((a, b) => a.y - b.y); L.rocks.sort((a, b) => a.y - b.y); L.flowers.sort((a, b) => a.y - b.y);
   return L;
 }
@@ -75,7 +78,8 @@ function blobs(g: CanvasRenderingContext2D, list: Blob[], fill: string): void {
 }
 
 /** Decor sprites (public/decor). Loaded once; `null` until ready, so callers fall back to vector art. */
-const DECOR = ['logpile', 'fence'] as const;
+const DECOR = ['logpile', 'fence', 'elfhouse', 'autumntree', 'pine', 'stump', 'chest', 'alchchest', 'lantern', 'arch'] as const;
+export type DecorKey = (typeof DECOR)[number];
 const imgs = new Map<string, HTMLImageElement>();
 let started = false;
 function loadDecor(): void {
@@ -83,7 +87,7 @@ function loadDecor(): void {
   started = true;
   for (const k of DECOR) { const im = new Image(); im.onload = (): void => { imgs.set(k, im); }; im.src = `${import.meta.env.BASE_URL}decor/${k}.webp`; }
 }
-export const decorImg = (k: (typeof DECOR)[number]): HTMLImageElement | null => imgs.get(k) ?? null;
+export const decorImg = (k: DecorKey): HTMLImageElement | null => imgs.get(k) ?? null;
 
 function paint(g: CanvasRenderingContext2D, L: GroundLayout): void {
   g.fillStyle = P.plain; g.fillRect(-PAD, -PAD, W + PAD * 2, H + PAD * 2);
@@ -140,6 +144,7 @@ export class Ground {
   constructor() { loadDecor(); }
 
   draw(g: CanvasRenderingContext2D, cw: number, ch: number): void {
+    if (cw <= 0 || ch <= 0) return;  // a hidden canvas has no size: drawImage of a 0x0 buffer throws and stops the frame loop
     const sx = cw / W, sy = ch / H, ow = Math.ceil((W + PAD * 2) * sx), oh = Math.ceil((H + PAD * 2) * sy);
     // decor sprites arrive after the first frames: repaint each time another one lands
     if (!this.off || this.off.width !== ow || this.off.height !== oh || this.painted !== imgs.size) {

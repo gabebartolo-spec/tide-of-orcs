@@ -6,15 +6,15 @@ export const P = {
   plainSun: '#8eab7b',
   // meadow flowers (TB-166): petals and hearts
   daisy: '#f6f2e4', violet: '#9b7fd0', buttercup: '#f2c64c', blossom: '#e9a0bb', flowerHeart: '#e8b84a', flowerHeartPale: '#f6e7a8',
-  // ambience (TB-166): fairy motes and sun shafts
-  mote: '#d6efff', moteGlow: 'rgba(150,205,255,.28)', shaft: 'rgba(255,241,196,1)', shaftClear: 'rgba(255,241,196,0)',
-  tuft: '#5e7858', tuftLight: '#a3b993', rock: '#8f9597', rockLight: '#b7bbb6', groveSide: '#9fb391',
+  // ambience (TB-166): fairy motes
+  mote: '#d6efff', moteGlow: 'rgba(150,205,255,.28)',
+  tuft: '#5e7858', tuftLight: '#a3b993', rock: '#8f9597', rockLight: '#b7bbb6',
   timber: '#8a6a46', timberDark: '#7a5c3c', timberSplinter: '#4e3a28', timberBand: '#5a4634', sand: '#c9b78a',
   amber: '#e2a85b', rose: '#c76f6f', lilac: '#cdbdea',
   orc: '#7f8f52', brute: '#6c7a44', elite: '#4f5a3a', boss: '#9a7a46', tusk: '#39412a',
   elfCloak: '#5f6f8a', archerCloak: '#8b9a7d', wolf: '#9aa3ad', bark: '#5a4634', knife: '#d9d4c3',
   treantTrunk: '#4e5e3f', treantLeaf: '#5f7d53', treantLeaf2: '#6f8f60', sage: '#8fa98a', grove: '#9fc48f',
-  hillFar: '#5a7058', hillNear: '#4f644d', plainDusk: '#5f6f72', lamp: 'rgba(226,168,91,.2)', lampClear: 'rgba(226,168,91,0)',
+  hillFar: '#5a7058', hillNear: '#4f644d', lamp: 'rgba(226,168,91,.2)', lampClear: 'rgba(226,168,91,0)',
   frost: '#bfe3ee', frostGlow: 'rgba(191,227,238,.45)', spark: '#f4eaa6', arcane: '#9b6bd6', arcaneCore: '#ece8ff',
   fire: '#f2763a', fireTint: 'rgba(242,118,58,.5)', firePatch: 'rgba(242,118,58,.28)', frostTint: 'rgba(150,215,240,.6)', frostPatch: 'rgba(191,227,238,.35)',
   sparkGlow: 'rgba(244,234,166,.65)', arcaneGlow: 'rgba(155,107,214,.45)', starGold: '#ffd36b',

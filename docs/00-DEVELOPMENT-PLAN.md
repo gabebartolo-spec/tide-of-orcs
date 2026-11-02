@@ -144,7 +144,7 @@ Orcs drop gear; six worn slots, a satchel, affixes, sets and mythic powers feed 
 - Grey Wolf TB-160, TB-157: an animated 3D-rendered wolf sprite (blam, CC BY) with run and bite; it costs 200, bites for 4 and sits under Muster.
 - Orcs join by wave TB-158 (PR #135): runners from wave 5, brutes from 10, Blackguard from 20, at half rate until summoned; a summon node makes its kind march ×4 as often and drop +50% starlight.
 - Checkpoints TB-159 (PR #136, save v11): clearing wave 10, 20, 30 … starts later runs one wave past it. Sim 60 min: best wave 18 → 32. Known: a fast fall loop at wave 12 farms Heartwood (director kept it for now).
-- Field TB-162, TB-165, TB-166, TB-168: log-pile barricade, drawn meadow flowers, motes and sun shafts; 3D plants and all vector stand-ins removed.
+- Field TB-162, TB-165, TB-166, TB-168: log-pile barricade, drawn meadow flowers, motes and sun shafts; 3D plants and all vector stand-ins removed. TB-174: one ground both sides of the wall, grove decor behind the elf, dusk tint and sun shafts cut.
 - Animation speed TB-161: attacks play once per real hit at true speed.
 - Open: TB-163 (arcane tree layout).
 

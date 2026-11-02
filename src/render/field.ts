@@ -14,7 +14,7 @@ import { Sprites } from './sprites';
 import { orcAnimT, orcState, orcSwingT, swingClipT, vanState } from './actorState';
 import { Ground, decorImg } from './ground';
 import { Ambience } from './ambience';
-import { GROUND, LOOT_VFX, SKY, VFX, dusk } from '../data/presentation';
+import { GROUND, GROVE_DECOR, LOOT_VFX, SKY, VFX, dusk } from '../data/presentation';
 import { SLOTS } from '../data/loot';
 import { setTiers } from '../sim/gear';
 
@@ -192,8 +192,8 @@ export class FieldRenderer {
     // plain
     this.ground.draw(g, this.canvas.width, this.canvas.height);
     const n = dusk(this.clock);
-    g.globalAlpha = SKY.duskAlpha * n; g.fillStyle = P.plainDusk; g.fillRect(BAR_X, -10, W - BAR_X + 10, H + 20); g.globalAlpha = 1;
-    g.fillStyle = P.groveSide; g.fillRect(-10, -10, BAR_X + 10, H + 20);
+    // grove decor behind the elf (TB-174), back to front
+    for (const d of GROVE_DECOR) { const im = decorImg(d.k); if (im) { const w = d.h * im.width / im.height; g.drawImage(im, d.x - w / 2, d.y - d.h, w, d.h); } }
     if (n > 0.01) { const lg = g.createRadialGradient(ELF_X, H / 2, 0, ELF_X, H / 2, SKY.lampR); lg.addColorStop(0, P.lamp); lg.addColorStop(1, P.lampClear); g.globalAlpha = n; g.fillStyle = lg; g.fillRect(ELF_X - SKY.lampR, H / 2 - SKY.lampR, SKY.lampR * 2, SKY.lampR * 2); g.globalAlpha = 1; }
 
     // barricade
@@ -286,7 +286,6 @@ export class FieldRenderer {
     if (s.stats.hawk) { const h = s.hawk; g.save(); g.translate(h.x, h.y); g.fillStyle = P.bark; g.beginPath(); g.moveTo(-12, 0); g.lineTo(0, -3); g.lineTo(12, 0); g.lineTo(0, 3); g.closePath(); g.fill(); g.restore(); }
 
     this.ambience.motesDraw(g, this.clock, n, this.reducedMotion);
-    this.ambience.shaftsDraw(g, this.clock, n, this.reducedMotion);
     this.fx.draw(g);
 
     // HUD overlays (no shake)
