@@ -39,9 +39,10 @@ function lineStep(s: SimState, ev: EventBus, dt: number): void {
 export function vanguardStep(s: SimState, ev: EventBus, dt: number): void {
   const st = s.stats;
   lineStep(s, ev, dt);
+  const claimed = new Set<Orc>();
   s.vans.forEach((v: Vanguard) => {
     const U = st.units[v.type];
-    march(s, v, VANGUARD.walkSpeed * U.spd * dt);
+    march(s, v, VANGUARD.walkSpeed * U.spd * dt, claimed);
     if (v.hitT > 0) v.hitT -= dt;
     if (st.vanMend > 0 && v.hp < v.maxhp) v.hp = Math.min(v.maxhp, v.hp + v.maxhp * st.vanMend * dt);
     const T = VANGUARD[v.type]; v.swingT += dt * U.rate;
@@ -57,21 +58,40 @@ export function vanguardStep(s: SimState, ev: EventBus, dt: number): void {
     });
     if (hitAny) v.swingT = 0;
   });
+  spread(s, dt);
+}
+
+/** Vanguard closer than VANGUARD.spread step apart along the line between them (TB-173). */
+function spread(s: SimState, dt: number): void {
+  const vs: Vanguard[] = []; s.vans.forEach((v) => { vs.push(v); });
+  const push = VANGUARD.walkSpeed * dt;
+  for (let i = 0; i < vs.length; i++) for (let j = i + 1; j < vs.length; j++) {
+    const a = vs[i]!, b = vs[j]!; let dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy);
+    if (d >= VANGUARD.spread) continue;
+    if (d < 1e-6) { dx = 0; dy = 1; d = 1; }  // exactly stacked: split along the lane axis
+    const k = Math.min(push, (VANGUARD.spread - d) / 2) / d;
+    a.x -= dx * k; a.y -= dy * k; b.x += dx * k; b.y += dy * k;
+  }
 }
 
 /** Vanguard only advance on orcs that have crossed halfway from the field's edge to the barricade (TB-169). */
 const HALF_X = (FIELD.barX + FIELD.w) / 2;
 
-/** The live orc past halfway nearest this vanguard, or null when none has come that close. */
-export function nearestOrcTo(s: SimState, v: Vanguard): Orc | null {
-  let best: Orc | null = null, bd = Infinity;
-  s.orcs.forEach((o) => { if (o.dead || o.x > HALF_X) return; const d = Math.hypot(o.x - v.x, o.y - v.y); if (d < bd) { bd = d; best = o; } });
-  return best;
+/** The live orc past halfway nearest this vanguard, or null when none has come that close. Orcs in `claimed` are
+ *  another vanguard's target this step and are skipped while an unclaimed one is past halfway (TB-173). */
+export function nearestOrcTo(s: SimState, v: Vanguard, claimed?: Set<Orc>): Orc | null {
+  let best: Orc | null = null, bd = Infinity, free: Orc | null = null, fd = Infinity;
+  s.orcs.forEach((o) => {
+    if (o.dead || o.x > HALF_X) return; const d = Math.hypot(o.x - v.x, o.y - v.y);
+    if (d < bd) { bd = d; best = o; }
+    if (!claimed?.has(o) && d < fd) { fd = d; free = o; }
+  });
+  return free ?? best;
 }
 
-/** March (TB-156): walk to the nearest orc until it is in reach, or back to the home stand when no orc is past halfway. */
-function march(s: SimState, v: Vanguard, step: number): void {
-  const o = nearestOrcTo(s, v);
+/** March (TB-156): walk to the nearest orc no other vanguard has claimed (TB-173) until it is in reach, or back to the home stand when no orc is past halfway. */
+function march(s: SimState, v: Vanguard, step: number, claimed: Set<Orc>): void {
+  const o = nearestOrcTo(s, v, claimed); if (o) claimed.add(o);
   const gx = o ? o.x : v.tx, gy = o ? o.y : v.ty, stop = o ? VANGUARD[v.type].reach * VANGUARD.closeIn + o.r : 0;
   const dx = gx - v.x, dy = gy - v.y, d = Math.hypot(dx, dy), go = Math.min(step, d - stop);
   v.mv = go > 1e-6;

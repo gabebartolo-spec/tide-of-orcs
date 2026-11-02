@@ -43,6 +43,7 @@ export const VANGUARD = {
   walkSpeed: 60, standX: 44, laneGap: 70, engageRange: 18,
   respawn: 12,   // seconds before a fallen line vanguard returns (TB-167), × 0.85 per Swift Muster rank
   respawnPerRank: 0.85,
+  spread: 26,   // vanguard closer than this push apart, so two never stack into one sprite (TB-173)
   closeIn: 0.8,  // a marching vanguard stops at this × its reach (+ the orc's radius) from its target (TB-156)
   spear: { cost: 6, hp: 5, dmg: 1.6 * (50 / 15) / 0.8, cd: 50 / 15, reach: 28, cleave: false },
   blade: { cost: 18, hp: 4, dmg: 1.4 * (55 / 15) / 0.45, cd: 55 / 15, reach: 34, cleave: true },
