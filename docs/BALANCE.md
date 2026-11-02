@@ -144,6 +144,29 @@ Report columns per minute: wave, starlight, kills/min, kills, wall %, vanguard c
 
 ## Proposed
 
+### P-184 · Push on from the checkpoint-51 stall (2026-11-03, TB-184) · proposed, not applied
+Director: keep checkpoints and the default tier; tune nodes, items and companions so the stuck player can push on. Player: `sim/out/player48.json` (every run-tree node at max except foe Fury/Swarm, 4 epics worn, `hw_dawn` 1). Soak: `npm run balance -- --load sim/out/player48.json --tiertop --hwbuy --minutes 45 --seed N --quiet [--tune …]` (`--load` is new: start as the saved player, fallen, and replant at its top tier each run, as the game defaults). Fresh: `npm run balance -- --hwbuy --minutes 40 --seed N --quiet [--tune …]`. Seeds 1–3 each.
+
+| Set | Changes | Soak best wave (45 min) | Soak: min to wave 50 | Fresh: first boss cleared (play min) | Fresh best wave (40 min) |
+|---|---|---|---|---|---|
+| Base | – | 48 / 48 / 48 (60 min) | never | 32.4 / 32.2 / 32.0 | 34 / 35 / 34 |
+| A | Starfall: `ARROWS.starfall.arrows` 8 → 12, `SHOT_FX.starArrowsPerRank` 2 → 4, `SHOT_FX.starChancePerRank` 0.05 → 0.1 | 48 / 49 / 49 | never | 32.4 / 32.2 / 32.0 | 34 / 35 / 34 |
+| B | A + `NODE_FX.boltDmg` 1.5 → 1.7, `NODE_FX.moonDmg` 1.6 → 2.2 | 49 / 49 / 49 | never | 32.4 / 32.2 / 32.0 | 34 / 35 / 34 |
+| C | A + `NODE_FX.kinship` 1.2 → 1.3 | 49 / 53 / 49 | – / 15 / – | 32.2 / 32.4 / 33.1 | 37 / 34 / 37 |
+| D | A + kinship 1.4 + boltDmg 1.7 | 49 / 50 / 53 | – / – / 8 | 31.4 / 32.5 / 31.1 | 38 / 39 / 40 |
+| **F** | **D + `BARRICADE.regenPerRank` 0.01 → 0.02 (Patient Hands)** | **53 / 53 / 53** | **11 / 10 / 14** | **33.8 / 32.5 / 31.9** | **34 / 35 / 35** |
+| H | regenPerRank 0.02 alone | 48 / 48 / 48 | never | 33.4 / 32.4 / 31.8 | 34 / 33 / 35 |
+| K | F without kinship | 49 / 49 / 49 | never | 33.4 / 32.4 / 31.8 | 34 / 33 / 35 |
+| E (probe, not a proposal) | `PLAYER.baseDmg` 9 → 36, `UNIT_FX.dmg` 1.3 → 1.6 | 54 / 53 / 54 | 2 / 2 / 2 | 24.8 / 25.7 / 24.7 | 53 / 54 / 53 |
+
+Proposed: **set F** — Kinship (Bond) 1.2 → 1.4 per rank, Ballista bolt 1.5 → 1.7 per rank, Starfall 12 arrows base, +4 arrows and +10% chance per rank, Patient Hands 2%/s per rank. Every seed passes wave 50 in 10–14 min and holds 53; the first boss on a fresh save is unchanged (31.9–33.8 min vs 32.0–32.4) and so is the fresh best wave. Kinship is what moves the soak (K, without it, stays at 49); regen alone does nothing (H) but tips F from one seed to three.
+
+What it says:
+- **No modest tune reaches 55–60 or the wave-75 boss.** Every set, including the probe E with four times the elf's damage and companions at 1.6 per rank, ends at a new plateau of 52–54: checkpoint 51, then each run falls at wave 51–52 in under a minute, as QA saw. Damage is very inelastic here (arena at wave 47: 4× elf damage stands 180 s, but the soak gains 2 waves).
+- Why: a late orc's hit is capped at `BARRICADE.maxHitFrac` (25% of the wall), so the wall dies to any four hits and Seasoned Timber does nothing late. Wolf riders leap the line and shamans' fireballs (3 grunt hits, also capped) land from 180 units out; past wave ~50 a few always arrive. Arena, wave 47, 4 seeds, seconds stood: base 28, `maxHitFrac` 0.1 58, Kinship 1.5 180, `UNIT_FX.dmg` 1.6 180, Starfall arrows 24 136.
+- And nothing grows after this player: the run tree is maxed (only foe Fury/Swarm ranks are left, and the greedy policy buys those, making orcs tougher), Heartwood comes only from the wave-75 boss, and gear is worth one wave (gear trial: 47 worn, 46 bare). Affix tunes (`AFFIX.gain`, `perIlvl`) change only new drops and moved nothing in 60 min.
+- So F turns 48 into 53; going further needs a new late progression source (deeper rank caps, a wall node that lowers the hit cap, or gear that scales with wave), which is a design call outside this row.
+
 ### P-175 · Late orcs toned down (2026-11-03, TB-175) · applied: set A (director 3 Nov)
 Director: tone down wolf riders, drummers and shamans; riders lose health; wall at wave 46 about 70 s. Arena, `--load sim/out/player48.json --wave 46 --tide --orcs grunt:0 --secs 180`, 40 seeds, mean seconds the wall stands (±10 s noise):
 

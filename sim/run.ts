@@ -13,11 +13,12 @@
  * reports when each tier unlocked, and each fall shows its tier (wave@minutes/tier).
  * --cost draw=12,crit=60 sets those run-tree nodes' base price for a sweep (TB-151).
  * Plays the pure sim with a scripted buy/rally policy and prints a per-minute markdown table.
+ * --load file.json starts as that saved player, fallen, replanting at its highest tier (TB-184).
  * --save file.json writes the player as they first reached their best wave, for `npm run arena -- --load file.json`.
  * Writes sim/out/<policy>-<date>.md unless --quiet.
  */
 import { ORC_TYPES, ORC_FX, FIREBALL, FOE_FX } from '../src/data/orcs';
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { SimState, createState } from '../src/sim/state';
 import { EventBus } from '../src/sim/events';
 import { step } from '../src/sim/step';
@@ -25,7 +26,7 @@ import { step } from '../src/sim/step';
 import { buy, canBuy, costOf } from '../src/sim/tree';
 import { canReplant, replant } from '../src/sim/prestige';
 import { NODES, NodeId } from '../src/data/skillTree';
-import { BARRICADE, CHECKPOINT, COST_WAVE, HP_RAMP, LOB, NODE_FX, PLAYER, SHOT_FX, STACKING, STEP, UNIT_FX, waveHP } from '../src/data/balance';
+import { ARROWS, BARRICADE, CHECKPOINT, COST_WAVE, HP_RAMP, LOB, NODE_FX, PLAYER, SHOT_FX, SOURCES, STACKING, STEP, UNIT_FX, VANGUARD, waveHP } from '../src/data/balance';
 import { BOSS_WAVE, TIERS } from '../src/data/bosses';
 import { AFFIX, DROP, MYTHIC_FX, MYTHICS, RARITY } from '../src/data/lootTables';
 import { SLOTS } from '../src/data/loot';
@@ -45,9 +46,11 @@ const minutes = Number(arg('minutes', '30')), policy = arg('policy', 'greedy') a
 /** Loot (TB-093/094): the sim rolls drops on its own RNG; the runner picks the equip policy. */
 const lootPolicy = arg('loot', 'greedy') as EquipPolicy; let drops = 0;
 
-const s = createState(seed); const ev = new EventBus(); s.lootPolicy = lootPolicy;
+/** --load file.json (TB-184): start as a player saved with --save (tree, tier, Heartwood, gear), fallen, so the first act is a Replant. */
+const loaded = arg('load', '') ? JSON.parse(readFileSync(arg('load', ''), 'utf-8')) as { tier: number; levels: SimState['run']['levels']; meta: SimState['meta'] } : null;
+const s = createState(seed, undefined, loaded ? loaded.meta : undefined); const ev = new EventBus(); s.lootPolicy = lootPolicy;
 const bare = args.includes('--bare');
-const TUNE: Record<string, unknown> = { BOSS_WAVE, TIERS, RARITY, DROP, AFFIX, MYTHIC_FX, PLAYER, LOB, BARRICADE, NODE_FX, COST_WAVE, STACKING, SHOT_FX, UNIT_FX, CHECKPOINT, ORC_TYPES, ORC_FX, FIREBALL, HP_RAMP, FOE_FX };
+const TUNE: Record<string, unknown> = { ARROWS, SOURCES, VANGUARD, BOSS_WAVE, TIERS, RARITY, DROP, AFFIX, MYTHIC_FX, PLAYER, LOB, BARRICADE, NODE_FX, COST_WAVE, STACKING, SHOT_FX, UNIT_FX, CHECKPOINT, ORC_TYPES, ORC_FX, FIREBALL, HP_RAMP, FOE_FX };
 for (const kv of arg('tune', '').split(',').filter(Boolean)) {
   const [path, v] = kv.split('='), keys = path!.split('.'), last = keys.pop()!;
   const obj = keys.reduce<Record<string, unknown>>((o, k) => (o === TUNE ? TUNE[k] : o[k]) as Record<string, unknown>, TUNE);
@@ -57,7 +60,7 @@ for (const kv of arg('cost', '').split(',').filter(Boolean)) { const [k, v] = kv
 for (const kv of arg('hw', '').split(',').filter(Boolean)) { const [k, v] = kv.split(':'); s.meta.hwLevels[k as HwId] = Number(v); }
 /** --mythic: a forced mythic, kept worn and locked so the equip policy never swaps it out. */
 const forced = MYTHICS.find((m) => m.id === arg('mythic', '')), doReroll = args.includes('--reroll');
-let rerolls = 0, glimmerSpent = 0;
+let rerolls = 0, glimmerSpent = 0, clearedRunInit = false;
 if (forced) {
   const l = s.meta.loot, uid = `i${l.nextUid++}`;
   l.items.push({ uid, base: 'forced', slot: forced.slot, rarity: 'mythic', ilvl: DROP.ilvlCap, mythic: forced.id, locked: true, affixes: rollAffixes(s.lootRng, RARITY.affixes.mythic, DROP.ilvlCap) });
@@ -76,6 +79,7 @@ function rerollWorn(): void {
   }
   if (changed) recompute(s);
 }
+if (loaded) { s.run.levels = loaded.levels; s.run.tier = loaded.tier; s.run.fallen = true; clearedRunInit = true; }
 recompute(s);
 /** Player model (TB-164): aim at the orc nearest the wall, led by its walk over the lob's flight, as the director plays.
  *  The old densest-crowd aim shot the spawn edge and landed behind moving orcs: the wall took hits from wave 1
@@ -114,7 +118,7 @@ function chaseSet(): void {
 const rows: string[] = []; let falls = 0, fallWave = '-', lastKills = 0;
 const fallWaves: number[] = [], fallMins: number[] = [], fallTiers: number[] = [], tierAt: string[] = [];
 const tierTop = args.includes('--tiertop');
-let clearedRun = false;
+let clearedRun = clearedRunInit;
 
 /**
  * dps policy (TB-040): starlight earned over a lookahead with this node bought, minus without, per starlight spent.
