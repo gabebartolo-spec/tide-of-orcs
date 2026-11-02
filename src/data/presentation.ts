@@ -11,6 +11,10 @@ export const SKY = {
 /** 0 at midday, 1 at deepest dusk. */
 export const dusk = (t: number): number => (1 - Math.cos((2 * Math.PI * t) / SKY.dayCycle)) / 2;
 
+/** Orc kinds with no sheet of their own draw another kind's approved sprite (director 3 Nov, TB-068): the sheet scales by the orc's
+ *  radius, so the boss (r 24) reads half again as big as a brute (r 16). Kinds not listed draw `orc.<kind>`. */
+export const ORC_SPRITE: Readonly<Partial<Record<string, string>>> = { elite: 'berserker', boss: 'brute' };
+
 /** Attack and hit VFX (TB-088, ART-STYLE §Attack and hit VFX). Render-only; sizes in field units, times in seconds. */
 export const VFX = {
   /** Pool sizes: squares/droplets, strokes (swipes, streaks, rings), ground splats, floating text. */
