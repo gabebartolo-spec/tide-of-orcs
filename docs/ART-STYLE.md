@@ -70,7 +70,7 @@ The plain reads as natural, calm grassland, not a flat board. Layout is seeded (
 - Tufts: 4–7 curved blades fanning from one root, mostly `tuft` with about a third `tuftLight`; some grouped in clumps, some single. Kept low-contrast so orcs, blood, VFX and the strike circle read on top.
 - Rocks: flat-ink shadow offset down-right, `rock` body, `rockLight` top-left highlight, 0–3 pebbles beside each; half sit on worn patches, where ground is thin.
 - Hills draw over the ground each frame. No colour wash sits over the field (TB-174): the dusk tint and the sun shafts were cut because they muted every colour; dusk now shows only as brighter motes and the lamplight on the bank.
-- Grove decor (TB-174, `GROVE_DECOR`): Sketchfab models rendered at the game angle to `public/decor` (elf house, autumn tree, pine, stump, chest, alchemist's chest, lantern, arch), drawn behind every unit along the grove's top and bottom bands and far-left edge, so the elf, archer and ballista spots stay clear.
+- Grove decor: none. TB-174's Sketchfab props were removed (TB-187, director 3 Nov); the grove becomes an elf encampment (TB-188).
 
 ## Typography
 - Display: **Heartwood**, the game's own elf hand (TB-135). One weight (400), no italic: the title's "Orc!" is amber, not slanted, and big numbers are not bold. `font-synthesis: none` (on body) stops the browser faking either. There is no fallback face (TB-137): every glyph the game shows must exist in Heartwood (97 now, incl. · × − – … ∞ →); add new ones to `glyphs.py` before using them in text.

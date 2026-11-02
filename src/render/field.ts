@@ -14,7 +14,7 @@ import { Sprites } from './sprites';
 import { orcAnimT, orcState, orcSwingT, swingClipT, vanState } from './actorState';
 import { Ground, decorImg } from './ground';
 import { Ambience } from './ambience';
-import { GROUND, GROVE_DECOR, LOOT_VFX, ORC_SPRITE, SKY, VFX, dusk } from '../data/presentation';
+import { GROUND, LOOT_VFX, ORC_SPRITE, SKY, VFX, dusk } from '../data/presentation';
 import { SLOTS } from '../data/loot';
 import { setTiers } from '../sim/gear';
 
@@ -192,8 +192,6 @@ export class FieldRenderer {
     // plain
     this.ground.draw(g, this.canvas.width, this.canvas.height);
     const n = dusk(this.clock);
-    // grove decor behind the elf (TB-174), back to front
-    for (const d of GROVE_DECOR) { const im = decorImg(d.k); if (im) { const w = d.h * im.width / im.height; g.drawImage(im, d.x - w / 2, d.y - d.h, w, d.h); } }
     if (n > 0.01) { const lg = g.createRadialGradient(ELF_X, H / 2, 0, ELF_X, H / 2, SKY.lampR); lg.addColorStop(0, P.lamp); lg.addColorStop(1, P.lampClear); g.globalAlpha = n; g.fillStyle = lg; g.fillRect(ELF_X - SKY.lampR, H / 2 - SKY.lampR, SKY.lampR * 2, SKY.lampR * 2); g.globalAlpha = 1; }
 
     // barricade

@@ -56,19 +56,6 @@ export const VFX = {
   treantShake: 0.2, impactLife: 0.3, stormLife: 0.35, zoneFade: 0.6, zoneSquash: 0.45, textLife: 0.9, textRise: 28,
 } as const;
 
-/** Grove decor on the elf's side of the wall (TB-174): sprite, centre x, base y (feet), height; field units, back to front.
- *  Kept to the top and bottom bands and the far left edge so the elf, archers and ballista lanes stay clear. */
-export const GROVE_DECOR = [
-  { k: 'autumntree', x: 120, y: 92, h: 92 },
-  { k: 'elfhouse', x: 52, y: 120, h: 70 },
-  { k: 'lantern', x: 18, y: 178, h: 58 },
-  { k: 'stump', x: 14, y: 300, h: 44 },
-  { k: 'chest', x: 22, y: 402, h: 18 },
-  { k: 'alchchest', x: 108, y: 418, h: 46 },
-  { k: 'arch', x: 46, y: 474, h: 66 },
-  { k: 'pine', x: 124, y: 478, h: 70 },
-] as const;
-
 /** Field ground (TB-098, ART-STYLE §Ground). Seeded layout painted once to an offscreen canvas; field units. Ranges are [min, max]. */
 export const GROUND = {
   seed: 0x6a7e31,
