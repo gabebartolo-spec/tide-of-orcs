@@ -90,7 +90,7 @@ export class Panel {
     $('hw-body').textContent = s.run.fallen ? STR.hwBody(hwSpendable(s)) : STR.hwClosed(hwSpendable(s));
     if (!$('pane-satchel').hidden) this.satchel.update();
     for (const b of $('hw-tree').querySelectorAll<HTMLButtonElement>('button[data-hw]')) b.disabled = !canBuyHw(s, b.dataset.hw as HwId);
-    const g = gain(), ok = s.run.wave >= PRESTIGE.voluntaryWave && g > 0 && !s.run.fallen;
+    const g = gain(), ok = s.run.wave >= PRESTIGE.voluntaryWave && !s.run.fallen;
     $('btn-pullback').hidden = !ok;
     $('pr-gain').textContent = '+' + g; ($('pr-btn') as HTMLButtonElement).disabled = !ok;
     $('pr-req').textContent = ok ? STR.replantReady(s.meta.bestWave) : STR.replantFrom(PRESTIGE.voluntaryWave);

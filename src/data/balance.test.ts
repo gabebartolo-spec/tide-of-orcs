@@ -30,7 +30,7 @@ describe('economy', () => {
   ])('node cost wave multiplier at wave %i is %f', (w, m) => {
     expect(costWave(w)).toBeCloseTo(m, 2);
   });
-  it('a fall pays a flat Heartwood (rule 1, P-142)', () => { expect(PRESTIGE.fallGain).toBe(1); });
+  it('a fall pays no Heartwood; only bosses do (TB-171)', () => { expect(PRESTIGE.fallGain).toBe(0); });
 });
 
 describe('barricade and vanguard', () => {
