@@ -13,6 +13,7 @@
  * reports when each tier unlocked, and each fall shows its tier (wave@minutes/tier).
  * --cost draw=12,crit=60 sets those run-tree nodes' base price for a sweep (TB-151).
  * Plays the pure sim with a scripted buy/rally policy and prints a per-minute markdown table.
+ * --save file.json writes the player as they first reached their best wave, for `npm run arena -- --load file.json`.
  * Writes sim/out/<policy>-<date>.md unless --quiet.
  */
 import { ORC_TYPES } from '../src/data/orcs';
@@ -179,12 +180,28 @@ function decide(i: number): void {
 }
 
 const total = Math.round((minutes * 60) / STEP);
+/** --save file.json: the player as they first reached their best wave (run tree, tier, Heartwood, gear), for `npm run arena -- --load`. */
+const savePath = arg('save', ''); let savedWave = 0, saved = '';
+/** TB-087 late orcs: what each new kind did this session (kills, swings landed, fireballs, leaps) and the share of live orcs drummed. */
+const LATE = ['berserker', 'wolfrider', 'shaman', 'drummer'] as const;
+const kinds: Record<string, { kills: number; swings: number }> = Object.fromEntries(LATE.map((k) => [k, { kills: 0, swings: 0 }]));
+const firstSeen: Record<string, number> = {}; let fireballs = 0, fireHits = 0, leaps = 0, vanFell = 0, drumSamples = 0, drummed = 0;
+function tallyKinds(evs: ReturnType<EventBus['drain']>): void {
+  for (const e of evs) {
+    if ((e.t === 'kill' || e.t === 'orcSwing') && kinds[e.kind]) { kinds[e.kind]![e.t === 'kill' ? 'kills' : 'swings']++; firstSeen[e.kind] ??= s.run.wave; }
+    else if (e.t === 'fireballCast') fireballs++; else if (e.t === 'fireballStrike') fireHits++;
+    else if (e.t === 'riderLeap') leaps++; else if (e.t === 'vanguardFell') vanFell++;
+  }
+  s.orcs.forEach((o) => { drumSamples++; if (o.drum) drummed++; });
+}
 const firstHits: number[] = []; let hitRun = false;
 for (let i = 0; i < total; i++) {
   step(s, STEP, { aim: frontAim(s) }, ev); // player model: frontAim
   if (!hitRun && s.run.barHp < s.stats.barMax) { hitRun = true; firstHits.push(s.run.wave); } // TB-154: wave the wall first takes damage, per run
   if (i % 25 === 0) decide(i);
-  for (const e of ev.drain()) if (e.t === 'bossReady') { mark('bossReady', i); summonBoss(s, ev); } else if (e.t === 'bossEnd') { bosses++; if (e.cleared) { mark('bossClear', i); clearedRun = true; } } else if (e.t === 'loot') {
+  if (savePath && s.run.wave > savedWave) { savedWave = s.run.wave; saved = JSON.stringify({ wave: s.run.wave, tier: s.run.tier, levels: s.run.levels, meta: s.meta }); }
+  const evs = ev.drain(); tallyKinds(evs);
+  for (const e of evs) if (e.t === 'bossReady') { mark('bossReady', i); summonBoss(s, ev); } else if (e.t === 'bossEnd') { bosses++; if (e.cleared) { mark('bossClear', i); clearedRun = true; } } else if (e.t === 'loot') {
     drops++; if (firstDrop === '-') firstDrop = at(i);
     firsts[e.rarity] ??= `run ${falls + 1}, min ${at(i)}, boss ${bosses}`;
   } else if (e.t === 'barricadeFell') { if (fallWave === '-') fallWave = String(e.wave); fallWaves.push(e.wave); fallMins.push(Math.round(e.runTime / 6) / 10); fallTiers.push(s.run.tier); }
@@ -203,6 +220,7 @@ for (let i = 0; i < total; i++) {
 const header = `# Balance run · policy=${policy} loot=${lootPolicy} seed=${seed} minutes=${minutes}\n\n| min | wave | starlight | kills/min | kills | wall | vanguard | nodes | HW | falls | drops | satchel | gear |\n|---|---|---|---|---|---|---|---|---|---|---|---|---|\n`;
 const summary = `
 First fall at wave ${fallWave}. Falls (wave@run minutes): ${fallWaves.length ? fallWaves.map((w, i) => `${w}@${fallMins[i]}${fallTiers[i]! > 1 ? '/t' + fallTiers[i] : ''}`).join(', ') : '-'}. Replants: ${falls}. First wall damage (wave, per run): ${firstHits.join(', ') || '-'}. Heartwood: ${s.meta.heartwood}. Best wave: ${s.meta.bestWave}.
+Late orcs (TB-087): ${LATE.map((k) => `${k} ${kinds[k]!.kills} slain / ${kinds[k]!.swings} swings (first wave ${firstSeen[k] ?? '-'})`).join('; ')}. Fireballs ${fireballs} cast, ${fireHits} struck; rider leaps ${leaps}; vanguard fallen ${vanFell}; drummed share of live orcs ${drumSamples ? Math.round((1000 * drummed) / drumSamples) / 10 : 0}%.
 Milestones (TB-146): first Heartwood purchase affordable: ${ms.hwAfford}. First bought${doHwBuy ? '' : ' (no --hwbuy)'}: ${ms.hwBuy}. Heartwood nodes bought: ${hwBought}. First boss reached: ${ms.bossReady}. First boss cleared: ${ms.bossClear}.
 Tiers (TB-148): ${tierAt.length ? tierAt.join('; ') : 'none unlocked'}. Starlight earned per run minute, last run: ${Math.round(s.run.earned / Math.max(1, s.run.runTime / 60))}. Sources owned, last run: ${(['wolf', 'knives', 'fire', 'storm', 'ballista', 'moon'] as const).filter((k) => runStart.run.levels[k]).join(' ') || '-'}.
 `;
@@ -218,6 +236,7 @@ ${forced ? `Forced mythic ${forced.id}: power off, affixes kept: wave ${powerOff
 ` : ''}`;
 const report = header + rows.join('\n') + '\n' + summary + lootSummary;
 console.log(report);
+if (savePath) { writeFileSync(savePath, saved); console.log(`saved the wave-${savedWave} player to ${savePath}`); }
 if (!quiet) {
   mkdirSync('sim/out', { recursive: true });
   const f = `sim/out/${policy}-${new Date().toISOString().slice(0, 10)}.md`;
