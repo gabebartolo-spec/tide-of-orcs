@@ -551,7 +551,7 @@ body[data-mode="camp"] :is(.hud-wallbox, .hud-wave) { display: none; }
 .prestige.satchel { --bag-cols: 20; --bag-gap: 0.5rem; --card-icon: 4rem; --card-img: 3.75rem; --card-gap: 1.25rem; --card-row-gap: 0.5rem;
   --card-btn-h: 2.25rem; --card-btn-pad: 0.25rem 1.25rem; --reroll-pad: 0.125rem 0.75rem; --setl-gap: 0.375rem; --setl-hang: 1.5em;
   --setl-fs: 1rem; --setl-lh: 1.3; --card-fr: 1.25fr; --card-min-h: 19.75rem;
-  --narrow-doll-pocket: 4.5rem; --narrow-doll-w: 6rem; --narrow-pocket: 4rem; --narrow-gap: 0.5rem; --narrow-pill-fs: 0.875rem; --narrow-btn-pad: 0.25rem 0.75rem; }
+  --narrow-doll-pocket: 4.5rem; --narrow-doll-w: 6rem; --narrow-pocket: 4rem; --narrow-gap: 0.5rem; --narrow-pill-fs: 1rem; --narrow-btn-pad: 0.25rem 0.75rem; }
 /* One markup for every layout: the card's name and its rarity line sit in .title. Off the PC grid the title dissolves and the
    rarity line wraps under the head (the pre-TB-206 order: icon, name, path tag, then the line), so phones keep their layout. */
 .itemdetail .head { flex-wrap: wrap; row-gap: 0; } .itemdetail .title { display: contents; }
@@ -597,7 +597,7 @@ body[data-mode="camp"] :is(.hud-wallbox, .hud-wave) { display: none; }
 @media (max-width: 860px) and (orientation: portrait) {
   .prestige.satchel { --doll-pocket: var(--narrow-doll-pocket); --doll-w: var(--narrow-doll-w); --pocket-icon: 3rem; --bag-pocket: var(--narrow-pocket); --bag-gap: var(--narrow-gap); }
   .prestige.satchel > #sat-grid { align-self: stretch; grid-template-columns: repeat(auto-fill, var(--bag-pocket)); grid-auto-rows: var(--bag-pocket); gap: var(--bag-gap); justify-content: space-evenly; min-height: 0; }
-  .prestige.satchel > #sat-worn { width: max-content; max-width: 100%; align-self: start; }
+  .prestige.satchel > #sat-worn { width: auto; align-self: stretch; }
   .itemdetail .affixes:has(.buy) { display: grid; grid-template-columns: minmax(0, 1fr) max-content; column-gap: var(--narrow-gap); row-gap: var(--card-row-gap); }
   .itemdetail .affixes .buy { padding: var(--reroll-pad); min-height: 0; font-size: var(--narrow-pill-fs); }
   .itemdetail .row { justify-content: flex-start; gap: var(--narrow-gap); } .itemdetail .row .buy { padding: var(--narrow-btn-pad); }
