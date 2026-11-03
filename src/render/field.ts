@@ -144,6 +144,7 @@ export class FieldRenderer {
         case 'vanguardHit': fx.blood(e.x, e.y, footOf(ACTOR_R) + 4, P.bloodElf, B.vanHit, -1); break;
         case 'vanguardFell': fx.burst(e.x, e.y, P.spear, VFX.vanFell[0], VFX.vanFell[1]); fx.blood(e.x, e.y, footOf(ACTOR_R) + 4, P.bloodElf, B.vanFell, 0); fx.splat(e.x, e.y + 16, B.vanSplat, P.bloodElf); break;
         case 'replant': this.ceremony.start(this.reducedMotion); break;
+        case 'gameReset': this.ceremony.skip(); this.slow = 0; this.edge = 0; this.flash = 0; this.beams.length = 0; break;
         case 'loot': this.lootDrop(e.x, e.y, e.rarity); break;
         default: break;
       }

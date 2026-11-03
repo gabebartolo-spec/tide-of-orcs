@@ -43,7 +43,7 @@ export class AudioEngine {
     for (const e of events) {
       if (e.t === 'replant') { this.endBoss(); this.swapBed(); }
       else if (e.t === 'bossStart') this.startBoss();
-      else if (e.t === 'bossEnd') this.endBoss();
+      else if (e.t === 'bossEnd' || e.t === 'gameReset') this.endBoss();
       const c = cueFor(e); if (c) this.play(c);
     }
   }
