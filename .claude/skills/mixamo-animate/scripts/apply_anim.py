@@ -116,6 +116,17 @@ for spec in filter(None, os.environ.get("FINGSRC", "").split(";")):  # clip.fbx|
     for bn, q in _qs.items():
         pb = tgt.pose.bones[bn]
         for f in range(f0, f1 + 1): pb.rotation_quaternion = q; pb.keyframe_insert("rotation_quaternion", frame=f)
+for spec in filter(None, os.environ.get("FINGCOPY", "").split(";")):  # Side:Index>Middle,Ring,Pinky (TB-203): the Mixamo clips carry only thumb and
+    # index; the other fingers copy the index's local curl joint for joint, so the draw hand hooks the string with three fingers
+    sd_, rest_ = spec.split(":"); srcf, dsts = rest_.split(">")
+    for k in (1, 2, 3):
+        ps_ = tgt.pose.bones.get(f"mixamorig:{sd_}Hand{srcf}{k}")
+        for dn in dsts.split(","):
+            pd_ = tgt.pose.bones.get(f"mixamorig:{sd_}Hand{dn}{k}")
+            if not ps_ or not pd_: continue
+            pd_.rotation_mode = "QUATERNION"
+            for f in range(f0, f1 + 1):
+                sc.frame_set(f); pd_.rotation_quaternion = ps_.rotation_quaternion.copy(); pd_.keyframe_insert("rotation_quaternion", frame=f)
 for bn in filter(None, os.environ.get("FREEZE", "").split(",")):  # hold the clip's mean pose (no twist/wobble)
     pb = tgt.pose.bones[bn]; qs = []
     for f in range(f0, f1 + 1): sc.frame_set(f); q = pb.rotation_quaternion.copy(); qs.append(q if not qs or q.dot(qs[0]) >= 0 else -q)
@@ -375,6 +386,11 @@ if os.environ.get("WPNROT"):  # fwd,gf[,out]: one-hand weapon parented to the ha
     t = [v.dot(ax) for v in V]; L = max(t) - min(t); sh = (min(t) + gf * L) - hd.dot(ax)
     wp.matrix_world = Matrix.Translation(-sh * ax) @ wp.matrix_world; bpy.context.view_layer.update()
     print("WPN up", round(math.degrees(math.asin(max(-1, min(1, ax.z)))), 1), "L", round(L, 3))
+def NOCK():  # TB-203 NOCKFING=1: the nock sits between the index and middle fingertips (three-finger hook), else 40% past the hand bone
+    pbs = tgt.pose.bones
+    if os.environ.get("NOCKFING") and "mixamorig:RightHandIndex3" in pbs:
+        return tgt.matrix_world @ ((pbs["mixamorig:RightHandIndex3"].head + pbs["mixamorig:RightHandMiddle3"].head) / 2) + Vector(map(float, os.environ.get("NOCKOFF", "0,0,0").split(",")))
+    r_ = pbs["mixamorig:RightHand"]; return tgt.matrix_world @ (r_.tail + (r_.tail - r_.head) * 0.4)
 if os.environ.get("BOWALIGN"):  # each frame turn the bow hand so the bow stands upright in the shot plane (limb axis
     # perpendicular to the arrow line draw hand -> bow hand, in its vertical plane) with the back away from the draw hand.
     # BOWALIGN=n takes the arrow line from clip frame n (-1 = last, full draw) for every frame: while the draw hand reaches
@@ -389,12 +405,17 @@ if os.environ.get("BOWALIGN"):  # each frame turn the bow hand so the bow stands
     for f in range(f0, f1 + 1):
         sc.frame_set(f); bpy.context.view_layer.update(); M3 = w.matrix_world.to_3x3()
         d = (M3 @ ax).normalized(); b = (M3 @ bk); b = (b - d * b.dot(d)).normalized()
-        R =(Matrix((u, ar, u.cross(ar))).transposed() @ Matrix((d, b, d.cross(b))).transposed().inverted()).to_4x4()
+        ar_, u_ = ar, u
+        if os.environ.get("BOWALIGNF"):  # TB-203: from frame fa blend to the live shot line (nock -> bow hand) by fb, so the bow plane holds the nock at full draw (no roll)
+            fa2, fb2 = map(float, os.environ["BOWALIGNF"].split(",")); k2 = min(1.0, max(0.0, (f - f0 - fa2) / max(1e-6, fb2 - fa2)))
+            if k2 > 0:
+                al = (P("LeftHand") - NOCK()).normalized(); ar_ = (ar * (1 - k2) + al * k2).normalized(); u_ = Vector((0, 0, 1)); u_ = (u_ - ar_ * u_.dot(ar_)).normalized()
+        R =(Matrix((u_, ar_, u_.cross(ar_))).transposed() @ Matrix((d, b, d.cross(b))).transposed().inverted()).to_4x4()
         if os.environ.get("STRYAW"):  # TB-203: turn the braced bow about its limb axis so the string passes the inside of the
             # forearm (where a real archer's arm guard sits) while no arrow is on the string; full deg up to frame fa, back to 0 by fb
             dg_, fa_, fb_ = map(float, os.environ["STRYAW"].split(",")); k_ = f - f0
             yw = dg_ if k_ <= fa_ else (0.0 if k_ >= fb_ else dg_ * (fb_ - k_) / (fb_ - fa_))
-            R = Matrix.Rotation(math.radians(yw), 4, u) @ R
+            R = Matrix.Rotation(math.radians(yw), 4, u_) @ R
         wm = tgt.matrix_world @ pb.matrix; t = wm.translation.copy()
         pb.matrix = tgt.matrix_world.inverted() @ (Matrix.Translation(t) @ R @ Matrix.Translation(-t) @ wm); _unscale(pb); bpy.context.view_layer.update()
         pb.keyframe_insert("rotation_quaternion", frame=f)
@@ -486,7 +507,7 @@ if os.environ.get("QUIVER"):  # quiver on the back (Spine2) with arrows, and a n
     s_ = 0.0; modes = []
     for f in range(f0, f1 + 1):
         sc.frame_set(f); bpy.context.view_layer.update()
-        nk = W @ (rh.tail + (rh.tail - rh.head) * 0.4); rest_ = W @ (lh.tail + (lh.tail - lh.head) * 0.2)
+        nk = NOCK(); rest_ = W @ (lh.tail + (lh.tail - lh.head) * 0.2)
         if os.environ.get("RESTUP"):  # the shaft rides on top of the bow fist, not through the wrist: raise the rest point by RESTUP m along the vertical perpendicular to the shot line
             d0 = (rest_ - nk).normalized(); up_ = (Vector((0, 0, 1)) - d0 * d0.z).normalized(); rest_ = rest_ + up_ * float(os.environ["RESTUP"])
         d_ = (rest_ - nk)
@@ -540,11 +561,19 @@ if os.environ.get("QUIVER"):  # quiver on the back (Spine2) with arrows, and a n
             for f in range(f0, f1 + 1):
                 if modes[f - f0] not in ("shot", "turn 1.0"): continue
                 sc.frame_set(f); bpy.context.view_layer.update()
-                nl = wb.matrix_world.inverted() @ (W @ (rh.tail + (rh.tail - rh.head) * 0.4))
+                nl = wb.matrix_world.inverted() @ NOCK()
                 if nl.dot(Bk) >= sS: continue  # nock not behind the braced string: nothing to pull
                 um = max(0.05, min(0.95, (nl - e0).dot(ln) / ln.length_squared)); k_ = wb.shape_key_add(name=f"draw{f}", from_mix=False)
+                # LIMBBEND (TB-203): both limbs flex toward the string by LIMBBEND x draw depth at the tips (symmetric about the grip,
+                # quadratic from the riser out), and the string ends ride the bent tips, so the bow stays one plane and one arc
+                tb_ = float(os.environ.get("LIMBBEND", "0")) * (sS - nl.dot(Bk)); svs_ = set(sv)
+                ta_ = [c.dot(A_) for c in co]; a0_, a1_ = min(ta_), max(ta_)
+                wf = lambda c: max(0.0, (abs((c.dot(A_) - a0_) / (a1_ - a0_) - 0.5) - 0.12) / 0.38) ** 2
+                for i, c in enumerate(co):
+                    if i not in svs_ and tb_: k_.data[i].co = c - Bk * tb_ * wf(c)
+                E0, E1 = e0 - Bk * tb_ * wf(e0), e1 - Bk * tb_ * wf(e1)
                 for i in sv:
-                    u = U[i]; S_ = e0 + ln * u; V_ = e0 + (nl - e0) * (u / um) if u <= um else nl + (e1 - nl) * ((u - um) / (1 - um))
+                    u = U[i]; S_ = e0 + ln * u; V_ = E0 + (nl - E0) * (u / um) if u <= um else nl + (E1 - nl) * ((u - um) / (1 - um))
                     k_.data[i].co = co[i] - S_ + V_
                 for g in range(f0, f1 + 2):
                     k_.value = 1.0 if g == f else 0.0; k_.keyframe_insert("value", frame=g)
@@ -578,6 +607,7 @@ if os.environ.get("QUIVER"):  # quiver on the back (Spine2) with arrows, and a n
                 cl = min(((p - intersect_point_line(p, a0, a1)[0]).length if 0 <= intersect_point_line(p, a0, a1)[1] <= 1 else min((p - a0).length, (p - a1).length)) for p in SW)
                 res.append(round(best[0] * 100, 1)); print("STR", f - f0, "surf_cm", round(best[0] * 100, 1), best[1], "bone_cm", round(cl * 100, 1), modes[f - f0])
             print("STRSUM min surf cm", min(res), "frames inside", [i for i, r in enumerate(res) if r < 0])
+    if os.environ.get("TBPY"): exec(open(os.environ["TBPY"], encoding="utf-8").read())  # TB-203 probes (file path)
     if os.environ.get("ARROWONLY"): sys.exit(0)  # probe only, no render
 if os.environ.get("LHPROBE"):  # two-hand weapon: OFFS (local Euler XYZ, deg) that lays the left fist hole (env LHDIR, rest world) along the haft
     pb = tgt.pose.bones["mixamorig:" + os.environ.get("PSIDE", "Left") + "Hand"]; gr = bpy.data.objects["grip_r"]; gl = bpy.data.objects["grip_l"]
