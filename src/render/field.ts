@@ -233,7 +233,7 @@ export class FieldRenderer {
     if (s.stats.spikes) { g.fillStyle = P.cream; for (let y = 8; y < H; y += 24) { g.beginPath(); g.moveTo(BAR_X + BAR_W, y); g.lineTo(BAR_X + BAR_W + 9, y + 4); g.lineTo(BAR_X + BAR_W, y + 8); g.closePath(); g.fill(); } }
     this.hills();
     // encampment behind the wall (TB-188c), one cached blit per building at its level
-    this.camp.draw(g, s.meta.camp.levels, sx);
+    this.camp.draw(g, s.meta.camp.levels, sx, this.sprites);
 
     this.fx.drawGround(g);
     s.zones.forEach((z) => {
