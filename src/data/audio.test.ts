@@ -1,3 +1,4 @@
+import { existsSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { AUDIO, BOSS_BED, CUES, MUSIC, cueFor, nextBed } from './audio';
 
@@ -34,7 +35,12 @@ describe('audio cue map', () => {
     expect(CUES.fireballCast.duck).toBeUndefined();
   });
   it('ducks only on big moments', () => {
-    expect(Object.entries(CUES).filter(([, c]) => c.duck).map(([k]) => k).sort()).toEqual(['bossRoar', 'lootLegendary', 'lootMythic', 'rallyHorn', 'replant', 'setRise', 'wallFall']);
+    expect(Object.entries(CUES).filter(([, c]) => c.duck).map(([k]) => k).sort()).toEqual(['bossRoar', 'lootLegendary', 'lootMythic', 'rallyHorn', 'replant', 'setRise', 'uiRarity', 'wallFall']);
+  });
+  it('every UI sound file (TB-195g) is on disk as ogg and mp3', () => {
+    const files = Object.values(CUES).flatMap((c) => (c.file ? [c.file] : []));
+    expect(files.length).toBeGreaterThanOrEqual(11);
+    for (const f of files) for (const ext of ['ogg', 'mp3']) expect(existsSync(`public/audio/${f}.${ext}`), `${f}.${ext}`).toBe(true);
   });
   it('alternates the two music beds on Replant', () => {
     expect(MUSIC).toHaveLength(2);

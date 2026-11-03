@@ -50,9 +50,9 @@ export class Panel {
     $('dep-boss').querySelector('.n')!.textContent = STR.summonBoss;
 
     $('tab-settings').textContent = STR.tabSettings; $('tab-satchel').innerHTML = `${STR.tabSatchel}<span class="badge" id="sat-new" hidden></span>`;
-    this.satchel = new SatchelPane(game, (c) => this.onCue(c)); $('tab-satchel').onclick = () => { this.onCue('click'); this.setTab('satchel'); this.satchel.render(); this.markNew(0); };
+    this.satchel = new SatchelPane(game, (c) => this.onCue(c)); $('tab-satchel').onclick = () => { this.onCue('uiPop'); this.setTab('satchel'); this.satchel.render(); this.markNew(0); };
     fitPages([$('pane-satchel'), $('pane-prestige'), $('pane-settings')]);
-    $('tab-grove').onclick = () => { this.onCue('click'); this.setTab('grove'); }; $('tab-prestige').onclick = () => { this.onCue('click'); this.setTab('prestige'); }; $('tab-settings').onclick = () => { this.onCue('click'); this.setTab('settings'); };
+    $('tab-grove').onclick = () => { this.onCue('uiPop'); this.setTab('grove'); }; $('tab-prestige').onclick = () => { this.onCue('uiPop'); this.setTab('prestige'); }; $('tab-settings').onclick = () => { this.onCue('uiPop'); this.setTab('settings'); };
     this.initSettings();
     $('dep-boss').onclick = () => { game.summonBoss(); };
     $('pr-btn').onclick = () => { if (game.canReplant() && !game.state.run.fallen) this.doReplant(); };
@@ -184,6 +184,7 @@ export class Panel {
   setMode(m: 'run' | 'camp' | 'settings'): void {
     if (m !== 'camp') this.setTreeFull(false);
     if (m !== 'run') this.camp.close();
+    if (document.body.dataset.mode !== m) this.onCue('uiPanel'); // TB-195g: the panel whoosh
     document.body.dataset.mode = m;
     $('camp-go').hidden = m !== 'camp'; $('camp-close').hidden = m !== 'settings';
     $('camp-title').textContent = m === 'settings' ? STR.tabSettings : STR.campTitle;
