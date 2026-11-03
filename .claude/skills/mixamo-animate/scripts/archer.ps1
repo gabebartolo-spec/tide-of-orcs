@@ -1,4 +1,4 @@
-# Companion archer (TB-203): the approved elf recipes copied exactly (idle v1 = idle_hero.ps1, attack v5 = attack_hero.ps1) on
+﻿# Companion archer (TB-203): the approved elf recipes copied exactly (idle v1 = idle_hero.ps1, attack v5 = attack_hero.ps1) on
 # archer.blend = hero27.blend with the teal cloak recoloured to archerCloak (recolor_cloak.py). Same rig, weights, bow and quiver spot.
 # -clip idle|attack, -view game (GAMECAM=20 CAMROT=0) | front (GAMECAM=20 CAMROT=90). Runs through hid.ps1 (never the screen).
 param([ValidateSet("idle","attack")][string]$clip="attack", [ValidateSet("game","front")][string]$view="game",
@@ -20,4 +20,4 @@ if ($clip -eq "attack") {
 Remove-Item Env:ANGDBG -ErrorAction SilentlyContinue
 if ($dbg) { $env:ANGDBG="LeftArm,LeftForeArm,LeftHand,RightArm,RightForeArm,RightHand" }  # jitter probe only (no render): JIT line = worst per-bone twitch
 $env:GAMECAM=20; $env:CAMROT = if ($view -eq "game") { 0 } else { 90 }
-& "$S\hid.ps1" $Bl -b --factory-startup --python "$S\apply_anim.py" -- $model $fbx "$o\${clip}_${tag}_$view" | Select-String "Error|Traceback|ANIM frames|ARROW \d+ |HIT|JIT|ANGDBG|STR|FING|PT|GRIP|RISER|FAX|TB"
+& "$S\hid.ps1" $Bl -b --factory-startup --python "$S\apply_anim.py" -- $model $fbx "$o\${clip}_${tag}_$view" | Select-String "Error|Traceback|ANIM frames|ARROW \d+ |HIT|JIT|ANGDBG|STR|FING|PT|GRIP|RISER|FAX|TB|TAIL|POSEIN|ARMCLR|STRTURN"
