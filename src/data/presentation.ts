@@ -184,3 +184,7 @@ export const HUD = {
 
 /** Tooltip plates (TB-195c): rows = most now → next lines shown; gap = rem from the cursor; in = ms spring-in; w = plate width in rem. */
 export const PLATE = { rows: 3, gap: 1.25, in: 120, w: 19 } as const;
+
+/** Battle report (TB-195f): ms before the first tally rolls, between tallies, each roll's length, pause before the seal;
+ *  the seal drops from `stampFrom`x scale turned `stampTurn` degrees in `stampIn` ms; the board jolts `jolt` rem for `joltMs`. */
+export const REPORT = { lead: 350, gap: 380, roll: 520, stampAfter: 300, stampIn: 240, stampFrom: 2.6, stampTurn: -28, jolt: 0.375, joltMs: 220 };
