@@ -34,14 +34,19 @@ async function run(): Promise<unknown> {
       try { return fn.apply(this, a); } finally { g0.getImageData(0, 0, 1, 1); split[label] = (split[label] ?? 0) + performance.now() - t; depth--; }
     };
   };
-  // ?skip=orc,ground.draw: ablation, those helpers draw nothing (their cost is the drop in drawMs)
+  // ?skip=orc,ground.draw: ablation, those helpers draw nothing (their cost is the drop in drawMs); ?skip=draw no-ops the whole
+  // field draw, so the frame gap left is the browser's own frame pacing with no canvas work
   // ?skip=tint: measurement only, actors draw untinted and unrimmed (the cost of the burning/chilled bakes)
   if ((q.get('skip') ?? '').split(',').includes('tint')) {
-    const sp = field.sprites as unknown as { draw: (...a: unknown[]) => boolean }, d0 = sp.draw.bind(sp);
+    const sp = field.sprites as unknown as { draw: (...a: unknown[]) => boolean };
+    if (typeof sp.draw !== 'function') throw new Error('bench: skip=tint expects Sprites.draw');
+    const d0 = sp.draw.bind(sp);
     sp.draw = (...a: unknown[]): boolean => d0(...a.slice(0, 7));
   }
   for (const name of (q.get('skip') ?? '').split(',').filter((x) => x && x !== 'tint')) {
     const [a, b] = name.split('.'), o = (b ? (field as unknown as Record<string, Record<string, unknown>>)[a!] : field) as Record<string, unknown>;
+    // fail loudly when a helper is renamed instead of silently timing nothing (these reach into private members)
+    if (!o || typeof o[b ?? a!] !== 'function') throw new Error(`bench: skip=${name} names no FieldRenderer helper`);
     o[b ?? a!] = (): boolean => true;
   }
   if (q.get('split')) {
@@ -65,6 +70,7 @@ async function run(): Promise<unknown> {
   await new Promise<void>((done) => {
     const frame = (now: number): void => {
       if (f > WARM) gap.push(now - last); last = now;
+      if (f === WARM) console.timeStamp('bench:start');  // the --trace window
       const dt = 1 / 60, ang = f * 0.02, aim = { x: 520 + Math.cos(ang) * 220, y: 240 + Math.sin(ang * 1.3) * 150 };
       const t0 = performance.now();
       acc += dt; fill();
@@ -76,12 +82,18 @@ async function run(): Promise<unknown> {
       if (f === WARM - 1) for (const key in split) split[key] = 0;
       if (f >= WARM) { sim.push(t1 - t0); draw.push(t2 - t1); }
       if (++f < WARM + FRAMES) { requestAnimationFrame(frame); return; }
-      frozen = canvas.toDataURL('image/png'); done();
+      console.timeStamp('bench:end'); frozen = canvas.toDataURL('image/png'); done();
     };
     requestAnimationFrame(frame);
   });
+  // which rasteriser this browser gives canvas (SwiftShader = software: GPU-process raster then runs on the CPU)
+  const gl = document.createElement('canvas').getContext('webgl'), dbg = gl?.getExtension('WEBGL_debug_renderer_info');
+  const gpu = gl && dbg ? String(gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL)) : 'none';
   let burn = 0, chill = 0; s.orcs.forEach((o) => { if (o.burn > 0) burn++; else if (o.chill > 0) chill++; });
-  return { canvas: [canvas.width, canvas.height], live: s.orcs.count, burn, chill, bakes: field.sprites.bakeCount, bakeSize: field.sprites.bakeSize, vans: s.vans.count, frames: FRAMES, simMs: stats(sim), drawMs: stats(draw), frameMs: stats(gap), fps: +(1000 / (gap.reduce((x, y) => x + y, 0) / gap.length)).toFixed(1),
+  return { canvas: [canvas.width, canvas.height], gpu, live: s.orcs.count, burn, chill, bakes: field.sprites.bakeCount, bakeSize: field.sprites.bakeSize, vans: s.vans.count, frames: FRAMES, simMs: stats(sim), drawMs: stats(draw), frameMs: stats(gap), fps: +(1000 / (gap.reduce((x, y) => x + y, 0) / gap.length)).toFixed(1),
     split: Object.fromEntries(Object.entries(split).sort((x, y) => y[1] - x[1]).map(([k2, v]) => [k2, +(v / FRAMES).toFixed(3)])), frozen };
 }
-(window as unknown as { bench: Promise<unknown> }).bench = run();
+// the runner calls benchGo() once its profiler or trace is recording, so a fast run cannot finish before it is watched
+const w = window as unknown as { bench: Promise<unknown>; benchGo: () => void };
+const go = new Promise<void>((r) => { w.benchGo = r; });
+w.bench = go.then(run);

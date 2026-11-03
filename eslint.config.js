@@ -9,5 +9,10 @@ export default ts.config(
     },
     files: ['src/sim/**/*.ts', 'src/data/**/*.ts'],
   },
+  {
+    // the benchmark runner is a plain Node script (TB-217)
+    files: ['scripts/bench/**/*.mjs'],
+    languageOptions: { globals: { process: 'readonly', console: 'readonly', Buffer: 'readonly', fetch: 'readonly', WebSocket: 'readonly', setTimeout: 'readonly', clearTimeout: 'readonly', performance: 'readonly' } },
+  },
   { ignores: ['dist', 'node_modules', 'docs'] },
 );

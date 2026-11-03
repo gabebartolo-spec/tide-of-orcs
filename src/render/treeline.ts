@@ -70,8 +70,7 @@ export class Treeline {
       const h = s === 1 ? tr.h : tr.h * s;  // no per-tree object spread (TB-217)
       const im = imgs.get(far || tr.far ? `${tr.key}_far` : tr.key); if (!im) continue;
       const w = (im.width / im.height) * h; if (tr.x + w / 2 < x0 || tr.x - w / 2 > x1) continue;
-      // mirror by hand and undo it exactly (scale -1 and a translate are their own exact inverses): no save/restore per tree
-      if (tr.flip) { g.translate(tr.x, 0); g.scale(-1, 1); g.drawImage(im, -w / 2, base + tr.dy - h, w, h); g.scale(-1, 1); g.translate(-tr.x, 0); }
+      if (tr.flip) { g.save(); g.translate(tr.x, 0); g.scale(-1, 1); g.drawImage(im, -w / 2, base + tr.dy - h, w, h); g.restore(); }
       else g.drawImage(im, tr.x - w / 2, base + tr.dy - h, w, h);
     }
   }

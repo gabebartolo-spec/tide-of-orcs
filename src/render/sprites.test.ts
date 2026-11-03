@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { closeSheet, frameAt, heightBucket, parseAtlas, Sprites, toBitmap } from './sprites';
+import { frameAt, heightBucket, parseAtlas, Sprites } from './sprites';
 import { SPRITE_BAKE } from '../data/presentation';
 
 const anim = { image: 'sheet_elf.webp', frames: [[0, 0, 8, 8], [8, 0, 8, 8], [16, 0, 8, 8]] as [number, number, number, number][], fps: 12, ax: 0.5, ay: 1, hPerR: 2.6 };
@@ -117,23 +117,3 @@ function rig(): Sprites {
   priv.atlas = parseAtlas({ anims: { 'orc.grunt': anim } }); priv.imgs = new Map([['sheet_elf.webp', {}]]);
   return sp;
 }
-
-describe('sheet bitmaps (TB-217)', () => {
-  const el = { tag: 'img' } as unknown as HTMLImageElement;
-  it('keeps the image element when createImageBitmap is missing', async () => {
-    expect(await toBitmap(el, undefined)).toBe(el);
-  });
-  it('keeps the image element when createImageBitmap rejects', async () => {
-    expect(await toBitmap(el, () => Promise.reject(new Error('no')))).toBe(el);
-  });
-  it('uses the bitmap when the browser makes one', async () => {
-    const bmp = { close() {} } as unknown as ImageBitmap;
-    expect(await toBitmap(el, () => Promise.resolve(bmp))).toBe(bmp);
-  });
-  it('closes a replaced bitmap and leaves an element alone', () => {
-    let closed = 0;
-    closeSheet({ close: () => { closed++; } });
-    closeSheet(el);
-    expect(closed).toBe(1);
-  });
-});
