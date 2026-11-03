@@ -32,12 +32,12 @@ flight  = 0.7 s, apex 90 px; Longshaft repeat strikes 0.35 s apart; Split Shot a
 ```
 Rangers and Wardens keep straight volleys at `fireRate = 1.2 × 1.15^draw` per second, with `arrows` (Split Shot) in the fan, `pierce` (Longshaft), crit and Moonbow steering.
 
-| w | hp | loot | interval | grunt atk/s (vs vanguard) | grunt wall hit/s (×10, before the 25% cap) |
-|---|---|---|---|---|---|
-| 1 | 10 | 2 | 2.00 | 0.25 | 2.5 |
-| 10 | 41.1 | 6.0 | 1.04 | 1.03 | 10.3 |
-| 25 | 558 | 37.6 | 0.35 | 14.0 | 140 |
-| 50 | 53,204 | 797.8 | 0.30 | 1,330 | 13,301 |
+| w | hp | loot | interval | grunt atk/s (vs vanguard) |
+|---|---|---|---|---|
+| 1 | 10 | 2 | 2.00 | 0.25 |
+| 10 | 41.1 | 6.0 | 1.04 | 1.03 |
+| 25 | 558 | 37.6 | 0.35 | 14.0 |
+| 50 | 53,204 | 797.8 | 0.30 | 1,330 |
 
 ### Player and sources
 - Base damage 9, base fire rate 1.2 volleys/s (rangers/wardens only; the elf lobs), arrow speed 520, crit ×3. (9 since P-001, 2026-10-30; v1.0 had 4 and 1.1; raised because the bare archer's 4.4 dps was below wave-1 incoming HP of 5 hp/s and the river had been hiding it.)
@@ -116,9 +116,7 @@ Statuses predate the lob, wall and aim changes of 1–2 Nov (TB-154, TB-164) unl
 | First purchase | ≤ 30 s | first run: 14–16 starlight by its fall at ~36 s with front-orc aim, so one Sharp rank at the first Replant (nodes are bought only between runs, TB-136) |
 | Muster affordable | ≤ 2 min | met: 50 starlight earned by 56 s (greedy never buys it in run 1) |
 | First barricade fall, first run | wave 2–3, under a minute (TB-154 hard set: early runs are short on purpose; director, 2026-11-01) | met: wave 2 at 0.5 min, runs 1–7 fall at wave 2–4 in ~25 s (greedy, seed 1, 60 min, TB-154) |
-| A spearman earns its keep | buys at least as many seconds of wall life per starlight as a Seasoned Timber rank (median over waves 3/6/10/14, seeds 1–3) | met, barely: median ratio 1.06, 7 of 12 cases ≥ 1 at `wallMult` 10 (`sim/spearman.ts`, TB-086); was 1.5 before TB-080 |
 | Breakout | a run passes wave 15 within 15 min of total play | met: greedy after 4–6 short runs (6–12 min), that run falls at wave 24–26 (TB-054) |
-| Bare archer, no purchases, holds | ≥ 4 waves | met (falls wave 4–5) |
 | Worn gear power (TB-108) | +60–90% vs bare, about +2–3 waves at late orc HP (director, 2026-11-01; "+10 waves" dropped) | met: +1.5 waves mean worn vs bare, seeds 1–4, 25 h (P-108b gain 0.75; was +4.75) |
 | Tree fully bought in a run | never | met: 117 of 156 buyable ranks at most (greedy run 5) |
 

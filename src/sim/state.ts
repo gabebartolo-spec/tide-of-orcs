@@ -75,6 +75,8 @@ export interface RunState {
   tier: number;
   /** Specialisation path this run (TB-193a, v14), picked at Replant; null = none. hoardN: items dropped toward Magpie's Hoard's next upgrade. */
   path: PathId | null; hoardN: number;
+  /** Heartwood banked from boss waves cleared this run (v15, TB-205); the fallen overlay shows it (a fall pays none, TB-171). */
+  hwEarned: number;
 }
 /** heartwood: all Heartwood ever earned (spent on the Heartwood tree; no passive bonus since P-142); hwLevels: ranks bought;
  *  tier: the highest boss tier unlocked (TB-148). */
@@ -113,7 +115,7 @@ export interface SimState {
 
 export function freshRun(): RunState {
   return { wave: 1, waveT: 0, runTime: 0, starlight: 0, earned: 0, kills: 0, levels: { root: 1 }, barHp: -1, bulwarkUsed: false, fallen: false, bossDone: 0, boss: null, thunder: 0, splinterUsed: false, freeRallyUsed: false,
-    foeT: {}, stormT: 0, shotT: [0, 0, 0], knifeT: 0, hawkT: 0, treantT: 0, ballT: 0, tier: 1, path: null, hoardN: 0 };
+    foeT: {}, stormT: 0, shotT: [0, 0, 0], knifeT: 0, hawkT: 0, treantT: 0, ballT: 0, tier: 1, path: null, hoardN: 0, hwEarned: 0 };
 }
 export function freshMeta(): MetaState { return { heartwood: 0, lifetimeKills: 0, bestWave: 1, prestiges: 0, hwLevels: {}, loot: freshLoot(), tier: 1, checkpoint: 1, camp: freshCamp() }; }
 

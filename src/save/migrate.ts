@@ -46,6 +46,8 @@ export const migrations: Record<number, (s: AnySave) => AnySave> = {
   12: (s) => ({ ...s, version: 13, meta: { ...(s.meta as object), camp: { levels: {}, mats: {} } } }),
   /** v13 to v14: specialisation paths (TB-193a); no path chosen, nothing dropped toward Magpie's Hoard. */
   13: (s) => ({ ...s, version: 14, run: { ...(s.run as object), path: null, hoardN: 0 } }),
+  /** v14 to v15: Heartwood from bosses cleared this run, for the fallen overlay (TB-205); an old run counts from 0. */
+  14: (s) => ({ ...s, version: 15, run: { ...(s.run as object), hwEarned: 0 } }),
 };
 
 export function migrate(raw: unknown): Save {

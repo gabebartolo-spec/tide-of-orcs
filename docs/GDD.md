@@ -3,7 +3,7 @@
 Status: **Current** (v1.4, synced with the code 3 Nov 2026). Core-loop sections (§2–§5) are human-owned; ask before changing. `docs/prototype.html` is the original concept for tone, look and the core loop; its mechanics are historical (see §14).
 
 ## 1. Fantasy and tone
-You are the last warden of a grove on the western edge of a wide plain. Between you and the orc tide stands a timber barricade. The tide comes from the east, forever, and one day the wall will fall. That day isn't a loss. The grove burns down to a seed, you carry back Heartwood, and the next wall stands longer.
+You are the last warden of a grove on the western edge of a wide plain. Between you and the orc tide stands a timber barricade. The tide comes from the east, forever, and one day the wall will fall. That day isn't a loss. The grove burns down to a seed, the Heartwood your cleared boss waves paid is kept for good, and the next wall stands longer.
 
 Mood words: patient, verdant, lamplit, unhurried. A siege you will eventually lose and learn from. Never gritty, never grimdark. Orcs are weather.
 
@@ -12,20 +12,16 @@ Mood words: patient, verdant, lamplit, unhurried. A siege you will eventually lo
 ```
 orcs march west → arrows and companions drop them → starlight drops
      ↓                                                    ↓
-orcs that reach the wall hack at it (or at your vanguard)  spend starlight: tree nodes OR rally vanguard
+orcs that reach the wall hack at it (or at your vanguard)  spend starlight on tree nodes (vanguard stand on their own)
      ↓                                                    ↓
 waves scale every 24 s  ←──── battlefield visibly grows ←──┘
      ↓
-the barricade falls → run ends → Replant → Heartwood → next run grows faster
+boss waves cleared → Heartwood (kept) → the barricade falls → Replant → next run grows faster
 ```
 
-**Core verb:** buy a node. **Core tension:** every starlight spent on the tree is starlight not spent on a spearman at the wall. **Core reward:** watch the field change. **Active play:** aim the bow with the pointer; it lobs an arcing arrow into the aim circle on its own cadence. With no aim the elf holds fire. There is no click-to-shoot.
+**Core verb:** buy a node. **Core tension:** which branch the starlight grows: the bow, companions, the wall or the vanguard line. **Core reward:** watch the field change. **Active play:** aim the bow with the pointer; it lobs an arcing arrow into the aim circle on its own cadence. With no aim the elf holds fire. There is no click-to-shoot.
 
-Session shape (from the simulator, greedy policy, seed 1, 31 Oct 2026; numbers untuned: balance comes after the bug bash and performance pass, director 3 Nov):
-- Minute 0–1: lone archer, grunts only. The first Sharpened Tips rank lands within 30 s.
-- Minute 1–2 (wave 4–5): the first wall falls. Replant pays no Heartwood; it comes only from bosses.
-- Next runs: a fall pays no Heartwood, and Heartwood has no passive bonus (P-142), so progress comes from the run's skill tree and the Heartwood tree. Bosses (every 25 waves) pay the rest of the Heartwood.
-- Later runs (run 5 on seed 1): Muster, companions and armoury fill out and the run reaches wave 20+ (fell at wave 24 at minute 17). Summon runners, brutes and Blackguard for more starlight; summon boss waves from wave 25.
+Session shape: measured numbers return in the balance phase (director 3 Nov). A first run is short and falls early; a fall pays no Heartwood, only cleared boss waves (every 25) do; later runs grow through the skill tree, the Heartwood tree, gear and the camp.
 
 ## 3. The barricade and the fail state (signature mechanic)
 A timber palisade at x=150 (14 px wide) across the full field height. It has health.
@@ -35,7 +31,7 @@ A timber palisade at x=150 (14 px wide) across the full field height. It has hea
 - `barMax = 150 × (1 + 0.25 × Stout Timber) × 1.25^Seasoned Timber` (BALANCE.md owns the numbers; TB-154 was 400).
 - Orcs reaching `x ≤ barX + barW + r` stop and swing once per second. Each swing at the wall deals `wallMult × atk` = 25 × 0.025 × maxhp (TB-154, director 1 Nov: the wall feels pressure from wave 1 and a bare run falls at wave 2–3). Damage scales with waves exactly as orc HP does, so the wall's relative pressure comes from *how many* orcs leak, not from a separate curve. One swing takes at most a quarter of the wall's max (TB-125), so even a late orc needs four swings to fell a full wall.
 - **Patient Hands** mends 1% of max per second per rank. **Thornwall** damages anyone hacking the wall for 20% of player damage per second per rank. **Deep Roots** regrows the wall to 50% once per run the moment it would fall.
-- **Fallen:** when HP hits 0 the sim freezes, the field shows "The barricade has fallen" with wave, slain, minutes held, items found by rarity with the best drop of the run (TB-103) and Heartwood carried back, and a single button: *Replant the grove*. Replant is the only *run* action: boss summoning is closed. Its button, *To the grove*, opens the Grove page (TB-136, director 1 Nov: "upgrade tree should be a separate page AFTER you die"): the Grove tree, the Satchel, the Heartwood tree and Settings, with *March again* to replant. Starlight is spent there and carries into the next run; Grove levels are kept.
+- **Fallen:** when HP hits 0 the sim freezes, the field shows "The barricade has fallen" with wave, slain, minutes held, items found by rarity with the best drop of the run (TB-103) and the Heartwood this run earned from cleared boss waves (TB-205; the fall itself pays none, TB-171), and a single button: *Replant the grove*. Replant is the only *run* action: boss summoning is closed. Its button, *To the grove*, opens the Grove page (TB-136, director 1 Nov: "upgrade tree should be a separate page AFTER you die"): the Grove tree, the Satchel, the Heartwood tree and Settings, with *March again* to replant. Starlight is spent there and carries into the next run; Grove levels are kept.
 - Buying Seasoned Timber heals the wall by the amount of max HP it adds (growing the wall is new timber).
 - Screen shake on each hit scaled to damage fraction; splintered dark planks appear from the top as HP drops.
 
@@ -68,16 +64,16 @@ The four later kinds (TB-087, P-087; values in `ORC_FX` and `FIREBALL`, `src/dat
 - **War drummer:** halts 260 units from the wall. Orcs within 100 units march and hit 25% harder; drums never stack. It beats every 0.8 s, and each beat plays the war-drum sound (TB-182).
 
 ## 5. Vanguard (melee, a standing line)
-The **Muster** node puts a standing line of spearmen at the wall (TB-167; there is no rally bar). Each unit that falls returns after `VANGUARD.respawn` 12 s (×0.85 per Swift Muster rank, faster with the Training Area). Line size: 2 + Close Ranks; Bladedancer turns half the line into bladedancers. The Cost column is no longer charged in play (`vanCost` is used only by `sim/spearman.ts`).
+The **Muster** node puts a standing line of spearmen at the wall (TB-167; there is no rally bar). Each unit that falls returns after `VANGUARD.respawn` 12 s (×0.85 per Swift Muster rank, faster with the Training Area). Line size: 2 + Close Ranks; Bladedancer turns half the line into bladedancers.
 
-| Unit | Unlock | Cost | HP | Damage per swing | Swing | Reach | Notes |
-|---|---|---|---|---|---|---|---|
-| Spearman | Muster | 6 × loot(wave) | 5 × waveHP(wave) × 1.3^Shieldwall | 1.6 × player dmg × 1.3^Spear Drill × Kinship (crit, rate and speed nodes, SKILL-TREE TB-111) | 0.8 s | 28 | One target |
-| Bladedancer | Bladedancer node | 18 × loot(wave) | 4 × waveHP(wave) × 1.3^Shieldwall | 1.4 × player dmg × 1.3^Blade Drill × Kinship | 0.45 s | 34 | Cleaves every orc in reach |
+| Unit | Unlock | HP | Damage per swing | Swing | Reach | Notes |
+|---|---|---|---|---|---|---|
+| Spearman | Muster | 5 × waveHP(wave) × 1.3^Shieldwall | 1.6 × player dmg × 1.3^Spear Drill × Kinship (crit, rate and speed nodes, SKILL-TREE TB-111) | 0.8 s | 28 | One target |
+| Bladedancer | Bladedancer node | 4 × waveHP(wave) × 1.3^Shieldwall | 1.4 × player dmg × 1.3^Blade Drill × Kinship | 0.45 s | 34 | Cleaves every orc in reach |
 
-Each vanguard marches on a different orc while there are enough past halfway, and vanguard closer than `VANGUARD.spread` (26 px) step apart, so two never merge into one figure (TB-173). Orcs within `r + 18` px of a vanguard engage it instead of advancing, swinging once per second for `atk`. **Field Mending** heals vanguard 3%/s per rank. Rally costs scale with wave, so a late reinforcement is a real decision. Both buttons show cost, grey out when unaffordable or the line is full ("Line is full"), and say "Learn Muster" before the node is owned.
+Each vanguard marches on a different orc while there are enough past halfway, and vanguard closer than `VANGUARD.spread` (26 px) step apart, so two never merge into one figure (TB-173). Orcs within `r + 18` px of a vanguard engage it instead of advancing, swinging once per second for `atk`. **Field Mending** heals vanguard 3%/s per rank.
 
-Design intent: vanguard are the *reactive* spend. The tree is the *investment* spend. A good player rallies when the wall dips under half, and buys nodes when it's quiet.
+Design intent: the vanguard line is a standing defence bought through the tree (Muster, Close Ranks, Swift Muster, drills); it costs nothing in play and returns on its own after `VANGUARD.respawn`.
 
 ## 6. The player
 - Elf archer at (64, H/2). The elf only lobs (below); the draw (`lobCd`) never changes with input and holds when ready rather than banking shots.
@@ -128,11 +124,11 @@ All companion damage scales with Kinship (×1.2/rank). Kinship also scales vangu
 - **Tooltip plates (TB-195c):** hovering a skill-tree node shows a carved plate by the cursor with what the next rank changes (*now → next*), its cost and one line of flavour; the detail card shows the first sentence only.
 - **Tab tokens (TB-195d):** the panel tabs are carved tokens (bow, satchel, seed, cog) that spring forward when chosen.
 - **Field:** 15:8 canvas. Top-left: barricade health bar (timber → amber → rose as it drops) with numbers, and vanguard count once Muster is owned. Bottom: wave timer bar. Toast at top. Every kept item drop (TB-192) stands a light pillar in its rarity colour on the field, taller by rarity, with a banner under the toast (icon, rarity, name) and its rarity chime; legendary and mythic also shake and flash the field, and the Satchel tab counts the new items until it is opened. Fallen overlay covers the field when the wall is down.
-- **Rally bar** under the field: Rally Spearman and (after the node) Rally Bladedancer buttons showing cost, and the *Summon the boss wave* button (waiting count, then a countdown and orcs left while it runs).
+- **Boss bar** under the field: the *Summon the boss wave* button (waiting count, then a countdown and orcs left while it runs).
 - **Pages (TB-136):** `body[data-mode]` is `run` (the field fills the screen under the header, which shows the stats and a Settings button), `camp` (after a fall: the Grove page, tabs The Grove / Satchel / Replant / Settings, *March again*) or `settings` (an overlay over the field, *Back to the field*). Panels and the field sit in a carved living-wood frame on a deep forest green with a faint gilded vine; buttons are carved plaques (ART-STYLE §UI wood).
 - **Grove page:** tabs The Grove / Satchel / Replant / Settings. The tree is a 1288×1262 logical canvas shown in a 460 px tall view (380 px on narrow screens) with pan/zoom (TB-021); it opens at 1:1 on Waking (TB-082), branches are curved and the camera eases to the selected node (TB-066). Detail card below with branch, prerequisite, rank, description, cost and a single Learn/Improve button. Affordable nodes pulse amber. Click selects; click again buys. The camp never scrolls the page (TB-153): every tab fits the screen, and only the skill tree inside the Grove pans. The Replant tab holds voluntary Replant beside the Heartwood tree; Settings holds volume (the M key mutes and unmutes; automated browsers start muted, TB-196), motion, number format, save export/import and the playtest run log download (TB-070).
 - **Encampment (TB-188b):** the grove strip west of the barricade holds four buildings in its top and bottom bands (bowyer top-left, forge top-right, kitchen bottom-left, training area bottom-right; `CAMP_SPOTS`). Clicking one opens its card over the strip: level (of 3), what it gives now and next, the cost in Heartwood and its material with the owned counts in brackets, and one Build/Upgrade button. Like the Heartwood tree, the button works only while the run has fallen; mid-run the card says upgrades open when the wall falls. Esc, ✕ or a click elsewhere on the field closes it. The Replant tab gains a third column, **Camp**: the four material counts (Sinew, Orc Iron, Game Meat, Straw & Hide), then each building's name, level, next effect, cost and button. Card and list are rem-sized, so the Settings text scale grows them; the card scrolls inside itself when it outgrows the field.
-- **Mobile (TB-155, director 2 Nov):** the web build plays on phones held sideways. Touch aim: hold a finger on the plain and the strike circle sits 3.5 rem above the fingertip so the finger never hides it; lifting the finger stops the bow (aim-to-play holds). Only the first finger aims, so a second can press Rally. A portrait phone shows *Turn your phone sideways*. Under 540 px tall: slimmer frames and stats, the camp header hides, the Grove's detail card sits beside the tree, Satchel/Replant/Settings keep two columns. On a short touch screen the one-page fit stops at 80 % and the rest scrolls inside the tab (PC never scrolls). No pull-to-refresh, double-tap zoom, text selection or long-press menu. Touch targets ≥ 44 px on coarse pointers (TB-064).
+- **Mobile (TB-155, director 2 Nov):** the web build plays on phones held sideways. Touch aim: hold a finger on the plain and the strike circle sits 3.5 rem above the fingertip so the finger never hides it; lifting the finger stops the bow (aim-to-play holds). Only the first finger aims, so a second can press the boss button. A portrait phone shows *Turn your phone sideways*. Under 540 px tall: slimmer frames and stats, the camp header hides, the Grove's detail card sits beside the tree, Satchel/Replant/Settings keep two columns. On a short touch screen the one-page fit stops at 80 % and the rest scrolls inside the tab (PC never scrolls). No pull-to-refresh, double-tap zoom, text selection or long-press menu. Touch targets ≥ 44 px on coarse pointers (TB-064).
 - All copy through `src/data/strings.ts`.
 
 ## 12. Onboarding (no tutorial)

@@ -71,7 +71,7 @@ describe('save v12 -> v13 (TB-188a)', () => {
     const v12 = { version: 12, savedAt: 5, run: freshRun(), meta: { ...freshMeta(), heartwood: 9, camp: undefined },
       settings: { volume: 0.7, reducedMotion: null, numberFormat: 'short', textScale: 1 } };
     const s = migrate(JSON.parse(JSON.stringify(v12)));
-    expect(CURRENT_VERSION).toBe(14); expect(s.version).toBe(14);
+    expect(CURRENT_VERSION).toBe(15); expect(s.version).toBe(15);
     expect(s.meta.camp).toEqual({ levels: {}, mats: {} }); expect(s.meta.heartwood).toBe(9);
   });
 });

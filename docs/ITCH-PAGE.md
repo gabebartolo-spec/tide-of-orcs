@@ -40,7 +40,7 @@ Captured from the real game at 1920 × 1080 (headless Chrome over CDP, sim-progr
 | File | Shows |
 |---|---|
 | `itch/1-field.png` | Wave 7, 15 orcs on the plain, two hacking a 57 / 400 wall, the elf drawing on the aim circle |
-| `itch/2-fallen.png` | "The barricade has fallen": wave, slain, minutes held, best drop, +1 Heartwood (stale: falls pay no Heartwood since TB-171; retake before the page goes public) |
+| `itch/2-fallen.png` | "The barricade has fallen": wave, slain, minutes held, best drop, Heartwood from boss waves cleared this run (stale shot shows +1 from before TB-171/TB-205; retake before the page goes public) |
 | `itch/3-grove.png` | The Grove page between runs: the full skill tree around Waking |
 
 Cover image (630 × 500) is not made yet; it needs art, not a crop.

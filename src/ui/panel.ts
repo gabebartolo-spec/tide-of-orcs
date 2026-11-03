@@ -303,7 +303,7 @@ export class Panel {
     // Items by rarity, rarest first, then the best drop in its rarity colour (TB-103)
     const counts = RARITIES.filter((k) => r.found?.[k]).reverse().map((k) => `${r.found![k]} ${STR.rarityName[k] ?? k}`).join(', ');
     $('fallen-loot').innerHTML = r.best ? STR.fallenLoot(counts, `<span class="best r-${r.best.rarity}">${itemName(r.best)}</span>`) : STR.fallenNoLoot;
-    $('fallen-hw').textContent = '+' + gain(); $('fallen').hidden = false;
+    $('fallen-hw').textContent = '+' + fmt(r.hwEarned); $('fallen').hidden = false;
   }
   private doReplant(): void {
     const hw = this.game.replant(this.tier()); $('fallen').hidden = true; this.tree.selected = 'sharp'; this.renderDetail(); this.renderHw(); this.setMode('run');

@@ -160,6 +160,6 @@ describe('paths: choosing and replanting (TB-193a)', () => {
   });
   it('v13 saves migrate to v14 with no path', () => {
     const m = migrate({ version: 13, savedAt: 0, run: { ...freshRun(), path: undefined, hoardN: undefined }, meta: freshMeta(), settings: {} }) as { version: number; run: { path: unknown; hoardN: unknown } };
-    expect(m.version).toBe(14); expect(m.run.path).toBeNull(); expect(m.run.hoardN).toBe(0);
+    expect(m.version).toBe(15); expect(m.run.path).toBeNull(); expect(m.run.hoardN).toBe(0);
   });
 });
