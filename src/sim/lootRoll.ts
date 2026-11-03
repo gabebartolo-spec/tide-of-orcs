@@ -1,7 +1,7 @@
 /** Seeded loot rolls (TB-092): drop chance, rarity with pity, item level, affixes. Pure; takes the sim RNG. */
 import { OrcKind } from '../data/orcs';
 import { Item, LootMeta, RARITIES, Rarity } from '../data/loot';
-import { AFFIXES, AFFIX_NEEDS, AffixDef, BASES, DROP, Feature, MYTHICS, RARITY, SETS, affixScale, forPath } from '../data/lootTables';
+import { AFFIXES, AFFIX_NEEDS, AffixDef, BASES, DROP, Feature, MYTHICS, RARITY, SETS, SET_CHANCE, affixScale, forPath } from '../data/lootTables';
 import { Rng } from './rng';
 import { Stats } from './stats';
 import { PathId } from '../data/paths';
@@ -87,6 +87,6 @@ export function rollDrop(rng: Rng, loot: LootMeta, kind: OrcKind, wave: number, 
   const base = pick(rng, myth ? BASES.filter((b) => b.slot === myth.slot) : BASES);
   const item: Item = { uid: `i${loot.nextUid++}`, base: base.id, slot: base.slot, rarity, ilvl, affixes: rollAffixes(rng, RARITY.affixes[rarity], ilvl, mods.has) };
   if (myth) item.mythic = myth.id;
-  else if (rarity === 'legendary' && rng.next() < 0.5) item.set = pick(rng, forPath(SETS, mods.path)).id;
+  else if (rarity === 'legendary' && rng.next() < SET_CHANCE) item.set = pick(rng, forPath(SETS, mods.path)).id;
   return item;
 }
