@@ -15,5 +15,6 @@ Third-party assets used in Tide of Orcs.
 - Treeline (`tree_*` in `public/decor`; TB-207): "Handpainted Tree Pack" by rudolfs,
   https://sketchfab.com/3d-models/handpainted-tree-pack-d246b8b4439d44c6adc854ebc5ffc5ba, licensed CC BY 4.0
   (https://creativecommons.org/licenses/by/4.0/). Changed: single trees rendered to 2D sprites, plus darker hazed copies.
-- Grunt orc (sprites `orc.grunt`, `orc.grunt.attack`, `orc.grunt.death`; TB-212): "Low-poly orc" by Riltariki (Sketchfab),
-  licensed CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Changed: rendered to 2D sprite frames with its own walk, attack and death clips.
+- Grunt orc candidate (TB-212, comparison renders only, not in the build): "Low-poly orc" by Riltariki (https://sketchfab.com/Riltariki),
+  https://sketchfab.com/3d-models/low-poly-orc-62f1637181cb4f6aa38897f5b7ab5edf, licensed CC BY 4.0
+  (https://creativecommons.org/licenses/by/4.0/). Changed: rendered to 2D sprite frames with its own walk, attack and death clips, skin recoloured green.
