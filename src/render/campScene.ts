@@ -1,3 +1,4 @@
+import { renderScale } from './quality';
 import { BuildingId } from '../data/camp';
 import { CAMP_SCENE } from '../data/presentation';
 import { CampArt } from './camp';
@@ -22,7 +23,7 @@ export class CampScene {
 
   resize(): void {
     const r = this.canvas.getBoundingClientRect();
-    this.dpr = devicePixelRatio || 1;
+    this.dpr = renderScale(r.width, r.height);   // the shared backing scale (TB-218 P3)
     this.canvas.width = Math.max(1, Math.round(r.width * this.dpr)); this.canvas.height = Math.max(1, Math.round(r.height * this.dpr));
     const S = CAMP_SCENE;
     this.k = Math.max(r.width / S.w, r.height / (S.bottom - S.top)) || 1;

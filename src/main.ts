@@ -14,6 +14,7 @@ import { PHONE_QUERY } from './data/presentation';
 import { setUiSound } from './data/audio';
 import { wantsCalm } from './ui/juice';
 import { armFullscreen } from './ui/fullscreen';
+import { quality } from './render/quality';
 
 const game = new GameController();
 const fieldCanvas = document.getElementById('game') as HTMLCanvasElement;
@@ -111,6 +112,9 @@ if (import.meta.env.DEV) Object.assign(window, { __tide: { game, field, tree, ca
 fetch('./build.json').then((r) => (r.ok ? r.json() : null)).then((b) => { if (b) document.getElementById('build')!.textContent = `${b.tag} · ${b.sha}`; }).catch(() => {});
 
 let last = performance.now(), acc = 0, hudT = 0, saveT = 0;
+// Draw pacing (TB-218 P3): the sim keeps its fixed step every frame; the field draws at most every quality.q.drawGap ms (60 Hz on a 120 Hz screen),
+// carrying the skipped frames' dt into the next draw, and feeds the governor the draw-to-draw time.
+let lastDraw = 0, drawDt = 0;
 // A hidden page saves (saveTriggers), suspends audio and holds the sim; coming back resets the clock, so there is no catch-up burst (TB-218)
 let away = false;
 const goAway = (): void => { away = true; audio.suspend(); dropAllAim(); };
@@ -121,7 +125,7 @@ addEventListener('pageshow', comeBack);
 // A coarse portrait phone shows the rotate prompt (style.css .turn): the sim holds still behind it (TB-218)
 const portraitMq = matchMedia('(orientation: portrait) and (pointer: coarse)');
 function frame(now: number): void {
-  if (away || portraitMq.matches) { last = now; requestAnimationFrame(frame); return; }
+  if (away || portraitMq.matches) { last = now; lastDraw = 0; requestAnimationFrame(frame); return; }
   if (resync) { resync = false; last = now; acc = 0; }
   const dt = Math.min(0.25, Math.max(0, (now - last) / 1000)); last = now;
   // a mythic drop briefly holds, then slows the field (TB-105)
@@ -134,7 +138,12 @@ function frame(now: number): void {
   const events = game.events.drain();
   game.noteEvents(events); field.consume(events, game.state); panel.handleEvents(events); audio.consume(events);
   // the field is hidden (zero-size) on the camp pages, so skip its draw there (TB-136)
-  if (!document.hidden && document.body.dataset.mode !== 'camp') field.draw(game.state, dt, game.aim);
+  drawDt += dt;
+  if (!document.hidden && document.body.dataset.mode !== 'camp' && now - lastDraw >= quality.q.drawGap - 1) {
+    field.draw(game.state, drawDt, game.aim); drawDt = 0;
+    if (lastDraw && quality.frame(now - lastDraw)) field.resize();
+    lastDraw = now;
+  } else if (document.body.dataset.mode === 'camp') { drawDt = 0; lastDraw = 0; }
   if (!document.hidden && campView.offsetParent) campScene.draw(game.state.meta.camp.levels, now / 1000);
   treeWrap.classList.toggle('burning', field.ceremony.burning);
   hudT += dt; if (hudT > 0.15) { hudT = 0; panel.update(); tree.draw(game.state, game.state.t); } else if (tree.live) tree.draw(game.state, game.state.t);

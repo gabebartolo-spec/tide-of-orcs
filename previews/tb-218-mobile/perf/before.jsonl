@@ -1,0 +1,5 @@
+{"scenario":"plain","throttle":"4","vw":"915","vh":"412","canvas":[1830,824],"mp":1.51,"live":160,"tier":null,"fps":22.5,"frameMs":{"med":41.6,"p95":83.4},"drawMs":{"med":29,"p95":65.5},"bakeBytes":null,"bakeCount":0}
+{"scenario":"burn","throttle":"4","vw":"915","vh":"412","canvas":[1830,824],"mp":1.51,"live":160,"tier":null,"fps":5.1,"frameMs":{"med":191.7,"p95":291.6},"drawMs":{"med":152.1,"p95":228.4},"bakeBytes":null,"bakeCount":6191}
+{"scenario":"chill","throttle":"4","vw":"915","vh":"412","canvas":[1830,824],"mp":1.51,"live":160,"tier":null,"fps":5.2,"frameMs":{"med":175,"p95":466.7},"drawMs":{"med":142,"p95":460.4},"bakeBytes":null,"bakeCount":5706}
+{"scenario":"flash","throttle":"4","vw":"915","vh":"412","canvas":[1830,824],"mp":1.51,"live":160,"tier":null,"fps":14.5,"frameMs":{"med":75.1,"p95":108.4},"drawMs":{"med":43.1,"p95":88},"bakeBytes":null,"bakeCount":0}
+{"scenario":"hitburn","throttle":"4","vw":"915","vh":"412","canvas":[1830,824],"mp":1.51,"live":160,"tier":null,"fps":4.8,"frameMs":{"med":175,"p95":458.4},"drawMs":{"med":155,"p95":264.1},"bakeBytes":null,"bakeCount":4931}

@@ -1,3 +1,4 @@
+import { renderScale } from './quality';
 import { BRANCH_COLOR, BRANCH_LABEL, NODE, NODES, NodeId, SkillNode, TREE_VIEW } from '../data/skillTree';
 import { Camera, centreOn, clampCamera, easeToward, startCamera, panBy, toWorld, wholeCamera, zoomAt } from './camera';
 import { SimState } from '../sim/state';
@@ -110,8 +111,8 @@ export class TreeRenderer {
     const r = this.canvas.getBoundingClientRect(); if (!r.width || !r.height) return;
     // Work in 1080p layout px (CSS px ÷ the UI scale, TB-143), so legend, labels and camera framing grow with the window
     this.ui = uiScale(); const first = this.vw === 1, k = r.width / this.ui / this.vw;
-    this.vw = r.width / this.ui; this.vh = r.height / this.ui; this.dpr = (devicePixelRatio || 1) * this.ui;
-    this.canvas.width = Math.round(r.width * (devicePixelRatio || 1)); this.canvas.height = Math.round(r.height * (devicePixelRatio || 1));
+    this.vw = r.width / this.ui; this.vh = r.height / this.ui; const sc = renderScale(r.width, r.height); this.dpr = sc * this.ui;
+    this.canvas.width = Math.round(r.width * sc); this.canvas.height = Math.round(r.height * sc);
     // Keep the same framing when the panel resizes: scale zoom with width.
     if (this.full) { this.cam = wholeCamera(this.vw, this.vh); this.target = null; return; }
     this.cam = first ? startCamera(this.vw, this.vh) : clampCamera({ ...this.cam, z: this.cam.z * k }, this.vw, this.vh);
@@ -123,8 +124,8 @@ export class TreeRenderer {
     if (on) this.saved = this.target ?? this.cam;
     this.full = on; this.target = null; this.vw = 1; // force a fresh fit on the next resize
     const r = this.canvas.getBoundingClientRect(); if (!r.width || !r.height) return;
-    this.ui = uiScale(); this.vw = r.width / this.ui; this.vh = r.height / this.ui; this.dpr = (devicePixelRatio || 1) * this.ui;
-    this.canvas.width = Math.round(r.width * (devicePixelRatio || 1)); this.canvas.height = Math.round(r.height * (devicePixelRatio || 1));
+    this.ui = uiScale(); this.vw = r.width / this.ui; this.vh = r.height / this.ui; const sc = renderScale(r.width, r.height); this.dpr = sc * this.ui;
+    this.canvas.width = Math.round(r.width * sc); this.canvas.height = Math.round(r.height * sc);
     this.cam = on ? wholeCamera(this.vw, this.vh) : this.saved ? clampCamera(this.saved, this.vw, this.vh) : startCamera(this.vw, this.vh);
     this.stale = true;
   }

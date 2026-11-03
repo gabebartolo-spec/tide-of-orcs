@@ -5,6 +5,7 @@ import { BRANCH_COLOR, BRANCH_LABEL, NODE } from '../data/skillTree';
 import { STR } from '../data/strings';
 import type { Cue } from '../data/audio';
 import { GameController } from '../game';
+import { quality, storedPref, type QualityPref } from '../render/quality';
 import { TreeRenderer } from '../render/tree';
 import { stepNode, tabOrder } from '../render/treeNav';
 import { canBuy, costOf, rankOf, unlocked } from '../sim/tree';
@@ -245,6 +246,9 @@ export class Panel {
   private initSettings(): void {
     $('set-vol-k').textContent = STR.setVolume; $('set-motion-k').textContent = STR.setMotion; $('set-num-k').textContent = STR.setNumbers; $('set-text-k').textContent = STR.setText;
     const mo = $<HTMLSelectElement>('set-motion').options; mo[0]!.text = STR.motionSystem; mo[1]!.text = STR.motionFull; mo[2]!.text = STR.motionReduced;
+    const qo = $<HTMLSelectElement>('set-quality').options; qo[0]!.text = STR.qualAuto; qo[1]!.text = STR.qualHigh; qo[2]!.text = STR.qualLow; $('set-quality-k').textContent = STR.setQuality;
+    $<HTMLSelectElement>('set-quality').value = storedPref();
+    $<HTMLSelectElement>('set-quality').onchange = (e) => { quality.setPref((e.target as HTMLSelectElement).value as QualityPref); window.dispatchEvent(new Event('resize')); };
     const no = $<HTMLSelectElement>('set-num').options; no[0]!.text = STR.numShort; no[1]!.text = STR.numSci;
     $('set-save-k').textContent = STR.setSave;
     $('btn-export').textContent = STR.exportBtn; $('btn-import').textContent = STR.importBtn;

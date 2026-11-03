@@ -93,6 +93,7 @@ export const STR = {
     stormDmg: 'storm arrow damage', stormChain: 'storm chains', homingDmg: 'moon arrow damage', critDmg: 'crit damage',
   } as Record<string, string>,
   setVolume: 'Volume', setMotion: 'Motion', setNumbers: 'Numbers', setText: 'Text size', fsEnter: 'Fullscreen', fsExit: 'Exit fullscreen', soundOn: 'Sound on', soundOff: 'Sound off',
+  setQuality: 'Graphics (reload to apply fully)', qualAuto: 'Auto', qualHigh: 'High', qualLow: 'Low',
   motionSystem: 'Follow system', motionFull: 'Full', motionReduced: 'Reduced',
   numShort: 'Short (1.25M)', numSci: 'Scientific (1.25e6)',
   setTel: 'Playtest data', telBtn: 'Download run log', telNone: 'No finished runs yet', telSaved: (n: number) => `Saved ${n} run${n === 1 ? '' : 's'}`,

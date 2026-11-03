@@ -1,6 +1,7 @@
 /** Web Audio playback: ambient loop, two music beds crossfaded on Replant, a boss track on boss waves, SFX from sim events, ducking. Missing files are skipped silently. */
 import { AMBIENT, AUDIO, BOSS_BED, Bed, CUES, Cue, MUSIC, cueFor, nextBed } from '../data/audio';
 import type { SimEvent } from '../sim/events';
+import { quality } from '../render/quality';
 
 export class AudioEngine {
   private ctx: AudioContext | null = null;
@@ -13,9 +14,13 @@ export class AudioEngine {
   private bossSrc: AudioBufferSourceNode | null = null;
   /** A boss wave began before the boss track finished loading; start it when the load lands. */
   private bossPending = false;
+  private bossStreamed = false;
   private bufs = new Map<string, AudioBuffer | null>();
   private lastAt = new Map<Cue, number>();
   private volume = 1;
+  /** Phone tier (TB-218 P5): music and ambient stream through media elements instead of resident decoded PCM (about 150 MB). */
+  private streams = new Map<string, HTMLAudioElement>();
+  private streaming = false;
 
   constructor(private base = './audio/') {}
 
@@ -27,14 +32,33 @@ export class AudioEngine {
     this.master = this.ctx.createGain(); this.master.gain.value = this.volume; this.master.connect(this.ctx.destination);
     this.amb = this.ctx.createGain(); this.amb.gain.value = AUDIO.ambientGain; this.amb.connect(this.master);
     this.music = this.ctx.createGain(); this.music.gain.value = AUDIO.musicGain; this.music.connect(this.master);
+    this.streaming = quality.q.cheap && typeof Audio !== 'undefined';
     for (const b of MUSIC) {
       const g = this.ctx.createGain(); g.gain.value = b === this.bed ? 1 : 0; g.connect(this.music); this.beds.set(b, g);
-      void this.load(b).then((buf) => { if (buf) this.loop(buf, g); });
+      if (this.streaming) { if (b === this.bed) this.stream(b, g); }
+      else void this.load(b).then((buf) => { if (buf) this.loop(buf, g); });
     }
     this.boss = this.ctx.createGain(); this.boss.gain.value = 0; this.boss.connect(this.music);
-    void this.load(BOSS_BED).then((buf) => { if (buf && this.bossPending) this.startBoss(); });
+    if (!this.streaming) void this.load(BOSS_BED).then((buf) => { if (buf && this.bossPending) this.startBoss(); });
     for (const [c, d] of Object.entries(CUES)) void this.load(d.file ?? c, c);
-    void this.load(AMBIENT).then((b) => { if (b) this.loop(b, this.amb); });
+    if (this.streaming) this.stream(AMBIENT, this.amb);
+    else void this.load(AMBIENT).then((b) => { if (b) this.loop(b, this.amb); });
+  }
+
+  /** Play `name` as a looping media element into `out` (created once per name, then reused). */
+  private stream(name: string, out: GainNode, fromStart = false): void {
+    let el = this.streams.get(name);
+    if (!el) {
+      el = new Audio(`${this.base}${name}.mp3`); el.loop = true; el.preload = 'auto';
+      this.streams.set(name, el);
+      this.ctx!.createMediaElementSource(el).connect(out);
+    }
+    if (fromStart) el.currentTime = 0;
+    void el.play().catch(() => { /* blocked or missing file: stay silent */ });
+  }
+  private halt(name: string, afterSecs: number): void {
+    const el = this.streams.get(name); if (!el) return;
+    setTimeout(() => el.pause(), afterSecs * 1000);
   }
 
   /** The page went to the background (TB-218): stop the audio clock and the output. */
@@ -59,6 +83,12 @@ export class AudioEngine {
   /** Boss track from its first bar; the run's bed fades out under it. */
   private startBoss(): void {
     const ctx = this.ctx; if (!ctx) return;
+    if (this.streaming) {
+      this.bossPending = false; this.stream(BOSS_BED, this.boss, true); this.bossStreamed = true;
+      this.ramp(this.boss.gain, 1, AUDIO.bossFade);
+      this.ramp(this.beds.get(this.bed)!.gain, 0, AUDIO.bossFade);
+      return;
+    }
     const buf = this.bufs.get(BOSS_BED);
     if (!buf) { this.bossPending = !this.bufs.has(BOSS_BED); return; }
     this.bossPending = false;
@@ -71,6 +101,12 @@ export class AudioEngine {
 
   private endBoss(): void {
     this.bossPending = false;
+    if (this.bossStreamed && this.ctx) {
+      this.bossStreamed = false;
+      this.ramp(this.boss.gain, 0, AUDIO.bossFade);
+      this.ramp(this.beds.get(this.bed)!.gain, 1, AUDIO.bossFade);
+      this.halt(BOSS_BED, AUDIO.bossFade); return;
+    }
     const ctx = this.ctx, src = this.bossSrc; if (!ctx || !src) return;
     this.ramp(this.boss.gain, 0, AUDIO.bossFade);
     this.ramp(this.beds.get(this.bed)!.gain, 1, AUDIO.bossFade);
@@ -81,6 +117,7 @@ export class AudioEngine {
   private swapBed(): void {
     const ctx = this.ctx; if (!ctx) return;
     const next = nextBed(this.bed);
+    if (this.streaming) { this.stream(next, this.beds.get(next)!); this.halt(this.bed, AUDIO.crossfade); }
     for (const [b, g] of this.beds) this.ramp(g.gain, b === next ? 1 : 0, AUDIO.crossfade);
     this.bed = next;
   }

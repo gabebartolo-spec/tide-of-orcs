@@ -1,5 +1,6 @@
 import { CAMP_BACKDROP } from '../data/presentation';
 import { P } from './palette';
+import { quality } from './quality';
 
 /** The Camp scene's backdrop (TB-188j, docs/plans/elf-encampment.md §1): a plate rendered in Blender in the buildings' own style
  *  (forest, meadow, the road in front of the row), darkened toward the canvas bottom (TB-188k); contact shadows are baked into the
@@ -12,7 +13,7 @@ let loading = false;
 function load(): void {
   if (loading || typeof Image === 'undefined') return;
   loading = true;
-  const im = new Image(); im.onload = (): void => { plate = im; }; im.src = `${import.meta.env.BASE_URL}${B.src}`;
+  const im = new Image(); im.onload = (): void => { plate = im; }; im.src = `${import.meta.env.BASE_URL}${quality.q.cheap ? B.srcPhone : B.src}`;
 }
 
 export class CampBackdrop {
