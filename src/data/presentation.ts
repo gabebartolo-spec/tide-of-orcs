@@ -138,7 +138,7 @@ export const TREE_LIGHT = {
  *  scale instead of in the field's grove strip. Scene units match field units (the elf stands ~38 units tall), and the view
  *  fits the `w` x `h` box to its canvas. `l3H` is the drawn height of every level-3 Tripo sprite (~3.5x the elf's frame: the Tripo frames include each building's ground island, so the
  *  structure itself reads ~3x the elf), so each
- *  building gets its own scale. `sky` is the share of the box above the horizon. The four finished buildings stand equally tall; levels 1-2 keep their render ratio. */
+ *  building gets its own scale. `sky` is the share of the box above the horizon. The four finished buildings stand equally tall. TB-188g: CAMP_LV_SCALE multiplies that scale per building and level. */
 export const CAMP_SCENE = { w: 840, h: 210, l3H: 135, sky: 0.25, elf: { x: 805, y: 185, r: 12 } } as const;
 /** Each building's footprint in the camp scene: centre x, base y (ground line), width and height in scene units. One row,
  *  left to right, with the elf at the east end; widths are the level-3 sprites at `l3H` tall. Click targets, the Tripo
@@ -148,6 +148,16 @@ export const CAMP_SPOTS = {
   forge: { x: 210, y: 185, w: 132, h: 135 },
   kitchen: { x: 392, y: 185, w: 196, h: 135 },
   training: { x: 640, y: 185, w: 256, h: 135 },
+} as const;
+
+/** Per-level scale on each building's level-3 scale (TB-188g), index = level. Measured in the Camp tab (roof top to ground line,
+ *  in elf heights; the elf measures ~40 units): at one shared scale level 1 read 1.5-2.1x the elf and level 2 sometimes stood taller
+ *  than level 3. These put level 1 at 2.5/3.1 and level 2 at 2.8/3.1 of the building's own level-3 height, so each upgrade grows. */
+export const CAMP_LV_SCALE = {
+  bowyer: [1, 1.19, 1.36, 1],
+  forge: [1, 1.56, 1.44, 1],
+  kitchen: [1, 1.04, 0.96, 1],
+  training: [1, 1.05, 0.83, 1],
 } as const;
 
 /** UI motion and feedback kit (TB-195a, docs/plans/game-ui.md §3, ART-STYLE §Motion). Times in ms, sizes in CSS px. */
