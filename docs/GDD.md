@@ -123,6 +123,7 @@ All companion damage scales with Kinship (×1.2/rank). Kinship also scales vangu
 - **Header:** title; in a run the game HUD (TB-195b): the barricade wall bar with HP and vanguard count, the starlight gem, the wave banner (stamped CLEARED on each wave clear, replacing the wave toast); then Slain (lifetime), Heartwood (shown as `available / earned` once any is spent). Tabular numerals.
 - **Tooltip plates (TB-195c):** hovering a skill-tree node shows a carved plate by the cursor with what the next rank changes (*now → next*), its cost and one line of flavour; the detail card shows the first sentence only.
 - **Tab tokens (TB-195d):** the panel tabs are carved tokens (bow, satchel, seed, cog) that spring forward when chosen.
+- **Saving (TB-195m):** the game autosaves; there is no Save button. Wipe save sits in Settings and needs a second press.
 - **Battle report (TB-195f):** the fallen overlay tallies the run (wave, slain, minutes, starlight/min, best wave) and the Heartwood carried back, then stamps a seal; Replant stays the only run action.
 - **Satchel as an object (TB-195e):** gear is dragged from the leather bag onto its sewn pocket to wear it (the Wear button still works); hovering bag gear shows it and the worn piece as two plates side by side.
 - **Satchel v2 (TB-195j):** worn gear sits on a paper doll (six sockets around the elf); every item is one pocket whose glow shows its rarity, with its name only on hover.

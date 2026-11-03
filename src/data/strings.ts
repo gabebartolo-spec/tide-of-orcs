@@ -101,7 +101,7 @@ export const STR = {
   setTel: 'Playtest data', telHint: 'Each finished run is logged on this device only. Download the file and send it to the developer if you are testing.', telBtn: 'Download run log', telNone: 'No finished runs yet', telSaved: (n: number) => `Saved ${n} run${n === 1 ? '' : 's'}`,
   setSave: 'Save transfer', exportBtn: 'Export', importBtn: 'Import', exportHint: 'Export puts your save in the box below; copy it to keep or move it. Paste a save there and press Import to load it.',
   exported: 'Save copied', importConfirm: 'Import replaces this grove. Press again', imported: 'Save imported', importBad: 'That save could not be read',
-  autosave: 'Autosaves every 20s', saveNow: 'Save now',
+
   starlightCost: (n: string) => `${n} starlight`,
   barricadeHud: (hp: string, max: string) => `BARRICADE ${hp} / ${max}`,
   vanguardHud: (n: number, cap: number) => `VANGUARD ${n} / ${cap}`,
@@ -114,7 +114,8 @@ export const STR = {
   hwClosed: (avail: number) => `Heartwood is spent only when the grove is replanted. ${avail} saved.`,
   hwCost: (n: number) => `${n} Heartwood`, hwRank: (l: number, m: number) => (m > 1 ? `rank ${l} / ${m}` : l ? 'learned' : ''),
   hwBought: (name: string) => `${name} takes root`,
-  heartAvail: (avail: number, total: number) => (avail === total ? String(total) : `${avail} / ${total}`),
+  /** Spendable Heartwood only, never `avail / total` (TB-195m). */
+  heartAvail: (avail: number) => String(avail),
   // Encampment (TB-188b)
   campSecTitle: 'Camp', campSecBody: 'Buildings last every run. Pay Heartwood and the material common orcs drop.',
   campMats: 'Materials', campLevel: (l: number, m: number) => `level ${l} / ${m}`,

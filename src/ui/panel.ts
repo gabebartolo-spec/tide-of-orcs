@@ -13,7 +13,7 @@ import { BOSS_WAVE, TIERS } from '../data/bosses';
 import { fitPages } from './fit';
 import { NumberFormat, fmt, setNumberFormat } from './format';
 import { HW_NODE, HW_NODES, HwId } from '../data/heartwood';
-import { canBuyHw, hwCost, hwPending, hwRank, hwSpendable, hwUnlocked } from '../sim/heartwood';
+import { canBuyHw, hwCost, hwRank, hwSpendable, hwUnlocked } from '../sim/heartwood';
 import { SatchelPane, itemName } from './satchel';
 import { glyph } from './glyphs';
 import { LOOT_BANNER, REPORT } from '../data/presentation';
@@ -50,10 +50,9 @@ export class Panel {
     // static copy
     $('tab-grove').textContent = STR.tabGrove; $('tab-camp').textContent = STR.tabCamp; $('tab-prestige').textContent = STR.tabReplant;
     $('pr-title').textContent = STR.replantTitle; $('pr-body').textContent = STR.replantBody;
-    $('btn-save').textContent = STR.saveNow;
     $('k-wave').textContent = STR.wave; $('k-kills').textContent = STR.slain; $('k-heart').textContent = STR.heartwood;
     $('pr-gain-k').textContent = STR.replantGainK; $('pr-btn').textContent = STR.replantBtn;
-    $('pr-each').innerHTML = STR.replantEach(PRESTIGE.fallGain); $('pr-reset').textContent = STR.replantReset; $('pr-kept').textContent = STR.replantKept; $('btn-reset').textContent = STR.wipe; $('autosave').textContent = STR.autosave;
+    $('pr-each').innerHTML = STR.replantEach(PRESTIGE.fallGain); $('pr-reset').textContent = STR.replantReset; $('pr-kept').textContent = STR.replantKept; $('btn-reset').textContent = STR.wipe;
     $('fallen-title').textContent = STR.fallenTitle; $('fallen-hw-k').textContent = STR.fallenHW; $('fallen-btn').textContent = STR.fallenToCamp;
     $('camp-title').textContent = STR.campTitle; $('camp-go').textContent = STR.campGo; $('camp-close').textContent = STR.campClose; $('btn-settings').textContent = STR.tabSettings;
     $('dep-boss').querySelector('.n')!.textContent = STR.summonBoss;
@@ -76,7 +75,6 @@ export class Panel {
     $('btn-pullback').onclick = () => { this.onCue('click'); this.game.pullBack(); };
     $('btn-settings').onclick = () => { this.onCue('click'); this.setMode('settings'); this.setTab('settings'); };
     $('camp-close').onclick = () => { this.onCue('click'); this.setMode('run'); };
-    $('btn-save').onclick = () => { game.save(); this.toast(STR.saved); };
     $('btn-reset').onclick = () => this.wipe();
     tree.canvas.addEventListener('click', (e) => {
       const id = tree.hitTest(e.clientX, e.clientY); if (!id) return;
@@ -120,7 +118,7 @@ export class Panel {
   /** Called ~6 Hz. */
   update(): void {
     const s = this.game.state;
-    this.hud.starlight(s.run.starlight); this.hud.wall(s.run.barHp, s.stats.barMax, STR.barricadeHud(fmt(Math.max(0, s.run.barHp)), fmt(s.stats.barMax))); $('hud-van').hidden = !s.stats.muster; if (s.stats.muster) $('hud-van').textContent = STR.vanguardHud(s.vans.count, s.stats.vanCap); $('st-wave').textContent = s.run.tier > 1 ? STR.waveTide(s.run.wave, STR.tideName(s.run.tier)) : String(s.run.wave); $('st-kills').textContent = fmt(s.meta.lifetimeKills); $('st-heart').textContent = STR.heartAvail(hwSpendable(s), s.meta.heartwood + hwPending(s));
+    this.hud.starlight(s.run.starlight); this.hud.wall(s.run.barHp, s.stats.barMax, STR.barricadeHud(fmt(Math.max(0, s.run.barHp)), fmt(s.stats.barMax))); $('hud-van').hidden = !s.stats.muster; if (s.stats.muster) $('hud-van').textContent = STR.vanguardHud(s.vans.count, s.stats.vanCap); $('st-wave').textContent = s.run.tier > 1 ? STR.waveTide(s.run.wave, STR.tideName(s.run.tier)) : String(s.run.wave); $('st-kills').textContent = fmt(s.meta.lifetimeKills); $('st-heart').textContent = STR.heartAvail(hwSpendable(s));
     $('hw-body').textContent = s.run.fallen ? STR.hwBody(hwSpendable(s)) : STR.hwClosed(hwSpendable(s));
     if (!$('pane-satchel').hidden) this.satchel.update();
     for (const b of $('hw-tree').querySelectorAll<HTMLButtonElement>('button[data-hw]')) b.disabled = !canBuyHw(s, b.dataset.hw as HwId);
