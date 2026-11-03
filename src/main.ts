@@ -16,7 +16,7 @@ const audio = new AudioEngine();
 let muted = navigator.webdriver;
 const applyVolume = (): void => audio.setVolume(muted ? 0 : game.settings.volume);
 applyVolume();
-addEventListener('keydown', (e) => { if ((e.key === 'm' || e.key === 'M') && !(e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement)) { muted = !muted; applyVolume(); } });
+addEventListener('keydown', (e) => { if ((e.key === 'm' || e.key === 'M') && !e.repeat && !e.ctrlKey && !e.metaKey && !e.altKey && !(e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLSelectElement)) { muted = !muted; applyVolume(); } });
 // Browsers block audio until the first gesture.
 addEventListener('pointerdown', () => audio.unlock(), { capture: true });
 addEventListener('keydown', () => audio.unlock(), { capture: true });

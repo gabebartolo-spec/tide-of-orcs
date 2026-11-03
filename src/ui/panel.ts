@@ -1,4 +1,5 @@
 import { PRESTIGE, VanType } from '../data/balance';
+import { CONFIRM_ARM_MS } from '../data/settings';
 import { BRANCH_COLOR, BRANCH_LABEL, NODE } from '../data/skillTree';
 import { STR } from '../data/strings';
 import type { Cue } from '../data/audio';
@@ -51,7 +52,7 @@ export class Panel {
     $('pr-btn').onclick = () => { if (game.canReplant() && !game.state.run.fallen) this.doReplant(); };
     // After a fall the field gives way to the Grove page (TB-136): the tree and satchel are spent between runs
     $('fallen-btn').onclick = () => { this.onCue('click'); this.setMode('camp'); this.setTab('grove'); };
-    $('camp-go').onclick = () => this.doReplant();
+    $('camp-go').onclick = () => { if (game.state.run.fallen) this.doReplant(); };
     $('tier-down').textContent = '‹'; $('tier-up').textContent = '›'; $('tier-down').setAttribute('aria-label', STR.tierDown); $('tier-up').setAttribute('aria-label', STR.tierUp);
     $('tier-down').onclick = () => this.stepTier(-1); $('tier-up').onclick = () => this.stepTier(1);
     $('btn-pullback').textContent = STR.pullBack;
@@ -132,7 +133,7 @@ export class Panel {
       else if (e.t === 'bought' && e.firstRank && e.id !== 'sharp') this.toast(STR.joins(NODE[e.id as keyof typeof NODE].name));
       else if (e.t === 'vanguardFell') this.toast(STR.vanFalls(VAN_NAME[e.type as VanType]));
       else if (e.t === 'barricadeRegrow') this.toast(STR.regrow);
-      else if (e.t === 'loot' && e.kept && LOOT_TOAST.includes(e.rarity)) { const it = this.game.state.meta.loot.items.find((i) => i.uid === e.uid); if (it) { this.lootBanner(it); this.markNew(this.newItems + 1); } }
+      else if (e.t === 'loot' && e.kept && LOOT_TOAST.includes(e.rarity)) { const it = this.game.state.meta.loot.items.find((i) => i.uid === e.uid); if (it) { this.lootBanner(it); if ($('pane-satchel').hidden) this.markNew(this.newItems + 1); } }
       else if (e.t === 'barricadeFell') this.showFallen(e.chosen);
     }
   }
@@ -201,9 +202,12 @@ export class Panel {
     $('set-save-k').textContent = STR.setSave; $('set-save-hint').textContent = STR.exportHint;
     $('btn-export').textContent = STR.exportBtn; $('btn-import').textContent = STR.importBtn;
     this.syncSettings();
-    $<HTMLInputElement>('set-vol').oninput = (e) => { this.game.settings.volume = Number((e.target as HTMLInputElement).value); this.settingsChanged(); };
+    // Sliders apply on every input but save once on release (TB-199).
+    $<HTMLInputElement>('set-vol').oninput = (e) => { this.game.settings.volume = Number((e.target as HTMLInputElement).value); this.settingsApplied(); };
+    $<HTMLInputElement>('set-vol').onchange = () => this.game.save();
     $<HTMLSelectElement>('set-motion').onchange = (e) => { const v = (e.target as HTMLSelectElement).value; this.game.settings.reducedMotion = v === 'sys' ? null : v === 'reduced'; this.settingsChanged(); };
-    $<HTMLInputElement>('set-text').oninput = (e) => { this.game.settings.textScale = Number((e.target as HTMLInputElement).value); this.settingsChanged(); };
+    $<HTMLInputElement>('set-text').oninput = (e) => { this.game.settings.textScale = Number((e.target as HTMLInputElement).value); this.settingsApplied(); };
+    $<HTMLInputElement>('set-text').onchange = () => this.game.save();
     $<HTMLSelectElement>('set-num').onchange = (e) => { this.game.settings.numberFormat = (e.target as HTMLSelectElement).value as NumberFormat; this.settingsChanged(); };
     $('btn-export').onclick = () => {
       const blob = this.game.exportSave(), box = $<HTMLTextAreaElement>('set-blob'); box.value = blob; box.select();
@@ -230,16 +234,23 @@ export class Panel {
     setNumberFormat(set.numberFormat);
   }
 
-  private settingsChanged(): void { this.syncSettings(); this.onSettings(); this.game.save(); this.renderDetail(); }
+  private settingsApplied(): void { this.syncSettings(); this.onSettings(); this.renderDetail(); }
+  private settingsChanged(): void { this.settingsApplied(); this.game.save(); }
 
   private importArmed = false;
+  private importTimer = 0;
+  private wipeTimer = 0;
+  /** After an import or wipe the old satchel pick and new-loot badge belong to the old game (TB-199). */
+  private resetSatchelView(): void { this.satchel.selected = null; this.markNew(0); }
   private importSave(): void {
     const btn = $('btn-import'), str = $<HTMLTextAreaElement>('set-blob').value;
     if (!str.trim()) return;
-    if (!this.importArmed) { this.importArmed = true; btn.textContent = STR.importConfirm; setTimeout(() => { this.importArmed = false; btn.textContent = STR.importBtn; }, 4000); return; }
-    this.importArmed = false; btn.textContent = STR.importBtn;
+    if (!this.importArmed) { this.importArmed = true; btn.textContent = STR.importConfirm; clearTimeout(this.importTimer); this.importTimer = window.setTimeout(() => { this.importArmed = false; btn.textContent = STR.importBtn; }, CONFIRM_ARM_MS); return; }
+    clearTimeout(this.importTimer); this.importArmed = false; btn.textContent = STR.importBtn;
     try { this.game.importSave(str); } catch { this.toast(STR.importBad); return; }
-    $('fallen').hidden = true; this.tree.selected = 'sharp'; this.renderHw(); this.syncSettings(); this.onSettings(); this.renderDetail();
+    $('fallen').hidden = true; this.tree.selected = 'sharp'; this.resetSatchelView(); this.renderHw(); this.syncSettings(); this.onSettings(); this.renderDetail();
+    // a fallen import stays in camp (the run is frozen); a standing one returns to the field so the ticking run is seen
+    this.setMode(this.game.state.run.fallen ? 'camp' : 'run');
     if (this.game.state.run.fallen) this.showFallen();
     this.toast(STR.imported);
   }
@@ -260,8 +271,8 @@ export class Panel {
   }
   private wipe(): void {
     const btn = $('btn-reset');
-    if (!this.wipeArmed) { this.wipeArmed = true; btn.textContent = STR.wipeConfirm; setTimeout(() => { this.wipeArmed = false; btn.textContent = STR.wipe; }, 4000); return; }
-    this.game.wipe(); this.wipeArmed = false; btn.textContent = STR.wipe; $('fallen').hidden = true; this.setMode('run'); this.tree.selected = 'sharp'; this.renderDetail(); this.renderHw(); this.toast(STR.freshDawn);
+    if (!this.wipeArmed) { this.wipeArmed = true; btn.textContent = STR.wipeConfirm; clearTimeout(this.wipeTimer); this.wipeTimer = window.setTimeout(() => { this.wipeArmed = false; btn.textContent = STR.wipe; }, CONFIRM_ARM_MS); return; }
+    clearTimeout(this.wipeTimer); this.game.wipe(); this.resetSatchelView(); this.wipeArmed = false; btn.textContent = STR.wipe; $('fallen').hidden = true; this.setMode('run'); this.tree.selected = 'sharp'; this.renderDetail(); this.renderHw(); this.toast(STR.freshDawn);
   }
 
   toast(msg: string): void {
