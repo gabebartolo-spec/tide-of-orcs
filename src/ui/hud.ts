@@ -92,7 +92,7 @@ export class Hud {
     st.hidden = false;
     // The wave text crossfades back in as the stamp fades, so the plaque is never blank; a new call cancels the old timer.
     const fade = (): void => { stampT = window.setTimeout(() => tween(st, HUD.stampOut, (t) => {
-      st.style.opacity = String(1 - t); if (t >= 0.8) banner.classList.add('stamp-ending');
+      st.style.opacity = String(1 - t); if (t >= 0.95) banner.classList.add('stamp-ending');
       if (t >= 1) { st.hidden = true; banner.classList.remove('stamp-ending'); } }), HUD.stampHold); };
     if (calm()) { st.style.transform = ''; st.style.opacity = '1'; fade(); return; }
     tween(st, HUD.stampIn, (t) => {

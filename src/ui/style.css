@@ -799,7 +799,7 @@ body:not([data-mode="camp"]) :is(header .stat, .hud-wave) { width: 16rem; min-wi
 .hud-wave .stamp { top: 56%; font-size: 1.25rem; padding: 0 0.5rem; line-height: 1.6rem; }
 /* round 5: the wave text stays out while the stamp shows and fades back in only after the stamp has gone */
 .hud-wave:has(.stamp:not([hidden])) > :not(.stamp) { visibility: visible; opacity: 0; transition: none; }
-.hud-wave > :not(.stamp) { transition: opacity 0.25s ease-out; }
+.hud-wave > :not(.stamp) { transition: opacity 0.15s ease-out; }
 
 /* TB-195b round 6: the low tone is a deep danger red, not pale salmon. */
 .hud-wall[data-tone="low"] { --tone: color-mix(in srgb, var(--rose) 55%, #8a1f1a); }
@@ -807,7 +807,7 @@ body:not([data-mode="camp"]) :is(header .stat, .hud-wave) { width: 16rem; min-wi
 .hud-wall[data-tone="low"] { --tone: #b3261e; }
 .hud-wall[data-tone="low"] .fill::after { mix-blend-mode: normal; opacity: .9; }
 .odo .od { -webkit-mask-image: linear-gradient(transparent 6%, #000 26%, #000 74%, transparent 94%); mask-image: linear-gradient(transparent 6%, #000 26%, #000 74%, transparent 94%); }
-.hud-wave.stamp-ending:has(.stamp:not([hidden])) > :not(.stamp), .hud-wave.stamp-ending > :not(.stamp) { opacity: 1; transition: opacity 0.35s ease-out; }
+.hud-wave.stamp-ending:has(.stamp:not([hidden])) > :not(.stamp), .hud-wave.stamp-ending > :not(.stamp) { opacity: 1; transition: opacity 0.15s ease-out; }
 .hud-wave .stamp { opacity: 0; }
 
 /* TB-195b r9: reserve the odometer width so the plaques to its right do not shift as the count grows */
