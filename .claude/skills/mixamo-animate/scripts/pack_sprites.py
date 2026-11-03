@@ -58,9 +58,19 @@ ANCHOR_X = {"orc.wolfrider": 430.0, "orc.wolfrider.attack": 430.0}
 for _k, _x in ANCHOR_X.items():
     if _k in anchors: anchors[_k] = [_x] + list(anchors[_k][1:])
 
+# TB-210: the blam wolf rider frames live in their own folder (tide-assets\wolfrider_blamrames, hashes in wolfrider_blam/frames.sha256),
+# never in the shared frames dir, whose orc.wolfrider* files stay the approved v8 run / v6 attack that main ships. Env WRFRAMES overrides.
+WRDIR = os.environ.get("WRFRAMES", os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(src))), "wolfrider_blam", "frames"))
+KEYDIR = {"orc.wolfrider": WRDIR, "orc.wolfrider.attack": WRDIR}
+if os.path.isfile(os.path.join(WRDIR, "anchors_wolfrider.json")):
+    anchors.update(json.load(open(os.path.join(WRDIR, "anchors_wolfrider.json"), encoding="utf-8-sig")))
+for _k, _x in ANCHOR_X.items():
+    if _k in anchors: anchors[_k] = [_x] + list(anchors[_k][1:])
+
 def frames(key):
-    fs = [(int(m.group(1)), f) for f in os.listdir(src) if (m := re.fullmatch(re.escape(key) + r"_(\d+)\.png", f))]
-    return [Image.open(os.path.join(src, f)).convert("RGBA") for _, f in sorted(fs)]
+    d = KEYDIR.get(key, src)
+    fs = [(int(m.group(1)), f) for f in os.listdir(d) if (m := re.fullmatch(re.escape(key) + r"_(\d+)\.png", f))]
+    return [Image.open(os.path.join(d, f)).convert("RGBA") for _, f in sorted(fs)]
 
 cuts, body = {}, {}
 for key, (fps, mirror, bk, br) in ANIMS.items():
