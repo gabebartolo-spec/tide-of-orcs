@@ -208,19 +208,20 @@ export const CAMP_DRAW_ORDER = [...BUILDINGS].sort((a, b) => CAMP_SPOTS[a.id].y 
  *  was dropped: it floated off the building), training dust at the ring's centre (`dustDy` above the image's base). */
 /** Elk grazing behind the camp and birds over the forest (TB-188k round 3; TB-208, director 4 Nov), kept in the background. Each
  *  elk plays public/decor/camp/elk.webp, the "Realistic Animated Elk" model's own Stand_Eating_01 graze loop rendered at one spot
- *  by render_camp_backdrop.py (frame grid and rect in CAMP_ELK_ART), shifted by (dx, dy) scene units, `flip` mirrors it, `phase`
+ *  by render_camp_backdrop.py (frame grid and rect in CAMP_ELK_ART), shifted by (dx, dy) scene units, `flip` mirrors it (and its baked
+ *  shadow, which then falls against the camp sun: keep false unless re-rendered), `phase`
  *  (0-1) offsets its place in the loop so the herd does not move in step. Birds: `n` small two-stroke silhouettes drifting at
  *  `speed` units/s across the band y0..y1, wings beating at `flap` Hz, span `span`. */
 export const CAMP_FAUNA = {
   elk: [
-    { dx: -470, dy: -10, flip: false, phase: 0 }, { dx: 70, dy: -40, flip: true, phase: 0.7 },
-    { dx: 380, dy: 0, flip: false, phase: 0.2 },
+    { dx: -105, dy: -22, flip: false, phase: 0 }, { dx: 70, dy: -40, flip: false, phase: 0.55 },
+    { dx: 312, dy: 0, flip: false, phase: 0.2 },
   ],
   birds: { n: 5, y0: -262, y1: -228, speed: [9, 16], flap: [1.4, 2.4], span: 7, a: 0.8 },
 } as const;
 /** Elk sheet layout (scene units for the rect; `n` frames in a grid of `cols`, played at `fps`), written by post_elk.py. */
 export interface CampSheetRect { readonly x: number; readonly y: number; readonly w: number; readonly h: number; readonly n: number; readonly cols: number; readonly fps: number }
-export const CAMP_ELK_ART: CampSheetRect = /*ELK*/{ x: 542.8, y: -187.0, w: 103.8, h: 89.2, n: 32, cols: 8, fps: 3.0 }/*EEND*/;
+export const CAMP_ELK_ART: CampSheetRect = /*ELK*/{ x: 538.2, y: -183.5, w: 97.5, h: 88.8, n: 64, cols: 8, fps: 6.0 }/*EEND*/;
 
 export const CAMP_LIFE = {
   cap: 120,

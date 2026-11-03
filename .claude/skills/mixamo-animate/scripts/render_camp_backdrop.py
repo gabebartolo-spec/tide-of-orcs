@@ -480,9 +480,12 @@ if want("elk"):
         sc.frame_set(f); bpy.context.view_layer.update(); V += [w2c(sc, cam, p) for p in pts()]
     u0, u1 = min(v.x for v in V), max(v.x for v in V); v0, v1 = min(v.y for v in V), max(v.y for v in V)
     sc.render.use_border = True; sc.render.use_crop_to_border = True
-    sc.render.border_min_x, sc.render.border_max_x = u0 - 0.01, u1 + 0.01; sc.render.border_min_y, sc.render.border_max_y = v0 - 0.01, v1 + 0.006
+    sc.render.border_min_x, sc.render.border_max_x = u0 - 0.04, u1 + 0.02; sc.render.border_min_y, sc.render.border_max_y = v0 - 0.04, v1 + 0.006   # wide left/bottom: the shadow falls lower left and must not touch the edge
     os.makedirs(os.path.join(out, "elk"), exist_ok=True)
-    for i, f in enumerate(frames):
+    for o in obs: o.hide_render = True   # the empty plate: the shadow catcher's own veil, which post_elk.py divides out
+    sc.render.filepath = os.path.join(out, "elk", "bg.png"); bpy.ops.render.render(write_still=True)
+    for o in obs: o.hide_render = False
+    for i, f in enumerate(frames if not os.environ.get("ELK_BG_ONLY") else []):
         sc.frame_set(f); sc.render.filepath = os.path.join(out, "elk", "%03d.png" % i); bpy.ops.render.render(write_still=True)
     json.dump({"rect": [sc.render.border_min_x, sc.render.border_max_x, sc.render.border_min_y, sc.render.border_max_y],
                "n": len(frames), "fps": sc.render.fps / ELK_STEP, "res": [sc.render.resolution_x, sc.render.resolution_y],

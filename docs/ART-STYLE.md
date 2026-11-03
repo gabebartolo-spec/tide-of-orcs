@@ -211,6 +211,11 @@ scene pixel scale to an offscreen canvas and blitted, so the camp costs four `dr
 The animals grazing behind the camp are the Sketchfab "Realistic Animated Elk" (WildMesh 3D, CC BY 4.0), never a code-drawn
 creature. `render_camp_backdrop.py` pass `elk` imports the gltf into the camp scene (same camera, sun, sky fill and shadow
 catcher as the buildings), scales it to `ELK_LEN` 66 units nose to tail, and renders the model's own `Stand_Eating_01` clip
-as authored every 8th frame (32 frames, 3 fps, loops). `post_elk.py` crops all frames to one shared rect, packs
-`public/decor/camp/elk.webp` (8 per row) and prints `CAMP_ELK_ART`. Each elk in `CAMP_FAUNA.elk` is offset, may be mirrored,
-and starts at its own `phase` so the herd does not graze in step.
+as authored every 4th frame (`ELK_STEP` 4: 64 frames, 6 fps, loops; every 8th frame snapped the head down in one step).
+The render border keeps 0.04 of the frame clear left and below so the shadow, which falls lower left like the buildings', is
+never cut. The pass also renders `bg.png`, the empty plate: `post_elk.py` divides the shadow catcher's veil out of each frame
+against it (a' = (a - bg) / (1 - bg), the faint occlusion halo ramped to zero), refuses frames whose kept pixels touch the
+border, crops all frames to one shared rect, packs `public/decor/camp/elk.webp` (8 per row) and prints `CAMP_ELK_ART`. Each
+elk in `CAMP_FAUNA.elk` is offset and starts at its own `phase` so the herd does not graze in step. None is mirrored: a flip
+mirrors the baked shadow against the camp sun. Elk stand at least one elk length clear of every building and of the
+Materials panel.
