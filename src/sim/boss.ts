@@ -32,7 +32,7 @@ export function bossStep(s: SimState, ev: EventBus, dt: number): void {
   const cleared = b.left <= 0;
   if (!cleared && b.t < BOSS_WAVE.secs) return;
   const loot = cleared ? BOSS_WAVE.clearLoot * waveLoot(s.run.wave) * tierLoot(s.run.tier) * s.stats.starMult * (1 + HW_FX.bossPerRank * hwRank(s.meta, 'hw_boss')) : 0;
-  // Heartwood drops only here (P-142), banked at once; halved once Heartwood Splinter has stood the wall again
+  // Heartwood drops only here (P-142), banked at once (Heartwood Splinter no longer halves it since TB-128)
   const hw = cleared ? Math.max(1, Math.floor(bossHw(s.run.wave) * tierHw(s.run.tier))) : 0;
   s.run.starlight += loot; s.run.earned += loot; s.run.boss = null; s.meta.heartwood += hw; s.run.hwEarned += hw;
   // stragglers of a failed challenge keep marching as ordinary orcs

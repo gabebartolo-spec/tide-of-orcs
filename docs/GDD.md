@@ -19,7 +19,7 @@ waves scale every 24 s  ←──── battlefield visibly grows ←──┘
 boss waves cleared → Heartwood (kept) → the barricade falls → Replant → next run grows faster
 ```
 
-**Core verb:** buy a node. **Core tension:** which branch the starlight grows: the bow, companions, the wall or the vanguard line. **Core reward:** watch the field change. **Active play:** aim the bow with the pointer; it lobs an arcing arrow into the aim circle on its own cadence. With no aim the elf holds fire. There is no click-to-shoot.
+**Core verb:** buy a node. **Core reward:** watch the field change. **Active play:** aim the bow with the pointer; it lobs an arcing arrow into the aim circle on its own cadence. With no aim the elf holds fire. There is no click-to-shoot.
 
 Session shape: measured numbers return in the balance phase (director 3 Nov). A first run is short and falls early; a fall pays no Heartwood, only cleared boss waves (every 25) do; later runs grow through the skill tree, the Heartwood tree, gear and the camp.
 
@@ -125,6 +125,7 @@ All companion damage scales with Kinship (×1.2/rank). Kinship also scales vangu
 - **Tab tokens (TB-195d):** the panel tabs are carved tokens (bow, satchel, seed, cog) that spring forward when chosen.
 - **Battle report (TB-195f):** the fallen overlay tallies the run (wave, slain, minutes, starlight/min, best wave) and the Heartwood carried back, then stamps a seal; Replant stays the only run action.
 - **Satchel as an object (TB-195e):** gear is dragged from the leather bag onto its sewn pocket to wear it (the Wear button still works); hovering bag gear shows it and the worn piece as two plates side by side.
+- **Satchel v2 (TB-195j):** worn gear sits on a paper doll (six sockets around the elf); every item is one pocket whose glow shows its rarity, with its name only on hover.
 - **Field:** 15:8 canvas. Top-left: barricade health bar (timber → amber → rose as it drops) with numbers, and vanguard count once Muster is owned. Bottom: wave timer bar. Toast at top. Every kept item drop (TB-192) stands a light pillar in its rarity colour on the field, taller by rarity, with a banner under the toast (icon, rarity, name) and its rarity chime; legendary and mythic also shake and flash the field, and the Satchel tab counts the new items until it is opened. Fallen overlay covers the field when the wall is down.
 - **Boss bar** under the field: the *Summon the boss wave* button (waiting count, then a countdown and orcs left while it runs).
 - **Pages (TB-136):** `body[data-mode]` is `run` (the field fills the screen under the header, which shows the stats and a Settings button), `camp` (after a fall: the Grove page, tabs The Grove / Satchel / Replant / Settings, *March again*) or `settings` (an overlay over the field, *Back to the field*). Panels and the field sit in a carved living-wood frame on a deep forest green with a faint gilded vine; buttons are carved plaques (ART-STYLE §UI wood).

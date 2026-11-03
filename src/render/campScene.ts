@@ -1,6 +1,7 @@
 import { BuildingId } from '../data/camp';
 import { CAMP_SCENE } from '../data/presentation';
 import { CampArt } from './camp';
+import { CampLife } from './campLife';
 import { P } from './palette';
 import type { Sprites } from './sprites';
 
@@ -9,6 +10,7 @@ import type { Sprites } from './sprites';
  *  canvas and centred. Read-only: it draws sim state and maps clicks back to scene units for campHit. */
 export class CampScene {
   private art = new CampArt();
+  private life = new CampLife();
   private k = 1; private ox = 0; private oy = 0; private dpr = 1;
 
   constructor(readonly canvas: HTMLCanvasElement, private sprites: Sprites) {
@@ -39,6 +41,7 @@ export class CampScene {
     g.fillStyle = P.plain; g.fillRect(0, horizon, cw, this.canvas.height - horizon);
     g.setTransform(px, 0, 0, px, this.ox * this.dpr, this.oy * this.dpr);
     this.art.draw(g, levels, px, this.sprites);
+    this.life.draw(g, levels, t);
     g.fillStyle = P.shadow; g.beginPath(); g.ellipse(elf.x, elf.y, elf.r, elf.r / 3, 0, 0, 6.28); g.fill();
     this.sprites.drawActor(g, 'elf', 'walk', t, elf.x, elf.y, elf.r);
   }

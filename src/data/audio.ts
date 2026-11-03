@@ -78,10 +78,10 @@ export const CUES: Record<Cue, { gain: number; gap: number; duck?: boolean; file
   // Orc war drum (ElevenLabs), on every drumBeat (TB-182)
   warDrum: { gain: 1, gap: 0.4 },
   // UI sound set (TB-195a hooks, TB-195g ElevenLabs files in public/audio/ui): carved wood with a soft elven shimmer.
-  // Hover, stamp, rarity and path have no UI calling them yet; they load and wait for TB-195 hover plates, battle report, TB-193 paths.
+  // TB-195k: hover ticks on entering a control (ui/juice armHover), stamp on buy and equip, rarity on a rare+ drop banner, path on picking a path.
   uiPress: { gain: 0.3, gap: 0.03, file: 'ui/click' },
   uiPop: { gain: 0.45, gap: 0.05, file: 'ui/tab' },
-  uiHover: { gain: 0.2, gap: 0.04, file: 'ui/hover' },
+  uiHover: { gain: 0.2, gap: 0.09, file: 'ui/hover' },
   uiPanel: { gain: 0.4, gap: 0.2, file: 'ui/panel' },
   uiCount: { gain: 0.12, gap: 0.25, file: 'ui/count' },
   uiStamp: { gain: 0.7, gap: 0.3, file: 'ui/stamp' },

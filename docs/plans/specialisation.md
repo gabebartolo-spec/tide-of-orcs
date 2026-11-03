@@ -41,7 +41,7 @@ Each mythic gets a Meshy icon like the existing ones (public/items), and its own
    and SKILL-TREE.md, three sets and three mythics in `lootTables.ts`, and tests for each effect.
 2. **TB-193b Balance:** placeholder numbers (P-193) sit in BALANCE ## Proposed; sims and tuning wait for the balance phase (after features, bug bash and performance).
 3. **TB-193c UI (done):** cards sit across the top of the Replant tab, usable while the run has fallen (`choosePath`); clicking the chosen card or *No path* clears it; the pick pops and bursts in the path's light (TB-195a juice). Sigils are placeholder vectors (`src/render/sigil.ts`, `PATH_TINT` tokens) until TB-193d. Locked path nodes show a padlock and the hint "Choose the Path of the … at Replant"; path set items and mythics carry a path tag in the satchel.
-4. **TB-193d Art (done):** 3 sigils in `public/sigils/`, 18 set-piece icons (`<set>-<slot>`) and 3 mythic icons in `public/items/`, from Meshy (548 credits).
+4. **TB-193d Art (done):** 3 sigils in `public/sigils/` (drawn on the Replant cards since TB-193e), 18 set-piece icons (`<set>-<slot>`) and 3 mythic icons in `public/items/`, from Meshy (548 credits).
 
 ## 6. Decisions (director, 3 Nov)
 1. **Choice timing:** chosen before each prestige (Replant), changeable every run.

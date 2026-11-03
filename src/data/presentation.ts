@@ -110,6 +110,8 @@ export const AMBIENCE = {
 export const LOOT_BANNER = {
   life: { common: 3, rare: 3.5, epic: 4, legendary: 5, mythic: 6 } as Record<string, number>,
   max: 3,
+  /** Rarities whose banner plays the uiRarity reveal shimmer (TB-195k). */
+  reveal: ['rare', 'epic', 'legendary', 'mythic'] as readonly string[],
 } as const;
 
 /** Skill-tree lighting (TB-190b, ART-STYLE §Arcane skill tree). World px at zoom 1; rates per second. Render-only. */
@@ -136,7 +138,7 @@ export const TREE_LIGHT = {
  *  scale instead of in the field's grove strip. Scene units match field units (the elf stands ~38 units tall), and the view
  *  fits the `w` x `h` box to its canvas. `l3H` is the drawn height of every level-3 Tripo sprite (~3.5x the elf's frame: the Tripo frames include each building's ground island, so the
  *  structure itself reads ~3x the elf), so each
- *  building gets its own scale. `sky` is the share of the box above the horizon. The four finished buildings stand equally tall; levels 1-2 keep their render ratio. */
+ *  building gets its own scale. `sky` is the share of the box above the horizon. The four finished buildings stand equally tall. TB-188g: CAMP_LV_SCALE multiplies that scale per building and level. */
 export const CAMP_SCENE = { w: 840, h: 210, l3H: 135, sky: 0.25, elf: { x: 805, y: 185, r: 12 } } as const;
 /** Each building's footprint in the camp scene: centre x, base y (ground line), width and height in scene units. One row,
  *  left to right, with the elf at the east end; widths are the level-3 sprites at `l3H` tall. Click targets, the Tripo
@@ -146,6 +148,40 @@ export const CAMP_SPOTS = {
   forge: { x: 210, y: 185, w: 132, h: 135 },
   kitchen: { x: 392, y: 185, w: 196, h: 135 },
   training: { x: 640, y: 185, w: 256, h: 135 },
+} as const;
+
+/** Per-level scale on each building's level-3 scale (TB-188g), index = level. Measured in the Camp tab (roof top to ground line,
+ *  in elf heights; the elf measures ~40 units): at one shared scale level 1 read 1.5-2.1x the elf and level 2 sometimes stood taller
+ *  than level 3. These put level 1 at 2.5/3.1 and level 2 at 2.8/3.1 of the building's own level-3 height, so each upgrade grows. */
+export const CAMP_LV_SCALE = {
+  bowyer: [1, 1.19, 1.36, 1],
+  forge: [1, 1.56, 1.44, 1],
+  kitchen: [1, 1.04, 0.96, 1],
+  training: [1, 1.05, 0.83, 1],
+} as const;
+
+/** Camp idle life (TB-188f): ambient motion in the Camp scene, scene units and seconds. Particle kinds: `rate` per second per
+ *  emitter (dust: one burst of `burst` every `every` s), life range, start velocity (vy negative = up), `grav` downward accel,
+ *  `wind` sideways drift, size from `r0` to `r1` over life, peak alpha `a`. `cap` bounds the shared pool. Emitters per building
+ *  and level ([lv1, lv2, lv3]), placed on each Tripo sprite in a Camp tab capture: the forge chimney (smoke and sparks), the
+ *  kitchen fire, pot or roof (smoke), the training ring (dust from dummy hits) and the bowyer roof peak (a swaying pennant:
+ *  pole `pole` tall, flag `len` x `w`, tip sway `amp` at `freq` Hz plus a second wave). */
+export const CAMP_LIFE = {
+  cap: 160,
+  smoke: { rate: 2.4, life: [2.6, 3.6], vx: [-1.5, 1.5], vy: [-9, -6], grav: 0, wind: 3, r0: 2.2, r1: 7, a: 0.32 },
+  sparks: { rate: 3.5, life: [0.45, 0.85], vx: [-7, 7], vy: [-30, -17], grav: 30, wind: 0, r0: 0.9, r1: 0.5, a: 1 },
+  dust: { every: [1.6, 2.6], burst: 6, life: [0.5, 0.8], vx: [-11, 11], vy: [-8, -3], grav: 14, wind: 0, r0: 1.4, r1: 3.2, a: 0.55 },
+  pennant: { pole: 11, len: 9, w: 5, amp: 1.8, freq: 0.35, amp2: 0.7, freq2: 0.6 },
+  emit: {
+    forge: [
+      [{ k: 'smoke', x: 210, y: 92 }, { k: 'sparks', x: 210, y: 92 }],
+      [{ k: 'smoke', x: 192, y: 84 }, { k: 'sparks', x: 192, y: 84 }],
+      [{ k: 'smoke', x: 207, y: 74 }, { k: 'sparks', x: 207, y: 74 }],
+    ],
+    kitchen: [[{ k: 'smoke', x: 390, y: 165 }], [{ k: 'smoke', x: 407, y: 148 }], [{ k: 'smoke', x: 382, y: 82 }]],
+    training: [[{ k: 'dust', x: 645, y: 170 }], [{ k: 'dust', x: 636, y: 154 }], [{ k: 'dust', x: 637, y: 164 }]],
+    bowyer: [[{ k: 'pennant', x: 71, y: 92 }], [{ k: 'pennant', x: 68, y: 83 }], [{ k: 'pennant', x: 71, y: 72 }]],
+  },
 } as const;
 
 /** UI motion and feedback kit (TB-195a, docs/plans/game-ui.md §3, ART-STYLE §Motion). Times in ms, sizes in CSS px. */

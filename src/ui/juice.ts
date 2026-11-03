@@ -45,6 +45,17 @@ export function pop(el: HTMLElement, ms: number = JUICE.dur.pop, from: number = 
   tween(el, ms, (t) => { el.style.transform = t >= 1 ? '' : `scale(${popScale(t, from)})`; });
 }
 
+/** Hover tick (TB-195k): one soft uiHover each time the pointer enters a different live control under root (buttons, tabs,
+ *  path cards, satchel items). Moving inside one control stays quiet; CUES.uiHover.gap caps a fast sweep. */
+export function armHover(root: HTMLElement): void {
+  let last: Element | null = null;
+  root.addEventListener('pointerover', (e) => {
+    const el = (e.target as HTMLElement).closest?.('button:not(:disabled), [role=tab], [data-uid]') ?? null;
+    if (el && el !== last) uiSound('uiHover');
+    last = el;
+  });
+}
+
 /** Press feedback: the button sinks, then springs back, with the press sound. Reduced motion keeps the sound. */
 export function press(el: HTMLElement): void {
   uiSound('uiPress');

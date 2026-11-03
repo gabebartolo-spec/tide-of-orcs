@@ -511,6 +511,35 @@ body[data-mode="camp"] :is(.hud-wallbox, .hud-wave) { display: none; }
 .plate.cmp .dv { font-family: var(--display); font-size: 1.25rem; } .plate.cmp .dv.up { color: var(--grove); } .plate.cmp .dv.down { color: var(--rose); }
 :root[data-calm] #sat-worn .item.over { transform: none; transition: none; }
 
+/* Satchel v2 (TB-195j, director 3 Nov: "squares within squares"): one frame per item. Each item is its glyph sitting straight in a
+   sewn `pocket`; rarity is the pocket's glow, not another box; no text under icons (the name is on the hover plate). The worn
+   gear is a paper doll: six pockets round the elf's silhouette (the game elf, `doll` piece, tinted through a mask). */
+:root { --doll-pocket: 6.25rem; --doll-w: 15rem; --bag-pocket: 5.75rem; --lift: 0.3125rem; }
+#sat-grid .item, #sat-worn .item { border: 0; border-radius: 0; box-shadow: none; outline-offset: 0; min-height: 0; padding: 0; display: grid; place-items: center;
+  background: image-set(url("/ui/pocket.webp") 1x, url("/ui/pocket@2x.webp") 2x) center / 100% 100% no-repeat; transition: transform 140ms ease-out, filter 140ms ease-out; }
+#sat-grid .item .txt, #sat-worn .item .txt { display: none; }
+#sat-grid .item .glyph, #sat-worn .item .glyph { border: 0; background: none; box-shadow: none; border-radius: 0; }
+#sat-grid .item:not(.empty), #sat-worn .item:not(.empty) { filter: drop-shadow(0 0 0.5rem color-mix(in srgb, var(--rar, transparent) 75%, transparent)); }
+#sat-grid .item.r-common, #sat-worn .item.r-common { filter: none; }
+#sat-grid .item:hover, #sat-worn .item:not(.empty):hover { transform: translateY(calc(-1 * var(--lift))); }
+#sat-grid .item.sel, #sat-worn .item.sel { outline: 0; filter: drop-shadow(0 0 0.25rem var(--cream)) drop-shadow(0 0 0.625rem color-mix(in srgb, var(--rar, var(--cream)) 80%, transparent)); }
+#sat-grid { grid-template-columns: repeat(auto-fill, var(--bag-pocket)); grid-auto-rows: var(--bag-pocket); gap: 0.5rem; justify-content: center; }
+#sat-grid .item .glyph, #sat-grid .item .glyph img { width: calc(var(--bag-pocket) * 0.66); height: calc(var(--bag-pocket) * 0.66); }
+#sat-worn { position: relative; grid-template-columns: var(--doll-pocket) var(--doll-w) var(--doll-pocket); grid-template-rows: repeat(3, var(--doll-pocket)); gap: 0.75rem 0.5rem; justify-content: center; }
+#sat-worn::before { content: ""; grid-column: 2; grid-row: 1 / span 3; align-self: stretch; background: var(--line); opacity: .75;
+  -webkit-mask: image-set(url("/ui/doll.webp") 1x, url("/ui/doll@2x.webp") 2x) center / contain no-repeat; mask: image-set(url("/ui/doll.webp") 1x, url("/ui/doll@2x.webp") 2x) center / contain no-repeat; }
+#sat-worn > .item:nth-child(1) { grid-area: 1 / 1; } #sat-worn > .item:nth-child(2) { grid-area: 1 / 3; } #sat-worn > .item:nth-child(3) { grid-area: 2 / 1; }
+#sat-worn > .item:nth-child(4) { grid-area: 2 / 3; } #sat-worn > .item:nth-child(5) { grid-area: 3 / 1; } #sat-worn > .item:nth-child(6) { grid-area: 3 / 3; }
+#sat-worn .item .glyph, #sat-worn .item .glyph img { width: calc(var(--doll-pocket) * 0.66); height: calc(var(--doll-pocket) * 0.66); }
+#sat-worn .item.want { outline: 0; animation: pocket-want 0.9s ease-in-out infinite; }
+@keyframes pocket-want { 0%, 100% { filter: drop-shadow(0 0 0.25rem var(--amber)); } 50% { filter: drop-shadow(0 0 1.25rem var(--amber)); } }
+:root[data-calm] #sat-worn .item.want { animation: none; filter: drop-shadow(0 0 0.75rem var(--amber)); }
+:root[data-calm] :is(#sat-grid, #sat-worn) .item { transition: none; } :root[data-calm] :is(#sat-grid, #sat-worn) .item:hover { transform: none; }
+/* The picked item's card sits under the bag (right), not under the doll, so the page keeps its scale with an item picked. */
+@media (min-width: 861px) and (orientation: landscape) {
+  .prestige.satchel > .stat { grid-row: 2; } .prestige.satchel > #sat-worn { grid-row: 3 / span 2; } .prestige.satchel > #sat-sets { grid-row: 5; }
+  .prestige.satchel > #sat-grid { grid-row: 2 / span 2; } .prestige.satchel > #sat-detail { grid-column: 2; grid-row: 4 / span 2; }
+}
 /* HUD outside the field (TB-195i, director 3 Nov): the wall bar, starlight, wave plank, Slain/Heartwood and Settings sit in a
    carved bar above the field instead of over it, so no HUD piece covers the plain; the field shrinks to fit under the bar. */
 :root { --hudbar: 5.25rem; }
