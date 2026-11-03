@@ -134,4 +134,21 @@ export const STR = {
   pathShort: { serpent: 'Serpent', fox: 'Fox', magpie: 'Magpie' },
   pathHint: (name: string) => `Choose the ${name} at Replant`,
   pathChosen: (name: string) => `${name} chosen for the next run`, pathCleared: 'No path for the next run',
+// Tooltip plates (TB-195c): [stat key, label, kind, lower is better], in show order
+  plateOn: 'On', plateOff: 'Off', plateNext: 'Next rank', plateMax: 'Fully grown', plateLocked: (name: string) => `Needs ${name}`,
+  plateStats: [
+    ['dmg', 'Arrow damage', 'num', false], ['fireRate', 'Draw speed', 'x', false], ['radius', 'Strike radius', 'num', false],
+    ['arrows', 'Arrows', 'num', false], ['pierce', 'Pierce', 'num', false], ['crit', 'Crit chance', 'pct', false], ['critMult', 'Crit damage', 'x', false],
+    ['barMax', 'Barricade', 'num', false], ['barRegen', 'Regrowth', 'num', false], ['spikes', 'Spikes', 'num', false],
+    ['vanCap', 'Vanguard', 'num', false], ['vanHp', 'Vanguard health', 'num', false], ['vanDmg', 'Vanguard damage', 'num', false], ['vanRespawn', 'Vanguard return', 'secs', true],
+    ['wolf', 'Wolf bite', 'num', false], ['archers', 'Archers', 'num', false], ['hawk', 'Hawk', 'flag', false], ['treant', 'Treant', 'flag', false],
+    ['knives.dmg', 'Knife damage', 'num', false], ['knives.rate', 'Knives', 'x', false], ['storm', 'Storm', 'flag', false], ['ballista', 'Ballista bolt', 'num', false],
+    ['kin', 'Kinship', 'x', false], ['starMult', 'Starlight', 'x', false], ['homing', 'Homing', 'flag', false],
+    ['fireP', 'Fire arrows', 'pct', false], ['frostP', 'Frost arrows', 'pct', false], ['shockP', 'Shock arrows', 'pct', false], ['rebP', 'Rebound arrows', 'pct', false],
+    ['moonP', 'Moon arrows', 'pct', false], ['starP', 'Starfall', 'pct', false], ['burnSecs', 'Burn', 'secs', false], ['stunSecs', 'Stun', 'secs', false],
+    ['units.wolf.dmg', 'Wolf damage', 'x', false], ['units.wolf.rate', 'Wolf speed', 'x', false], ['units.wolf.crit', 'Wolf crit', 'pct', false],
+    ['units.spear.dmg', 'Spear damage', 'x', false], ['units.blade.dmg', 'Blade damage', 'x', false], ['units.ranger.dmg', 'Ranger damage', 'x', false],
+    ['units.warden.dmg', 'Warden damage', 'x', false], ['units.hawk.dmg', 'Hawk damage', 'x', false], ['units.treant.dmg', 'Treant damage', 'x', false],
+    ['itemFind', 'Item find', 'x', false], ['luck', 'Luck', 'num', false], ['satchelCap', 'Satchel', 'num', false],
+  ] as ReadonlyArray<readonly [string, string, 'pct' | 'x' | 'flag' | 'num' | 'secs', boolean]>,
 } as const;
