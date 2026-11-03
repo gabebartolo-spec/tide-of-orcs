@@ -386,6 +386,9 @@ if os.environ.get("WPNROT"):  # fwd,gf[,out]: one-hand weapon parented to the ha
     t = [v.dot(ax) for v in V]; L = max(t) - min(t); sh = (min(t) + gf * L) - hd.dot(ax)
     wp.matrix_world = Matrix.Translation(-sh * ax) @ wp.matrix_world; bpy.context.view_layer.update()
     print("WPN up", round(math.degrees(math.asin(max(-1, min(1, ax.z)))), 1), "L", round(L, 3))
+def _fcs(act):  # fcurves of an action, legacy or layered (Blender 4.4+ slots/channelbags)
+    if hasattr(act, "fcurves") and len(act.fcurves): return list(act.fcurves)
+    return [fc for ly in getattr(act, "layers", []) for st in ly.strips for cb in st.channelbags for fc in cb.fcurves]
 def NOCK():  # TB-203 NOCKFING=1: the nock sits between the index and middle fingertips (three-finger hook), else 40% past the hand bone
     pbs = tgt.pose.bones
     if os.environ.get("NOCKFING") and "mixamorig:RightHandIndex3" in pbs:
@@ -609,8 +612,9 @@ if os.environ.get("QUIVER"):  # quiver on the back (Spine2) with arrows, and a n
                 for g in range(f0, f1 + 2):
                     k_.value = 1.0 if g == f else 0.0; k_.keyframe_insert("value", frame=g)
             if wb.data.shape_keys.animation_data:
-                for fc in (wb.data.shape_keys.animation_data.action.fcurves if hasattr(wb.data.shape_keys.animation_data.action, "fcurves") else []):
+                for fc in _fcs(wb.data.shape_keys.animation_data.action):
                     for kp in fc.keyframe_points: kp.interpolation = "CONSTANT"
+            print("STRKEYS", [k.name for k in wb.data.shape_keys.key_blocks][1:])
             print("STRDRAW frames", [f - f0 for f in range(f0, f1 + 1) if modes[f - f0] in ("shot", "turn 1.0")])
         if os.environ.get("STRPROBE"):
             own = []
@@ -848,6 +852,14 @@ sun = bpy.data.objects.new("sun", bpy.data.lights.new("sun", "SUN")); sc.collect
 rim = bpy.data.objects.new("rim", bpy.data.lights.new("rim", "SUN")); sc.collection.objects.link(rim); rim.data.energy = 1.5; rim.data.color = (0.8, 0.85, 1); rim.rotation_euler = Euler((math.radians(-60), 0, math.radians(200)))
 sc.view_settings.view_transform = "Standard"
 sc.eevee.taa_render_samples = 32
+if os.environ.get("STABLESH"):  # TB-203: leg shading flickered frame to frame (virtual shadow map LOD/jitter): pin shadow resolution, no jitter, more samples
+    for L_ in (sun, rim):
+        for k_, v_ in (("shadow_maximum_resolution", 0.002), ("use_shadow_jitter", False), ("shadow_softness_factor", 1.0), ("shadow_filter_radius", 3.0), ("shadow_resolution_limit", 0.002)):
+            if hasattr(L_.data, k_): setattr(L_.data, k_, v_)
+    for k_, v_ in (("taa_render_samples", 128), ("shadow_resolution_scale", 1.0), ("shadow_ray_count", 4), ("shadow_step_count", 16), ("use_shadow_jitter_viewport", False)):
+        if hasattr(sc.eevee, k_): setattr(sc.eevee, k_, v_)
+    for o_ in bpy.data.objects:  # the moving bow/arrow/quiver cast shifting shadows over the legs: props cast none
+        if o_.name.startswith(("wpn_", "prop_")): o_.visible_shadow = False
 for mt in bpy.data.materials:
     if mt.use_nodes:
         for nd in mt.node_tree.nodes:
@@ -917,7 +929,7 @@ if os.environ.get("IDLEPOSE"):  # TB-203: BLENDIN frames ease out of the dumped 
         k_ = wbk_.data.shape_keys.key_blocks[f"draw{f1}"]; RL = int(os.environ.get("RELEASE", "2"))
         for j in range(1, RL + 1): k_.value = 1 - j / (RL + 1); k_.keyframe_insert("value", frame=f1 + j)
         k_.value = 0.0; k_.keyframe_insert("value", frame=f1 + RL + 1)
-        for fc in wbk_.data.shape_keys.animation_data.action.fcurves if hasattr(wbk_.data.shape_keys.animation_data.action, "fcurves") else []:
+        for fc in _fcs(wbk_.data.shape_keys.animation_data.action):
             for kp in fc.keyframe_points: kp.interpolation = "CONSTANT"
     if os.environ.get("TAILDBG"):
         wb_ = bpy.data.objects.get("wpn_bow")
@@ -935,6 +947,9 @@ n2 = round(n * RT)
 fl = [int(x) for x in os.environ["FR"].split(",")] if os.environ.get("FR") else range(n2)
 for i in fl:
     t_ = i * n / n2; sc.frame_set(f0 + int(t_), subframe=t_ - int(t_))
+    if os.environ.get("STRDBG") and bpy.data.objects.get("wpn_bow") and bpy.data.objects["wpn_bow"].data.shape_keys:
+        wq_ = bpy.data.objects["wpn_bow"]; em_ = wq_.evaluated_get(bpy.context.evaluated_depsgraph_get()).to_mesh()
+        print("STRDBG", i, [(k.name, round(k.value, 2)) for k in wq_.data.shape_keys.key_blocks if k.value > 0.01], "nockgap", round(min((wq_.matrix_world @ em_.vertices[j].co - NOCK()).length for j in sv), 3))
     if os.environ.get("FOCUS"):  # close-up: centre the ortho camera on this bone's head (e.g. LeftHand)
         _f = cam.matrix_world.to_3x3() @ Vector((0, 0, -1))
         cam.location = tgt.matrix_world @ tgt.pose.bones["mixamorig:" + os.environ["FOCUS"]].head - _f * 5

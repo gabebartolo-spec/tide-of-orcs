@@ -20,4 +20,4 @@ if ($clip -eq "attack") {
 Remove-Item Env:ANGDBG -ErrorAction SilentlyContinue
 if ($dbg) { $env:ANGDBG="LeftArm,LeftForeArm,LeftHand,RightArm,RightForeArm,RightHand" }  # jitter probe only (no render): JIT line = worst per-bone twitch
 $env:GAMECAM=20; $env:CAMROT = if ($view -eq "game") { 0 } else { 90 }
-& "$S\hid.ps1" $Bl -b --factory-startup --python "$S\apply_anim.py" -- $model $fbx "$o\${clip}_${tag}_$view" | Select-String "Error|Traceback|ANIM frames|ARROW \d+ |HIT|JIT|ANGDBG|STR|FING|PT|GRIP|RISER|FAX|TB|TAIL|POSEIN|ARMCLR|STRTURN"
+& "$S\hid.ps1" $Bl -b --factory-startup --python "$S\apply_anim.py" -- $model $fbx "$o\${clip}_${tag}_$view" | Select-String "Error|Traceback|ANIM frames|ARROW \d+ |HIT|JIT|ANGDBG|STR|FING|PT|GRIP|RISER|FAX|TB|TAIL|POSEIN|ARMCLR|STRTURN|STRKEYS|STRDBG"
