@@ -11,5 +11,10 @@ export function fmt(n: number, mode: NumberFormat = current): string {
   if (mode === 'sci') return n.toExponential(2).replace('+', '');
   let i = -1;
   while (n >= 1000 && i < UNITS.length - 1) { n /= 1000; i++; }
-  return n.toFixed(n < 10 ? 2 : n < 100 ? 1 : 0) + UNITS[i];
+  // round first, then step up a unit if rounding reached 1000 (999999 is 1.00M, not 1000K; TB-216c)
+  if (Number(n.toFixed(0)) >= 1000 && i < UNITS.length - 1) { n /= 1000; i++; }
+  const d = n < 10 ? 2 : n < 100 ? 1 : 0, s = n.toFixed(d);
+  // 9.999 rounds to 10.00: show it at the next band's precision (10.0)
+  const r = Number(s);
+  return (r >= 10 && d === 2 ? n.toFixed(1) : r >= 100 && d === 1 ? n.toFixed(0) : s) + UNITS[i];
 }

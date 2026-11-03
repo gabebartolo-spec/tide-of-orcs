@@ -12,6 +12,7 @@ import { Particles } from './particles';
 import { fmt } from '../ui/format';
 import { STR } from '../data/strings';
 import { Ceremony } from './ceremony';
+import { plainPoint } from './viewMap';
 import { Sprites } from './sprites';
 import { orcAnimT, orcState, orcSwingT, swingClipT, vanState } from './actorState';
 import { Ground, decorImg } from './ground';
@@ -66,10 +67,10 @@ export class FieldRenderer {
    *  window shows more meadow. */
   readonly view = { k: 1, ox: 0, oy: 0 };
   private treeline = new Treeline();
-  /** Client px to plain coordinates, clamped onto the plain. */
-  toWorld(cx: number, cy: number): { x: number; y: number } {
-    const r = this.canvas.getBoundingClientRect(), v = this.view;
-    return { x: Math.min(W, Math.max(0, (cx - r.left - v.ox) / v.k)), y: Math.min(H, Math.max(0, (cy - r.top - v.oy) / v.k)) };
+  /** Client px to plain coordinates; null off the plain unless `clamp` pins it to the edge (TB-216c). */
+  toWorld(cx: number, cy: number, clamp: boolean): { x: number; y: number } | null {
+    const r = this.canvas.getBoundingClientRect();
+    return plainPoint(cx - r.left, cy - r.top, this.view, clamp);
   }
   /** Visible world rect this frame. */
   private vis: { x0: number; y0: number; x1: number; y1: number } = { x0: 0, y0: 0, x1: W, y1: H };
@@ -290,7 +291,7 @@ export class FieldRenderer {
     }
     for (const im of this.impacts) { const k = im.life / IMPACT_LIFE; g.globalAlpha = k; g.strokeStyle = P.cream; g.lineWidth = 2; g.beginPath(); g.arc(im.x, im.y, im.r * (1.15 - 0.15 * k), 0, 6.28); g.stroke(); g.globalAlpha = 1; }
     for (const sm of this.storms) {
-      if (sm.c === P.lilac) { g.globalAlpha = sm.life / 0.35; g.strokeStyle = sm.c; g.lineWidth = 2; g.beginPath(); sm.pts.forEach((p, i) => (i ? g.lineTo(p[0] + (Math.random() - 0.5) * 6, p[1] + (Math.random() - 0.5) * 6) : g.moveTo(p[0], p[1]))); g.stroke(); g.globalAlpha = 1; continue; }
+      if (sm.c === P.lilac) { g.globalAlpha = sm.life / VFX.stormLife; g.strokeStyle = sm.c; g.lineWidth = 2; g.beginPath(); sm.pts.forEach((p, i) => (i ? g.lineTo(p[0] + (Math.random() - 0.5) * 6, p[1] + (Math.random() - 0.5) * 6) : g.moveTo(p[0], p[1]))); g.stroke(); g.globalAlpha = 1; continue; }
       // Shock: a thick jagged bolt with a glow, re-jagged every frame.
       g.beginPath();
       for (let i = 0; i < sm.pts.length; i++) {
@@ -323,7 +324,7 @@ export class FieldRenderer {
     if (wt > 0) { const bx = wx + Math.max(wh, ww * wt) - wh / 2; g.fillStyle = P.amber; g.globalAlpha = 0.3; g.beginPath(); g.arc(bx, wy + wh / 2, wh * 1.4, 0, 6.28); g.fill(); g.globalAlpha = 1; g.fillStyle = P.cream; g.beginPath(); g.arc(bx, wy + wh / 2, wh * 0.45, 0, 6.28); g.fill(); }
     if (this.flash > 0) { this.flash -= dt; g.globalAlpha = Math.max(0, this.flash / LOOT_VFX.flashLife) * this.flashA; g.fillStyle = this.flashC; g.fillRect(this.vis.x0, this.vis.y0, this.vis.x1 - this.vis.x0, H - this.vis.y0); g.globalAlpha = 1; }
     if (this.edge > 0) { const M = LOOT_VFX.mythic; g.globalAlpha = (this.edge / M.edge) * (0.6 + 0.4 * Math.sin(this.clock * M.flicker)); g.strokeStyle = P.rose; g.lineWidth = M.edgeW; g.strokeRect(this.vis.x0 + M.edgeW / 2, this.vis.y0 + M.edgeW / 2, this.vis.x1 - this.vis.x0 - M.edgeW, H - this.vis.y0 - M.edgeW); g.globalAlpha = 1; }
-    this.ceremony.draw(g, dt);
+    this.ceremony.draw(g, dt, this.vis.x0, this.vis.y0, this.vis.x1, H);
   }
 
   /** Light columns over drops, fading over their life; a lit ground ellipse under legendary and mythic; motes spiralling up an epic beam. */

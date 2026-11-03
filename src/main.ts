@@ -7,6 +7,7 @@ import { AudioEngine } from './audio/engine';
 import { STR } from './data/strings';
 import { campHit } from './ui/camp';
 import { CampScene } from './render/campScene';
+import { pointerAims } from './render/viewMap';
 import { setUiSound } from './data/audio';
 
 const game = new GameController();
@@ -38,12 +39,14 @@ setUiSound((c) => audio.play(c));
 const TOUCH_LIFT = 3.5; // rem
 let aimFinger: number | null = null;
 const setAim = (e: PointerEvent): void => {
-  if (e.pointerType !== 'mouse' && aimFinger !== null && e.pointerId !== aimFinger) return;
+  if (!pointerAims(e.pointerType, e.pointerId, aimFinger)) return;  // a hovering pen never aims (TB-216c)
   const r = fieldCanvas.getBoundingClientRect();
   const lift = e.pointerType === 'mouse' ? 0 : TOUCH_LIFT * parseFloat(getComputedStyle(document.documentElement).fontSize);
   // a captured finger can slide off the canvas: keep the circle on the plain
   const x = Math.min(r.right, Math.max(r.left, e.clientX)), y = Math.min(r.bottom, Math.max(r.top, e.clientY - lift));
-  const p = field.toWorld(x, y); game.setAim(p.x, p.y);  // the plain sits inside a full-window view (TB-207)
+  // the plain sits inside a full-window view (TB-207); the mouse over the extra meadow holds fire (TB-216c)
+  const p = field.toWorld(x, y, e.pointerType !== 'mouse');
+  if (p) game.setAim(p.x, p.y); else game.clearAim();
 };
 const endAim = (e: PointerEvent): void => {
   if (e.pointerType === 'mouse') { if (e.type === 'pointerleave') game.clearAim(); return; }

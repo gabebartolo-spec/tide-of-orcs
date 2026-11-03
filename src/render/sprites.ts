@@ -35,6 +35,14 @@ export function parseAtlas(raw: unknown): Atlas | null {
   return { images: [...images].sort(), anims };
 }
 
+/** The atlas without anims whose sheet failed to load; null when no sheet loaded (TB-216c). */
+export function keepLoaded(atlas: Atlas, loaded: ReadonlySet<string>): Atlas | null {
+  const anims: Record<string, Anim> = {};
+  for (const [k, a] of Object.entries(atlas.anims)) if (loaded.has(a.image)) anims[k] = a;
+  const images = atlas.images.filter((i) => loaded.has(i));
+  return images.length ? { images, anims } : null;
+}
+
 export class Sprites {
   private atlas: Atlas | null = null;
   /** Decoded sheets by atlas image name. */
@@ -52,12 +60,16 @@ export class Sprites {
       if (!res.ok) return false;
       const atlas = parseAtlas(await res.json());
       if (!atlas) return false;
-      const imgs = await Promise.all(atlas.images.map(async (name) => {
+      const settled = await Promise.allSettled(atlas.images.map(async (name) => {
         const img = new Image(); img.src = base + 'sprites/' + name;
         await img.decode();
         return [name, img] as const;
       }));
-      this.atlas = atlas; this.imgs = new Map(imgs);
+      // one bad sheet drops only its own anims; the rest keep their sprites (TB-216c)
+      const imgs = new Map(settled.flatMap((r) => (r.status === 'fulfilled' ? [r.value] : [])));
+      const kept = keepLoaded(atlas, new Set(imgs.keys()));
+      if (!kept) return false;
+      this.atlas = kept; this.imgs = imgs;
       return true;
     } catch { return false; } finally { this.loading = false; }
   }
