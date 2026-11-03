@@ -190,9 +190,13 @@ def _unscale(pb):  # pb.matrix = ... also writes location/scale; those channels 
     if pb.name != "mixamorig:Hips": pb.location = (0, 0, 0)
 def _woffs(var):  # bone:ax,ay,az,deg;... = world-axis rotation about the bone head, every frame
     for spec in filter(None, os.environ.get(var, "").split(";")):
-        bn, e = spec.rsplit(":", 1); ax, ay, az, deg = [float(v) for v in e.split(",")]; pb = tgt.pose.bones[bn]
-        R = Matrix.Rotation(math.radians(deg), 4, (ax, ay, az))
+        bn, e = spec.rsplit(":", 1); win = None  # optional @a-b: apply only on clip frames a..b, weighted by a half-sine (0 at a and b, full at the middle)
+        if "@" in e: e, wr = e.split("@"); win = [int(v) for v in wr.split("-")]
+        ax, ay, az, deg = [float(v) for v in e.split(",")]; pb = tgt.pose.bones[bn]
         for f in range(f0, f1 + 1):
+            k = 1.0 if win is None else (math.sin(math.pi * (f - f0 - win[0]) / (win[1] - win[0])) if win[0] <= f - f0 <= win[1] else 0.0)
+            if k == 0.0: continue
+            R = Matrix.Rotation(math.radians(deg * k), 4, (ax, ay, az))
             sc.frame_set(f); bpy.context.view_layer.update()
             wm = tgt.matrix_world @ pb.matrix; t = wm.translation.copy()
             nm = Matrix.Translation(t) @ R @ Matrix.Translation(-t) @ wm
@@ -719,6 +723,15 @@ if os.environ.get("YPROBE"):  # body heading per frame: world-Z yaw (deg) of the
         sc.frame_set(f); bpy.context.view_layer.update(); P = lambda n: tgt.matrix_world @ tgt.pose.bones["mixamorig:" + n].head
         s_ = P("LeftArm") - P("RightArm"); h_ = P("LeftUpLeg") - P("RightUpLeg")
         print("YP", f - f0, round(math.degrees(math.atan2(s_.y, s_.x)), 1), round(math.degrees(math.atan2(h_.y, h_.x)), 1))
+if os.environ.get("ZPROBE"):  # per frame: lowest world z of the weapon (wpn_*) and of the body meshes; weapon below the body's lowest point = sunk under the foot line. ZPROBE=x exits after
+    def zmin(o):
+        dg = bpy.context.evaluated_depsgraph_get(); e = o.evaluated_get(dg); m = e.to_mesh(); z = min((e.matrix_world @ v.co).z for v in m.vertices); e.to_mesh_clear(); return z
+    for f in range(f0, f1 + 1):
+        sc.frame_set(f); bpy.context.view_layer.update()
+        wz = min(zmin(o) for o in bpy.data.objects if o.type == "MESH" and o.name.startswith("wpn_"))
+        bz = min(zmin(o) for o in bpy.data.objects if o.type == "MESH" and not o.name.startswith(("wpn_", "prop_", "body_plug")))
+        print("ZP", f - f0, round(wz, 3), round(bz, 3))
+    if os.environ["ZPROBE"] == "x": sys.exit(0)
 if os.environ.get("BOWPROBE"):  # per frame: CANT = bow limb axis out of the vertical plane through the arrow line
     # (draw hand -> bow hand), 0 = upright like a real archer at any aim height; STR = string toward the draw hand (+1)
     w = bpy.data.objects["wpn_bow"]; ax = Vector(w["bow_ax"]); bk = Vector(w["bow_back"]); cant = []; st = []

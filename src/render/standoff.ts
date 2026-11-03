@@ -11,3 +11,14 @@ export function standoffX(kind: string, x: number, r: number): number {
   const u = Math.max(0, (x - stop) / R);
   return stop + gp + u * (R - gp);
 }
+
+/** Drawn x of a corpse that fell at drawn x, `k` (0..1) of the way through its fall: slides right, smoothstep-eased, until it lies
+ *  at least `corpse` radii right of the wall stop (TB-214). Kinds without ORC_STANDOFF, and corpses already that far out, stay put. */
+export function corpseX(kind: string, x: number, r: number, k: number): number {
+  const so = ORC_STANDOFF[kind];
+  if (!so) return x;
+  const need = FIELD.barX + FIELD.barW + r + so.corpse * r - x;
+  if (need <= 0) return x;
+  const u = Math.min(1, Math.max(0, k));
+  return x + need * u * u * (3 - 2 * u);
+}

@@ -37,6 +37,8 @@ Blender: `C:\Program Files\Blender Foundation\Blender 5.2\blender.exe -b --facto
 | `FREEZE=bone,...` | Hold the clip's mean pose (kills twist and wobble from the clip) |
 | `AMP=bone:gain` | Scale the clip's swing about its mean (axis-angle; slerp can't go above 1) |
 | `WOFFS=bone:1,x,y,z` | Fixed local rotation offset in degrees (e.g. lower the arm, bend the wrist forward) |
+| `WOFFS=bone:x,y,z,deg@a-b` | Same offset applied only on clip frames a..b, weighted sin(pi(f-a)/(b-a)) so it eases in and out (TB-214 death wrist lift `RightHand:0,1,0,35@48-78`) |
+| `ZPROBE=1` (or `x` to exit after) | Print `ZP frame wpnMinZ bodyMinZ` per frame: finds frames where the weapon sinks below the feet |
 | `REST=bones` | Hold the bind pose |
 | `WLEVEL=bones` | Hold the bone at its modelled orientation in WORLD space (position follows the parent). Not for heads alone: the body turns under it (runner attack v3 rejected: "twisted", neck "gelatinous") |
 | `WYAW=b1,b2>ref` | Bones held upright at their modelled orientation, turned only by ref's heading (shoulder line, world Z). The head fix: `WYAW=mixamorig:Neck,mixamorig:Head>mixamorig:Spine2` = solid head, never tilted or slanted, facing where the shoulders face (runner attack v4). REST on Head tilts with the spine (v2 rejected) |
