@@ -66,7 +66,7 @@ export const STR = {
     'foxfire-pack': ['+15% vanguard and companion damage', 'Fallen vanguard return 30% faster', 'Vanguard deal +10% damage per companion in the field'],
     'magpies-hoard': ['+15% starlight', 'Kills may drop a bonus starlight shard', 'Every fifth drop is one rarity higher'],
   } as Record<string, [string, string, string]>,
-  itemLevel: (n: number) => `item level ${n}`, mythicLine: (power: string) => `Power: ${power}`,
+  itemLevel: (n: number) => `item level ${n}`, mythicLine: (power: string) => `Power: ${power}`, kindInSlot: (kind: string, slot: string) => `${kind} (${slot} slot)`,
   /** Mythic powers as the player reads them (TB-100); numbers match MYTHIC_FX. */
   mythicPower: {
     'last-knife': 'Every knife that lands brings your next arrow a quarter of a second closer.',
