@@ -63,7 +63,7 @@ export interface RunState {
   earned: number;
   barHp: number; bulwarkUsed: boolean; fallen: boolean;
   /** Once-per-run gear state, saved so a reload cannot reset it (v8, TB-110): Thunder's Memory's stored charges, whether Heartwood Splinter stood the wall again, whether Rootwarden's free rally was spent. */
-  thunder: number; splinterUsed: boolean; freeRallyUsed: boolean;
+  thunder: number; freeRallyUsed: boolean;
   /** Boss waves summoned this run, and the one running now (t: seconds in, next: script index, left: its orcs not yet slain). */
   bossDone: number; boss: { t: number; next: number; left: number } | null;
   foeT: Partial<Record<OrcKind, number>>; stormT: number; shotT: number[]; knifeT: number; hawkT: number; treantT: number; ballT: number;
@@ -114,7 +114,7 @@ export interface SimState {
 }
 
 export function freshRun(): RunState {
-  return { wave: 1, waveT: 0, runTime: 0, starlight: 0, earned: 0, kills: 0, levels: { root: 1 }, barHp: -1, bulwarkUsed: false, fallen: false, bossDone: 0, boss: null, thunder: 0, splinterUsed: false, freeRallyUsed: false,
+  return { wave: 1, waveT: 0, runTime: 0, starlight: 0, earned: 0, kills: 0, levels: { root: 1 }, barHp: -1, bulwarkUsed: false, fallen: false, bossDone: 0, boss: null, thunder: 0, freeRallyUsed: false,
     foeT: {}, stormT: 0, shotT: [0, 0, 0], knifeT: 0, hawkT: 0, treantT: 0, ballT: 0, tier: 1, path: null, hoardN: 0, hwEarned: 0 };
 }
 export function freshMeta(): MetaState { return { heartwood: 0, lifetimeKills: 0, bestWave: 1, prestiges: 0, hwLevels: {}, loot: freshLoot(), tier: 1, checkpoint: 1, camp: freshCamp() }; }
