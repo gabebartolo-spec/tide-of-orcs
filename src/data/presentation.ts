@@ -98,14 +98,15 @@ export const GROUND = {
    *  thresholds the wall score has reached: Stats.barMax / BARRICADE.baseHp, plus `perPerk` for each wall perk that does not
    *  raise max health (Repair regen, Bulwark). Seasoned Timber 3, 6 and 9 ranks alone reach 1.95x, 3.81x, 7.45x.
    *  Per tier: fence rows and panel scale, all drawn with the rendered fence sprite (no code-drawn parts). Extra rows stand
-   *  behind the first, `rowDx` further back and `rowDy` of a step lower, mirrored so their rope ties face the front row,
+   *  behind the first, `rowDx` further back and `rowDy[r]` of a step lower (rope ties out of phase), mirrored so their rope ties face the front row,
    *  shaded by `rowShade`, each with its own ground shadow on its grove side (`shadowDx`, `shadowW` of the panel width). Rows
    *  reach at most `backMax` (scaled) behind the front row's base spot; any more pushes the wall toward the field, so the elf
    *  keeps clear grass. Each panel sits up to `jitter` left or right (fixed scatter) so row seams never run as one straight line. A broken panel
-   *  draws `brokenShade` darker at `brokenAlpha`, `brokenDx` inward (never widening the wall) and sunk `brokenDy`; `rowSeed` offsets each row's fixed golden-ratio break scatter (`breakScatter`). */
+   *  draws `brokenShade` darker at `brokenAlpha`, `brokenDx` inward (never widening the wall) sunk `brokenDy` and tilted `brokenTilt` rad, its top `brokenSnap` snapped off; every `brokenGap`-th broken panel is gone (a gap).
+   *  Every other panel is flipped so the rope bindings alternate sides instead of stacking into one column; `rowSeed` offsets each row's fixed golden-ratio break scatter (`breakScatter`). */
   wallTiers: {
     at: [1.9, 3.7, 7], perPerk: 0.5, rows: [1, 2, 2, 3], scale: [1, 1, 1.4, 1.4],
-    rowDx: -18, rowDy: 0.33, rowShade: 0.3, backMax: 18, shadowDx: -8, shadowW: 0.7, brokenAlpha: 0.9, brokenDx: 4, brokenDy: 2.5, brokenShade: 0.5, jitter: 0.8, rowSeed: 7, breakScatter: 0.618034,
+    rowDx: -18, rowDy: [0, 0.5, 0.25], rowShade: 0.3, backMax: 18, shadowDx: -8, shadowW: 0.7, brokenAlpha: 0.9, brokenDx: 4, brokenDy: 5, brokenTilt: 0.14, brokenShade: 0.6, brokenSnap: 0.25, brokenGap: 3, jitter: 3, rowSeed: 7, breakScatter: 0.618034,
   },
 } as const;
 

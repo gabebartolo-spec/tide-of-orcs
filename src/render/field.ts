@@ -261,7 +261,7 @@ export class FieldRenderer {
       const y0 = -lh / 2 - Math.ceil(-top / step) * step;
       const rows = T.rows[tier]!, fwd = Math.max(0, -(rows - 1) * T.rowDx * sc - T.backMax * sc);  // keep grass between wall and elf
       for (let r = rows - 1; r >= 0; r--) {
-        const x0 = BAR_X + BAR_W / 2 - w / 2 + r * T.rowDx * sc + fwd, dy = r * T.rowDy * step;
+        const x0 = BAR_X + BAR_W / 2 - w / 2 + r * T.rowDx * sc + fwd, dy = T.rowDy[r]! * step;
         g.fillStyle = P.wallShade; g.fillRect(x0 + w * (1 - T.shadowW) / 2 + T.shadowDx, top, w * T.shadowW, H - top);  // each row's own ground shadow
         const img = r ? this.shadedFence(fence) : fence, inward = r === rows - 1 && r ? 1 : -1;  // broken panels lean toward the wall's middle
         for (let i = 0, y = y0 + dy; y < H; i++, y += step) {
@@ -269,8 +269,13 @@ export class FieldRenderer {
           g.globalAlpha = alive ? 1 : T.brokenAlpha;
           const jit = ((((i + r * T.rowSeed) * T.breakScatter * 3) % 1) * 2 - 1) * T.jitter * sc;
           const px = x0 + jit + (alive ? 0 : inward * T.brokenDx), py = y + (alive ? 0 : T.brokenDy * sc), im = alive ? img : this.brokenFence(fence);
-          if (r) { g.save(); g.translate(px + w, py); g.scale(-1, 1); g.drawImage(im, 0, 0, w, lh); g.restore(); }  // mirrored: rope ties face the front row
-          else g.drawImage(im, px, py, w, lh);
+          const seed = i + r * T.rowSeed;
+          if (!alive && seed % T.brokenGap === 0) continue;  // panel gone: a gap in the wall
+          const snap = alive ? 0 : T.brokenSnap, ih = im.height;
+          g.save(); g.translate(px + w / 2, py + lh);  // pivot at the panel's foot so a broken panel leans
+          if (!alive) g.rotate(inward * T.brokenTilt);
+          if ((r ? 1 : 0) ^ (i & 1)) g.scale(-1, 1);  // back rows mirrored, and every other panel flipped so bindings alternate sides
+          g.drawImage(im, 0, ih * snap, im.width, ih * (1 - snap), -w / 2, -lh * (1 - snap), w, lh * (1 - snap)); g.restore();
         }
       }
       g.globalAlpha = 1;
