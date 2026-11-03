@@ -5,22 +5,22 @@ export type HwId = 'hw_dawn' | 'hw_wolf' | 'hw_timber' | 'hw_orders' | 'hw_boss'
 export type HwLevels = Partial<Record<HwId, number>>;
 
 /** req: other lines that must reach a rank first (TB-101). */
-export interface HwNode { id: HwId; name: string; costs: readonly number[]; desc: string; req?: readonly [HwId, number][] }
+export interface HwNode { id: HwId; name: string; costs: readonly number[]; desc: string; /** terse effect on the Replant tab (TB-195n) */ stat: string; req?: readonly [HwId, number][] }
 
 /** Rank n costs costs[n] Heartwood; max rank is costs.length. */
 export const HW_NODES: readonly HwNode[] = [
-  { id: 'hw_dawn', name: 'Early Dawn', costs: [2, 4, 8, 14, 22], desc: 'Each run starts 2 waves further on per rank.' },
-  { id: 'hw_wolf', name: 'Old Friend', costs: [3], desc: 'Each run starts with the Grey Wolf.' },
-  { id: 'hw_timber', name: 'Stout Timber', costs: [4, 8, 16], desc: 'Barricade base health +25% per rank.' },
-  { id: 'hw_orders', name: 'Standing Orders', costs: [5, 12], desc: 'Each run starts with one Spearman on the field per rank.' },
-  { id: 'hw_boss', name: 'Warlords', costs: [6, 12, 24], desc: 'Boss wave clear bonus +50% per rank.' },
+  { id: 'hw_dawn', name: 'Early Dawn', costs: [2, 4, 8, 14, 22], desc: 'Each run starts 2 waves further on per rank.', stat: '+2 start waves / rank' },
+  { id: 'hw_wolf', name: 'Old Friend', costs: [3], desc: 'Each run starts with the Grey Wolf.', stat: 'Start with Grey Wolf' },
+  { id: 'hw_timber', name: 'Stout Timber', costs: [4, 8, 16], desc: 'Barricade base health +25% per rank.', stat: '+25% barricade / rank' },
+  { id: 'hw_orders', name: 'Standing Orders', costs: [5, 12], desc: 'Each run starts with one Spearman on the field per rank.', stat: '+1 Spearman / rank' },
+  { id: 'hw_boss', name: 'Warlords', costs: [6, 12, 24], desc: 'Boss wave clear bonus +50% per rank.', stat: '+50% boss bonus / rank' },
   // loot lines (TB-101), BALANCE P-101
-  { id: 'hw_find', name: 'Far Sight', costs: [2, 5, 12], desc: 'Item Find +15% / +35% / +60% in total.' },
-  { id: 'hw_fortune', name: "Fortune's Favour", costs: [3, 8, 20], desc: 'Luck +10% / +25% / +45% in total.' },
-  { id: 'hw_satchel', name: 'Deep Satchel', costs: [4], desc: 'The satchel holds 80 items, not 40.', req: [['hw_find', 1]] },
-  { id: 'hw_tithe', name: 'Warboss Tithe', costs: [10], desc: 'Bosses always drop 2 items.', req: [['hw_find', 2], ['hw_fortune', 1]] },
-  { id: 'hw_heirloom', name: 'Heirloom', costs: [15], desc: 'Name one worn item your heirloom: it gains 5 item levels each Replant, past the cap.', req: [['hw_fortune', 2]] },
-  { id: 'hw_glimmer', name: 'Glimmerwork', costs: [6], desc: 'Rerolls cost 40% less; salvage gives +1 Glimmer.', req: [['hw_satchel', 1]] },
+  { id: 'hw_find', name: 'Far Sight', costs: [2, 5, 12], desc: 'Item Find +15% / +35% / +60% in total.', stat: 'Item Find +15/35/60%' },
+  { id: 'hw_fortune', name: "Fortune's Favour", costs: [3, 8, 20], desc: 'Luck +10% / +25% / +45% in total.', stat: 'Luck +10/25/45%' },
+  { id: 'hw_satchel', name: 'Deep Satchel', costs: [4], desc: 'The satchel holds 80 items, not 40.', req: [['hw_find', 1]], stat: 'Satchel 80 slots' },
+  { id: 'hw_tithe', name: 'Warboss Tithe', costs: [10], desc: 'Bosses always drop 2 items.', req: [['hw_find', 2], ['hw_fortune', 1]], stat: 'Bosses drop 2 items' },
+  { id: 'hw_heirloom', name: 'Heirloom', costs: [15], desc: 'Name one worn item your heirloom: it gains 5 item levels each Replant, past the cap.', req: [['hw_fortune', 2]], stat: 'Heirloom +5 ilvl / replant' },
+  { id: 'hw_glimmer', name: 'Glimmerwork', costs: [6], desc: 'Rerolls cost 40% less; salvage gives +1 Glimmer.', req: [['hw_satchel', 1]], stat: 'Rerolls −40%, salvage +1' },
 ];
 
 export const HW_NODE: Readonly<Record<HwId, HwNode>> = Object.fromEntries(HW_NODES.map((n) => [n.id, n])) as Record<HwId, HwNode>;

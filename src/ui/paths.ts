@@ -16,7 +16,7 @@ export const pathHint = (s: SimState, n: SkillNode): string | null => (pathLocke
 /** The starting bonus line on a path card, from PATH_FX (no numbers in the UI). */
 export const startBonus = (id: PathId): string => {
   const v = id === 'serpent' ? PATH_FX.startCrit : id === 'fox' ? PATH_FX.startFox : PATH_FX.startStar;
-  return STR.pathStart(STR.pathBonus[id](Math.round(v * 100)));
+  return STR.pathBonus[id](Math.round(v * 100));
 };
 
 /** The path an item belongs to (a path set piece or a path mythic), or null. */
@@ -46,10 +46,8 @@ export class PathPicker {
 
   render(): void {
     const s = this.state(), cur = s.run.path ?? null, open = s.run.fallen; this.sig = `${cur}|${open}`;
-    this.root.innerHTML = `<div class="pathhead"><h2>${STR.pathsTitle}</h2><p>${open ? STR.pathsBody : STR.pathsClosed}</p></div>
-      <div class="pathcards">${PATH_IDS.map((id) => `<button class="pathcard${cur === id ? ' on' : ''}" data-path="${id}" aria-pressed="${cur === id}" ${open ? '' : 'disabled'}>
-        <canvas class="sigil" aria-hidden="true"></canvas><span class="name">${PATHS[id].name}</span><span class="desc">${PATHS[id].focus}</span><span class="bonus">${startBonus(id)}</span></button>`).join('')}</div>
-      <button class="ghost pathnone" data-path="" aria-pressed="${cur === null}" ${open && cur !== null ? '' : 'disabled'}>${STR.pathNone}</button>`;
+    this.root.innerHTML = `<div class="pathcards">${PATH_IDS.map((id) => `<button class="pathcard${cur === id ? ' on' : ''}" data-path="${id}" aria-pressed="${cur === id}" ${open ? '' : 'disabled'}>
+        <canvas class="sigil" aria-hidden="true"></canvas><span class="name">${PATHS[id].name}</span><span class="bonus">${startBonus(id)}</span></button>`).join('')}</div>`;
     for (const cv of this.root.querySelectorAll<HTMLCanvasElement>('canvas.sigil')) {
       const id = (cv.closest<HTMLElement>('[data-path]')!.dataset.path) as PathId;
       requestAnimationFrame(() => this.draw(cv, id, cur === id));

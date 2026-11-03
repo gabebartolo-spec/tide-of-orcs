@@ -58,7 +58,7 @@ fieldCanvas.addEventListener('pointerdown', (e) => {
 });
 fieldCanvas.addEventListener('pointermove', setAim);
 // Encampment (TB-188e): the Camp tab's scene; a click on a building opens its card, a click anywhere else closes it.
-const campView = document.getElementById('campview') as HTMLCanvasElement, campScene = new CampScene(campView, field.sprites);
+const campView = document.getElementById('campview') as HTMLCanvasElement, campScene = new CampScene(campView);
 campView.addEventListener('click', (e) => { const id = campHit(...campScene.toScene(e.clientX, e.clientY)); if (id) { panel.onCue('click'); panel.camp.show(id); } else panel.camp.close(); });
 campView.addEventListener('pointermove', (e) => { campView.style.cursor = e.pointerType === 'mouse' && campHit(...campScene.toScene(e.clientX, e.clientY)) ? 'pointer' : ''; });
 for (const t of ['pointerup', 'pointercancel', 'pointerleave'] as const) fieldCanvas.addEventListener(t, endAim);
@@ -72,7 +72,7 @@ const skipCeremony = (): void => { if (field.ceremony.active) field.ceremony.ski
 fieldCanvas.addEventListener('pointerdown', skipCeremony); addEventListener('keydown', skipCeremony);
 void field.sprites.load();
 // dev-only handle for checking render work in the browser
-if (import.meta.env.DEV) Object.assign(window, { __tide: { game, field, tree } });
+if (import.meta.env.DEV) Object.assign(window, { __tide: { game, field, tree, campScene } });
 
 // build stamp (written by the itch workflow)
 fetch('./build.json').then((r) => (r.ok ? r.json() : null)).then((b) => { if (b) document.getElementById('build')!.textContent = `${b.tag} · ${b.sha}`; }).catch(() => {});

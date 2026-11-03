@@ -1,4 +1,4 @@
-/* Layout: battlefield canvas on the left with a rally bar beneath it, a tabbed grove panel (skill tree / replant) on the right; stacks on phones. */
+﻿/* Layout: battlefield canvas on the left with a rally bar beneath it, a tabbed grove panel (skill tree / replant) on the right; stacks on phones. */
 /* Fonts ship with the game so the desktop build works offline (TB-118). Heartwood, the game's own face (tools/typeface, TB-135), is the only
    font: DOM and canvas alike, no fallback faces (TB-137). One weight, no italic. */
 @font-face { font-family: "Heartwood"; font-style: normal; font-weight: 400; font-display: swap; src: url("./fonts/heartwood-400.woff2") format("woff2"); }
@@ -15,9 +15,9 @@
   color-scheme: dark;
 }
 /* UI scale (TB-143, TB-191): every size is in rem, and the root font is 1/54 of the window height (or 1/96 of its width,
-   whichever is smaller): 20 px at 1920×1080, 40 px at 3840×2160 (DPR 1), 20 CSS px = 40 device px at 4K DPR 2. Smaller
+   whichever is smaller): 20 px at 1920Ã—1080, 40 px at 3840Ã—2160 (DPR 1), 20 CSS px = 40 device px at 4K DPR 2. Smaller
    windows stop at 16 px. The smallest text is 0.875rem, 1.62% of screen height, readable from a couch on a TV.
-   --text-scale is Settings › Text size (0.8–1.6), set by src/render/textScale.ts. */
+   --text-scale is Settings â€º Text size (0.8â€“1.6), set by src/render/textScale.ts. */
 html { font-size: calc(clamp(16px, min(100vw / 96, 100vh / 54), 80px) * var(--text-scale, 1)); }
 html, body { height: 100%; }
 /* Heartwood has one weight and no italic: never let the browser fake bold or slant it */
@@ -188,6 +188,10 @@ body[data-mode="settings"] .panel { display: flex; position: fixed; z-index: 5; 
 body[data-mode="settings"] .tabs { display: none; }
 body[data-mode="camp"] .play { display: none; }
 body[data-mode="camp"] .panel { width: min(73.75rem, 100%); margin-inline: auto; }
+/* Menu backdrop (TB-195o, director yes 3 Nov): a painted dusk canopy behind the between-runs pages, darkened toward the
+   edges by an ink vignette so the panel and header read on it */
+body[data-mode="camp"] { background: radial-gradient(ellipse at 50% 45%, transparent 35%, color-mix(in srgb, var(--ink) 70%, transparent)),
+  url("/ui/canopy.webp") center / cover no-repeat fixed, var(--ink); }
 .campbar { display: flex; align-items: center; gap: 0.625rem; padding: 0.375rem 0.5rem 0.625rem; }
 .campbar h2 { font-family: var(--display); font-weight: 500; font-size: 1.375rem; margin: 0 auto 0 0; }
 /* Boss tier picker (TB-148): shown once a second tier is unlocked */
@@ -260,7 +264,7 @@ button, select, .tabs { touch-action: manipulation; }
   .turn { display: flex; position: fixed; inset: 0; z-index: 10; align-items: center; justify-content: center; padding: 2rem;
     background: var(--ink) url("./wood/gilt.svg") center / 20rem 20rem; text-align: center; }
   .turn p { font-family: var(--display); font-size: 1.5rem; line-height: 1.4; max-width: 16ch; margin: 0; }
-  .turn p::before { content: "⟳"; display: block; font-size: 3rem; color: var(--amber); margin-bottom: 0.5rem; }
+  .turn p::before { content: "âŸ³"; display: block; font-size: 3rem; color: var(--amber); margin-bottom: 0.5rem; }
 }
 /* Short landscape screens (phones): slimmer frames and plaques so the field and the Grove get the room. */
 @media (max-height: 540px) {
@@ -348,7 +352,7 @@ body[data-mode="camp"] .campwrap { flex: 1 1 0; min-height: 0; height: auto; }
 .prestige.split.three .hwtree { grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); }
 @media (max-width: 860px) { .prestige.split.three { grid-template-columns: 1fr; } }
 
-/* Game HUD (TB-195b, docs/plans/game-ui.md §2, ART-STYLE §Motion): objects over the field, not a text row. A lit timber wall bar
+/* Game HUD (TB-195b, docs/plans/game-ui.md Â§2, ART-STYLE Â§Motion): objects over the field, not a text row. A lit timber wall bar
    that cracks, a faceted starlight gem with a rolling odometer, the wave on a hanging cloth banner with a CLEARED stamp.
    Colours are palette tokens (the extra ones here mirror src/render/palette.ts). Numbers in data/presentation.ts HUD. */
 :root { --grove: #9fc48f; --star-gold: #ffd36b; --spark: #f4eaa6; --hud-roll: 380ms; }
@@ -394,24 +398,30 @@ body[data-mode="camp"] :is(.hud-wallbox, .hud-wave) { display: none; }
 [data-path="serpent"] { --pc: var(--path-serpent); --pl: var(--path-serpent-light); }
 [data-path="fox"] { --pc: var(--path-fox); --pl: var(--path-fox-light); }
 [data-path="magpie"] { --pc: var(--path-magpie); --pl: var(--path-magpie-light); }
-.paths { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 3fr) auto; gap: 0.5rem 1rem; align-items: center; padding-bottom: 0.875rem; margin-bottom: 0.5rem; background: var(--root); background-position: left bottom; }
+/* Path cards (TB-193f layout C, TB-193h plaques): head and None on one row, three full-size carved-wood plaques below.
+   The Replant pane is data-fit="scroll", so the cards are never scaled down. */
+.paths { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.75rem 1rem; align-items: center; padding-bottom: 0.875rem; margin-bottom: 0.5rem; background: var(--root); background-position: left bottom; }
 .paths .pathhead { display: flex; flex-direction: column; gap: 0.375rem; }
-.pathcards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.75rem; }
-.pathcard { position: relative; display: grid; grid-template-columns: 4.25rem minmax(0, 1fr); grid-template-rows: auto auto auto; column-gap: 0.75rem; align-items: center; text-align: left;
-  padding: 0.625rem 0.875rem 0.625rem 0.625rem; border-radius: 0.5rem; border: 0.0625rem solid var(--splinter); color: var(--text);
-  box-shadow: inset 0 0.0625rem 0 var(--timber-dark), inset 0 -0.125rem 0 var(--ink), inset 0.25rem 0 0 color-mix(in srgb, var(--pc) 55%, var(--bark));
+.pathcards { grid-column: 1 / -1; grid-row: 2; display: grid; grid-template-columns: repeat(3, minmax(16rem, 1fr)); gap: 1rem; }
+.pathcard { position: relative; display: grid; grid-template-columns: 4.5rem minmax(0, 1fr); grid-template-rows: auto auto auto; column-gap: 0.875rem; align-items: center; text-align: left;
+  padding: 0.75rem 1rem 0.75rem 0.75rem; border-radius: 0.375rem; color: var(--text);
+  border: 0.0625rem solid color-mix(in srgb, var(--pc) 60%, var(--splinter));
+  background: var(--grain), linear-gradient(170deg, color-mix(in srgb, var(--bark) 62%, var(--ink)), color-mix(in srgb, var(--splinter) 48%, var(--ink)) 80%);
+  box-shadow: inset 0 0.0625rem 0 color-mix(in srgb, var(--timber) 45%, transparent), inset 0 -0.1875rem 0 color-mix(in srgb, var(--ink) 70%, transparent), 0 0.1875rem 0.5rem color-mix(in srgb, var(--ink) 60%, transparent);
   transition: box-shadow .2s ease-out, transform .2s ease-out, border-color .2s; }
-.pathcard .sigil { grid-row: 1 / span 3; width: 4.25rem; height: 4.25rem; }
-.pathcard .name { font-family: var(--display); font-size: 1.1875rem; color: var(--pc); }
+.pathcard .sigil { grid-row: 1 / span 3; width: 4.5rem; height: 4.5rem; }
+.pathcard .name { font-family: var(--display); font-size: 1.25rem; color: var(--pc); }
 .pathcard .desc { color: var(--text-dim); font-size: 0.875rem; line-height: 1.3; }
 .pathcard .bonus { color: var(--amber); font-size: 0.875rem; font-variant-numeric: tabular-nums; }
 .pathcard:hover:not(:disabled) { border-color: var(--pc); transform: translateY(-0.0625rem); }
-.pathcard.on { border-color: var(--pl); background: var(--grain), radial-gradient(ellipse at 15% 50%, color-mix(in srgb, var(--pl) 22%, transparent), transparent 70%), linear-gradient(160deg, var(--ink-3), var(--ink) 70%);
-  box-shadow: inset 0 0.0625rem 0 var(--timber-dark), inset 0.25rem 0 0 var(--pl), 0 0 0.75rem color-mix(in srgb, var(--pl) 55%, transparent), 0 0 1.75rem color-mix(in srgb, var(--pl) 25%, transparent); }
-.pathcard:disabled { cursor: default; opacity: 0.8; } .pathcard.on:disabled { opacity: 1; }
+.pathcard.on { border: 0.125rem solid var(--pl); padding: 0.6875rem 0.9375rem 0.6875rem 0.6875rem;
+  background: var(--grain), radial-gradient(ellipse at 18% 50%, color-mix(in srgb, var(--pl) 24%, transparent), transparent 70%), linear-gradient(170deg, color-mix(in srgb, var(--bark) 70%, var(--ink)), color-mix(in srgb, var(--splinter) 55%, var(--ink)) 80%);
+  box-shadow: inset 0 0.0625rem 0 color-mix(in srgb, var(--timber) 55%, transparent), 0 0 0.75rem color-mix(in srgb, var(--pl) 55%, transparent), 0 0 1.75rem color-mix(in srgb, var(--pl) 25%, transparent); }
+.pathcard:disabled { cursor: default; }
+.pathcard:disabled:not(.on) .sigil { opacity: 0.85; }
 @media (prefers-reduced-motion: reduce) { .pathcard { transition: none; } }
 .pathnone { align-self: center; white-space: nowrap; }
-@media (max-width: 860px) { .paths { grid-template-columns: 1fr; } .pathcards { grid-template-columns: 1fr; } }
+@media (max-width: 860px) { .pathcards { grid-template-columns: 1fr; } }
 /* Path tags: the detail card's branch line in the path colour, and a small carved tag on path set items and mythics */
 .detail .branch[data-path] { color: var(--pc); }
 .ptag { display: inline-block; padding: 0 0.375rem; border-radius: 0.25rem; font-size: 0.875rem; line-height: 1.35; color: var(--pc); border: 0.0625rem solid color-mix(in srgb, var(--pc) 60%, transparent); background: color-mix(in srgb, var(--pc) 12%, var(--ink)); }
@@ -460,6 +470,31 @@ body[data-mode="camp"] :is(.hud-wallbox, .hud-wave) { display: none; }
 :root[data-calm] .tabs button::before { transition: none; }
 :root[data-calm] .tab:not([hidden]) { animation: none; }
 
+/* Battle report (TB-195f): the fallen overlay is the carved `report` board (9-slice, 68 px edges, plank centre), tallies roll up
+   one by one, the wax `stamp` seal slams on its corner, and Onward is the glowing `march` plaque (3-slice, 56 px caps). */
+:root { --rep-edge: 4.25rem; --rep-w: 36rem; --seal: 8.5rem; --march-cap: 3.5rem; --march-h: 6rem; }
+.fallen .report { position: relative; box-sizing: border-box; width: min(var(--rep-w), 92vw); padding: 0.25rem 0.5rem 0.75rem;
+  border: var(--rep-edge) solid transparent; border-image: image-set(url("/ui/report.webp") 1x, url("/ui/report@2x.webp") 2x) 68 fill / var(--rep-edge) stretch;
+  display: flex; flex-direction: column; align-items: stretch; gap: 0.625rem; filter: drop-shadow(0 0.75rem 1.25rem color-mix(in srgb, var(--ink) 80%, transparent)); }
+.fallen .report h2 { margin-top: -1.25rem; color: var(--amber); text-shadow: 0 0.125rem 0 var(--ink); }
+.fallen .tally { margin: 0; display: grid; gap: 0.25rem; }
+.fallen .tally > div { display: flex; justify-content: space-between; align-items: baseline; padding: 0.25rem 0.5rem; border-bottom: 0.0625rem solid color-mix(in srgb, var(--amber) 22%, transparent); }
+.fallen .tally dt { color: var(--text-dim); font-size: 1rem; }
+.fallen .tally dd { margin: 0; font-family: var(--display); font-size: 1.625rem; color: var(--text); font-variant-numeric: tabular-nums; display: inline-block; }
+.fallen .report p { max-width: none; font-size: 0.9375rem; }
+.fallen .hwline { display: flex; justify-content: space-between; align-items: center; padding: 0 0.5rem; }
+.fallen .hwline .k { color: var(--text); font-size: 1.0625rem; }
+.fallen .hwline .big { display: inline-block; }
+.fallen .seal { position: absolute; right: calc(-1 * var(--rep-edge) - 2.75rem); bottom: calc(-1 * var(--rep-edge) - 3.75rem); width: var(--seal); height: var(--seal); pointer-events: none; opacity: 0;
+  background: image-set(url("/ui/stamp.webp") 1x, url("/ui/stamp@2x.webp") 2x) center / contain no-repeat; filter: drop-shadow(0 0.375rem 0.5rem color-mix(in srgb, var(--ink) 70%, transparent)); }
+.fallen .seal.on { opacity: 1; }
+.fallen .march { height: var(--march-h); min-width: 18rem; padding: 0 0.75rem; border: solid transparent; border-width: 0 var(--march-cap); background: none; cursor: pointer;
+  border-image: image-set(url("/ui/march.webp") 1x, url("/ui/march@2x.webp") 2x) 0 56 fill / 0 var(--march-cap) stretch;
+  font-family: var(--display); font-size: 1.5rem; color: var(--ink); animation: march-glow 2.2s ease-in-out infinite; }
+.fallen .march:hover { filter: brightness(1.12) drop-shadow(0 0 1.25rem var(--amber)); }
+.fallen .march:focus-visible { outline: 0.125rem solid var(--amber); outline-offset: 0.25rem; }
+@keyframes march-glow { 0%, 100% { filter: drop-shadow(0 0 0.375rem color-mix(in srgb, var(--amber) 50%, transparent)); } 50% { filter: drop-shadow(0 0 1.125rem var(--amber)); } }
+:root[data-calm] .fallen .march { animation: none; filter: drop-shadow(0 0 0.625rem color-mix(in srgb, var(--amber) 60%, transparent)); }
 /* TB-195e satchel as an object: the bag and the worn row are stitched leather (32 px slice = 1.6rem, stitches repeat),
    worn slots are sewn pockets, dragging lights the matching pocket, hover shows two compare plates side by side. */
 :root { --sat-edge: 1.6rem; --sat-mid: 400%; --pocket-pad: 0.875rem; --pocket-foot: 1.375rem; --pocket-icon: 3.75rem; --pocket-want: 0.5rem; --pocket-over: 1.06; }
@@ -524,3 +559,158 @@ body:not([data-mode="camp"]) header { position: relative; top: auto; left: auto;
 body:not([data-mode="camp"]) .play, body:not([data-mode="camp"]) header { width: min(100vw, calc((100vh - 2rem - var(--hudbar)) * 15 / 8 + 2rem)); }
 @supports (height: 100dvh) { body:not([data-mode="camp"]) .play, body:not([data-mode="camp"]) header { width: min(100vw, calc((100dvh - 2rem - var(--hudbar)) * 15 / 8 + 2rem)); } }
 body:not([data-mode="camp"]) .hud { align-items: center; flex-wrap: nowrap; }
+
+/* Between-runs panel (TB-195m, director 3 Nov). The title is one cream colour and its twig underline spans the whole title.
+   Tab icons are light glyphs on a dark disc (cream glyph on --ink disc, 13.9:1 by token; measured in the capture 8.3:1 unselected at 0.8 opacity).
+   March again is the carved `march` plaque, raised with a bevel and shadow, lifting on hover and pressing in on click.
+   The header Settings plank hides between runs (the Settings tab is there); it stays in the run HUD. */
+header h1 em { color: inherit; }
+header h1 { display: inline-block; background-size: 100% 0.625rem; }
+:root { --disc: 2.5rem; --glyph: 1.5rem; }
+.tabs button::before { width: var(--disc); height: var(--disc); margin-left: calc(var(--disc) / -2); border-radius: 50%; background: radial-gradient(circle at 50% 35%, var(--ink-3), var(--ink) 70%) !important;
+  box-shadow: 0 0 0 0.125rem var(--timber), 0 0.1875rem 0.375rem var(--ink); filter: none; }
+.tabs button::after { content: ""; position: absolute; left: 50%; top: calc(0.25rem + (var(--disc) - var(--glyph)) / 2); width: var(--glyph); height: var(--glyph); margin-left: calc(var(--glyph) / -2);
+  background: var(--cream); opacity: .8; -webkit-mask: var(--g) center / contain no-repeat; mask: var(--g) center / contain no-repeat; transform-origin: 50% 70%;
+  transition: transform var(--tok-in) cubic-bezier(.34, 1.56, .64, 1), opacity var(--tok-in) ease-out; pointer-events: none; }
+#tab-grove { --g: url("/ui/glyph-bow.svg"); } #tab-satchel { --g: url("/ui/glyph-satchel.svg"); } #tab-camp { --g: url("/ui/glyph-tent.svg"); }
+#tab-prestige { --g: url("/ui/glyph-seed.svg"); } #tab-settings { --g: url("/ui/glyph-cog.svg"); }
+.tabs button:hover::after { opacity: 1; }
+.tabs button[aria-selected="true"]::before { filter: none; box-shadow: 0 0 0 0.125rem var(--amber), 0 0 0.75rem var(--amber), 0 0.1875rem 0.375rem var(--ink); }
+.tabs button[aria-selected="true"]::after { opacity: 1; transform: translateY(var(--tok-lift)) scale(var(--tok-on)); }
+:root[data-calm] .tabs button::after { transition: none; }
+#camp-go { --march-cap: 2.25rem; height: 3.5rem; min-width: 11rem; padding: 0 0.5rem; border: solid transparent; border-width: 0 var(--march-cap); background: none; box-shadow: none; clip-path: none; cursor: pointer;
+  border-image: image-set(url("/ui/march.webp") 1x, url("/ui/march@2x.webp") 2x) 0 56 fill / 0 var(--march-cap) stretch;
+  font-family: var(--display); font-size: 1.125rem; color: var(--ink); text-shadow: 0 0.0625rem 0 color-mix(in srgb, var(--cream) 50%, transparent);
+  filter: drop-shadow(0 0.25rem 0 var(--splinter, var(--ink))) drop-shadow(0 0.375rem 0.5rem var(--ink)); transition: transform 120ms ease-out, filter 120ms ease-out; }
+#camp-go:hover { transform: translateY(-0.125rem); filter: brightness(1.1) drop-shadow(0 0.375rem 0 var(--splinter, var(--ink))) drop-shadow(0 0.5rem 0.75rem var(--ink)) drop-shadow(0 0 0.5rem var(--amber)); }
+#camp-go:active { transform: translateY(0.1875rem); filter: brightness(0.92) drop-shadow(0 0.0625rem 0 var(--splinter, var(--ink))) drop-shadow(0 0.125rem 0.1875rem var(--ink)); }
+:root[data-calm] #camp-go { transition: none; }
+body:not([data-mode="run"]) header #btn-settings { display: none; }
+
+/* Between-runs polish (TB-195n, director's 13-point list, 3 Nov). Labels are sentence case at 1rem or more (Heartwood's capital E
+   reads as C when small); the display face is for headings. One button system: primary gold plank (.buy), secondary wood
+   (.ghost), destructive rose (.danger), set apart. Path cards and the satchel share one leather; stitches are dark angled dashes. */
+/* body text in the system's UI face (Segoe UI on Windows): Heartwood is kept for headings of 1.2rem (24 px at 1080p) and up */
+:root { --body: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", sans-serif; }
+.stat .k, .tabs button, .detail .branch, .item .slot, .satbar, .hud-wave .k, .plate .pk, .plate .done, .plate .lock, .lootbanner .rar, .camplist .k,
+.hud-van, .hud-wall .lbl { text-transform: none; letter-spacing: .02em; }
+.stat .k, .tabs button, .detail .branch, .satbar, .hwnode .desc, .bcard .desc, .bcard .cost, .auto, .ghost, .camplist { font-size: 1rem; }
+/* header: a dark scrim behind the title and stats, everything on one centre line */
+body[data-mode="camp"] header { align-items: center; margin: -0.625rem calc(-1 * max(1rem, env(safe-area-inset-left, 0rem))) 0.5rem; padding: 0.75rem 1.5rem 1rem;
+  background: linear-gradient(color-mix(in srgb, var(--ink) 94%, transparent), color-mix(in srgb, var(--ink) 85%, transparent) 75%, transparent); }
+body[data-mode="camp"] .stat .k { font-size: 1.125rem; } body[data-mode="camp"] .stat .v { font-size: 1.75rem; }
+body[data-mode="camp"] .odo { font-size: 1.75rem; }
+body[data-mode="camp"] header h1 { padding-bottom: 0; background: none; line-height: 1; }
+body[data-mode="camp"] .hud, body[data-mode="camp"] .hud .stats, body[data-mode="camp"] .stat { align-items: center; }
+body[data-mode="camp"] .stat .v, body[data-mode="camp"] .odo { line-height: 1; }
+/* panel: at most 75 % of the window, centred, a translucent body with no gilt wallpaper; a softer backdrop vignette */
+body[data-mode="camp"] { background-image: radial-gradient(ellipse at 50% 45%, transparent 50%, color-mix(in srgb, var(--ink) 30%, transparent)),
+  url("/ui/canopy.webp"); background-size: auto, cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed; }
+body[data-mode="camp"] .panel { width: min(75vw, 73.75rem); background: var(--grain), color-mix(in srgb, var(--ink-2) 86%, transparent); background-size: auto; background-clip: padding-box; }
+/* the camp bar: the tab names it already, so no title; the primary plank sits right */
+body[data-mode="camp"] #camp-title { display: none; }
+body[data-mode="camp"] .campbar { justify-content: flex-end; }
+#sat-title { display: none; }
+/* secondary wood planks share the primary's height */
+.panel .ghost { min-height: 2.75rem; padding-inline: 1.25rem; text-shadow: none; }
+/* primary: a clean gold plank, dark text, no glow, no art behind the label */
+.buy { background: linear-gradient(#ebb871, var(--amber) 55%, #c98f45); color: var(--ink); text-shadow: none; font-size: 1rem; min-height: 2.75rem; }
+.buy:disabled { background: var(--ink-3); color: var(--text-dim); box-shadow: inset 0 0.0625rem 0 var(--line), inset 0 -0.125rem 0 var(--ink); text-shadow: none; }
+#camp-go, .rphead .buy { border: 0; border-image: none; clip-path: polygon(0.4375rem 0, calc(100% - 0.4375rem) 0, 100% 50%, calc(100% - 0.4375rem) 100%, 0.4375rem 100%, 0 50%);
+  height: auto; min-height: 2.75rem; min-width: 11rem; padding: 0.5rem 1.75rem; font-family: var(--body); font-size: 1.125rem; color: var(--ink); text-shadow: none; filter: none;
+  background: linear-gradient(#ebb871, var(--amber) 55%, #c98f45); box-shadow: inset 0 0.0625rem 0 #f4d29b, inset 0 -0.1875rem 0 #9c6a33; }
+#camp-go:hover, .rphead .buy:hover:not(:disabled) { filter: brightness(1.08); transform: none; }
+#camp-go:active, .rphead .buy:active:not(:disabled) { filter: brightness(0.94); transform: translateY(0.0625rem); }
+.rphead .buy:disabled { background: var(--ink-3); color: var(--text-dim); box-shadow: inset 0 0.0625rem 0 var(--line); }
+/* destructive: rose, apart from everything else */
+.danger-row { margin-top: 2rem; }
+.panel .ghost.danger { color: #f0b4b4; font-weight: 600; }
+.ghost.danger:hover { filter: brightness(1.15); }
+/* Replant: the title and Replant plank on one row, the paths, then the whole Heartwood tree in a grid */
+.prestige.replant { gap: 1rem; }
+.rphead { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.replant .paths { display: block; padding-bottom: 1rem; margin-bottom: 0; }
+.replant .hwtree { display: grid; grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr)); gap: 0.5rem; }
+.replant .hwnode .name { font-weight: 400; font-size: 1.0625rem; }
+.replant .hwnode .rk { color: var(--text-dim); font-size: 1rem; }
+/* path cards on the satchel's leather, a fine edge in the path's own colour; chosen: a thicker edge and an inner glow */
+.pathcard { grid-template-rows: auto auto; row-gap: 0.25rem; padding: 0.75rem 1rem 0.75rem 0.75rem; border: 0.09375rem solid var(--pc);
+  background: linear-gradient(color-mix(in srgb, var(--ink) 45%, transparent), color-mix(in srgb, var(--ink) 45%, transparent)),
+    image-set(url("/ui/satchel.webp") 1x, url("/ui/satchel@2x.webp") 2x) center / var(--sat-mid) var(--sat-mid) no-repeat;
+  box-shadow: 0 0.1875rem 0.5rem color-mix(in srgb, var(--ink) 60%, transparent); }
+.pathcard .sigil { grid-row: 1 / span 2; }
+.pathcard .name { align-self: end; }
+.pathcard .bonus { align-self: start; font-size: 1rem; color: var(--text); }
+.pathcard:hover:not(:disabled) { transform: none; filter: brightness(1.08); }
+.pathcard.on { border: 0.1875rem solid var(--pl); padding: 0.65625rem 0.90625rem 0.65625rem 0.65625rem;
+  background: linear-gradient(color-mix(in srgb, var(--ink) 40%, transparent), color-mix(in srgb, var(--ink) 40%, transparent)),
+    image-set(url("/ui/satchel.webp") 1x, url("/ui/satchel@2x.webp") 2x) center / var(--sat-mid) var(--sat-mid) no-repeat;
+  box-shadow: inset 0 0 1.25rem color-mix(in srgb, var(--pl) 45%, transparent), 0 0.1875rem 0.5rem color-mix(in srgb, var(--ink) 60%, transparent); }
+/* satchel: leather all the way out, stitches as dark angled dashes just inside the edge */
+#sat-grid, #sat-worn { position: relative; border: 0; border-image: none; padding: 1.125rem; border-radius: 0.5rem;
+  background: image-set(url("/ui/satchel.webp") 1x, url("/ui/satchel@2x.webp") 2x) center / var(--sat-mid) var(--sat-mid) no-repeat;
+  box-shadow: inset 0 0 0 0.125rem color-mix(in srgb, var(--ink) 55%, transparent), 0 0.25rem 0.75rem color-mix(in srgb, var(--ink) 60%, transparent); }
+#sat-grid::after, #sat-worn::after { content: ""; position: absolute; inset: 0.4375rem; pointer-events: none; padding: 0.1875rem; border-radius: 0.25rem;
+  background: repeating-linear-gradient(-45deg, color-mix(in srgb, var(--ink) 85%, transparent) 0 0.1875rem, transparent 0.1875rem 0.625rem);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); }
+/* the doll is pressed into the leather: a darker debossed silhouette */
+#sat-worn::before { background: var(--ink); opacity: .55; }
+/* empty pockets: the slot icon in cream at full strength so it reads on the leather */
+#sat-worn .item.empty { opacity: 1; } #sat-worn .item.empty .glyph { opacity: 1; color: var(--cream); }
+/* pockets: pressed into the leather with the same dark angled stitch (the light-beaded pocket art is gone) */
+#sat-grid .item, #sat-worn .item { position: relative; border-radius: 0.375rem; background: color-mix(in srgb, var(--ink) 30%, transparent);
+  box-shadow: inset 0 0.1875rem 0.375rem color-mix(in srgb, var(--ink) 70%, transparent), inset 0 -0.0625rem 0 color-mix(in srgb, var(--cream) 18%, transparent); }
+#sat-grid .item::after, #sat-worn .item::after { content: ""; position: absolute; inset: 0.25rem; pointer-events: none; padding: 0.125rem; border-radius: 0.25rem;
+  background: repeating-linear-gradient(-45deg, color-mix(in srgb, var(--ink) 85%, transparent) 0 0.125rem, transparent 0.125rem 0.4375rem);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); }
+#sat-grid > .desc { opacity: .7; }
+#sat-grid > .desc { grid-column: 1 / -1; grid-row: 1 / span 2; place-self: center; color: var(--text-dim); font-size: 1.125rem; }
+#sat-grid { min-height: calc(var(--bag-pocket) * 2 + 2.75rem); }
+.satbar .set select { font-size: 1rem; }
+/* Settings: label | control | value on a 2-column page, 1rem gaps */
+.settings .col { gap: 1rem; }
+.settings .set { display: grid; grid-template-columns: 8rem minmax(0, 1fr) 3.5rem; align-items: center; gap: 1rem; }
+.settings .set select { grid-column: 2; justify-self: start; min-width: 12rem; }
+.settings output { color: var(--text); font-variant-numeric: tabular-nums; }
+select, .set select { -webkit-appearance: none; appearance: none; color: var(--text); border: 0.0625rem solid var(--timber-dark); border-radius: 0.375rem; padding: 0.375rem 2rem 0.375rem 0.75rem; font-size: 1rem;
+  background: linear-gradient(45deg, transparent 50%, var(--text) 50%) calc(100% - 1rem) 55% / 0.375rem 0.375rem no-repeat,
+    linear-gradient(135deg, var(--text) 50%, transparent 50%) calc(100% - 0.625rem) 55% / 0.375rem 0.375rem no-repeat,
+    linear-gradient(var(--bark), var(--splinter)); box-shadow: inset 0 0.0625rem 0 var(--timber); }
+select option { background: var(--ink-2); color: var(--text); }
+.set input[type=range] { -webkit-appearance: none; appearance: none; background: none; border: 0; height: 1.5rem; padding: 0; flex: 1 1 auto; width: 100%; }
+input[type=range]::-webkit-slider-runnable-track { height: 0.5rem; border-radius: 0.25rem; background: linear-gradient(var(--timber-dark), var(--splinter)); box-shadow: inset 0 0.0625rem 0.125rem var(--ink); }
+input[type=range]::-moz-range-track { height: 0.5rem; border-radius: 0.25rem; background: linear-gradient(var(--timber-dark), var(--splinter)); }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 1.25rem; height: 1.25rem; margin-top: -0.375rem; border-radius: 50%; border: 0.125rem solid #9c6a33;
+  background: radial-gradient(circle at 40% 35%, #f4d29b, var(--amber) 60%, #c98f45); }
+input[type=range]::-moz-range-thumb { width: 1.25rem; height: 1.25rem; border-radius: 50%; border: 0.125rem solid #9c6a33; background: var(--amber); }
+.settings textarea { font-size: 1rem; background: var(--ink); border: 0.0625rem solid var(--splinter); box-shadow: inset 0 0.1875rem 0.5rem var(--ink), inset 0 0 0 0.0625rem color-mix(in srgb, var(--ink) 80%, transparent); padding: 0.5rem 0.75rem; }
+/* costs that cannot be paid yet are greyed */
+.cost.short { color: var(--text-dim); opacity: .75; }
+/* Camp: the materials in an aligned grid over the diorama's top-right corner */
+.campwrap .camplist { position: absolute; top: 0.75rem; right: 0.75rem; z-index: 2; gap: 0.375rem; padding: 0.625rem 0.875rem; border-radius: 0.375rem;
+  background: color-mix(in srgb, var(--ink) 82%, transparent); border: 0.0625rem solid var(--splinter); }
+.camplist .k { color: var(--text-dim); }
+.camplist dl.mats { display: grid; grid-template-columns: auto auto; gap: 0.25rem 1.5rem; margin: 0; font-size: 1rem; }
+.camplist dl.mats dt { color: var(--text); } .camplist dl.mats dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; color: var(--text); }
+/* round 3: full-width header scrim, clearance under the plank, two-line Heartwood rows that scroll, matched satchel labels */
+body[data-mode="camp"]::before { content: ""; position: fixed; inset: 0 0 auto 0; height: 6rem; pointer-events: none; z-index: 0;
+  background: linear-gradient(color-mix(in srgb, var(--ink) 80%, transparent) 60%, transparent); }
+body[data-mode="camp"] header, body[data-mode="camp"] .panel { position: relative; z-index: 1; }
+body[data-mode="camp"] .campbar { padding-bottom: 1rem; }
+.replant .hwnode .rk { white-space: nowrap; }
+.replant .hwnode .name, .replant .hwnode .desc { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.replant .hwnode > div:first-child { min-width: 0; }
+.replant .hwnode .buy { flex: 0 0 auto; min-width: 8.5rem; }
+#pane-prestige { overflow-y: auto; padding-bottom: 1.5rem; }
+#sat-count { font-size: 1rem; }
+.settings .set > span:first-child { font-size: 1.0625rem; } .settings output { font-size: 1rem; }
+.replant .hwnode .name { font-size: 1rem; overflow: visible; }
+.replant .hwnode .buy { min-width: 0; padding-inline: 0.75rem; }
+.replant .hwnode { padding-block: 0.25rem; min-height: 0; }
+.prestige.replant { gap: 0.5rem; } .replant .paths { padding-bottom: 0.25rem; } .replant .hwtree { gap: 0.375rem; }
+/* round 4 */
+.replant .hwnode .desc { white-space: normal; }
+#camp-go { font-size: max(18px, 1.125rem); }
+.panel .ghost.danger { border-image: none; border: 0.0625rem solid var(--rose); background: linear-gradient(color-mix(in srgb, var(--rose) 30%, var(--ink)), color-mix(in srgb, var(--rose) 18%, var(--ink))); color: #f6c6c6; }
+.pathcard.on { box-shadow: inset 0 0 0.875rem color-mix(in srgb, var(--pl) 55%, transparent); }
+#sat-count, #sat-worn-k { font-family: var(--body); font-size: 1rem; color: var(--text-dim); text-transform: none; letter-spacing: .02em; }

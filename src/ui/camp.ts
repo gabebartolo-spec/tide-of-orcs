@@ -1,5 +1,5 @@
 import { BUILDING, BUILDINGS, BuildingId, CAMP_FX, MAT_IDS, MAT_NAMES } from '../data/camp';
-import { CAMP_SPOTS } from '../data/presentation';
+import { CAMP_DRAW_ORDER, CAMP_SPOTS } from '../data/presentation';
 import { STR } from '../data/strings';
 import type { GameController } from '../game';
 import { campCost, campLevel, canUpgrade } from '../sim/camp';
@@ -26,7 +26,8 @@ export function campFxText(id: BuildingId, level: number): string {
 
 /** The building under a field point (field units), or null. Footprints come from CAMP_SPOTS. */
 export function campHit(x: number, y: number): BuildingId | null {
-  for (const b of BUILDINGS) {
+  // front row first: it is drawn over the back row (TB-188k round 3)
+  for (const b of [...CAMP_DRAW_ORDER].reverse()) {
     const p = CAMP_SPOTS[b.id];
     if (Math.abs(x - p.x) <= p.w / 2 && y <= p.y && y >= p.y - p.h) return b.id;
   }
@@ -64,18 +65,18 @@ export class CampPane {
   private block(id: BuildingId, card: boolean): string {
     const s = this.game.state, b = BUILDING[id], l = campLevel(s.meta, id), c = campCost(s.meta, id), max = maxLevel(id);
     const now = campFxText(id, l), next = c ? campFxText(id, l + 1) : '';
-    const cost = c ? STR.campCost(c.hw, hwSpendable(s), c.mat, MAT_NAMES[b.mat], s.meta.camp.mats[b.mat] ?? 0) : STR.fullyGrown;
+    const cost = c ? STR.campCost(c.hw, c.mat, MAT_NAMES[b.mat]) : STR.fullyGrown;
     const btn = `<button class="buy" data-camp="${id}" ${canUpgrade(s, id) ? '' : 'disabled'}>${c === null ? STR.complete : l ? STR.campUpgrade : STR.campBuild}</button>`;
     const head = `<div class="name">${b.name} <span class="desc">${STR.campLevel(l, max)}</span></div>`;
+    const costCls = c && !canUpgrade(s, id) ? 'cost short' : 'cost';
     const nextLine = next ? `<div class="desc"><b>${STR.campNext}:</b> ${next}</div>` : '';
     // the Replant list is compact (name, next, cost and button on one row) so the tab fits without shrinking its text
-    if (!card) return `${head}${nextLine}<div class="row"><span class="cost">${cost}</span>${btn}</div>`;
+    if (!card) return `${head}${nextLine}<div class="row"><span class="${costCls}">${cost}</span>${btn}</div>`;
     return `${head}
       <div class="desc">${b.desc}</div>
       ${now ? `<div class="desc"><b>${STR.campNow}:</b> ${now}</div>` : ''}
       ${nextLine}
-      <div class="cost">${cost}</div>
-      ${c && !s.run.fallen ? `<div class="desc">${STR.campClosed}</div>` : ''}
+      <div class="${costCls}">${cost}</div>
       ${btn}`;
   }
 
@@ -87,8 +88,8 @@ export class CampPane {
   /** Rebuilt on upgrade, replant and import; update() refreshes the buttons. */
   render(): void {
     const m = this.game.state.meta;
-    this.list.innerHTML = `<div class="mats"><span class="k">${STR.campMats}</span>${MAT_IDS.map((k) => `<span class="mat">${MAT_NAMES[k]} <b>${m.camp.mats[k] ?? 0}</b></span>`).join('')}</div>`
-      + BUILDINGS.map((b) => `<div class="hwnode campnode">${this.block(b.id, false)}</div>`).join('');
+    // materials only (TB-195n): the buildings are upgraded from their cards on the diorama
+    this.list.innerHTML = `<div class="k">${STR.campMats}</div><dl class="mats">${MAT_IDS.map((k) => `<dt>${MAT_NAMES[k]}</dt><dd>${m.camp.mats[k] ?? 0}</dd>`).join('')}</dl>`;
     this.renderCard();
   }
 

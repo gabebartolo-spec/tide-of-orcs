@@ -4,22 +4,27 @@
  * its tree canvas pans inside its own box at full size.
  * Phones (TB-155): a short touch screen cannot hold Replant or Settings at a readable size, so the scale stops at
  * PHONE_MIN and the rest scrolls inside the tab (the `.fitscroll` class); PC keeps the no-scroll page.
+ * A pane marked `data-fit="scroll"` (Replant, TB-193f layout C) is never scaled: its cards stay full size and it scrolls.
  */
 const PHONE_MIN = 0.8;
 /** Smallest scale the PC page bisects down to, and the bisection steps (0.6 / 2^7 ≈ 0.005 precision). */
 const FIT_MIN = 0.4, FIT_STEPS = 7;
-const phone = matchMedia('(pointer: coarse) and (max-height: 540px)');
+/** Smallest scale a pane may take: 1 for a scroll pane, PHONE_MIN on phones, else 0 (FIT_MIN then applies). */
+export function fitFloor(fitMode: string | undefined, isPhone: boolean): number {
+  return fitMode === 'scroll' ? 1 : isPhone ? PHONE_MIN : 0;
+}
 export function fitPages(panes: HTMLElement[]): void {
+  const phone = matchMedia('(pointer: coarse) and (max-height: 540px)');
   const fit = (pane: HTMLElement): void => {
     const c = pane.firstElementChild as HTMLElement | null;
     if (!c || pane.hidden || pane.clientHeight === 0) return;
-    const floor = phone.matches ? PHONE_MIN : 0;
+    const floor = fitFloor(pane.dataset.fit, phone.matches);
     // offsetHeight is the unscaled layout height at width ÷ k. A smaller k widens the layout, which can reflow (more grid
     // columns) and change the height in jumps, so a fixed-point iteration can swing between two k and end overflowing:
     // bisect for the largest k that fits instead.
     const fits = (k: number): boolean => { c.style.width = k < 1 ? `${100 / k}%` : ''; return c.offsetHeight * k <= pane.clientHeight + 1; };
     let k = 1;
-    if (!fits(1)) {
+    if (floor < 1 && !fits(1)) {
       let lo = Math.max(floor, FIT_MIN), hi = 1;
       if (fits(lo)) { for (let i = 0; i < FIT_STEPS; i++) { const mid = (lo + hi) / 2; if (fits(mid)) lo = mid; else hi = mid; } }
       k = lo;
