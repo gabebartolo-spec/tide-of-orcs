@@ -26,7 +26,7 @@ export function fitPages(panes: HTMLElement[]): void {
     // offsetHeight is the unscaled layout height at width ÷ k. A smaller k widens the layout, which can reflow (more grid
     // columns) and change the height in jumps, so a fixed-point iteration can swing between two k and end overflowing:
     // bisect for the largest k that fits instead.
-    const fits = (k: number): boolean => { c.style.width = k < 1 ? `${100 / k}%` : ''; return c.offsetHeight * k <= pane.clientHeight + 1; };
+    const fits = (k: number): boolean => { c.style.width = k < 1 ? `${100 / k}%` : ''; return c.offsetHeight * k <= pane.clientHeight; };
     let k = 1;
     if (floor < 1 && !fits(1)) {
       let lo = Math.max(floor, FIT_MIN), hi = 1;
@@ -35,7 +35,7 @@ export function fitPages(panes: HTMLElement[]): void {
     }
     c.style.width = k < 1 ? `${100 / k}%` : ''; c.style.transform = k < 1 ? `scale(${k})` : ''; c.style.transformOrigin = 'top left';
     // a transform keeps the unscaled layout height: pull the bottom in so the scroll ends at the content
-    const over = c.offsetHeight * k > pane.clientHeight + 1;
+    const over = c.offsetHeight * k > pane.clientHeight;
     c.style.marginBottom = over && k < 1 ? `${-(1 - k) * c.offsetHeight}px` : '';
     pane.classList.toggle('fitscroll', over);
   };
