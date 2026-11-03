@@ -20,7 +20,7 @@ describe('per-type shot nodes (TB-111)', () => {
     expect(withNodes({ fire: 1 }).stats.fireP).toBeCloseTo(SHOT_FX.chance0);
     expect(withNodes({ shock: 1, shockchance: 2 }).stats.shockP).toBeCloseTo(0.55);
     expect(withNodes({ moon: 1, moonchance: 5 }).stats.moonP).toBe(1);
-    expect(withNodes({ starfall: 1, starchance: 5 }).stats.starP).toBeCloseTo(0.35);
+    expect(withNodes({ starfall: 1, starchance: 5 }).stats.starP).toBeCloseTo(0.6);
   });
 
   it('about one lob in four ignites at Fire Arrows rank 1', () => {
@@ -44,7 +44,7 @@ describe('per-type shot nodes (TB-111)', () => {
     expect(st.rebMult).toBeCloseTo(SHOT_FX.dmg ** 3);
     expect(st.moonMult).toBeCloseTo(1.6 * SHOT_FX.moonDmg ** 2);
     expect(st.homeR).toBeCloseTo(PLAYER.aimHomingRadius * 1.5);
-    expect(st.starArrows).toBe(ARROWS.starfall.arrows + 4);
+    expect(st.starArrows).toBe(ARROWS.starfall.arrows + 8);
     expect(st.critMult).toBeCloseTo(PLAYER.critMult + 1);
     expect(st.stunSecs).toBeCloseTo(ARROWS.stun.secs + 0.5);
     expect(st.knifeExtra).toBe(2); expect(st.boltRoot).toBeCloseTo(SHOT_FX.boltRootSecs);

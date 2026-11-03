@@ -231,8 +231,8 @@ describe('prestige', () => {
 
 describe('kinship, horde (TB-039)', () => {
   const comp = { root: 1, ranger: 1, wolf: 1, knives: 1, ballista: 1, muster: 1 };
-  it('kinship scales every companion and the vanguard by 1.2 per rank', () => {
-    const a = deriveStats(comp), b = deriveStats({ ...comp, bond: 3 }), k = 1.2 ** 3;
+  it('kinship scales every companion and the vanguard by 1.4 per rank', () => {
+    const a = deriveStats(comp), b = deriveStats({ ...comp, bond: 3 }), k = 1.4 ** 3;
     expect(b.kin / a.kin).toBeCloseTo(k);
     expect(b.wolf / a.wolf).toBeCloseTo(k);
     expect(b.knives!.dmg / a.knives!.dmg).toBeCloseTo(k);

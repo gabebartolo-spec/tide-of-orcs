@@ -3,6 +3,7 @@
 Two sections. `## Current` is what ships and is human-owned. `## Proposed` is where agents put changes, each with the simulator output that justifies it. Nothing moves from Proposed to Current without Gabe's sign-off. `src/data/balance.ts` mirrors `## Current` and the tests pin the reference tables.
 
 ## Current (v1.2)
+- P-184 set F applied 2026-11-03 (TB-184): Kinship ×1.4/rank, Iron Bolts ×1.7/rank, Starfall 12 arrows, +4 arrows and +0.1 chance per rank, Patient Hands 2%/s per rank.
 
 ### Field
 - Logical size 900 × 480. Barricade at x = 150, 14 px wide. Elf at (64, 240). Vanguard stand at x = 194 in lanes H/2 ± 70k.
@@ -42,9 +43,9 @@ Rangers and Wardens keep straight volleys at `fireRate = 1.2 × 1.15^draw` per s
 - Burn: 35% of player dmg per second for 3 s (refreshes, no stack).
 - Storm: 4× dmg × kin per jump, 6 s cooldown, 5 targets, 140 px jump radius, seeks from 200 px past the wall.
 - Hawk: 2.5× dmg × kin, 4 s, 60 px radius. Treant: 3× dmg × kin, 3 s, 160 px from the wall.
-- Ballista: 40 × 1.5^bolt × kin every 4 s, infinite pierce. Knives: 5 × 1.35^nimble × kin every 1.4 s ÷ 1.2^nimble.
+- Ballista: 40 × 1.7^bolt × kin every 4 s, infinite pierce. Knives: 5 × 1.35^nimble × kin every 1.4 s ÷ 1.2^nimble.
 - Moonbow: the strike circle settles on the nearest orc within 70 px of the aim point (`aimHomingRadius`). The lob's reward for aiming is `LOB.dmgMult` 1 (×1 player damage) to every orc in the circle: a wave-1 grunt takes two lobs, wave 5 three (TB-154, director 2026-11-01; was 3, one shot to wave 7).
-- Node multipliers (`NODE_FX` in `src/data/balance.ts`): Sharpen ×1.25^r dmg, Moonbow ×1.6 dmg, Quick Draw ×1.15^r fire rate and ÷1.15^r lob cooldown, Wide Volley ×1.2^r radius, Keen Eye +0.08 crit per rank, Gleaning ×1.15^r starlight, Kinship ×1.2^r companion and vanguard dmg, Fangs ×1.4^r wolf dmg, Nimble Wrist ×1.2^r knife rate and ×1.35^r knife dmg, Iron Bolts ×1.5^r ballista dmg. Per-kind Fury/Swarm (incl. War Drums and Call the Horde for grunts) are `FOE_FX` in `src/data/orcs.ts`: ×1.3^r hp, ×1.4^r loot, ×1.2^r spawn rate.
+- Node multipliers (`NODE_FX` in `src/data/balance.ts`): Sharpen ×1.25^r dmg, Moonbow ×1.6 dmg, Quick Draw ×1.15^r fire rate and ÷1.15^r lob cooldown, Wide Volley ×1.2^r radius, Keen Eye +0.08 crit per rank, Gleaning ×1.15^r starlight, Kinship ×1.4^r companion and vanguard dmg, Fangs ×1.4^r wolf dmg, Nimble Wrist ×1.2^r knife rate and ×1.35^r knife dmg, Iron Bolts ×1.7^r ballista dmg. Per-kind Fury/Swarm (incl. War Drums and Call the Horde for grunts) are `FOE_FX` in `src/data/orcs.ts`: ×1.3^r hp, ×1.4^r loot, ×1.2^r spawn rate.
 
 #### Other constants in `src/data/` (reference, not previously listed)
 | Constant | Value | File |
@@ -65,7 +66,7 @@ Rangers and Wardens keep straight volleys at `fireRate = 1.2 × 1.15^draw` per s
 ```
 barMax   = 150 × (1 + 0.25 × hw_timber) × 1.25^timber        (TB-154: was 400)
 wall hit = 25 × atk = 25 × 0.025 × orc maxhp per swing        (TB-154: wallMult was 10)
-regen    = 0.01 × repair × barMax per second
+regen    = 0.02 × repair × barMax per second
 spikes   = 0.2 × spikes × dmg per second to each orc hacking the wall
 Deep Roots: once per run, regrow to 0.5 × barMax instead of falling
 ```
@@ -144,7 +145,7 @@ Report columns per minute: wave, starlight, kills/min, kills, wall %, vanguard c
 
 ## Proposed
 
-### P-184 · Push on from the checkpoint-51 stall (2026-11-03, TB-184) · proposed, not applied
+### P-184 · Push on from the checkpoint-51 stall (2026-11-03, TB-184) · applied: set F (director 3 Nov)
 Director: keep checkpoints and the default tier; tune nodes, items and companions so the stuck player can push on. Player: `sim/out/player48.json` (every run-tree node at max except foe Fury/Swarm, 4 epics worn, `hw_dawn` 1). Soak: `npm run balance -- --load sim/out/player48.json --tiertop --hwbuy --minutes 45 --seed N --quiet [--tune …]` (`--load` is new: start as the saved player, fallen, and replant at its top tier each run, as the game defaults). Fresh: `npm run balance -- --hwbuy --minutes 40 --seed N --quiet [--tune …]`. Seeds 1–3 each.
 
 | Set | Changes | Soak best wave (45 min) | Soak: min to wave 50 | Fresh: first boss cleared (play min) | Fresh best wave (40 min) |
@@ -159,7 +160,7 @@ Director: keep checkpoints and the default tier; tune nodes, items and companion
 | K | F without kinship | 49 / 49 / 49 | never | 33.4 / 32.4 / 31.8 | 34 / 33 / 35 |
 | E (probe, not a proposal) | `PLAYER.baseDmg` 9 → 36, `UNIT_FX.dmg` 1.3 → 1.6 | 54 / 53 / 54 | 2 / 2 / 2 | 24.8 / 25.7 / 24.7 | 53 / 54 / 53 |
 
-Proposed: **set F** — Kinship (Bond) 1.2 → 1.4 per rank, Ballista bolt 1.5 → 1.7 per rank, Starfall 12 arrows base, +4 arrows and +10% chance per rank, Patient Hands 2%/s per rank. Every seed passes wave 50 in 10–14 min and holds 53; the first boss on a fresh save is unchanged (31.9–33.8 min vs 32.0–32.4) and so is the fresh best wave. Kinship is what moves the soak (K, without it, stays at 49); regen alone does nothing (H) but tips F from one seed to three.
+**Applied 2026-11-03 (director): set F** — Kinship (Bond) 1.2 → 1.4 per rank, Ballista bolt 1.5 → 1.7 per rank, Starfall 12 arrows base, +4 arrows and +10% chance per rank, Patient Hands 2%/s per rank. Every seed passes wave 50 in 10–14 min and holds 53; the first boss on a fresh save is unchanged (31.9–33.8 min vs 32.0–32.4) and so is the fresh best wave. Kinship is what moves the soak (K, without it, stays at 49); regen alone does nothing (H) but tips F from one seed to three.
 
 What it says:
 - **No modest tune reaches 55–60 or the wave-75 boss.** Every set, including the probe E with four times the elf's damage and companions at 1.6 per rank, ends at a new plateau of 52–54: checkpoint 51, then each run falls at wave 51–52 in under a minute, as QA saw. Damage is very inelastic here (arena at wave 47: 4× elf damage stands 180 s, but the soak gains 2 waves).
@@ -383,7 +384,7 @@ Price by power (§8 #4), starlight per +1% at rank 0, today:
 Damage and rate are the same lever for the elf's damage per second, yet Quick Draw costs four times as much per percent as Sharpened Tips. No price change is proposed yet. With multiply kept, this table is the per-rank power prices would be set against. Reproduce: `npx tsx sim/run.ts --minutes 180 --seed 1 --quiet --hwbuy --tune STACKING.add=1,NODE_FX.sharpDmg=1.47,NODE_FX.drawRate=1.22,NODE_FX.wideRadius=1.33,NODE_FX.knifeRate=1.33,NODE_FX.boltDmg=2.73,NODE_FX.gleanLoot=1.098,SHOT_FX.dmg=1.64,UNIT_FX.dmg=1.64,UNIT_FX.rate=1.22,BARRICADE.timberMult=1.47`.
 
 ### P-002 · Arrow arsenal numbers (TB-089, 2026-10-31, from the director's mechanics; simmed 2 Nov)
-All in `ARROWS` (`src/data/balance.ts`). Rebound: jump 120, falloff 0.6 per bounce, bolt speed 420, hops 1 + rank. Shock: 3 targets, 0.3 × lob dmg, jump 90. Thunderclap: 0.5 s. Frost: 3 s, slow 0.2 + 0.05 × (rank − 1). Shatter: radius 50, 1.0 × dmg × 1.4^(rank − 1). Starfall: every 10th lob, 8 arrows, r 26, 0.6 s fall, 0.08 s stagger, lob damage each; each aims where its orc will be on landing, held no closer than the wall's face. Costs in SKILL-TREE.md.
+All in `ARROWS` (`src/data/balance.ts`). Rebound: jump 120, falloff 0.6 per bounce, bolt speed 420, hops 1 + rank. Shock: 3 targets, 0.3 × lob dmg, jump 90. Thunderclap: 0.5 s. Frost: 3 s, slow 0.2 + 0.05 × (rank − 1). Shatter: radius 50, 1.0 × dmg × 1.4^(rank − 1). Starfall: every 10th lob, 12 arrows + 4 per `starcount` rank, fire chance 0.1 + 0.1 per `starchance` rank, r 26, 0.6 s fall, 0.08 s stagger, lob damage each; each aims where its orc will be on landing, held no closer than the wall's face. Costs in SKILL-TREE.md.
 
 Sim, 2 Nov (set F tiers): each arrow node knocked out (`--cost <id>=1e15`, never affordable) against the base, greedy, `--hwbuy`, 300 min, seeds 1 / 2. Base: best wave 29 / 29, Heartwood 245 / 215, tier 2 at play min 84 / 97.
 
