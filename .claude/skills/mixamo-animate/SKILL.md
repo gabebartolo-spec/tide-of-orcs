@@ -191,6 +191,11 @@ Older vars (`AIM`, `EDGE`, `GRIPAX`, `ABD`, `OFFS`, `DAMP`) were replaced by the
 - **SWING gain ×2 on the shield clip's left arm** widened the sideways swing (7–26° out), not the forward swing, and put the fist into the hip (LFIST 2) → keep ×1.
 - **Bladedancer-rig clips are unusable** (41 bones: Feminine Walk, Walking AS100); use X Bot (65 bones) downloads. Mixamo's export S3 URL expires in 300 s. Chrome blocks Mixamo saves after several downloads (multiple-downloads block): ask the director to allow it; never use screen control.
 
+## Warboss (TB-214, 4 Nov)
+- `scripts/boss3de/render_mixamo.sh <absolute outdir> [front]` renders all three clips (front = CAMROT 90 check). The out prefix must be absolute: the script cds.
+- Per-key ORTHO is fine (packer scales by anchors.json ortho): walk 2.6, attack 4.6 (3.9 cut the axe at frame 26), death 3.4.
+- Find grip clipping with `CLIP=1` (axe/body tri overlaps over the clip, no render) and `CLIPDBG=n` (bones hit at frame n). Dying: no offset 21 frames, OFFS RightHand 0,-90,0 27, WOFFS RightHand 0,0,1,-90 0 (used).
+
 ## Next uses
 Grunt attack approval (speed: whatever looks natural), the bladedancer face fix, then the other 10 models. Add every new correction from the director to the fixes list above, and every approved setup to the recipes.
 

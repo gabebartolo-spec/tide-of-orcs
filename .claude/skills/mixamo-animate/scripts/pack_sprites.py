@@ -46,12 +46,12 @@ ANIMS = {
     "hawk": (30, False, "hawk", 3.0),  # TB-068 companion flight v1 (director 3 Nov): OSU CC BY Sketchfab hawk, its own Wings Flapping clip, frames 0-29 (render_hawk.py VIEW=game YAW=90); anchor = bird centre
     "orc.wolfrider": (25, True, "orc.wolfrider", 2.6),  # run v8 (director 3 Nov): companion wolf run copied onto the rider wolf, orc at rest; frames from wolfrider/render_wr_sheet.py STEP=1
     "orc.wolfrider.attack": (15, True, "orc.wolfrider", 2.6),  # shares the run body key, same ortho 1.4
-    # TB-214 Warboss: 3DE_Study Sketchfab orc, its own actions (boss3de/render_boss.py, ORTHO 2.6). Walk (walking 1-35) and punch (1-31)
-    # render at YAW -90 (facing screen-left, NOT mirrored) so the punch's body turn swings the chest toward the camera, not the back;
-    # death (1-96 every 2nd frame) renders at YAW 90 CX 0.6 and IS mirrored, so the fall runs side-on toward the wall.
+    # TB-214 Warboss v3: 3DE_Study Sketchfab orc on Mixamo clips (boss3de/render_mixamo.sh, apply_anim.py GAMECAM=20, facing
+    # screen-right like the grunt, so mirrored): Orc Walk (36 frames, ORTHO 2.6), Standing Melee Attack Downward (69, ORTHO 4.6 so
+    # the swung axe stays inside the cell), Dying (every 2nd of 133 = 67 at 15 fps, ORTHO 3.4). Per-key ortho is fine: the packer scales by it.
     # Body 3.0 radii (orc 2.4): at r 24 the Warboss stands ~1.9x a brute's height so it reads as the boss.
-    "orc.boss": (30, False, "orc.boss", 3.0),
-    "orc.boss.attack": (30, False, "orc.boss", 3.0),
+    "orc.boss": (30, True, "orc.boss", 3.0),
+    "orc.boss.attack": (30, True, "orc.boss", 3.0),
     "orc.boss.death": (15, True, "orc.boss", 3.0),
 }
 # TB-188d: Tripo camp buildings, one static frame per building per level (render_camp.py, ORTHO 2.2, anchor = ground centre).

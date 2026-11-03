@@ -27,8 +27,10 @@ export const dusk = (t: number): number => (1 - Math.cos((2 * Math.PI * t) / SKY
 export const ORC_SPRITE: Readonly<Partial<Record<string, string>>> = { elite: 'berserker' };
 
 /** Death clips (TB-214): an orc whose sheet has `orc.<kind>.death` plays it once where it fell, holds the last frame `hold`
- *  seconds, then fades over `fade` seconds. Render-only; the sim has already removed the orc. */
-export const ORC_DEATH = { hold: 2, fade: 1 };
+ *  seconds, then fades over `fade` seconds (alpha eased by `fadePow`, so no half-faded ghost lingers). Render-only; the sim has already
+ *  removed the orc. `beam`: where a loot beam over a corpse draws: 'behind' (under every actor), 'off' (hidden while a corpse lies
+ *  within `beamR` radii of it, shown once the corpse is gone) or 'over' (on top, the pre-TB-214 order). */
+export const ORC_DEATH: { hold: number; fade: number; fadePow: number; beam: 'behind' | 'off' | 'over'; beamR: number } = { hold: 2, fade: 0.6, fadePow: 2, beam: 'behind', beamR: 1.5 };
 
 /** Render interpolation (TB-194): actors draw between their last two sim steps; a move longer than `snap` field units in one step (a pooled slot reused, a leap) snaps instead of sliding. */
 export const INTERP = { snap: 40 };

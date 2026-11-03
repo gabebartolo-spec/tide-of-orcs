@@ -4,8 +4,8 @@ Third-party assets used in Tide of Orcs.
 
 - Warboss (sprite `orc.boss`, `.attack`, `.death`; TB-214): "Orc Model Rigged Packed Resources" by 3DE_Study,
   https://sketchfab.com/3d-models/orc-model-rigged-packed-resources-b82ab03340084827b5d9c1c234db4644,
-  licensed CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Changed: rendered its own walking, punch and death
-  animations to 2D sprite frames.
+  licensed CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Changed: retargeted Mixamo walk, axe chop and dying
+  clips onto its rig, gave it the grunt's (own, Tripo) axe, rendered to 2D sprite frames.
 - Companion wolf (sprite `wolf`, `wolf.attack`; TB-160): "Fantasy Wolf Animation" by blam,
   https://sketchfab.com/3d-models/fantasy-wolf-animation-11c6c9eb79d940ce90aa32cc420ca22c, licensed CC BY 4.0
   (https://creativecommons.org/licenses/by/4.0/). Changed: retextured with Meshy, rendered to 2D sprite frames.

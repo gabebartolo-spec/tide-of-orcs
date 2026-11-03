@@ -90,8 +90,10 @@ export class FieldRenderer {
     for (let i = this.corpses.length - 1; i >= 0; i--) {
       const c = this.corpses[i]!, dur = this.sprites.duration(c.key), t = this.clock - c.born, fadeT = t - dur - ORC_DEATH.hold;
       if (fadeT >= ORC_DEATH.fade) { this.corpses.splice(i, 1); continue; }
-      g.globalAlpha = fadeT > 0 ? 1 - fadeT / ORC_DEATH.fade : 1; this.at(c.x, c.y, false);
-      this.sprites.draw(g, c.key, Math.min(t, dur * 0.999), 0, c.r * 0.9, c.r);
+      g.globalAlpha = fadeT > 0 ? (1 - fadeT / ORC_DEATH.fade) ** ORC_DEATH.fadePow : 1; this.at(c.x, c.y, false);
+      const ct = Math.min(t, dur * 0.999), sdx = this.sprites.shadowDx(c.key, c.r);  // shadow under the body's centre, like a live orc
+      g.fillStyle = P.shadow; g.beginPath(); g.ellipse(sdx, c.r * 0.9, c.r * 0.9, c.r * 0.35, 0, 0, 6.28); g.fill();
+      this.sprites.draw(g, c.key, ct, 0, c.r * 0.9, c.r);
     }
     g.globalAlpha = 1; this.at(0, 0, false);
   }
@@ -126,9 +128,11 @@ export class FieldRenderer {
       switch (e.t) {
         case 'kill': {
           const r = ORC_TYPES[e.kind as OrcKind]?.radius ?? ACTOR_R;
-          fx.burst(e.x, e.y, P.orc, VFX.kill[0], VFX.kill[1]); fx.blood(e.x, e.y, footOf(r), P.bloodOrc, B.kill, 0); fx.splat(e.x, e.y + footOf(r), r * B.killSplat, P.bloodOrc);
+          // with a death clip the splat lands under the fallen body, not the rig origin (TB-214)
+          const dk = this.deathKey(e.kind), dead = this.sprites.duration(dk) > 0, sdx = dead ? this.sprites.shadowDx(dk, r) : 0;
+          fx.burst(e.x, e.y, P.orc, VFX.kill[0], VFX.kill[1]); fx.blood(e.x, e.y, footOf(r), P.bloodOrc, B.kill, 0); fx.splat(e.x + sdx, e.y + footOf(r), r * B.killSplat, P.bloodOrc);
           fx.text(e.x, e.y - 14, '+' + fmt(e.loot), P.amber);
-          const dk = this.deathKey(e.kind); if (this.sprites.duration(dk) > 0) this.corpses.push({ key: dk, x: e.x, y: e.y, r, born: this.clock });
+          if (dead) this.corpses.push({ key: dk, x: e.x, y: e.y, r, born: this.clock });
           break;
         }
         case 'hit': fx.burst(e.x, e.y, P.cream, VFX.hit[0], VFX.hit[1]); fx.blood(e.x, e.y, footOf(ACTOR_R), P.bloodOrc, B.hit, e.src === 'lob' ? 0 : 1); if (e.crit) fx.text(e.x, e.y - 22, 'crit', P.cream); break;
@@ -301,10 +305,11 @@ export class FieldRenderer {
     const vans = this.vanBuf, orcs = this.orcBuf; vans.length = 0; orcs.length = 0;
     s.vans.forEach((v) => { vans.push(v); }); vans.sort(byY); for (const v of vans) this.van(s, v);
     s.orcs.forEach((o) => { if (!o.dead) orcs.push(o); }); orcs.sort(byY);
+    if (ORC_DEATH.beam === 'behind') this.drawBeams(dt);  // TB-214: the loot beam stays behind the falling corpse
     this.drawCorpses();
     for (const o of orcs) { this.orc(s, o); if (o.burn > 0 && !this.reducedMotion && Math.random() < A.flameRate * dt) this.fx.flame(o.x + (Math.random() - 0.5) * o.r, o.y, Math.random() < 0.5 ? P.fire : P.amber); }
 
-    this.drawBeams(dt);
+    if (ORC_DEATH.beam !== 'behind') this.drawBeams(dt);
     s.shots.forEach((a) => { const d = this.interp.off(a); g.translate(d.dx, d.dy); this.shot(a, dt); g.translate(-d.dx, -d.dy); });
     if (this.puffs.length) {
       g.shadowColor = P.fireGlow; g.shadowBlur = VFX.fireball.glow;  // set and cleared by hand: restore() with a shadow set is dear (TB-183)
@@ -354,6 +359,7 @@ export class FieldRenderer {
     const g = this.g, L = LOOT_VFX, rm = this.reducedMotion;
     for (let i = this.beams.length - 1; i >= 0; i--) {
       const b = this.beams[i]!; b.life -= dt; if (b.life <= 0) { this.beams.splice(i, 1); continue; }
+      if (ORC_DEATH.beam === 'off' && this.corpses.some((c) => Math.abs(c.x - b.x) < c.r * ORC_DEATH.beamR && Math.abs(c.y + L.foot - b.y) < c.r * ORC_DEATH.beamR)) continue;
       const k = b.life / b.max, h = L.beamH * b.k, w = L.beamW * b.k * (rm ? 1 : 1 + 0.25 * Math.sin(this.clock * L.pulse)), a = Math.min(1, k * 2);
       if (b.ground) { g.globalAlpha = L.groundAlpha * k; g.fillStyle = b.c; g.beginPath(); g.ellipse(b.x, b.y, L.ringR * b.k, L.ringR * b.k * 0.4, 0, 0, 6.28); g.fill(); }
       const gr = g.createLinearGradient(0, b.y, 0, b.y - h); gr.addColorStop(0, b.c); gr.addColorStop(1, 'transparent');
