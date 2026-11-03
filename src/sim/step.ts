@@ -134,14 +134,17 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
       lob(s, ELF_X, H / 2, x + Math.cos(a) * d, y + Math.sin(a) * d, fx, ev);
     }
   }
+  // Packlord 4: companions strike faster while an orc is near the wall (Rangers and Wardens too, TB-219)
+  const haste = st.petHaste > 0 && nearestOrc(s, BAR_X, H / 2, (o) => o.x < BAR_X + SET_FX.nearWall) ? 1 + st.petHaste : 1;
+  const pet = st.petDmg;
   // Rangers and wardens keep straight volleys at the nearest orc, each on its own unit nodes.
   for (let i = 1; i <= st.archers && i < 3; i++) {
     const U = st.units[i === 1 ? 'ranger' : 'warden'];
     run.shotT[i] = (run.shotT[i] ?? 0) + dt;
-    if (run.shotT[i]! < 1 / (st.fireRate * U.rate)) continue;
+    if (run.shotT[i]! < 1 / (st.fireRate * U.rate * haste)) continue;
     const [sx, sy] = shooters[i]!;
     const tg = nearestOrc(s, sx, sy);
-    if (tg) { run.shotT[i] = 0; volley(s, sx, sy, tg.x, tg.y, SOURCES.archerDmgFrac * st.kin * U.dmg, tg, U); }
+    if (tg) { run.shotT[i] = 0; volley(s, sx, sy, tg.x, tg.y, SOURCES.archerDmgFrac * st.kin * pet * U.dmg, tg, U); }
   }
   if (st.knives) { run.knifeT += dt; if (run.knifeT >= 1 / st.knives.rate) { const tg = nearestOrc(s, ELF_X, H / 2); if (tg) {
     run.knifeT = 0; ev.push({ t: 'knife' }); const ang = Math.atan2(tg.y - H / 2, tg.x - ELF_X);
@@ -170,9 +173,6 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
     }
   }
 
-  // Packlord 4: companions strike faster while an orc is near the wall
-  const haste = st.petHaste > 0 && nearestOrc(s, BAR_X, H / 2, (o) => o.x < BAR_X + SET_FX.nearWall) ? 1 + st.petHaste : 1;
-  const pet = st.petDmg;
   if (st.wolf) {
     while (s.pack.length < st.extraWolves) s.pack.push({ ...s.wolf, y: s.wolf.y + SOURCES.wolf.reach * 2 * (s.pack.length + 1) });
     wolfStep(s, ev, s.wolf, dt, haste, st.wolf * pet);

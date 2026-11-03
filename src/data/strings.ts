@@ -118,7 +118,7 @@ export const STR = {
   campFx: {
     bowDmg: (v: number) => `bow damage +${v}%`, drawCut: (v: number) => `draw time −${v}%`, radius: (v: number) => `strike circle +${v}%`,
     weaponDmg: (v: number) => `knives, ballista and storm +${v}%`, findPlus: (v: number) => `Item Find +${v}%`, rerollCut: (v: number) => `rerolls −${v}%`,
-    wallHp: (v: number) => `barricade health +${v}%`, regenPlus: (v: number) => `barricade regen +${v}/s`, starlight: (v: number) => `starlight +${v}%`,
+    wallHp: (v: number) => `barricade health +${v}%`, regenPlus: (v: number) => `barricade regen +${v}%/s`, starlight: (v: number) => `starlight +${v}%`,
     vanHp: (v: number) => `vanguard health +${v}%`, vanDmg: (v: number) => `vanguard damage +${v}%`, respawnCut: (v: number) => `vanguard respawn −${v}%`,
   },
   // Specialisation paths (TB-193c)
