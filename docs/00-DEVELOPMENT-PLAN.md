@@ -1,12 +1,12 @@
 # Let's Hunt Some Orc! — Development Plan (repo: tide-of-orcs)
 
-**Version 2.2 · 3 Nov 2026 · Owner: Gabe**
+**Version 2.4 · 3 Nov 2026 · Owner: Gabe**
 
-v1.1 replaced the river (no fail state) with a barricade that can fall, forced Replant on a fall, and starlight-bought melee vanguard. v1.2 recorded M2 done and offline progress removed. v1.3 (31 Oct, evening) syncs with the code: M1 and M2 done, M3 done (TB-054 closed: `wallMult` 10 kept, targets reset; TB-085, TB-086 re-runs), M4 done except music and assets. v1.4 (1 Nov) syncs again: the arrow arsenal and the whole loot stack are on main, the tree grew to 104 nodes, the game is titled A Lot of Orcs (TB-115), and the M5 bug bash has run twice. v1.5 (1 Nov, night) adds §8, design directions from the active-incremental research (TB-145). v1.6 (1 Nov, late) drops the public release, Steam and testers from the roadmap: the team is the director and Claude. The itch page stays private (Restricted) as a proof of concept, kept up to date and ready to go live only if the director chooses; a commercial release is a maybe for later. `docs/prototype.html` (published as the Tide of Orcs artifact) is the original concept for tone and the core loop; mechanics have diverged since (GDD §14), and the docs now win over it. v1.7 (2 Nov) adds M4.10, the 2 Nov director's list (boss tiers, price by power, one-page camp, early-game tuning, mythics onto reach), and closes the open number questions in M4.5, M4.6 and §8. v1.8 (2 Nov, late) adds phone controls for the itch web build (TB-155) and the start-of-run elf flash fix to M4.10, narrows the mobile note in M5, and records the itch build of main at 8d20894. v1.9 (2 Nov, night) adds M4.11, the director's 2 Nov playtest list (vanguard line and march, wolf sprite and nerf, orcs join by wave, checkpoints, drawn meadow, no stand-in shapes), and records the itch build of main at ba521f8. v2.0 (3 Nov) closes M4.11: TB-163 arcane tree done, checkpoints every 5 waves (TB-172), vanguard spread (TB-173), migration suite covers v1–v10; itch build of main bdc029f, 3 Nov. Open work: TB-068 (sprite sheets) and TB-087 (new orcs, waiting on the director's edits to P-087). v2.1 (3 Nov) closes M4.10: TB-087 four new orcs built (PR #148), GDD §4 updated (PR #149), late-wave sim tools added (PR #150). Open work: TB-068 (sprite sheets); Grove costs for the new orcs still draft. v2.2 (3 Nov) adds the late-wave finding: orc health growth after wave 15 sets where runs stall; rate under sim for the director. v2.3 (3 Nov) syncs §3 In scope with the code (9 orc kinds, 117 nodes in 7 branches, loot, 11-node Heartwood tree, boss every 25 waves); late orcs toned down (TB-175, set A).
+Current plan as of 3 Nov 2026; history lives in git and `docs/log/`. Order of work (director, 3 Nov): build all features → bug bash → performance → only then balance; no balance tuning or sims until then. `docs/prototype.html` is the original concept for tone and the core loop; mechanics have diverged (GDD §14) and the docs win over it.
 
 ## 1. Vision
 
-An elf stands behind a timber barricade with a bow. Orcs come forever. Every orc you drop gives starlight; starlight either grows a branching grove of skills (wolves, rangers, hawks, treants, knives, lightning, ballistae, a stouter wall) or rallies spearmen and bladedancers to hold the line in melee. The wall will fall. When it does, the grove burns to a seed, you carry back Heartwood, and the next wall stands longer. You will lose the wall, and losing feeds the grove.
+An elf stands behind a timber barricade with a bow. Orcs come forever. Every orc you drop gives starlight; starlight either grows a branching grove of skills (wolves, rangers, hawks, treants, knives, lightning, ballistae, a stouter wall) or musters spearmen and bladedancers to hold the line in melee. The wall will fall. When it does, you replant with the Heartwood your cleared boss waves paid, and the next wall stands longer. You will lose the wall, and losing feeds the grove.
 
 Tone: calm, cosy, slightly melancholy. ShredDead's "no fail state, satisfying grind" with Thronefall's soft pastoral palette and Esoteric Ebb's inky, lamplit UI.
 
@@ -24,15 +24,17 @@ The single-file prototype (`docs/prototype.html`) proves the loop. The plan belo
 ### In scope for 1.0
 - Endless waves with 9 orc kinds (`src/data/orcs.ts`): grunt; runner, brute and Blackguard (elite) joining from waves 5/10/20; berserker, wolf rider, shaman and war drummer from waves 25/30/35/40; each marches more often once its Grove node is bought. A boss wave (Warboss and escort) unlocks every 25 waves, summoned when the player chooses, with boss tiers unlocked across runs (TB-148). Difficulty scaling.
 - Barricade with health, regen, Thornwall, Deep Roots; forced Replant when it falls; run summary.
-- Vanguard: Spearman and Bladedancer rallied with starlight, lanes, engage/death.
-- Skill tree with 7 branches (Bow, Armoury, Companions, Vanguard, Barricade, Grove, Spoils), 117 nodes (`src/data/skillTree.ts`, SKILL-TREE.md), drawn as a tree, pan/zoom.
+- Vanguard: Spearman and Bladedancer as a standing line at the wall that respawns on a timer (TB-167).
+- Skill tree with 7 branches (Bow, Armoury, Companions, Vanguard, Barricade, Grove, Spoils), 117 nodes plus 15 path nodes (132 in `src/data/skillTree.ts`, SKILL-TREE.md), drawn as a tree, pan/zoom and full screen.
+- Specialisation paths (TB-193): Serpent, Fox, Magpie, chosen before each Replant and changeable every run; path nodes, sets and mythics only while the path is chosen (`src/data/paths.ts`).
+- Elf encampment behind the wall (TB-188): bowyer, forge, kitchen, training area, three levels each, upgraded with Heartwood and materials while fallen (`src/data/camp.ts`).
 - Companions: wolf, ranger, warden, hawk, treant.
 - Weapons: knives, fire arrows, storm, ballista, moonbow, and the arrow arsenal (M4.5).
 - Loot: six gear slots, five rarities up to mythic, sets and Glimmer rerolls (M4.6).
 - Prestige (Replant), forced and voluntary, with Heartwood (paid only by cleared boss waves) and an 11-node Heartwood tree (`src/data/heartwood.ts`, BALANCE.md §Heartwood tree); checkpoints every 5 waves (TB-172).
 - Autosave, save import/export (no offline progress).
-- Settings: audio volume, reduced motion, number format.
-- Audio: ambient wind-and-grove loop, SFX cues in `src/data/audio.ts` (incl. wall hits, rally, fall, fireball), 2 music beds and a boss track.
+- Settings: audio volume, reduced motion, number format, text size.
+- Audio: ambient wind-and-grove loop, SFX cues in `src/data/audio.ts` (incl. wall hits, rally, fall, fireball), 2 music beds, a boss track, and a carved-wood UI sound set (`public/audio/ui`, TB-195g).
 
 ### Out of scope for 1.0 (candidates for 1.x)
 - Multiple maps / biomes.
@@ -57,7 +59,7 @@ Goal: a correct engine with the whole prototype ported.
 
 ### M1 — Vertical slice (weeks 2–3) · **done**, tag `m1` 53b391d (TB-078 9bfcc0e cleared the last blocker after the tag)
 Goal: parity with the prototype, properly built.
-- ~~Remaining from the port: tree pan/zoom, River-id save migration.~~ Done (TB-021 ede6878, TB-028 ffe9c82; save schema reached v2 then, v6 now).
+- ~~Remaining from the port: tree pan/zoom, River-id save migration.~~ Done (TB-021 ede6878, TB-028 ffe9c82; save schema reached v2 then, v14 now).
 - ~~Balance pass #0 (TB-025):~~ Done (P-001 resolved): first wall fell minute 5–7, wave 12–18; run 2 at wave 25–29. TB-080 (wall ×10) since moved the first fall to wave 4–5 at about minute 1.6 by design; TB-054 reset the targets to match (first fall wave 4–6, ~minute 2; breakout past wave 15 within 15 min).
 - ~~Mobile layout check~~ Done 31 Oct at 375×812: no horizontal scroll, tree draws and fits. One blocker, TB-078: the fallen overlay hides Replant. Touch targets and touch copy go to TB-064 (M4).
 **Done when:** a new player's first wall falls around minute 2 (wave 4–6, since TB-080/TB-054), they understand why, and their second run is visibly stronger.
@@ -77,13 +79,13 @@ Goal: parity with the prototype, properly built.
 - ~~Balance pass #1 via the simulator (TB-054):~~ Done 1185a3a: re-set the pacing targets for the wall ×10 design, then tune; original aim was first prestige at 30–45 min, second at ~35 min of a fresh run. Measured now: greedy breaks out after 4–6 short runs (6–12 min), reaches the wave-35 ceiling around 14 min run time.
 **Done when:** three consecutive prestige runs each feel faster than the last.
 
-### M4 — Presentation (weeks 6–7) · **done except TB-068** (sprite sheets, Gabe). Done: ElevenLabs SFX and ambient bed TB-069, sprite loader TB-060, parallax/day-dusk TB-061, audio engine TB-062, music beds TB-063 (PR #9), mobile TB-064, settings TB-065, tree polish TB-066, strings TB-067, attack and hit VFX TB-088, field ground TB-098 (tufts, rocks, worn patches).
-TB-068 status: ten models rigged; approved clips so far are grunt walk and attack, bladedancer attack, spearman attack. TB-087 (berserker, war drummer, shaman, wolf rider in game): built 3 Nov (PR #148).
-- Final art: Tripo models → Cascadeur animation → sprite sheets for orcs, elf, vanguard, companions (ART-STYLE.md §Asset pipeline); vector draws remain the fallback. Wall weathering, parallax hills, day/night tinting, natural ground (ART-STYLE §Ground).
+### M4 — Presentation (weeks 6–7) · **done except TB-068** (sprite sheets). Done: ElevenLabs SFX and ambient bed TB-069, sprite loader TB-060, parallax/day-dusk TB-061, audio engine TB-062, music beds TB-063 (PR #9), mobile TB-064, settings TB-065, tree polish TB-066, strings TB-067, attack and hit VFX TB-088, field ground TB-098 (tufts, rocks, worn patches).
+TB-068 status: every orc kind, the elf, both vanguard, the wolf and the hawk draw from sprites; open: the drummer's drum clip (being redone, TB-186) and the companion archer (TB-203).
+- Final art: Tripo models → Mixamo/Cascadeur animation → sprite sheets for orcs, elf, vanguard, companions (ART-STYLE.md §Asset pipeline); vector draws remain the fallback. Wall weathering, parallax hills, day/night tinting, natural ground (ART-STYLE §Ground).
 - Audio: ElevenLabs SFX and ambient bed, two music beds, ducking on wall fall and boss.
 - Tree layout polish: branch curves, bloom on affordable nodes, camera easing.
 - Settings, reduced-motion path, number formats.
-**Done when:** a 60-second trailer can be captured without placeholder art.
+**Done when:** no actor draws placeholder art (the trailer is skipped for now, director 3 Nov).
 
 ### M4.5 — Arrow arsenal (TB-089) · **done** (PR #15, c069ff1); P-002 simmed 2 Nov, numbers kept
 Six new nodes (43 → 49) giving the elf's lob distinct elemental arrows, each with its own VFX and ElevenLabs SFX. Numbers in BALANCE.md P-002, simmed 2 Nov on set F tiers: each node is a fair side buy (knocking one out moves best wave by about one), so they stand.
@@ -138,9 +140,9 @@ Orcs drop gear; six worn slots, a satchel, affixes, sets and mythic powers feed 
 - Mythics onto reach TB-128 (PRs #109–#114, 7409e52): all eight mythics now give the elf reach (faster draw or a wider catch), because the sim showed reach, not lob damage, decides the fall. Starfall and Thunder set B, reach versions of Knife, Kiln, Splinter and First Wolf (BALANCE P-128).
 - Phone controls for the itch web build TB-155 (PR #117, e4911f2; director 2 Nov, "phones only"): hold-to-aim with the circle lifted above the finger, second finger free for Rally, portrait asks for landscape, short-landscape layout for run and camp. TB-153's no-scroll rule stays for PC. Itch page set Mobile friendly, Landscape.
 - Start-of-run flash fixed (PR #116, a1083b4): the old vector elf no longer shows while the sprite atlas loads.
-- New orcs TB-087: P-087 reviewed by the director 3 Nov (behaviours kept, join by wave, boss escort grows by tier); built in PR #148 (d770138): berserker, wolf rider, shaman, war drummer join at waves 25/30/35/40 (director 3 Nov); boss escort grows by tier; GDD §4 updated (PR #149). Grove summon costs (3000/5000/8000/12000) are still drafts. Late-wave sim (3 Nov): 4-hour runs plateau at wave 37–38, so drummers are rarely met; at wave 42 the wall lasts about 15 s, wolf riders matter most, shamans fall short of casting. New tools (PR #150): `npm run arena` (fixed-wave fights) and `npm run balance -- --save`.
+- New orcs TB-087: P-087 reviewed by the director 3 Nov (behaviours kept, join by wave, boss escort grows by tier); built in PR #148 (d770138): berserker, wolf rider, shaman, war drummer join at waves 25/30/35/40 (director 3 Nov); boss escort grows by tier; GDD §4 updated (PR #149). Grove summon costs (3000/5000/8000/12000) are still drafts, held for the balance phase. Late-wave sim (3 Nov): 4-hour runs plateau at wave 37–38, so drummers are rarely met; at wave 42 the wall lasts about 15 s, wolf riders matter most, shamans fall short of casting. New tools (PR #150): `npm run arena` (fixed-wave fights) and `npm run balance -- --save`.
 - Late-wave wall (3 Nov, sim): no sudden drop at any wave. Orc health grows ×1.3 per wave after 15 (`HP_RAMP`) while starlight grows ×1.13, so arrows to kill a grunt go 67 → 189 from wave 36 to 40 and runs stall at 37–38. Shaman and drummer numbers move the wall by ≤5 s, so they wait on this. 4-hour sims, best wave / stall: ×1.3 40 / 37–38, ×1.25 43 / 41–42, ×1.2 48 / 46–47, ×1.15 59 / 56–57; every rate still stalls. Director picked ×1.2 (3 Nov). `--tune ORC_FX.*, FIREBALL.*` (PR #152) and `HP_RAMP.*` added for sweeps.
-- Arena at ×1.2 (3 Nov, saved wave-48 player, full tide, 5 seeds, seconds the wall stands, cap 180): wave 42 180, 44 156, 46 46, 48 27. Wave 46 with one kind removed: no shamans 71, no drummers 92, no wolf riders 113; wave 44 with no wolf riders stands the full 180. Wolf riders hurt most (they leap the line, 10–45 leaps a fight), then drummers (speed up 40–50% of live orcs), then shamans (now cast 4–9 fireballs). Which to tone down first is open for the director. Rerun: `npm run arena -- --load sim/out/player48.json --wave 46 --tide --orcs grunt:0 --seeds 5 --secs 180 [--tune ORC_TYPES.wolfrider.from=999]` (player from `npm run balance -- --minutes 240 --hwbuy --save`).
+- Arena at ×1.2 (3 Nov, saved wave-48 player, full tide, 5 seeds, seconds the wall stands, cap 180): wave 42 180, 44 156, 46 46, 48 27. Wave 46 with one kind removed: no shamans 71, no drummers 92, no wolf riders 113; wave 44 with no wolf riders stands the full 180. Wolf riders hurt most (they leap the line, 10–45 leaps a fight), then drummers (speed up 40–50% of live orcs), then shamans (now cast 4–9 fireballs). Director: tone down all three, wolf rider health first; applied as set A (TB-175). Rerun: `npm run arena -- --load sim/out/player48.json --wave 46 --tide --orcs grunt:0 --seeds 5 --secs 180 [--tune ORC_TYPES.wolfrider.from=999]` (player from `npm run balance -- --minutes 240 --hwbuy --save`).
 
 ### M4.11 — Director's playtest (2 Nov) · **done**
 - Vanguard TB-156, TB-167, TB-169, TB-170: a standing line at the wall that respawns on a timer (Swift Muster shortens it), walks out only to orcs past halfway, and turns back to face the field once home. TB-173: each vanguard targets a different orc and they step apart. Rally buttons gone.
@@ -151,10 +153,17 @@ Orcs drop gear; six worn slots, a satchel, affixes, sets and mythic powers feed 
 - Animation speed TB-161: attacks play once per real hit at true speed.
 - Arcane tree TB-163 (PR #143, 44216ac): the skill-tree layout draws a tree, trunk to foliage, and its links grow as nodes are bought.
 
-### M5 — Polish · bug bash run twice
-- Private itch page as a proof of concept (TB-073, `docs/ITCH-PAGE.md`; builds via `itch.yml`): kept Restricted and up to date with each milestone; it goes public only if the director chooses. Latest build: main bdc029f to `html5-dev`, 3 Nov (M4.10 and M4.11 complete). Milestone tags stop at `m1`; later builds go out by manual workflow run.
-- Save import/export (done in TB-065), version migration test suite (TB-140: every old save v1–v10 migrates to v11 and plays).
-- Bug bash (TB-075, `docs/QA-CHECKLIST.md`): runs 1 and 2 done (PRs #33, #37); run 5 (3 Nov) re-checked boss tiers, the four late orcs, all sprites, checkpoints and boss-only Heartwood, and 160 orcs of all eight kinds: 60 fps at 1080p and 4K down to a 2× slower CPU, 58–61 fps at 1080p 4× (headroom down, TB-183); findings TB-180–186; their bugs became TB-112–117. Performance: no frame spikes in a visible browser with 160 orcs (TB-113); measured at 1080p and 4K with CPU throttling as a mid-range stand-in (TB-150, QA run 4): passes. Not yet on real mid-range hardware.
+### M4.12 — Director's list (3 Nov) · **built**
+- Elf encampment TB-188a–c (save v13): data and `upgradeBuilding`, building card and Replant Camp section, placeholder art. Final camp models via Tripo.
+- Specialisation paths TB-193a, TB-193c (save v14): data, sets, mythics (Fox's is the charm Foxfire Tail), path cards on the Replant tab. Path icons via Meshy.
+- Game-feel UI TB-195 (Hades-like, richer carved wood): juice kit TB-195a, HUD TB-195b, UI sounds TB-195g, carved 9-slice art in `public/ui` TB-195h; plan `docs/plans/game-ui.md`.
+- Skill tree full screen TB-189, neon links TB-190, lighting TB-190b; item hype TB-192; text scale TB-191 (save v12); smoother animation TB-194; elf shot loop crossfade TB-202.
+- Bug-bash fixes TB-198–200; 11 dead gear affixes wired TB-201.
+
+### M5 — Polish · bug bash
+- Private itch page as a proof of concept (TB-073, `docs/ITCH-PAGE.md`; builds via `itch.yml`): kept Restricted and up to date with each milestone; it goes public only if the director chooses. Last build: main bdc029f to `html5-dev`, 3 Nov; the director skipped further itch builds for now. Milestone tags stop at `m1`.
+- Save import/export (done in TB-065), version migration test suite (TB-140; save now v14).
+- Bug bash (TB-075, `docs/QA-CHECKLIST.md`): runs 1 and 2 done (PRs #33, #37); run 5 (3 Nov) re-checked boss tiers, the four late orcs, all sprites, checkpoints and boss-only Heartwood, and 160 orcs of all eight kinds: 60 fps at 1080p and 4K down to a 2× slower CPU, 58–61 fps at 1080p 4× (headroom down, TB-183); findings TB-180–186. Performance: no frame spikes in a visible browser with 160 orcs (TB-113); measured at 1080p and 4K with CPU throttling as a mid-range stand-in (TB-150, QA run 4): passes. Not yet on real mid-range hardware.
 
 A full mobile port stays out of the roadmap (director, 31 Oct): the game is built for PC first. The itch web build does play on phones in landscape since TB-155 (2 Nov); TB-064/TB-078 layout work stays in the code.
 **Done when:** the director calls it finished.
@@ -172,21 +181,21 @@ A full mobile port stays out of the roadmap (director, 31 Oct): the game is buil
 | Balance plateau: player stalls before prestige unlocks | Headless simulator from M0; prestige threshold tuned by sim, not vibes |
 | Aiming feels like a chore, or the field feels dead when the player looks away | The lob is steady and forgiving (1.25 s, wide circle) so aiming is placement, not clicking; companions and vanguard keep fighting; each node has a battlefield-visible effect |
 | The fail state feels like wasted time | Heartwood comes only from bosses (TB-171); the fallen screen shows what the run earned before it shows the button; ceremony ≤ 4 s and skippable |
-| Canvas perf on phones with 200 orcs | Fixed-step sim, object pools, no per-frame allocations, batched draws by colour |
+| Canvas perf with 160 orcs (`ORC_CAP`) on a mid-range PC | Fixed-step sim, object pools, no per-frame allocations, batched draws by colour |
 | Scope creep into "full tower defence" | Pillars 1 & 2; out-of-scope list is explicit |
 | Save corruption in the wild | Versioned schema + migration tests + export/import |
 
 ## 7. Working method with Claude Code
-See `docs/AGENT-TEAM.md`. Short version: the human owns GDD and BALANCE `## Current`; agents own implementation, tests, and `## Proposed` balance changes backed by sim output. One backlog item per PR.
+See `docs/AGENT-TEAM.md`. No roles: each session is a plain Claude session reporting to the director; agents merge their own PRs by hand on green (no auto-merge) and the director never merges. Agents use Tripo, Meshy and ElevenLabs only with the director's written spend yes. Short version: the human owns GDD and BALANCE `## Current`; agents own implementation, tests, and `## Proposed` balance changes backed by sim output. One backlog item per PR.
 
 ## 8. Design directions from the active-incremental research (1 Nov, TB-145)
 A deep-research pass (1 Nov) on active, run-based incrementals (Nodebuster, Deep Rock Galactic: Survivor, Vampire Survivors, Ball x Pit, Shroomstead). All twelve claims that survived checking come from wikis, reviews and player threads, not developer postmortems. These are directions. None changes `## Current` or a GDD core-loop section until the director approves it.
 
 | # | Idea | Seen in | Where we stand | Next step |
 |---|---|---|---|---|
-| 1 | Meta currency is paid for **boss kills**, not distance, and each boss beaten opens a harder tier where orc stats and income rise together. Early runs are expected to fail at the first boss. | Nodebuster | P-142 already pays Heartwood from bosses (3 × floor(w/25)) plus a flat 1 per fall. Orc strength and income rise on the same wave curve with no tier step. | Built (TB-148): director chose unlock across runs. Clearing a boss at your highest tier unlocks the next named tide; pick any unlocked tier at March. Set F applied 2 Nov (BALANCE `TIERS`, P-148). Done. |
+| 1 | Meta currency is paid for **boss kills**, not distance, and each boss beaten opens a harder tier where orc stats and income rise together. Early runs are expected to fail at the first boss. | Nodebuster | P-142 already pays Heartwood from bosses (3 × floor(w/25)); a fall pays none since TB-171. Orc strength and income rise on the same wave curve with no tier step. | Built (TB-148): director chose unlock across runs. Clearing a boss at your highest tier unlocks the next named tide; pick any unlocked tier at March. Set F applied 2 Nov (BALANCE `TIERS`, P-148). Done. |
 | 2 | **Bonuses add inside a stat; multipliers stay rare and gated.** Two +50% make +100%. Big multipliers come only from gated picks (weapon level 6/12/18, or two weapons sharing a tag). | DRG: Survivor | Every run-tree rank multiplies (`Math.pow(mult, rank)` in `stats.ts`), so deep lines compound and the late tree outruns the wave curve. | Simmed (TB-147, BALANCE P-147): adding with today's numbers nearly doubles the time to the first boss; adding with per-rank bonuses matched at rank 6 keeps pacing (84–91 min) and weakens 10-rank lines (×9.3 → ×5.7). **Decided 1 Nov (director): keep multiply.** Closed. |
-| 3 | **Early ranks are cheap enough to buy at least one new upgrade after every run.** | Shroomstead players | A fall pays 1 Heartwood; the cheapest Heartwood nodes cost 2–3, so runs that fall before wave 25 need two falls per purchase. | Measured (TB-146, BALANCE §TB-146): first purchase at the end of run 2 (about 2 min); first boss on run 19–20 at 81–105 play minutes, then runs plateau at wave 27–28. |
+| 3 | **Early ranks are cheap enough to buy at least one new upgrade after every run.** | Shroomstead players | Measured before TB-171, when a fall paid 1 Heartwood; falls now pay none, so the first purchase waits for the first cleared boss. | Measured (TB-146, BALANCE §TB-146): first purchase at the end of run 2 (about 2 min); first boss on run 19–20 at 81–105 play minutes, then runs plateau at wave 27–28. |
 | 4 | **Price by power.** Base price set by how strong the upgrade is (200 for damage, 900 for cooldown, 10 000 for a revive), plus a small global fee that rises with every purchase, so order of buying matters less. | Vampire Survivors PowerUps | Heartwood prices are hand-set per node; the run tree uses base × growth^rank × costWave. | Measured (BALANCE P-147): Quick Draw costs 4× Sharpened Tips per +1%; Gleaning and Iron Bolts sit at 75 and 40. Multiply kept (1 Nov). TB-151 priced the three rate nodes against this table; director applied G1 (2 Nov, BALANCE P-151): Quick Draw 12, Keen Eye 30, Nimble Wrist 46. Done for the run tree; Heartwood prices unchanged. |
 | 5 | **Compounding reroll cost** (about ×1.4 per reroll). | DRG: Survivor | Glimmer rerolls already compound per item (P-102). | None; this confirms our rule. |
 | 6 | **Calibrate meta strength.** Too weak feels pointless; too strong makes runs trivial. Repeatable upgrades go steep around level 20. | Ball x Pit, genre reviews | P-142 removed the Heartwood passive for this reason. | Keep the sim gate: a fresh save must still reach the first boss, and a full Heartwood tree must not skip it. Re-checked 3 Nov (TB-146, BALANCE.md): passes; fresh saves clear it at 35–38 play min, a full tree at 27–29 (26.6–29.3) and falls to it first on 3 of 4 seeds. |

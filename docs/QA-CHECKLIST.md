@@ -1,8 +1,8 @@
-# Bug bash checklist (TB-075)
+# Bug bash checklist (TB-075, TB-204)
 
-Run against the dev build (`npm run dev`) in a desktop browser, before each itch tag. Each line is one check: what to do, what must be true. Mark the run's result in the table at the end; anything that fails becomes a backlog row.
-Dev handle: `window.__tide` = `{ game, field, tree }` (dev builds only). `game.state` is the sim state; `game.buy(id)`, `game.rally(type)`, `game.replant()`, `game.summonBoss()` are the panel's intents.
-Names below are the design names (GDD). The UI speaks the TB-121 voice (`src/data/strings.ts`): starlight is teeth, Heartwood is grudge, Replant is Burn it down, Sharpened Tips (`sharp`) is Ouch, Waking (`root`) is Fine., Spearman is a Lad, Bladedancer a Show-off.
+Run against the dev build (`npm run dev`) in a desktop browser, at each bug-bash stage (build features → bug bash → performance → balance, director 3 Nov). Each line is one check: what to do, what must be true. Mark the run's result in the table at the end; anything that fails becomes a backlog row.
+Dev handle: `window.__tide` = `{ game, field, tree }` (dev builds only). `game.state` is the sim state; `game.buy(id)`, `game.replant(tier, path)`, `game.summonBoss()`, `game.upgradeBuilding(id)` are among the panel's intents (full list: ARCHITECTURE.md §UI).
+Names below are the design names (GDD), which the UI also uses (`src/data/strings.ts`). Runs 1–5 are history; run 3 quotes an older UI voice since retired.
 
 ## A. Start and aim (GDD §2, §6, §12)
 - A1 Wipe save, reload: wave 1, 0 starlight, only grunts march, Sharpened Tips is selected in the tree.
@@ -56,6 +56,10 @@ Names below are the design names (GDD). The UI speaks the TB-121 voice (`src/dat
 
 ## J. Performance (design rule 7)
 - J1 160 orcs on screen: frame time stays under 16.7 ms on a mid-range desktop.
+
+## K. Camp and paths (TB-188, TB-193)
+- K1 While fallen, a camp building upgrades for Heartwood plus its material, raises its level (3 levels) and changes Stats; refused while the wall stands. Levels and materials survive Replant and reload (save v13).
+- K2 While fallen, a specialisation path can be chosen or changed on the Replant tab and the next run carries it; path nodes count only on their path; path items and mythics (e.g. Fox's Foxfire Tail) drop only while that path is chosen (save v14).
 
 ## Run 1 (1 Nov 2026, dev build, claude)
 Driven from the dev handle with `game.tick(1/50)`. The browser pane was hidden, so no frames rendered: toasts, overlays and the tree canvas were not seen. "Pass by code" means the check was read in source.

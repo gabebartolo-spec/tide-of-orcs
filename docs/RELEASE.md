@@ -1,38 +1,16 @@
 # Releasing to itch.io
 
-Every development milestone ships a playable web build to **https://veniceissinking.itch.io/elves-vs-orcs**. Milestones go to the `html5-dev` channel; tagged versions (`v1.0.0`) go to `html5`.
+Web builds go to **https://veniceissinking.itch.io/elves-vs-orcs** (page Restricted, a private proof of concept; see ITCH-PAGE.md). Builds of `main` go to the `html5-dev` channel by manual workflow run; a tagged `v1.0.0` would go to `html5`. The director skipped further itch builds for now (3 Nov); the last is main bdc029f, 3 Nov.
 
 ## One-time setup (Gabe)
 1. On itch.io, open the project → Edit → set **Kind of project: HTML** and tick *This file will be played in the browser*. Set viewport to 1280 × 720 (or "Click to launch in fullscreen"), enable *Mobile friendly* with orientation *Landscape* (TB-155).
 2. Get a butler API key: itch.io → Settings → API keys → Generate.
 3. In the GitHub repo: Settings → Secrets and variables → Actions → New repository secret `BUTLER_API_KEY` with that key. *(Done 30 Oct 2026.)*
-4. Optional later: move the job behind a GitHub environment with a required reviewer so an agent can tag but a human approves the upload.
 
-## Shipping a milestone
-```
-git tag m1 -m "M1 vertical slice"
-git push origin m1
-```
-From a Claude session the tag push is blocked by the GitHub proxy; create the tag from GitHub → Releases → *Draft a new release* → new tag `m1` on `main` → Publish. Same workflow fires.
-`.github/workflows/itch.yml` runs lint, tests, build, stamps `dist/build.json` with tag/sha/date, and pushes `dist/` with butler to channel `html5-dev` (version label = tag). The game shows the tag in the footer (ui reads `build.json`).
+## Pushing a build
+Actions → "Release to itch.io" → Run workflow → pick a channel. `.github/workflows/itch.yml` runs lint, tests, build, stamps `dist/build.json` with tag/sha/date, and pushes `dist/` with butler. The game shows the build in the footer (ui reads `build.json`). A tag push (`m0`, `m1`, shipped 30 Oct) fires the same workflow; tags stop at `m1` and later milestones are untagged.
 
-Manual push: Actions → "Release to itch.io" → Run workflow → pick a channel.
-
-## Milestone tags
-| Tag | Milestone | Channel |
-|---|---|---|
-| m0 | Foundation (full prototype port) · **shipped 30 Oct 2026** | html5-dev |
-| m1 | Vertical slice · **shipped 30 Oct 2026** (53b391d; predates the TB-078 Replant fix 9bfcc0e, so phones can lose the Replant button in this build) | html5-dev |
-| m2 | Companions & armoury | html5-dev |
-| m3 | Prestige | html5-dev |
-| m4 | Presentation | html5-dev |
-| v1.0.0 | Ship | html5 |
-
-M2–M4.10 are on `main` but untagged. Since 1 Nov builds of `main` go to `html5-dev` by manual workflow run; the latest is 8d20894 (2 Nov, run 41352680687).
-
-The itch page's "development log" gets a short post per milestone: what's new, what to test, where to leave feedback. Draft it from `docs/log/` for that milestone.
-
-## Checklist before tagging
+## Checklist before a build
 - `npm run lint && npm test` green on main.
 - `npm run balance -- --minutes 30` shows no stall (wave rising, purchases happening).
 - Build opened locally with `npm run preview`; save/load works; a fresh save plays.
