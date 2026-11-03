@@ -36,6 +36,7 @@ and every input answers back.
 1. **TB-195a (done) Motion and feedback kit:** `ui/juice.ts`, with spring tween helpers, count-up numbers, pop and press, a DOM particle
    burst (canvas overlay), and a UI sound hook in `data/audio.ts`. Numbers in `data/presentation.ts`. Everything else builds on it.
 2. **TB-195b (done) HUD:** starlight gem, wave banner and wall bar over the field, replacing the header text row.
+   **TB-195c (variant b-bolder, unmerged):** one Heartwood weight with a same-colour text stroke and ink ring (no faux bold), the wave as a 3rem hero banner over 1.5rem Slain / Heartwood plaques, a 2.5rem starlight numeral on a dark plate with the gem in a timber collar, 15 timber stakes with 25/50/75 ticks and a red trail, tapered cracks that wipe in, a timber name tag, a throb that quickens with the wall (`throbPeriod`), a grove-green clear seal, and a gold-only buy burst with hero sparks, streaks and flare rings. All HUD numbers in `HUD` / `JUICE.burst` (`src/data/presentation.ts`); colours are `--hud-*` tokens mirrored in `palette.ts`.
 3. **TB-195c Tooltip plates:** node and item info as cursor plates with *now → next* numbers. The detail card's prose is cut to one line.
 4. **TB-195d Tabs as tokens + screen transitions.**
 5. **TB-195e Satchel as an object:** drag to equip, compare plates. Builds on TB-192.

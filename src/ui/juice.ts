@@ -90,8 +90,8 @@ export class CountUp {
   }
 }
 
-interface Spark { x: number; y: number; vx: number; vy: number; life: number; max: number; size: number; color: string }
-interface Flare { x: number; y: number; life: number; r: number; color: string }
+interface Spark { x: number; y: number; vx: number; vy: number; life: number; max: number; size: number; color: string; hero: boolean }
+interface Flare { x: number; y: number; life: number; r: number; color: string; wait: number }
 let overlay: HTMLCanvasElement | null = null;
 const sparks: Spark[] = [];
 const flares: Flare[] = [];
@@ -124,29 +124,32 @@ export function burst(x: number, y: number, colors: readonly string[] = [P.starG
   const B = JUICE.burst, rem = remPx(), r = (a: number, b: number): number => a + Math.random() * (b - a);
   const n = Math.max(4, Math.round(B.count * scale)), k = Math.sqrt(scale);
   for (let i = 0; i < n; i++) {
-    const life = r(B.lifeMin, B.lifeMax), v = sparkVelocity(Math.random(), r(B.speedMin, B.speedMax) * rem * k, B.fan, B.lift * rem * k);
+    const hero = i < n * B.heroShare, life = r(B.lifeMin, B.lifeMax) * (hero ? B.heroLife : 1), v = sparkVelocity(Math.random(), r(B.speedMin, B.speedMax) * rem * k, B.fan, B.lift * rem * k);
     const sa = Math.random() * Math.PI * 2, sd = Math.sqrt(Math.random()) * B.spawn * rem * k;
-    sparks.push({ x: x + Math.cos(sa) * sd, y: y + Math.sin(sa) * sd, vx: v.vx, vy: v.vy, life, max: life, size: r(B.sizeMin, B.sizeMax) * rem * k, color: colors[i % colors.length]! });
+    sparks.push({ x: x + Math.cos(sa) * sd, y: y + Math.sin(sa) * sd, vx: v.vx, vy: v.vy, life, max: life, size: r(B.sizeMin, B.sizeMax) * rem * k * (hero ? B.heroSize : 1), color: colors[i % colors.length]!, hero });
   }
-  flares.push({ x, y, life: B.flareLife, r: B.flare * rem * k, color: colors[0]! });
+  flares.push({ x, y, life: B.flareLife, r: B.flare * rem * k, color: colors[0]!, wait: 0 }, { x, y, life: B.flareLife, r: B.flare * B.flare2 * rem * k, color: colors[1 % colors.length]!, wait: B.flare2Delay });
   if (!looping) { looping = true; let last = now(); const frame = (): void => {
     const t = now(), dt = Math.min(0.05, (t - last) / 1000); last = t;
     const ctx = ensureOverlay(); if (!ctx) { looping = false; return; }
     const dpr = window.devicePixelRatio || 1, drag = B.drag ** (dt * 60), g = B.gravity * remPx();
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, innerWidth, innerHeight); ctx.globalCompositeOperation = 'source-over';
     for (let i = flares.length - 1; i >= 0; i--) {
-      const f = flares[i]!; f.life -= dt; if (f.life <= 0) { flares.splice(i, 1); continue; }
+      const f = flares[i]!; if (f.wait > 0) { f.wait -= dt; continue; } f.life -= dt; if (f.life <= 0) { flares.splice(i, 1); continue; }
       const p = 1 - f.life / B.flareLife;
-      ctx.globalAlpha = (1 - p) * 0.8; ctx.strokeStyle = f.color; ctx.lineWidth = f.r * 0.12 * (1 - p) + 1;
+      ctx.globalAlpha = Math.min(1, (1 - p) * 1.4) * 0.9; ctx.strokeStyle = f.color; ctx.lineWidth = f.r * 0.12 * (1 - p) + 1;
       ctx.beginPath(); ctx.arc(f.x, f.y, f.r * (0.3 + 0.7 * p), 0, Math.PI * 2); ctx.stroke();
     }
     for (let i = sparks.length - 1; i >= 0; i--) {
       const s = sparks[i]!; s.life -= dt; if (s.life <= 0) { sparks.splice(i, 1); continue; }
       s.vx *= drag; s.vy = s.vy * drag + g * dt; s.x += s.vx * dt; s.y += s.vy * dt;
       const a = s.life / s.max, rad = s.size * (0.5 + 0.5 * a);
-      ctx.fillStyle = s.color;
+      ctx.fillStyle = s.color; ctx.strokeStyle = s.color; ctx.lineCap = 'round';
       ctx.globalAlpha = a * B.glowAlpha; ctx.beginPath(); ctx.arc(s.x, s.y, rad * B.glow, 0, Math.PI * 2); ctx.fill();
-      ctx.globalAlpha = a; ctx.beginPath(); ctx.arc(s.x, s.y, rad, 0, Math.PI * 2); ctx.fill();
+      // each spark is a streak stretched along its velocity (TB-195c); the hero sparks stay round and big
+      ctx.globalAlpha = a;
+      if (s.hero) { ctx.beginPath(); ctx.arc(s.x, s.y, rad, 0, Math.PI * 2); ctx.fill(); }
+      else { ctx.lineWidth = rad * 1.6; ctx.beginPath(); ctx.moveTo(s.x, s.y); ctx.lineTo(s.x - s.vx * B.stretch, s.y - s.vy * B.stretch); ctx.stroke(); }
     }
     ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
     if (sparks.length || flares.length) requestAnimationFrame(frame); else { ctx.clearRect(0, 0, innerWidth, innerHeight); looping = false; }

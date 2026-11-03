@@ -20,6 +20,8 @@ export const P = {
   frost: '#bfe3ee', frostGlow: 'rgba(191,227,238,.45)', spark: '#f4eaa6', arcane: '#9b6bd6', arcaneCore: '#ece8ff',
   fire: '#f2763a', fireTint: 'rgba(242,118,58,.5)', firePatch: 'rgba(242,118,58,.28)', frostTint: 'rgba(150,215,240,.6)', frostPatch: 'rgba(191,227,238,.35)',
   sparkGlow: 'rgba(244,234,166,.65)', arcaneGlow: 'rgba(155,107,214,.45)', starGold: '#ffd36b',
+  /** HUD wood and wall tones (TB-195c), mirrored as CSS vars in style.css: label gold, ink brown, deep grove, wall ember and blood, crack lip. */
+  hudGold: '#ffd98a', hudInk: '#1a0f05', groveDeep: '#2f4a28', wallEmber: '#d2601e', wallBlood: '#b3261e', hudLip: '#e8cf9a',
   /** Shaman fireball (TB-127): ember body, pale core, halo. */
   ember: '#ffb061', fireCore: '#fff1c8', fireGlow: 'rgba(242,118,58,.55)',
   spear: '#8fb7c9', blade: '#cdbdea',

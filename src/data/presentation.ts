@@ -240,30 +240,38 @@ export const JUICE = {
   /** Particle burst (TB-195b: reads at 1080p, Hades-like): count, speed range (rem/s), life range (s), size range (rem), gravity (rem/s²),
    *  drag per 1/60 s; `lift` is an upward kick (rem/s) so sparks arc up then fall; `fan` the half-angle (rad) of the spray round straight
    *  up; `glow` the halo radius × size; `flare` a bright ring at the origin (rem radius) and its life (s); `spawn` the radius (rem) sparks scatter from so frame 1 is no blob. Rem so 1080p and 4K match. */
-  burst: { count: 64, speedMin: 6, speedMax: 19, lifeMin: 0.5, lifeMax: 1.0, sizeMin: 0.16, sizeMax: 0.4, gravity: 34, drag: 0.93, lift: 8, fan: 1.9, glow: 1.8, glowAlpha: 0.14, flare: 1.6, flareLife: 0.28, spawn: 5 },
+  burst: { count: 64, speedMin: 6, speedMax: 19, lifeMin: 0.5, lifeMax: 1.0, sizeMin: 0.16, sizeMax: 0.4, gravity: 22, drag: 0.93, lift: 10, fan: 1.9, glow: 1.8, glowAlpha: 0.14, flare: 1.6, flareLife: 0.28, spawn: 5,
+    /** TB-195c: `heroShare` of the sparks are big round hero sparks (`heroSize` x size, `heroLife` x life); the rest are streaks stretched `stretch` s along their velocity; a second ring follows the first after `flare2Delay` s at `flare2` x radius. */
+    heroShare: 0.2, heroSize: 2.2, heroLife: 1.7, stretch: 0.03, flare2: 1.5, flare2Delay: 0.16 },
   /** Stagger: ms between list children entering. */
   stagger: 30,
   /** Stagger: px each child rises from as it enters. */
   rise: 8,
 } as const;
 
-/** Game HUD over the field (TB-195b, docs/plans/game-ui.md §2): starlight gem with an odometer, the wave banner and its clear stamp,
+/** Game HUD over the field (TB-195b, TB-195c, docs/plans/game-ui.md §2): starlight gem with an odometer, the wave banner and its clear stamp,
  *  the lit timber wall bar. Times in ms, sizes in rem. */
 export const HUD = {
   /** Wall bar crack stages: one more crack shows as the barricade falls below each fraction (highest first). */
   cracks: [0.75, 0.5, 0.25] as readonly number[],
+  /** Where each crack sits along the bar (fraction of its width), matching the crack art in index.html. */
+  crackX: [0.725, 0.47, 0.225] as readonly number[],
   /** Wall bar fill colour bands: above `high` it glows grove, above `low` amber, else rose (and the bar throbs). */
   high: 0.5, low: 0.25,
-  /** Odometer: ms each digit rolls to its new place. */
-  roll: 380,
-  /** Gem sparkle: smallest starlight gain that sparkles, ms between sparkles, burst scale. */
-  sparkleMin: 1, sparkleGap: 900, sparkleScale: 0.3,
-  /** Wave-clear stamp: ms it slams in (from `stampFrom` scale), ms it holds, ms it fades. */
-  stampIn: 260, stampFrom: 1.5, stampHold: 1100, stampOut: 400,
-  /** Wall bar shake on a hit: rem amplitude per hit fraction of max HP (capped at `shakeMax`), ms. */
-  shakeK: 6, shakeMax: 0.6, shakeMs: 360,
-  /** Odometer: ms each changed digit's strip rolls from its old digit to its new one (all together, no overshoot). */
-  odoRoll: 480,
+  /** Wall bar: ms its fill tone fades; ms the tone band waits behind a new crack so the two read in sequence; ms the new crack wipes in; timber chips thrown at it. */
+  toneMs: 380, toneLag: 120, crackWipe: 220, chips: 5,
+  /** Low-wall throb: seconds per beat at `low` of the wall (slow) and at `deep` of it (fast); in between it quickens. */
+  throbSlow: 0.9, throbFast: 0.45, deep: 0.1,
+  /** Gem glint: smallest starlight gain that glints, ms between glints, glint and big-gain burst scales, and the gain (fraction of the total) that earns the big pop. */
+  sparkleMin: 1, sparkleGap: 450, sparkleScale: 0.12, sparkleBigScale: 0.3, sparkleBig: 0.05,
+  /** Wave-clear stamp: ms it winds up (from `from` scale to `pre`), slams in (to `land`), settles on the spring, holds, fades;
+   *  it turns from `turnFrom` to `turn` degrees; `ring` rem is how far the contact ring spreads (over `ringMs`); `jolt` rem the banner drops on contact. */
+  stamp: { wind: 60, slam: 120, settle: 140, hold: 1100, out: 400, from: 1.9, pre: 1.7, land: 0.94, overshoot: 1.7, turnFrom: -9, turn: -3, ring: 1.2, ringMs: 220, jolt: 0.25, joltMs: 120 },
+  /** Wall bar hit: rem shake amplitude per hit fraction of max HP (floor `shakeMin`, cap `shakeMax`), `crackShake` rem when a new crack opens,
+   *  vertical share `shakeY`, `cycles` swings with exponential `shakeDecay` over `shakeMs`; `flashMs` the brightness flash. */
+  shakeK: 6, shakeMin: 0.15, shakeMax: 0.6, crackShake: 0.9, shakeY: 0.4, cycles: 3, shakeDecay: 6, shakeMs: 300, flashMs: 160,
+  /** Odometer: ms each changed digit rolls (cap), ms of stagger per digit from the right, blur (rem) while it runs, % of a digit it overshoots. */
+  odoRoll: 450, odoStagger: 40, odoBlur: 0.05, odoOver: 1.5,
 } as const;
 
 /** Tooltip plates (TB-195c): rows = most now → next lines shown; gap = rem from the cursor; in = ms spring-in; w = plate width in rem. */
