@@ -214,7 +214,7 @@ export const CAMP_DRAW_ORDER = [...BUILDINGS].sort((a, b) => CAMP_SPOTS[a.id].y 
  *  Birds: `n` small two-stroke silhouettes drifting at `speed` units/s across the band y0..y1, wings beating at `flap` Hz, span `span`. */
 export const CAMP_FAUNA = {
   elk: [
-    { dx: -105, dy: -22, right: false, s: 1.0, phase: 0 }, { dx: 70, dy: -40, right: true, s: 0.92, phase: 0.55 },
+    { dx: -105, dy: -22, right: false, s: 1.0, phase: 0 }, { dx: 75, dy: -16, right: true, s: 0.92, phase: 0.55 },
     { dx: 300, dy: -26, right: false, s: 1.08, phase: 0.3 },
   ],
   birds: { n: 5, y0: -262, y1: -228, speed: [9, 16], flap: [1.4, 2.4], span: 7, a: 0.8 },
