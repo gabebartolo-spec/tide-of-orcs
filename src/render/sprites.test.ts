@@ -61,12 +61,12 @@ describe('sprite atlas', () => {
     priv.atlas = parseAtlas({ anims: { 'orc.grunt': anim } }); priv.imgs = new Map([['sheet_elf.webp', {}]]);
     const g = ctx() as unknown as CanvasRenderingContext2D & { draws: number };
     for (let i = 0; i < 160; i++) expect(sp.draw(g, 'orc.grunt', 0, i, 0, 10, false, 'red', 'orange', 4)).toBe(true);
-    expect(sp.bakeCount).toBe(2); // one halo bake + one tint bake (TB-216f)
-    expect(g.draws).toBe(480); // halo, sharp body, tint per orc
+    expect(sp.bakeCount).toBe(1)
+    expect(g.draws).toBe(160)
     expect(filters.filter((f) => f.startsWith('drop-shadow')).length).toBe(1);
     sp.draw(g, 'orc.grunt', 1.5 / 12, 0, 0, 10, false, 'red', 'orange', 4);
     sp.draw(g, 'orc.grunt', 0, 0, 0, 10, false, 'blue', 'cyan', 4);
-    expect(sp.bakeCount).toBe(6);
+    expect(sp.bakeCount).toBe(3);
   });
 
   it('shares tint-only bakes across heights and bounds rimmed bakes across radii (TB-216d)', () => {
@@ -75,7 +75,8 @@ describe('sprite atlas', () => {
     for (let r = 4; r <= 40; r += 0.1) sp.draw(g, 'orc.grunt', 0, 0, 0, r, false, 'blue');
     expect(sp.bakeCount).toBe(1);
     for (let r = 4; r <= 40; r += 0.1) sp.draw(g, 'orc.grunt', 0, 0, 0, r, false, 'red', 'orange', 4);
-    expect(sp.bakeCount - 2).toBeLessThanOrEqual(Math.ceil(Math.log2(40 / 4) * SPRITE_BAKE.steps) + 2);
+    const hpr = sp.heightPerR('orc.grunt');
+    expect(sp.bakeCount - 1).toBeLessThanOrEqual(Math.ceil(hpr * (40 - 4) / SPRITE_BAKE.quantum) + 2);
     for (let i = 0; i < SPRITE_BAKE.cap * 2; i++) sp.draw(g, 'orc.grunt', 0, 0, 0, 1 + i, false, `#${i}`, 'orange', 4);
     expect(sp.bakeSize).toBeLessThanOrEqual(SPRITE_BAKE.cap);
     expect(heightBucket(26)).toBe(heightBucket(26.4));
@@ -93,8 +94,8 @@ describe('glow bake scale (TB-216f)', () => {
     const g = { drawImage() {}, filter: 'none', getTransform: () => ({ a: 2, b: 0 }) } as unknown as CanvasRenderingContext2D;
     sp.draw(g, 'orc.grunt', 0, 0, 0, 10, false, '', 'cyan', 4);
     const pad = Math.ceil(4 * 2) + 1;
-    expect(made[0]!.height - 2 * pad).toBe(heightBucket(h * 2));
-    expect(filters).toContain(`drop-shadow(-${made[0]!.width / 2}px 0 4px cyan)`);
+    expect(made[0]!.height - 2 * pad).toBe(Math.ceil(Math.round(h * 2 / SPRITE_BAKE.quantum) * SPRITE_BAKE.quantum));
+    expect(filters).toContain('drop-shadow(0 0 4px cyan)');
   });
 });
 
