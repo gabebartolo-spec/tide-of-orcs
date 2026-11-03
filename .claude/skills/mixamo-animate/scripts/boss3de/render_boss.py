@@ -1,7 +1,7 @@
 # TB-214 Warboss: 3DE_Study "Orc Model Rigged Packed Resources" (Sketchfab, CC BY). Plays the .blend's own actions
 # (walking 1-35, punch 1-31, death 1-96) unchanged and renders each frame from the field camera (GAMECAM deg above the
 # ground, ortho, camera on -Y so +X is screen-right). The model faces -Y; YAW 90 turns it to +X (pack_sprites mirrors orcs).
-# Env: YAW (deg, default 90; death plays from a model turned a quarter so its first frame matches the walk), STEP (frame step), VIEW=game|front, GAMECAM, ORTHO, RES, CZ (camera aim height, m), CX (aim x).
+# Env: FRAMES (comma list, overrides first/last/STEP), YAW (deg, default 90; death plays from a model turned a quarter so its first frame matches the walk), STEP (frame step), VIEW=game|front, GAMECAM, ORTHO, RES, CZ (camera aim height, m), CX (aim x).
 # Usage: blender -b <blend> --python render_boss.py -- <action> <first> <last> <outdir> <key>
 # Prints ANCHOR <x px> <y px> = the ground under the rig origin in the image (for anchors.json).
 import bpy, math, sys, os
@@ -37,6 +37,7 @@ bpy.context.view_layer.update()
 p = world_to_camera_view(sc, cam, Vector((0, 0, 0))); print(f"ANCHOR {p.x * RES:.2f} {(1 - p.y) * RES:.2f}")
 os.makedirs(OUT, exist_ok=True)
 STEP = int(os.environ.get("STEP", "1"))
-for i, f in enumerate(range(F0, F1 + 1, STEP)):
+FR = [int(x) for x in os.environ["FRAMES"].split(",")] if os.environ.get("FRAMES") else list(range(F0, F1 + 1, STEP))
+for i, f in enumerate(FR):
     sc.frame_set(f); sc.render.filepath = os.path.join(OUT, f"{KEY}_{i}.png"); bpy.ops.render.render(write_still=True)
-print("DONE", KEY, len(range(F0, F1 + 1, STEP)))
+print("DONE", KEY, len(FR))

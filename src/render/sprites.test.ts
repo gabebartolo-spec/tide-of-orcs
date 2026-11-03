@@ -16,6 +16,11 @@ describe('sprite atlas', () => {
     const a = parseAtlas({ anims: { 'orc.grunt': anim, bad: { image: 'x', frames: [[0, 0, 8]], fps: 12, ax: 0, ay: 0, hPerR: 1 }, empty: { ...anim, frames: [] } } });
     expect(Object.keys(a!.anims)).toEqual(['orc.grunt']);
   });
+  it('keeps a finite shadow centre sx and drops a junk one (TB-214)', () => {
+    const a = parseAtlas({ anims: { ok: { ...anim, sx: 0.4 }, junk: { ...anim, sx: 'x' } } });
+    expect(a!.anims.ok!.sx).toBe(0.4);
+    expect('sx' in a!.anims.junk!).toBe(false);
+  });
   it('lists every sheet the anims use, and reads the old single-image atlas', () => {
     const a = parseAtlas({ anims: { 'orc.grunt': { ...anim, image: 'sheet_orcs.webp' }, 'van.spear': anim } });
     expect(a!.images).toEqual(['sheet_elf.webp', 'sheet_orcs.webp']);

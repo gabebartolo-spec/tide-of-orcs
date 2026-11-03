@@ -46,16 +46,24 @@ ANIMS = {
     "hawk": (30, False, "hawk", 3.0),  # TB-068 companion flight v1 (director 3 Nov): OSU CC BY Sketchfab hawk, its own Wings Flapping clip, frames 0-29 (render_hawk.py VIEW=game YAW=90); anchor = bird centre
     "orc.wolfrider": (25, True, "orc.wolfrider", 2.6),  # run v8 (director 3 Nov): companion wolf run copied onto the rider wolf, orc at rest; frames from wolfrider/render_wr_sheet.py STEP=1
     "orc.wolfrider.attack": (15, True, "orc.wolfrider", 2.6),  # shares the run body key, same ortho 1.4
-    # TB-214 Warboss: 3DE_Study CC BY Sketchfab orc, its own actions (boss3de/render_boss.py, ORTHO 2.6): walking 1-35, punch 1-31,
-    # death 1-96 every 2nd frame at YAW 140 so its first frame faces like the walk; field.ts plays the death once where the boss fell
-    "orc.boss": (30, True, "orc.boss", 2.4),
-    "orc.boss.attack": (30, True, "orc.boss", 2.4),
-    "orc.boss.death": (15, True, "orc.boss", 2.4),
+    # TB-214 Warboss: 3DE_Study Sketchfab orc, its own actions (boss3de/render_boss.py, ORTHO 2.6). Walk (walking 1-35) and punch (1-31)
+    # render at YAW -90 (facing screen-left, NOT mirrored) so the punch's body turn swings the chest toward the camera, not the back;
+    # death (1-96 every 2nd frame) renders at YAW 90 CX 0.6 and IS mirrored, so the fall runs side-on toward the wall.
+    # Body 3.0 radii (orc 2.4): at r 24 the Warboss stands ~1.9x a brute's height so it reads as the boss.
+    "orc.boss": (30, False, "orc.boss", 3.0),
+    "orc.boss.attack": (30, False, "orc.boss", 3.0),
+    "orc.boss.death": (15, True, "orc.boss", 3.0),
 }
 # TB-188d: Tripo camp buildings, one static frame per building per level (render_camp.py, ORTHO 2.2, anchor = ground centre).
 # hPerR is the frame's height in metres, so camp.ts draws it with r = CAMP_UNITS_PER_M (field units per metre).
 for _b in ("bowyer", "forge", "kitchen", "training"):
     for _l in (1, 2, 3): ANIMS[f"camp.{_b}.{_l}"] = (1, False, f"camp.{_b}.{_l}", 0)
+# ONLY=<prefix>: pack just the keys with that prefix and merge them into the existing atlas.json; refuses unless those keys fill
+# their sheets alone, so a partial repack never rewrites another actor's sheet (shared frames dir may hold other sessions' work).
+ONLY = os.environ.get("ONLY")
+if ONLY:
+    ANIMS = {k: v for k, v in ANIMS.items() if k.startswith(ONLY)}
+    assert ANIMS, f"no ANIMS key starts with {ONLY}"
 anchors = json.load(open(os.path.join(src, "anchors.json"), encoding="utf-8-sig"))
 
 def frames(key):
@@ -79,7 +87,10 @@ for key, (fps, mirror, bk, br) in ANIMS.items():
     fx, fy = (ax - box[0]) / (box[2] - box[0]), (ay - box[1]) / (box[3] - box[1])
     if key == bk:  # body height: the opaque vertical extent of frame 0, in sheet px
         b0 = fr[0].getchannel("A").point(lambda a: 255 if a > 8 else 0).getbbox(); body[key] = (b0[3] - b0[1]) * s
-    cuts[key] = dict(imgs=out, fps=fps, ax=round(1 - fx if mirror else fx, 4), ay=round(fy, 4), bk=bk, br=br, touch=box[0] <= 0 or box[2] >= RES or box[1] <= 0)
+    # sx: the body's mean opaque x over the loop (0..1 of frame), so the in-engine shadow centres under the body, not the rig origin
+    import numpy as _np
+    _m = _np.mean([_np.nonzero(_np.array(f.getchannel("A")) > 40)[1].mean() for f in fr]); _sx = (_m - box[0]) / (box[2] - box[0])
+    cuts[key] = dict(sx=round(1 - _sx if mirror else _sx, 4), imgs=out, fps=fps, ax=round(1 - fx if mirror else fx, 4), ay=round(fy, 4), bk=bk, br=br, touch=box[0] <= 0 or box[2] >= RES or box[1] <= 0)
 
 # shelf-pack every frame, one sheet per group (orcs / elf + vanguard)
 anims, sheets = {}, {}
@@ -95,13 +106,21 @@ for name in SHEETS.values():
     for key, c in group.items():
         for i, im in enumerate(c["imgs"]): sheet.paste(im, place[(key, i)][:2])
         fh = c["imgs"][0].height
-        anims[key] = dict(image=name, frames=[list(place[(key, i)]) for i in range(len(c["imgs"]))], fps=c["fps"], ax=c["ax"], ay=c["ay"], hPerR=round(fh / PX_PER_M if key.startswith("camp.") else fh / body[c["bk"]] * c["br"], 4))
+        anims[key] = dict(image=name, frames=[list(place[(key, i)]) for i in range(len(c["imgs"]))], fps=c["fps"], ax=c["ax"], sx=c["sx"], ay=c["ay"], hPerR=round(fh / PX_PER_M if key.startswith("camp.") else fh / body[c["bk"]] * c["br"], 4))
         print("PACK", key, len(c["imgs"]), "frames", f"{c['imgs'][0].width}x{fh}", "ax", c["ax"], "ay", c["ay"], "hPerR", anims[key]["hPerR"], "->", name, "EDGE-CLIPPED" if c["touch"] else "")
     sheets[name] = sheet
 os.makedirs(dst, exist_ok=True)
+if ONLY:
+    prev = json.load(open(os.path.join(dst, "atlas.json"), encoding="utf-8"))
+    for k, a in prev["anims"].items():
+        assert a["image"] not in sheets or k.startswith(ONLY), f"ONLY={ONLY}: sheet {a['image']} also holds {k}; repack it whole"
+    prev["anims"] = {k: a for k, a in prev["anims"].items() if not k.startswith(ONLY)} | anims
+    prev["images"] = sorted(set(prev["images"]) | set(sheets)); anims, sheet_names = prev["anims"], prev["images"]
+else:
+    sheet_names = sorted(sheets)
 for name, sheet in sheets.items():
     sheet.save(os.path.join(dst, name), "WEBP", quality=90, method=6, alpha_quality=100)
     print("PACK sheet", name, sheet.size, os.path.getsize(os.path.join(dst, name)) // 1024, "KB")
-json.dump(dict(images=sorted(sheets), anims=anims), open(os.path.join(dst, "atlas.json"), "w"), separators=(",", ":"))
+json.dump(dict(images=sheet_names, anims=anims), open(os.path.join(dst, "atlas.json"), "w"), separators=(",", ":"))
 old = os.path.join(dst, "sheet.webp")
 if os.path.exists(old): os.remove(old); print("PACK removed", old)

@@ -484,12 +484,13 @@ export class FieldRenderer {
 
   private orc(s: SimState, o: Orc): void {
     const g = this.g, wind = this.windUp(o), d = this.interp.off(o); this.at(o.x + d.dx + wind.dx, o.y + d.dy, false);
-    g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, o.r * 0.9, o.r * 0.9, o.r * 0.35, 0, 0, 6.28); g.fill();
     // Burning or chilled: the orc's own body takes the colour and a soft rim of it, so shading still reads (TB-089).
     const tint = o.burn > 0 ? P.fireTint : o.chill > 0 ? P.frostTint : '', glow = o.burn > 0 ? P.fire : o.chill > 0 ? P.frost : '';
     let k = this.orcKeys.get(o.kind);
     if (!k) { const key = `orc.${ORC_SPRITE[o.kind] ?? o.kind}`; k = { key, atk: key + '.attack' }; this.orcKeys.set(o.kind, k); }
     const ost = orcState(s, o), ot = ost === 'attack' ? orcSwingT(o, this.sprites.duration(k.atk), VFX.strike.orc) : orcAnimT(o);
+    const sdx = this.sprites.shadowDx(ost === 'attack' ? k.atk : k.key, o.r); // centred under the body (TB-214), not the rig origin
+    g.fillStyle = P.shadow; g.beginPath(); g.ellipse(sdx, o.r * 0.9, o.r * 0.9, o.r * 0.35, 0, 0, 6.28); g.fill();
     this.sprites.drawActor(g, k.key, ost, ot, 0, o.r * 0.9, o.r, o.hitT > 0, tint, glow, VFX.arrows.rimBlur);
     this.orcBars(o); this.at(0, 0, false);
   }

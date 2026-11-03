@@ -2,7 +2,8 @@
 
 Third-party assets used in Tide of Orcs.
 
-- Warboss (sprite `orc.boss`, `.attack`, `.death`; TB-214): "Orc Model Rigged Packed Resources" by 3DE_Study (Sketchfab),
+- Warboss (sprite `orc.boss`, `.attack`, `.death`; TB-214): "Orc Model Rigged Packed Resources" by 3DE_Study,
+  https://sketchfab.com/3d-models/orc-model-rigged-packed-resources-b82ab03340084827b5d9c1c234db4644,
   licensed CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Changed: rendered its own walking, punch and death
   animations to 2D sprite frames.
 - Companion wolf (sprite `wolf`, `wolf.attack`; TB-160): "Fantasy Wolf Animation" by blam,

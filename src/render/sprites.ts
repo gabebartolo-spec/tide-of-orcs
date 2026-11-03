@@ -4,7 +4,7 @@
  */
 
 /** One animation: its sheet image, frame rects on it, playback rate, foot anchor (0..1 of frame), drawn height per unit of actor radius. */
-export interface Anim { image: string; frames: [number, number, number, number][]; fps: number; ax: number; ay: number; hPerR: number }
+export interface Anim { image: string; frames: [number, number, number, number][]; fps: number; ax: number; ay: number; hPerR: number; sx?: number }
 /** Atlas: one JSON over several sheets (TB-129: orcs on one, elf + vanguard on another, each under the 2 MB budget). */
 export interface Atlas { images: string[]; anims: Record<string, Anim> }
 
@@ -29,7 +29,7 @@ export function parseAtlas(raw: unknown): Atlas | null {
     const image = typeof a?.image === 'string' ? a.image : fallback;
     const ok = a && image && Array.isArray(a.frames) && a.frames.length > 0 && a.frames.every((f) => Array.isArray(f) && f.length === 4 && f.every(Number.isFinite))
       && [a.fps, a.ax, a.ay, a.hPerR].every((v) => typeof v === 'number' && Number.isFinite(v)) && a.fps! > 0 && a.hPerR! > 0;
-    if (ok) { anims[k] = { ...(a as Anim), image }; images.add(image); }
+    if (ok) { anims[k] = { ...(a as Anim), image }; if (typeof a.sx !== 'number' || !Number.isFinite(a.sx)) delete anims[k]!.sx; images.add(image); }
   }
   if (!images.size) return null;
   return { images: [...images].sort(), anims };
@@ -90,6 +90,11 @@ export class Sprites {
   }
 
   /** Drawn height of `key` per unit of r (0 when it has no sprite), so a caller can size a sprite to a set height. */
+  /** Shadow offset (TB-214): the body's mean x minus the foot anchor, in field units at radius r; 0 when the anim has no `sx`. */
+  shadowDx(key: string, r: number): number {
+    const a = this.atlas?.anims[key], f = a?.frames[0];
+    return a && f && a.sx !== undefined ? (a.sx - a.ax) * a.hPerR * r * (f[2] / f[3]) : 0;
+  }
   heightPerR(key: string): number { return this.atlas?.anims[key]?.hPerR ?? 0; }
 
   /** Draw animation `key` with its feet at (x, y) for an actor of radius r. False when there is no sprite for it.
