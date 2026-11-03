@@ -19,7 +19,7 @@ export const STR = {
   learned: 'learned',
   treeLabel: (name: string) => `Skill tree, ${name} selected. Tab to move, Enter to learn.`,
   joins: (name: string) => `${name} joins the grove`,
-  waveN: (w: number) => `Wave ${w}`,
+  waveN: (w: number) => `Wave ${w}`, waveCleared: 'Cleared',
   /** Boss tiers (TB-148): the tide a run plays at, picked at March. */
   tideName: (t: number) => `${['First', 'Second', 'Third', 'Fourth', 'Fifth', 'Sixth', 'Seventh', 'Eighth', 'Ninth', 'Tenth'][t - 1] ?? `${t}th`} Tide`,
   waveTide: (w: number, tide: string) => `${w} · ${tide}`,

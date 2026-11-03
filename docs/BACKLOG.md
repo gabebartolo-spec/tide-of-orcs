@@ -1,4 +1,4 @@
-﻿# Backlog
+# Backlog
 
 Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>`. Owner is an agent name or `gabe`. One PR per row.
 
@@ -205,6 +205,8 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-195 | Game-feel UI (director 3 Nov: "looks like a website"): HUD, tooltip plates, juice kit, tokens, satchel object, battle report, UI sounds. Plan: docs/plans/game-ui.md (DRAFT) | ui | 194 | claude | planning |
 | TB-195h | Carved UI art (director 3 Nov: Hades, carved wood made richer): starlight gem, wave banner, wall bar + 3 cracked states + fill, 4 tab tokens, tooltip plate, satchel leather + pocket, battle-report board + wax stamp, glowing gold March again plaque. `art/ui/carve_hud.py`, `art/ui/pack_hud.py`, `public/ui/*.webp` 1x+2x; manifest in docs/plans/game-ui.md §6 | ui | 195 | claude | done |
 | TB-195a | UI motion and feedback kit: `ui/juice.ts` (spring tweens, count-up, press, particle burst, stagger, reduced motion), `JUICE` numbers, `uiSound` hook; header starlight counts up, node buy presses and bursts | ui | 195 | claude | in progress |
+| TB-195a | UI motion and feedback kit: `ui/juice.ts` (spring tweens, count-up, press, particle burst, stagger, reduced motion), `JUICE` numbers, `uiSound` hook; header starlight counts up, node buy presses and bursts | ui | 195 | claude | done 90eceaf |
+| TB-195b | Game HUD (plan docs/plans/game-ui.md §2): starlight gem with a rolling odometer, hanging wave banner with a CLEARED stamp, lit timber wall bar that cracks at 75/50/25 % and shakes on hits; replaces the header stat text and the canvas wall bar. Buy burst made bigger (64 glowing sparks, upward arc, flare) | ui | 195 | claude | in progress |
 | TB-195g | UI sound set (ElevenLabs, 11 sounds, carved wood + elven shimmer) in `public/audio/ui`, mapped in `CUES.file`; click/tab/buy/error/equip/panel/count wired to existing hooks, hover/stamp/rarity/path loaded for the UI that will call them | ui | 195 | claude | done (PR) |
 | TB-192 | Item hype (director 3 Nov: "icons way too small, impossible to know when you got a drop"): 88 px satchel/worn cards with rarity frames, every drop stands a rarity-scaled light pillar, a drop banner (icon, rarity, name), a Satchel tab "n new" badge, legendary/mythic shake + field flash | ui | 105 | claude | done dc2c614 |
 | TB-200 | Render and audio bug-bash fixes: hit flash kept on tinted (burning/chilled) orc sprites; boss music starts when its track finishes loading after the boss wave began | render | 198 | claude | done 4fe2c91 |
