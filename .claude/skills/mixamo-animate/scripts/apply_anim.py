@@ -714,6 +714,11 @@ if os.environ.get("HPROBE"):  # both hands relative to the hips, per frame
         l = tgt.matrix_world @ tgt.pose.bones["mixamorig:LeftHand"].head - h; r = tgt.matrix_world @ tgt.pose.bones["mixamorig:RightHand"].head - h
         lf = tgt.matrix_world @ tgt.pose.bones["mixamorig:LeftFoot"].head - h
         print("HP", f - f0, *[round(c, 3) for c in l], "|", *[round(c, 3) for c in r], "|", round(lf.y, 3))
+if os.environ.get("YPROBE"):  # body heading per frame: world-Z yaw (deg) of the shoulder line (left arm head - right arm head) and of the hips line (left - right thigh); 0 = shoulders along +X
+    for f in range(f0, f1 + 1):
+        sc.frame_set(f); bpy.context.view_layer.update(); P = lambda n: tgt.matrix_world @ tgt.pose.bones["mixamorig:" + n].head
+        s_ = P("LeftArm") - P("RightArm"); h_ = P("LeftUpLeg") - P("RightUpLeg")
+        print("YP", f - f0, round(math.degrees(math.atan2(s_.y, s_.x)), 1), round(math.degrees(math.atan2(h_.y, h_.x)), 1))
 if os.environ.get("BOWPROBE"):  # per frame: CANT = bow limb axis out of the vertical plane through the arrow line
     # (draw hand -> bow hand), 0 = upright like a real archer at any aim height; STR = string toward the draw hand (+1)
     w = bpy.data.objects["wpn_bow"]; ax = Vector(w["bow_ax"]); bk = Vector(w["bow_back"]); cant = []; st = []

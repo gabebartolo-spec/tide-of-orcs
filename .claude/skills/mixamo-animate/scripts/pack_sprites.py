@@ -90,7 +90,15 @@ for key, (fps, mirror, bk, br) in ANIMS.items():
     # sx: the body's mean opaque x over the loop (0..1 of frame), so the in-engine shadow centres under the body, not the rig origin
     import numpy as _np
     _m = _np.mean([_np.nonzero(_np.array(f.getchannel("A")) > 40)[1].mean() for f in fr]); _sx = (_m - box[0]) / (box[2] - box[0])
-    cuts[key] = dict(sx=round(1 - _sx if mirror else _sx, 4), imgs=out, fps=fps, ax=round(1 - fx if mirror else fx, 4), ay=round(fy, 4), bk=bk, br=br, touch=box[0] <= 0 or box[2] >= RES or box[1] <= 0)
+    _ext = {}
+    if key.endswith(".death"):  # TB-214: per-frame shadow x = mean x of the body's bottom band (the feet while he staggers, the whole body once down), and land = first frame under half frame 0's opaque height (the splat lands then)
+        _sxf, _hs = [], []
+        for f in fr:
+            A_ = _np.array(f.getchannel("A")) > 40; ys = _np.nonzero(A_.any(1))[0]; y0, y1 = int(ys[0]), int(ys[-1])
+            xs = _np.nonzero(A_[max(y0, y1 - max(4, (y1 - y0) // 6)):y1 + 1])[1]; v = (xs.mean() - box[0]) / (box[2] - box[0])
+            _sxf.append(round(float(1 - v if mirror else v), 4)); _hs.append(y1 - y0)
+        _ext = dict(sxf=_sxf, land=next((i for i, hh in enumerate(_hs) if hh < 0.5 * _hs[0]), len(_hs) - 1))
+    cuts[key] = dict(sx=round(1 - _sx if mirror else _sx, 4), imgs=out, ext=_ext, fps=fps, ax=round(1 - fx if mirror else fx, 4), ay=round(fy, 4), bk=bk, br=br, touch=box[0] <= 0 or box[2] >= RES or box[1] <= 0)
 
 # shelf-pack every frame, one sheet per group (orcs / elf + vanguard)
 anims, sheets = {}, {}
@@ -106,7 +114,7 @@ for name in SHEETS.values():
     for key, c in group.items():
         for i, im in enumerate(c["imgs"]): sheet.paste(im, place[(key, i)][:2])
         fh = c["imgs"][0].height
-        anims[key] = dict(image=name, frames=[list(place[(key, i)]) for i in range(len(c["imgs"]))], fps=c["fps"], ax=c["ax"], sx=c["sx"], ay=c["ay"], hPerR=round(fh / PX_PER_M if key.startswith("camp.") else fh / body[c["bk"]] * c["br"], 4))
+        anims[key] = dict(image=name, frames=[list(place[(key, i)]) for i in range(len(c["imgs"]))], fps=c["fps"], ax=c["ax"], sx=c["sx"], ay=c["ay"], hPerR=round(fh / PX_PER_M if key.startswith("camp.") else fh / body[c["bk"]] * c["br"], 4), **c.get("ext", {}))
         print("PACK", key, len(c["imgs"]), "frames", f"{c['imgs'][0].width}x{fh}", "ax", c["ax"], "ay", c["ay"], "hPerR", anims[key]["hPerR"], "->", name, "EDGE-CLIPPED" if c["touch"] else "")
     sheets[name] = sheet
 os.makedirs(dst, exist_ok=True)

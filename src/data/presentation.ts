@@ -32,6 +32,11 @@ export const ORC_SPRITE: Readonly<Partial<Record<string, string>>> = { elite: 'b
  *  within `beamR` radii of it, shown once the corpse is gone) or 'over' (on top, the pre-TB-214 order). */
 export const ORC_DEATH: { hold: number; fade: number; fadePow: number; beam: 'behind' | 'off' | 'over'; beamR: number } = { hold: 2, fade: 0.6, fadePow: 2, beam: 'behind', beamR: 1.5 };
 
+/** Wall stand-off (TB-214, render only): a kind listed here draws `gap` radii further from the barricade than the sim stops it, so a
+ *  big swing (the Warboss axe) lands its edge on the trunk instead of the body and arms covering it. The shift eases in over the last
+ *  `ramp` radii of the march, so he never stalls on the spot. The sim position, hits and the strike circle are unchanged. */
+export const ORC_STANDOFF: Readonly<Partial<Record<string, { gap: number; ramp: number }>>> = { boss: { gap: 1.6, ramp: 4 } };
+
 /** Render interpolation (TB-194): actors draw between their last two sim steps; a move longer than `snap` field units in one step (a pooled slot reused, a leap) snaps instead of sliding. */
 export const INTERP = { snap: 40 };
 

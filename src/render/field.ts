@@ -17,6 +17,7 @@ import { orcAnimT, orcState, orcSwingT, swingClipT, vanState } from './actorStat
 import { Ground, decorImg } from './ground';
 import { Ambience } from './ambience';
 import { Interp } from './interp';
+import { standoffX } from './standoff';
 import { FIELD_VIEW, GROUND, LOOT_VFX, ORC_DEATH, ORC_SPRITE, SKY, VFX, dusk } from '../data/presentation';
 import { SLOTS } from '../data/loot';
 import { setTiers } from '../sim/gear';
@@ -76,7 +77,7 @@ export class FieldRenderer {
   /** Sprite keys per orc kind, built once so the draw loop builds no strings (TB-183). */
   private orcKeys = new Map<string, { key: string; atk: string }>();
   /** Fallen orcs playing their death clip (TB-214), and each kind's death key built once. */
-  private corpses: { key: string; x: number; y: number; r: number; born: number }[] = [];
+  private corpses: { key: string; x: number; y: number; r: number; born: number; splat: boolean }[] = [];
   private deathKeys = new Map<string, string>();
   private deathKey(kind: string): string {
     let k = this.deathKeys.get(kind);
@@ -91,7 +92,8 @@ export class FieldRenderer {
       const c = this.corpses[i]!, dur = this.sprites.duration(c.key), t = this.clock - c.born, fadeT = t - dur - ORC_DEATH.hold;
       if (fadeT >= ORC_DEATH.fade) { this.corpses.splice(i, 1); continue; }
       g.globalAlpha = fadeT > 0 ? (1 - fadeT / ORC_DEATH.fade) ** ORC_DEATH.fadePow : 1; this.at(c.x, c.y, false);
-      const ct = Math.min(t, dur * 0.999), sdx = this.sprites.shadowDx(c.key, c.r);  // shadow under the body's centre, like a live orc
+      const ct = Math.min(t, dur * 0.999), sdx = this.sprites.shadowDx(c.key, c.r, ct);  // shadow under the feet frame by frame, then the body once down
+      if (!c.splat && ct >= this.sprites.landT(c.key)) { c.splat = true; this.fx.splat(c.x + sdx, c.y + footOf(c.r), c.r * VFX.blood.killSplat, P.bloodOrc); }
       g.fillStyle = P.shadow; g.beginPath(); g.ellipse(sdx, c.r * 0.9, c.r * 0.9, c.r * 0.35, 0, 0, 6.28); g.fill();
       this.sprites.draw(g, c.key, ct, 0, c.r * 0.9, c.r);
     }
@@ -129,10 +131,12 @@ export class FieldRenderer {
         case 'kill': {
           const r = ORC_TYPES[e.kind as OrcKind]?.radius ?? ACTOR_R;
           // with a death clip the splat lands under the fallen body, not the rig origin (TB-214)
-          const dk = this.deathKey(e.kind), dead = this.sprites.duration(dk) > 0, sdx = dead ? this.sprites.shadowDx(dk, r) : 0;
-          fx.burst(e.x, e.y, P.orc, VFX.kill[0], VFX.kill[1]); fx.blood(e.x, e.y, footOf(r), P.bloodOrc, B.kill, 0); fx.splat(e.x + sdx, e.y + footOf(r), r * B.killSplat, P.bloodOrc);
-          fx.text(e.x, e.y - 14, '+' + fmt(e.loot), P.amber);
-          if (dead) this.corpses.push({ key: dk, x: e.x, y: e.y, r, born: this.clock });
+          // with a death clip the corpse falls where the orc was drawn (its wall stand-off) and its splat waits for the body to land (drawCorpses)
+          const dk = this.deathKey(e.kind), dead = this.sprites.duration(dk) > 0, cx = standoffX(e.kind, e.x, r);
+          fx.burst(cx, e.y, P.orc, VFX.kill[0], VFX.kill[1]); fx.blood(cx, e.y, footOf(r), P.bloodOrc, B.kill, 0);
+          if (!dead) fx.splat(e.x, e.y + footOf(r), r * B.killSplat, P.bloodOrc);
+          fx.text(cx, e.y - 14, '+' + fmt(e.loot), P.amber);
+          if (dead) this.corpses.push({ key: dk, x: cx, y: e.y, r, born: this.clock, splat: false });
           break;
         }
         case 'hit': fx.burst(e.x, e.y, P.cream, VFX.hit[0], VFX.hit[1]); fx.blood(e.x, e.y, footOf(ACTOR_R), P.bloodOrc, B.hit, e.src === 'lob' ? 0 : 1); if (e.crit) fx.text(e.x, e.y - 22, 'crit', P.cream); break;
@@ -489,7 +493,7 @@ export class FieldRenderer {
   }
 
   private orc(s: SimState, o: Orc): void {
-    const g = this.g, wind = this.windUp(o), d = this.interp.off(o); this.at(o.x + d.dx + wind.dx, o.y + d.dy, false);
+    const g = this.g, wind = this.windUp(o), d = this.interp.off(o); this.at(standoffX(o.kind, o.x + d.dx, o.r) + wind.dx, o.y + d.dy, false);
     // Burning or chilled: the orc's own body takes the colour and a soft rim of it, so shading still reads (TB-089).
     const tint = o.burn > 0 ? P.fireTint : o.chill > 0 ? P.frostTint : '', glow = o.burn > 0 ? P.fire : o.chill > 0 ? P.frost : '';
     let k = this.orcKeys.get(o.kind);

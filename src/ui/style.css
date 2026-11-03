@@ -738,6 +738,9 @@ body[data-mode="settings"] .panel { width: min(60rem, calc(100vw - 3rem)); }
 body:not([data-mode="camp"]) .rally { position: fixed; left: 0; right: 0; bottom: 0; padding: 2.5rem 1.75rem 1.25rem; z-index: 2;
   background: linear-gradient(transparent, color-mix(in srgb, var(--ink) 55%, transparent)); }
 body:not([data-mode="camp"]) .rally:not(:has(> :not([hidden]))) { background: none; }
+/* TB-214: the run HUD pills float over the top of the field, so the toast and the drop banners sit below them, toast first */
+body:not([data-mode="camp"]) .toast { top: 4.5rem; z-index: 4; }
+body:not([data-mode="camp"]) .lootbanners { top: 7.25rem; z-index: 4; }
 @supports (height: 100dvh) {
   body:not([data-mode="camp"]) .wrap { height: 100dvh; }
   body:not([data-mode="camp"]) .play, body:not([data-mode="camp"]) header { width: 100vw; }

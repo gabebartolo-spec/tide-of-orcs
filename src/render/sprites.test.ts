@@ -21,6 +21,11 @@ describe('sprite atlas', () => {
     expect(a!.anims.ok!.sx).toBe(0.4);
     expect('sx' in a!.anims.junk!).toBe(false);
   });
+  it('keeps a death clip per-frame shadow sxf and land frame only when they fit its frames (TB-214)', () => {
+    const a = parseAtlas({ anims: { ok: { ...anim, sxf: [0.4, 0.5, 0.6], land: 2 }, short: { ...anim, sxf: [0.4], land: 3 }, junk: { ...anim, sxf: [0.4, 'x', 1], land: 1.5 } } });
+    expect(a!.anims.ok!.sxf).toEqual([0.4, 0.5, 0.6]); expect(a!.anims.ok!.land).toBe(2);
+    for (const k of ['short', 'junk']) { expect('sxf' in a!.anims[k]!).toBe(false); expect('land' in a!.anims[k]!).toBe(false); }
+  });
   it('lists every sheet the anims use, and reads the old single-image atlas', () => {
     const a = parseAtlas({ anims: { 'orc.grunt': { ...anim, image: 'sheet_orcs.webp' }, 'van.spear': anim } });
     expect(a!.images).toEqual(['sheet_elf.webp', 'sheet_orcs.webp']);

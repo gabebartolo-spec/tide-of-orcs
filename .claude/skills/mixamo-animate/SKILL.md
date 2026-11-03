@@ -195,6 +195,8 @@ Older vars (`AIM`, `EDGE`, `GRIPAX`, `ABD`, `OFFS`, `DAMP`) were replaced by the
 - `scripts/boss3de/render_mixamo.sh <absolute outdir> [front]` renders all three clips (front = CAMROT 90 check). The out prefix must be absolute: the script cds.
 - Per-key ORTHO is fine (packer scales by anchors.json ortho): walk 2.6, attack 4.6 (3.9 cut the axe at frame 26), death 3.4.
 - Find grip clipping with `CLIP=1` (axe/body tri overlaps over the clip, no render) and `CLIPDBG=n` (bones hit at frame n). Dying: no offset 21 frames, OFFS RightHand 0,-90,0 27, WOFFS RightHand 0,0,1,-90 0 (used).
+- `YPROBE=1` prints `YP frame shoulderYaw hipsYaw` (degrees about world Z) per frame. Measured on this rig: Orc Walk shoulders ~0°, hips ~-7° (profile); Standing Melee Attack Downward rests at shoulders -31°/hips -50°, winds up to -83° and strikes at +65°, so the clip itself turns him chest-on at rest and back-to-camera mid-swing. Sword And Shield Downward Slash twists the same way and hides the axe in the strike frames. A hips yaw (`WOFFS mixamorig:Hips:0,0,1,40`) makes the attack rest pose profile like the walk, at the cost of his back facing the camera mid-swing: a director call, not a fix.
+- The in-game boss draws 1.6 r right of its sim stop (`ORC_STANDOFF`): the axe tip just reaches the trunk there. Keep ORTHO so the swing fits the cell after the stand-off.
 
 ## Next uses
 Grunt attack approval (speed: whatever looks natural), the bladedancer face fix, then the other 10 models. Add every new correction from the director to the fixes list above, and every approved setup to the recipes.
