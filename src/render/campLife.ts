@@ -1,15 +1,15 @@
 import { BUILDINGS, BuildingId } from '../data/camp';
-import { CAMP_LIFE } from '../data/presentation';
+import { CAMP_ART, CAMP_LIFE } from '../data/presentation';
 import { P } from './palette';
 
-/** Camp idle life (TB-188f, docs/plans/elf-encampment.md §1): forge smoke and sparks, kitchen smoke, dust from the training
- *  ring and a swaying pennant on the bowyer, drawn over the Camp scene. One fixed pool of particles in typed arrays, no
+/** Camp idle life (TB-188f, docs/plans/elf-encampment.md §1): forge sparks, dust from the training
+ *  ring, drawn over the Camp scene. One fixed pool of particles in typed arrays, no
  *  allocation per frame. It only advances when CampScene draws, and main.ts draws the scene only while the Camp tab is shown,
  *  so it stops with the tab. Reads levels; never touches sim state. */
 
 type Ctx = CanvasRenderingContext2D;
-type Kind = 'smoke' | 'sparks' | 'dust';
-const KINDS: readonly Kind[] = ['smoke', 'sparks', 'dust'];
+type Kind = 'sparks' | 'dust';
+const KINDS: readonly Kind[] = ['sparks', 'dust'];
 /** A long pause (tab hidden, window in the background) restarts the clock instead of replaying the gap. */
 const MAX_DT = 0.1;
 
@@ -21,7 +21,7 @@ export class CampLife {
   private vx = new Float32Array(this.n); private vy = new Float32Array(this.n);
   private age = new Float32Array(this.n); private life = new Float32Array(this.n);
   private kind = new Uint8Array(this.n); private alive = new Uint8Array(this.n);
-  /** Spawn accumulator (smoke, sparks) or countdown to the next burst (dust), per building and emitter. */
+  /** Spawn accumulator (sparks) or countdown to the next burst (dust), per building and emitter. */
   private acc = new Map<number, number>();
   private last = -1;
 
@@ -32,12 +32,9 @@ export class CampLife {
     for (let bi = 0; bi < BUILDINGS.length; bi++) {
       const b = BUILDINGS[bi]!, lv = Math.min(3, levels[b.id] ?? 0);
       if (lv <= 0) continue;
-      const list = CAMP_LIFE.emit[b.id][lv - 1]!;
-      for (let i = 0; i < list.length; i++) {
-        const e = list[i]!;
-        if (e.k === 'pennant') { pennant(g, e.x, e.y, t); continue; }
-        if (dt > 0) this.emit(bi * 100 + lv * 10 + i, e.k, e.x, e.y, dt);
-      }
+      const r = CAMP_ART[b.id][lv - 1]!;
+      if (b.id === 'forge') { if (dt > 0) this.emit(bi * 10 + lv, 'sparks', r.top[0], r.top[1], dt); }
+      else if (b.id === 'training' && dt > 0) this.emit(bi * 10 + lv, 'dust', r.x + r.w / 2, r.y + r.h * (1 - CAMP_LIFE.dustDy), dt);
     }
     this.step(dt);
     this.paint(g);
@@ -80,22 +77,10 @@ export class CampLife {
       if (!this.alive[i]) continue;
       const k = KINDS[this.kind[i]!]!, c = CAMP_LIFE[k], f = this.age[i]! / this.life[i]!;
       const r = c.r0 + (c.r1 - c.r0) * f;
-      // smoke fades in then out; sparks and dust fade out
-      g.globalAlpha = c.a * (k === 'smoke' ? Math.min(1, f * 4) * (1 - f) : 1 - f);
-      g.fillStyle = k === 'smoke' ? P.creamDim : k === 'dust' ? P.sand : i % 2 ? P.spark : P.ember;
+      g.globalAlpha = c.a * (1 - f);
+      g.fillStyle = k === 'dust' ? P.sand : i % 2 ? P.spark : P.ember;
       g.beginPath(); g.arc(this.x[i]!, this.y[i]!, r, 0, Math.PI * 2); g.fill();
     }
     g.globalAlpha = 1;
   }
-}
-
-/** A pennant on a short pole planted at (x, y), its tip swaying on two slow waves. */
-function pennant(g: Ctx, x: number, y: number, t: number): void {
-  const p = CAMP_LIFE.pennant, top = y - p.pole, tau = Math.PI * 2;
-  const sway = p.amp * Math.sin(t * p.freq * tau) + p.amp2 * Math.sin(t * p.freq2 * tau);
-  g.strokeStyle = P.bark; g.lineWidth = 1; g.lineCap = 'round';
-  g.beginPath(); g.moveTo(x, y); g.lineTo(x, top); g.stroke();
-  g.fillStyle = P.elfCloak;
-  g.beginPath(); g.moveTo(x, top); g.quadraticCurveTo(x + p.len / 2, top + sway * 0.4, x + p.len, top + p.w / 2 + sway); g.lineTo(x, top + p.w); g.closePath(); g.fill();
-  g.fillStyle = P.starGold; g.beginPath(); g.arc(x, top, 0.8, 0, tau); g.fill();
 }
