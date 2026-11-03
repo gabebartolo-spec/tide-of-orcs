@@ -42,6 +42,8 @@ export const migrations: Record<number, (s: AnySave) => AnySave> = {
   10: (s) => { const m = s.meta as { bestWave?: number }; return { ...s, version: 11, meta: { ...m, checkpoint: checkpointFor(m.bestWave ?? 1) } }; },
   /** v11 → v12: Settings › Text size (TB-191); old saves keep 100 %. */
   11: (s) => ({ ...s, version: 12, settings: { ...(s.settings as object), textScale: 1 } }),
+  /** v12 to v13: the elf encampment (TB-188a); nothing built, no materials. */
+  12: (s) => ({ ...s, version: 13, meta: { ...(s.meta as object), camp: { levels: {}, mats: {} } } }),
 };
 
 export function migrate(raw: unknown): Save {

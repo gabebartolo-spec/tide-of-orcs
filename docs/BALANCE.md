@@ -2,6 +2,7 @@
 
 Two sections. `## Current` is what ships and is human-owned. `## Proposed` is where agents put changes, each with the simulator output that justifies it. Nothing moves from Proposed to Current without Gabe's sign-off. `src/data/balance.ts` mirrors `## Current` and the tests pin the reference tables.
 
+
 ## Current (v1.2)
 - P-184 set F applied 2026-11-03 (TB-184): Kinship ×1.4/rank, Iron Bolts ×1.7/rank, Starfall 12 arrows, +4 arrows and +0.1 chance per rank, Patient Hands 2%/s per rank.
 
@@ -154,6 +155,12 @@ Mythic flags (TB-128): `--mythic <id>` wears that mythic from the start and ends
 Report columns per minute: wave, starlight, kills/min, kills, wall %, vanguard count, nodes owned, HW, falls. Summary line gives the first fall wave, every fall wave in order (`Falls:`), replants, Heartwood, best wave. (Before TB-084 the "First fall" field printed the last fall.) Writes `sim/out/<policy>-<date>.md` unless `--quiet`. CI runs 30 minutes of greedy as a smoke test.
 
 ## Proposed
+
+### P-188 Elf encampment (TB-188a): placeholder, untuned
+No sims run (director, 3 Nov). Numbers live in `src/data/camp.ts`.
+- Cost per level (all four buildings): L1 3 Heartwood + 10 material, L2 8 + 30, L3 20 + 80. Heartwood is shared with the Heartwood tree; spent only while fallen.
+- Materials: bowyer sinew, forge orc iron, kitchen game meat, training straw & hide. Grunts, runners and brutes (not champions) drop one random material at 5 % per kill; kept across runs.
+- Effects, totals at L1 / L2 / L3: bowyer bow damage ×1.05/1.1/1.2, draw time −3/6/10 %, strike radius ×1.04/1.08/1.12; forge knife, ballista and storm damage ×1.05/1.1/1.2, Item Find +3/6/10 %, reroll cost −5/10/15 %; kitchen wall max HP ×1.05/1.1/1.2, regen +0.5/1/2 (added to Repair regen), starlight ×1.03/1.06/1.1; training vanguard HP and damage ×1.05/1.1/1.2, respawn −5/10/15 %.
 
 ### P-184 · Push on from the checkpoint-51 stall (2026-11-03, TB-184) · applied: set F (director 3 Nov)
 Director: keep checkpoints and the default tier; tune nodes, items and companions so the stuck player can push on. Player: `sim/out/player48.json` (every run-tree node at max except foe Fury/Swarm, 4 epics worn, `hw_dawn` 1). Soak: `npm run balance -- --load sim/out/player48.json --tiertop --hwbuy --minutes 45 --seed N --quiet [--tune …]` (`--load` is new: start as the saved player, fallen, and replant at its top tier each run, as the game defaults). Fresh: `npm run balance -- --hwbuy --minutes 40 --seed N --quiet [--tune …]`. Seeds 1–3 each.
