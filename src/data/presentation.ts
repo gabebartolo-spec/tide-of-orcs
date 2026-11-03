@@ -214,15 +214,16 @@ export const CAMP_DRAW_ORDER = [...BUILDINGS].sort((a, b) => CAMP_SPOTS[a.id].y 
  *  Birds: `n` small two-stroke silhouettes drifting at `speed` units/s across the band y0..y1, wings beating at `flap` Hz, span `span`. */
 export const CAMP_FAUNA = {
   elk: [
-    { dx: -105, dy: -22, right: false, s: 1.0, phase: 0 }, { dx: 75, dy: -16, right: true, s: 0.92, phase: 0.55 },
-    { dx: 300, dy: -26, right: false, s: 1.08, phase: 0.3 },
+    { dx: -105, dy: -6, right: false, s: 1.0, phase: 0 }, { dx: -5, dy: -6, right: true, s: 0.92, phase: 0.55 },
+    { dx: 285, dy: -12, right: false, s: 1.08, phase: 0.3 },
   ],
   birds: { n: 5, y0: -262, y1: -228, speed: [9, 16], flap: [1.4, 2.4], span: 7, a: 0.8 },
 } as const;
-/** Elk sheet layout (scene units for the rect; `n` frames in a grid of `cols`, played at `fps`), written by post_elk.py. */
+/** Elk sheet layout (scene units for the rect; `n` frames in a grid of `cols`, played at `fps`), written by post_elk.py, which also
+ *  trims each elk to one contact shadow under its hooves (the long antler streaks and a second hind-leg smear read as stray marks). */
 export interface CampSheetRect { readonly x: number; readonly y: number; readonly w: number; readonly h: number; readonly n: number; readonly cols: number; readonly fps: number }
-export const CAMP_ELK_ART: CampSheetRect = /*ELK*/{ x: 557.0, y: -161.0, w: 68.0, h: 61.7, n: 64, cols: 8, fps: 6.0 }/*EEND*/;
-export const CAMP_ELK_R_ART: CampSheetRect = /*ELKR*/{ x: 566.0, y: -161.0, w: 66.7, h: 60.7, n: 64, cols: 8, fps: 6.0 }/*EREND*/;
+export const CAMP_ELK_ART: CampSheetRect = /*ELK*/{ x: 567.7, y: -161.0, w: 57.3, h: 56.0, n: 64, cols: 8, fps: 6.0 }/*EEND*/;
+export const CAMP_ELK_R_ART: CampSheetRect = /*ELKR*/{ x: 570.7, y: -161.0, w: 62.0, h: 56.3, n: 64, cols: 8, fps: 6.0 }/*EREND*/;
 /** Scene point under the rendered elk's hooves (render_camp_backdrop.py ELK_AT): the anchor each elk scales about. */
 export const CAMP_ELK_FOOT = { x: 600, y: -110 } as const;
 

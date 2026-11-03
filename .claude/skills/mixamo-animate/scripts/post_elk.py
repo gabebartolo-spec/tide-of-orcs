@@ -19,6 +19,25 @@ for i in range(n):
     r_, g_, b_, a_ = im.split(); d = ImageChops.subtract(a_, BG)
     a2 = Image.frombytes("L", d.size, bytes(0 if v < 10 or w == 0 else min(255, (v - 10) * 255 // max(1, w - 10)) for v, w in zip(d.tobytes(), inv.tobytes())))
     fr.append(Image.merge("RGBA", (r_, g_, b_, a2)))
+# One contact shadow (TB-208 critic): the low camp sun throws the antlers' and head's shadows far across the grass as thin
+# streaks, and on the right-facing pass a second smear behind the hind legs; both read as stray marks at game scale. The elk
+# grazes on one spot, so frame 0's hooves (lowest non-shadow pixels) fix one ground ellipse for every frame; shadow pixels
+# (near-black: the catcher writes no colour) keep their alpha inside it and fade to none by SH_FADE times its radius.
+import math
+def _dark(p): return max(p[0], p[1], p[2]) < 24
+a0 = fr[0].load(); W0_, H0_ = fr[0].size
+body = [(x, y) for y in range(H0_) for x in range(W0_) if a0[x, y][3] > 128 and not _dark(a0[x, y])]
+hy = max(y for x, y in body); feet = [x for x, y in body if y >= hy - 10]
+SH_PAD, SH_RY, SH_FADE = float(os.environ.get("SH_PAD", "10")), float(os.environ.get("SH_RY", "9")), 1.35
+cx, rx, cy = (min(feet) + max(feet)) / 2, (max(feet) - min(feet)) / 2 + SH_PAD, hy - 2
+for im in fr:
+    px_ = im.load()
+    for y in range(max(0, int(cy - 12)), H0_):   # above the ground band the only near-black pixels are the elk's own
+        for x in range(W0_):
+            p = px_[x, y]
+            if p[3] == 0 or not _dark(p): continue
+            e = math.hypot((x - cx) / rx, (y - cy) / SH_RY) if y > cy else abs(x - cx) / rx   # above the hoof line: a column
+            if e > 1: px_[x, y] = (p[0], p[1], p[2], int(p[3] * max(0.0, (SH_FADE - e) / (SH_FADE - 1))))
 bb = None
 for im in fr:
     b = im.getchannel("A").point(lambda v: 255 if v > 6 else 0).getbbox()
