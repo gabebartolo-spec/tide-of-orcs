@@ -94,6 +94,11 @@ export const GROUND = {
   flowers: { drifts: 16, per: [24, 36], driftW: 90, driftH: 22, edge: 0.22, lane: 40, r: [2.4, 3.8], stem: [3, 8], kinds: { daisy: 4, violet: 3, buttercup: 2, blossom: 1 } },
   /** Fence barricade (director 2 Nov, Sketchfab "the fence"): panel draw width, vertical step between stacked panels (units). */
   fence: { w: 30, step: 22 },
+  /** Barricade tiers (TB-209, director 4 Nov): the wall looks stronger as its max health grows. Tier = how many `at` thresholds
+   *  Stats.barMax / BARRICADE.baseHp has reached (Seasoned Timber 3, 6 and 9 ranks alone reach 1.95x, 3.81x, 7.45x).
+   *  Per tier: fence rows (extra rows stand behind the first, toward the grove, each `rowDx` further back and `rowDy` of a
+   *  step lower, shaded by `rowShade`) and panel scale (taller, thicker stakes; the step grows with it). */
+  wallTiers: { at: [1.9, 3.7, 7], rows: [1, 2, 2, 3], scale: [1, 1, 1.25, 1.25], rowDx: -10, rowDy: 0.5, rowShade: 0.35 },
 } as const;
 
 /** Loot moments (TB-105, plan §11). Lives in seconds, sizes in field units.

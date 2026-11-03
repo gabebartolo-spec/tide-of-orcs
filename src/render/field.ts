@@ -21,6 +21,7 @@ import { Interp } from './interp';
 import { FIELD_VIEW, GROUND, LOOT_VFX, ORC_SPRITE, SKY, VFX, dusk } from '../data/presentation';
 import { SLOTS } from '../data/loot';
 import { setTiers } from '../sim/gear';
+import { wallTier } from './wallTier';
 
 const IMPACT_LIFE = VFX.impactLife;
 /** Foot offset below an actor's centre, where its blood lands. */
@@ -36,6 +37,7 @@ export class FieldRenderer {
   private g: CanvasRenderingContext2D;
   private fx = new Particles();
   private shake = 0;
+  private fenceBack: HTMLCanvasElement | null = null;
   private storms: { pts: [number, number][]; life: number; c: string }[] = [];
   private impacts: { x: number; y: number; r: number; life: number }[] = [];
   /** Fire puffs where a fireball landed (TB-127): discs that rise, swell and cool from pale core to ember to fire as they fade. */
@@ -206,6 +208,15 @@ export class FieldRenderer {
     this.fx.arc(x, y + 4, Bl.r, ang + 0.25, Bl.half, P.blade, P.cream, Bl.width, Bl.life);
   }
 
+  /** The fence panel shaded for the back rows (TB-209), baked once. */
+  private shadedFence(fence: HTMLImageElement): HTMLCanvasElement {
+    if (this.fenceBack) return this.fenceBack;
+    const c = document.createElement('canvas'); c.width = fence.width; c.height = fence.height;
+    const x = c.getContext('2d')!; x.drawImage(fence, 0, 0);
+    x.globalCompositeOperation = 'source-atop'; x.globalAlpha = GROUND.wallTiers.rowShade; x.fillStyle = P.ink; x.fillRect(0, 0, c.width, c.height);
+    return (this.fenceBack = c);
+  }
+
   draw(s: SimState, dt: number, aim: { x: number; y: number } | null = null): void {
     const g = this.g; this.sim = s;
     this.fx.update(dt); this.clock += dt;
@@ -235,12 +246,15 @@ export class FieldRenderer {
     g.fillStyle = P.wallShade; g.fillRect(BAR_X + 4, top, BAR_W + 4, H - top);
     const fence = decorImg('fence');
     if (fence) {
-      // stacked fence panels running into the field, top to bottom so each overlaps the one behind it
-      const L = GROUND.fence, lh = L.w * fence.height / fence.width;
-      for (let i = 0, y = -lh / 2 - Math.ceil(-top / L.step) * L.step; y < H; i++, y += L.step) {
-        const alive = y < 0 || y / H < frac || (i * 0.618034) % 1 < frac;  // same fixed break scatter as the planks
-        g.globalAlpha = alive ? 1 : 0.3;
-        g.drawImage(fence, BAR_X + BAR_W / 2 - L.w / 2 + (alive ? 0 : 5), y, L.w, lh);
+      // stacked fence panels running into the field, top to bottom so each overlaps the one behind it; back rows first (TB-209)
+      const L = GROUND.fence, T = GROUND.wallTiers, tier = wallTier(s.stats.barMax), sc = T.scale[tier]!, w = L.w * sc, step = L.step * sc, lh = w * fence.height / fence.width;
+      for (let r = T.rows[tier]! - 1; r >= 0; r--) {
+        const img = r ? this.shadedFence(fence) : fence, x0 = BAR_X + BAR_W / 2 - w / 2 + r * T.rowDx, dy = r * T.rowDy * step;
+        for (let i = 0, y = -lh / 2 - Math.ceil(-top / step) * step + dy; y < H; i++, y += step) {
+          const alive = y < 0 || y / H < frac || ((i + r * 7) * 0.618034) % 1 < frac;  // same fixed break scatter as the planks
+          g.globalAlpha = alive ? 1 : 0.3;
+          g.drawImage(img, x0 + (alive ? 0 : 5), y, w, lh);
+        }
       }
       g.globalAlpha = 1;
     } else for (let y = -Math.ceil(-top / 18) * 18; y < H; y += 18) {
