@@ -117,7 +117,11 @@ export class Sprites {
     const h = a.hPerR * r, w = h * (fw / fh), dx = x - w * a.ax, dy = y - h * a.ay;
     if (flash) g.filter = FLASH_FILTER;
     if (tint || glow) {
-      const b = glow ? this.baked(img, a, fi, tint, glow, blur, heightBucket(h)) : this.baked(img, a, fi, tint, '', 0, 0), s = w / fw;
+      // A glow bake is made at the drawn device-pixel height (canvas filter lengths ignore the transform, as the old live
+      // shadowBlur did), so its blur and rim land 1:1 on screen (TB-216f).
+      const m = glow ? g.getTransform?.() : undefined, k = m ? Math.hypot(m.a, m.b) || 1 : 1;
+      const b = glow ? this.baked(img, a, fi, tint, glow, blur, heightBucket(h * k)) : this.baked(img, a, fi, tint, '', 0, 0);
+      const s = h / (b.c.height - 2 * b.pad);
       g.drawImage(b.c, 0, 0, b.c.width, b.c.height, dx - b.pad * s, dy - b.pad * s, w + 2 * b.pad * s, h + 2 * b.pad * s);
     } else g.drawImage(img, fx, fy, fw, fh, dx, dy, w, h);
     if (flash) g.filter = 'none';
@@ -140,11 +144,13 @@ export class Sprites {
     if (hit) return hit;
     if (this.bakeSize >= SPRITE_BAKE.cap) { this.bakes.clear(); this.bakeSize = 0; return this.baked(img, a, fi, tint, glow, blur, hb); }
     const [fx, fy, fw, fh] = a.frames[fi]!;
-    const srcBlur = hb ? blur * fh / hb : 0, pad = glow ? Math.ceil(srcBlur * 2) + 1 : 0;
-    const c = this.makeCanvas(); c.width = fw + 2 * pad; c.height = fh + 2 * pad;
+    // Glow bakes are sized to the bucketed device height hb, so `blur` is in screen pixels like the live filter was.
+    const bh = glow && hb ? hb : fh, bw = glow && hb ? Math.max(1, Math.round(hb * fw / fh)) : fw;
+    const pad = glow ? Math.ceil(blur * 2) + 1 : 0;
+    const c = this.makeCanvas(); c.width = bw + 2 * pad; c.height = bh + 2 * pad;
     const cg = c.getContext('2d')!;
-    if (glow) cg.filter = `drop-shadow(0 0 ${srcBlur}px ${glow})`;
-    cg.drawImage(img, fx, fy, fw, fh, pad, pad, fw, fh);
+    if (glow) cg.filter = `drop-shadow(0 0 ${blur}px ${glow})`;
+    cg.drawImage(img, fx, fy, fw, fh, pad, pad, bw, bh);
     cg.filter = 'none';
     if (tint) {
       const tc = (this.tmp ??= this.makeCanvas()), tg = tc.getContext('2d')!;
@@ -152,7 +158,7 @@ export class Sprites {
       tg.clearRect(0, 0, fw, fh); tg.globalCompositeOperation = 'source-over'; tg.drawImage(img, fx, fy, fw, fh, 0, 0, fw, fh);
       tg.globalCompositeOperation = 'source-atop'; tg.fillStyle = tint; tg.fillRect(0, 0, fw, fh);
       tg.globalCompositeOperation = 'source-over';
-      cg.drawImage(tc, 0, 0, fw, fh, pad, pad, fw, fh);
+      cg.drawImage(tc, 0, 0, fw, fh, pad, pad, bw, bh);
     }
     this.bakeCount++; this.bakeSize++;
     return (list[fi] = { c, pad });

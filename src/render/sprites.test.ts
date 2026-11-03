@@ -82,6 +82,22 @@ describe('sprite atlas', () => {
   });
 });
 
+describe('glow bake scale (TB-216f)', () => {
+  it('bakes at the drawn device height with the blur in screen px, whatever the transform', () => {
+    const sp = new Sprites(), made: { width: number; height: number }[] = [], filters: string[] = [];
+    const c = { drawImage() {}, clearRect() {}, fillRect() {}, fillStyle: '', globalCompositeOperation: '', set filter(v: string) { filters.push(v); } };
+    sp.makeCanvas = () => { const o = { width: 0, height: 0, getContext: () => c }; made.push(o); return o as unknown as HTMLCanvasElement; };
+    const priv = sp as unknown as { atlas: unknown; imgs: Map<string, unknown> };
+    priv.atlas = parseAtlas({ anims: { 'orc.grunt': anim } }); priv.imgs = new Map([['sheet_elf.webp', {}]]);
+    const h = sp.heightPerR('orc.grunt') * 10;
+    const g = { drawImage() {}, filter: 'none', getTransform: () => ({ a: 2, b: 0 }) } as unknown as CanvasRenderingContext2D;
+    sp.draw(g, 'orc.grunt', 0, 0, 0, 10, false, '', 'cyan', 4);
+    const pad = Math.ceil(4 * 2) + 1;
+    expect(made[0]!.height - 2 * pad).toBe(heightBucket(h * 2));
+    expect(filters).toContain('drop-shadow(0 0 4px cyan)');
+  });
+});
+
 describe('sheet load failure (TB-216c)', () => {
   it('one failed sheet drops only its own anims', async () => {
     const { keepLoaded } = await import('./sprites');
