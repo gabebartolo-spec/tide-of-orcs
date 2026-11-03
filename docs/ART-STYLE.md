@@ -149,6 +149,19 @@ Carved living wood, not a template: no cards, glows or gradients standing in for
 - `button.png` (385×94, alpha-cropped from the render at half size) skins `.deploy` and `.ghost`: `border-image 20 30 fill / 8px 12px`. Build the plaque as a coarse quad grid: an ngon cap pinches at its centre under subdivision, and a fine grid clamps the bevel flat. `.buy` stays amber: the one gold action on a page.
 - Roots (`root.svg`) replace rules, a sprout (`sprout.svg`) marks the active tab.
 
+## Carved HUD pieces (TB-195h)
+The richer carved wood (director 3 Nov, Hades reference): the TB-136 material pushed further, one distinct object per UI element.
+- `art/ui/carve_hud.py` renders every piece at 2x (`blender -b --factory-startup --python art/ui/carve_hud.py -- <outdir> [piece ...]`,
+  run hidden). Deeper relief than `carve.py` (0.04–0.05 grain displacement), a warm low rim sun from the top right (74°) that
+  catches every carved edge, the key from the top left as before, a cool fill. Gilt is metallic gold; the gem and corner studs
+  are a faceted amber stone with a faint emission.
+- `art/ui/pack_hud.py` writes `public/ui/<name>.webp` and `<name>@2x.webp`, bakes an amber glow halo into `gem` and `march`
+  only (on a padded canvas, so the halo never clips), and downsizes premultiplied so edges carry no dark fringe. Manifest and
+  9-slice insets: `docs/plans/game-ui.md` §6.
+- Wall-bar cracks are real splits: each rail is built from pieces between jagged crack lines, and per state the gaps widen
+  and loose pieces tilt. Swallowtail ends are two convex halves (a concave ngon bevels into a stepped edge).
+- The report stamp is red-brown wax (#7a2a2a), a material colour, not the rose token; rose stays Heartwood and danger.
+
 ## Arcane skill tree (TB-163)
 
 The node layout draws a tree: Waking is the trunk base, Muster and Grey Wolf the trunk, Bow / Companions / Armoury the canopy boughs, Vanguard the low left bough, Barricade / Spoils / Grove the roots. Each link is a faint `line` outline until its node is owned, then wood grows along it (`TREE_VIEW.growRate`) in `treeGlow` halo, `treeWood` body, `treeWoodLit` core and a thin vein in the branch colour. Width is `woodBase + woodPerNode·√(nodes carried)`, so the trunk is thickest. Two `spark` motes drift outward along each grown link. Reduced motion: wood snaps grown, no motes.
