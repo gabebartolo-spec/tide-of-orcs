@@ -16,12 +16,14 @@ import { HW_NODE, HW_NODES, HwId } from '../data/heartwood';
 import { canBuyHw, hwCost, hwPending, hwRank, hwSpendable, hwUnlocked } from '../sim/heartwood';
 import { SatchelPane, itemName } from './satchel';
 import { glyph } from './glyphs';
-import { LOOT_BANNER } from '../data/presentation';
+import { LOOT_BANNER, REPORT } from '../data/presentation';
 import { LOOT_TOAST } from '../data/lootTables';
 import { RARITIES } from '../data/loot';
 import { applyTextScale } from '../render/textScale';
 import { CampPane } from './camp';
-import { armHover, burstAt, press } from './juice';
+import { armHover, burstAt, calm, countValue, pop, press, tween } from './juice';
+import { reportRows, reportTimes } from './report';
+import { uiSound } from '../data/audio';
 import { Hud } from './hud';
 import { Plate, oneLine, plateRows } from './plate';
 import { PathPicker, pathHint } from './paths';
@@ -284,6 +286,7 @@ export class Panel {
   private importArmed = false;
   private importTimer = 0;
   private wipeTimer = 0;
+  private reportTimers: number[] = [];
   /** After an import or wipe the old satchel pick and new-loot badge belong to the old game (TB-199). */
   private resetSatchelView(): void { this.satchel.selected = null; this.markNew(0); }
   private importSave(): void {
@@ -302,12 +305,29 @@ export class Panel {
   private showFallen(chosen = false): void {
     $('fallen-title').textContent = chosen ? STR.pulledTitle : STR.fallenTitle;
     const r = this.game.state.run;
-    $('fallen-sum').textContent = STR.fallenSummary(r.wave, fmt(r.kills), Math.floor(r.runTime / 60));
-    $('fallen-rate').textContent = STR.fallenRate(fmt(r.earned / Math.max(1, r.runTime / 60)), this.game.state.meta.bestWave);
     // Items by rarity, rarest first, then the best drop in its rarity colour (TB-103)
     const counts = RARITIES.filter((k) => r.found?.[k]).reverse().map((k) => `${r.found![k]} ${STR.rarityName[k] ?? k}`).join(', ');
     $('fallen-loot').innerHTML = r.best ? STR.fallenLoot(counts, `<span class="best r-${r.best.rarity}">${itemName(r.best)}</span>`) : STR.fallenNoLoot;
-    $('fallen-hw').textContent = '+' + fmt(r.hwEarned); $('fallen').hidden = false;
+    // battle report (TB-195f): tallies roll up one by one, then Heartwood, then the wax seal stamps on
+    const rows = reportRows(r, this.game.state.meta.bestWave), when = reportTimes(rows.length, calm());
+    const list = $('fallen-rows'); list.textContent = '';
+    const cells = rows.map((row) => { const d = document.createElement('div'), k = document.createElement('dt'), v = document.createElement('dd');
+      k.textContent = row.label; v.textContent = calm() ? fmt(row.value) : '0'; d.append(k, v); list.appendChild(d); return v; });
+    const hw = $('fallen-hw'), seal = $('fallen-seal'), board = $('fallen-board');
+    hw.textContent = '+' + (calm() ? fmt(r.hwEarned) : '0'); seal.classList.toggle('on', calm());
+    for (const t of this.reportTimers) clearTimeout(t);
+    this.reportTimers = [];
+    if (!calm()) {
+      const roll = (el: HTMLElement, to: number, pre: string): void => { uiSound('uiCount'); tween(el, REPORT.roll, (t) => { el.textContent = pre + fmt(Math.round(countValue(0, to, t))); }, () => { el.textContent = pre + fmt(to); pop(el); }); };
+      rows.forEach((row, i) => this.reportTimers.push(window.setTimeout(() => roll(cells[i]!, row.value, ''), when.rows[i])));
+      this.reportTimers.push(window.setTimeout(() => roll(hw, r.hwEarned, '+'), when.hw));
+      this.reportTimers.push(window.setTimeout(() => {
+        seal.classList.add('on'); uiSound('uiStamp');
+        tween(seal, REPORT.stampIn, (t) => { const k = 1 - t * t; seal.style.transform = t >= 1 ? '' : `scale(${1 + (REPORT.stampFrom - 1) * k}) rotate(${REPORT.stampTurn * k}deg)`; seal.style.opacity = String(Math.min(1, t * 3)); },
+          () => tween(board, REPORT.joltMs, (t) => { board.style.transform = t >= 1 ? '' : `translateY(${Math.sin(t * Math.PI * 3) * (1 - t) * REPORT.jolt}rem)`; }));
+      }, when.stamp));
+    }
+    $('fallen').hidden = false;
   }
   private doReplant(): void {
     const hw = this.game.replant(this.tier()); $('fallen').hidden = true; this.tree.selected = 'sharp'; this.renderDetail(); this.renderHw(); this.setMode('run');

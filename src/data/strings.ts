@@ -8,6 +8,7 @@ export const STR = {
   fallenSummary: (w: number, kills: string, mins: number) => `Wave ${w} · ${kills} orcs slain · ${mins} min held`,
   fallenRate: (perMin: string, best: number) => `${perMin} starlight / min · best wave ${best}`,
   fallenLoot: (counts: string, best: string) => `Found ${counts} · best: ${best}`, fallenNoLoot: 'No items found this run',
+  repWave: 'Wave reached', repSlain: 'Orcs slain', repMins: 'Minutes held', repRate: 'Starlight / min', repBest: 'Best wave',
   fallenHW: 'Heartwood carried back', pulledTitle: 'You leave the wall standing', pullBack: 'Replant', fallenBtn: 'Replant the grove',
   starlight: 'Starlight', wave: 'Wave', slain: 'Slain', heartwood: 'Heartwood',
   campTitle: 'Between runs', campGo: 'March again', campClose: 'Back to the field', fallenToCamp: 'To the grove',
