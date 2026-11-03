@@ -160,6 +160,30 @@ export const CAMP_LV_SCALE = {
   training: [1, 1.05, 0.83, 1],
 } as const;
 
+/** Camp idle life (TB-188f): ambient motion in the Camp scene, scene units and seconds. Particle kinds: `rate` per second per
+ *  emitter (dust: one burst of `burst` every `every` s), life range, start velocity (vy negative = up), `grav` downward accel,
+ *  `wind` sideways drift, size from `r0` to `r1` over life, peak alpha `a`. `cap` bounds the shared pool. Emitters per building
+ *  and level ([lv1, lv2, lv3]), placed on each Tripo sprite in a Camp tab capture: the forge chimney (smoke and sparks), the
+ *  kitchen fire, pot or roof (smoke), the training ring (dust from dummy hits) and the bowyer roof peak (a swaying pennant:
+ *  pole `pole` tall, flag `len` x `w`, tip sway `amp` at `freq` Hz plus a second wave). */
+export const CAMP_LIFE = {
+  cap: 160,
+  smoke: { rate: 2.4, life: [2.6, 3.6], vx: [-1.5, 1.5], vy: [-9, -6], grav: 0, wind: 3, r0: 2.2, r1: 7, a: 0.32 },
+  sparks: { rate: 3.5, life: [0.45, 0.85], vx: [-7, 7], vy: [-30, -17], grav: 30, wind: 0, r0: 0.9, r1: 0.5, a: 1 },
+  dust: { every: [1.6, 2.6], burst: 6, life: [0.5, 0.8], vx: [-11, 11], vy: [-8, -3], grav: 14, wind: 0, r0: 1.4, r1: 3.2, a: 0.55 },
+  pennant: { pole: 11, len: 9, w: 5, amp: 1.8, freq: 0.35, amp2: 0.7, freq2: 0.6 },
+  emit: {
+    forge: [
+      [{ k: 'smoke', x: 210, y: 92 }, { k: 'sparks', x: 210, y: 92 }],
+      [{ k: 'smoke', x: 192, y: 84 }, { k: 'sparks', x: 192, y: 84 }],
+      [{ k: 'smoke', x: 207, y: 74 }, { k: 'sparks', x: 207, y: 74 }],
+    ],
+    kitchen: [[{ k: 'smoke', x: 390, y: 165 }], [{ k: 'smoke', x: 407, y: 148 }], [{ k: 'smoke', x: 382, y: 82 }]],
+    training: [[{ k: 'dust', x: 645, y: 170 }], [{ k: 'dust', x: 636, y: 154 }], [{ k: 'dust', x: 637, y: 164 }]],
+    bowyer: [[{ k: 'pennant', x: 71, y: 92 }], [{ k: 'pennant', x: 68, y: 83 }], [{ k: 'pennant', x: 71, y: 72 }]],
+  },
+} as const;
+
 /** UI motion and feedback kit (TB-195a, docs/plans/game-ui.md §3, ART-STYLE §Motion). Times in ms, sizes in CSS px. */
 export const JUICE = {
   /** Spring durations: pops, panels, screen moves. */
