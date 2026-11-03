@@ -278,6 +278,6 @@ export const SATCHEL_UI = { lines: 4, gap: 1.25, snap: 260 } as const;
 export const FIELD_VIEW = { reach: 24 } as const;
 
 /** Baked burning/chilled sprite frames (TB-216d). A glowing frame bakes whole at its drawn device height snapped to
- *  `quantum` px and is blitted 1:1 (TB-216f); `steps` is the per-doubling bucket of heightBucket(); past `cap` baked
+ *  `quantum` px, with its sub-pixel offset snapped to 1/`sub` px, and is blitted 1:1 on whole pixels (TB-216f); `steps` is the per-doubling bucket of heightBucket(); past `cap` baked
  *  frames the whole cache is dropped and rebuilt on demand. */
-export const SPRITE_BAKE = { steps: 4, cap: 512, quantum: 0.5 } as const;
+export const SPRITE_BAKE = { steps: 4, cap: 2048, quantum: 0.5, sub: 4 } as const;
