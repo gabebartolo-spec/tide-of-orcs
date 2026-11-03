@@ -121,7 +121,7 @@ Statuses predate the lob, wall and aim changes of 1–2 Nov (TB-154, TB-164) unl
 | Tree fully bought in a run | never | met: 117 of 156 buyable ranks at most (greedy run 5) |
 
 ## Heartwood tree (M3, built TB-053; shown to the player as Grudges, TB-112)
-Bought with Heartwood, never reset. Costs in HW. The tree spends from `available = earned − spent`. The header shows `available / earned` once anything is spent. Early Dawn's skipped boss waves are not owed (`bossDone` starts at `floor(startWave / BOSS_WAVE.every)`). Standing Orders spearmen are placed free, ignoring Muster and the line cap.
+Bought with Heartwood, never reset. Costs in HW. The tree spends from `available = earned − spent`. The header shows `available / earned` once anything is spent. Early Dawn's skipped boss waves are not owed (`bossDone` starts at `floor(startWave / BOSS_WAVE.every)`). Standing Orders spearmen are placed free, ignoring Muster and the line cap. Vanguard are not saved, so a load places them again (TB-219); the vanguard pool holds `VANGUARD.poolCap` (12) units, enough for a maxed line of 7 plus both.
 
 | id | Name | Max | Cost | Effect |
 |---|---|---|---|---|
