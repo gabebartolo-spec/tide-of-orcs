@@ -543,40 +543,42 @@ body[data-mode="camp"] :is(.hud-wallbox, .hud-wave) { display: none; }
 @keyframes pocket-want { 0%, 100% { filter: drop-shadow(0 0 0.25rem var(--amber)); } 50% { filter: drop-shadow(0 0 1.25rem var(--amber)); } }
 :root[data-calm] #sat-worn .item.want { animation: none; filter: drop-shadow(0 0 0.75rem var(--amber)); }
 :root[data-calm] :is(#sat-grid, #sat-worn) .item { transition: none; } :root[data-calm] :is(#sat-grid, #sat-worn) .item:hover { transform: none; }
-/* TB-206b: the picked item's card sits beside the doll (right) and the bag fills the rest of that column under it,
-   scrolling inside its frame (contain: size, so a full 80-item bag never grows the page); the Sets list sits under the
-   doll, its sets side by side, each as its name over one line per tier. The page keeps scale >= 0.95 at 1920x1080 with
-   any item picked. Sizes are the --card-* / --setl-* / --bag-min tokens. */
-:root { --bag-min: calc(var(--bag-pocket) + 2 * var(--sat-edge) + 1rem); --card-icon: 4rem; --card-img: 3.75rem;
-  --card-gap: 1rem; --card-row-gap: 0.25rem; --card-btn-pad: 0.125rem 0.625rem; --setl-gap: 0.375rem; --setl-cols: 3; --setl-off: 0.8; --setl-hang: 1.5em; }
+/* TB-206b (round 3): two bands. Top: the doll in a frame cut to its own width, the picked item's card, and the worn Sets
+   list, side by side. Bottom: the bag across the full width, --bag-cols pockets a row, so a full 40-item bag is two rows
+   and never scrolls (an 80-item Deep Satchel is four rows and the page fit scales). Set tiers are full-opacity text:
+   met amber, unmet parchment. Sizes are the --card-* / --setl-* / --bag-* tokens. */
+:root { --bag-cols: 20; --bag-gap: 0.5rem; --card-icon: 4rem; --card-img: 3.75rem; --card-gap: 1.25rem; --card-row-gap: 0.25rem;
+  --card-btn-h: 2.25rem; --card-btn-pad: 0.25rem 1.25rem; --reroll-pad: 0.125rem 0.75rem; --setl-gap: 0.375rem; --setl-hang: 1.5em;
+  --setl-fs: 1rem; --setl-lh: 1.3; --card-fr: 1.25fr; }
 @media (min-width: 861px) and (orientation: landscape) {
-  .prestige.satchel { grid-template-rows: auto auto minmax(0, 1fr) auto; }
-  .prestige.satchel > .stat, .prestige.satchel > .satbar { grid-row: 1; }
-  .prestige.satchel > #sat-worn { grid-row: 2 / span 2; } .prestige.satchel > #sat-sets { grid-row: 4; }
-  .prestige.satchel > #sat-detail { grid-column: 2; grid-row: 2; align-self: start; }
-  .prestige.satchel > #sat-grid { grid-row: 3 / span 2; align-self: stretch; contain: size; min-height: var(--bag-min); overflow-y: auto;
-    scrollbar-width: thin; scrollbar-color: var(--splinter) transparent; }
-  .prestige.satchel > #sat-detail, .prestige.satchel > #sat-grid, .prestige.satchel > #sat-worn { margin: 0; }
+  :root { --doll-pocket: 5.5rem; --doll-w: 12rem; --bag-pocket: 4rem; }
+  .prestige.satchel { grid-template-columns: max-content minmax(0, var(--card-fr)) minmax(0, 1fr); grid-template-rows: auto auto auto;
+    column-gap: var(--card-gap); row-gap: calc(0.5 * var(--card-gap)); }
+  .prestige.satchel > * { grid-column: auto; grid-row: auto; margin: 0; }
+  .prestige.satchel > .stat { grid-area: 1 / 1; } .prestige.satchel > .satbar { grid-area: 1 / 2 / 2 / 4; }
+  .prestige.satchel > #sat-worn { grid-area: 2 / 1; align-self: start; width: max-content; }
+  .prestige.satchel > #sat-detail { grid-area: 2 / 2; align-self: start; min-height: 0; }
+  .prestige.satchel > #sat-sets { grid-area: 2 / 3; align-self: start; }
+  .prestige.satchel > #sat-grid { grid-area: 3 / 1 / 4 / 4; align-self: start; justify-self: stretch; min-height: 0;
+    grid-template-columns: repeat(var(--bag-cols), var(--bag-pocket)); grid-auto-rows: var(--bag-pocket); gap: var(--bag-gap); justify-content: space-evenly; }
   .itemdetail .glyph.big { width: var(--card-icon); height: var(--card-icon); } .itemdetail .glyph.big img { width: var(--card-img); height: var(--card-img); }
-  .itemdetail .affixes { margin: var(--card-row-gap) 0; display: grid; grid-template-columns: repeat(2, max-content); column-gap: calc(3 * var(--card-gap)); row-gap: var(--card-row-gap); }
+  .itemdetail .affixes { margin: var(--card-row-gap) 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(max-content, 1fr)); column-gap: var(--card-gap); row-gap: var(--card-row-gap); }
+  .itemdetail .affixes:not(:has(.buy)) { grid-template-columns: repeat(2, max-content); }
   .itemdetail .affixes li { display: flex; flex-wrap: wrap; align-items: center; gap: var(--setl-gap); }
-  .itemdetail .affixes .buy { padding: var(--card-btn-pad); min-height: 0; }
-  .itemdetail .row { margin-top: var(--card-row-gap); justify-content: flex-start; gap: var(--setl-gap); }
+  .itemdetail .affixes .buy { padding: var(--reroll-pad); min-height: 0; }
+  .itemdetail .row { margin-top: calc(2 * var(--card-row-gap)); justify-content: flex-start; gap: calc(2 * var(--setl-gap)); }
+  .itemdetail .row .buy { min-height: var(--card-btn-h); padding: var(--card-btn-pad); }
   .itemdetail .row [data-act="salvage"] { margin-left: auto; }
-  #sat-sets { display: grid; grid-template-columns: repeat(var(--setl-cols), minmax(0, 1fr)); column-gap: var(--card-gap); align-items: start; }
-  #sat-sets > .k { grid-column: 1 / -1; }
   .sets .set, .itemdetail .set { display: block; margin: var(--setl-gap) 0 0; }
   .sets .set .k, .itemdetail .set .k { color: var(--cream); }
-  .set .tier { opacity: var(--setl-off); font-size: 1rem; line-height: 1.25; padding-left: var(--setl-hang); text-indent: calc(-1 * var(--setl-hang)); }
-  .set .tier.on { opacity: 1; }
+  .set .tier { color: var(--text); opacity: 1; font-size: var(--setl-fs); line-height: var(--setl-lh); padding-left: var(--setl-hang); text-indent: calc(-1 * var(--setl-hang)); }
+  .set .tier.on { color: var(--amber); }
 }
-/* TB-206b: a short window (720p) keeps its 16 px root (html clamp), so the doll and bag pockets shrink there instead of the
-   whole page, and the satchel keeps scale >= 0.95 at 1280x720 too. */
+/* 720p keeps its 16 px root (html clamp), so the pockets are sized for that height instead of the page shrinking */
 @media (min-width: 861px) and (orientation: landscape) and (max-height: 800px) {
-  :root { --doll-pocket: 3.75rem; --doll-w: 9.5rem; --bag-pocket: 4.25rem; --card-icon: 2.5rem; --card-img: 2.25rem; --pocket-icon: 2.75rem; --setl-gap: 0.25rem; }
-  .set .tier { font-size: 0.9375rem; line-height: 1.15; } .itemdetail .row .buy { padding: var(--card-btn-pad); min-height: 0; }
+  :root { --doll-pocket: 4.25rem; --doll-w: 8.5rem; --bag-pocket: 3.25rem; --bag-gap: 0.375rem; --pocket-icon: 3rem; --card-icon: 3rem; --card-img: 2.75rem;
+    --setl-gap: 0.25rem; --setl-lh: 1.2; --card-btn-h: 2rem; --card-gap: 1rem; --sat-edge: 1.125rem; --card-fr: 1.35fr; }
   .itemdetail :is(.desc, .affixes li) { line-height: 1.2; } #sat-worn { row-gap: var(--setl-gap); }
-  .itemdetail .head .title { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: calc(2 * var(--setl-gap)); }
 }
 /* HUD outside the field (TB-195i, director 3 Nov): the wall bar, starlight, wave plank, Slain/Heartwood and Settings sit in a
    carved bar above the field instead of over it, so no HUD piece covers the plain; the field shrinks to fit under the bar. */
