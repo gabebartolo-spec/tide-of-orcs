@@ -202,6 +202,7 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
 
   // projectiles
   s.shots.forEach((a: Projectile) => {
+    if (s.run.fallen) return; // the run froze mid-loop (TB-216a): nothing else resolves
     if (a.kind === 'fireball') {
       // The shaman's fireball (TB-127): the lob's parabola on its own timings; burns every vanguard in its circle, or the wall (TB-087).
       a.t += dt; const u = Math.min(1, a.t / FIREBALL.flight);
