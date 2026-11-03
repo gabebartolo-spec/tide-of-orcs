@@ -1,4 +1,4 @@
-# Specialisation paths (TB-193) — DRAFT plan
+﻿# Specialisation paths (TB-193) — DRAFT plan
 
 Director, 3 Nov: add specialisation with three paths. Each has a unique item set and an extra mythic weapon. This plan proposes how.
 Nothing is built until the director picks the open choices at the end.
@@ -31,7 +31,7 @@ Nothing is built until the director picks the open choices at the end.
 | Mythic | Slot | Power |
 |---|---|---|
 | **Fang of the Coiled Serpent** | bow | Every 5th shot is a venom arrow that splits on impact into three |
-| **Foxfire Glaive** | a new vanguard weapon slot, or charm | Calls a spectral fox that runs the wall line, biting orcs; it grows with companion count |
+| **Foxfire Glaive** | charm | Calls a spectral fox that runs the wall line, biting orcs; it grows with companion count |
 | **The Magpie's Talon** | quiver | Arrows that kill steal a glint: +x starlight, and a small chance the orc drops an item |
 
 Each mythic gets a Meshy icon like the existing ones (public/items), and its own drop-moment effect (TB-192 handles drop hype).
@@ -46,5 +46,5 @@ Each mythic gets a Meshy icon like the existing ones (public/items), and its own
 ## 6. Open choices for the director
 1. ~~Choice timing~~ **Decided (director, 3 Nov):** chosen before each prestige (Replant), changeable every run.
 2. ~~Exclusive drops~~ **Decided (director, 3 Nov):** path items drop only while their path is chosen.
-3. **Fox mythic slot:** charm (simple) or a new vanguard weapon slot (more work: a new slot means a save migration and UI).
+3. ~~Fox mythic slot~~ **Decided (director, 3 Nov): charm.**
 4. **Icon art spend:** Meshy credits for nine or more icons, yes or no.
