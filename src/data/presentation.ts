@@ -110,6 +110,8 @@ export const AMBIENCE = {
 export const LOOT_BANNER = {
   life: { common: 3, rare: 3.5, epic: 4, legendary: 5, mythic: 6 } as Record<string, number>,
   max: 3,
+  /** Rarities whose banner plays the uiRarity reveal shimmer (TB-195k). */
+  reveal: ['rare', 'epic', 'legendary', 'mythic'] as readonly string[],
 } as const;
 
 /** Skill-tree lighting (TB-190b, ART-STYLE §Arcane skill tree). World px at zoom 1; rates per second. Render-only. */

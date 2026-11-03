@@ -21,7 +21,7 @@ import { LOOT_TOAST } from '../data/lootTables';
 import { RARITIES } from '../data/loot';
 import { applyTextScale } from '../render/textScale';
 import { CampPane } from './camp';
-import { burstAt, press } from './juice';
+import { armHover, burstAt, press } from './juice';
 import { Hud } from './hud';
 import { Plate, oneLine, plateRows } from './plate';
 import { PathPicker, pathHint } from './paths';
@@ -57,7 +57,9 @@ export class Panel {
     $('dep-boss').querySelector('.n')!.textContent = STR.summonBoss;
 
     $('tab-settings').textContent = STR.tabSettings; $('tab-satchel').innerHTML = `${STR.tabSatchel}<span class="badge" id="sat-new" hidden></span>`;
-    this.satchel = new SatchelPane(game, (c) => this.onCue(c)); $('tab-satchel').onclick = () => { this.onCue('uiPop'); this.setTab('satchel'); this.satchel.render(); this.markNew(0); };
+    armHover(document.body); // TB-195k
+    // TB-195k: an equip lands with the stamp under its chime
+    this.satchel = new SatchelPane(game, (c) => { this.onCue(c); if (c === 'equip' || c === 'setRise') this.onCue('uiStamp'); }); $('tab-satchel').onclick = () => { this.onCue('uiPop'); this.setTab('satchel'); this.satchel.render(); this.markNew(0); };
     fitPages([$('pane-satchel'), $('pane-prestige'), $('pane-settings')]);
     $('tab-grove').onclick = () => { this.onCue('uiPop'); this.setTab('grove'); }; $('tab-camp').onclick = () => { this.onCue('uiPop'); this.setTab('camp'); }; $('tab-prestige').onclick = () => { this.onCue('uiPop'); this.setTab('prestige'); }; $('tab-settings').onclick = () => { this.onCue('uiPop'); this.setTab('settings'); };
     this.initSettings();
@@ -100,7 +102,7 @@ export class Panel {
     $('camp-sec-title').textContent = STR.campSecTitle; $('camp-sec-body').textContent = STR.campSecBody;
     this.camp = new CampPane(game, $('bcard'), $('camp-list'), (msg) => { this.onCue('bought'); this.toast(msg); });
     this.paths = new PathPicker($('paths'), () => game.state, (p) => game.choosePath(p),
-      (p) => { this.onCue('equip'); this.toast(p ? STR.pathChosen(PATHS[p].name) : STR.pathCleared); this.renderDetail(); }, drawSigil);
+      (p) => { this.onCue(p ? 'uiPath' : 'click'); this.toast(p ? STR.pathChosen(PATHS[p].name) : STR.pathCleared); this.renderDetail(); }, drawSigil);
     this.renderDetail(); this.renderHw(); this.camp.render(); this.paths.render(); this.setMode('run');
     if (game.state.run.fallen) this.showFallen();
   }
@@ -171,6 +173,7 @@ export class Panel {
     el.className = `lootbanner r-${it.rarity}`;
     el.innerHTML = `${glyph(it.slot, it, true)}<span class="txt"><span class="rar">${STR.rarityName[it.rarity] ?? it.rarity}</span><span class="nm">${STR.lootFound(itemName(it))}</span></span>`;
     box.prepend(el);
+    if (LOOT_BANNER.reveal.includes(it.rarity)) this.onCue('uiRarity'); // TB-195k: the reveal shimmer, rare and up
     while (box.children.length > LOOT_BANNER.max) box.lastElementChild!.remove();
     setTimeout(() => el.remove(), (LOOT_BANNER.life[it.rarity] ?? LOOT_BANNER.life.common!) * 1000);
   }
@@ -178,6 +181,7 @@ export class Panel {
   private buy(id: keyof typeof NODE): void {
     const btn = document.getElementById('buy-btn');
     if (!this.game.buy(id)) return;
+    this.onCue('uiStamp'); // TB-195k: a buy stamps
     if (btn) { press(btn); burstAt(btn); } // TB-195a: press plus a gold burst on every buy
     this.renderDetail();
   }
