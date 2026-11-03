@@ -65,7 +65,7 @@ export class Hud {
   /** Wall bar: lit fill by fraction, tone band, cracks; a drop in HP shakes it. */
   wall(hp: number, max: number, label: string): void {
     const frac = Math.max(0, Math.min(1, hp / Math.max(1, max))), bar = $('hud-wall');
-    $('hud-wall-fill').style.width = `${frac * 100}%`;
+    $('hud-wall-fill').style.setProperty('--frac', String(frac));
     bar.dataset.tone = wallTone(frac); bar.dataset.crack = String(crackStage(frac));
     $('hud-wall-t').textContent = label;
     if (this.lastHp !== null && hp < this.lastHp) this.shake((this.lastHp - hp) / Math.max(1, max));
@@ -86,7 +86,7 @@ export class Hud {
     if (calm()) { st.style.transform = ''; st.style.opacity = '1'; fade(); return; }
     tween(st, HUD.stampIn, (t) => {
       const e = springEase(t, JUICE.overshoot); st.style.opacity = String(Math.min(1, t * 3));
-      st.style.transform = `translate(-50%, -50%) rotate(-12deg) scale(${HUD.stampFrom + (1 - HUD.stampFrom) * e})`;
+      st.style.transform = `translate(-50%, -50%) rotate(-6deg) scale(${HUD.stampFrom + (1 - HUD.stampFrom) * e})`;
     }, () => { pop(banner, JUICE.dur.pop, 1.08); fade(); });
   }
 }

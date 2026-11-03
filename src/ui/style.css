@@ -385,7 +385,7 @@ body[data-mode="camp"] .campwrap { flex: 1 1 0; min-height: 0; height: auto; }
   filter: drop-shadow(0 0.25rem 0.375rem color-mix(in srgb, var(--ink) 80%, transparent)); }
 .hud-wave .k { font-size: 0.875rem; letter-spacing: .16em; text-transform: uppercase; color: var(--amber); }
 .hud-wave .v { font-family: var(--display); font-size: 1.5rem; line-height: 1; color: var(--text); white-space: nowrap; }
-.hud-wave .stamp { position: absolute; left: 50%; top: 58%; transform: translate(-50%, -50%) rotate(-12deg); padding: 0.125rem 0.5rem; font-family: var(--display); font-size: 1.125rem;
+.hud-wave .stamp { position: absolute; left: 50%; top: 58%; transform: translate(-50%, -50%) rotate(-6deg); padding: 0.125rem 0.5rem; font-family: var(--display); font-size: 1.125rem;
   letter-spacing: .14em; text-transform: uppercase; color: var(--grove); border: 0.1875rem double var(--grove); background: color-mix(in srgb, var(--ink) 70%, transparent); white-space: nowrap; pointer-events: none; }
 .hud .stats { margin-left: 0; align-self: center; }
 body[data-mode="camp"] :is(.hud-wallbox, .hud-wave) { display: none; }
@@ -745,3 +745,35 @@ body:not([data-mode="camp"]) .rally:not(:has(> :not([hidden]))) { background: no
 body[data-mode="camp"] .wrap { padding: 0; gap: 0; }
 body[data-mode="camp"] header { margin: 0; }
 body[data-mode="camp"] .panel { width: 100%; margin: 0; }
+/* TB-195b critic pass (4 Nov): Slain and Heartwood hang as carved banner plaques like the wave, not dark pills; the run wall bar is
+   larger (20 x 2.5 rem, same 320x40 piece scaled 1.25x) so its label has room beside the end caps; the fill spans the carved channel
+   by HP fraction and takes the tone colour below the high band, so the art itself reads amber, then rose, as the wall cracks. */
+body:not([data-mode="camp"]) .hud .stats { gap: 1rem; flex-wrap: nowrap; }
+body:not([data-mode="camp"]) header .stat { position: relative; align-items: baseline; justify-content: center; gap: 0.5rem; box-sizing: border-box; min-width: 10rem; height: 3.6rem;
+  padding: 0.9rem 0.75rem 0; margin-top: -0.25rem; border-radius: 0; background: none; box-shadow: none; border: solid transparent; border-width: 0 2.4rem;
+  border-image: image-set(url("/ui/banner.webp") 1x, url("/ui/banner@2x.webp") 2x) 0 48 fill / 0 2.4rem stretch;
+  filter: drop-shadow(0 0.25rem 0.375rem color-mix(in srgb, var(--ink) 80%, transparent)); text-shadow: 0 0 0.125rem #2a1a0a, 0 0.0625rem 0.125rem #2a1a0a; }
+body:not([data-mode="camp"]) header .stat .k { font-weight: 700; color: #ffd98a; }
+body:not([data-mode="camp"]) header .stat .v { line-height: 1; color: #fff4dc; white-space: nowrap; }
+.hud-wall { --chan: 13.2rem; }
+.hud-wall .fill { width: calc(var(--frac, 1) * var(--chan)); max-width: none; }
+.hud-wall .fill::after { content: ""; position: absolute; inset: 0; background: var(--tone); mix-blend-mode: color; opacity: 0; transition: opacity var(--hud-roll) ease-out; }
+.hud-wall:is([data-tone="mid"], [data-tone="low"]) .fill::after { opacity: .8; }
+body:not([data-mode="camp"]) .hud-wall { width: 20rem; height: 2.5rem; --chan: 16.5rem; }
+body:not([data-mode="camp"]) .hud-wall .fill { left: 1.75rem; top: 0.75rem; height: 1rem; background-size: 19rem 1rem; }
+body:not([data-mode="camp"]) .hud-wall .lbl { line-height: 2.5rem; padding: 0 2.25rem; }
+/* TB-195b critic round 2 (4 Nov): one plaque size and type for Wave, Slain and Heartwood, numerals clear of the nails; the wall label
+   gets a carved dark stroke over the lit fill; the odometer settles without overshoot and fades each cell's top and bottom so a
+   rolling digit never shows two rows; the CLEARED stamp replaces the wave text on a cream-on-forest seal; a buy keeps its label above the burst. */
+body:not([data-mode="camp"]) :is(header .stat, .hud-wave) { min-width: 13.5rem; padding: 0.9rem 0.75rem 0; align-items: baseline; }
+body:not([data-mode="camp"]) :is(header .stat .k, .hud-wave .k) { font-size: 1.125rem; font-weight: 700; letter-spacing: .02em; color: #ffd98a; }
+body:not([data-mode="camp"]) :is(header .stat .v, .hud-wave .v) { font-family: var(--display); font-size: 1.75rem; font-weight: 700; line-height: 1; }
+body:not([data-mode="camp"]) .hud-wall .lbl { -webkit-text-stroke: 0.25rem #2a1a0a; paint-order: stroke fill; }
+.hud-wall:is([data-tone="mid"], [data-tone="low"]) .fill::after { opacity: 1; }
+.hud-wall[data-tone="low"] .fill::after { mix-blend-mode: normal; opacity: .7; }
+.odo .strip { transition-timing-function: cubic-bezier(.2, .7, .3, 1); }
+.odo .od { -webkit-mask-image: linear-gradient(transparent, #000 22%, #000 78%, transparent); mask-image: linear-gradient(transparent, #000 22%, #000 78%, transparent); }
+.hud-wave:has(.stamp:not([hidden])) > :not(.stamp) { visibility: hidden; }
+.hud-wave .stamp { top: 55%; font-size: 1.5rem; font-weight: 700; color: #f3f8e6; border-color: #cfe8b8; background: #2f4a28; letter-spacing: .1em;
+  box-shadow: 0 0.125rem 0.375rem #000a; text-shadow: 0 0.0625rem 0 #1a2a14; }
+#buy-btn { position: relative; z-index: 1001; }
