@@ -15,3 +15,5 @@ Third-party assets used in Tide of Orcs.
 - Treeline (`tree_*` in `public/decor`; TB-207): "Handpainted Tree Pack" by rudolfs,
   https://sketchfab.com/3d-models/handpainted-tree-pack-d246b8b4439d44c6adc854ebc5ffc5ba, licensed CC BY 4.0
   (https://creativecommons.org/licenses/by/4.0/). Changed: single trees rendered to 2D sprites, plus darker hazed copies.
+- Boss ogre (`orc.ogre*` in `public/sprites/sheet_ogre.webp`; TB-211): "Troll_Orc" by Reizake, Sketchfab, licensed CC BY 4.0
+  (https://creativecommons.org/licenses/by/4.0/). Changed: rendered to 2D sprite frames from the model's own animation take.

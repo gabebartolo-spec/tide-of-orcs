@@ -11,10 +11,11 @@ from PIL import Image
 src, dst = sys.argv[1], sys.argv[2]
 RES, PX_PER_M, SHEET_W, PAD = 512, 110, 2048, 2
 # TB-194: four sheets (each <= 2 MB) since attacks are packed at 30 fps (every clip frame); was orcs + elf (TB-129)
-SHEETS = {"orcs": "sheet_orcs.webp", "orcs2": "sheet_orcs2.webp", "elf": "sheet_elf.webp", "van": "sheet_van.webp", "camp": "sheet_camp.webp", "archer": "sheet_archer.webp"}
+SHEETS = {"orcs": "sheet_orcs.webp", "orcs2": "sheet_orcs2.webp", "elf": "sheet_elf.webp", "van": "sheet_van.webp", "camp": "sheet_camp.webp", "archer": "sheet_archer.webp", "ogre": "sheet_ogre.webp"}
 ORCS2 = ("orc.runner", "orc.brute", "orc.wolfrider", "hawk")
 def sheet_of(key):
     if key.startswith("camp."): return SHEETS["camp"]
+    if key.startswith("orc.ogre"): return SHEETS["ogre"]  # TB-211 boss ogre: its own sheet
     if key.startswith("archer"): return SHEETS["archer"]  # TB-203 companion archer: its own sheet (206 frames would push sheet_elf past 2 MB)
     if key.startswith(ORCS2): return SHEETS["orcs2"]
     if key.startswith("orc."): return SHEETS["orcs"]
@@ -44,6 +45,8 @@ ANIMS = {
     "wolf.attack": (25, False, "wolf", 1.6),  # all 33 bite frames; field.ts scrubs it with the bite cooldown
     "hawk": (30, False, "hawk", 3.0),  # TB-068 companion flight v1 (director 3 Nov): OSU CC BY Sketchfab hawk, its own Wings Flapping clip, frames 0-29 (render_hawk.py VIEW=game YAW=90); anchor = bird centre
     "orc.wolfrider": (25, True, "orc.wolfrider", 2.6),  # run v8 (director 3 Nov): companion wolf run copied onto the rider wolf, orc at rest; frames from wolfrider/render_wr_sheet.py STEP=1
+    "orc.ogre": (30, True, "orc.ogre", 2.4),  # TB-211 boss: Reizake CC BY Troll_Orc, its own take frames 61-110 (walk loop, 111 = 61); render_ogre.py VIEW=game YAW=90 ORTHO=4.2 INPLACE=1
+    "orc.ogre.attack": (30, True, "orc.ogre", 2.4),  # TB-211: its own take frames 173-231 (sword combo)
     "orc.wolfrider.attack": (15, True, "orc.wolfrider", 2.6),  # shares the run body key, same ortho 1.4
 }
 # TB-188d: Tripo camp buildings, one static frame per building per level (render_camp.py, ORTHO 2.2, anchor = ground centre).
