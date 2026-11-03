@@ -17,8 +17,8 @@ loot(w)     = 2  × 1.13^(w−1)
 interval(w) = max(0.3, 2.0 × 0.93^(w−1))   seconds between grunt spawns; kind k every interval × every_k / 1.2^swarm_k; paused during a boss wave
 boss wave: unlocks every 25 waves, 60 s script, clear bonus = 40 × waveLoot(w) × starMult × (1 + 0.5 × hw_boss rank) starlight and bossHw(w) = 3 × floor(w / 25) Heartwood (P-142)
 speed       = base × (1 + 0.008 w)
-atk         = 0.025 × maxhp                  per swing, one swing per second, vs vanguard
-wall hit    = min(10 × atk, 0.25 × barMax)    per swing vs the barricade (TB-080: bare run falls at wave 3–4, ~90 s; cap P-125, TB-125)
+atk         = 0.025 × maxhp                  per second vs vanguard; one swing every 35/15 s (`orcSwing`, TB-161) hits for atk × orcSwing
+wall hit    = min(25 × atk, 0.25 × barMax)    per second vs the barricade (`wallMult`, TB-154; cap P-125, TB-125)
 ```
 Type multipliers and unlocks in GDD §4. Per kind: Fury ×1.3^r health, ×1.4^r starlight; Swarm ×1.2^r spawn rate (grunts: War Drums, Call the Horde). Live orc cap 160.
 Crowd control (TB-126, P-126): a stun or root is never topped up or lengthened while it holds; a fresh one lands only once the orc has broken free (`stunOrc`, `rootOrc`). Pins and slows are unchanged.
@@ -27,7 +27,7 @@ Crowd control (TB-126, P-126): a stun or root is never topped up or lengthened w
 ```
 lobCd   = 1.25 / 1.15^draw         seconds between shots; fires only while aimed
 radius  = 20 × 1.2^wide            strike circle, px (40 until TB-132)
-dmg     = 3 × player dmg           to every orc within radius + orc radius
+dmg     = 1 × player dmg           to every orc within radius + orc radius
 flight  = 0.7 s, apex 90 px; Longshaft repeat strikes 0.35 s apart; Split Shot arrows land within 0.6 × radius
 ```
 Rangers and Wardens keep straight volleys at `fireRate = 1.2 × 1.15^draw` per second, with `arrows` (Split Shot) in the fan, `pierce` (Longshaft), crit and Moonbow steering.
@@ -46,7 +46,7 @@ Rangers and Wardens keep straight volleys at `fireRate = 1.2 × 1.15^draw` per s
 - Hawk: 2.5× dmg × kin, 4 s, 60 px radius. Treant: 3× dmg × kin, 3 s, 160 px from the wall.
 - Ballista: 40 × 1.7^bolt × kin every 4 s, infinite pierce. Knives: 5 × 1.35^nimble × kin every 1.4 s ÷ 1.2^nimble.
 - Moonbow: the strike circle settles on the nearest orc within 70 px of the aim point (`aimHomingRadius`). The lob's reward for aiming is `LOB.dmgMult` 1 (×1 player damage) to every orc in the circle: a wave-1 grunt takes two lobs, wave 5 three (TB-154, director 2026-11-01; was 3, one shot to wave 7).
-- Node multipliers (`NODE_FX` in `src/data/balance.ts`): Sharpen ×1.25^r dmg, Moonbow ×1.6 dmg, Quick Draw ×1.15^r fire rate and ÷1.15^r lob cooldown, Wide Volley ×1.2^r radius, Keen Eye +0.08 crit per rank, Gleaning ×1.15^r starlight, Kinship ×1.4^r companion and vanguard dmg, Fangs ×1.4^r wolf dmg, Nimble Wrist ×1.2^r knife rate and ×1.35^r knife dmg, Iron Bolts ×1.7^r ballista dmg. Per-kind Fury/Swarm (incl. War Drums and Call the Horde for grunts) are `FOE_FX` in `src/data/orcs.ts`: ×1.3^r hp, ×1.4^r loot, ×1.2^r spawn rate.
+- Node multipliers (`NODE_FX` in `src/data/balance.ts`): Sharpen ×1.25^r dmg, Moonbow ×1.6 dmg, Quick Draw ×1.15^r fire rate and ÷1.15^r lob cooldown, Wide Volley ×1.2^r radius, Keen Eye +0.08 crit per rank, Gleaning ×1.08^r starlight, Kinship ×1.4^r companion and vanguard dmg, Fangs ×1.4^r wolf dmg, Nimble Wrist ×1.2^r knife rate and ×1.35^r knife dmg, Iron Bolts ×1.7^r ballista dmg. Per-kind Fury/Swarm (incl. War Drums and Call the Horde for grunts) are `FOE_FX` in `src/data/orcs.ts`: ×1.3^r hp, ×1.4^r loot, ×1.2^r spawn rate.
 
 #### Other constants in `src/data/` (reference, not previously listed)
 | Constant | Value | File |
@@ -109,7 +109,7 @@ Worn affixes are summed per stat across items (`gearTotals`), then applied once 
 - Moonhead `homingDmg`: `moonMult` × (1 + sum). Paleglow `critDmg`: the elf's `critMult` × (1 + sum).
 
 ### Pacing targets (what the sim must hit)
-Status measured 31 Oct 2026 at 8791ac2, seed 1, 25 min, player model `crowdAim` (except "no aim"). Greedy falls: waves 5, 5, 7, 5, 24 (minutes 1.6, 3.3, 5.8, 7.6, 16.9). Nobuy falls: wave 4 at 1.5 min, then waves 5–6 every ~2 min (13 falls). No aim at all: falls at wave 2–3 every ~0.8 min.
+Statuses predate the lob, wall and aim changes of 1–2 Nov (TB-154, TB-164) unless the row says otherwise; re-measure in the balance phase.
 
 | Target | Value | Status |
 |---|---|---|
@@ -236,7 +236,7 @@ What it says:
 - Sim note: `--cost id=base` sets a run-tree node's base price for a sweep.
 
 ### P-087 · Four new orcs: draft for the director to edit (2026-11-02, TB-087)
-Director reviewed 3 Nov (decisions below); not built or simmed yet. Each joins the tide on its own from a set wave at half rate, like runners, brutes and Blackguard since TB-158 (GDD §4), its Grove summon node makes it march more often, and it has its own Fury and Swarm nodes (+30% health and +40% starlight, +20% spawn per rank), so the player chooses the danger. Stats are in grunt units like `ORC_TYPES` (hp × wave HP, loot × wave loot, `every` × the grunt interval). The field is 900 wide with the wall at x 150.
+Director reviewed 3 Nov (decisions below); built 3 Nov (TB-087, below). Each joins the tide on its own from a set wave at half rate, like runners, brutes and Blackguard since TB-158 (GDD §4), its Grove summon node makes it march more often, and it has its own Fury and Swarm nodes (+30% health and +40% starlight, +20% spawn per rank), so the player chooses the danger. Stats are in grunt units like `ORC_TYPES` (hp × wave HP, loot × wave loot, `every` × the grunt interval). The field is 900 wide with the wall at x 150.
 
 | Orc | hp | speed | loot | radius | every | What it does | Answer the player has |
 |---|---|---|---|---|---|---|---|
@@ -263,7 +263,7 @@ Director 3 Nov: all four behaviours and halt distances kept as drafted; arrival 
 Limit: the sim player tops out near wave 31–35 in an hour, so shamans and drummers barely march in any run; their join waves need a longer or later-start sim to judge. Costs untested for the same reason (the greedy player never affords 3000+ Grove nodes before wave 30).
 
 ### P-148 · Boss tiers: how hard each tier hits, and what it pays (2026-11-02, TB-148)
-Director chose *unlock across runs*: clearing a boss wave while at your highest tier unlocks the next for good; at March you pick any unlocked tier. Shipped switched off (`TIERS.max` 1); set F moved to Current 2026-11-02. Each tier above 1 multiplies orc HP by `hp^(tier−1)`, starlight per kill and per boss by `loot^(tier−1)`, and boss Heartwood by `1 + hw × (tier−1)`, from wave 1.
+Director chose *unlock across runs*: clearing a boss wave while at your highest tier unlocks the next for good; at March you pick any unlocked tier. Set F moved to Current 2026-11-02 (`TIERS.max` 6). Each tier above 1 multiplies orc HP by `hp^(tier−1)`, starlight per kill and per boss by `loot^(tier−1)`, and boss Heartwood by `1 + hw × (tier−1)`, from wave 1.
 
 Sim: `npx tsx sim/run.ts --minutes 360 --hwbuy --quiet --tune TIERS.max=6,TIERS.hp=…,TIERS.loot=…,TIERS.hw=…`, seed 1, on TB-154 balance (main 2cad1a3). The bot marches at its highest tier after a run that cleared a boss, otherwise one tier lower (`--tiertop` always marches at the highest: it walls itself at the top tier, clears 3–5 bosses in 6 h and ends with *less* Heartwood than tiers off, 74–91 vs 128).
 
@@ -297,7 +297,7 @@ Director: arrows one-shot early orcs, the wall is far too healthy (no damage unt
 Bare first run, seeds 1–3 (`createState` + `step`, no buys): the hard set alone killed 1–3 orcs and earned 2–6 starlight before falling at 28 s, below the 12 for the first Sharp rank even when aiming at the front orc. Director then chose a faster lob, `LOB.cd` 2.5 → 1.25 (Quick Draw scales from it; the elf's damage per second is ⅔ of before all game). Front-orc aim: 7–8 kills, 14–16 starlight (one buy), falls at wave 2 around 36 s. The first orc reaches the wall at 18 s on every set, so the wall now takes damage in wave 1.
 
 ### P-142 · Tree-gated progress: Heartwood from bosses, no passive, Gleaning deeper (2026-11-01, TB-142)
-Director: early game too easy, first runs too long, Gleaning a no-brainer that snowballs, Heartwood too easy. Chosen and applied (now in Current): a fall pays a flat 1 HW; bosses pay the rest (`bossHw = 3 × floor(w / 25)`, 3 at wave 25, 6 at 50; halved after Heartwood Splinter); boss waves every 25; no passive `heart` bonus; Gleaning moves under War Drums (root → Call the Horde → War Drums → Gleaning), 5 ranks, base 600, growth 2.2, +8% per rank.
+Director: early game too easy, first runs too long, Gleaning a no-brainer that snowballs, Heartwood too easy. Chosen and applied: a fall paid a flat 1 HW (since 0, TB-171); bosses pay the rest (`bossHw = 3 × floor(w / 25)`, 3 at wave 25, 6 at 50; halved after Heartwood Splinter); boss waves every 25; no passive `heart` bonus; Gleaning moves under War Drums (root → Call the Horde → War Drums → Gleaning), 5 ranks, base 600, growth 2.2, +8% per rank.
 
 Evidence, `npm run balance -- --minutes N --seed S --quiet`, greedy bot:
 
@@ -559,9 +559,6 @@ Original options:
 
 Proposed rewording for the run 2 row: "Run 2 falls at a wave ≥ 1.5× run 1's fall wave" (now 25–29 vs 12–18: met).
 
-### TB-079 lob: pacing check (open; pre-TB-080, needs a re-run under TB-054)
-Greedy sim, player model aims at the thickest crowd every step (`crowdAim`), 30 min, seeds 1–3: run 1 falls at minute 8 (seeds 2, 3) to 21 (seed 1); run 2 reaches wave 35 on all three. Targets were first fall 12–18, run 2 ≥ 1.5×. The model aims perfectly, so a human will land fewer orcs per circle. `LOB.dmgMult` 3 is the tuning lever; leave it until play-testing.
-
 ### TB-054 · Balance pass #1 (2026-10-31, closed: director kept `wallMult` 10 and chose new pacing targets, now in §Pacing targets)
 The sim summary used to print the *last* fall as "First fall"; fixed in `sim/run.ts`. The 30-min "first fall 26/35/35" figures under §Simulator were last falls.
 
@@ -592,7 +589,7 @@ Options:
 
 Decision: keep 10. Measured falls over 40 min, seeds 1–3 (wave@run minutes): greedy 5@1.6 … 24–26@9–10, 35–36@14; dps 5@1.6 … 20–26@8–10, 35@14; nobuy 4–5@1.5–1.9 every run. Over 40 min dps no longer beats greedy (Heartwood 52–66 vs 60–68).
 
-### Loot (TB-091, from the Loot Expansion Design; data in `src/data/lootTables.ts`, not yet live)
+### Loot (TB-091, from the Loot Expansion Design; data in `src/data/lootTables.ts`, live)
 - P(drop) = min(0.6, 0.008 · lootTier^1.5 · (1 + itemFind)). lootTier: grunt 1, runner 2, brute 3, elite 4, boss 5.
 - Rarity weights normal/boss: common 70.47/0, rare 25/45.1, epic 4.5/45, legendary 0.03/9, mythic 0/0.9 (P-108; boss column is the simmed 40/40/8/0.8 rescaled to sum 100). Each weight × (1+luck)^rank × (1 + 0.15(lootTier−1))^rank, rank 0–4.
 - Affixes per rarity 1/2/3/4/4; ranges × 0.75 × (1 + 0.03 · ilvl) (`AFFIX.gain` 0.75, P-108b). Item level = wave, capped at 20 + 10 × prestiges. Commons stop after prestige 3, rares after 8. Affixes roll only for features the player owns (TB-114, `AFFIX_NEEDS`): Kinship needs any companion; Packbond the wolf, Talons the hawk, Roots the treant, Blades the knives, Ballistae the ballista, Thorns the spikes, Banner/Mail/Mending the vanguard (Muster), Elitebane elites marching; fire, storm and moon affixes need that arrow.
@@ -785,8 +782,8 @@ Evidence: headless probe, greedy buys, crowd aim, seeds 1–3, 120 sim minutes e
 
 Proposal: A. Add `BARRICADE.maxHitFrac: 0.25`; `barricadeHit` takes `min(amount, maxHitFrac × barMax)`. The wall then always survives at least four swings, so Timber, Patient Hands and rallying keep mattering late, and pacing barely moves (best wave and run lengths within a wave and a minute of Current). B also works and is more forgiving (+1–2 waves). C is rejected: it still one-shots from wave 40 and shortens early runs. Early waves are unchanged by A and B (hits there are 1–3% of the wall).
 
-### P-127 · Shaman fireball flight (2026-11-01, TB-127; presentation only, damage waits on TB-087)
-`FIREBALL` in `src/data/orcs.ts`: flight 0.9 s, arc 55 px, strike radius 24 px, damage 0. The ball leaves the staff tip and lands where the shaman aimed when it cast; nothing takes damage yet. Chosen so the cast-sheet throw (35 frames at 15 fps, release about frame 18) reads as one motion with the lob, and so the strike circle matches the elf's own 24 px strike circle for a familiar read. Once TB-087 fixes shaman stats, damage, target choice (wall or vanguard) and cadence go here with sim output.
+### P-127 · Shaman fireball flight (2026-11-01, TB-127; damage since built in TB-087: `FIREBALL.every` 4 s, `gruntHits` 3)
+`FIREBALL` in `src/data/orcs.ts`: flight 0.9 s, arc 55 px, strike radius 24 px, damage 0 at the time. The ball leaves the staff tip and lands where the shaman aimed when it cast; nothing takes damage yet. Chosen so the cast-sheet throw (35 frames at 15 fps, release about frame 18) reads as one motion with the lob, and so the strike circle matches the elf's own 24 px strike circle for a familiar read.
 ### P-126 · Crowd control froze the field at the orc cap (2026-11-01, TB-126; director chose no re-stun, now in Current)
 Cause, from a state dump at wave 110 (seed 3, bosses every 60, legendary and mythic weights raised): all 160 live orcs held. 128 sat stun-locked at the spawn edge (x 800–1000): maxed Quiver makes every shot roll shock, Thunderclap stun 1.0 s outlasts the 0.57 s lob cadence, and crowd aim keeps hitting the thickest pile, which is the frozen one. 32 sat root-locked by the Treant set's 1.5 s root, re-applied on every stamp faster than it wore off. With the cap full nothing spawned, nothing reached the wall, and the run never fell.
 

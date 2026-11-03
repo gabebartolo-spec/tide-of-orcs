@@ -1,7 +1,7 @@
-﻿# Specialisation paths (TB-193) — DRAFT plan
+# Specialisation paths (TB-193) — plan (a and c built)
 
-Director, 3 Nov: add specialisation with three paths. Each has a unique item set and an extra mythic. This plan proposes how.
-Nothing is built until the director picks the open choices at the end.
+Director, 3 Nov: add specialisation with three paths. Each has a unique item set and an extra mythic. Data (TB-193a, save v14)
+and UI (TB-193c) are built; balance and art remain.
 
 ## 1. The three paths
 | Path | Focus | Feel | Leans on |
@@ -10,7 +10,7 @@ Nothing is built until the director picks the open choices at the end.
 | Path of the Fox | Vanguard and companions | A cunning pack: more bodies on the field, fighting together | Vanguard line, wolf, hawk, treant |
 | Path of the Magpie | Economy | A hoarder: starlight, loot and summons | Starlight, item find, summons, rerolls |
 
-## 2. How a path is chosen (proposal)
+## 2. How a path is chosen
 - At each prestige (Replant), before *March again*, the player picks one path for the coming run. It can change at every
   replant, so there is no lock-in. That fits "costs no progress".
 - The chosen path does three things:
@@ -37,14 +37,14 @@ Nothing is built until the director picks the open choices at the end.
 Each mythic gets a Meshy icon like the existing ones (public/items), and its own drop-moment effect (TB-192 handles drop hype).
 
 ## 5. Build steps (one row and one PR each)
-1. **TB-193a Data and sim:** `data/paths.ts`, path state in `run` with a migration, path branches in `skillTree.ts`
+1. **TB-193a Data and sim (done):** `data/paths.ts`, path state in `run` with a migration, path branches in `skillTree.ts`
    and SKILL-TREE.md, three sets and three mythics in `lootTables.ts`, and tests for each effect.
-2. **TB-193b Balance:** sims for each path against no path (`npm run balance`), numbers in BALANCE ## Proposed, then ask the director.
-3. **TB-193c UI (built):** cards sit across the top of the Replant tab, usable while the run has fallen (`choosePath`); clicking the chosen card or *No path* clears it; the pick pops and bursts in the path's light (TB-195a juice). Sigils are placeholder vectors (`src/render/sigil.ts`, `PATH_TINT` tokens) until TB-193d. Locked path nodes show a padlock and the hint "Choose the Path of the … at Replant"; path set items and mythics carry a path tag in the satchel. Original scope: the path pick on the Replant screen (three cards with a sigil each), and path branch styling in the tree (with TB-190's neon in the path's colour).
-4. **TB-193d Art:** three path sigils, six set-item icons (or more) and three mythic icons. Meshy (the existing icon pipeline) or free models.
+2. **TB-193b Balance:** placeholder numbers (P-193) sit in BALANCE ## Proposed; sims and tuning wait for the balance phase (after features, bug bash and performance).
+3. **TB-193c UI (done):** cards sit across the top of the Replant tab, usable while the run has fallen (`choosePath`); clicking the chosen card or *No path* clears it; the pick pops and bursts in the path's light (TB-195a juice). Sigils are placeholder vectors (`src/render/sigil.ts`, `PATH_TINT` tokens) until TB-193d. Locked path nodes show a padlock and the hint "Choose the Path of the … at Replant"; path set items and mythics carry a path tag in the satchel.
+4. **TB-193d Art:** three path sigils, six set-item icons (or more) and three mythic icons. Meshy (approved).
 
-## 6. Open choices for the director
-1. ~~Choice timing~~ **Decided (director, 3 Nov):** chosen before each prestige (Replant), changeable every run.
-2. ~~Exclusive drops~~ **Decided (director, 3 Nov):** path items drop only while their path is chosen.
-3. ~~Fox mythic slot~~ **Decided (director, 3 Nov): charm.**
-4. ~~Icon art spend~~ **Decided (director, 3 Nov): yes to Meshy credits** for the path icons (sigils, set items, mythics).
+## 6. Decisions (director, 3 Nov)
+1. **Choice timing:** chosen before each prestige (Replant), changeable every run.
+2. **Exclusive drops:** path items drop only while their path is chosen.
+3. **Fox mythic slot:** charm (Foxfire Tail).
+4. **Icon art spend:** Meshy credits approved for the path icons (sigils, set items, mythics).

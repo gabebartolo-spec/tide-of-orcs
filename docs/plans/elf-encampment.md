@@ -1,8 +1,8 @@
-﻿# Elf military encampment (TB-188) — DRAFT plan
+# Elf military encampment (TB-188) — plan (a–c built)
 
 Director, 3 Nov: the grove props are gone (TB-187). The area behind the wall becomes an elf military encampment with a
-**bowyer, a forge, a kitchen and a training area, each upgradable.** This plan proposes how. Nothing is built until the
-director picks the open choices at the end.
+**bowyer, a forge, a kitchen and a training area, each upgradable.** Data, UI and placeholder art are built
+(TB-188a–c, save v13); final art and life remain.
 
 ## 1. Where it sits
 The grove is the strip west of the barricade: the elf stands mid-strip, with archers and the ballista on their spots.
@@ -15,7 +15,7 @@ The four buildings take the free bands, as the props did, so no unit lane is cov
 | Bottom-left | Kitchen (cook fire, pot, bread table, smoke) | The quiet back corner |
 | Bottom-right, behind the wall | Training area (straw dummies, sparring ring, spear rack) | The vanguard muster from here to the wall |
 
-Each building has three looks: **level 0** (a frame or tent), **level 1** (built), and **level 3** (finished, with a banner,
+Each building has three looks: **level 0** (a frame or tent), **level 1** (built; level 2 adds a banner), and **level 3** (finished, with a banner,
 lights and a working animation such as forge sparks, cook smoke or a swinging dummy). The level drawn is the building's
 upgrade level, so the camp grows visibly as the player invests. That is the GDD's "watch the field change".
 
@@ -28,19 +28,19 @@ upgrade level, so the camp grows visibly as the player invests. That is the GDD'
 | Training area | Vanguard | + vanguard HP and damage %, − respawn time |
 
 Each building's levels live beside the Heartwood tree (paid with Heartwood plus its material), so systems still read only `Stats` (CLAUDE.md rule 4). Clicking a building on
-the field opens its card with its levels, costs and the next upgrade. The skill tree stays as it is.
+the field opens its card with its level, costs and the next upgrade; upgrades are bought only while the run has fallen. The skill tree stays as it is.
 
 ## 3. Build steps (one backlog row and one PR each)
-1. **TB-188a Data and sim:** `src/data/camp.ts` (buildings, levels, costs, effects) → `Stats`. Save migration for the camp levels.
-   Tests pin each effect. BALANCE ## Proposed holds the costs, with balance sims (`npm run balance`).
-2. **TB-188b UI:** click a building → its card (upgrade, cost, effect). A "Camp" section on the Replant tab lists all four.
-3. **TB-188c Placeholder art:** palette-token vector drawings of each building at levels 0/1/3, so the loop plays before the final art.
-4. **TB-188d Final art:** buildings as sprites at the game angle (GAMECAM 20), like the fence. The source is Meshy; every frame is screened, then sent to the director before packing.
+1. **TB-188a Data and sim (done):** `src/data/camp.ts` (buildings, levels, costs, effects) → `Stats`. Save migration for the camp levels.
+  . Placeholder costs (P-188) in BALANCE ## Proposed; tuning waits for the balance phase.
+2. **TB-188b UI (done):** click a building → its card (upgrade, cost, effect). A "Camp" section on the Replant tab lists all four.
+3. **TB-188c Placeholder art (done):** palette-token vector drawings of each building at levels 0/1/3, so the loop plays before the final art.
+4. **TB-188d Final art:** buildings as sprites at the game angle (GAMECAM 20), like the fence. The source is Tripo; every frame is screened, then sent to the director before packing.
 5. **TB-188e Life:** idle animations (sparks, smoke, dummy hits) and upgrade moments (build dust, banner raise, sound).
 
-## 4. Open choices for the director
-1. ~~Currency~~ **Decided (director, 3 Nov): Heartwood plus special farmable materials dropped by common enemies.** Buildings
-   are permanent. Each building has its own material, e.g. bowyer = sinew/heartstring, forge = orc iron, kitchen = game meat,
-   training = straw/hide. Grunts and other common orcs drop them during a run, and they are kept across runs. Drop rates go to BALANCE ## Proposed.
-2. ~~Art source~~ **Decided (director, 3 Nov): Meshy** (the director named it, which is the spend yes for this job).
-3. ~~Levels~~ **Decided (director, 3 Nov): 3 per building.**
+## 4. Decisions (director, 3 Nov)
+1. **Currency:** Heartwood plus a farmable material per building, dropped by common orcs. Buildings
+   are permanent. Each building has its own material, e.g. bowyer = sinew, forge = iron, kitchen = meat,
+   training = hide (`src/data/camp.ts`). Grunts and other common orcs drop them during a run, and they are kept across runs. Drop rates go to BALANCE ## Proposed.
+2. **Art source:** Tripo for the camp models.
+3. **Levels:** 3 per building.
