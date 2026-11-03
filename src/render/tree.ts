@@ -2,6 +2,7 @@ import { BRANCH_COLOR, BRANCH_LABEL, NODE, NODES, NodeId, SkillNode, TREE_VIEW }
 import { Camera, centreOn, clampCamera, easeToward, startCamera, panBy, toWorld, wholeCamera, zoomAt } from './camera';
 import { SimState } from '../sim/state';
 import { canBuy, pathLocked, rankOf, unlocked } from '../sim/tree';
+import { DragGuard } from './dragGuard';
 import { BRANCH_LIGHT, P, PATH_TINT } from './palette';
 import { TREE_LIGHT as L } from '../data/presentation';
 
@@ -40,8 +41,7 @@ export class TreeRenderer {
   private cam: Camera = { x: 0, y: 0, z: 1 };
   private vw = 1; private vh = 1; private dpr = 1;
   private pts = new Map<number, { x: number; y: number }>();
-  private moved = 0;
-  private dragged = false;
+  private drag = new DragGuard();
   /** Where the camera is easing to after a selection; null once there or when the player pans or zooms. */
   private target: Camera | null = null;
   private lastDraw = 0;
@@ -75,10 +75,10 @@ export class TreeRenderer {
     canvas.addEventListener('pointerdown', (e) => {
       canvas.setPointerCapture(e.pointerId); this.pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
       this.target = null;
-      if (this.pts.size === 1) { this.moved = 0; this.dragged = false; }
+      if (this.pts.size === 1) this.drag.press();
     });
     canvas.addEventListener('pointermove', (e) => this.onMove(e));
-    const end = (e: PointerEvent): void => { this.pts.delete(e.pointerId); if (!this.pts.size) canvas.classList.remove('dragging'); };
+    const end = (e: PointerEvent): void => { this.pts.delete(e.pointerId); if (!this.pts.size) { canvas.classList.remove('dragging'); setTimeout(() => { if (!this.pts.size) this.drag.settle(); }, 0); } }; // the release click still sees `dragged`; hover works again after (TB-219)
     canvas.addEventListener('pointerup', end); canvas.addEventListener('pointercancel', end);
     // Keyboard focus shows a ring on the selected node (TB-116), so redraw when it comes or goes.
     canvas.addEventListener('focus', () => { this.stale = true; }); canvas.addEventListener('blur', () => { this.stale = true; });
@@ -87,18 +87,17 @@ export class TreeRenderer {
   private onMove(e: PointerEvent): void {
     const p = this.pts.get(e.pointerId); if (!p) return;
     const dx = (e.clientX - p.x) / this.ui, dy = (e.clientY - p.y) / this.ui;
-    if (this.full) { this.moved += Math.hypot(dx, dy); p.x = e.clientX; p.y = e.clientY; return; } // fixed camera: no pan or pinch
+    if (this.full) { this.drag.travel(dx, dy); p.x = e.clientX; p.y = e.clientY; return; } // fixed camera: no pan or pinch
     if (this.pts.size === 2) {
       const [a, b] = [...this.pts.values()];
       const other = (a === p ? b : a)!;
       const d0 = Math.hypot(p.x - other.x, p.y - other.y), d1 = Math.hypot(e.clientX - other.x, e.clientY - other.y);
       const [mx, my] = this.local({ clientX: (e.clientX + other.x) / 2, clientY: (e.clientY + other.y) / 2 });
       if (d0 > 0) { this.cam = zoomAt(this.cam, mx, my, d1 / d0, this.vw, this.vh); this.stale = true; }
-      this.dragged = true;
+      this.drag.pinch();
     } else {
-      this.moved += Math.hypot(dx, dy);
-      if (this.moved > TREE_VIEW.dragPx) { this.dragged = true; this.canvas.classList.add('dragging'); }
-      if (this.dragged) { this.cam = panBy(this.cam, dx, dy, this.vw, this.vh); this.stale = true; }
+      if (this.drag.move(dx, dy, TREE_VIEW.dragPx)) this.canvas.classList.add('dragging');
+      if (this.drag.dragged) { this.cam = panBy(this.cam, dx, dy, this.vw, this.vh); this.stale = true; }
     }
     p.x = e.clientX; p.y = e.clientY;
   }
@@ -143,7 +142,7 @@ export class TreeRenderer {
 
   /** Node under the pointer, or null. A press that turned into a drag never selects. */
   hitTest(clientX: number, clientY: number): NodeId | null {
-    if (this.dragged) { this.dragged = false; return null; }
+    if (this.drag.dragged) return null; // not cleared here: the hover tooltip also calls this; settle() clears it after the release click (TB-219)
     const [sx, sy] = this.local({ clientX, clientY }); if (sy < TREE_VIEW.legendH) return null; // the legend strip covers what is under it
     const [x, y] = toWorld(this.cam, sx, sy);
     for (const n of NODES) if (Math.hypot(n.x - x, n.y - y) < TREE_VIEW.hitR) return n.id;

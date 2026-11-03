@@ -29,6 +29,7 @@ import { Plate, oneLine, plateRows } from './plate';
 import { PathPicker, pathHint } from './paths';
 import { PATHS } from '../data/paths';
 import { drawSigil } from '../render/sigil';
+import { TimerBag } from './timerBag';
 import { P } from '../render/palette';
 
 /** Buy sparks (TB-195b): starlight gold, frost blue, grove green and lilac, so they read against the gold button. */
@@ -285,7 +286,7 @@ export class Panel {
   private importArmed = false;
   private importTimer = 0;
   private wipeTimer = 0;
-  private reportTimers: number[] = [];
+  private reportTimers = new TimerBag();
   /** After an import or wipe the old satchel pick, new-loot badge (TB-199) and tide pick (TB-216b) belong to the old game. */
   private resetSatchelView(): void { this.satchel.selected = null; this.markNew(0); this.pickTier = 0; }
   private importSave(): void {
@@ -294,7 +295,7 @@ export class Panel {
     if (!this.importArmed) { this.importArmed = true; btn.textContent = STR.importConfirm; clearTimeout(this.importTimer); this.importTimer = window.setTimeout(() => { this.importArmed = false; btn.textContent = STR.importBtn; }, CONFIRM_ARM_MS); return; }
     clearTimeout(this.importTimer); this.importArmed = false; btn.textContent = STR.importBtn;
     try { this.game.importSave(str); } catch { this.toast(STR.importBad); return; }
-    $('fallen').hidden = true; this.tree.selected = 'sharp'; this.resetSatchelView(); this.renderHw(); this.syncSettings(); this.onSettings(); this.renderDetail();
+    this.reportTimers.clear(); $('fallen').hidden = true; this.tree.selected = 'sharp'; this.resetSatchelView(); this.renderHw(); this.syncSettings(); this.onSettings(); this.renderDetail();
     // a fallen import stays in camp (the run is frozen); a standing one returns to the field so the ticking run is seen
     this.setMode(this.game.state.run.fallen ? 'camp' : 'run');
     if (this.game.state.run.fallen) this.showFallen();
@@ -314,28 +315,27 @@ export class Panel {
       k.textContent = row.label; v.textContent = calm() ? fmt(row.value) : '0'; d.append(k, v); list.appendChild(d); return v; });
     const hw = $('fallen-hw'), seal = $('fallen-seal'), board = $('fallen-board');
     hw.textContent = '+' + (calm() ? fmt(r.hwEarned) : '0'); seal.classList.toggle('on', calm());
-    for (const t of this.reportTimers) clearTimeout(t);
-    this.reportTimers = [];
+    this.reportTimers.clear();
     if (!calm()) {
       const roll = (el: HTMLElement, to: number, pre: string): void => { uiSound('uiCount'); tween(el, REPORT.roll, (t) => { el.textContent = pre + fmt(Math.round(countValue(0, to, t))); }, () => { el.textContent = pre + fmt(to); pop(el); }); };
-      rows.forEach((row, i) => this.reportTimers.push(window.setTimeout(() => roll(cells[i]!, row.value, ''), when.rows[i])));
-      this.reportTimers.push(window.setTimeout(() => roll(hw, r.hwEarned, '+'), when.hw));
-      this.reportTimers.push(window.setTimeout(() => {
+      rows.forEach((row, i) => this.reportTimers.add(() => roll(cells[i]!, row.value, ''), when.rows[i]!));
+      this.reportTimers.add(() => roll(hw, r.hwEarned, '+'), when.hw);
+      this.reportTimers.add(() => {
         seal.classList.add('on'); uiSound('uiStamp');
         tween(seal, REPORT.stampIn, (t) => { const k = 1 - t * t; seal.style.transform = t >= 1 ? '' : `scale(${1 + (REPORT.stampFrom - 1) * k}) rotate(${REPORT.stampTurn * k}deg)`; seal.style.opacity = String(Math.min(1, t * 3)); },
           () => tween(board, REPORT.joltMs, (t) => { board.style.transform = t >= 1 ? '' : `translateY(${Math.sin(t * Math.PI * 3) * (1 - t) * REPORT.jolt}rem)`; }));
-      }, when.stamp));
+      }, when.stamp);
     }
     $('fallen').hidden = false;
   }
   private doReplant(): void {
-    const hw = this.game.replant(this.tier()); $('fallen').hidden = true; this.tree.selected = 'sharp'; this.renderDetail(); this.renderHw(); this.setMode('run');
+    this.reportTimers.clear(); const hw = this.game.replant(this.tier()); $('fallen').hidden = true; this.tree.selected = 'sharp'; this.renderDetail(); this.renderHw(); this.setMode('run');
     this.toast(STR.replanted(hw));
   }
   private wipe(): void {
     const btn = $('btn-reset');
     if (!this.wipeArmed) { this.wipeArmed = true; btn.textContent = STR.wipeConfirm; clearTimeout(this.wipeTimer); this.wipeTimer = window.setTimeout(() => { this.wipeArmed = false; btn.textContent = STR.wipe; }, CONFIRM_ARM_MS); return; }
-    clearTimeout(this.wipeTimer); this.game.wipe(); this.resetSatchelView(); this.wipeArmed = false; btn.textContent = STR.wipe; $('fallen').hidden = true; this.setMode('run'); this.tree.selected = 'sharp'; this.renderDetail(); this.renderHw(); this.toast(STR.freshDawn);
+    clearTimeout(this.wipeTimer); this.reportTimers.clear(); this.game.wipe(); this.resetSatchelView(); this.wipeArmed = false; btn.textContent = STR.wipe; $('fallen').hidden = true; this.setMode('run'); this.tree.selected = 'sharp'; this.renderDetail(); this.renderHw(); this.toast(STR.freshDawn);
   }
 
   toast(msg: string): void {
