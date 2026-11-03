@@ -1,6 +1,6 @@
 import { PRESTIGE } from '../data/balance';
 import { EventBus } from './events';
-import { SimState, freshRun, recompute } from './state';
+import { SimState, createState, freshRun, recompute } from './state';
 import { hwRank, startRun } from './heartwood';
 
 import { HW_FX } from '../data/heartwood';
@@ -45,6 +45,8 @@ export function replant(s: SimState, ev: EventBus, tier = s.meta.tier, path: Pat
   s.orcs.clear(); s.shots.clear(); s.vans.clear(); s.zones.clear();
   // run-only set and mythic state starts over with the run
   s.knifeN = 0; s.vanRespawn.length = 0; s.fangN = 0;
+  // companions start the run fresh at their createState posts (TB-216a)
+  const fresh = createState(); s.wolf = fresh.wolf; s.fox = fresh.fox; s.hawk = fresh.hawk; s.pack.length = 0;
   s.run.barHp = 0; startRun(s);
   ev.push({ t: 'replant', heartwood: hw, forced });
   return hw;
