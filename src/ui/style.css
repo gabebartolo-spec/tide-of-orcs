@@ -550,7 +550,7 @@ body[data-mode="camp"] :is(.hud-wallbox, .hud-wave) { display: none; }
    parchment. Every size is a --card-* / --setl-* / --bag-* token, scoped to the satchel (not the page root). */
 .prestige.satchel { --bag-cols: 20; --bag-gap: 0.5rem; --card-icon: 4rem; --card-img: 3.75rem; --card-gap: 1.25rem; --card-row-gap: 0.5rem;
   --card-btn-h: 2.25rem; --card-btn-pad: 0.25rem 1.25rem; --reroll-pad: 0.125rem 0.75rem; --setl-gap: 0.375rem; --setl-hang: 1.5em;
-  --setl-fs: 1rem; --setl-lh: 1.3; --card-fr: 1.25fr;
+  --setl-fs: 1rem; --setl-lh: 1.3; --card-fr: 1.25fr; --card-min-h: 19.75rem;
   --narrow-doll-pocket: 4.5rem; --narrow-doll-w: 6rem; --narrow-pocket: 4rem; --narrow-gap: 0.5rem; --narrow-pill-fs: 0.875rem; --narrow-btn-pad: 0.25rem 0.75rem; }
 /* One markup for every layout: the card's name and its rarity line sit in .title. Off the PC grid the title dissolves and the
    rarity line wraps under the head (the pre-TB-206 order: icon, name, path tag, then the line), so phones keep their layout. */
@@ -564,7 +564,7 @@ body[data-mode="camp"] :is(.hud-wallbox, .hud-wave) { display: none; }
   .prestige.satchel > * { grid-column: auto; grid-row: auto; margin: 0; }
   .prestige.satchel > .stat { grid-area: 1 / 1; }
   .prestige.satchel > #sat-worn { grid-area: 2 / 1; align-self: start; width: max-content; }
-  .prestige.satchel > #sat-detail { grid-area: 1 / 2 / 3 / 3; align-self: start; min-height: 0; }
+  .prestige.satchel > #sat-detail { grid-area: 1 / 2 / 3 / 3; align-self: start; min-height: var(--card-min-h); }
   .prestige.satchel > #sat-sets { grid-area: 1 / 3 / 3 / 4; align-self: start; }
   .prestige.satchel > .satbar { grid-area: 3 / 1 / 4 / 4; }
   .prestige.satchel > #sat-grid { grid-area: 4 / 1 / 5 / 4; align-self: start; justify-self: stretch; min-height: 0;
@@ -588,7 +588,7 @@ body[data-mode="camp"] :is(.hud-wallbox, .hud-wave) { display: none; }
 /* 720p keeps its 16 px root (html clamp), so the pockets are sized for that height instead of the page shrinking */
 @media (min-width: 861px) and (orientation: landscape) and (max-height: 800px) {
   .prestige.satchel { --doll-pocket: 4.25rem; --doll-w: 8.5rem; --bag-pocket: 3.25rem; --bag-gap: 0.375rem; --pocket-icon: 3rem; --card-icon: 3rem; --card-img: 2.75rem;
-    --setl-gap: 0.25rem; --setl-lh: 1.2; --card-row-gap: 0.375rem; --card-btn-h: 2rem; --card-gap: 1rem; --sat-edge: 1.125rem; --card-fr: 1.35fr; }
+    --setl-gap: 0.25rem; --setl-lh: 1.2; --card-row-gap: 0.375rem; --card-btn-h: 2rem; --card-gap: 1rem; --sat-edge: 1.125rem; --card-fr: 1.35fr; --card-min-h: 18rem; }
   .itemdetail :is(.desc, .affixes li) { line-height: 1.2; } #sat-worn { row-gap: var(--setl-gap); }
 }
 /* Narrow portrait window (< 861 px wide, e.g. a small browser window; a touch phone held upright shows the turn-sideways
@@ -597,7 +597,7 @@ body[data-mode="camp"] :is(.hud-wallbox, .hud-wave) { display: none; }
 @media (max-width: 860px) and (orientation: portrait) {
   .prestige.satchel { --doll-pocket: var(--narrow-doll-pocket); --doll-w: var(--narrow-doll-w); --pocket-icon: 3rem; --bag-pocket: var(--narrow-pocket); --bag-gap: var(--narrow-gap); }
   .prestige.satchel > #sat-grid { align-self: stretch; grid-template-columns: repeat(auto-fill, var(--bag-pocket)); grid-auto-rows: var(--bag-pocket); gap: var(--bag-gap); justify-content: space-evenly; min-height: 0; }
-  .prestige.satchel > #sat-worn { width: max-content; max-width: 100%; align-self: center; }
+  .prestige.satchel > #sat-worn { width: max-content; max-width: 100%; align-self: start; }
   .itemdetail .affixes:has(.buy) { display: grid; grid-template-columns: minmax(0, 1fr) max-content; column-gap: var(--narrow-gap); row-gap: var(--card-row-gap); }
   .itemdetail .affixes .buy { padding: var(--reroll-pad); min-height: 0; font-size: var(--narrow-pill-fs); }
   .itemdetail .row { justify-content: flex-start; gap: var(--narrow-gap); } .itemdetail .row .buy { padding: var(--narrow-btn-pad); }
