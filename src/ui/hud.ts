@@ -3,7 +3,7 @@
 import { HUD, JUICE } from '../data/presentation';
 import { STR } from '../data/strings';
 import { P } from '../render/palette';
-import { burstAt, calm, flash, pop, springEase, tween } from './juice';
+import { burstAt, calm, pop, springEase, tween } from './juice';
 
 /** How many cracks show at this barricade fraction (0..HUD.cracks.length). */
 export function crackStage(frac: number): number { return HUD.cracks.filter((c) => frac < c).length; }
@@ -20,6 +20,7 @@ export function odometerLayout(text: string): { mask: string; digits: number[] }
 }
 
 /** A number whose digits roll like a mechanical counter. Each digit is a 0–9 strip that slides to its place on the spring. */
+let stampT = 0; // pending stamp fade timer, shared so a new clear cancels the old one
 export class Odometer {
   private mask = '';
   private strips: HTMLElement[] = [];
@@ -36,10 +37,13 @@ export class Odometer {
         cell.setAttribute('aria-hidden', 'true'); this.el.appendChild(cell);
       }
     }
-    // TB-195b: every digit snaps to its value and the whole number slides in together, so mid-roll all digits share one baseline.
-    const changed = digits.some((d, i) => this.strips[i]!.dataset.d !== String(d));
-    digits.forEach((d, i) => { const s = this.strips[i]!; s.dataset.d = String(d); s.style.transform = `translateY(${-d * 10}%)`; });
-    if (changed && !calm()) this.el.animate([{ transform: 'translateY(0.45em)', opacity: 0.2 }, { transform: 'translateY(0)', opacity: 1 }], { duration: HUD.odoRoll, easing: 'cubic-bezier(.2, .7, .3, 1)' });
+    // TB-195b: each changed digit rolls its strip from the old digit to the new one; all start and land together, with no
+    // overshoot, so at rest every digit sits on one baseline.
+    digits.forEach((d, i) => {
+      const s = this.strips[i]!, old = s.dataset.d, to = `translateY(${-d * 10}%)`;
+      s.dataset.d = String(d); s.style.transform = to;
+      if (old !== undefined && old !== String(d) && !calm()) s.animate([{ transform: `translateY(${-Number(old) * 10}%)` }, { transform: to }], { duration: HUD.odoRoll, easing: 'cubic-bezier(.25, .6, .3, 1)' });
+    });
   }
 }
 
@@ -49,6 +53,7 @@ export class Hud {
   private star: Odometer;
   private lastStar: number | null = null;
   private lastSparkle = 0;
+
   private lastHp: number | null = null;
   constructor(format: (n: number) => string) {
     this.star = new Odometer($('st-star'), format);
@@ -56,11 +61,10 @@ export class Hud {
     $('hud-stamp').textContent = STR.waveCleared;
   }
 
-  /** Starlight: digits roll; a gain sparkles the gem (throttled) and flashes green, a spend flashes red. */
+  /** Starlight: digits roll; a gain sparkles the gem (throttled). */
   starlight(v: number): void {
     const prev = this.lastStar; this.lastStar = v; this.star.set(v);
     if (prev === null || v === prev) return;
-    flash($('st-star'), v > prev);
     const t = performance.now();
     if (v - prev >= HUD.sparkleMin && t - this.lastSparkle > HUD.sparkleGap) { this.lastSparkle = t; pop($('hud-gem')); burstAt($('hud-gem'), [P.starGold, P.spark], HUD.sparkleScale); }
   }
@@ -84,11 +88,15 @@ export class Hud {
   /** A wave cleared: the banner pops and the CLEARED stamp slams onto it, holds, fades. Reduced motion shows and fades it, no slam. */
   waveCleared(): void {
     const st = $('hud-stamp'), banner = $('hud-wave');
+    window.clearTimeout(stampT); banner.classList.remove('stamp-ending'); st.style.opacity = '0';
     st.hidden = false;
-    const fade = (): void => { window.setTimeout(() => tween(st, HUD.stampOut, (t) => { st.style.opacity = String(1 - t); if (t >= 1) st.hidden = true; }), HUD.stampHold); };
+    // The wave text crossfades back in as the stamp fades, so the plaque is never blank; a new call cancels the old timer.
+    const fade = (): void => { stampT = window.setTimeout(() => tween(st, HUD.stampOut, (t) => {
+      st.style.opacity = String(1 - t); if (t >= 0.4) banner.classList.add('stamp-ending');
+      if (t >= 1) { st.hidden = true; banner.classList.remove('stamp-ending'); } }), HUD.stampHold); };
     if (calm()) { st.style.transform = ''; st.style.opacity = '1'; fade(); return; }
     tween(st, HUD.stampIn, (t) => {
-      const e = springEase(t, JUICE.overshoot); st.style.opacity = String(Math.min(1, t * 3));
+      const e = springEase(t, JUICE.overshoot); st.style.opacity = String(Math.min(1, t * 6));
       st.style.transform = `translate(-50%, -50%) rotate(-3deg) scale(${HUD.stampFrom + (1 - HUD.stampFrom) * e})`;
     }, () => { pop(banner, JUICE.dur.pop, 1.08); fade(); });
   }

@@ -782,7 +782,7 @@ body:not([data-mode="camp"]) .hud-wall .lbl { -webkit-text-stroke: 0.25rem #2a1a
 .hud-wall::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: none center / 100% 100% no-repeat; z-index: 1; }
 .hud-wall[data-crack="1"]::after { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 40' preserveAspectRatio='none'%3E%3Cg fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cg stroke='%23e8cf9a' stroke-width='4.4'%3E%3Cpath d='M232 6 l-6 9 l7 6 l-5 12'/%3E%3Cpath d='M226 15 l-9 3'/%3E%3C/g%3E%3Cg stroke='%231a0f05' stroke-width='2.2'%3E%3Cpath d='M232 6 l-6 9 l7 6 l-5 12'/%3E%3Cpath d='M226 15 l-9 3'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
 .hud-wall[data-crack="2"]::after { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 40' preserveAspectRatio='none'%3E%3Cg fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cg stroke='%23e8cf9a' stroke-width='4.4'%3E%3Cpath d='M232 6 l-6 9 l7 6 l-5 12'/%3E%3Cpath d='M226 15 l-9 3'/%3E%3Cpath d='M150 5 l5 10 l-7 8 l4 11'/%3E%3Cpath d='M148 23 l10 4'/%3E%3C/g%3E%3Cg stroke='%231a0f05' stroke-width='2.2'%3E%3Cpath d='M232 6 l-6 9 l7 6 l-5 12'/%3E%3Cpath d='M226 15 l-9 3'/%3E%3Cpath d='M150 5 l5 10 l-7 8 l4 11'/%3E%3Cpath d='M148 23 l10 4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
-.hud-wall[data-crack="3"]::after { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 40' preserveAspectRatio='none'%3E%3Cg fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cg stroke='%23e8cf9a' stroke-width='4.4'%3E%3Cpath d='M232 6 l-6 9 l7 6 l-5 12'/%3E%3Cpath d='M226 15 l-9 3'/%3E%3Cpath d='M150 5 l5 10 l-7 8 l4 11'/%3E%3Cpath d='M148 23 l10 4'/%3E%3Cpath d='M72 6 l-4 9 l8 7 l-6 12'/%3E%3Cpath d='M76 22 l9 -3'/%3E%3Cpath d='M290 9 l-5 8 l5 9'/%3E%3C/g%3E%3Cg stroke='%231a0f05' stroke-width='2.2'%3E%3Cpath d='M232 6 l-6 9 l7 6 l-5 12'/%3E%3Cpath d='M226 15 l-9 3'/%3E%3Cpath d='M150 5 l5 10 l-7 8 l4 11'/%3E%3Cpath d='M148 23 l10 4'/%3E%3Cpath d='M72 6 l-4 9 l8 7 l-6 12'/%3E%3Cpath d='M76 22 l9 -3'/%3E%3Cpath d='M290 9 l-5 8 l5 9'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
+.hud-wall[data-crack="3"]::after { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 40' preserveAspectRatio='none'%3E%3Cg fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cg stroke='%23e8cf9a' stroke-width='4.4'%3E%3Cpath d='M232 6 l-6 9 l7 6 l-5 12'/%3E%3Cpath d='M226 15 l-9 3'/%3E%3Cpath d='M150 5 l5 10 l-7 8 l4 11'/%3E%3Cpath d='M148 23 l10 4'/%3E%3Cpath d='M72 6 l-4 9 l8 7 l-6 12'/%3E%3Cpath d='M76 22 l9 -3'/%3E%3Cpath d='M272 9 l-5 8 l5 9'/%3E%3C/g%3E%3Cg stroke='%231a0f05' stroke-width='2.2'%3E%3Cpath d='M232 6 l-6 9 l7 6 l-5 12'/%3E%3Cpath d='M226 15 l-9 3'/%3E%3Cpath d='M150 5 l5 10 l-7 8 l4 11'/%3E%3Cpath d='M148 23 l10 4'/%3E%3Cpath d='M72 6 l-4 9 l8 7 l-6 12'/%3E%3Cpath d='M76 22 l9 -3'/%3E%3Cpath d='M272 9 l-5 8 l5 9'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
 .hud-wall[data-tone="mid"] { --tone: #d2601e; }
 .hud-wall[data-tone="mid"] .fill::after { mix-blend-mode: normal; opacity: .75; }
 body:not([data-mode="camp"]) .hud-wall .lbl { inset: auto; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 2; padding: 0 0.625rem; line-height: 1.5rem;
@@ -797,3 +797,15 @@ body:not([data-mode=camp]) header .stat .v.heart { color: color-mix(in srgb, var
    over a pale split so it reads on the lit fill and on the drained channel alike. */
 body:not([data-mode="camp"]) :is(header .stat, .hud-wave) { width: 16rem; min-width: 16rem; }
 .hud-wave .stamp { top: 56%; font-size: 1.25rem; padding: 0 0.5rem; line-height: 1.6rem; }
+/* round 5: the wave text stays out while the stamp shows and fades back in only after the stamp has gone */
+.hud-wave:has(.stamp:not([hidden])) > :not(.stamp) { visibility: visible; opacity: 0; transition: none; }
+.hud-wave > :not(.stamp) { transition: opacity 0.3s ease-out 0.15s; }
+
+/* TB-195b round 6: the low tone is a deep danger red, not pale salmon. */
+.hud-wall[data-tone="low"] { --tone: color-mix(in srgb, var(--rose) 55%, #8a1f1a); }
+/* round 7: deep danger red on low; rolling digits fade out before the window edge; the wave text crossfades in under the fading stamp */
+.hud-wall[data-tone="low"] { --tone: #b3261e; }
+.hud-wall[data-tone="low"] .fill::after { mix-blend-mode: normal; opacity: .9; }
+.odo .od { -webkit-mask-image: linear-gradient(transparent 6%, #000 26%, #000 74%, transparent 94%); mask-image: linear-gradient(transparent 6%, #000 26%, #000 74%, transparent 94%); }
+.hud-wave.stamp-ending:has(.stamp:not([hidden])) > :not(.stamp), .hud-wave.stamp-ending > :not(.stamp) { opacity: 1; transition: opacity 0.35s ease-out; }
+.hud-wave .stamp { opacity: 0; }
