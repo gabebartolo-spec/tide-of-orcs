@@ -39,23 +39,22 @@ import { recompute } from '../src/sim/state';
 import { HW_NODES, HwId } from '../src/data/heartwood';
 import { buyHw, canBuyHw, hwCost, hwSpendable } from '../src/sim/heartwood';
 
-type Policy = 'greedy' | 'wall' | 'dps' | 'nobuy';
+import { applyTune, pickChoice } from './cli';
+
+const POLICIES = ['greedy', 'wall', 'dps', 'nobuy'] as const; type Policy = typeof POLICIES[number];
+const EQUIP_POLICIES: readonly EquipPolicy[] = ['player', 'greedy', 'hoarder'];
 const args = process.argv.slice(2);
 const arg = (k: string, d: string) => { const i = args.indexOf(`--${k}`); return i >= 0 ? args[i + 1] ?? d : d; };
-const minutes = Number(arg('minutes', '30')), policy = arg('policy', 'greedy') as Policy, seed = Number(arg('seed', '1')), quiet = args.includes('--quiet');
+const minutes = Number(arg('minutes', '30')), policy: Policy = pickChoice('policy', arg('policy', 'greedy'), POLICIES), seed = Number(arg('seed', '1')), quiet = args.includes('--quiet');
 /** Loot (TB-093/094): the sim rolls drops on its own RNG; the runner picks the equip policy. */
-const lootPolicy = arg('loot', 'greedy') as EquipPolicy; let drops = 0;
+const lootPolicy = pickChoice('loot', arg('loot', 'greedy'), EQUIP_POLICIES); let drops = 0;
 
 /** --load file.json (TB-184): start as a player saved with --save (tree, tier, Heartwood, gear), fallen, so the first act is a Replant. */
 const loaded = arg('load', '') ? JSON.parse(readFileSync(arg('load', ''), 'utf-8')) as { tier: number; levels: SimState['run']['levels']; meta: SimState['meta'] } : null;
 const s = createState(seed, undefined, loaded ? loaded.meta : undefined); const ev = new EventBus(); s.lootPolicy = lootPolicy;
 const bare = args.includes('--bare');
 const TUNE: Record<string, unknown> = { ARROWS, SOURCES, VANGUARD, BOSS_WAVE, TIERS, RARITY, DROP, AFFIX, MYTHIC_FX, PLAYER, LOB, BARRICADE, NODE_FX, COST_WAVE, STACKING, SHOT_FX, UNIT_FX, CHECKPOINT, ORC_TYPES, ORC_FX, FIREBALL, HP_RAMP, FOE_FX };
-for (const kv of arg('tune', '').split(',').filter(Boolean)) {
-  const [path, v] = kv.split('='), keys = path!.split('.'), last = keys.pop()!;
-  const obj = keys.reduce<Record<string, unknown>>((o, k) => (o === TUNE ? TUNE[k] : o[k]) as Record<string, unknown>, TUNE);
-  obj[last] = Number(v);
-}
+applyTune(TUNE, arg('tune', ''));
 for (const kv of arg('cost', '').split(',').filter(Boolean)) { const [k, v] = kv.split('='); (NODES.find((x) => x.id === k) as { base: number }).base = Number(v); }
 for (const kv of arg('hw', '').split(',').filter(Boolean)) { const [k, v] = kv.split(':'); s.meta.hwLevels[k as HwId] = Number(v); }
 /** --mythic: a forced mythic, kept worn and locked so the equip policy never swaps it out. */

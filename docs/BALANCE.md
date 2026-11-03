@@ -88,7 +88,7 @@ cap = 2 + ranks        mend = 0.03 × mend × maxhp per second
 |---|---|---|---|
 | 1 | 12 | 50 | 36 |
 | 10 | 36 | 205 | 108 |
-| 25 | 226 | 6,209 | 677 |
+| 25 | 226 | 2,789 | 677 |
 
 ### Economy
 - Provoke is per kind now (TB-080, see Fury/Swarm above). Blood Banners retired.
