@@ -26,7 +26,7 @@ export const LOB = {
 export const BARRICADE = {
   baseHp: 150,          // TB-154 (director 1 Nov), was 400
   timberMult: 1.25,     // per Seasoned Timber rank
-  regenPerRank: 0.01,   // fraction of max per second per Patient Hands rank
+  regenPerRank: 0.02,   // fraction of max per second per Patient Hands rank
   spikesPerRank: 0.2,   // fraction of player dmg per second per Thornwall rank
   bulwarkFrac: 0.5,     // Deep Roots regrow fraction
   orcAtkFrac: 0.025,     // orc dps to vanguard = this × orc maxhp
@@ -74,15 +74,15 @@ export const ARROWS = {
   /** Shatter: a chilled orc that dies deals `mult` × perRank^(rank − 1) × player damage to orcs within `radius`. */
   shatter: { radius: 50, mult: 1, perRank: 1.4 },
   /** Starfall: a lob that rolls Starfall also rains `arrows` arrows on orcs across the plain, each a small strike circle, falling `stagger` s apart. */
-  starfall: { arrows: 8, r: 26, height: 260, flight: 0.6, stagger: 0.08 },
+  starfall: { arrows: 12, r: 26, height: 260, flight: 0.6, stagger: 0.08 },
 } as const;
 
 /** Per-type shot nodes (TB-111). Fire, frost, shock, Rebound and Moonbow each roll per shot: `chance0` once owned, + `chancePerRank` per Quiver rank.
  *  Starfall rolls its own `starChance0` + `starChancePerRank`. Damage nodes multiply by `dmg` per rank. */
 export const SHOT_FX = {
-  chance0: 0.25, chancePerRank: 0.15, starChance0: 0.1, starChancePerRank: 0.05,
+  chance0: 0.25, chancePerRank: 0.15, starChance0: 0.1, starChancePerRank: 0.1,
   dmg: 1.3, moonDmg: 1.2,
-  burnSecsPerRank: 1, stunSecsPerRank: 0.25, homeReachPerRank: 0.25, starArrowsPerRank: 2,
+  burnSecsPerRank: 1, stunSecsPerRank: 0.25, homeReachPerRank: 0.25, starArrowsPerRank: 4,
   knivesPerRank: 1, boltRootSecs: 0.3, windlass: 0.9,
 } as const;
 
@@ -97,9 +97,9 @@ export const STACKING = { add: 0 };
 
 /** Per-rank multipliers and flat effects of tree nodes (SKILL-TREE.md effect column). */
 export const NODE_FX = {
-  sharpDmg: 1.25, moonDmg: 1.6, drawRate: 1.15, critPerRank: 0.08, gleanLoot: 1.08, kinship: 1.2,
+  sharpDmg: 1.25, moonDmg: 1.6, drawRate: 1.15, critPerRank: 0.08, gleanLoot: 1.08, kinship: 1.4,
   wideRadius: 1.2,
-  fangsDmg: 1.4, knifeRate: 1.2, boltDmg: 1.5,
+  fangsDmg: 1.4, knifeRate: 1.2, boltDmg: 1.7,
 } as const;
 
 /** A fall (or a voluntary replant) pays no Heartwood: it drops only from cleared bosses (director 2 Nov, TB-171). */
