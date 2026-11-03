@@ -1,4 +1,4 @@
-/* Layout: battlefield canvas on the left with a rally bar beneath it, a tabbed grove panel (skill tree / replant) on the right; stacks on phones. */
+﻿/* Layout: battlefield canvas on the left with a rally bar beneath it, a tabbed grove panel (skill tree / replant) on the right; stacks on phones. */
 /* Fonts ship with the game so the desktop build works offline (TB-118). Heartwood, the game's own face (tools/typeface, TB-135), is the only
    font: DOM and canvas alike, no fallback faces (TB-137). One weight, no italic. */
 @font-face { font-family: "Heartwood"; font-style: normal; font-weight: 400; font-display: swap; src: url("./fonts/heartwood-400.woff2") format("woff2"); }
@@ -15,9 +15,9 @@
   color-scheme: dark;
 }
 /* UI scale (TB-143, TB-191): every size is in rem, and the root font is 1/54 of the window height (or 1/96 of its width,
-   whichever is smaller): 20 px at 1920×1080, 40 px at 3840×2160 (DPR 1), 20 CSS px = 40 device px at 4K DPR 2. Smaller
+   whichever is smaller): 20 px at 1920Ã—1080, 40 px at 3840Ã—2160 (DPR 1), 20 CSS px = 40 device px at 4K DPR 2. Smaller
    windows stop at 16 px. The smallest text is 0.875rem, 1.62% of screen height, readable from a couch on a TV.
-   --text-scale is Settings › Text size (0.8–1.6), set by src/render/textScale.ts. */
+   --text-scale is Settings â€º Text size (0.8â€“1.6), set by src/render/textScale.ts. */
 html { font-size: calc(clamp(16px, min(100vw / 96, 100vh / 54), 80px) * var(--text-scale, 1)); }
 html, body { height: 100%; }
 /* Heartwood has one weight and no italic: never let the browser fake bold or slant it */
@@ -264,7 +264,7 @@ button, select, .tabs { touch-action: manipulation; }
   .turn { display: flex; position: fixed; inset: 0; z-index: 10; align-items: center; justify-content: center; padding: 2rem;
     background: var(--ink) url("./wood/gilt.svg") center / 20rem 20rem; text-align: center; }
   .turn p { font-family: var(--display); font-size: 1.5rem; line-height: 1.4; max-width: 16ch; margin: 0; }
-  .turn p::before { content: "⟳"; display: block; font-size: 3rem; color: var(--amber); margin-bottom: 0.5rem; }
+  .turn p::before { content: "âŸ³"; display: block; font-size: 3rem; color: var(--amber); margin-bottom: 0.5rem; }
 }
 /* Short landscape screens (phones): slimmer frames and plaques so the field and the Grove get the room. */
 @media (max-height: 540px) {
@@ -352,7 +352,7 @@ body[data-mode="camp"] .campwrap { flex: 1 1 0; min-height: 0; height: auto; }
 .prestige.split.three .hwtree { grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); }
 @media (max-width: 860px) { .prestige.split.three { grid-template-columns: 1fr; } }
 
-/* Game HUD (TB-195b, docs/plans/game-ui.md §2, ART-STYLE §Motion): objects over the field, not a text row. A lit timber wall bar
+/* Game HUD (TB-195b, docs/plans/game-ui.md Â§2, ART-STYLE Â§Motion): objects over the field, not a text row. A lit timber wall bar
    that cracks, a faceted starlight gem with a rolling odometer, the wave on a hanging cloth banner with a CLEARED stamp.
    Colours are palette tokens (the extra ones here mirror src/render/palette.ts). Numbers in data/presentation.ts HUD. */
 :root { --grove: #9fc48f; --star-gold: #ffd36b; --spark: #f4eaa6; --hud-roll: 380ms; }
@@ -586,3 +586,131 @@ header h1 { display: inline-block; background-size: 100% 0.625rem; }
 #camp-go:active { transform: translateY(0.1875rem); filter: brightness(0.92) drop-shadow(0 0.0625rem 0 var(--splinter, var(--ink))) drop-shadow(0 0.125rem 0.1875rem var(--ink)); }
 :root[data-calm] #camp-go { transition: none; }
 body:not([data-mode="run"]) header #btn-settings { display: none; }
+
+/* Between-runs polish (TB-195n, director's 13-point list, 3 Nov). Labels are sentence case at 1rem or more (Heartwood's capital E
+   reads as C when small); the display face is for headings. One button system: primary gold plank (.buy), secondary wood
+   (.ghost), destructive rose (.danger), set apart. Path cards and the satchel share one leather; stitches are dark angled dashes. */
+/* body text in the system's UI face (Segoe UI on Windows): Heartwood is kept for headings of 1.2rem (24 px at 1080p) and up */
+:root { --body: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", sans-serif; }
+.stat .k, .tabs button, .detail .branch, .item .slot, .satbar, .hud-wave .k, .plate .pk, .plate .done, .plate .lock, .lootbanner .rar, .camplist .k,
+.hud-van, .hud-wall .lbl { text-transform: none; letter-spacing: .02em; }
+.stat .k, .tabs button, .detail .branch, .satbar, .hwnode .desc, .bcard .desc, .bcard .cost, .auto, .ghost, .camplist { font-size: 1rem; }
+/* header: a dark scrim behind the title and stats, everything on one centre line */
+body[data-mode="camp"] header { align-items: center; margin: -0.625rem calc(-1 * max(1rem, env(safe-area-inset-left, 0rem))) 0.5rem; padding: 0.75rem 1.5rem 1rem;
+  background: linear-gradient(color-mix(in srgb, var(--ink) 94%, transparent), color-mix(in srgb, var(--ink) 85%, transparent) 75%, transparent); }
+body[data-mode="camp"] .stat .k { font-size: 1.125rem; } body[data-mode="camp"] .stat .v { font-size: 1.75rem; }
+body[data-mode="camp"] .odo { font-size: 1.75rem; }
+body[data-mode="camp"] header h1 { padding-bottom: 0; background: none; line-height: 1; }
+body[data-mode="camp"] .hud, body[data-mode="camp"] .hud .stats, body[data-mode="camp"] .stat { align-items: center; }
+body[data-mode="camp"] .stat .v, body[data-mode="camp"] .odo { line-height: 1; }
+/* panel: at most 75 % of the window, centred, a translucent body with no gilt wallpaper; a softer backdrop vignette */
+body[data-mode="camp"] { background-image: radial-gradient(ellipse at 50% 45%, transparent 50%, color-mix(in srgb, var(--ink) 30%, transparent)),
+  url("/ui/canopy.webp"); background-size: auto, cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed; }
+body[data-mode="camp"] .panel { width: min(75vw, 73.75rem); background: var(--grain), color-mix(in srgb, var(--ink-2) 86%, transparent); background-size: auto; background-clip: padding-box; }
+/* the camp bar: the tab names it already, so no title; the primary plank sits right */
+body[data-mode="camp"] #camp-title { display: none; }
+body[data-mode="camp"] .campbar { justify-content: flex-end; }
+#sat-title { display: none; }
+/* secondary wood planks share the primary's height */
+.panel .ghost { min-height: 2.75rem; padding-inline: 1.25rem; text-shadow: none; }
+/* primary: a clean gold plank, dark text, no glow, no art behind the label */
+.buy { background: linear-gradient(#ebb871, var(--amber) 55%, #c98f45); color: var(--ink); text-shadow: none; font-size: 1rem; min-height: 2.75rem; }
+.buy:disabled { background: var(--ink-3); color: var(--text-dim); box-shadow: inset 0 0.0625rem 0 var(--line), inset 0 -0.125rem 0 var(--ink); text-shadow: none; }
+#camp-go, .rphead .buy { border: 0; border-image: none; clip-path: polygon(0.4375rem 0, calc(100% - 0.4375rem) 0, 100% 50%, calc(100% - 0.4375rem) 100%, 0.4375rem 100%, 0 50%);
+  height: auto; min-height: 2.75rem; min-width: 11rem; padding: 0.5rem 1.75rem; font-family: var(--body); font-size: 1.125rem; color: var(--ink); text-shadow: none; filter: none;
+  background: linear-gradient(#ebb871, var(--amber) 55%, #c98f45); box-shadow: inset 0 0.0625rem 0 #f4d29b, inset 0 -0.1875rem 0 #9c6a33; }
+#camp-go:hover, .rphead .buy:hover:not(:disabled) { filter: brightness(1.08); transform: none; }
+#camp-go:active, .rphead .buy:active:not(:disabled) { filter: brightness(0.94); transform: translateY(0.0625rem); }
+.rphead .buy:disabled { background: var(--ink-3); color: var(--text-dim); box-shadow: inset 0 0.0625rem 0 var(--line); }
+/* destructive: rose, apart from everything else */
+.danger-row { margin-top: 2rem; }
+.panel .ghost.danger { color: #f0b4b4; font-weight: 600; }
+.ghost.danger:hover { filter: brightness(1.15); }
+/* Replant: the title and Replant plank on one row, the paths, then the whole Heartwood tree in a grid */
+.prestige.replant { gap: 1rem; }
+.rphead { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.replant .paths { display: block; padding-bottom: 1rem; margin-bottom: 0; }
+.replant .hwtree { display: grid; grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr)); gap: 0.5rem; }
+.replant .hwnode .name { font-weight: 400; font-size: 1.0625rem; }
+.replant .hwnode .rk { color: var(--text-dim); font-size: 1rem; }
+/* path cards on the satchel's leather, a fine edge in the path's own colour; chosen: a thicker edge and an inner glow */
+.pathcard { grid-template-rows: auto auto; row-gap: 0.25rem; padding: 0.75rem 1rem 0.75rem 0.75rem; border: 0.09375rem solid var(--pc);
+  background: linear-gradient(color-mix(in srgb, var(--ink) 45%, transparent), color-mix(in srgb, var(--ink) 45%, transparent)),
+    image-set(url("/ui/satchel.webp") 1x, url("/ui/satchel@2x.webp") 2x) center / var(--sat-mid) var(--sat-mid) no-repeat;
+  box-shadow: 0 0.1875rem 0.5rem color-mix(in srgb, var(--ink) 60%, transparent); }
+.pathcard .sigil { grid-row: 1 / span 2; }
+.pathcard .name { align-self: end; }
+.pathcard .bonus { align-self: start; font-size: 1rem; color: var(--text); }
+.pathcard:hover:not(:disabled) { transform: none; filter: brightness(1.08); }
+.pathcard.on { border: 0.1875rem solid var(--pl); padding: 0.65625rem 0.90625rem 0.65625rem 0.65625rem;
+  background: linear-gradient(color-mix(in srgb, var(--ink) 40%, transparent), color-mix(in srgb, var(--ink) 40%, transparent)),
+    image-set(url("/ui/satchel.webp") 1x, url("/ui/satchel@2x.webp") 2x) center / var(--sat-mid) var(--sat-mid) no-repeat;
+  box-shadow: inset 0 0 1.25rem color-mix(in srgb, var(--pl) 45%, transparent), 0 0.1875rem 0.5rem color-mix(in srgb, var(--ink) 60%, transparent); }
+/* satchel: leather all the way out, stitches as dark angled dashes just inside the edge */
+#sat-grid, #sat-worn { position: relative; border: 0; border-image: none; padding: 1.125rem; border-radius: 0.5rem;
+  background: image-set(url("/ui/satchel.webp") 1x, url("/ui/satchel@2x.webp") 2x) center / var(--sat-mid) var(--sat-mid) no-repeat;
+  box-shadow: inset 0 0 0 0.125rem color-mix(in srgb, var(--ink) 55%, transparent), 0 0.25rem 0.75rem color-mix(in srgb, var(--ink) 60%, transparent); }
+#sat-grid::after, #sat-worn::after { content: ""; position: absolute; inset: 0.4375rem; pointer-events: none; padding: 0.1875rem; border-radius: 0.25rem;
+  background: repeating-linear-gradient(-45deg, color-mix(in srgb, var(--ink) 85%, transparent) 0 0.1875rem, transparent 0.1875rem 0.625rem);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); }
+/* the doll is pressed into the leather: a darker debossed silhouette */
+#sat-worn::before { background: var(--ink); opacity: .55; }
+/* empty pockets: the slot icon in cream at full strength so it reads on the leather */
+#sat-worn .item.empty { opacity: 1; } #sat-worn .item.empty .glyph { opacity: 1; color: var(--cream); }
+/* pockets: pressed into the leather with the same dark angled stitch (the light-beaded pocket art is gone) */
+#sat-grid .item, #sat-worn .item { position: relative; border-radius: 0.375rem; background: color-mix(in srgb, var(--ink) 30%, transparent);
+  box-shadow: inset 0 0.1875rem 0.375rem color-mix(in srgb, var(--ink) 70%, transparent), inset 0 -0.0625rem 0 color-mix(in srgb, var(--cream) 18%, transparent); }
+#sat-grid .item::after, #sat-worn .item::after { content: ""; position: absolute; inset: 0.25rem; pointer-events: none; padding: 0.125rem; border-radius: 0.25rem;
+  background: repeating-linear-gradient(-45deg, color-mix(in srgb, var(--ink) 85%, transparent) 0 0.125rem, transparent 0.125rem 0.4375rem);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); }
+#sat-grid > .desc { opacity: .7; }
+#sat-grid > .desc { grid-column: 1 / -1; grid-row: 1 / span 2; place-self: center; color: var(--text-dim); font-size: 1.125rem; }
+#sat-grid { min-height: calc(var(--bag-pocket) * 2 + 2.75rem); }
+.satbar .set select { font-size: 1rem; }
+/* Settings: label | control | value on a 2-column page, 1rem gaps */
+.settings .col { gap: 1rem; }
+.settings .set { display: grid; grid-template-columns: 8rem minmax(0, 1fr) 3.5rem; align-items: center; gap: 1rem; }
+.settings .set select { grid-column: 2; justify-self: start; min-width: 12rem; }
+.settings output { color: var(--text); font-variant-numeric: tabular-nums; }
+select, .set select { -webkit-appearance: none; appearance: none; color: var(--text); border: 0.0625rem solid var(--timber-dark); border-radius: 0.375rem; padding: 0.375rem 2rem 0.375rem 0.75rem; font-size: 1rem;
+  background: linear-gradient(45deg, transparent 50%, var(--text) 50%) calc(100% - 1rem) 55% / 0.375rem 0.375rem no-repeat,
+    linear-gradient(135deg, var(--text) 50%, transparent 50%) calc(100% - 0.625rem) 55% / 0.375rem 0.375rem no-repeat,
+    linear-gradient(var(--bark), var(--splinter)); box-shadow: inset 0 0.0625rem 0 var(--timber); }
+select option { background: var(--ink-2); color: var(--text); }
+.set input[type=range] { -webkit-appearance: none; appearance: none; background: none; border: 0; height: 1.5rem; padding: 0; flex: 1 1 auto; width: 100%; }
+input[type=range]::-webkit-slider-runnable-track { height: 0.5rem; border-radius: 0.25rem; background: linear-gradient(var(--timber-dark), var(--splinter)); box-shadow: inset 0 0.0625rem 0.125rem var(--ink); }
+input[type=range]::-moz-range-track { height: 0.5rem; border-radius: 0.25rem; background: linear-gradient(var(--timber-dark), var(--splinter)); }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 1.25rem; height: 1.25rem; margin-top: -0.375rem; border-radius: 50%; border: 0.125rem solid #9c6a33;
+  background: radial-gradient(circle at 40% 35%, #f4d29b, var(--amber) 60%, #c98f45); }
+input[type=range]::-moz-range-thumb { width: 1.25rem; height: 1.25rem; border-radius: 50%; border: 0.125rem solid #9c6a33; background: var(--amber); }
+.settings textarea { font-size: 1rem; background: var(--ink); border: 0.0625rem solid var(--splinter); box-shadow: inset 0 0.1875rem 0.5rem var(--ink), inset 0 0 0 0.0625rem color-mix(in srgb, var(--ink) 80%, transparent); padding: 0.5rem 0.75rem; }
+/* costs that cannot be paid yet are greyed */
+.cost.short { color: var(--text-dim); opacity: .75; }
+/* Camp: the materials in an aligned grid over the diorama's top-right corner */
+.campwrap .camplist { position: absolute; top: 0.75rem; right: 0.75rem; z-index: 2; gap: 0.375rem; padding: 0.625rem 0.875rem; border-radius: 0.375rem;
+  background: color-mix(in srgb, var(--ink) 82%, transparent); border: 0.0625rem solid var(--splinter); }
+.camplist .k { color: var(--text-dim); }
+.camplist dl.mats { display: grid; grid-template-columns: auto auto; gap: 0.25rem 1.5rem; margin: 0; font-size: 1rem; }
+.camplist dl.mats dt { color: var(--text); } .camplist dl.mats dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; color: var(--text); }
+/* round 3: full-width header scrim, clearance under the plank, two-line Heartwood rows that scroll, matched satchel labels */
+body[data-mode="camp"]::before { content: ""; position: fixed; inset: 0 0 auto 0; height: 6rem; pointer-events: none; z-index: 0;
+  background: linear-gradient(color-mix(in srgb, var(--ink) 80%, transparent) 60%, transparent); }
+body[data-mode="camp"] header, body[data-mode="camp"] .panel { position: relative; z-index: 1; }
+body[data-mode="camp"] .campbar { padding-bottom: 1rem; }
+.replant .hwnode .rk { white-space: nowrap; }
+.replant .hwnode .name, .replant .hwnode .desc { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.replant .hwnode > div:first-child { min-width: 0; }
+.replant .hwnode .buy { flex: 0 0 auto; min-width: 8.5rem; }
+#pane-prestige { overflow-y: auto; padding-bottom: 1.5rem; }
+#sat-count { font-size: 1rem; }
+.settings .set > span:first-child { font-size: 1.0625rem; } .settings output { font-size: 1rem; }
+.replant .hwnode .name { font-size: 1rem; overflow: visible; }
+.replant .hwnode .buy { min-width: 0; padding-inline: 0.75rem; }
+.replant .hwnode { padding-block: 0.25rem; min-height: 0; }
+.prestige.replant { gap: 0.5rem; } .replant .paths { padding-bottom: 0.25rem; } .replant .hwtree { gap: 0.375rem; }
+/* round 4 */
+.replant .hwnode .desc { white-space: normal; }
+#camp-go { font-size: max(18px, 1.125rem); }
+.panel .ghost.danger { border-image: none; border: 0.0625rem solid var(--rose); background: linear-gradient(color-mix(in srgb, var(--rose) 30%, var(--ink)), color-mix(in srgb, var(--rose) 18%, var(--ink))); color: #f6c6c6; }
+.pathcard.on { box-shadow: inset 0 0 0.875rem color-mix(in srgb, var(--pl) 55%, transparent); }
+#sat-count, #sat-worn-k { font-family: var(--body); font-size: 1rem; color: var(--text-dim); text-transform: none; letter-spacing: .02em; }

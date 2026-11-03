@@ -111,7 +111,7 @@ export const STR = {
   // Encampment (TB-188b)
   campSecTitle: 'Camp',
   campMats: 'Materials', campLevel: (l: number, m: number) => `level ${l} / ${m}`,
-  campCost: (hw: number, hwHave: number, mat: number, matName: string, matHave: number) => `${hw} Heartwood (${hwHave}) · ${mat} ${matName} (${matHave})`,
+  campCost: (hw: number, mat: number, matName: string) => `${hw} Heartwood · ${mat} ${matName}`,
   campNext: 'Next', campNow: 'Now', campUpgrade: 'Upgrade', campBuild: 'Build',
   cardClose: 'Close',
   campUpgraded: (name: string, l: number) => `${name} reaches level ${l}`,
@@ -124,7 +124,7 @@ export const STR = {
   // Specialisation paths (TB-193c)
   pathsTitle: 'Choose your path', pathNone: 'No path',
   pathStart: (bonus: string) => `Starts with ${bonus}`,
-  pathBonus: { serpent: (v: number) => `+${v}% crit chance`, fox: (v: number) => `+${v}% vanguard and companion damage`, magpie: (v: number) => `+${v}% starlight` },
+  pathBonus: { serpent: (v: number) => `+${v}% crit chance`, fox: (v: number) => `+${v}% ally damage`, magpie: (v: number) => `+${v}% starlight` },
   pathShort: { serpent: 'Serpent', fox: 'Fox', magpie: 'Magpie' },
   pathHint: (name: string) => `Choose the ${name} at Replant`,
   pathChosen: (name: string) => `${name} chosen for the next run`, pathCleared: 'No path for the next run',

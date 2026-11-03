@@ -45,7 +45,7 @@ const magpie = (c: G, t: Tint): void => {
 };
 
 /** Draw a path's sigil filling the canvas: a flat ink disc, one even ring in the path colour, the flat mark centred;
- *  the chosen path's ring is lit and glows. */
+ *  the chosen path's ring is lit and thicker. */
 export function drawSigil(cv: HTMLCanvasElement, path: PathId, lit: boolean): void {
   // a fixed backing size, so a card drawn while its tab is hidden (no layout yet) is still sharp when shown
   const w = SIGIL_PX, h = SIGIL_PX;
@@ -55,9 +55,8 @@ export function drawSigil(cv: HTMLCanvasElement, path: PathId, lit: boolean): vo
   c.setTransform(1, 0, 0, 1, 0, 0); c.clearRect(0, 0, w, h);
   c.setTransform(k, 0, 0, k, (w - 100 * k) / 2, (h - 100 * k) / 2);
   c.beginPath(); c.arc(50, 50, 45, 0, 6.283); c.fillStyle = P.ink; c.fill();
-  c.lineWidth = 3; c.strokeStyle = lit ? t.light : t.deep;
-  if (lit) { c.shadowColor = t.light; c.shadowBlur = 10 * k; }
-  c.stroke(); c.shadowColor = P.noShadow; c.shadowBlur = 0;
+  // TB-195n: the same disc on every path, the ring in the path's own colour, thicker when chosen; no glow
+  c.lineWidth = lit ? 5 : 3; c.strokeStyle = lit ? t.light : t.colour; c.stroke();
   c.save(); c.beginPath(); c.arc(50, 50, 43, 0, 6.283); c.clip();
   if (path === 'serpent') serpent(c, PATH_TINT.serpent); else if (path === 'fox') fox(c, PATH_TINT.fox); else magpie(c, PATH_TINT.magpie);
   c.restore();

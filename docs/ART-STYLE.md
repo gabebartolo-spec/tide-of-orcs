@@ -86,6 +86,8 @@ The plain reads as natural, calm grassland, not a flat board. Layout is seeded (
 - Readability (TB-138, TB-191): body 1rem = 1/54 of window height (20 px at 1920×1080, 40 px at 3840×2160 DPR 1, 20 CSS px = 40 device px at DPR 2; never under 16 px), so it reads from a couch on a TV. Floor: no text under 0.875rem (1.62% of screen height) on PC; only the ≤540 px phone layout goes smaller. Canvas: tree labels 14 layout px × `uiScale()`; field HUD 13 and damage numbers 15 field units (≈2.7% / 3.1% of screen height) × `textScale()`. Settings › Text size (80–160%) multiplies all of it; text is warm parchment `--text` / `P.text` (#ecdcb4), secondary `--text-dim` / `P.textDim`, every DOM text has a dark ink halo (`text-shadow`), canvas labels a 4 px ink shadow and +3 px.
 - Run layout (TB-138): the 15:8 field fills the window (fit, letterboxed), frame 16 px; header stats float over the field. The far hills run across grove, barricade and plain, drawn over the fence.
 
+**Between-runs panel (TB-195p).** The display face is for headings of 24px and up only; every label, value and button under that uses `--body` (system UI stack), sentence case, at least 16px. One button system: primary = gold plank (`.buy`, `#camp-go`, ink text, >=44px tall, no glow); secondary = wood plank (`.ghost`); destructive = wood with a rose edge and rose text (`.ghost.danger`), set 2rem apart. Selected states use a thicker edge in the item's own colour plus an inner glow, never bloom.
+
 ## Motion
 - Orc walk: 1.5 px vertical bob at 8 rad/s. At the wall or on a vanguard: stop, keep bobbing, timber splinters fly on each swing.
 - Hit flash: body fills cream for 0.12 s.

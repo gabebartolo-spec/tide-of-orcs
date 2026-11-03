@@ -8,7 +8,6 @@ import { GameController } from '../game';
 import { TreeRenderer } from '../render/tree';
 import { stepNode, tabOrder } from '../render/treeNav';
 import { canBuy, costOf, rankOf, unlocked } from '../sim/tree';
-import { gain } from '../sim/prestige';
 import { bossesReady, canSummonBoss } from '../sim/boss';
 import { BOSS_WAVE, TIERS } from '../data/bosses';
 import { fitPages } from './fit';
@@ -50,9 +49,8 @@ export class Panel {
   constructor(private game: GameController, private tree: TreeRenderer) {
     // static copy
     $('tab-grove').textContent = STR.tabGrove; $('tab-camp').textContent = STR.tabCamp; $('tab-prestige').textContent = STR.tabReplant;
-    $('pr-title').textContent = STR.replantTitle;
+    $('paths-title').textContent = STR.pathsTitle;
     $('k-wave').textContent = STR.wave; $('k-kills').textContent = STR.slain; $('k-heart').textContent = STR.heartwood;
-    $('pr-gain-k').textContent = STR.replantGainK;
     $('btn-reset').textContent = STR.wipe;
     $('fallen-title').textContent = STR.fallenTitle; $('fallen-hw-k').textContent = STR.fallenHW; $('fallen-btn').textContent = STR.fallenToCamp;
     $('camp-title').textContent = STR.campTitle; $('camp-go').textContent = STR.campGo; $('camp-close').textContent = STR.campClose; $('btn-settings').textContent = STR.tabSettings;
@@ -66,7 +64,6 @@ export class Panel {
     $('tab-grove').onclick = () => { this.onCue('uiPop'); this.setTab('grove'); }; $('tab-camp').onclick = () => { this.onCue('uiPop'); this.setTab('camp'); }; $('tab-prestige').onclick = () => { this.onCue('uiPop'); this.setTab('prestige'); }; $('tab-settings').onclick = () => { this.onCue('uiPop'); this.setTab('settings'); };
     this.initSettings();
     $('dep-boss').onclick = () => { game.summonBoss(); };
-    $('pr-btn').onclick = () => { if (game.canReplant() && !game.state.run.fallen) this.doReplant(); };
     // After a fall the field gives way to the Grove page (TB-136): the tree and satchel are spent between runs
     $('fallen-btn').onclick = () => { this.onCue('click'); this.setMode('camp'); this.setTab('grove'); };
     $('camp-go').onclick = () => { if (game.state.run.fallen) this.doReplant(); };
@@ -100,7 +97,6 @@ export class Panel {
     this.setTreeFull(false);
     $('hw-title').textContent = STR.hwTitle;
     $('hw-tree').onclick = (e) => { const id = (e.target as HTMLElement).closest('button')?.dataset.hw as HwId | undefined; if (id && game.buyHw(id)) { this.toast(STR.hwBought(HW_NODE[id].name)); this.renderHw(); } };
-    $('camp-sec-title').textContent = STR.campSecTitle;
     this.camp = new CampPane(game, $('bcard'), $('camp-list'), (msg) => { this.onCue('bought'); this.toast(msg); });
     this.paths = new PathPicker($('paths'), () => game.state, (p) => game.choosePath(p),
       (p) => { this.onCue(p ? 'uiPath' : 'click'); this.toast(p ? STR.pathChosen(PATHS[p].name) : STR.pathCleared); this.renderDetail(); }, drawSigil);
@@ -112,7 +108,7 @@ export class Panel {
   renderHw(): void {
     const s = this.game.state, m = s.meta;
     $('hw-tree').innerHTML = HW_NODES.map((n) => { const r = hwRank(m, n.id), c = hwCost(m, n.id); return `
-      <div class="hwnode"><div><div class="name">${n.name} <span class="desc">${STR.hwRank(r, n.costs.length)}</span></div><div class="desc" title="${n.desc}">${oneLine(n.desc)}</div>${hwUnlocked(m, n.id) ? '' : `<div class="desc">${STR.hwNeeds((n.req ?? []).map(([r, k]) => `${HW_NODE[r].name} ${k}`).join(', '))}</div>`}</div>
+      <div class="hwnode"><div><div class="name" title="${n.desc}">${n.name} <span class="rk">${STR.hwRank(r, n.costs.length)}</span></div><div class="desc" title="${n.stat}">${hwUnlocked(m, n.id) ? n.stat : STR.hwNeeds((n.req ?? []).map(([r, k]) => `${HW_NODE[r].name} ${k}`).join(', '))}</div></div>
       <button class="buy" data-hw="${n.id}" ${canBuyHw(s, n.id) ? '' : 'disabled'}>${c === null ? STR.complete : STR.hwCost(c)}</button></div>`; }).join('');
   }
 
@@ -123,10 +119,9 @@ export class Panel {
     if (!$('pane-satchel').hidden) this.satchel.update();
     for (const b of $('hw-tree').querySelectorAll<HTMLButtonElement>('button[data-hw]')) b.disabled = !canBuyHw(s, b.dataset.hw as HwId);
     this.camp.update(); this.paths.update();
-    const g = gain(), ok = s.run.wave >= PRESTIGE.voluntaryWave && !s.run.fallen;
+    const ok = s.run.wave >= PRESTIGE.voluntaryWave && !s.run.fallen;
     $('btn-pullback').hidden = !ok;
-    $('pr-gain').textContent = '+' + g; ($('pr-btn') as HTMLButtonElement).disabled = !ok;
-    $('pr-btn').textContent = ok || s.run.fallen ? STR.replantBtn : STR.replantFrom(PRESTIGE.voluntaryWave);
+
     const b = document.getElementById('buy-btn') as HTMLButtonElement | null; if (b) b.disabled = !canBuy(s, NODE[this.tree.selected]);
     this.bossButton(); this.tierPicker();
   }
@@ -230,7 +225,7 @@ export class Panel {
 
   private tab: Tab = 'grove';
   setTab(k: Tab): void {
-    this.tab = k; $('camp-title').textContent = tabTitle(k);
+    this.tab = k; $('camp-title').textContent = tabTitle(k); $('camp-go').textContent = k === 'prestige' ? STR.replantBtn : STR.campGo; document.body.dataset.tab = k;
     if (k !== 'camp') this.camp.close();
     if (k !== 'grove') this.setTreeFull(false);
     for (const t of ['grove', 'satchel', 'camp', 'prestige', 'settings'] as const) { $('pane-' + t).hidden = k !== t; $('tab-' + t).setAttribute('aria-selected', String(k === t)); }
@@ -249,7 +244,7 @@ export class Panel {
     $('btn-export').textContent = STR.exportBtn; $('btn-import').textContent = STR.importBtn;
     this.syncSettings();
     // Sliders apply on every input but save once on release (TB-199).
-    $<HTMLInputElement>('set-vol').oninput = (e) => { this.game.settings.volume = Number((e.target as HTMLInputElement).value); this.settingsApplied(); };
+    $<HTMLInputElement>('set-vol').oninput = (e) => { this.game.settings.volume = Number((e.target as HTMLInputElement).value); $('set-vol-v').textContent = `${Math.round(this.game.settings.volume * 100)}%`; this.settingsApplied(); };
     $<HTMLInputElement>('set-vol').onchange = () => this.game.save();
     $<HTMLSelectElement>('set-motion').onchange = (e) => { const v = (e.target as HTMLSelectElement).value; this.game.settings.reducedMotion = v === 'sys' ? null : v === 'reduced'; this.settingsChanged(); };
     $<HTMLInputElement>('set-text').oninput = (e) => { this.game.settings.textScale = Number((e.target as HTMLInputElement).value); this.settingsApplied(); };
@@ -272,7 +267,7 @@ export class Panel {
   /** Reflect game.settings in the controls and the number formatter. */
   private syncSettings(): void {
     const set = this.game.settings;
-    $<HTMLInputElement>('set-vol').value = String(set.volume);
+    $<HTMLInputElement>('set-vol').value = String(set.volume); $('set-vol-v').textContent = `${Math.round(set.volume * 100)}%`;
     $<HTMLSelectElement>('set-motion').value = set.reducedMotion === null ? 'sys' : set.reducedMotion ? 'reduced' : 'full';
     $<HTMLSelectElement>('set-num').value = set.numberFormat;
     $<HTMLInputElement>('set-text').value = String(set.textScale); $('set-text-v').textContent = `${Math.round(set.textScale * 100)}%`;
