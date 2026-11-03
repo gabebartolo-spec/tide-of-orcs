@@ -140,6 +140,22 @@ export const TREE_LIGHT = {
  *  structure itself reads ~3x the elf), so each
  *  building gets its own scale. `sky` is the share of the box above the horizon. The four finished buildings stand equally tall. TB-188g: CAMP_LV_SCALE multiplies that scale per building and level. */
 export const CAMP_SCENE = { w: 840, h: 210, l3H: 135, sky: 0.25, elf: { x: 805, y: 185, r: 12 } } as const;
+/** The Camp scene's backdrop (TB-188i), painted once per canvas size to an offscreen canvas. Scene units; y down from the box top.
+ *  sky: gradient stops (top, horizon). trees: far forest silhouette, crowns of radius r every `step` with a jitter, two rows
+ *  (far row paler). hills: one low band like the field's. ground: seeded patches and grass tufts. path: a worn track along the
+ *  row through the buildings (y centre, half width, wave). shadow: contact ellipse under each building, rx = w * rx, ry. */
+export const CAMP_BACKDROP = {
+  seed: 1880,
+  trees: [
+    { y: 50, r: [7, 11], step: 9, lift: [0, 9] },
+    { y: 54, r: [5, 9], step: 7, lift: [0, 6] },
+  ],
+  hill: { y: 53, h: 6, w: 70 },
+  ground: { patches: 46, r: [10, 30], squash: 0.35, tufts: 90, blade: [2, 4] },
+  path: { y: 194, half: 7, amp: 3, wave: 160, edge: 1.2, pebbles: 40 },
+  shadow: { rx: 0.42, ry: 7, dy: -1 },
+} as const;
+
 /** Each building's footprint in the camp scene: centre x, base y (ground line), width and height in scene units. One row,
  *  left to right, with the elf at the east end; widths are the level-3 sprites at `l3H` tall. Click targets, the Tripo
  *  sprites and the level-0 placeholder all share it. */
