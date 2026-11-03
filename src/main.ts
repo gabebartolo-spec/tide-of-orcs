@@ -10,10 +10,10 @@ import { campHit } from './ui/camp';
 import { CampScene } from './render/campScene';
 import { AimTracker } from './ui/aimTracker';
 import { aimPoint, startsAim, type Insets } from './ui/touchAim';
-import { PHONE_QUERY } from './data/presentation';
 import { setUiSound } from './data/audio';
 import { wantsCalm } from './ui/juice';
 import { armFullscreen } from './ui/fullscreen';
+import { installTapFallback } from './ui/tapFallback';
 import { quality } from './render/quality';
 
 const game = new GameController();
@@ -54,14 +54,13 @@ setUiSound((c) => audio.play(c));
 // bottom) and below the HUD. One pointer owns the aim (AimTracker): when it lifts the aim clears.
 // A pen aims only in contact; a mouse follows the cursor and clears on leave.
 const tracker = new AimTracker();
-const phoneMq = matchMedia(PHONE_QUERY);
 const remPx = (): number => parseFloat(getComputedStyle(document.documentElement).fontSize);
 const insetProbe = document.createElement('div');
 insetProbe.style.cssText = 'position:fixed;visibility:hidden;pointer-events:none;padding:0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)';
 document.body.appendChild(insetProbe);
 const insets = (): Insets => { const c = getComputedStyle(insetProbe); return { left: parseFloat(c.paddingLeft) || 0, right: parseFloat(c.paddingRight) || 0, bottom: parseFloat(c.paddingBottom) || 0 }; };
 const aimAt = (type: 'touch' | 'pen', cx: number, cy: number): void => {
-  const p = aimPoint(type, cx, cy, fieldCanvas.getBoundingClientRect(), remPx(), phoneMq.matches, insets().bottom);
+  const p = aimPoint(type, cx, cy, fieldCanvas.getBoundingClientRect(), remPx(), insets().bottom);
   const w = field.toWorld(p.x, p.y, true);   // a captured finger can slide off the canvas: keep the circle on the plain
   if (w) game.setAim(w.x, w.y); else game.dropAim();
 };
@@ -104,7 +103,7 @@ const treeWrap = document.querySelector('.treewrap') as HTMLElement;
 const skipCeremony = (): void => { if (field.ceremony.active) field.ceremony.skip(); };
 fieldCanvas.addEventListener('pointerdown', skipCeremony); addEventListener('keydown', skipCeremony);
 void field.sprites.load();
-armFullscreen();
+armFullscreen(); installTapFallback();
 // dev-only handle for checking render work in the browser
 if (import.meta.env.DEV) Object.assign(window, { __tide: { game, field, tree, campScene, audio, panel } });
 
@@ -146,8 +145,8 @@ function frame(now: number): void {
   // the field is hidden (zero-size) on the camp pages, so skip its draw there (TB-136)
   drawDt += dt;
   if (!document.hidden && document.body.dataset.mode !== 'camp' && now - lastDraw >= quality.q.drawGap - 1) {
-    field.draw(game.state, drawDt, game.aim); drawDt = 0;
-    if (lastDraw && quality.frame(now - lastDraw)) field.resize();
+    const w0 = performance.now(); field.draw(game.state, drawDt, game.aim); drawDt = 0;
+    if (lastDraw && quality.frame(now - lastDraw, performance.now() - w0)) field.resize();
     lastDraw = now;
   } else if (document.body.dataset.mode === 'camp') { drawDt = 0; lastDraw = 0; }
   // camp and tree follow the same draw cap as the field, so a 120 Hz screen draws them at 60 (TB-218)

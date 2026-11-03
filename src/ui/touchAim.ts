@@ -10,14 +10,14 @@ export function liftFor(type: 'touch' | 'pen', y: number, r: FieldRect, remPx: n
   return full * Math.min(1, Math.max(0, (r.bottom - y) / fade));
 }
 
-/** The circle's client position: lifted, kept on the field, and (phone landscape) below the HUD line. */
-export function aimPoint(type: 'touch' | 'pen', cx: number, cy: number, r: FieldRect, remPx: number, hudClamp: boolean, bottomInset = 0): { x: number; y: number } {
+/** The circle's client position. The finger's travel from the field top to the gesture-bar line is stretched over the whole field, so a
+ *  thumb that stays out of the bottom inset still reaches the very bottom of the plain, and the lift fades to nothing there. The top is
+ *  reachable too: the HUD plates are pointer-transparent, so a finger over them aims. */
+export function aimPoint(type: 'touch' | 'pen', cx: number, cy: number, r: FieldRect, remPx: number, bottomInset = 0): { x: number; y: number } {
   const x = Math.min(r.right, Math.max(r.left, cx));
-  // the lift fades out by the gesture-bar line and the circle never goes below it: the bottom safe-area inset is never an aim target (TB-218)
-  const usable = r.bottom - bottomInset, lr = { ...r, bottom: usable };
-  let y = Math.min(usable, Math.max(r.top, cy - liftFor(type, cy, lr, remPx)));
-  y = Math.min(r.bottom, y);
-  if (hudClamp) y = Math.max(y, Math.min(r.bottom, r.top + TOUCH.hudBottomPx));
+  const span = r.bottom - r.top, usable = Math.max(1, span - bottomInset);
+  const my = Math.min(r.bottom, r.top + Math.max(0, cy - r.top) * (span / usable));
+  const y = Math.min(r.bottom, Math.max(r.top, my - liftFor(type, my, r, remPx)));
   return { x, y };
 }
 

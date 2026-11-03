@@ -40,7 +40,7 @@ export const STR = {
   turnSideways: 'Turn your phone sideways to hold the wall.',
   tabSatchel: 'Satchel', satchelTitle: 'Satchel', satchelWorn: 'Worn',
   satchelCount: (n: number, cap: number, glimmer: number) => `Satchel ${n} / ${cap} · ${glimmer} Glimmer`,
-  satchelEmpty: 'Empty', satchelPick: '',
+  satchelEmpty: 'Empty', satchelPick: '', satchelBack: 'Back to bag',
   satchelVs: (worn: string, d: number) => `Against worn ${worn}: ${d >= 0 ? '+' : ''}${d} power`,
   cmpWorn: 'Worn now', cmpHover: 'In the satchel', cmpNone: 'Nothing worn here', cmpPower: (d: number) => `${d >= 0 ? '+' : ''}${d} power`,
   satchelFilter: 'Keep', filterAtLeast: (r: string) => `${r} and up`, satchelWornNow: 'Worn',

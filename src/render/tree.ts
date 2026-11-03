@@ -1,11 +1,11 @@
-import { renderScale } from './quality';
+import { quality, renderScale } from './quality';
 import { BRANCH_COLOR, BRANCH_LABEL, NODE, NODES, NodeId, SkillNode, TREE_VIEW } from '../data/skillTree';
 import { Camera, wholeZoom, centreOn, clampCamera, easeToward, startCamera, panBy, toWorld, wholeCamera, zoomAt } from './camera';
 import { SimState } from '../sim/state';
 import { canBuy, pathLocked, rankOf, unlocked } from '../sim/tree';
 import { DragGuard } from './dragGuard';
 import { BRANCH_LIGHT, P, PATH_TINT } from './palette';
-import { TREE_LIGHT as L } from '../data/presentation';
+import { TREE_LIGHT as L, QUALITY } from '../data/presentation';
 
 /** The UI scale: root font size over 16 px (style.css, TB-143); 1.25 at 1920×1080 since TB-191, times Settings › Text size. */
 export const uiScale = (): number => parseFloat(getComputedStyle(document.documentElement).fontSize) / 16 || 1;
@@ -70,7 +70,7 @@ export class TreeRenderer {
 
   constructor(readonly canvas: HTMLCanvasElement) {
     this.g = canvas.getContext('2d')!;
-    new ResizeObserver(() => this.resize()).observe(canvas);
+    new ResizeObserver(() => this.resizeSoon()).observe(canvas);
     this.resize();
     canvas.addEventListener('wheel', (e) => {
       e.preventDefault(); if (this.full) return; this.target = null; const [sx, sy] = this.local(e);
@@ -119,12 +119,21 @@ export class TreeRenderer {
     const r = this.canvas.getBoundingClientRect(); return [(e.clientX - r.left) / this.ui, (e.clientY - r.top) / this.ui];
   }
 
+  /** Reallocating a canvas clears it and costs a frame: only when the size really changed. */
+  private setStore(w: number, h: number): void { if (this.canvas.width !== w) this.canvas.width = w; if (this.canvas.height !== h) this.canvas.height = h; }
+  private resizeTimer = 0;
+  /** A URL-bar slide or rotation fires many size callbacks: on a phone wait for the box to hold still, then resize once (TB-218). */
+  private resizeSoon(): void {
+    if (quality.tier !== 'phone') { this.resize(); return; }
+    clearTimeout(this.resizeTimer); this.resizeTimer = window.setTimeout(() => this.resize(), QUALITY.resizeSettleMs);
+  }
+
   resize(): void {
     const r = this.canvas.getBoundingClientRect(); if (!r.width || !r.height) return;
     // Work in 1080p layout px (CSS px ÷ the UI scale, TB-143), so legend, labels and camera framing grow with the window
     this.ui = uiScale(); const first = this.vw === 1, k = r.width / this.ui / this.vw;
     this.vw = r.width / this.ui; this.vh = r.height / this.ui; const sc = renderScale(r.width, r.height); this.dpr = sc * this.ui;
-    this.canvas.width = Math.round(r.width * sc); this.canvas.height = Math.round(r.height * sc);
+    this.setStore(Math.round(r.width * sc), Math.round(r.height * sc));
     // Keep the same framing when the panel resizes: scale zoom with width.
     if (this.full) { this.cam = this.fullCamera(); this.target = null; return; }
     this.cam = first ? startCamera(this.vw, this.vh) : clampCamera({ ...this.cam, z: this.cam.z * k }, this.vw, this.vh);
@@ -137,7 +146,7 @@ export class TreeRenderer {
     this.full = on; this.target = null; this.vw = 1; // force a fresh fit on the next resize
     const r = this.canvas.getBoundingClientRect(); if (!r.width || !r.height) return;
     this.ui = uiScale(); this.vw = r.width / this.ui; this.vh = r.height / this.ui; const sc = renderScale(r.width, r.height); this.dpr = sc * this.ui;
-    this.canvas.width = Math.round(r.width * sc); this.canvas.height = Math.round(r.height * sc);
+    this.setStore(Math.round(r.width * sc), Math.round(r.height * sc));
     this.cam = on ? this.fullCamera() : this.saved ? clampCamera(this.saved, this.vw, this.vh) : startCamera(this.vw, this.vh);
     this.stale = true;
   }
@@ -301,6 +310,7 @@ export class TreeRenderer {
     c.fillStyle = P.ink; c.fillRect(x - 0.75, y, 1.5, 3);
   }
 
+  private legProbe = -1; private legPx = 14; private legGap = 30;
   draw(s: SimState, t: number): void {
     this.stale = false;
     if (this.target) {
@@ -328,7 +338,18 @@ export class TreeRenderer {
     }
     c.setTransform(k, 0, 0, k, 0, 0); // legend stays in screen space, on its own strip so nodes pan under it, not through it (TB-117)
     c.fillStyle = P.ink2; c.fillRect(0, 0, this.vw, TREE_VIEW.legendH); c.fillStyle = P.line; c.fillRect(0, TREE_VIEW.legendH - 1, this.vw, 1);
-    let lx = 14; c.font = '14px Heartwood'; c.textAlign = 'left';
-    for (const k of Object.keys(BRANCH_COLOR) as (keyof typeof BRANCH_COLOR)[]) { c.fillStyle = BRANCH_COLOR[k]; c.fillRect(lx, 14, 8, 8); c.fillStyle = P.textDim; const label = BRANCH_LABEL[k].toUpperCase(); c.fillText(label, lx + 12, 22); lx += c.measureText(label).width + 30; }
+    // the strip never clips: gaps tighten, then the font steps down, until every label fits the canvas width
+    const keys = Object.keys(BRANCH_COLOR) as (keyof typeof BRANCH_COLOR)[], labels = keys.map((k) => BRANCH_LABEL[k].toUpperCase());
+    c.font = '14px Heartwood'; c.textAlign = 'left';
+    const probe = c.measureText(labels[0]!).width + this.vw * 1000;   // changes with width or when the face finishes loading
+    if (probe !== this.legProbe) {
+      this.legProbe = probe; let px = 14;
+      const need = (): number => labels.reduce((a, l) => a + c.measureText(l).width + 12, 0) + 14 * 2;
+      while (px > 10 && need() + 8 * (keys.length - 1) > this.vw) { px--; c.font = `${px}px Heartwood`; }
+      this.legPx = px; this.legGap = Math.min(30, Math.max(8, (this.vw - need()) / (keys.length - 1)));
+    }
+    c.font = `${this.legPx}px Heartwood`; const gap = this.legGap;
+    let lx = 14;
+    keys.forEach((k, i) => { c.fillStyle = BRANCH_COLOR[k]; c.fillRect(lx, 14, 8, 8); c.fillStyle = P.textDim; c.fillText(labels[i]!, lx + 12, 22); lx += c.measureText(labels[i]!).width + 12 + gap; });
   }
 }

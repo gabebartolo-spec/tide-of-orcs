@@ -292,11 +292,11 @@ export const SPRITE_BAKE = { steps: 4, cap: 2048, quantum: 0.5, sub: 4 } as cons
 export const SPRITE_BAKE_PHONE = { cap: 2048, quantum: 2, sub: 1, maxBytes: 12 * 1024 * 1024 } as const;
 
 /** Render quality (TB-218 P2, P3). Phone tier: weak or touch device. `ladder` is the field backing scale the governor steps along
- *  (slow = mean `slowMs` over a `window`-frame stretch for `downAfter` s; fast = under `fastMs` for `upAfter` s); `gap60` and
+ *  (slow = mean draw interval over `slowMs` across a `window`-frame stretch for `downAfter` s; fast = mean draw cost under `fastMs` for `upAfter` s, doubling to `upAfterMax` when a step up is undone within `undoWithin` s); `gap60` and
  *  `gapFloor` are the minimum ms between draws (60 Hz on a 120 Hz screen, then the 30 fps floor). `shared` and `sharedMp` cap every
  *  other canvas (camp, tree, juice). Desktop: scale cap 2, no frame cap, the old 900 particles. */
 export const QUALITY = {
   weakMemGb: 2, weakCores: 2, ladder: [1.5, 1.25, 1] as readonly number[], phoneStart: 1.25, phoneHigh: 1.5, minScale: 1, desktopScale: 2,
   fieldMp: 1.0, haloK: 0.6, shadowPx: 64, phoneParts: 300, deskParts: 900, resizeSettleMs: 250, gap60: 15, gapFloor: 30, shared: 1.5, sharedMp: 1.0,
-  governor: { window: 60, every: 15, slowMs: 20, fastMs: 12, downAfter: 3, upAfter: 10 },
+  governor: { window: 60, every: 15, slowMs: 20, fastMs: 8, downAfter: 3, upAfter: 10, upAfterMax: 80, undoWithin: 30 },
 } as const;

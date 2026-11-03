@@ -50,7 +50,7 @@ header h1 em { color: var(--amber); font-style: normal; }
 .fallen .big { font-family: var(--display); font-size: 2.75rem; color: var(--rose); font-weight: 400; }
 .rally { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; justify-content: flex-end; margin-top: 0.5rem; }
 .deploy { background: var(--ink-2); border: 0.0625rem solid var(--line); border-radius: 0.5rem; padding: 0.5rem 0.75rem; display: flex; flex-direction: column; align-items: flex-start; gap: 0.125rem; min-width: 9.375rem; }
-.deploy:hover:not(:disabled) { border-color: var(--amber); }
+@media (hover: hover) and (pointer: fine) { .deploy:hover:not(:disabled) { border-color: var(--amber); } }
 .deploy:disabled { opacity: .5; cursor: default; }
 .deploy .n { font-weight: 700; } .deploy .c { font-size: 0.875rem; color: var(--amber); font-variant-numeric: tabular-nums; }
 .deploy .c.dim { color: var(--text-dim); }
@@ -72,7 +72,7 @@ header h1 em { color: var(--amber); font-style: normal; }
 .buy { background: var(--amber); color: var(--ink); border: 0; border-radius: 0.375rem; padding: 0.5rem 0.875rem; font-weight: 700; }
 .buy:disabled { background: var(--ink-3); color: var(--text-dim); cursor: default; }
 .ghost { background: none; border: 0.0625rem solid var(--line); border-radius: 0.375rem; padding: 0.375rem 0.625rem; font-size: 0.875rem; color: var(--text-dim); }
-.ghost:hover { color: var(--text); border-color: var(--text-dim); }
+@media (hover: hover) and (pointer: fine) { .ghost:hover { color: var(--text); border-color: var(--text-dim); } }
 .prestige { padding: 1rem 0.875rem; display: flex; flex-direction: column; gap: 0.75rem; line-height: 1.45; }
 .prestige h2 { font-family: var(--display); font-weight: 400; font-size: 1.5625rem; margin: 0; }
 .prestige p { margin: 0; color: var(--text-dim); max-width: 60ch; }
@@ -106,6 +106,7 @@ header h1 em { color: var(--amber); font-style: normal; }
 .itemdetail .affixes { margin: 0.375rem 0; padding-left: 1.125rem; }
 .r-common { --rar: var(--text-dim); } .r-rare { --rar: var(--sage); } .r-epic { --rar: var(--lilac); } .r-legendary { --rar: var(--amber); } .r-mythic { --rar: var(--rose); }
 .satbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.375rem; font-size: 0.875rem; text-transform: uppercase; letter-spacing: .12em; color: var(--text-dim); }
+.buy.back { display: none; }
 .itemdetail .row { display: flex; flex-wrap: wrap; gap: 0.375rem; align-items: center; margin-top: 0.5rem; }
 /* Glyph frames (TB-097): colour from --rar, and a frame shape per rarity: common plain, rare solid, epic double, legendary square-cornered, mythic glowing */
 .item .txt { display: flex; flex-direction: column; align-items: flex-start; gap: 0.0625rem; min-width: 0; }
@@ -171,7 +172,7 @@ header h1 em { color: var(--amber); font-style: normal; }
 .buy:disabled { background: var(--grain), var(--ink-3); box-shadow: inset 0 0.0625rem 0 var(--line), inset 0 -0.125rem 0 var(--ink); }
 .deploy, .ghost { border: 0; background: var(--grain), linear-gradient(var(--bark), var(--splinter)); box-shadow: inset 0 0.0625rem 0 var(--timber), inset 0 -0.125rem 0 #3a2c1e; padding-inline: 1.125rem; }
 .ghost { color: var(--text); }
-.deploy:hover:not(:disabled), .ghost:hover { box-shadow: inset 0 0.0625rem 0 var(--amber), inset 0 -0.125rem 0 #3a2c1e, inset 0 0 0 0.0625rem var(--amber); }
+@media (hover: hover) and (pointer: fine) { .deploy:hover:not(:disabled), .ghost:hover { box-shadow: inset 0 0.0625rem 0 var(--amber), inset 0 -0.125rem 0 #3a2c1e, inset 0 0 0 0.0625rem var(--amber); } }
 .deploy.boss:not(:disabled) { box-shadow: inset 0 0.0625rem 0 var(--amber), inset 0 -0.125rem 0 #3a2c1e, inset 0 0 0 0.0625rem var(--amber); }
 .item, .hwnode { background: var(--grain), var(--ink); border-color: var(--splinter); }
 .set select, .set input, .settings textarea { border-color: var(--splinter); }
@@ -206,7 +207,8 @@ body[data-mode="settings"]::after { content: ""; position: fixed; inset: 0; z-in
 /* Carved plaque (art/ui/carve.py button.png, 385x94): 9-slice with fill, ends cut 1.875rem so the split points stay whole */
 .deploy, .ghost { clip-path: none; border: solid transparent; border-width: 0.5rem 0.75rem; border-image: url("./wood/button.png") 20 30 fill / 0.5rem 0.75rem stretch;
   background: none; box-shadow: none; text-shadow: 0 0.0625rem 0.125rem var(--ink); }
-.deploy:hover:not(:disabled), .ghost:hover, .deploy.boss:not(:disabled) { box-shadow: none; filter: brightness(1.18); }
+@media (hover: hover) and (pointer: fine) { .deploy:hover:not(:disabled), .ghost:hover { box-shadow: none; filter: brightness(1.18); } }
+.deploy.boss:not(:disabled) { box-shadow: none; filter: brightness(1.18); }
 
 /* Readability (TB-138): parchment text with a dark halo so it holds on grain, gilt and the plain */
 body { text-shadow: 0 0.0625rem 0.125rem var(--ink), 0 0 0.375rem var(--ink); }
@@ -298,6 +300,7 @@ button, select, .tabs { touch-action: manipulation; }
 body[data-mode="camp"] .tab.fitscroll:not([hidden]) { overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
 
 /* Full-screen skill tree (TB-189): the Grove pane covers the window, the whole tree fits beside the detail card. */
+#pane-grove { position: relative; }
 .treefull { position: absolute; top: 0.25rem; right: 0.5rem; z-index: 1; padding: 0.25rem 0.625rem; font-size: 0.8125rem; background: var(--ink-2); }
 body.tree-full #pane-grove { position: fixed; inset: 0; z-index: 30; display: flex; flex-direction: row; background: var(--ink); }
 body.tree-full #pane-grove .treewrap { flex: 1 1 0; min-width: 0; height: auto; }
@@ -412,7 +415,7 @@ body[data-mode="camp"] :is(.hud-wallbox, .hud-wave) { display: none; }
 .pathcard .name { font-family: var(--display); font-size: 1.25rem; color: var(--pc); }
 .pathcard .desc { color: var(--text-dim); font-size: 0.875rem; line-height: 1.3; }
 .pathcard .bonus { color: var(--amber); font-size: 0.875rem; font-variant-numeric: tabular-nums; }
-.pathcard:hover:not(:disabled) { border-color: var(--pc); transform: translateY(-0.0625rem); }
+@media (hover: hover) and (pointer: fine) { .pathcard:hover:not(:disabled) { border-color: var(--pc); transform: translateY(-0.0625rem); } }
 .pathcard.on { border: 0.125rem solid var(--pl); padding: 0.6875rem 0.9375rem 0.6875rem 0.6875rem;
   background: var(--grain), radial-gradient(ellipse at 18% 50%, color-mix(in srgb, var(--pl) 24%, transparent), transparent 70%), linear-gradient(170deg, color-mix(in srgb, var(--bark) 70%, var(--ink)), color-mix(in srgb, var(--splinter) 55%, var(--ink)) 80%);
   box-shadow: inset 0 0.0625rem 0 color-mix(in srgb, var(--timber) 55%, transparent), 0 0 0.75rem color-mix(in srgb, var(--pl) 55%, transparent), 0 0 1.75rem color-mix(in srgb, var(--pl) 25%, transparent); }
@@ -461,7 +464,7 @@ body[data-mode="camp"] :is(.hud-wallbox, .hud-wave) { display: none; }
 #tab-satchel::before { background-image: image-set(url("/ui/token-satchel.webp") 1x, url("/ui/token-satchel@2x.webp") 2x); }
 #tab-prestige::before { background-image: image-set(url("/ui/token-seed.webp") 1x, url("/ui/token-seed@2x.webp") 2x); }
 #tab-settings::before { background-image: image-set(url("/ui/token-cog.webp") 1x, url("/ui/token-cog@2x.webp") 2x); }
-.tabs button:hover::before { filter: brightness(0.9) drop-shadow(0 0.125rem 0.1875rem var(--ink)); }
+@media (hover: hover) and (pointer: fine) { .tabs button:hover::before { filter: brightness(0.9) drop-shadow(0 0.125rem 0.1875rem var(--ink)); } }
 .tabs button[aria-selected="true"]::before { transform: translateY(var(--tok-lift)) scale(var(--tok-on));
   filter: drop-shadow(0 0 0.375rem var(--amber)) drop-shadow(0 0.1875rem 0.25rem var(--ink)); }
 .tab:not([hidden]) { animation: ui-fade var(--ui-in) var(--ui-ease), pane-rise var(--tok-in) cubic-bezier(.34, 1.56, .64, 1); }
@@ -490,7 +493,7 @@ body[data-mode="camp"] :is(.hud-wallbox, .hud-wave) { display: none; }
 .fallen .march { height: var(--march-h); min-width: 18rem; padding: 0 0.75rem; border: solid transparent; border-width: 0 var(--march-cap); background: none; cursor: pointer;
   border-image: image-set(url("/ui/march.webp") 1x, url("/ui/march@2x.webp") 2x) 0 56 fill / 0 var(--march-cap) stretch;
   font-family: var(--display); font-size: 1.5rem; color: var(--ink); animation: march-glow 2.2s ease-in-out infinite; }
-.fallen .march:hover { filter: brightness(1.12) drop-shadow(0 0 1.25rem var(--amber)); }
+@media (hover: hover) and (pointer: fine) { .fallen .march:hover { filter: brightness(1.12) drop-shadow(0 0 1.25rem var(--amber)); } }
 .fallen .march:focus-visible { outline: 0.125rem solid var(--amber); outline-offset: 0.25rem; }
 @keyframes march-glow { 0%, 100% { filter: drop-shadow(0 0 0.375rem color-mix(in srgb, var(--amber) 50%, transparent)); } 50% { filter: drop-shadow(0 0 1.125rem var(--amber)); } }
 :root[data-calm] .fallen .march { animation: none; filter: drop-shadow(0 0 0.625rem color-mix(in srgb, var(--amber) 60%, transparent)); }
@@ -530,7 +533,7 @@ body[data-mode="camp"] :is(.hud-wallbox, .hud-wave) { display: none; }
 #sat-grid .item .glyph, #sat-worn .item .glyph { border: 0; background: none; box-shadow: none; border-radius: 0; }
 #sat-grid .item:not(.empty), #sat-worn .item:not(.empty) { filter: drop-shadow(0 0 0.5rem color-mix(in srgb, var(--rar, transparent) 75%, transparent)); }
 #sat-grid .item.r-common, #sat-worn .item.r-common { filter: none; }
-#sat-grid .item:hover, #sat-worn .item:not(.empty):hover { transform: translateY(calc(-1 * var(--lift))); }
+@media (hover: hover) and (pointer: fine) { #sat-grid .item:hover, #sat-worn .item:not(.empty):hover { transform: translateY(calc(-1 * var(--lift))); } }
 #sat-grid .item.sel, #sat-worn .item.sel { outline: 0; filter: drop-shadow(0 0 0.25rem var(--cream)) drop-shadow(0 0 0.625rem color-mix(in srgb, var(--rar, var(--cream)) 80%, transparent)); }
 #sat-grid { grid-template-columns: repeat(auto-fill, var(--bag-pocket)); grid-auto-rows: var(--bag-pocket); gap: 0.5rem; justify-content: center; }
 #sat-grid .item .glyph, #sat-grid .item .glyph img { width: calc(var(--bag-pocket) * 0.66); height: calc(var(--bag-pocket) * 0.66); }
@@ -543,7 +546,8 @@ body[data-mode="camp"] :is(.hud-wallbox, .hud-wave) { display: none; }
 #sat-worn .item.want { outline: 0; animation: pocket-want 0.9s ease-in-out infinite; }
 @keyframes pocket-want { 0%, 100% { filter: drop-shadow(0 0 0.25rem var(--amber)); } 50% { filter: drop-shadow(0 0 1.25rem var(--amber)); } }
 :root[data-calm] #sat-worn .item.want { animation: none; filter: drop-shadow(0 0 0.75rem var(--amber)); }
-:root[data-calm] :is(#sat-grid, #sat-worn) .item { transition: none; } :root[data-calm] :is(#sat-grid, #sat-worn) .item:hover { transform: none; }
+:root[data-calm] :is(#sat-grid, #sat-worn) .item { transition: none; }
+@media (hover: hover) and (pointer: fine) { :root[data-calm] :is(#sat-grid, #sat-worn) .item:hover { transform: none; } }
 /* The picked item's card sits under the bag (right), not under the doll, so the page keeps its scale with an item picked. */
 @media (min-width: 861px) and (orientation: landscape) {
   .prestige.satchel > .stat { grid-row: 2; } .prestige.satchel > #sat-worn { grid-row: 3 / span 2; } .prestige.satchel > #sat-sets { grid-row: 5; }
@@ -573,7 +577,7 @@ header h1 { display: inline-block; background-size: 100% 0.625rem; }
   transition: transform var(--tok-in) cubic-bezier(.34, 1.56, .64, 1), opacity var(--tok-in) ease-out; pointer-events: none; }
 #tab-grove { --g: url("/ui/glyph-bow.svg"); } #tab-satchel { --g: url("/ui/glyph-satchel.svg"); } #tab-camp { --g: url("/ui/glyph-tent.svg"); }
 #tab-prestige { --g: url("/ui/glyph-seed.svg"); } #tab-settings { --g: url("/ui/glyph-cog.svg"); }
-.tabs button:hover::after { opacity: 1; }
+@media (hover: hover) and (pointer: fine) { .tabs button:hover::after { opacity: 1; } }
 .tabs button[aria-selected="true"]::before { filter: none; box-shadow: 0 0 0 0.125rem var(--amber), 0 0 0.75rem var(--amber), 0 0.1875rem 0.375rem var(--ink); }
 .tabs button[aria-selected="true"]::after { opacity: 1; transform: translateY(var(--tok-lift)) scale(var(--tok-on)); }
 :root[data-calm] .tabs button::after { transition: none; }
@@ -581,7 +585,7 @@ header h1 { display: inline-block; background-size: 100% 0.625rem; }
   border-image: image-set(url("/ui/march.webp") 1x, url("/ui/march@2x.webp") 2x) 0 56 fill / 0 var(--march-cap) stretch;
   font-family: var(--display); font-size: 1.125rem; color: var(--ink); text-shadow: 0 0.0625rem 0 color-mix(in srgb, var(--cream) 50%, transparent);
   filter: drop-shadow(0 0.25rem 0 var(--splinter, var(--ink))) drop-shadow(0 0.375rem 0.5rem var(--ink)); transition: transform 120ms ease-out, filter 120ms ease-out; }
-#camp-go:hover { transform: translateY(-0.125rem); filter: brightness(1.1) drop-shadow(0 0.375rem 0 var(--splinter, var(--ink))) drop-shadow(0 0.5rem 0.75rem var(--ink)) drop-shadow(0 0 0.5rem var(--amber)); }
+@media (hover: hover) and (pointer: fine) { #camp-go:hover { transform: translateY(-0.125rem); filter: brightness(1.1) drop-shadow(0 0.375rem 0 var(--splinter, var(--ink))) drop-shadow(0 0.5rem 0.75rem var(--ink)) drop-shadow(0 0 0.5rem var(--amber)); } }
 #camp-go:active { transform: translateY(0.1875rem); filter: brightness(0.92) drop-shadow(0 0.0625rem 0 var(--splinter, var(--ink))) drop-shadow(0 0.125rem 0.1875rem var(--ink)); }
 :root[data-calm] #camp-go { transition: none; }
 body:not([data-mode="run"]) header #btn-settings { display: none; }
@@ -618,13 +622,13 @@ body[data-mode="camp"] .campbar { justify-content: flex-end; }
 #camp-go, .rphead .buy { border: 0; border-image: none; clip-path: polygon(0.4375rem 0, calc(100% - 0.4375rem) 0, 100% 50%, calc(100% - 0.4375rem) 100%, 0.4375rem 100%, 0 50%);
   height: auto; min-height: 2.75rem; min-width: 11rem; padding: 0.5rem 1.75rem; font-family: var(--body); font-size: 1.125rem; color: var(--ink); text-shadow: none; filter: none;
   background: linear-gradient(#ebb871, var(--amber) 55%, #c98f45); box-shadow: inset 0 0.0625rem 0 #f4d29b, inset 0 -0.1875rem 0 #9c6a33; }
-#camp-go:hover, .rphead .buy:hover:not(:disabled) { filter: brightness(1.08); transform: none; }
+@media (hover: hover) and (pointer: fine) { #camp-go:hover, .rphead .buy:hover:not(:disabled) { filter: brightness(1.08); transform: none; } }
 #camp-go:active, .rphead .buy:active:not(:disabled) { filter: brightness(0.94); transform: translateY(0.0625rem); }
 .rphead .buy:disabled { background: var(--ink-3); color: var(--text-dim); box-shadow: inset 0 0.0625rem 0 var(--line); }
 /* destructive: rose, apart from everything else */
 .danger-row { margin-top: 2rem; }
 .panel .ghost.danger { color: #f0b4b4; font-weight: 600; }
-.ghost.danger:hover { filter: brightness(1.15); }
+@media (hover: hover) and (pointer: fine) { .ghost.danger:hover { filter: brightness(1.15); } }
 /* Replant: the title and Replant plank on one row, the paths, then the whole Heartwood tree in a grid */
 .prestige.replant { gap: 1rem; }
 .rphead { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
@@ -640,7 +644,7 @@ body[data-mode="camp"] .campbar { justify-content: flex-end; }
 .pathcard .sigil { grid-row: 1 / span 2; }
 .pathcard .name { align-self: end; }
 .pathcard .bonus { align-self: start; font-size: 1rem; color: var(--text); }
-.pathcard:hover:not(:disabled) { transform: none; filter: brightness(1.08); }
+@media (hover: hover) and (pointer: fine) { .pathcard:hover:not(:disabled) { transform: none; filter: brightness(1.08); } }
 .pathcard.on { border: 0.1875rem solid var(--pl); padding: 0.65625rem 0.90625rem 0.65625rem 0.65625rem;
   background: linear-gradient(color-mix(in srgb, var(--ink) 40%, transparent), color-mix(in srgb, var(--ink) 40%, transparent)),
     image-set(url("/ui/satchel.webp") 1x, url("/ui/satchel@2x.webp") 2x) center / var(--sat-mid) var(--sat-mid) no-repeat;
@@ -956,7 +960,11 @@ header, #hud, #toast, #campview, .wrap, .play { touch-action: pan-x pan-y; }
   body:not([data-mode="camp"]) .hud .stats { gap: 0.25rem; }
   body:not([data-mode="camp"]) .hud { gap: 0.25rem; }
   /* Grove: the Full-screen / Close button leaves the legend strip and sits at the bottom corner of the tree */
-  .treefull { top: auto; bottom: 0.5rem; right: 0.5rem; }
+  /* the gem stays inside the HUD box (it hung 13 px below it) */
+  .hud-gem { width: 3.25rem; height: 3.25rem; margin: -0.5rem -0.375rem -0.5rem -0.625rem; }
+  /* the button sits over the detail column's empty foot, never over the tree (nodes stay visible and tappable) */
+  .treefull { top: auto; bottom: 0.5rem; right: max(34px, env(safe-area-inset-right, 0px)); margin-right: 0.5rem; }
+  body[data-mode="camp"] #pane-grove .detail { padding-bottom: 4rem; }
   body.tree-full #pane-grove { padding-left: max(34px, env(safe-area-inset-left, 0px)); padding-right: max(34px, env(safe-area-inset-right, 0px)); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; }
   body.tree-full #pane-grove .detail { flex-basis: 18rem; }
   /* camp panes and Settings: 34 px from both screen edges (or the inset, whichever is larger) */
@@ -967,7 +975,11 @@ header, #hud, #toast, #campview, .wrap, .play { touch-action: pan-x pan-y; }
   body:not([data-mode="camp"]) .rally { left: max(34px, env(safe-area-inset-left)); right: max(34px, env(safe-area-inset-right)); }
   .fallen { padding-left: max(34px, env(safe-area-inset-left)); padding-right: max(34px, env(safe-area-inset-right)); }
   /* Satchel: the picked item's card is a short strip so the bag keeps its rows; the filter shows its whole label */
-  .prestige.satchel > #sat-detail { max-height: 6.25rem; }
+  /* Satchel: a picked item's card takes the bag's whole column (name, stats, buttons in view; Back returns to the bag) */
+  .prestige.satchel:not(.picked) > #sat-detail { display: none; } .prestige.satchel:not(.picked) > #sat-grid { grid-row: 2 / span 2; }
+  .prestige.satchel.picked > .satbar, .prestige.satchel.picked > #sat-grid { display: none; }
+  .prestige.satchel.picked > #sat-detail { grid-column: 2; grid-row: 1 / span 3; max-height: none; min-height: 0; overflow-y: auto; }
+  #sat-detail .buy.back { display: inline-flex; align-items: center; justify-content: center; }
   #sat-detail .affixes { margin: 0.125rem 0; font-size: 0.875rem; line-height: 1.25; }
   #sat-detail .name { font-size: 1.125rem; }
   .prestige.satchel > .satbar { flex-wrap: nowrap; gap: 0.5rem; }
@@ -977,4 +989,4 @@ header, #hud, #toast, #campview, .wrap, .play { touch-action: pan-x pan-y; }
   .fallen .seal { display: none; }
   .fallen .report { overflow: visible; }
 }
-@media (pointer: coarse) and (max-height: 380px) and (orientation: landscape) { .fallen { padding-top: 4.75rem; } .prestige.satchel > #sat-detail { max-height: 5.5rem; } }
+@media (pointer: coarse) and (max-height: 380px) and (orientation: landscape) { .fallen { padding-top: 4.75rem; } }

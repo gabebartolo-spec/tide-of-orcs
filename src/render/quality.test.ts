@@ -34,8 +34,29 @@ describe('Governor', () => {
     const g = new Governor([1.5, 1], 1);
     for (let i = 0; i < 400 && !g.floor; i++) g.frame(40);
     expect(g.floor).toBe(true);
-    for (let i = 0; i < 1500 && g.floor; i++) g.frame(8);
+    for (let i = 0; i < 1500 && g.floor; i++) g.frame(7);
     expect(g.floor).toBe(false);
+  });
+});
+
+describe('Governor recovery (paced draws)', () => {
+  it('recovers from the floor on cheap draws even though paced intervals never go under 14 ms', () => {
+    const g = new Governor([1.5, 1.25, 1], 1);
+    for (let i = 0; i < 400 && !g.floor; i++) g.frame(40, 30);
+    expect(g.floor).toBe(true);
+    for (let i = 0; i < 2000 && g.floor; i++) g.frame(33, 4);   // floor cap: 33 ms apart, 4 ms of work
+    expect(g.floor).toBe(false);
+    for (let i = 0; i < 4000 && g.rung > 0; i++) g.frame(16.7, 4);
+    expect(g.rung).toBe(0);
+  });
+  it('a step up that is undone at once makes the next climb take twice as long', () => {
+    const g = new Governor([1.5, 1], 1);
+    const run = (ms: number, work: number, until: () => boolean): number => { let t = 0; while (!until() && t < 600000) { g.frame(ms, work); t += ms; } return t; };
+    for (let i = 0; i < 400 && g.rung < 1; i++) g.frame(40, 30);
+    const first = run(16.7, 4, () => g.rung === 0);
+    run(40, 30, () => g.rung === 1);
+    const second = run(16.7, 4, () => g.rung === 0);
+    expect(second).toBeGreaterThan(first * 1.8);
   });
 });
 

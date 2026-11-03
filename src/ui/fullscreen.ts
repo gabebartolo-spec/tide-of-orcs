@@ -19,15 +19,19 @@ export function exitFullscreen(): void {
   document.exitFullscreen?.().catch(() => {});
 }
 
-/** On the first touch release in the run view of a coarse-pointer device, go fullscreen (needs a user gesture). */
+/** On a touch release in the run view of a coarse-pointer device, go fullscreen (needs a user gesture). Re-armed whenever fullscreen
+ *  ends without the Settings button (Android back or swipe gesture), so the next run-view touch brings it back unless the player chose 'off'. */
 export function armFullscreen(): void {
-  if (!matchMedia('(pointer: coarse)').matches || read() === 'off') return;
+  if (!matchMedia('(pointer: coarse)').matches) return;
   const once = (e: PointerEvent): void => {
     if (e.pointerType === 'mouse' || document.body.dataset.mode !== 'run') return;
+    if (read() === 'off') { removeEventListener('pointerup', once, true); return; }
     removeEventListener('pointerup', once, true);
     enterFullscreen();
   };
-  addEventListener('pointerup', once, true);
+  const arm = (): void => { if (read() !== 'off') addEventListener('pointerup', once, true); };   // same function twice is one listener
+  document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement) arm(); });
+  arm();
 }
 
 /** Settings button: toggles fullscreen and remembers the choice. Hidden where the browser has no fullscreen API. */

@@ -38,13 +38,13 @@ describe('touch aim point (TB-218 I2, I3)', () => {
   });
   it('the lift fades to 0 at the bottom edge so the whole plain is reachable', () => {
     expect(liftFor('touch', 412, R, 16)).toBe(0); expect(liftFor('touch', 370, R, 16)).toBe(28);
-    expect(aimPoint('touch', 460, 412, R, 16, false, 20).y).toBe(R.bottom - 20);   // the circle never enters the bottom inset (TB-218)
-    expect(aimPoint('touch', 460, 392, R, 16, false, 20).y).toBe(R.bottom - 20);
-    expect(aimPoint('touch', 460, 412, R, 16, false).y).toBe(412);
+    expect(aimPoint('touch', 460, 392, R, 16, 20).y).toBe(R.bottom);   // a thumb at the gesture-bar line reaches the field's bottom edge (TB-218)
+    expect(aimPoint('touch', 460, 412, R, 16, 20).y).toBe(R.bottom);
+    expect(aimPoint('touch', 460, 412, R, 16).y).toBe(412);
   });
-  it('the circle stays on the field and below the HUD line in phone landscape', () => {
-    expect(aimPoint('touch', 460, 20, R, 16, true).y).toBe(90); expect(aimPoint('touch', 460, 20, R, 16, false).y).toBe(0);
-    expect(aimPoint('touch', 2000, 200, R, 16, true).x).toBe(915);
+  it('the circle reaches the top of the plain (the HUD is pointer-transparent) and stays on the field', () => {
+    expect(aimPoint('touch', 460, 20, R, 16).y).toBe(0); expect(aimPoint('touch', 460, 5, R, 16).y).toBe(0);
+    expect(aimPoint('touch', 2000, 200, R, 16).x).toBe(915);
   });
   it('a press in the outer 24 px or the bottom inset starts no aim', () => {
     const inset = { left: 34, right: 0, bottom: 20 };

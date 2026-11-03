@@ -64,6 +64,7 @@ export class SatchelPane {
       // TB-105: the worn card flashes its rarity, the counter flashes on salvage, a rerolled line shimmers in
       const tiers = setTiers(this.loot, this.game.state.stats.setBoost);
       if (act === 'equip' && this.game.equipItem(uid)) { flash = () => $('sat-worn').querySelector(`[data-uid="${uid}"]`); this.onCue(setTiers(this.loot, this.game.state.stats.setBoost) > tiers ? 'setRise' : 'equip'); }
+      else if (act === 'close') this.selected = null;
       else if (act === 'lock') this.game.lockItem(uid);
       else if (act === 'heirloom') this.game.heirloomItem(uid);
       else if (act === 'reroll' && this.game.rerollItem(uid, i)) { flash = () => $('sat-detail').querySelectorAll('.affixes li')[i]; this.onCue('reroll'); }
@@ -141,6 +142,7 @@ export class SatchelPane {
 
   private renderDetail(): void {
     const l = this.loot, it = l.items.find((i) => i.uid === this.selected);
+    document.querySelector('.prestige.satchel')?.classList.toggle('picked', !!it);   // phone landscape: the card takes the bag's column (TB-218)
     if (!it) { $('sat-detail').innerHTML = `<div class="desc">${STR.satchelPick}</div>`; return; }
     const cur = l.items.find((i) => i.uid === l.equipped[it.slot]), worn = cur?.uid === it.uid;
     const myth = it.mythic ? MYTHICS.find((m) => m.id === it.mythic) : null;
@@ -151,7 +153,7 @@ export class SatchelPane {
     $('sat-detail').innerHTML = `<div class="head">${glyph(it.slot, it, true)}<div class="name r-${it.rarity}">${itemName(it)}</div>${pathTag(it)}</div>
       <div class="desc">${STR.rarityName[it.rarity]} · ${STR.slotName[it.slot]} · ${STR.itemLevel(it.ilvl)}</div>
       <ul class="affixes">${lines}</ul>${it.set ? setBlock(it.set, setCounts(l)[it.set] ?? 0, this.game.state.stats.setBoost) : ''}${myth ? `<div class="desc">${STR.mythicLine(STR.mythicPower[myth.id] ?? '')}</div>` : ''}${cmp}
-      <div class="row">${worn ? `<span class="desc">${STR.satchelWornNow}</span>` : `<button class="buy" data-act="equip">${STR.equip}</button>`}
+      <div class="row"><button class="buy back" data-act="close">${STR.satchelBack}</button>${worn ? `<span class="desc">${STR.satchelWornNow}</span>` : `<button class="buy" data-act="equip">${STR.equip}</button>`}
       <button class="buy" data-act="lock">${it.locked ? STR.unlock : STR.lock}</button>
       ${hwRank(this.game.state.meta, 'hw_heirloom') && (worn || l.heirloom === it.uid) ? `<button class="buy" data-act="heirloom">${l.heirloom === it.uid ? STR.unheirloom : STR.heirloom}</button>` : ''}
       <button class="buy" data-act="salvage"${worn || it.locked ? ' disabled' : ''}>${STR.salvageFor(salvageGlimmer(it, this.game.state.stats))}</button></div>`;
