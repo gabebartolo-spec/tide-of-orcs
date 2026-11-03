@@ -1,8 +1,8 @@
 import { BRANCH_COLOR, BRANCH_LABEL, NODE, NODES, NodeId, SkillNode, TREE_VIEW } from '../data/skillTree';
 import { Camera, centreOn, clampCamera, easeToward, startCamera, panBy, toWorld, wholeCamera, zoomAt } from './camera';
 import { SimState } from '../sim/state';
-import { canBuy, rankOf, unlocked } from '../sim/tree';
-import { BRANCH_LIGHT, P } from './palette';
+import { canBuy, pathLocked, rankOf, unlocked } from '../sim/tree';
+import { BRANCH_LIGHT, P, PATH_TINT } from './palette';
 import { TREE_LIGHT as L } from '../data/presentation';
 
 /** The UI scale: root font size over 16 px (style.css, TB-143); 1.25 at 1920×1080 since TB-191, times Settings › Text size. */
@@ -27,6 +27,9 @@ for (const n of NODES) { let d = 0; for (let p = n; p.parent; p = NODE[p.parent]
 const MAX_DEPTH = Math.max(...DEPTH.values());
 const LINK_OF = new Map(LINKS.map((l) => [l.n.id, l] as const));
 interface Mote { x: number; y: number; vx: number; vy: number; life: number; col: string }
+/** A node's neon (TB-193c): a path node glows in its path's light, every other node in its branch's. */
+const lightOf = (n: SkillNode): string => (n.path ? PATH_TINT[n.path].light : BRANCH_LIGHT[n.branch]);
+const ringOf = (n: SkillNode): string => (n.path ? PATH_TINT[n.path].colour : BRANCH_COLOR[n.branch]);
 const at = (a: number, c: number, b: number, u: number): number => (1 - u) * (1 - u) * a + 2 * (1 - u) * u * c + u * u * b;
 
 /** Skill tree canvas with pan (drag) and zoom (wheel / pinch). Camera is view state only. */
@@ -169,6 +172,13 @@ export class TreeRenderer {
     c.globalAlpha = 1; c.beginPath();
     for (const l of LINKS) if ((this.grown.get(l.n.id) ?? 0) < 1) { c.moveTo(l.p.x, l.p.y); c.quadraticCurveTo(l.cx, l.cy, l.n.x, l.n.y); }
     c.strokeStyle = P.linkDim; c.lineWidth = 1.2; c.stroke();
+    // Path links not yet grown (TB-193c): the chosen path's still neon in its colour; a locked path's dashed and faint
+    for (const l of LINKS) {
+      if (!l.n.path || (this.grown.get(l.n.id) ?? 0) >= 1) continue;
+      const locked = pathLocked(s, l.n); c.beginPath(); c.moveTo(l.p.x, l.p.y); c.quadraticCurveTo(l.cx, l.cy, l.n.x, l.n.y);
+      c.strokeStyle = PATH_TINT[l.n.path].light; c.globalAlpha = locked ? L.pathLockedA : L.pathOpenA; c.lineWidth = locked ? 1.2 : 2;
+      if (locked) c.setLineDash(L.pathDash); c.stroke(); c.setLineDash([]); c.globalAlpha = 1;
+    }
     // Bloom and light pools: cached, laid on additively, breathing slowly (steady under reduced motion)
     this.drawGlow(grown);
     // Wood body and its lit edge, then the hot core in the branch light
@@ -177,7 +187,7 @@ export class TreeRenderer {
     c.strokeStyle = P.treeWoodLit; c.globalAlpha = 0.6;
     for (const { l, g } of grown) { part(l, g); c.lineWidth = Math.max(1, l.w * 0.45); c.stroke(); }
     c.globalCompositeOperation = 'lighter'; c.globalAlpha = L.coreA;
-    for (const { l, g } of grown) { part(l, g); c.strokeStyle = BRANCH_LIGHT[l.n.branch]; c.lineWidth = Math.max(L.coreMin, l.w * L.coreK); c.stroke(); }
+    for (const { l, g } of grown) { part(l, g); c.strokeStyle = lightOf(l.n); c.lineWidth = Math.max(L.coreMin, l.w * L.coreK); c.stroke(); }
     c.strokeStyle = P.lightHot; c.globalAlpha = 0.55;
     for (const { l, g } of grown) { part(l, g); c.lineWidth = Math.max(0.8, l.w * L.coreK * 0.4); c.stroke(); }
     if (!this.reducedMotion) { this.pulses(grown, t); this.motes(grown, t); this.bursts(dt); }
@@ -198,7 +208,7 @@ export class TreeRenderer {
       for (const { l, g } of grown) if (g >= 1) owned.add(l.n.id);
       for (const id of owned) {
         const n = NODE[id], r = L.poolR, gr = o.createRadialGradient(n.x, n.y, 0, n.x, n.y, r);
-        gr.addColorStop(0, BRANCH_LIGHT[n.branch]); gr.addColorStop(1, P.glowClear);
+        gr.addColorStop(0, lightOf(n)); gr.addColorStop(1, P.glowClear);
         o.globalAlpha = L.poolA; o.fillStyle = gr; o.beginPath(); o.arc(n.x, n.y, r, 0, 6.283); o.fill();
       }
       for (const [extra, a] of L.bloom) {
@@ -206,7 +216,7 @@ export class TreeRenderer {
         for (const { l, g } of grown) {
           o.beginPath(); o.moveTo(l.p.x, l.p.y);
           o.quadraticCurveTo(l.p.x + (l.cx - l.p.x) * g, l.p.y + (l.cy - l.p.y) * g, at(l.p.x, l.cx, l.n.x, g), at(l.p.y, l.cy, l.n.y, g));
-          o.strokeStyle = BRANCH_LIGHT[l.n.branch]; o.lineWidth = l.w + extra; o.stroke();
+          o.strokeStyle = lightOf(l.n); o.lineWidth = l.w + extra; o.stroke();
         }
       }
     }
@@ -221,7 +231,7 @@ export class TreeRenderer {
     for (const { l, g } of grown) {
       const d = DEPTH.get(l.n.id)!, u = h - (d - 1); if (u < 0 || u >= 1 || u > g) continue;
       const x = at(l.p.x, l.cx, l.n.x, u), y = at(l.p.y, l.cy, l.n.y, u);
-      c.fillStyle = BRANCH_LIGHT[l.n.branch]; c.globalAlpha = 0.35; c.beginPath(); c.arc(x, y, L.pulseR + l.w * 0.5, 0, 6.283); c.fill();
+      c.fillStyle = lightOf(l.n); c.globalAlpha = 0.35; c.beginPath(); c.arc(x, y, L.pulseR + l.w * 0.5, 0, 6.283); c.fill();
       c.globalAlpha = 0.6; c.beginPath(); c.arc(x, y, L.pulseR * 0.45 + l.w * 0.3, 0, 6.283); c.fill();
       c.fillStyle = P.lightHot; c.globalAlpha = 0.95; c.beginPath(); c.arc(x, y, L.pulseCore + l.w * 0.15, 0, 6.283); c.fill();
     }
@@ -231,7 +241,7 @@ export class TreeRenderer {
   private motes(grown: { l: Link; g: number }[], t: number): void {
     const c = this.g;
     for (const { l, g } of grown) {
-      c.fillStyle = BRANCH_LIGHT[l.n.branch];
+      c.fillStyle = lightOf(l.n);
       for (let k = 0; k < L.motes; k++) {
         const u = ((t * L.moteSpeed + l.seed + k / L.motes) % 1) * g, a = Math.sin(u * Math.PI);
         const dx = l.n.x - l.p.x, dy = l.n.y - l.p.y, len = Math.hypot(dx, dy) || 1, sw = Math.sin(t * L.moteSwayRate + k * 2.1 + l.seed * 9) * L.moteSway;
@@ -251,7 +261,7 @@ export class TreeRenderer {
         const l = LINK_OF.get(id); if (!l) break;
         for (let k = 0; k < L.burstPer && this.burst.length < L.burstCap; k++) {
           const u = Math.random(), a = Math.random() * 6.283, v = L.burstSpeed * (0.3 + Math.random() * 0.7);
-          this.burst.push({ x: at(l.p.x, l.cx, l.n.x, u), y: at(l.p.y, l.cy, l.n.y, u), vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: L.burstLife * (0.6 + Math.random() * 0.4), col: BRANCH_LIGHT[n.branch] });
+          this.burst.push({ x: at(l.p.x, l.cx, l.n.x, u), y: at(l.p.y, l.cy, l.n.y, u), vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: L.burstLife * (0.6 + Math.random() * 0.4), col: lightOf(n) });
         }
       }
     }
@@ -269,6 +279,13 @@ export class TreeRenderer {
     if (this.burst.length) this.growing = true;
   }
 
+  /** A small padlock on a node whose path is not this run's (TB-193c). */
+  private lock(x: number, y: number, col: string): void {
+    const c = this.g; c.strokeStyle = col; c.fillStyle = col; c.lineWidth = 1.6;
+    c.beginPath(); c.arc(x, y - 2, 3.5, Math.PI, 0); c.stroke(); c.fillRect(x - 5, y - 2, 10, 7);
+    c.fillStyle = P.ink; c.fillRect(x - 0.75, y, 1.5, 3);
+  }
+
   draw(s: SimState, t: number): void {
     this.stale = false;
     if (this.target) {
@@ -283,15 +300,16 @@ export class TreeRenderer {
     c.globalAlpha = 1;
     const keyFocus = this.canvas.matches(':focus-visible');
     for (const n of NODES) {
-      const lvl = rankOf(s, n.id), col = BRANCH_COLOR[n.branch], un = unlocked(s, n), maxed = lvl >= n.max, r = n.id === 'root' ? 16 : 13;
+      const lvl = rankOf(s, n.id), col = ringOf(n), un = unlocked(s, n), shut = pathLocked(s, n), maxed = lvl >= n.max, r = n.id === 'root' ? 16 : 13;
       c.beginPath(); c.arc(n.x, n.y, r, 0, 6.28);
       c.fillStyle = maxed ? col : lvl > 0 ? P.nodeOwned : P.ink; c.fill();
-      c.lineWidth = n.id === this.selected ? 3 : 2; c.strokeStyle = un ? col : P.line; c.stroke();
+      c.lineWidth = n.id === this.selected ? 3 : 2; c.strokeStyle = un ? col : shut ? PATH_TINT[n.path!].deep : P.line; c.stroke();
+      if (shut) this.lock(n.x, n.y, PATH_TINT[n.path!].colour);
       if (lvl > 0 && !maxed) { c.beginPath(); c.arc(n.x, n.y, r, -1.571, -1.571 + (6.283 * lvl) / n.max); c.strokeStyle = col; c.lineWidth = 4; c.stroke(); }
       if (canBuy(s, n)) { c.beginPath(); c.arc(n.x, n.y, r + 5, 0, 6.28); c.strokeStyle = P.amber; c.lineWidth = 1; c.globalAlpha = this.reducedMotion ? 0.8 : 0.5 + 0.5 * Math.sin(t * 4); c.stroke(); c.globalAlpha = 1; }
       if (keyFocus && n.id === this.selected) { c.beginPath(); c.arc(n.x, n.y, r + 9, 0, 6.28); c.strokeStyle = P.cream; c.lineWidth = 2; c.setLineDash([4, 3]); c.stroke(); c.setLineDash([]); }
       c.fillStyle = un ? P.text : P.nodeLabelLocked; c.font = '14px Heartwood'; c.textAlign = 'center'; c.shadowColor = P.ink; c.shadowBlur = 4; c.fillText(n.name, n.x, n.y + r + 15); c.shadowBlur = 0;
-      if (n.max > 1) { c.fillStyle = maxed ? P.ink : P.text; c.font = '14px Heartwood'; c.fillText(`${lvl}/${n.max}`, n.x, n.y + 4); }
+      if (n.max > 1 && !shut) { c.fillStyle = maxed ? P.ink : P.text; c.font = '14px Heartwood'; c.fillText(`${lvl}/${n.max}`, n.x, n.y + 4); }
     }
     c.setTransform(k, 0, 0, k, 0, 0); // legend stays in screen space, on its own strip so nodes pan under it, not through it (TB-117)
     c.fillStyle = P.ink2; c.fillRect(0, 0, this.vw, TREE_VIEW.legendH); c.fillStyle = P.line; c.fillRect(0, TREE_VIEW.legendH - 1, this.vw, 1);

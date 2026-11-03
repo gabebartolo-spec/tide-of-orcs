@@ -112,6 +112,8 @@ export const LOOT_BANNER = {
 
 /** Skill-tree lighting (TB-190b, ART-STYLE §Arcane skill tree). World px at zoom 1; rates per second. Render-only. */
 export const TREE_LIGHT = {
+  /** Path links not yet grown (TB-193c): alpha of the chosen path's still neon, of a locked path's faint line, and its dash. */
+  pathOpenA: 0.55, pathLockedA: 0.3, pathDash: [5, 5] as number[],
   /** Bloom round owned links, drawn additively into a cached layer: [extra width over the wood, alpha], widest first. */
   bloom: [[34, 0.05], [18, 0.1], [8, 0.22]] as readonly (readonly [number, number])[],
   /** Light pool under each owned node: radius and centre alpha. */
@@ -136,4 +138,22 @@ export const CAMP_SPOTS = {
   forge: { x: 114, y: 120, w: 50, h: 56 },
   kitchen: { x: 42, y: 466, w: 62, h: 54 },
   training: { x: 114, y: 466, w: 52, h: 54 },
+} as const;
+
+/** UI motion and feedback kit (TB-195a, docs/plans/game-ui.md §3, ART-STYLE §Motion). Times in ms, sizes in CSS px. */
+export const JUICE = {
+  /** Spring durations: pops, panels, screen moves. */
+  dur: { pop: 120, panel: 220, screen: 400 },
+  /** easeOutBack overshoot constant (1.70158 is the classic; lower = a slighter overshoot). */
+  overshoot: 1.2,
+  /** Count-up: ms to roll to a new value, the pop's start scale (settles to 1), the colour flash length. */
+  count: { dur: 400, popFrom: 1.15, flash: 450 },
+  /** Press: scale at the bottom of the press, ms down, ms back up on the spring. */
+  press: { scale: 0.9, down: 50, up: 120 },
+  /** Particle burst: count, speed range (px/s), life range (s), size range (px), gravity (px/s²), drag per 1/60 s. */
+  burst: { count: 26, speedMin: 120, speedMax: 340, lifeMin: 0.35, lifeMax: 0.75, sizeMin: 1.5, sizeMax: 3.5, gravity: 520, drag: 0.94 },
+  /** Stagger: ms between list children entering. */
+  stagger: 30,
+  /** Stagger: px each child rises from as it enters. */
+  rise: 8,
 } as const;

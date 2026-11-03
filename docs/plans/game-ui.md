@@ -49,7 +49,7 @@ Each step ends with screenshots and a short screen capture (GIF) at 1080p and 4K
 ## 5. Open choices for the director
 1. ~~Reference game~~ **Decided (director, 3 Nov): Hades** (painterly, glowing, light and particles everywhere).
 2. ~~Material~~ **Decided (director, 3 Nov): keep the carved wood, richer**: deeper carving, a warm rim light, gold or starlight inlay, glow (TB-195h).
-3. **UI sounds:** generate a set with ElevenLabs (you run it, or I write the prompts list), yes or no.
+3. ~~UI sounds~~ **Decided (director, 3 Nov): Claude generates them in ElevenLabs** (TB-195g).
 
 ## 6. TB-195h art manifest (carved pieces, `public/ui/`)
 Built by `art/ui/carve_hud.py` (Blender 5.2, headless) and packed by `art/ui/pack_hud.py` (WebP, premultiplied downscale,

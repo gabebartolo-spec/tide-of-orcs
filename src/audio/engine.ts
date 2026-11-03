@@ -33,7 +33,7 @@ export class AudioEngine {
     }
     this.boss = this.ctx.createGain(); this.boss.gain.value = 0; this.boss.connect(this.music);
     void this.load(BOSS_BED).then((buf) => { if (buf && this.bossPending) this.startBoss(); });
-    for (const c of Object.keys(CUES)) void this.load(c);
+    for (const [c, d] of Object.entries(CUES)) void this.load(d.file ?? c, c);
     void this.load(AMBIENT).then((b) => { if (b) this.loop(b, this.amb); });
   }
 
@@ -104,7 +104,7 @@ export class AudioEngine {
     const src = this.ctx!.createBufferSource(); src.buffer = b; src.loop = true; src.connect(out); src.start();
   }
 
-  private async load(name: string): Promise<AudioBuffer | null> {
+  private async load(name: string, key: string = name): Promise<AudioBuffer | null> {
     // OGG first where supported, then MP3 (Suno music exports MP3 only).
     const exts = new Audio().canPlayType('audio/ogg; codecs=vorbis') ? ['ogg', 'mp3'] : ['mp3'];
     let buf: AudioBuffer | null = null;
@@ -114,7 +114,7 @@ export class AudioEngine {
         if (r.ok) { buf = await this.ctx!.decodeAudioData(await r.arrayBuffer()); break; }
       } catch { buf = null; }
     }
-    this.bufs.set(name, buf);
+    this.bufs.set(key, buf);
     return buf;
   }
 }

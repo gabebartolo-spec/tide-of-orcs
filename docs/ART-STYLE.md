@@ -24,6 +24,7 @@ Status: **Current** (v1.3, checked against `src/render/palette.ts` and `src/data
 | treeGlow | rgba(205,189,234,.22) | Arcane halo round grown skill-tree wood (TB-163) |
 | lightHot / linkDim / glowClear | #fff8ec / rgba(205,189,234,.26) / rgba(0,0,0,0) | Hot white core of owned tree links; thin still line of locked links; transparent gradient stop (TB-190b) |
 | BRANCH_LIGHT | Bow #b98cff, Companions #ffb35a, Armoury #ff6f5e, Grove #8ff07a, Barricade #ffc46e, Vanguard #6fd2ff, Spoils #ffe98a | Per-branch light colour for skill-tree bloom, pools, pulses and motes (TB-190b) |
+| PATH_TINT | Serpent #86c79a / light #5dffa8 / deep #2f5a3e / pale #d8f5c8; Fox #e39a5c / #ff8a3d / #7a3f1e / #fbe3c4; Magpie #a8bde0 / #7fb4ff / #28324a / #f2f4fa | Specialisation paths (TB-193c): node rings and labels, path-branch neon, sigils and the chosen card's glow; mirrored in style.css as `--path-<id>` |
 | spear | #8fb7c9 | Spearman cloak, vanguard HP bars, Vanguard branch |
 | blade | #cdbdea | Bladedancer cloak (shares lilac) |
 | amber | #e2a85b | Starlight, affordable pulse, buy and rally buttons, boss crown, burn, wall bar when under 50% |
@@ -96,6 +97,8 @@ The plain reads as natural, calm grassland, not a flat board. Layout is seeded (
 - Affordable node: amber ring, 0.5–1.0 alpha sine at 4 rad/s. Rally buttons: border turns amber on hover when affordable.
 - Replant: tree desaturates, amber particles rise, one seed falls, field fades up through a #e2a85b-tinted overlay. ≤ 4 s.
 - UI eases (TB-194): camp pages and tabs fade in over 200 ms (`--ui-in`); the fallen overlay and toasts fade in over 200 ms and out over 150 ms (`--ui-out`), the toast also drops 6 px into place. Opacity only on pages and tabs. All off under reduced motion (`data-calm` on `<html>`, from the Motion setting).
+- UI motion and feedback kit (TB-195a, `src/ui/juice.ts`, numbers in `JUICE`, plan docs/plans/game-ui.md §3): UI moves on a spring (easeOutBack, overshoot 1.2): 120 ms pops, 220 ms panels, 400 ms screen moves. Changing numbers count up over 400 ms (ease-out, never past the target), pop 1.15 → 1 and flash `grove` green up or `rose` red down (the header starlight counter first). Buttons press to 0.9 in 50 ms and spring back in 120 ms with the `uiPress` sound; buying a tree node also bursts 26 star-gold/spark/amber squares on a full-screen canvas overlay. Lists stagger children 30 ms apart, rising 8 px. UI sounds go through `uiSound` (`src/data/audio.ts`). Reduced motion keeps colour flashes and sounds, drops scale, roll, rise and particles.
+- UI sound set (TB-195g, ElevenLabs SFX v2, `public/audio/ui/*.ogg|mp3`): carved wood with a soft elven shimmer, one take each, trimmed to the first transient, -3 dBFS peak, short squared fade. click (buttons, `click` and `uiPress`), tab (tab token pop, `uiPop`), buy (`bought`), error (`denied`), equip (`equip`), panel (whoosh on run/camp/settings change, `uiPanel`), count (starlight count-up, rising only, `uiCount`, 0.25 s gap). Loaded but not yet called: hover (`uiHover`), stamp (`uiStamp`, battle report), rarity (`uiRarity`, mythic/legendary reveal), path (`uiPath`, specialisation choice). A cue's `file` field in `CUES` names its file under `public/audio/`.
 - Reduced motion: no bob, no pulse, no shake; replant becomes a 300 ms cross-fade.
 
 ## Attack and hit VFX (TB-088)
