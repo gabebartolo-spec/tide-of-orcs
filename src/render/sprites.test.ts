@@ -46,3 +46,14 @@ describe('sprite atlas', () => {
     } finally { globalThis.fetch = real; }
   });
 });
+
+describe('sheet load failure (TB-216c)', () => {
+  it('one failed sheet drops only its own anims', async () => {
+    const { keepLoaded } = await import('./sprites');
+    const a = parseAtlas({ anims: { 'orc.grunt': { ...anim, image: 'sheet_orcs.webp' }, 'elf.walk': anim } })!;
+    const k = keepLoaded(a, new Set(['sheet_elf.webp']))!;
+    expect(Object.keys(k.anims)).toEqual(['elf.walk']);
+    expect(k.images).toEqual(['sheet_elf.webp']);
+    expect(keepLoaded(a, new Set())).toBeNull();
+  });
+});

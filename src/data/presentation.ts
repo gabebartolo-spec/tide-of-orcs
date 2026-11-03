@@ -215,7 +215,7 @@ export const CAMP_FAUNA = {
     { dx: -470, dy: -10, flip: false }, { dx: -440, dy: 6, flip: true }, { dx: 70, dy: -40, flip: true }, { dx: 380, dy: 0, flip: false },
   ],
   every: [5, 11], up: [1.5, 3.2],
-  birds: { n: 5, y0: -262, y1: -228, speed: [9, 16], flap: [1.4, 2.4], span: 7, a: 0.8 },
+  birds: { n: 5, y0: -262, y1: -228, speed: [9, 16], flap: [1.4, 2.4], span: 7, a: 0.8, margin: 60 },
 } as const;
 /** Deer image rects (scene units), written by post_camp.py with CAMP_ART. */
 export const CAMP_DEER_ART: Readonly<Record<'up' | 'down', CampArtRect>> = /*DEER*/{ up: { x: 576.8, y: -143.8, w: 42.8, h: 37.0, top: [614.2, -143.5] }, down: { x: 577.2, y: -130.0, w: 45.2, h: 23.2, top: [600.1, -130.0] } }/*DEND*/;
