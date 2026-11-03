@@ -125,4 +125,13 @@ export const STR = {
     wallHp: (v: number) => `barricade health +${v}%`, regenPlus: (v: number) => `barricade regen +${v}/s`, starlight: (v: number) => `starlight +${v}%`,
     vanHp: (v: number) => `vanguard health +${v}%`, vanDmg: (v: number) => `vanguard damage +${v}%`, respawnCut: (v: number) => `vanguard respawn −${v}%`,
   },
+  // Specialisation paths (TB-193c)
+  pathsTitle: 'Choose your path', pathNone: 'No path',
+  pathsBody: 'A path opens its branch of the Grove, gives a starting bonus, and lets its set and mythic drop. Change it at every Replant.',
+  pathsClosed: 'You choose a path when the wall falls, for the next run.',
+  pathStart: (bonus: string) => `Starts with ${bonus}`,
+  pathBonus: { serpent: (v: number) => `+${v}% crit chance`, fox: (v: number) => `+${v}% vanguard and companion damage`, magpie: (v: number) => `+${v}% starlight` },
+  pathShort: { serpent: 'Serpent', fox: 'Fox', magpie: 'Magpie' },
+  pathHint: (name: string) => `Choose the ${name} at Replant`,
+  pathChosen: (name: string) => `${name} chosen for the next run`, pathCleared: 'No path for the next run',
 } as const;

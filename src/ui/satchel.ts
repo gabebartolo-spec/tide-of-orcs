@@ -9,6 +9,7 @@ import { itemScore, rerollCost, salvageGlimmer } from '../sim/loot';
 import { setCounts, setTiers } from '../sim/gear';
 import type { Cue } from '../data/audio';
 import { hwRank } from '../sim/heartwood';
+import { pathTag } from './paths';
 
 const $ = (id: string): HTMLElement => document.getElementById(id)!;
 
@@ -80,7 +81,7 @@ export class SatchelPane {
     const l = this.loot, worn = new Set(Object.values(l.equipped));
     this.sig = this.signature(); ($('sat-filter') as HTMLSelectElement).value = l.lootFilter.minRarity;
     const cell = (slot: Slot, it?: Item) => it
-      ? `<button class="item r-${it.rarity}${it.uid === this.selected ? ' sel' : ''}" data-uid="${it.uid}" title="${itemName(it)}">${glyph(slot, it)}<span class="txt"><span class="slot">${STR.slotName[slot]}${it.locked ? STR.lockedMark : ''}${it.uid === l.heirloom ? STR.heirloomMark : ''}</span><span class="nm">${itemName(it)}</span></span></button>`
+      ? `<button class="item r-${it.rarity}${it.uid === this.selected ? ' sel' : ''}" data-uid="${it.uid}" title="${itemName(it)}">${glyph(slot, it)}<span class="txt"><span class="slot">${STR.slotName[slot]}${it.locked ? STR.lockedMark : ''}${it.uid === l.heirloom ? STR.heirloomMark : ''}</span><span class="nm">${itemName(it)}</span>${pathTag(it)}</span></button>`
       : `<div class="item empty">${glyph(slot)}<span class="txt"><span class="slot">${STR.slotName[slot]}</span></span></div>`;
     $('sat-worn').innerHTML = SLOTS.map((s) => cell(s, l.items.find((i) => i.uid === l.equipped[s]))).join('');
     const boost = this.game.state.stats.setBoost, sets = Object.entries(setCounts(l));
@@ -100,7 +101,7 @@ export class SatchelPane {
     const cost = rerollCost(it, this.game.state.stats.rerollMult), poor = l.glimmer < cost;
     const lines = it.affixes.map((a, i) => `<li>${affixText(a)}${worn ? ` <button class="buy" data-act="reroll" data-i="${i}"${poor ? ' disabled' : ''}>${STR.rerollFor(cost)}</button>` : ''}</li>`).join('');
     const cmp = cur && cur.uid !== it.uid ? `<div class="desc">${STR.satchelVs(itemName(cur), Math.round((itemScore(it) - itemScore(cur)) * 100))}</div>` : '';
-    $('sat-detail').innerHTML = `<div class="head">${glyph(it.slot, it, true)}<div class="name r-${it.rarity}">${itemName(it)}</div></div>
+    $('sat-detail').innerHTML = `<div class="head">${glyph(it.slot, it, true)}<div class="name r-${it.rarity}">${itemName(it)}</div>${pathTag(it)}</div>
       <div class="desc">${STR.rarityName[it.rarity]} · ${STR.slotName[it.slot]} · ${STR.itemLevel(it.ilvl)}</div>
       <ul class="affixes">${lines}</ul>${it.set ? setBlock(it.set, setCounts(l)[it.set] ?? 0, this.game.state.stats.setBoost) : ''}${myth ? `<div class="desc">${STR.mythicLine(STR.mythicPower[myth.id] ?? '')}</div>` : ''}${cmp}
       <div class="row">${worn ? `<span class="desc">${STR.satchelWornNow}</span>` : `<button class="buy" data-act="equip">${STR.equip}</button>`}

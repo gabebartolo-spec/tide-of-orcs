@@ -40,7 +40,7 @@ Each mythic gets a Meshy icon like the existing ones (public/items), and its own
 1. **TB-193a Data and sim:** `data/paths.ts`, path state in `run` with a migration, path branches in `skillTree.ts`
    and SKILL-TREE.md, three sets and three mythics in `lootTables.ts`, and tests for each effect.
 2. **TB-193b Balance:** sims for each path against no path (`npm run balance`), numbers in BALANCE ## Proposed, then ask the director.
-3. **TB-193c UI:** the path pick on the Replant screen (three cards with a sigil each), and path branch styling in the tree (with TB-190's neon in the path's colour).
+3. **TB-193c UI (built):** cards sit across the top of the Replant tab, usable while the run has fallen (`choosePath`); clicking the chosen card or *No path* clears it; the pick pops and bursts in the path's light (TB-195a juice). Sigils are placeholder vectors (`src/render/sigil.ts`, `PATH_TINT` tokens) until TB-193d. Locked path nodes show a padlock and the hint "Choose the Path of the … at Replant"; path set items and mythics carry a path tag in the satchel. Original scope: the path pick on the Replant screen (three cards with a sigil each), and path branch styling in the tree (with TB-190's neon in the path's colour).
 4. **TB-193d Art:** three path sigils, six set-item icons (or more) and three mythic icons. Meshy (the existing icon pipeline) or free models.
 
 ## 6. Open choices for the director
