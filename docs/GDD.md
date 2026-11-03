@@ -19,7 +19,7 @@ waves scale every 24 s  ←──── battlefield visibly grows ←──┘
 boss waves cleared → Heartwood (kept) → the barricade falls → Replant → next run grows faster
 ```
 
-**Core verb:** buy a node. **Core tension:** which branch the starlight grows: the bow, companions, the wall or the vanguard line. **Core reward:** watch the field change. **Active play:** aim the bow with the pointer; it lobs an arcing arrow into the aim circle on its own cadence. With no aim the elf holds fire. There is no click-to-shoot.
+**Core verb:** buy a node. **Core reward:** watch the field change. **Active play:** aim the bow with the pointer; it lobs an arcing arrow into the aim circle on its own cadence. With no aim the elf holds fire. There is no click-to-shoot.
 
 Session shape: measured numbers return in the balance phase (director 3 Nov). A first run is short and falls early; a fall pays no Heartwood, only cleared boss waves (every 25) do; later runs grow through the skill tree, the Heartwood tree, gear and the camp.
 
