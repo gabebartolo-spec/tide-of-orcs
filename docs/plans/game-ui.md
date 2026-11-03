@@ -73,3 +73,9 @@ glow halo baked into `gem` and `march`). Each piece ships as `<name>.webp` (1x, 
 | `march` | 312×96 | The glowing gold *March again* plaque. 12 px of glow pads every side | `0 56 0 56` fill (3-slice), height fixed |
 
 QA contact sheets: `C:/Users/DANTE/Documents/tide-assets/ui/tb195h_*.png` (raw pieces, in-game 1x on ink and on the plain, edge crops, 2x stretch).
+
+## Decision log
+
+| Date | Decision | Spend |
+|---|---|---|
+| 3 Nov | Director: "Yes, generate it" for a painted dusk-canopy menu backdrop (TB-195o). ElevenLabs gpt-image-2.5-sunburst, 2 variations, the second kept as `public/ui/canopy.webp` (source `tide-assets/ui/canopy_source.png`) | ~381 credits |
