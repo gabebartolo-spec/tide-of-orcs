@@ -79,8 +79,10 @@ export class CountUp {
 }
 
 interface Spark { x: number; y: number; vx: number; vy: number; life: number; max: number; size: number; color: string }
+interface Flare { x: number; y: number; life: number; r: number; color: string }
 let overlay: HTMLCanvasElement | null = null;
 const sparks: Spark[] = [];
+const flares: Flare[] = [];
 let looping = false;
 
 function ensureOverlay(): CanvasRenderingContext2D | null {
@@ -94,32 +96,53 @@ function ensureOverlay(): CanvasRenderingContext2D | null {
   return overlay.getContext('2d');
 }
 
-/** Particle burst at client (x, y) on a canvas over the whole DOM. Dropped under reduced motion. */
-export function burst(x: number, y: number, colors: readonly string[] = [P.starGold, P.spark, P.amber]): void {
+/** Launch velocity for a spark at u ∈ 0..1 across the fan: ±fan round straight up, plus the lift kick. Pure, for tests. */
+export function sparkVelocity(u: number, speed: number, fan: number = JUICE.burst.fan, lift: number = JUICE.burst.lift): { vx: number; vy: number } {
+  const a = -Math.PI / 2 + (u * 2 - 1) * fan;
+  return { vx: Math.cos(a) * speed, vy: Math.sin(a) * speed - lift };
+}
+
+/** Root font px: burst sizes and speeds are in rem so they read the same at 1080p and 4K. */
+const remPx = (): number => parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+
+/** Particle burst at client (x, y) on a canvas over the whole DOM: glowing sparks arc up and fall, with a flare ring at the
+ *  origin. `scale` multiplies count and size (a HUD sparkle is ~0.3). Dropped under reduced motion. */
+export function burst(x: number, y: number, colors: readonly string[] = [P.starGold, P.spark, P.amber], scale = 1): void {
   if (calm() || !ensureOverlay()) return;
-  const B = JUICE.burst, r = (a: number, b: number): number => a + Math.random() * (b - a);
-  for (let i = 0; i < B.count; i++) {
-    const a = Math.random() * Math.PI * 2, sp = r(B.speedMin, B.speedMax), life = r(B.lifeMin, B.lifeMax);
-    sparks.push({ x, y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, life, max: life, size: r(B.sizeMin, B.sizeMax), color: colors[i % colors.length]! });
+  const B = JUICE.burst, rem = remPx(), r = (a: number, b: number): number => a + Math.random() * (b - a);
+  const n = Math.max(4, Math.round(B.count * scale)), k = Math.sqrt(scale);
+  for (let i = 0; i < n; i++) {
+    const life = r(B.lifeMin, B.lifeMax), v = sparkVelocity(Math.random(), r(B.speedMin, B.speedMax) * rem * k, B.fan, B.lift * rem * k);
+    sparks.push({ x, y, vx: v.vx, vy: v.vy, life, max: life, size: r(B.sizeMin, B.sizeMax) * rem * k, color: colors[i % colors.length]! });
   }
+  flares.push({ x, y, life: B.flareLife, r: B.flare * rem * k, color: colors[0]! });
   if (!looping) { looping = true; let last = now(); const frame = (): void => {
     const t = now(), dt = Math.min(0.05, (t - last) / 1000); last = t;
     const ctx = ensureOverlay(); if (!ctx) { looping = false; return; }
-    const dpr = window.devicePixelRatio || 1, drag = B.drag ** (dt * 60);
+    const dpr = window.devicePixelRatio || 1, drag = B.drag ** (dt * 60), g = B.gravity * remPx();
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, innerWidth, innerHeight); ctx.globalCompositeOperation = 'lighter';
+    for (let i = flares.length - 1; i >= 0; i--) {
+      const f = flares[i]!; f.life -= dt; if (f.life <= 0) { flares.splice(i, 1); continue; }
+      const p = 1 - f.life / B.flareLife;
+      ctx.globalAlpha = (1 - p) * 0.8; ctx.strokeStyle = f.color; ctx.lineWidth = f.r * 0.12 * (1 - p) + 1;
+      ctx.beginPath(); ctx.arc(f.x, f.y, f.r * (0.3 + 0.7 * p), 0, Math.PI * 2); ctx.stroke();
+    }
     for (let i = sparks.length - 1; i >= 0; i--) {
       const s = sparks[i]!; s.life -= dt; if (s.life <= 0) { sparks.splice(i, 1); continue; }
-      s.vx *= drag; s.vy = s.vy * drag + B.gravity * dt; s.x += s.vx * dt; s.y += s.vy * dt;
-      ctx.globalAlpha = s.life / s.max; ctx.fillStyle = s.color; ctx.fillRect(s.x - s.size / 2, s.y - s.size / 2, s.size, s.size);
+      s.vx *= drag; s.vy = s.vy * drag + g * dt; s.x += s.vx * dt; s.y += s.vy * dt;
+      const a = s.life / s.max, rad = s.size * (0.5 + 0.5 * a);
+      ctx.fillStyle = s.color;
+      ctx.globalAlpha = a * 0.3; ctx.beginPath(); ctx.arc(s.x, s.y, rad * B.glow, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = a; ctx.beginPath(); ctx.arc(s.x, s.y, rad, 0, Math.PI * 2); ctx.fill();
     }
     ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
-    if (sparks.length) requestAnimationFrame(frame); else { ctx.clearRect(0, 0, innerWidth, innerHeight); looping = false; }
+    if (sparks.length || flares.length) requestAnimationFrame(frame); else { ctx.clearRect(0, 0, innerWidth, innerHeight); looping = false; }
   }; requestAnimationFrame(frame); }
 }
 
 /** Burst from an element's centre. */
-export function burstAt(el: Element, colors?: readonly string[]): void {
-  const b = el.getBoundingClientRect(); burst(b.left + b.width / 2, b.top + b.height / 2, colors);
+export function burstAt(el: Element, colors?: readonly string[], scale = 1): void {
+  const b = el.getBoundingClientRect(); burst(b.left + b.width / 2, b.top + b.height / 2, colors, scale);
 }
 
 /** Delay (ms) of child i in a staggered list. */

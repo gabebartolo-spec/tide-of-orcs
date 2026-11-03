@@ -21,7 +21,8 @@ import { LOOT_TOAST } from '../data/lootTables';
 import { RARITIES } from '../data/loot';
 import { applyTextScale } from '../render/textScale';
 import { CampPane } from './camp';
-import { CountUp, burstAt, press } from './juice';
+import { burstAt, press } from './juice';
+import { Hud } from './hud';
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string): T => document.getElementById(id) as T;
 const VAN_NAME: Record<VanType, string> = { spear: 'Spearman', blade: 'Bladedancer' };
@@ -34,15 +35,15 @@ export class Panel {
   readonly camp: CampPane;
   /** Boss tier picked for the next March (TB-148); 0 means the highest unlocked. */
   private pickTier = 0;
-  /** Header starlight rolls to each new value (TB-195a). */
-  private starCount = new CountUp($('st-star'), fmt);
+  /** Field HUD: starlight gem, wave banner, wall bar (TB-195b). */
+  private hud = new Hud(fmt);
 
   constructor(private game: GameController, private tree: TreeRenderer) {
     // static copy
     $('tab-grove').textContent = STR.tabGrove; $('tab-prestige').textContent = STR.tabReplant;
     $('pr-title').textContent = STR.replantTitle; $('pr-body').textContent = STR.replantBody;
     $('btn-save').textContent = STR.saveNow;
-    $('k-star').textContent = STR.starlight; $('k-wave').textContent = STR.wave; $('k-kills').textContent = STR.slain; $('k-heart').textContent = STR.heartwood;
+    $('k-wave').textContent = STR.wave; $('k-kills').textContent = STR.slain; $('k-heart').textContent = STR.heartwood;
     $('pr-gain-k').textContent = STR.replantGainK; $('pr-btn').textContent = STR.replantBtn;
     $('pr-each').innerHTML = STR.replantEach(PRESTIGE.fallGain); $('pr-reset').textContent = STR.replantReset; $('pr-kept').textContent = STR.replantKept; $('btn-reset').textContent = STR.wipe; $('autosave').textContent = STR.autosave;
     $('fallen-title').textContent = STR.fallenTitle; $('fallen-hw-k').textContent = STR.fallenHW; $('fallen-btn').textContent = STR.fallenToCamp;
@@ -102,7 +103,7 @@ export class Panel {
   /** Called ~6 Hz. */
   update(): void {
     const s = this.game.state;
-    this.starCount.set(s.run.starlight); $('st-wave').textContent = s.run.tier > 1 ? STR.waveTide(s.run.wave, STR.tideName(s.run.tier)) : String(s.run.wave); $('st-kills').textContent = fmt(s.meta.lifetimeKills); $('st-heart').textContent = STR.heartAvail(hwSpendable(s), s.meta.heartwood + hwPending(s));
+    this.hud.starlight(s.run.starlight); this.hud.wall(s.run.barHp, s.stats.barMax, STR.barricadeHud(fmt(Math.max(0, s.run.barHp)), fmt(s.stats.barMax))); $('hud-van').hidden = !s.stats.muster; if (s.stats.muster) $('hud-van').textContent = STR.vanguardHud(s.vans.count, s.stats.vanCap); $('st-wave').textContent = s.run.tier > 1 ? STR.waveTide(s.run.wave, STR.tideName(s.run.tier)) : String(s.run.wave); $('st-kills').textContent = fmt(s.meta.lifetimeKills); $('st-heart').textContent = STR.heartAvail(hwSpendable(s), s.meta.heartwood + hwPending(s));
     $('hw-body').textContent = s.run.fallen ? STR.hwBody(hwSpendable(s)) : STR.hwClosed(hwSpendable(s));
     if (!$('pane-satchel').hidden) this.satchel.update();
     for (const b of $('hw-tree').querySelectorAll<HTMLButtonElement>('button[data-hw]')) b.disabled = !canBuyHw(s, b.dataset.hw as HwId);
@@ -133,7 +134,7 @@ export class Panel {
 
   handleEvents(events: ReturnType<GameController['events']['drain']>): void {
     for (const e of events) {
-      if (e.t === 'wave') this.toast(STR.waveN(e.wave));
+      if (e.t === 'wave') this.hud.waveCleared();
       else if (e.t === 'kill' && e.kind === 'boss') this.toast(STR.bossFalls);
       else if (e.t === 'bossReady') this.toast(STR.bossReady);
       else if (e.t === 'bossStart') this.toast(STR.bossStart);

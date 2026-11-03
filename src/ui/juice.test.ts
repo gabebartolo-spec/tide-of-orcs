@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { JUICE } from '../data/presentation';
-import { countValue, popScale, springEase, staggerDelay } from './juice';
+import { countValue, popScale, sparkVelocity, springEase, staggerDelay } from './juice';
 
 describe('juice math (TB-195a)', () => {
   it('spring starts at 0, ends at 1 and overshoots slightly in between', () => {
@@ -16,5 +16,10 @@ describe('juice math (TB-195a)', () => {
     expect(countValue(100, 40, 0.5)).toBeLessThan(100); expect(countValue(100, 40, 0.5)).toBeGreaterThan(40);
   });
   it('pop scales 1.15 → 1', () => { expect(popScale(0)).toBeCloseTo(JUICE.count.popFrom); expect(popScale(1)).toBeCloseTo(1); });
+  it('burst sparks spray upward with lift (TB-195b)', () => {
+    for (const u of [0, 0.25, 0.5, 0.75, 1]) expect(sparkVelocity(u, 10).vy).toBeLessThan(0);
+    const mid = sparkVelocity(0.5, 10, 1, 4); expect(mid.vx).toBeCloseTo(0); expect(mid.vy).toBeCloseTo(-14);
+    expect(JUICE.burst.count).toBeGreaterThanOrEqual(48);
+  });
   it('staggers children 30 ms apart', () => { expect(staggerDelay(0)).toBe(0); expect(staggerDelay(3)).toBe(3 * JUICE.stagger); expect(JUICE.stagger).toBe(30); });
 });
