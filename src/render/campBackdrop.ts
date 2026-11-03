@@ -1,8 +1,9 @@
-import { CAMP_BACKDROP, CAMP_SPOTS } from '../data/presentation';
+import { CAMP_BACKDROP } from '../data/presentation';
 import { P } from './palette';
 
 /** The Camp scene's backdrop (TB-188j, docs/plans/elf-encampment.md §1): a plate rendered in Blender in the buildings' own style
- *  (forest, meadow, the road in front of the row), plus a soft contact shadow under each building. Static, so it is composed once
+ *  (forest, meadow, the road in front of the row), darkened toward the canvas bottom (TB-188k); contact shadows are baked into the
+ *  building images. Static, so it is composed once
  *  per canvas size (and once more when the plate loads) to an offscreen canvas and blitted each frame. */
 
 const B = CAMP_BACKDROP;
@@ -34,15 +35,11 @@ export class CampBackdrop {
     if (!plate) return cv;
     g.imageSmoothingQuality = 'high';
     g.drawImage(plate, p.x0, p.y0, p.x1 - p.x0, p.y1 - p.y0);
-    // soft contact shadows: a radial fade, darkest under the building's middle
-    const s = B.shadow;
-    for (const spot of Object.values(CAMP_SPOTS)) {
-      const rx = spot.w * s.rx, cy = spot.y + s.dy;
-      g.save(); g.translate(spot.x, cy); g.scale(1, s.ry / rx);
-      const gr = g.createRadialGradient(0, 0, 0, 0, 0, rx);
-      gr.addColorStop(0, P.wallShade); gr.addColorStop(1, P.glowClear);
-      g.globalAlpha = s.a; g.fillStyle = gr; g.beginPath(); g.arc(0, 0, rx, 0, Math.PI * 2); g.fill(); g.restore();
-    }
+    // foreground vignette: the bottom of the canvas darkens so the eye stays on the building row
+    const sh = B.shade, y0 = ch * (1 - sh.h);
+    g.setTransform(1, 0, 0, 1, 0, 0);
+    const gr = g.createLinearGradient(0, y0, 0, ch); gr.addColorStop(0, P.glowClear); gr.addColorStop(0.45, P.dim45); gr.addColorStop(1, P.dim);
+    g.globalAlpha = sh.a; g.fillStyle = gr; g.fillRect(0, y0, cw, ch - y0);
     g.globalAlpha = 1;
     return cv;
   }

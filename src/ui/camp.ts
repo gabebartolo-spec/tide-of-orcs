@@ -1,5 +1,5 @@
 import { BUILDING, BUILDINGS, BuildingId, CAMP_FX, MAT_IDS, MAT_NAMES } from '../data/camp';
-import { CAMP_SPOTS } from '../data/presentation';
+import { CAMP_DRAW_ORDER, CAMP_SPOTS } from '../data/presentation';
 import { STR } from '../data/strings';
 import type { GameController } from '../game';
 import { campCost, campLevel, canUpgrade } from '../sim/camp';
@@ -26,7 +26,8 @@ export function campFxText(id: BuildingId, level: number): string {
 
 /** The building under a field point (field units), or null. Footprints come from CAMP_SPOTS. */
 export function campHit(x: number, y: number): BuildingId | null {
-  for (const b of BUILDINGS) {
+  // front row first: it is drawn over the back row (TB-188k round 3)
+  for (const b of [...CAMP_DRAW_ORDER].reverse()) {
     const p = CAMP_SPOTS[b.id];
     if (Math.abs(x - p.x) <= p.w / 2 && y <= p.y && y >= p.y - p.h) return b.id;
   }
