@@ -154,7 +154,7 @@ Numbers in `LOOT_VFX` and `LOOT_BANNER` (`src/data/presentation.ts`), colours pe
 
 ## UI wood (TB-136)
 Carved living wood, not a template: no cards, glows or gradients standing in for material.
-- Base: deep forest green (ink tokens above; the old blue-grey is gone). A gold vine tile (`src/ui/wood/gilt.svg`, 320 px, 16% opacity) runs behind the page and the panels.
+- Base: deep forest green (ink tokens above; the old blue-grey is gone). A gold vine tile (`src/ui/wood/gilt.svg`, 320 px, 16% opacity) runs behind the page and the panels. Between runs (camp mode) the page behind the panel is the painted dusk canopy `public/ui/canopy.webp` (TB-195o), cover-sized under an ink vignette.
 - Frame and buttons are rendered in Blender, not drawn in CSS: `art/ui/carve.py` (headless: `blender -b --factory-startup --python art/ui/carve.py -- <outdir>`). Planks carry relief grain (stretched clouds displacement), corners are sawn log ends with ring grain and a bark collar, with two carved leaves. Render 256 px per unit, Cycles, transparent film, orthographic top camera.
 - `frame.png` (512 px, from a 1024 px render) is a 9-slice: `border-image: url(frame.png) 125 / 58px / 0 stretch` on a 30 px border, so knots and leaves stay whole and lap over the content.
 - `button.png` (385×94, alpha-cropped from the render at half size) skins `.deploy` and `.ghost`: `border-image 20 30 fill / 8px 12px`. Build the plaque as a coarse quad grid: an ngon cap pinches at its centre under subdivision, and a fine grid clamps the bevel flat. `.buy` stays amber: the one gold action on a page.
