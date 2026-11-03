@@ -6,6 +6,7 @@ import { Orc, Projectile, SimState, Vanguard, Wolf } from '../sim/state';
 import { barFrac } from '../sim/barricade';
 import { engagedVanguard } from '../sim/vanguard';
 import { P } from './palette';
+import { CampArt } from './camp';
 import { Particles } from './particles';
 import { fmt } from '../ui/format';
 import { STR } from '../data/strings';
@@ -48,6 +49,7 @@ export class FieldRenderer {
   /** Draws movers between sim steps (TB-194); main.ts snaps it and sets alpha. */
   readonly interp = new Interp();
   private ground = new Ground();
+  private camp = new CampArt();
   private ambience = new Ambience(BAR_X + BAR_W);
   /** Animation clock for sprite frames. */
   private clock = 0;
@@ -230,6 +232,8 @@ export class FieldRenderer {
     g.fillStyle = P.sand; g.fillRect(BAR_X - 3, 0, 3, H);
     if (s.stats.spikes) { g.fillStyle = P.cream; for (let y = 8; y < H; y += 24) { g.beginPath(); g.moveTo(BAR_X + BAR_W, y); g.lineTo(BAR_X + BAR_W + 9, y + 4); g.lineTo(BAR_X + BAR_W, y + 8); g.closePath(); g.fill(); } }
     this.hills();
+    // encampment behind the wall (TB-188c), one cached blit per building at its level
+    this.camp.draw(g, s.meta.camp.levels, sx);
 
     this.fx.drawGround(g);
     s.zones.forEach((z) => {
