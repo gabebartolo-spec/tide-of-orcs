@@ -17,14 +17,14 @@ Layout coordinates are for a 1400×1320 tree canvas, root at (700, 890) (TB-163)
 | pierce | Longshaft | Bow | crit | 3 | 260 | 3.8 | 480 | 330 | Each shot strikes the ground +1 more time per rank. |
 | moon | Moonbow | Bow | multi | 1 | 3200 | — | 270 | 390 | One shot in four is a moon shot: the circle settles onto the nearest orc and strikes +60% harder. |
 | bounce | Rebound | Bow | pierce | 4 | 1200 | 2.2 | 380 | 240 | One shot in four looses a magic bolt that leaps to 2 more orcs, +1 per rank; each leap hits softer. |
-| starfall | Starfall | Bow | moon | 1 | 6000 | — | 170 | 280 | One shot in ten also rains 8 arrows on orcs across the plain. |
+| starfall | Starfall | Bow | moon | 1 | 6000 | — | 170 | 280 | One shot in ten also rains 12 arrows on orcs across the plain. |
 | wolf | Grey Wolf | Companions | muster | 1 | 200 | — | 700 | 550 | A wolf runs the plain and savages the nearest orc. |
 | fangs | Fangs | Companions | wolf | 5 | 90 | 1.9 | 820 | 470 | Wolf bites +40% harder per rank. |
 | ranger | Ranger | Companions | wolf | 1 | 350 | — | 690 | 390 | A second archer joins you behind the wall. |
 | warden | Warden | Companions | ranger | 1 | 2800 | — | 640 | 220 | A third archer, veteran of older wars. |
 | hawk | Hawk | Companions | fangs | 1 | 900 | — | 850 | 310 | A hawk dives on the thickest knot of orcs every few seconds. |
 | treant | Treant | Companions | hawk | 1 | 1400 | — | 820 | 150 | An old treant roots itself before the wall and stamps the ground. |
-| bond | Kinship | Companions | ranger | 5 | 500 | 2.2 | 540 | 150 | All companions and vanguard +20% damage per rank. |
+| bond | Kinship | Companions | ranger | 5 | 500 | 2.2 | 540 | 150 | All companions and vanguard +40% damage per rank. |
 | knives | Throwing Knives | Armoury | root | 1 | 100 | — | 820 | 650 | A knife flies at the nearest orc every 1.4 s. |
 | knifespd | Nimble Wrist | Armoury | knives | 5 | 46 | 1.9 | 950 | 680 | Knives fly 20% more often per rank. |
 | fire | Fire Arrows | Armoury | knives | 1 | 450 | — | 960 | 530 | One shot in four sets orcs alight, burning for a few seconds. |
@@ -34,17 +34,17 @@ Layout coordinates are for a 1400×1320 tree canvas, root at (700, 890) (TB-163)
 | shock | Shock Arrows | Armoury | storm | 1 | 2200 | — | 1220 | 410 | One shot in four looses lightning from your strike to 3 more orcs. |
 | stun | Thunderclap | Armoury | shock | 3 | 3000 | 2.2 | 1276 | 384 | Shock arrows stun the orcs they strike for half a second, +0.25 s per rank. |
 | ballista | Ballista | Armoury | knifespd | 1 | 3400 | — | 1080 | 660 | A heavy bolt that punches through the whole line. |
-| bolt | Iron Bolts | Armoury | ballista | 5 | 2000 | 2.0 | 1141 | 651 | Ballista +50% damage per rank. |
+| bolt | Iron Bolts | Armoury | ballista | 5 | 2000 | 2.0 | 1141 | 651 | Ballista +70% damage per rank. |
 | horde | Call the Horde | Grove | root | 5 | 160 | 2.4 | 830 | 960 | Grunts march 20% more often per rank. More orcs, more starlight. More danger. |
 | drums | War Drums | Grove | horde | 5 | 300 | 2.4 | 970 | 940 | Grunts have +30% health and drop +40% starlight per rank. |
 | glean | Gleaning | Grove | drums | 5 | 600 | 2.2 | 1031 | 931 | +8% starlight from every orc. |
-| runners | Goblin Runners | Grove | horde | 1 | 120 | — | 880 | 1060 | Small, fast orcs join the tide. |
+| runners | Goblin Runners | Grove | horde | 1 | 120 | — | 880 | 1060 | Runners march four times as often (they trickle in on their own from wave 5), each worth +150% starlight. |
 | runfury | Runner Fury | Grove | runners | 5 | 200 | 2.4 | 908 | 1115 | Runners have +30% health and drop +40% starlight per rank. |
 | runswarm | Runner Swarm | Grove | runners | 5 | 200 | 2.4 | 939 | 1042 | Runners march 20% more often per rank. |
-| brutes | Brutes | Grove | runners | 1 | 400 | — | 1000 | 1130 | Slow, hulking orcs join the tide. |
+| brutes | Brutes | Grove | runners | 1 | 400 | — | 1000 | 1130 | Brutes march four times as often (they trickle in on their own from wave 10), each worth +150% starlight. |
 | brutefury | Brute Fury | Grove | brutes | 5 | 600 | 2.4 | 1054 | 1161 | Brutes have +30% health and drop +40% starlight per rank. |
 | bruteswarm | Brute Swarm | Grove | brutes | 5 | 600 | 2.4 | 1058 | 1109 | Brutes march 20% more often per rank. |
-| elites | Blackguard | Grove | brutes | 1 | 1500 | — | 1120 | 1200 | Armoured elite orcs join the tide. |
+| elites | Blackguard | Grove | brutes | 1 | 1500 | — | 1120 | 1200 | Blackguard march four times as often (they trickle in on their own from wave 20), each worth +150% starlight. |
 | elitefury | Elite Fury | Grove | elites | 5 | 2000 | 2.4 | 1174 | 1231 | Elites have +30% health and drop +40% starlight per rank. |
 | eliteswarm | Elite Swarm | Grove | elites | 5 | 2000 | 2.4 | 1178 | 1179 | Elites march 20% more often per rank. |
 | berserkers | Berserkers | Grove | elites | 1 | 2400 | — | 1250 | 1222 | Berserkers march four times as often (they trickle in on their own from wave 25), each worth +150% starlight. |
@@ -60,15 +60,15 @@ Layout coordinates are for a 1400×1320 tree canvas, root at (700, 890) (TB-163)
 | drummerfury | Drummer Fury | Grove | drummers | 5 | 16000 | 2.4 | 1170 | 1020 | War drummers have +30% health and drop +40% starlight per rank. |
 | drummerswarm | Drummer Swarm | Grove | drummers | 5 | 16000 | 2.4 | 1120 | 1060 | War drummers march 20% more often per rank. |
 | timber | Seasoned Timber | Barricade | root | 10 | 25 | 1.6 | 570 | 960 | Barricade +25% health per rank. |
-| repair | Patient Hands | Barricade | timber | 5 | 90 | 2.0 | 430 | 980 | Barricade mends 1% of its health per second per rank. |
+| repair | Patient Hands | Barricade | timber | 5 | 90 | 2.0 | 430 | 980 | Barricade mends 2% of its health per second per rank. |
 | spikes | Thornwall | Barricade | timber | 5 | 150 | 2.1 | 537 | 1013 | Orcs hacking at the wall take 20% of your arrow damage per second per rank. |
 | bulwark | Deep Roots | Barricade | repair | 1 | 2400 | — | 371 | 999 | Once per run, a falling barricade regrows to half health. |
-| muster | Muster | Vanguard | root | 1 | 50 | — | 700 | 730 | Rally spearmen with starlight. They hold the line until they fall. Up to 2 at once. |
+| muster | Muster | Vanguard | root | 1 | 50 | — | 700 | 730 | Two spearmen hold the line. Each one that falls returns after 12 seconds. |
 | shield | Shieldwall | Vanguard | muster | 5 | 110 | 1.9 | 560 | 760 | Vanguard +30% health per rank. |
 | drill | Spear Drill | Vanguard | muster | 5 | 130 | 1.9 | 575 | 670 | Spearmen +30% damage per rank. |
 | ranks | Close Ranks | Vanguard | shield | 3 | 400 | 2.6 | 430 | 780 | +1 vanguard may stand at once. |
 | mend | Field Mending | Vanguard | drill | 3 | 350 | 2.4 | 450 | 650 | Vanguard recover 3% health per second per rank. |
-| champion | Bladedancer | Vanguard | ranks | 1 | 2200 | — | 290 | 750 | Rally bladedancers: costlier, faster, their strikes cleave every orc in reach. |
+| champion | Bladedancer | Vanguard | ranks | 1 | 2200 | — | 290 | 750 | Half the line become bladedancers: faster, their strikes cleave every orc in reach. |
 | hunter | Hunter's Eye | Spoils | root | 1 | 120 | — | 700 | 1020 | +5% chance to strike for triple damage. |
 | scavenger | Scavenger | Spoils | hunter | 1 | 150 | — | 600 | 1120 | Salvage gives 50% more Glimmer this run. |
 | trophy | Trophy | Spoils | hunter | 1 | 200 | — | 800 | 1120 | Kills on waves 10, 20, 30… roll a second drop. |
@@ -88,8 +88,8 @@ Layout coordinates are for a 1400×1320 tree canvas, root at (700, 890) (TB-163)
 | moonreach | Moonpull | Bow | moon | 3 | 3500 | 2.2 | 215 | 419 | Moon shots settle onto orcs 25% farther from your aim per rank. |
 | moonchance | Moon Quiver | Bow | moon | 5 | 3500 | 1.9 | 273 | 328 | +15% chance per rank that a shot is a moon shot. |
 | stardmg | Starsteel | Bow | starfall | 5 | 6500 | 1.9 | 137 | 228 | Starfall arrows +30% damage per rank. |
-| starcount | Meteor Shower | Bow | starfall | 3 | 7000 | 2.2 | 113 | 303 | +2 Starfall arrows per rank. |
-| starchance | Wishing Star | Bow | starfall | 5 | 6500 | 1.9 | 90 | 254 | +5% chance per rank that a shot calls Starfall. |
+| starcount | Meteor Shower | Bow | starfall | 3 | 7000 | 2.2 | 113 | 303 | +4 Starfall arrows per rank. |
+| starchance | Wishing Star | Bow | starfall | 5 | 6500 | 1.9 | 90 | 254 | +10% chance per rank that a shot calls Starfall. |
 | knifedmg | Keen Knives | Armoury | knives | 5 | 150 | 1.9 | 848 | 595 | Knives +30% damage per rank. |
 | knifefan | Knife Fan | Armoury | knives | 3 | 400 | 2.4 | 770 | 613 | +1 knife per throw per rank. |
 | boltpin | Pinning Bolts | Armoury | ballista | 3 | 2500 | 2.2 | 1127 | 701 | Every orc a bolt passes through is held still 0.3 s per rank. |
