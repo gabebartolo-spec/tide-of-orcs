@@ -94,11 +94,18 @@ export const GROUND = {
   flowers: { drifts: 16, per: [24, 36], driftW: 90, driftH: 22, edge: 0.22, lane: 40, r: [2.4, 3.8], stem: [3, 8], kinds: { daisy: 4, violet: 3, buttercup: 2, blossom: 1 } },
   /** Fence barricade (director 2 Nov, Sketchfab "the fence"): panel draw width, vertical step between stacked panels (units). */
   fence: { w: 30, step: 22 },
-  /** Barricade tiers (TB-209, director 4 Nov): the wall looks stronger as its max health grows. Tier = how many `at` thresholds
-   *  Stats.barMax / BARRICADE.baseHp has reached (Seasoned Timber 3, 6 and 9 ranks alone reach 1.95x, 3.81x, 7.45x).
-   *  Per tier: fence rows (extra rows stand behind the first, toward the grove, each `rowDx` further back and `rowDy` of a
-   *  step lower, shaded by `rowShade`) and panel scale (taller, thicker stakes; the step grows with it). */
-  wallTiers: { at: [1.9, 3.7, 7], rows: [1, 2, 2, 3], scale: [1, 1, 1.25, 1.25], rowDx: -10, rowDy: 0.5, rowShade: 0.35 },
+  /** Barricade tiers (TB-209, director 4 Nov): the wall looks stronger as wall-branch nodes are bought. Tier = how many `at`
+   *  thresholds the wall score has reached: Stats.barMax / BARRICADE.baseHp, plus `perPerk` for each wall perk that does not
+   *  raise max health (Repair regen, Bulwark). Seasoned Timber 3, 6 and 9 ranks alone reach 1.95x, 3.81x, 7.45x.
+   *  Per tier: fence rows and panel scale, all drawn with the rendered fence sprite (no code-drawn parts). Extra rows stand
+   *  behind the first, `rowDx` further back and `rowDy` of a step lower, mirrored so their rope ties face the front row,
+   *  shaded by `rowShade`, each with its own ground shadow on its grove side (`shadowDx`, `shadowW` of the panel width). Rows
+   *  reach at most `backMax` (scaled) behind the front row's base spot; any more pushes the wall toward the field, so the elf
+   *  keeps clear grass. A broken panel draws shaded at `brokenAlpha`, `brokenDx` inward (never widening the wall); `rowSeed` offsets each row's fixed golden-ratio break scatter (`breakScatter`). */
+  wallTiers: {
+    at: [1.9, 3.7, 7], perPerk: 0.5, rows: [1, 2, 2, 3], scale: [1, 1, 1.4, 1.4],
+    rowDx: -18, rowDy: 0.33, rowShade: 0.3, backMax: 18, shadowDx: -8, shadowW: 0.7, brokenAlpha: 0.9, brokenDx: 4, rowSeed: 7, breakScatter: 0.618034,
+  },
 } as const;
 
 /** Loot moments (TB-105, plan §11). Lives in seconds, sizes in field units.

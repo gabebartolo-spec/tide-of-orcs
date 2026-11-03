@@ -21,7 +21,7 @@ import { Interp } from './interp';
 import { FIELD_VIEW, GROUND, LOOT_VFX, ORC_SPRITE, SKY, VFX, dusk } from '../data/presentation';
 import { SLOTS } from '../data/loot';
 import { setTiers } from '../sim/gear';
-import { wallTier } from './wallTier';
+import { panelAlive, wallTier } from './wallTier';
 
 const IMPACT_LIFE = VFX.impactLife;
 /** Foot offset below an actor's centre, where its blood lands. */
@@ -243,23 +243,29 @@ export class FieldRenderer {
     // barricade
     const frac = barFrac(s);
     const top = Math.max(vis.y0, this.treeline.skirtBase(vis.y0) + 10);  // the barricade ends just below the treeline's bush skirt, with a capping rail
-    g.fillStyle = P.wallShade; g.fillRect(BAR_X + 4, top, BAR_W + 4, H - top);
     const fence = decorImg('fence');
+    if (!fence) { g.fillStyle = P.wallShade; g.fillRect(BAR_X + 4, top, BAR_W + 4, H - top); }
     if (fence) {
       // stacked fence panels running into the field, top to bottom so each overlaps the one behind it; back rows first (TB-209)
-      const L = GROUND.fence, T = GROUND.wallTiers, tier = wallTier(s.stats.barMax), sc = T.scale[tier]!, w = L.w * sc, step = L.step * sc, lh = w * fence.height / fence.width;
-      for (let r = T.rows[tier]! - 1; r >= 0; r--) {
-        const img = r ? this.shadedFence(fence) : fence, x0 = BAR_X + BAR_W / 2 - w / 2 + r * T.rowDx, dy = r * T.rowDy * step;
-        for (let i = 0, y = -lh / 2 - Math.ceil(-top / step) * step + dy; y < H; i++, y += step) {
-          const alive = y < 0 || y / H < frac || ((i + r * 7) * 0.618034) % 1 < frac;  // same fixed break scatter as the planks
-          g.globalAlpha = alive ? 1 : 0.3;
-          g.drawImage(img, x0 + (alive ? 0 : 5), y, w, lh);
+      const L = GROUND.fence, T = GROUND.wallTiers, tier = wallTier(s.stats), sc = T.scale[tier]!, w = L.w * sc, step = L.step * sc, lh = w * fence.height / fence.width;
+      const y0 = -lh / 2 - Math.ceil(-top / step) * step;
+      const rows = T.rows[tier]!, fwd = Math.max(0, -(rows - 1) * T.rowDx * sc - T.backMax * sc);  // keep grass between wall and elf
+      for (let r = rows - 1; r >= 0; r--) {
+        const x0 = BAR_X + BAR_W / 2 - w / 2 + r * T.rowDx * sc + fwd, dy = r * T.rowDy * step;
+        g.fillStyle = P.wallShade; g.fillRect(x0 + w * (1 - T.shadowW) / 2 + T.shadowDx, top, w * T.shadowW, H - top);  // each row's own ground shadow
+        const img = r ? this.shadedFence(fence) : fence, inward = r === rows - 1 && r ? 1 : -1;  // broken panels lean toward the wall's middle
+        for (let i = 0, y = y0 + dy; y < H; i++, y += step) {
+          const alive = panelAlive(y, H, frac, i + r * T.rowSeed);
+          g.globalAlpha = alive ? 1 : T.brokenAlpha;
+          const px = x0 + (alive ? 0 : inward * T.brokenDx), im = alive ? img : this.shadedFence(fence);
+          if (r) { g.save(); g.translate(px + w, y); g.scale(-1, 1); g.drawImage(im, 0, 0, w, lh); g.restore(); }  // mirrored: rope ties face the front row
+          else g.drawImage(im, px, y, w, lh);
         }
       }
       g.globalAlpha = 1;
     } else for (let y = -Math.ceil(-top / 18) * 18; y < H; y += 18) {
       // each plank breaks at a fixed point (golden-ratio scatter), so damage never flickers frame to frame
-      const alive = y < 0 || y / H < frac || ((y / 18) * 0.618034) % 1 < frac;
+      const alive = panelAlive(y, H, frac, y / 18);
       g.fillStyle = alive ? (y % 36 ? P.timber : P.timberDark) : P.timberSplinter;
       g.fillRect(BAR_X, y, BAR_W, 16);
       g.fillStyle = P.timberBand; g.fillRect(BAR_X + 2, y - 2, BAR_W - 4, 3);
