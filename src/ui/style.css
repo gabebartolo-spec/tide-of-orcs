@@ -155,9 +155,7 @@ header h1 em { color: var(--amber); font-style: normal; }
    Colours are the palette's timber tokens; nothing new. */
 :root { --bark: #5a4634; --timber-dark: #7a5c3c; --splinter: #4e3a28;
   --grain: url("./wood/grain.svg"); --root: url("./wood/root.svg") repeat-x left center / 10rem 0.625rem; }
-/* Carved frame: Blender render (art/ui/carve.py), rendered at 64rem. Shipped at 32rem; slice 125 keeps the knot and leaves whole; the border is the
-   plank's width and the image is drawn wider so the leaves lap over the corners of the content. */
-.panel, .field { border: 1.875rem solid transparent; border-image: url("./wood/frame.png") 125 / 3.625rem / 0 stretch; border-radius: 0; outline: 0; }
+/* (TB-207: the carved wood/frame.png border is gone; panels and the field run edge to edge, see the Full screen block.) */
 .panel { background: var(--grain), var(--ink-2); background-clip: padding-box; }
 .field { aspect-ratio: auto; background-clip: padding-box; }
 .field canvas { aspect-ratio: 15 / 8; height: auto; }
@@ -714,3 +712,36 @@ body[data-mode="camp"] .campbar { padding-bottom: 1rem; }
 .panel .ghost.danger { border-image: none; border: 0.0625rem solid var(--rose); background: linear-gradient(color-mix(in srgb, var(--rose) 30%, var(--ink)), color-mix(in srgb, var(--rose) 18%, var(--ink))); color: #f6c6c6; }
 .pathcard.on { box-shadow: inset 0 0 0.875rem color-mix(in srgb, var(--pl) 55%, transparent); }
 #sat-count, #sat-worn-k { font-family: var(--body); font-size: 1rem; color: var(--text-dim); text-transform: none; letter-spacing: .02em; }
+
+/* Full screen (TB-207, director 3 Nov): no timber frame and no corner knots anywhere. The field and the between-runs panel
+   run edge to edge; the run HUD floats over the top of the field on a soft ink gradient, the rally bar over the bottom.
+   The field canvas fills the window: field.ts fits the 900x480 plain to it at one scale and paints more meadow, treeline
+   and barricade wherever the window reaches past the plain, so there is no letterbox and no flat colour band. */
+.panel, .field, body:not([data-mode="camp"]) .field, body[data-mode="camp"] .panel, body[data-mode="settings"] .panel { border: 0; border-image: none; border-radius: 0; outline: 0; }
+body:not([data-mode="camp"]) .wrap { padding: 0; height: 100vh; overflow: hidden; }
+body:not([data-mode="camp"]) .play { position: fixed; inset: 0; width: 100vw; margin: 0; }
+body:not([data-mode="camp"]) .field { position: absolute; inset: 0; width: 100%; height: 100%; aspect-ratio: auto; display: flex; align-items: flex-end; justify-content: center; overflow: hidden;
+  background: #3d4d3b; }
+body:not([data-mode="camp"]) .field canvas { flex: none; width: 100%; height: 100%; aspect-ratio: auto; }
+body:not([data-mode="camp"]) header { position: fixed; inset: 0 0 auto 0; width: 100vw; height: auto; margin: 0; transform: none; z-index: 3; padding: 1rem 1.75rem 4.5rem;
+  border: 0; box-shadow: none; pointer-events: none; background: linear-gradient(color-mix(in srgb, var(--ink) 88%, transparent), color-mix(in srgb, var(--ink) 66%, transparent) 30%, color-mix(in srgb, var(--ink) 22%, transparent) 62%, color-mix(in srgb, var(--ink) 6%, transparent) 85%, transparent); }
+body:not([data-mode="camp"]) header .stat .k { font-size: 1.125rem; color: var(--text); }
+body:not([data-mode="camp"]) header .stat .v { font-size: 1.625rem; }
+body:not([data-mode="camp"]) .hud-wave .k { font-size: 1.125rem; font-weight: 700; color: #ffd98a; text-shadow: 0 0.0625rem 0.125rem #2a1a0a, 0 0 0.25rem #2a1a0a; }
+body:not([data-mode="camp"]) header .stat .v.heart { color: color-mix(in srgb, var(--rose) 55%, #fff4dc); }
+body:not([data-mode="camp"]) .hud-wave .v { font-size: 1.875rem; font-weight: 700; color: #fff4dc; text-shadow: 0 0 0.125rem #2a1a0a, 0 0.0625rem 0.125rem #2a1a0a; }
+body:not([data-mode="camp"]) header .stat .v { font-weight: 700; }
+body:not([data-mode="camp"]) header .stat { padding: 0.125rem 0.625rem; border-radius: 999px; background: color-mix(in srgb, var(--ink) 70%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--cream, #f3e6c8) 25%, transparent); text-shadow: 0 0.0625rem 0.0625rem var(--ink), 0 0 0.375rem var(--ink), 0 0 0.75rem var(--ink); }
+.hud-wall .lbl { font-size: 1.125rem; font-weight: 700; color: #fff4dc; text-shadow: 0 0 0.125rem #2a1a0a, 0.0625rem 0.0625rem 0 #2a1a0a, -0.0625rem -0.0625rem 0 #2a1a0a, 0.0625rem -0.0625rem 0 #2a1a0a, -0.0625rem 0.0625rem 0 #2a1a0a; }
+/* Settings mid-run: wide enough that its two columns never overlap */
+body[data-mode="settings"] .panel { width: min(60rem, calc(100vw - 3rem)); }
+body:not([data-mode="camp"]) .rally { position: fixed; left: 0; right: 0; bottom: 0; padding: 2.5rem 1.75rem 1.25rem; z-index: 2;
+  background: linear-gradient(transparent, color-mix(in srgb, var(--ink) 55%, transparent)); }
+body:not([data-mode="camp"]) .rally:not(:has(> :not([hidden]))) { background: none; }
+@supports (height: 100dvh) {
+  body:not([data-mode="camp"]) .wrap { height: 100dvh; }
+  body:not([data-mode="camp"]) .play, body:not([data-mode="camp"]) header { width: 100vw; }
+}
+body[data-mode="camp"] .wrap { padding: 0; gap: 0; }
+body[data-mode="camp"] header { margin: 0; }
+body[data-mode="camp"] .panel { width: 100%; margin: 0; }

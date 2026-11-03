@@ -1,4 +1,4 @@
-import { FIELD, STEP } from './data/balance';
+import { STEP } from './data/balance';
 import { GameController } from './game';
 import { FieldRenderer } from './render/field';
 import { TreeRenderer } from './render/tree';
@@ -43,7 +43,7 @@ const setAim = (e: PointerEvent): void => {
   const lift = e.pointerType === 'mouse' ? 0 : TOUCH_LIFT * parseFloat(getComputedStyle(document.documentElement).fontSize);
   // a captured finger can slide off the canvas: keep the circle on the plain
   const x = Math.min(r.right, Math.max(r.left, e.clientX)), y = Math.min(r.bottom, Math.max(r.top, e.clientY - lift));
-  game.setAim(((x - r.left) / r.width) * FIELD.w, ((y - r.top) / r.height) * FIELD.h);
+  const p = field.toWorld(x, y); game.setAim(p.x, p.y);  // the plain sits inside a full-window view (TB-207)
 };
 const endAim = (e: PointerEvent): void => {
   if (e.pointerType === 'mouse') { if (e.type === 'pointerleave') game.clearAim(); return; }
