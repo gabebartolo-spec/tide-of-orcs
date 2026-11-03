@@ -106,4 +106,17 @@ export const STR = {
   hwCost: (n: number) => `${n} Heartwood`, hwRank: (l: number, m: number) => (m > 1 ? `rank ${l} / ${m}` : l ? 'learned' : ''),
   hwBought: (name: string) => `${name} takes root`,
   heartAvail: (avail: number, total: number) => (avail === total ? String(total) : `${avail} / ${total}`),
+  // Encampment (TB-188b)
+  campSecTitle: 'Camp', campSecBody: 'Buildings last every run. Pay Heartwood and the material common orcs drop.',
+  campMats: 'Materials', campLevel: (l: number, m: number) => `level ${l} / ${m}`,
+  campCost: (hw: number, hwHave: number, mat: number, matName: string, matHave: number) => `${hw} Heartwood (${hwHave}) · ${mat} ${matName} (${matHave})`,
+  campNext: 'Next', campNow: 'Now', campUpgrade: 'Upgrade', campBuild: 'Build',
+  campClosed: 'Upgrades open when the wall falls.', cardClose: 'Close',
+  campUpgraded: (name: string, l: number) => `${name} reaches level ${l}`,
+  campFx: {
+    bowDmg: (v: number) => `bow damage +${v}%`, drawCut: (v: number) => `draw time −${v}%`, radius: (v: number) => `strike circle +${v}%`,
+    weaponDmg: (v: number) => `knives, ballista and storm +${v}%`, findPlus: (v: number) => `Item Find +${v}%`, rerollCut: (v: number) => `rerolls −${v}%`,
+    wallHp: (v: number) => `barricade health +${v}%`, regenPlus: (v: number) => `barricade regen +${v}/s`, starlight: (v: number) => `starlight +${v}%`,
+    vanHp: (v: number) => `vanguard health +${v}%`, vanDmg: (v: number) => `vanguard damage +${v}%`, respawnCut: (v: number) => `vanguard respawn −${v}%`,
+  },
 } as const;
