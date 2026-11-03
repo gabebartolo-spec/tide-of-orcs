@@ -74,7 +74,10 @@ export class FieldRenderer {
   /** Visible world rect this frame. */
   private vis: { x0: number; y0: number; x1: number; y1: number } = { x0: 0, y0: 0, x1: W, y1: H };
   /** Sprite keys per orc kind, built once so the draw loop builds no strings (TB-183). */
-  private orcKeys = new Map<string, { key: string; atk: string }>();
+  private orcKeys = new Map<string, { key: string; atk: string; strike: number }>();
+  /** Walk/attack switch per orc (TB-211): the state it last drew, when that state began on the render clock, and the clip time it last showed,
+   *  so a switch crossfades from the old pose over VFX.orcBlend s instead of jumping. Weak, so dead orcs drop out. */
+  private orcSw = new WeakMap<Orc, { st: string; at: number; t: number; pst: string; pt: number }>();
   /** Loot moments (TB-105): drop beams, the equip glow on the bow, the set-bonus leaf ring, the mythic screen-edge shimmer and slow-motion clock. */
   private beams: { x: number; y: number; life: number; max: number; c: string; ground: boolean; spiral: boolean; k: number }[] = [];
   /** Legendary/mythic field flash (TB-192): seconds left, peak alpha, colour. */
@@ -465,9 +468,16 @@ export class FieldRenderer {
     // Burning or chilled: the orc's own body takes the colour and a soft rim of it, so shading still reads (TB-089).
     const tint = o.burn > 0 ? P.fireTint : o.chill > 0 ? P.frostTint : '', glow = o.burn > 0 ? P.fire : o.chill > 0 ? P.frost : '';
     let k = this.orcKeys.get(o.kind);
-    if (!k) { const key = `orc.${ORC_SPRITE[o.kind] ?? o.kind}`; k = { key, atk: key + '.attack' }; this.orcKeys.set(o.kind, k); }
-    const ost = orcState(s, o), ot = ost === 'attack' ? orcSwingT(o, this.sprites.duration(k.atk), VFX.strike.orc) : orcAnimT(o);
+    if (!k) { const sp = ORC_SPRITE[o.kind] ?? o.kind, key = `orc.${sp}`; k = { key, atk: key + '.attack', strike: sp === 'ogre' ? VFX.strike.ogre : VFX.strike.orc }; this.orcKeys.set(o.kind, k); }
+    const ost = orcState(s, o), ot = ost === 'attack' ? orcSwingT(o, this.sprites.duration(k.atk), k.strike) : orcAnimT(o);
+    let sw = this.orcSw.get(o);
+    if (!sw) { sw = { st: ost, at: -1e9, t: ot, pst: ost, pt: ot }; this.orcSw.set(o, sw); }
+    if (sw.st !== ost) { sw.pst = sw.st; sw.pt = sw.t; sw.st = ost; sw.at = this.clock; }
+    sw.t = ot;
+    const u = this.reducedMotion ? 1 : Math.min(1, (this.clock - sw.at) / VFX.orcBlend);
+    if (u < 1) { g.globalAlpha = 1 - u; this.sprites.drawActor(g, k.key, sw.pst as typeof ost, sw.pt, 0, o.r * 0.9, o.r, o.hitT > 0, tint, glow, VFX.arrows.rimBlur); g.globalAlpha = u; }
     this.sprites.drawActor(g, k.key, ost, ot, 0, o.r * 0.9, o.r, o.hitT > 0, tint, glow, VFX.arrows.rimBlur);
+    g.globalAlpha = 1;
     this.orcBars(o); this.at(0, 0, false);
   }
 

@@ -45,8 +45,8 @@ ANIMS = {
     "wolf.attack": (25, False, "wolf", 1.6),  # all 33 bite frames; field.ts scrubs it with the bite cooldown
     "hawk": (30, False, "hawk", 3.0),  # TB-068 companion flight v1 (director 3 Nov): OSU CC BY Sketchfab hawk, its own Wings Flapping clip, frames 0-29 (render_hawk.py VIEW=game YAW=90); anchor = bird centre
     "orc.wolfrider": (25, True, "orc.wolfrider", 2.6),  # run v8 (director 3 Nov): companion wolf run copied onto the rider wolf, orc at rest; frames from wolfrider/render_wr_sheet.py STEP=1
-    "orc.ogre": (30, True, "orc.ogre", 2.4),  # TB-211 boss: Reizake CC BY Troll_Orc, its own take frames 61-110 (walk loop, 111 = 61); render_ogre.py VIEW=game YAW=90 ORTHO=4.2 INPLACE=1
-    "orc.ogre.attack": (30, True, "orc.ogre", 2.4),  # TB-211: its own take frames 173-231 (sword combo)
+    "orc.ogre": (30, False, "orc.ogre", 3.4),  # TB-211 boss: Reizake CC BY Troll_Orc, its own take frames 61-110 (walk loop, 111 = 61); render_ogre.py VIEW=game YAW=300 ORTHO=4.2 INPLACE=1 (critic 4 Nov: turned 30 deg to camera, cleaver on the far side so the face reads; already faces screen-left, so no mirror). Body 3.4 r: frame 0 includes the raised cleaver, 251 px vs 178 px body alone (NOSWORD=1), so the body itself is 2.4 r like every orc
+    "orc.ogre.attack": (30, False, "orc.ogre", 3.4),  # TB-211: its own take frames 173-231 (sword combo)
     "orc.wolfrider.attack": (15, True, "orc.wolfrider", 2.6),  # shares the run body key, same ortho 1.4
 }
 # TB-188d: Tripo camp buildings, one static frame per building per level (render_camp.py, ORTHO 2.2, anchor = ground centre).

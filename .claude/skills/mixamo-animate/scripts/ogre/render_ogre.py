@@ -72,11 +72,17 @@ cam.data.type = "ORTHO"; cam.data.ortho_scale = ORTHO; C = Vector((0, 0, float(E
 def place(view):
     if view == "game":   # field camera (as render_hawk): from -Y, T above the ground; character faces +X = screen-right
         cam.location = C + Vector((0, -D * math.cos(T), D * math.sin(T))); cam.rotation_euler = Euler((math.pi / 2 - T, 0, 0))
-    elif view == "front":  # facing the character (it faces +X)
-        cam.location = C + Vector((D, 0, 0)); cam.rotation_euler = Euler((math.pi / 2, 0, math.pi / 2))
+    elif view == "front":  # facing the character: it faces +X at YAW 90, so its facing turns with YAW - 90
+        f = YAW - math.pi / 2
+        cam.location = C + Vector((D * math.cos(f), D * math.sin(f), 0)); cam.rotation_euler = Euler((math.pi / 2, 0, math.pi / 2 + f))
     elif view == "back":
         cam.location = C + Vector((-D, 0, 0)); cam.rotation_euler = Euler((math.pi / 2, 0, -math.pi / 2))
     elif view == "top":
+        pass
+    if view in ("game", "front", "back"):  # light rig turns with the camera, so every view is lit as the game view is (critic 4 Nov: front was dark)
+        a = {"game": 0, "front": 90 + math.degrees(YAW) - 90, "back": -90}[view]
+        sun.rotation_euler.z = math.radians(20 + a); rim.rotation_euler.z = math.radians(200 + a)
+    if view == "top":
         cam.location = C + Vector((0, 0, D)); cam.rotation_euler = Euler((0, 0, 0))
 # lighting copied from apply_anim.py (every orc sprite): grey-blue world 0.6, warm key sun, cool rim, Standard view transform
 w = bpy.data.worlds.new("w"); sc.world = w; w.use_nodes = True; w.node_tree.nodes["Background"].inputs[0].default_value = (0.55, 0.6, 0.65, 1); w.node_tree.nodes["Background"].inputs[1].default_value = 0.6
@@ -92,6 +98,9 @@ _g = rootw(); _p = _w2c(sc, cam, Vector((_g.x, _g.y, 0))); print("ANCHOR", round
 fs = E("FRAMES", "1-231")
 frames = list(range(int(fs.split("-")[0]), int(fs.split("-")[1]) + 1)) if "-" in fs else [int(x) for x in fs.split(",")]
 INPLACE = E("INPLACE") == "1"
+if E("NOSWORD"):  # measuring only: hide the cleaver to get the body's own height (body-height calibration for pack_sprites)
+    for o in meshes:
+        if any(sl.material and sl.material.name == "lambert3" for sl in o.material_slots): o.hide_render = True; print("HID", o.name)
 for v in VIEWS:
     place(v)
     for i, f in enumerate(frames):
