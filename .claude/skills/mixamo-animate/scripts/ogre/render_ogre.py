@@ -1,5 +1,5 @@
 # TB-211 Orc Ogre: import Sketchfab "Troll_Orc" (Reizake, CC BY) FBX, relink textures, play its own take, ortho renders.
-# Env: VIEW=game|front|side|top (comma list), GAMECAM deg, YAW deg, ORTHO, RES, FRAMES "a-b" or "a,b,c", HEIGHT m, INPLACE=1
+# Env: VIEW=game|front|side|top (comma list), FORTHO front/back ortho (front crop), BOFF "bone:ax,ay,az,deg:f0,f1,f2,f3;..." (extra bone turn ramped in f0..f1, held, out f2..f3), GAMECAM deg, YAW deg, ORTHO, RES, FRAMES "a-b" or "a,b,c", HEIGHT m, INPLACE=1
 # Usage: blender -b --factory-startup --python render_ogre.py -- <Troll_Orc.fbx> <textures dir> <outdir> <prefix>
 import bpy, math, sys, os
 from mathutils import Vector, Euler
@@ -101,10 +101,29 @@ INPLACE = E("INPLACE") == "1"
 if E("NOSWORD"):  # measuring only: hide the cleaver to get the body's own height (body-height calibration for pack_sprites)
     for o in meshes:
         if any(sl.material and sl.material.name == "lambert3" for sl in o.material_slots): o.hide_render = True; print("HID", o.name)
+from mathutils import Quaternion
+BOFF = []  # TB-211: the take's cleaver passes through the head/torso in attack frames 30-32 (take 203-205); a ramped arm turn clears it
+for spec in filter(None, E("BOFF", "").split(";")):
+    bn, ax, fr4 = spec.split(":"); ax = [float(x) for x in ax.split(",")]; BOFF.append((bn, Vector(ax[:3]).normalized(), math.radians(ax[3]), [int(x) for x in fr4.split(",")]))
+WP, HB = bpy.data.objects.get("weapon_LP_trian1"), arm.pose.bones.get("joint150")  # the cleaver rides its own control, not the hand; carry it rigidly with the hand
+WPB = WP.matrix_basis.copy() if WP else None  # the weapon has no keys of its own: put its basis back every frame so an offset never leaks
+def boff(f):
+    if not BOFF: return
+    WP.matrix_basis = WPB
+    bpy.context.view_layer.update(); hw = lambda: arm.matrix_world @ HB.matrix; rel = hw().inverted() @ WP.matrix_world
+    for bn, ax, ang, (f0, f1, f2, f3) in BOFF:
+        k = 0 if f <= f0 or f >= f3 else 1 if f1 <= f <= f2 else (f - f0) / (f1 - f0) if f < f1 else (f3 - f) / (f3 - f2)
+        k = k * k * (3 - 2 * k)  # smoothstep
+        if k <= 0: continue
+        pb = arm.pose.bones[bn]; q = Quaternion(ax, ang * k)
+        if pb.rotation_mode == 'QUATERNION': pb.rotation_quaternion = pb.rotation_quaternion @ q
+        else: pb.rotation_euler = (pb.rotation_euler.to_quaternion() @ q).to_euler(pb.rotation_mode)
+    bpy.context.view_layer.update(); WP.matrix_world = hw() @ rel; bpy.context.view_layer.update()
 for v in VIEWS:
     place(v)
+    cam.data.ortho_scale = float(E("FORTHO", str(ORTHO))) if v in ("front", "back") else ORTHO
     for i, f in enumerate(frames):
-        sc.frame_set(f)
+        sc.frame_set(f); boff(f)
         if INPLACE:  # cancel the take's ground drift of the root (keep height)
             d = rootw() - r0; piv.location.x -= d.x; piv.location.y -= d.y; bpy.context.view_layer.update()
         if E("PROBE"): rw = rootw(); print("ROOT", f, tuple(round(x, 3) for x in rw))
