@@ -74,7 +74,9 @@ function dropLoot(s: SimState, ev: EventBus, o: Orc): void {
 }
 
 /** Set-bonus damage taken: bleeding (Nightknife 4) and pinned (Siegebreaker 6) orcs take more from every source. */
-export const takenMult = (s: SimState, o: Orc): number => (o.bleed > 0 ? 1 + s.stats.bleedAmp : 1) * (o.pin > 0 ? SET_FX.pinMult : 1);
+/** Bossbane counts bosses and champions; Elitebane counts the elite kind (TB-201). Applies to every hit and to burn. */
+export const takenMult = (s: SimState, o: Orc): number => (o.bleed > 0 ? 1 + s.stats.bleedAmp : 1) * (o.pin > 0 ? SET_FX.pinMult : 1)
+  * (o.kind === 'boss' || o.champ ? s.stats.bossDmg : 1) * (o.kind === 'elite' ? s.stats.eliteDmg : 1);
 
 /** Leave a patch of ground (TB-099); silently skipped when the zone pool is full. */
 export function addZone(s: SimState, kind: Zone['kind'], x: number, y: number, r: number, life: number): void {

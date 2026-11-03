@@ -153,7 +153,7 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
       const seen = new Set<Orc>(); const pts: [number, number][] = [];
       let cur = nearestOrc(s, BAR_X + SOURCES.storm.seekX, H / 2), cap = st.chain, reb = 0;
       while (cur && pts.length < cap) {
-        const c = cur; seen.add(c); pts.push([c.x, c.y]); damage(s, ev, c, st.dmg * SOURCES.storm.mult * st.kin);
+        const c = cur; seen.add(c); pts.push([c.x, c.y]); damage(s, ev, c, st.dmg * SOURCES.storm.mult * st.kin * st.stormDmg);
         // Stormcaller 6: a killing link strikes again from the corpse
         if (c.dead && reb < st.rebound) { reb++; cap++; }
         cur = nearestOrc(s, c.x, c.y, (o) => !seen.has(o) && dist(o.x, o.y, c.x, c.y) < st.chainJump);
