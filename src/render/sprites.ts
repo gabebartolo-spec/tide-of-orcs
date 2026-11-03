@@ -116,14 +116,19 @@ export class Sprites {
     const fi = frameAt(a, t), [fx, fy, fw, fh] = a.frames[fi]!;
     const h = a.hPerR * r, w = h * (fw / fh), dx = x - w * a.ax, dy = y - h * a.ay;
     if (flash) g.filter = FLASH_FILTER;
-    if (tint || glow) {
-      // A glow bake is made at the drawn device-pixel height (canvas filter lengths ignore the transform, as the old live
-      // shadowBlur did), so its blur and rim land 1:1 on screen (TB-216f).
-      const m = glow ? g.getTransform?.() : undefined, k = m ? Math.hypot(m.a, m.b) || 1 : 1;
-      const b = glow ? this.baked(img, a, fi, tint, glow, blur, heightBucket(h * k)) : this.baked(img, a, fi, tint, '', 0, 0);
-      const s = h / (b.c.height - 2 * b.pad);
+    if (glow) {
+      // The halo is baked at the drawn device-pixel height (canvas filter lengths ignore the transform, as the old live
+      // shadowBlur did), so its blur and rim land 1:1 on screen; the body is then drawn sharp from the atlas over it, as
+      // the live filter drew it, so the bake's resample never softens the orc (TB-216f).
+      const m = g.getTransform?.(), k = m ? Math.hypot(m.a, m.b) || 1 : 1;
+      const b = this.baked(img, a, fi, '', glow, blur, heightBucket(h * k)), s = h / (b.c.height - 2 * b.pad);
       g.drawImage(b.c, 0, 0, b.c.width, b.c.height, dx - b.pad * s, dy - b.pad * s, w + 2 * b.pad * s, h + 2 * b.pad * s);
-    } else g.drawImage(img, fx, fy, fw, fh, dx, dy, w, h);
+      g.drawImage(img, fx, fy, fw, fh, dx, dy, w, h);
+    }
+    if (tint) {
+      const b = this.baked(img, a, fi, tint, '', 0, 0);
+      g.drawImage(b.c, 0, 0, b.c.width, b.c.height, dx, dy, w, h);
+    } else if (!glow) g.drawImage(img, fx, fy, fw, fh, dx, dy, w, h);
     if (flash) g.filter = 'none';
     return true;
   }

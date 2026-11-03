@@ -61,12 +61,12 @@ describe('sprite atlas', () => {
     priv.atlas = parseAtlas({ anims: { 'orc.grunt': anim } }); priv.imgs = new Map([['sheet_elf.webp', {}]]);
     const g = ctx() as unknown as CanvasRenderingContext2D & { draws: number };
     for (let i = 0; i < 160; i++) expect(sp.draw(g, 'orc.grunt', 0, i, 0, 10, false, 'red', 'orange', 4)).toBe(true);
-    expect(sp.bakeCount).toBe(1);
-    expect(g.draws).toBe(160);
+    expect(sp.bakeCount).toBe(2); // one halo bake + one tint bake (TB-216f)
+    expect(g.draws).toBe(480); // halo, sharp body, tint per orc
     expect(filters.filter((f) => f.startsWith('drop-shadow')).length).toBe(1);
     sp.draw(g, 'orc.grunt', 1.5 / 12, 0, 0, 10, false, 'red', 'orange', 4);
     sp.draw(g, 'orc.grunt', 0, 0, 0, 10, false, 'blue', 'cyan', 4);
-    expect(sp.bakeCount).toBe(3);
+    expect(sp.bakeCount).toBe(6);
   });
 
   it('shares tint-only bakes across heights and bounds rimmed bakes across radii (TB-216d)', () => {
@@ -75,7 +75,7 @@ describe('sprite atlas', () => {
     for (let r = 4; r <= 40; r += 0.1) sp.draw(g, 'orc.grunt', 0, 0, 0, r, false, 'blue');
     expect(sp.bakeCount).toBe(1);
     for (let r = 4; r <= 40; r += 0.1) sp.draw(g, 'orc.grunt', 0, 0, 0, r, false, 'red', 'orange', 4);
-    expect(sp.bakeCount - 1).toBeLessThanOrEqual(Math.ceil(Math.log2(40 / 4) * SPRITE_BAKE.steps) + 2);
+    expect(sp.bakeCount - 2).toBeLessThanOrEqual(Math.ceil(Math.log2(40 / 4) * SPRITE_BAKE.steps) + 2);
     for (let i = 0; i < SPRITE_BAKE.cap * 2; i++) sp.draw(g, 'orc.grunt', 0, 0, 0, 1 + i, false, `#${i}`, 'orange', 4);
     expect(sp.bakeSize).toBeLessThanOrEqual(SPRITE_BAKE.cap);
     expect(heightBucket(26)).toBe(heightBucket(26.4));
