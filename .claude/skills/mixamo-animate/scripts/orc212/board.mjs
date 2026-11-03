@@ -1,6 +1,6 @@
-// node board.mjs <out.png> <newAtlas.json> <newSheet.webp>
+// node board.mjs <out.png> <newAtlas.json> <newSheet.webp> [strike frame/frames]  (TB-212 round 3: Mixamo clips on the Riltariki rig)
 import { spawn } from 'node:child_process'; import fs from 'node:fs'; import { tmpdir } from 'node:os'; import { join } from 'node:path';
-const [out, na, ns] = process.argv.slice(2);
+const [out, na, ns, st = '0.5'] = process.argv.slice(2);
 const atl = JSON.parse(fs.readFileSync(na, 'utf8')).anims; const pick = {}; for (const k of ['orc.grunt', 'orc.grunt.attack', 'orc.grunt.death']) pick[k] = atl[k];
 const sheet = 'data:image/webp;base64,' + fs.readFileSync(ns).toString('base64');
 const ud = fs.mkdtempSync(join(tmpdir(), 'cdp'));
@@ -16,12 +16,14 @@ await cmd('Page.navigate', { url: 'http://localhost:5644/' }); await sleep(7000)
 console.log(await ev(`(async()=>{const T=window.__tide,f=T.field,sp=f.sprites;
 const img=new Image();img.src=${JSON.stringify(sheet)};await img.decode();const A=${JSON.stringify(pick)};
 const old=sp.atlas.anims;
-// current grunt timing: strike frame 44/69; new: 30/60
-const items=[['orc.grunt',0,'old','Current: walk'],['orc.grunt.attack',44/69,'old','Current: attack (strike)'],['orc.grunt',0,'new','Riltariki: walk'],['orc.grunt.attack',30/60,'new','Riltariki: attack (strike)'],['orc.grunt.death',0.999,'new','Riltariki: death end (own clip)']];
+// current grunt timing: strike frame 44/69; new: the same Mixamo clip after a 10-frame lead-in (strike 38/79), passed as argv[4]
+const items=[['orc.grunt',0,'old','Current: walk'],['orc.grunt.attack',44/69,'old','Current: attack (strike)'],['orc.grunt',0,'new','Riltariki: walk'],['orc.grunt.attack',${st},'new','Riltariki: attack (strike)'],['orc.grunt.death',0.999,'new','Riltariki: death end (Mixamo Dying)']];
 T.game.state.orcs.forEach(o=>o.dead=true);
 const od=f.draw.bind(f);f.draw=(s,dt,aim)=>{s.orcs.forEach(o=>o.dead=true);od(s,dt,null);const g=f.g,b=f.base;g.setTransform(b.sx,0,0,b.sy,b.ex,b.ey);
- const r=12,y0=300;window.__pos=[];items.forEach(([k,t,w,l],i)=>{const x=560+i*70,y=y0;g.fillStyle='rgba(20,20,10,0.35)';g.beginPath();g.ellipse(x,y+r*0.9,r*0.9,r*0.35,0,0,6.28);g.fill();
+ const r=12,y0=300;window.__pos=[];items.forEach(([k,t,w,l],i)=>{const x=560+i*70,y=y0;
   const a=w==='old'?old[k]:A[k];const n=a.frames.length,[fx,fy,fw,fh]=a.frames[Math.min(n-1,Math.floor(t*n))];const h=a.hPerR*r,ww=h*fw/fh;
+  // shadow under the body's footprint (the lying death body is wider than a standing orc), drawn before the sprite like field.ts
+  const sx=k.endsWith('.death')?Math.max(r*0.9,ww*0.42):r*0.9,cx=k.endsWith('.death')?x-ww*a.ax+ww*0.5:x;g.fillStyle='rgba(20,20,10,0.35)';g.beginPath();g.ellipse(cx,y+r*0.9,sx,r*0.35,0,0,6.28);g.fill();
   g.drawImage(w==='old'?sp.imgs.get(a.image):img,fx,fy,fw,fh,x-ww*a.ax,y+r*0.9-h*a.ay,ww,h);window.__pos.push([b.sx*x+b.ex,b.sy*y+b.ey,l]);});};
 await new Promise(r=>setTimeout(r,800));return JSON.stringify({sx:f.base.sx,pos:window.__pos});})()`));
 const s = await cmd('Page.captureScreenshot', { format: 'png' }); fs.writeFileSync(out, Buffer.from(s.result.data, 'base64'));

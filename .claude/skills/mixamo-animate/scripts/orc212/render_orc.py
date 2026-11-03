@@ -49,6 +49,92 @@ if ARMFROM:
         if any(f'"{b}"' in fc.data_path for b in IDLE[0][0]): cb.fcurves.remove(fc)
     axa.animation_data.action = None
     print("ARMFROM idle frames", len(IDLE), "arm bones", len(IDLE[0][0]))
+MIX = os.environ.get("MIXAMO")  # death (TB-212 spec): retarget a Mixamo clip (Dying) onto Bip001. Torso/feet copy the world rotation change from rest; arms/legs aim
+# each segment along the Mixamo segment (the girl_apose rest is an A-pose, Bip001 is a T-pose, so rest-delta rotations would bend the arms); hands keep their rest offset.
+if MIX:
+    sc.frame_set(f0); bpy.context.view_layer.update()
+    hr = bip.matrix_world @ bip.pose.bones["Bip001 R Hand"].matrix; AXREL = hr.inverted() @ (axa.matrix_world @ axa.pose.bones["Axe_1_Dummy"].matrix)
+    bip.animation_data.action = None; axa.animation_data.action = None
+    for pb in bip.pose.bones: pb.matrix_basis = Matrix()
+    old = set(bpy.data.objects); bpy.ops.import_scene.fbx(filepath=MIX); mixo = next(o for o in set(bpy.data.objects) - old if o.type == 'ARMATURE')
+    for o in set(bpy.data.objects) - old:
+        if o.type == 'MESH': bpy.data.objects.remove(o, do_unlink=True)
+    f0, f1 = map(int, mixo.animation_data.action.frame_range); bpy.context.view_layer.update()
+    mr = lambda n: (mixo.matrix_world @ mixo.data.bones["mixamorig:" + n].matrix_local).to_quaternion()
+    orr = lambda n: (bip.matrix_world @ bip.data.bones["Bip001 " + n].matrix_local).to_quaternion()
+    MAP = [("Pelvis", "Hips"), ("Spine", "Spine"), ("Spine1", "Spine1"), ("Spine2", "Spine2"), ("Neck", "Neck"), ("Head", "Head")]
+    for sd in ("Left", "Right"):
+        L = sd[0]; MAP += [(L + " Clavicle", sd + "Shoulder"), (L + " UpperArm", sd + "Arm"), (L + " Forearm", sd + "ForeArm"), (L + " Hand", sd + "Hand"),
+                           (L + " Thigh", sd + "UpLeg"), (L + " Calf", sd + "Leg"), (L + " Foot", sd + "Foot")]
+    MAP.remove(("L Hand", "LeftHand")); MAP.append(("L Hand", "LeftHand"))  # L Hand is a child of R Hand (two-hand grip): pose it after R Hand or R Hand drags it off the left wrist
+    CH = {"Clavicle": "UpperArm", "UpperArm": "Forearm", "Forearm": "Hand", "Thigh": "Calf", "Calf": "Foot"}
+    MCH = {"Shoulder": "Arm", "Arm": "ForeArm", "ForeArm": "Hand", "UpLeg": "Leg", "Leg": "Foot"}
+    mrest = lambda n: mixo.matrix_world @ mixo.data.bones["mixamorig:" + n].matrix_local
+    K = (bip.matrix_world @ bip.data.bones["Bip001 Pelvis"].head_local).z / mrest("Hips").translation.z
+    def mw(n): return mixo.matrix_world @ mixo.pose.bones["mixamorig:" + n].matrix
+    # Riltariki parented Bip001 L Hand to R Hand (two-hand grip), so the left forearm's end is its rest offset to L Hand, carried by the forearm, not L Hand's posed head
+    FOFF = bip.data.bones["Bip001 L Forearm"].matrix_local.inverted() @ bip.data.bones["Bip001 L Hand"].head_local
+    def tip(n, child):
+        if n == "L Forearm": return bip.matrix_world @ (bip.pose.bones["Bip001 L Forearm"].matrix @ FOFF)
+        return bip.matrix_world @ bip.pose.bones["Bip001 " + child].head
+    def setw(n, rot=None, loc=None, aim=None):
+        pb = bip.pose.bones["Bip001 " + n]; W = bip.matrix_world @ pb.matrix; l, q, s = W.decompose()
+        if n == "L Hand" and loc is None: loc = tip("L Forearm", None)  # keep the left wrist on the forearm, not wherever the right hand carries it
+        if aim: q = (tip(n, aim[0]) - l).rotation_difference(aim[1]) @ q
+        if rot: q = rot
+        pb.matrix = bip.matrix_world.inverted() @ Matrix.LocRotScale(loc or l, q, s); bpy.context.view_layer.update()
+    # matched rest: aim the Bip001 limbs along the Mixamo rest (A-pose) segments, then every mapped bone copies the full Mixamo world rotation change (twist included)
+    for o, m in MAP:
+        part = o.split(" ")[-1]; mp = m.replace("Left", "").replace("Right", "")
+        if part in CH: setw(o, aim=(o[0] + " " + CH[part], mrest(m.replace(mp, MCH[mp])).translation - mrest(m).translation))
+    OQ = {o: (bip.matrix_world @ bip.pose.bones["Bip001 " + o].matrix).to_quaternion() for o, m in MAP}; MQ = {m: mrest(m).to_quaternion() for o, m in MAP}
+    def frame3(f, t):  # orthonormal frame from a finger direction and a thumb direction
+        x = f.normalized(); z = x.cross(t).normalized(); return Matrix((x, z.cross(x), z)).transposed()
+    def handframe(o, m, g, bn):  # TB-212 attack read as a thrust: copy the Mixamo hand's own frame (wrist->middle knuckle, then the knuckle line middle->pinky),
+        sd = m[:-4]; hb = "Bip001 " + o; pre = "mixamorig:" + sd + "Hand"  # so the axe sits in the fist the way the clip's sword does
+        mf = next((sd + "Hand" + k for k in ("Middle1", "Index1") if pre + k in bn), None)
+        if not mf: return
+        P = lambda n: bip.matrix_world @ bip.pose.bones[hb.replace("Hand", n)].head
+        oh = P("Hand"); of = P("Finger2") - oh; mh = g(sd + "Hand").translation; mfv = g(mf).translation - mh
+        if pre + "Pinky1" in bn and pre + "Middle1" in bn: R = frame3(mfv, g(sd + "HandPinky1").translation - g(sd + "HandMiddle1").translation) @ frame3(of, P("Finger4") - P("Finger2")).transposed()
+        else: R = of.rotation_difference(mfv).to_matrix()
+        l, q, sc_ = (bip.matrix_world @ bip.pose.bones[hb].matrix).decompose(); setw(o, rot=R.to_quaternion() @ q, loc=l)
+    def pose(arm, F):  # apply Mixamo armature <arm> frame F to Bip001; return the resulting world rotation per bone and the pelvis position
+        sc.frame_set(F); bpy.context.view_layer.update(); bn = set(arm.pose.bones.keys()); g = lambda n: arm.matrix_world @ arm.pose.bones["mixamorig:" + n].matrix
+        for o, m in MAP:
+            setw(o, rot=g(m).to_quaternion() @ MQ[m].inverted() @ OQ[o], loc=g("Hips").translation * K if o == "Pelvis" else None); part = o.split(" ")[-1]
+            if part in CH:  # swing-correct each limb segment onto the Mixamo segment (the matched rest left Bip001 L Forearm 155 deg off)
+                mp = m.replace("Left", "").replace("Right", ""); setw(o, aim=(o[0] + " " + CH[part], g(m.replace(mp, MCH[mp])).translation - g(m).translation))
+            if part == "Hand": handframe(o, m, g, bn)
+        return {o: (bip.matrix_world @ bip.pose.bones["Bip001 " + o].matrix).to_quaternion() for o, m in MAP}, g("Hips").translation * K
+    LEAD = os.environ.get("LEADIN")  # attack (TB-212 critic: walk->attack popped): <walk.fbx>:<K> prepends K frames slerping from the walk's frame 1 to the attack's frame 1
+    if LEAD:
+        lf, LK = LEAD.rsplit(":", 1); LK = int(LK); o2 = set(bpy.data.objects); bpy.ops.import_scene.fbx(filepath=lf)
+        wa = next(o for o in set(bpy.data.objects) - o2 if o.type == 'ARMATURE')
+        for o in set(bpy.data.objects) - o2:
+            if o.type == 'MESH': bpy.data.objects.remove(o, do_unlink=True)
+        print("LEAD actions", wa.name, wa.animation_data.action.name, mixo.name, mixo.animation_data.action.name); WP = pose(wa, int(wa.animation_data.action.frame_range[0]))
+        WP = (WP[0], Vector((0, 0, WP[1].z)) + (pose(mixo, f0)[1] * Vector((1, 1, 0))))  # walk height, attack ground position (the walk's root drift is tracked out in game)
+        f0 -= LK
+    GRIP = os.environ.get("GRIP")  # attack: <fbx>:<frame>:<in>:<out> slides the fist down the haft to that clip's grip (ANM_ATTACK_CRIT holds it from 1522), over the first <in>
+    if GRIP:                        # frames, and back to the carry grip over the last <out>, like the model's own chop (1501->1522, 1546->1561); a fist under the head swung butt-first
+        gf, gF, GIN, GOUT = GRIP.rsplit(":", 3); gF, GIN, GOUT = int(gF), int(GIN), int(GOUT); o3 = set(bpy.data.objects); bpy.ops.import_scene.fbx(filepath=gf); nw = set(bpy.data.objects) - o3
+        b3 = next(o for o in nw if o.name.startswith("Bip001")); a3 = next(o for o in nw if o.type == 'ARMATURE' and o.name.startswith("Armature")); fs = sc.frame_current
+        sc.frame_set(gF); bpy.context.view_layer.update(); AXHOLD = (b3.matrix_world @ b3.pose.bones["Bip001 R Hand"].matrix).inverted() @ (a3.matrix_world @ a3.pose.bones["Axe_1_Dummy"].matrix)
+        for o in nw: bpy.data.objects.remove(o, do_unlink=True)
+        _t = AXHOLD.translation.copy(); _t.z += float(os.environ.get("GRIPSLIDE", "0")); AXHOLD.translation = _t  # further down the haft, toward the butt (hand-local +z is the thumb side, where the head is)
+        sc.frame_set(fs); print("GRIP carry", [round(x, 1) for x in AXREL.translation], "hold", [round(x, 1) for x in AXHOLD.translation])
+    def grip(F):
+        if not GRIP: return AXREL
+        sm = lambda x: (lambda c: c * c * (3 - 2 * c))(min(1, max(0, x))); u = sm((F - f0) / GIN) * sm((f1 - F) / GOUT)
+        l0, q0, s0 = AXREL.decompose(); return Matrix.LocRotScale(l0.lerp(AXHOLD.translation, u), q0, s0)
+    def retarget(F):
+        if LEAD and F < f0 + LK:
+            t = (F - f0) / LK; t = t * t * (3 - 2 * t); A, B = WP, pose(mixo, f0 + LK)
+            for o, m in MAP: setw(o, rot=A[0][o].slerp(B[0][o], t), loc=A[1].lerp(B[1], t) if o == "Pelvis" else None)
+        else: pose(mixo, F)
+        axa.pose.bones["Axe_1_Dummy"].matrix = axa.matrix_world.inverted() @ (bip.matrix_world @ bip.pose.bones["Bip001 R Hand"].matrix) @ grip(F); bpy.context.view_layer.update()
+    print("MIXAMO", f0, f1, "K", round(K, 3))
 FADE = os.environ.get("AXEFADE")  # death (TB-212 critic: the axe popped out between frames 2 and 3): fade it linearly over a:b instead
 if FADE:
     fa, fb = map(int, FADE.split(":")); ma.surface_render_method = 'BLENDED'; abs_ = ma.node_tree.nodes["Principled BSDF"].inputs["Alpha"]
@@ -66,10 +152,14 @@ for n, e, c, rot in (("sun", 3.5, (1, 0.93, 0.8), (40, 0, 20)), ("rim", 1.5, (0.
 sc.view_settings.view_transform = "Standard"; sc.eevee.taa_render_samples = 32
 sc.render.resolution_x = sc.render.resolution_y = RES; sc.render.image_settings.file_format = 'PNG'; sc.render.image_settings.color_mode = 'RGBA'
 os.makedirs(OUT, exist_ok=True); n = 0
-TRACK = bool(os.environ.get("TRACK")); sc.frame_set(f0); bpy.context.view_layer.update(); P0 = bip.matrix_world @ bip.pose.bones["Bip001 Pelvis"].head; base = cam.location.copy()
+TRACK = bool(os.environ.get("TRACK")); sc.frame_set(f0)
+if MIX: retarget(f0)
+bpy.context.view_layer.update(); bpy.context.view_layer.update(); P0 = bip.matrix_world @ bip.pose.bones["Bip001 Pelvis"].head; base = cam.location.copy()
+DBGF = int(os.environ.get("DBGF", "0"))  # debug: render only the first DBGF frames
 for i, F in enumerate(range(f0, f1 + 1)):
-    if i % STEP: continue
+    if i % STEP or (DBGF and i >= DBGF): continue
     sc.frame_set(F)
+    if MIX: retarget(F)
     if ARMFROM:
         pose, rel = IDLE[n % len(IDLE)]
         for b, m in pose.items(): bip.pose.bones[b].matrix_basis = m
