@@ -291,7 +291,9 @@ def load_elk():
     root = bpy.data.objects.new("elk", None); sc.collection.objects.link(root)
     for o in new:
         if o.parent is None: o.parent = root
-    root.rotation_euler.z = math.pi        # the model faces +y (screen right): turn it to face screen left like the old deer
+    # the model faces +y (screen right): turn it to face screen left like the old deer; ELK_FACE=right keeps it facing right,
+    # a true right-facing pass (its other flank lit by the same sun, its shadow still falling lower left) instead of a canvas flip
+    root.rotation_euler.z = 0.0 if os.environ.get("ELK_FACE") == "right" else math.pi
     sc.frame_set(0); bpy.context.view_layer.update()
     ms = [o for o in new if o.type == "MESH"]
     def pts():

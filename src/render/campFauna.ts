@@ -1,4 +1,4 @@
-import { CAMP_ELK_ART, CAMP_FAUNA } from '../data/presentation';
+import { CAMP_ELK_ART, CAMP_ELK_FOOT, CAMP_ELK_R_ART, CAMP_FAUNA } from '../data/presentation';
 import { img } from './camp';
 import { P } from './palette';
 
@@ -21,15 +21,13 @@ export class CampFauna {
   draw(g: Ctx, t: number): void {
     const dt = this.last < 0 ? 0 : Math.min(MAX_DT, Math.max(0, t - this.last));
     this.last = t;
-    const sheet = img('elk'), E = CAMP_ELK_ART;
-    if (sheet) {
+    for (const d of F.elk) {
+      const sheet = img(d.right ? 'elk_r' : 'elk'), E = d.right ? CAMP_ELK_R_ART : CAMP_ELK_ART;
+      if (!sheet) continue;
       const fw = sheet.naturalWidth / E.cols, fh = sheet.naturalHeight / Math.ceil(E.n / E.cols);
-      for (const d of F.elk) {
-        const k = Math.floor((t * E.fps + d.phase * E.n) % E.n), sx = (k % E.cols) * fw, sy = Math.floor(k / E.cols) * fh;
-        const x = E.x + d.dx, y = E.y + d.dy;
-        if (!d.flip) { g.drawImage(sheet, sx, sy, fw, fh, x, y, E.w, E.h); continue; }
-        g.save(); g.translate((x + E.w / 2) * 2, 0); g.scale(-1, 1); g.drawImage(sheet, sx, sy, fw, fh, x, y, E.w, E.h); g.restore();
-      }
+      const k = Math.floor((t * E.fps + d.phase * E.n) % E.n), sx = (k % E.cols) * fw, sy = Math.floor(k / E.cols) * fh;
+      const fx = CAMP_ELK_FOOT.x + d.dx, fy = CAMP_ELK_FOOT.y + d.dy;   // scale about the hooves so every elk stays on the ground
+      g.drawImage(sheet, sx, sy, fw, fh, fx + (E.x - CAMP_ELK_FOOT.x) * d.s, fy + (E.y - CAMP_ELK_FOOT.y) * d.s, E.w * d.s, E.h * d.s);
     }
     const b = F.birds;
     g.strokeStyle = P.ink2; g.lineWidth = 0.9; g.lineCap = 'round'; g.globalAlpha = b.a;

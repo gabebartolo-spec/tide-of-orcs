@@ -216,6 +216,8 @@ The render border keeps 0.04 of the frame clear left and below so the shadow, wh
 never cut. The pass also renders `bg.png`, the empty plate: `post_elk.py` divides the shadow catcher's veil out of each frame
 against it (a' = (a - bg) / (1 - bg), the faint occlusion halo ramped to zero), refuses frames whose kept pixels touch the
 border, crops all frames to one shared rect, packs `public/decor/camp/elk.webp` (8 per row) and prints `CAMP_ELK_ART`. Each
-elk in `CAMP_FAUNA.elk` is offset and starts at its own `phase` so the herd does not graze in step. None is mirrored: a flip
-mirrors the baked shadow against the camp sun. Elk stand at least one elk length clear of every building and of the
+elk in `CAMP_FAUNA.elk` is offset, scaled by `s` about its hooves (`CAMP_ELK_FOOT`, herd within ±8%) and starts at its own
+`phase` so the herd does not graze in step. Never mirror a sheet in canvas: that flips the baked shadow against the camp sun. A
+right-facing elk uses `elk_r.webp` (`CAMP_ELK_R_ART`, `right: true`), rendered with `ELK_FACE=right` and packed with
+`NAME=elk_r post_elk.py`: the model turned to face right under the same sun, so its shadow still falls lower left. Elk stand at least one elk length clear of every building and of the
 Materials panel, and all graze on the open meadow in one band (dy -22 to -40), never in the treeline grass.

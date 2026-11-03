@@ -1,7 +1,7 @@
 # TB-208: after render_camp_backdrop.py's "elk" pass. Drops the shadow catcher's faint veil (as post_camp.py does), crops every
 # frame to the union of their alpha so all frames share one rect, packs them into a grid sheet public/decor/camp/elk.webp
 # (COLS per row) and prints the CAMP_ELK_ART rect (scene units) for src/data/presentation.ts. Optional: a contact sheet PNG.
-# python post_elk.py <render dir> <public dir> [contact sheet png]
+# python post_elk.py <render dir> <public dir> [contact sheet png]   env NAME (elk): the sheet name, elk_r for the right-facing pass
 import json, os, sys
 from PIL import Image
 src, pub = sys.argv[1], sys.argv[2]; sheet = sys.argv[3] if len(sys.argv) > 3 else None
@@ -30,7 +30,7 @@ fr = [im.crop(bb) for im in fr]; W, H = fr[0].size; COLS = 8; rows = (n + COLS -
 g = Image.new("RGBA", (W * COLS, H * rows), (0, 0, 0, 0))
 for i, im in enumerate(fr): g.paste(im, ((i % COLS) * W, (i // COLS) * H))
 os.makedirs(os.path.join(pub, "decor", "camp"), exist_ok=True)
-g.save(os.path.join(pub, "decor", "camp", "elk.webp"), quality=90, method=6)
+g.save(os.path.join(pub, "decor", "camp", os.environ.get("NAME", "elk") + ".webp"), quality=90, method=6)
 x, y = px0 + bb[0], py0 + bb[1]; s = lambda v, o: round(o + v / PX, 1)
 print(json.dumps({"x": s(x, X0), "y": s(y, Y0), "w": round(W / PX, 1), "h": round(H / PX, 1), "n": n, "cols": COLS, "fps": E["fps"]}))
 if sheet:
