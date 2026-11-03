@@ -240,7 +240,7 @@ export const JUICE = {
   /** Particle burst (TB-195b: reads at 1080p, Hades-like): count, speed range (rem/s), life range (s), size range (rem), gravity (rem/s²),
    *  drag per 1/60 s; `lift` is an upward kick (rem/s) so sparks arc up then fall; `fan` the half-angle (rad) of the spray round straight
    *  up; `glow` the halo radius × size; `flare` a bright ring at the origin (rem radius) and its life (s); `spawn` the radius (rem) sparks scatter from so frame 1 is no blob. Rem so 1080p and 4K match. */
-  burst: { count: 64, speedMin: 6, speedMax: 19, lifeMin: 0.5, lifeMax: 1.0, sizeMin: 0.16, sizeMax: 0.4, gravity: 34, drag: 0.93, lift: 8, fan: 1.9, glow: 1.8, glowAlpha: 0.14, flare: 1.6, flareLife: 0.28, spawn: 3.4 },
+  burst: { count: 64, speedMin: 6, speedMax: 19, lifeMin: 0.5, lifeMax: 1.0, sizeMin: 0.16, sizeMax: 0.4, gravity: 34, drag: 0.93, lift: 8, fan: 1.9, glow: 1.8, glowAlpha: 0.14, flare: 1.6, flareLife: 0.28, spawn: 5 },
   /** Stagger: ms between list children entering. */
   stagger: 30,
   /** Stagger: px each child rises from as it enters. */
