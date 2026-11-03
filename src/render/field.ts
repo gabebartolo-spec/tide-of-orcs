@@ -18,7 +18,7 @@ import { orcAnimT, orcState, orcSwingT, swingClipT, vanState } from './actorStat
 import { Ground, decorImg } from './ground';
 import { Ambience } from './ambience';
 import { Interp } from './interp';
-import { FIELD_VIEW, GROUND, LOOT_VFX, ORC_SPRITE, SKY, VFX, dusk } from '../data/presentation';
+import { FIELD_VIEW, GROUND, LOOT_VFX, ORC_SPRITE, SKY, TREELINE, VFX, dusk } from '../data/presentation';
 import { SLOTS } from '../data/loot';
 import { setTiers } from '../sim/gear';
 
@@ -229,9 +229,12 @@ export class FieldRenderer {
     const n = dusk(this.clock);
     if (n > 0.01) { const lg = g.createRadialGradient(ELF_X, H / 2, 0, ELF_X, H / 2, SKY.lampR); lg.addColorStop(0, P.lamp); lg.addColorStop(1, P.lampClear); g.globalAlpha = n; g.fillStyle = lg; g.fillRect(ELF_X - SKY.lampR, H / 2 - SKY.lampR, SKY.lampR * 2, SKY.lampR * 2); g.globalAlpha = 1; }
 
+    // the forest edge stands behind the barricade, so the palisade is drawn over it and shows its own capped top
+    this.forest();
+
     // barricade
     const frac = barFrac(s);
-    const top = Math.max(vis.y0, this.treeline.skirtBase(vis.y0) + 10);  // the barricade ends just below the treeline's bush skirt, with a capping rail
+    const top = Math.max(vis.y0, this.treeline.skirtBase(vis.y0) - TREELINE.cap.up);  // the wall rises a little into the bush skirt; its stake tips are the cap, and no trunk stands on its column
     g.fillStyle = P.wallShade; g.fillRect(BAR_X + 4, top, BAR_W + 4, H - top);
     const fence = decorImg('fence');
     if (fence) {
@@ -251,7 +254,6 @@ export class FieldRenderer {
       g.fillStyle = P.timberBand; g.fillRect(BAR_X + 2, y - 2, BAR_W - 4, 3);
     }
     if (s.stats.spikes) { g.fillStyle = P.cream; for (let y = 8; y < H; y += 24) { g.beginPath(); g.moveTo(BAR_X + BAR_W, y); g.lineTo(BAR_X + BAR_W + 9, y + 4); g.lineTo(BAR_X + BAR_W, y + 8); g.closePath(); g.fill(); } }
-    this.forest();
 
     this.fx.drawGround(g);
     s.zones.forEach((z) => {

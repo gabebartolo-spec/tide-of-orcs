@@ -14,12 +14,14 @@ export const SKY = {
  *  model height (`kinds`, in model units) times `unit`, always with one uniform scale so nothing squashes or warps. */
 export const TREELINE = {
   seed: 207, span: [-700, 1600] as const,
-  first: 60, gap: 24, stop: -6, minRows: 2, contact: 18, skirt: { step: 18, h: [10, 36] as const, lift: 14, rows: 2, offset: 9, far: 0.35, gap: 0.6 },
+  first: 92, gap: 22, stop: -6, minRows: 2, contact: 18, skirt: { step: 18, h: [8, 26] as const, lift: 8, rows: 2, offset: 9, far: 0.35, gap: 0.6 },
   /** World units per model unit, and the random size spread (x unit) of one tree. */
-  unit: 11, size: [0.88, 1.08] as const,
-  /** A short view shrinks a whole row so a typical tree (`fit` units) still shows; `over` units of a tall crown may leave the top edge. */
-  fit: 90, over: 30,
-  grow: 0.12, step: 22, stepGrow: 0.18, jitter: 0.45, lift: 8, bush: 0.2, bushH: [18, 28] as const,
+  unit: 9.5, size: [0.96, 1.04] as const,
+  /** Rows hang from the view top (`first` + row x `gap` down to a base, `lift` of jitter); a row only holds kinds up to `slack` x its room, then shrinks as one. */
+  slack: 1.12,
+  /** The barricade's top: it starts `up` units above the bush skirt base; no tree stands within `clear` units of the wall's centre. */
+  cap: { up: 20, clear: 16 },
+  grow: 0.06, step: 22, stepGrow: 0.18, jitter: 0.45, lift: 8, bush: 0.1, bushH: [18, 28] as const,
   /** Tree sprite keys and their real model heights (Handpainted Tree Pack), so the forest has a natural mix of tall and short. */
   kinds: ['oak_green_1', 'oak_green_2', 'pine_1', 'pine_2', 'pine_3', 'spruce_2', 'spruce_3'] as const,
   heights: { oak_green_1: 6.25, oak_green_2: 6.94, pine_1: 7.35, pine_2: 8.95, pine_3: 10.57, spruce_2: 5.31, spruce_3: 5.17 } as Readonly<Record<string, number>>,
