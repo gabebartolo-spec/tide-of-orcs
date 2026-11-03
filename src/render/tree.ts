@@ -340,13 +340,15 @@ export class TreeRenderer {
     c.fillStyle = P.ink2; c.fillRect(0, 0, this.vw, TREE_VIEW.legendH); c.fillStyle = P.line; c.fillRect(0, TREE_VIEW.legendH - 1, this.vw, 1);
     // the strip never clips: gaps tighten, then the font steps down, until every label fits the canvas width
     const keys = Object.keys(BRANCH_COLOR) as (keyof typeof BRANCH_COLOR)[], labels = keys.map((k) => BRANCH_LABEL[k].toUpperCase());
-    c.font = '14px Heartwood'; c.textAlign = 'left';
-    const probe = c.measureText(labels[0]!).width + this.vw * 1000;   // changes with width or when the face finishes loading
+    // 14 CSS px is the floor at every width and text size: the font may step down only while it stays at or above it (TB-218)
+    const legMin = Math.ceil(14 / this.ui), legStart = Math.max(14, legMin);
+    c.font = `${legStart}px Heartwood`; c.textAlign = 'left';
+    const probe = c.measureText(labels[0]!).width + this.vw * 1000 + this.ui * 7;   // changes with width, scale or when the face finishes loading
     if (probe !== this.legProbe) {
-      this.legProbe = probe; let px = 14;
+      this.legProbe = probe; let px = legStart;
       const need = (): number => labels.reduce((a, l) => a + c.measureText(l).width + 12, 0) + 14 * 2;
-      while (px > 10 && need() + 8 * (keys.length - 1) > this.vw) { px--; c.font = `${px}px Heartwood`; }
-      this.legPx = px; this.legGap = Math.min(30, Math.max(8, (this.vw - need()) / (keys.length - 1)));
+      while (px > legMin && need() + 8 * (keys.length - 1) > this.vw) { px--; c.font = `${px}px Heartwood`; }
+      this.legPx = px; this.legGap = Math.min(30, Math.max(4, (this.vw - need()) / (keys.length - 1)));
     }
     c.font = `${this.legPx}px Heartwood`; const gap = this.legGap;
     let lx = 14;

@@ -47,7 +47,9 @@ export class SatchelPane {
 
   constructor(private game: GameController, private onCue: (c: Cue) => void = () => {}) {
     // warm the icon cache so a run's first drop banner shows its picture at once (TB-192; 32 small WebPs)
-    for (const id of ITEM_ICON_IDS) new Image().src = `${import.meta.env.BASE_URL}${ITEM_ICON_DIR}/${id}.webp`;
+    // after the first seconds, on idle, so the icons never compete with the sprite sheets for the initial payload (TB-218 PERF-1)
+    const warm = (): void => { for (const id of ITEM_ICON_IDS) new Image().src = `${import.meta.env.BASE_URL}${ITEM_ICON_DIR}/${id}.webp`; };
+    setTimeout(() => (window.requestIdleCallback ?? ((f: () => void) => setTimeout(f, 0)))(warm), 8000);
     $('sat-title').textContent = STR.satchelTitle; $('sat-worn-k').textContent = STR.satchelWorn;
     const pick = (e: Event) => { const uid = (e.target as HTMLElement).closest<HTMLElement>('[data-uid]')?.dataset.uid; if (uid) { this.selected = uid; this.render(); } };
     $('sat-worn').onclick = pick; $('sat-grid').onclick = pick;
