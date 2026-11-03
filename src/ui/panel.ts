@@ -21,6 +21,12 @@ import { LOOT_TOAST } from '../data/lootTables';
 import { RARITIES } from '../data/loot';
 import { applyTextScale } from '../render/textScale';
 import { CampPane } from './camp';
+import { burstAt, press } from './juice';
+import { Hud } from './hud';
+import { Plate, oneLine, plateRows } from './plate';
+import { PathPicker, pathHint } from './paths';
+import { PATHS } from '../data/paths';
+import { drawSigil } from '../render/sigil';
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string): T => document.getElementById(id) as T;
 const VAN_NAME: Record<VanType, string> = { spear: 'Spearman', blade: 'Bladedancer' };
@@ -31,15 +37,19 @@ export class Panel {
   private satchel: SatchelPane;
   /** Encampment card and Replant-tab list (TB-188b). */
   readonly camp: CampPane;
+  /** Path cards on the Replant tab (TB-193c). */
+  private paths: PathPicker;
   /** Boss tier picked for the next March (TB-148); 0 means the highest unlocked. */
   private pickTier = 0;
+  /** Field HUD: starlight gem, wave banner, wall bar (TB-195b). */
+  private hud = new Hud(fmt);
 
   constructor(private game: GameController, private tree: TreeRenderer) {
     // static copy
     $('tab-grove').textContent = STR.tabGrove; $('tab-prestige').textContent = STR.tabReplant;
     $('pr-title').textContent = STR.replantTitle; $('pr-body').textContent = STR.replantBody;
     $('btn-save').textContent = STR.saveNow;
-    $('k-star').textContent = STR.starlight; $('k-wave').textContent = STR.wave; $('k-kills').textContent = STR.slain; $('k-heart').textContent = STR.heartwood;
+    $('k-wave').textContent = STR.wave; $('k-kills').textContent = STR.slain; $('k-heart').textContent = STR.heartwood;
     $('pr-gain-k').textContent = STR.replantGainK; $('pr-btn').textContent = STR.replantBtn;
     $('pr-each').innerHTML = STR.replantEach(PRESTIGE.fallGain); $('pr-reset').textContent = STR.replantReset; $('pr-kept').textContent = STR.replantKept; $('btn-reset').textContent = STR.wipe; $('autosave').textContent = STR.autosave;
     $('fallen-title').textContent = STR.fallenTitle; $('fallen-hw-k').textContent = STR.fallenHW; $('fallen-btn').textContent = STR.fallenToCamp;
@@ -47,9 +57,9 @@ export class Panel {
     $('dep-boss').querySelector('.n')!.textContent = STR.summonBoss;
 
     $('tab-settings').textContent = STR.tabSettings; $('tab-satchel').innerHTML = `${STR.tabSatchel}<span class="badge" id="sat-new" hidden></span>`;
-    this.satchel = new SatchelPane(game, (c) => this.onCue(c)); $('tab-satchel').onclick = () => { this.onCue('click'); this.setTab('satchel'); this.satchel.render(); this.markNew(0); };
+    this.satchel = new SatchelPane(game, (c) => this.onCue(c)); $('tab-satchel').onclick = () => { this.onCue('uiPop'); this.setTab('satchel'); this.satchel.render(); this.markNew(0); };
     fitPages([$('pane-satchel'), $('pane-prestige'), $('pane-settings')]);
-    $('tab-grove').onclick = () => { this.onCue('click'); this.setTab('grove'); }; $('tab-prestige').onclick = () => { this.onCue('click'); this.setTab('prestige'); }; $('tab-settings').onclick = () => { this.onCue('click'); this.setTab('settings'); };
+    $('tab-grove').onclick = () => { this.onCue('uiPop'); this.setTab('grove'); }; $('tab-prestige').onclick = () => { this.onCue('uiPop'); this.setTab('prestige'); }; $('tab-settings').onclick = () => { this.onCue('uiPop'); this.setTab('settings'); };
     this.initSettings();
     $('dep-boss').onclick = () => { game.summonBoss(); };
     $('pr-btn').onclick = () => { if (game.canReplant() && !game.state.run.fallen) this.doReplant(); };
@@ -70,6 +80,11 @@ export class Panel {
       if (tree.selected === id) { if (canBuy(game.state, NODE[id])) this.buy(id); else this.onCue('denied'); } else this.onCue('click');
       tree.select(id); this.renderDetail();
     });
+    // Tooltip plate (TB-195c): hovering a node shows what its next rank changes, beside the cursor
+    const plate = new Plate();
+    tree.canvas.addEventListener('mousemove', (e) => { const id = tree.hitTest(e.clientX, e.clientY); if (id) plate.show(id + ':' + rankOf(game.state, id), this.plateHtml(id), e.clientX, e.clientY); else plate.hide(); });
+    tree.canvas.addEventListener('mouseleave', () => plate.hide());
+    tree.canvas.addEventListener('click', () => plate.hide());
     // Keyboard (GDD §13, TB-116): Tab walks the nodes branch by branch and leaves the tree at either end; Enter or Space buys.
     const order = tabOrder();
     tree.canvas.addEventListener('keydown', (e) => {
@@ -84,7 +99,9 @@ export class Panel {
     $('hw-tree').onclick = (e) => { const id = (e.target as HTMLElement).closest('button')?.dataset.hw as HwId | undefined; if (id && game.buyHw(id)) { this.toast(STR.hwBought(HW_NODE[id].name)); this.renderHw(); } };
     $('camp-sec-title').textContent = STR.campSecTitle; $('camp-sec-body').textContent = STR.campSecBody;
     this.camp = new CampPane(game, $('bcard'), $('camp-list'), (msg) => { this.onCue('bought'); this.toast(msg); });
-    this.renderDetail(); this.renderHw(); this.camp.render(); this.setMode('run');
+    this.paths = new PathPicker($('paths'), () => game.state, (p) => game.choosePath(p),
+      (p) => { this.onCue('equip'); this.toast(p ? STR.pathChosen(PATHS[p].name) : STR.pathCleared); this.renderDetail(); }, drawSigil);
+    this.renderDetail(); this.renderHw(); this.camp.render(); this.paths.render(); this.setMode('run');
     if (game.state.run.fallen) this.showFallen();
   }
 
@@ -92,18 +109,18 @@ export class Panel {
   renderHw(): void {
     const s = this.game.state, m = s.meta;
     $('hw-tree').innerHTML = HW_NODES.map((n) => { const r = hwRank(m, n.id), c = hwCost(m, n.id); return `
-      <div class="hwnode"><div><div class="name">${n.name} <span class="desc">${STR.hwRank(r, n.costs.length)}</span></div><div class="desc">${n.desc}</div>${hwUnlocked(m, n.id) ? '' : `<div class="desc">${STR.hwNeeds((n.req ?? []).map(([r, k]) => `${HW_NODE[r].name} ${k}`).join(', '))}</div>`}</div>
+      <div class="hwnode"><div><div class="name">${n.name} <span class="desc">${STR.hwRank(r, n.costs.length)}</span></div><div class="desc" title="${n.desc}">${oneLine(n.desc)}</div>${hwUnlocked(m, n.id) ? '' : `<div class="desc">${STR.hwNeeds((n.req ?? []).map(([r, k]) => `${HW_NODE[r].name} ${k}`).join(', '))}</div>`}</div>
       <button class="buy" data-hw="${n.id}" ${canBuyHw(s, n.id) ? '' : 'disabled'}>${c === null ? STR.complete : STR.hwCost(c)}</button></div>`; }).join('');
   }
 
   /** Called ~6 Hz. */
   update(): void {
     const s = this.game.state;
-    $('st-star').textContent = fmt(s.run.starlight); $('st-wave').textContent = s.run.tier > 1 ? STR.waveTide(s.run.wave, STR.tideName(s.run.tier)) : String(s.run.wave); $('st-kills').textContent = fmt(s.meta.lifetimeKills); $('st-heart').textContent = STR.heartAvail(hwSpendable(s), s.meta.heartwood + hwPending(s));
+    this.hud.starlight(s.run.starlight); this.hud.wall(s.run.barHp, s.stats.barMax, STR.barricadeHud(fmt(Math.max(0, s.run.barHp)), fmt(s.stats.barMax))); $('hud-van').hidden = !s.stats.muster; if (s.stats.muster) $('hud-van').textContent = STR.vanguardHud(s.vans.count, s.stats.vanCap); $('st-wave').textContent = s.run.tier > 1 ? STR.waveTide(s.run.wave, STR.tideName(s.run.tier)) : String(s.run.wave); $('st-kills').textContent = fmt(s.meta.lifetimeKills); $('st-heart').textContent = STR.heartAvail(hwSpendable(s), s.meta.heartwood + hwPending(s));
     $('hw-body').textContent = s.run.fallen ? STR.hwBody(hwSpendable(s)) : STR.hwClosed(hwSpendable(s));
     if (!$('pane-satchel').hidden) this.satchel.update();
     for (const b of $('hw-tree').querySelectorAll<HTMLButtonElement>('button[data-hw]')) b.disabled = !canBuyHw(s, b.dataset.hw as HwId);
-    this.camp.update();
+    this.camp.update(); this.paths.update();
     const g = gain(), ok = s.run.wave >= PRESTIGE.voluntaryWave && !s.run.fallen;
     $('btn-pullback').hidden = !ok;
     $('pr-gain').textContent = '+' + g; ($('pr-btn') as HTMLButtonElement).disabled = !ok;
@@ -130,7 +147,7 @@ export class Panel {
 
   handleEvents(events: ReturnType<GameController['events']['drain']>): void {
     for (const e of events) {
-      if (e.t === 'wave') this.toast(STR.waveN(e.wave));
+      if (e.t === 'wave') this.hud.waveCleared();
       else if (e.t === 'kill' && e.kind === 'boss') this.toast(STR.bossFalls);
       else if (e.t === 'bossReady') this.toast(STR.bossReady);
       else if (e.t === 'bossStart') this.toast(STR.bossStart);
@@ -158,14 +175,29 @@ export class Panel {
     setTimeout(() => el.remove(), (LOOT_BANNER.life[it.rarity] ?? LOOT_BANNER.life.common!) * 1000);
   }
 
-  private buy(id: keyof typeof NODE): void { if (this.game.buy(id)) this.renderDetail(); }
+  private buy(id: keyof typeof NODE): void {
+    const btn = document.getElementById('buy-btn');
+    if (!this.game.buy(id)) return;
+    if (btn) { press(btn); burstAt(btn); } // TB-195a: press plus a gold burst on every buy
+    this.renderDetail();
+  }
+
+  /** A node's tooltip plate: name and rank, now → next rows, the cost as a gem chip, one line of flavour. */
+  private plateHtml(id: keyof typeof NODE): string {
+    const s = this.game.state, n = NODE[id], lvl = rankOf(s, id), maxed = lvl >= n.max, un = unlocked(s, n);
+    const rows = maxed ? [] : plateRows(...((p) => [p.now, p.next] as const)(this.game.previewNode(id)));
+    return `<div class="ph"><span class="nm">${n.name}</span>${n.max > 1 ? `<span class="rk">${STR.rank(lvl, n.max)}</span>` : ''}</div>`
+      + (rows.length ? `<div class="pk">${STR.plateNext}</div>` + rows.map((r) => `<div class="pr"><span class="pl">${r.label}</span><span class="pn">${r.now}</span><span class="pa">→</span><span class="px ${r.up ? 'up' : 'down'}">${r.next}</span></div>`).join('') : '')
+      + `<div class="pf">${oneLine(n.desc)}</div>`
+      + `<div class="pc">${maxed ? `<span class="done">${STR.plateMax}</span>` : !un && n.parent ? `<span class="lock">${STR.plateLocked(NODE[n.parent].name)}</span>` : n.base === 0 ? '' : `<span class="chip">${fmt(costOf(s, n))}</span>`}</div>`;
+  }
 
   renderDetail(): void {
-    const s = this.game.state, n = NODE[this.tree.selected], lvl = rankOf(s, n.id), cost = costOf(s, n), maxed = lvl >= n.max, un = unlocked(s, n);
+    const s = this.game.state, n = NODE[this.tree.selected], lvl = rankOf(s, n.id), cost = costOf(s, n), maxed = lvl >= n.max, un = unlocked(s, n), hint = pathHint(s, n);
     $('detail').innerHTML = `
-      <div class="branch" style="color:${BRANCH_COLOR[n.branch]}">${BRANCH_LABEL[n.branch]}${n.parent && !un ? ' · ' + STR.needs(NODE[n.parent].name) : ''}</div>
+      <div class="branch"${n.path ? ` data-path="${n.path}"` : ` style="color:${BRANCH_COLOR[n.branch]}"`}>${n.path ? PATHS[n.path].name : BRANCH_LABEL[n.branch]}${hint ? ' · ' + hint : n.parent && !un ? ' · ' + STR.needs(NODE[n.parent].name) : ''}</div>
       <div class="name"><span>${n.name}</span><span style="font-size:0.875rem;color:var(--cream-dim)">${n.max > 1 ? STR.rank(lvl, n.max) : lvl ? STR.learned : ''}</span></div>
-      <div class="desc">${n.desc}</div>
+      <div class="desc" title="${n.desc}">${oneLine(n.desc)}</div>
       <div class="row"><span style="font-variant-numeric:tabular-nums;color:var(--amber)">${maxed ? STR.fullyGrown : n.base === 0 ? '' : STR.starlightCost(fmt(cost))}</span>
       <button class="buy" id="buy-btn" ${canBuy(s, n) ? '' : 'disabled'}>${maxed ? STR.complete : !un ? STR.locked : lvl ? STR.improve : STR.learn}</button></div>`;
     $('buy-btn').onclick = () => this.buy(n.id);
@@ -176,6 +208,7 @@ export class Panel {
   setMode(m: 'run' | 'camp' | 'settings'): void {
     if (m !== 'camp') this.setTreeFull(false);
     if (m !== 'run') this.camp.close();
+    if (document.body.dataset.mode !== m) this.onCue('uiPanel'); // TB-195g: the panel whoosh
     document.body.dataset.mode = m;
     $('camp-go').hidden = m !== 'camp'; $('camp-close').hidden = m !== 'settings';
     $('camp-title').textContent = m === 'settings' ? STR.tabSettings : STR.campTitle;

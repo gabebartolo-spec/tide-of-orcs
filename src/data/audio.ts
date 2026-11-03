@@ -7,7 +7,8 @@ export type Cue =
   | 'fireArrow' | 'bounce' | 'shock' | 'stun' | 'frost' | 'shatter' | 'starfall'
   | 'fireballCast' | 'fireballHit'
   | 'lootDrop' | 'lootRare' | 'lootEpic' | 'lootLegendary' | 'lootMythic' | 'equip' | 'salvage' | 'reroll' | 'setRise'
-  | 'warDrum';
+  | 'warDrum'
+  | 'uiPress' | 'uiPop' | 'uiHover' | 'uiPanel' | 'uiCount' | 'uiStamp' | 'uiRarity' | 'uiPath';
 
 export const AMBIENT = 'ambient';
 
@@ -34,8 +35,8 @@ export const AUDIO = {
   creakFrac: 0.5,       // a hit that leaves the wall below this fraction creaks instead of thuds
 } as const;
 
-/** Per-cue gain and minimum seconds between plays (throttle for high-rate events). */
-export const CUES: Record<Cue, { gain: number; gap: number; duck?: boolean }> = {
+/** Per-cue gain, minimum seconds between plays (throttle) and an optional `file` stem under public/audio/ (default: the cue name). */
+export const CUES: Record<Cue, { gain: number; gap: number; duck?: boolean; file?: string }> = {
   loose: { gain: 0.5, gap: 0.08 },
   arrowHit: { gain: 0.45, gap: 0.05 },
   knife: { gain: 0.5, gap: 0.08 },
@@ -49,9 +50,10 @@ export const CUES: Record<Cue, { gain: number; gap: number; duck?: boolean }> = 
   wallFall: { gain: 1, gap: 2, duck: true },
   rallyHorn: { gain: 0.9, gap: 0.5, duck: true },
   replant: { gain: 0.9, gap: 1, duck: true },
-  click: { gain: 0.5, gap: 0.03 },
-  bought: { gain: 0.7, gap: 0.05 },
-  denied: { gain: 0.6, gap: 0.15 },
+  // UI clicks, buys and refusals use the carved-wood UI set (TB-195g, public/audio/ui)
+  click: { gain: 0.5, gap: 0.03, file: 'ui/click' },
+  bought: { gain: 0.7, gap: 0.05, file: 'ui/buy' },
+  denied: { gain: 0.6, gap: 0.15, file: 'ui/error' },
   // Arrow enchantments (TB-089, ElevenLabs)
   fireArrow: { gain: 0.5, gap: 0.2 },
   bounce: { gain: 0.45, gap: 0.08 },
@@ -69,13 +71,28 @@ export const CUES: Record<Cue, { gain: number; gap: number; duck?: boolean }> = 
   lootEpic: { gain: 0.65, gap: 0.3 },
   lootLegendary: { gain: 0.8, gap: 0.5, duck: true },
   lootMythic: { gain: 1, gap: 1, duck: true },
-  equip: { gain: 0.6, gap: 0.05 },
+  equip: { gain: 0.6, gap: 0.05, file: 'ui/equip' },
   salvage: { gain: 0.55, gap: 0.05 },
   reroll: { gain: 0.55, gap: 0.05 },
   setRise: { gain: 0.8, gap: 0.5, duck: true },
   // Orc war drum (ElevenLabs), on every drumBeat (TB-182)
   warDrum: { gain: 1, gap: 0.4 },
+  // UI sound set (TB-195a hooks, TB-195g ElevenLabs files in public/audio/ui): carved wood with a soft elven shimmer.
+  // Hover, stamp, rarity and path have no UI calling them yet; they load and wait for TB-195 hover plates, battle report, TB-193 paths.
+  uiPress: { gain: 0.3, gap: 0.03, file: 'ui/click' },
+  uiPop: { gain: 0.45, gap: 0.05, file: 'ui/tab' },
+  uiHover: { gain: 0.2, gap: 0.04, file: 'ui/hover' },
+  uiPanel: { gain: 0.4, gap: 0.2, file: 'ui/panel' },
+  uiCount: { gain: 0.12, gap: 0.25, file: 'ui/count' },
+  uiStamp: { gain: 0.7, gap: 0.3, file: 'ui/stamp' },
+  uiRarity: { gain: 0.8, gap: 1, duck: true, file: 'ui/rarity' },
+  uiPath: { gain: 0.7, gap: 0.5, file: 'ui/path' },
 };
+
+/** UI sound hook (TB-195a): the kit calls `uiSound(cue)`; main.ts points it at the audio engine. Never throws, so a missing engine or file is silent. */
+let uiSink: (c: Cue) => void = () => {};
+export function setUiSound(fn: (c: Cue) => void): void { uiSink = fn; }
+export function uiSound(c: Cue): void { try { uiSink(c); } catch { /* silent until the UI sound set lands */ } }
 
 /** Drop chime per rarity; a common one is the quiet tick. */
 export const LOOT_CUE: Record<string, Cue> = { common: 'lootDrop', rare: 'lootRare', epic: 'lootEpic', legendary: 'lootLegendary', mythic: 'lootMythic' };
