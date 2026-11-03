@@ -141,6 +141,9 @@ export const CAMP_SPOTS = {
   kitchen: { x: 42, y: 466, w: 62, h: 54 },
   training: { x: 114, y: 466, w: 52, h: 54 },
 } as const;
+/** Field units per metre for the Tripo camp sprites (TB-188d): render_camp.py sizes level 1/2/3 to 1.0/1.3/1.6 m wide, so a
+ *  level-3 building fills about its CAMP_SPOTS width and a level-1 hut stands about as tall as the elf. */
+export const CAMP_UNITS_PER_M = 36;
 
 /** UI motion and feedback kit (TB-195a, docs/plans/game-ui.md §3, ART-STYLE §Motion). Times in ms, sizes in CSS px. */
 export const JUICE = {

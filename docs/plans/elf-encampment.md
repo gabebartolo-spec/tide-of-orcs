@@ -35,12 +35,12 @@ the field opens its card with its levels, costs and the next upgrade. The skill 
    Tests pin each effect. BALANCE ## Proposed holds the costs, with balance sims (`npm run balance`).
 2. **TB-188b UI:** click a building → its card (upgrade, cost, effect). A "Camp" section on the Replant tab lists all four.
 3. **TB-188c Placeholder art:** palette-token vector drawings of each building at levels 0/1/3, so the loop plays before the final art.
-4. **TB-188d Final art:** buildings as sprites at the game angle (GAMECAM 20), like the fence. The source is Meshy; every frame is screened, then sent to the director before packing.
+4. **TB-188d Final art:** buildings as sprites at the game angle (GAMECAM 20), like the fence. The source is Tripo (H3.1 text to 3D, one model per building per level, 12 in all), rendered headless in Blender by `render_camp.ps1` into `sheet_camp.webp` (keys `camp.<id>.<lv>`); the vector art stays as the fallback until the sheet loads.
 5. **TB-188e Life:** idle animations (sparks, smoke, dummy hits) and upgrade moments (build dust, banner raise, sound).
 
 ## 4. Open choices for the director
 1. ~~Currency~~ **Decided (director, 3 Nov): Heartwood plus special farmable materials dropped by common enemies.** Buildings
    are permanent. Each building has its own material, e.g. bowyer = sinew/heartstring, forge = orc iron, kitchen = game meat,
    training = straw/hide. Grunts and other common orcs drop them during a run, and they are kept across runs. Drop rates go to BALANCE ## Proposed.
-2. ~~Art source~~ **Decided (director, 3 Nov): Meshy** (the director named it, which is the spend yes for this job).
+2. ~~Art source~~ **Decided (director, 3 Nov): Tripo, not Meshy** (the director switched the source to Tripo for TB-188d). **Spend: the director approved 780 Tripo credits** for the 12 models at H3.1 best quality (65 each), above the usual 500-per-session threshold.
 3. ~~Levels~~ **Decided (director, 3 Nov): 3 per building.**
