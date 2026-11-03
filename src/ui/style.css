@@ -602,6 +602,7 @@ body[data-mode="camp"] :is(.hud-wallbox, .hud-wave) { display: none; }
   .itemdetail .affixes .buy { padding: var(--reroll-pad); min-height: 0; font-size: var(--narrow-pill-fs); }
   .itemdetail .row { justify-content: flex-start; gap: var(--narrow-gap); } .itemdetail .row .buy { padding: var(--narrow-btn-pad); }
   #sat-detail:not(:has(.head)) { display: none; }
+  .itemdetail .affixes { list-style: none; }
   .itemdetail .affixes:has(.buy) li { display: grid; grid-template-columns: subgrid; grid-column: 1 / -1; align-items: center; }
   .sets .set, .itemdetail .set { display: block; margin: var(--setl-gap) 0 0; }
   .sets .set .k, .itemdetail .set .k { color: var(--cream); }
