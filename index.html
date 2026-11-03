@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-visual">
+<meta name="theme-color" content="#161d15">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="/manifest.webmanifest">
 <title>Let's Hunt Some Orc!</title>
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="stylesheet" href="/src/ui/style.css">
@@ -97,6 +100,7 @@
           <label class="set"><span id="set-num-k"></span><select id="set-num"><option value="short"></option><option value="sci"></option></select></label>
           <h2 id="set-tel-k"></h2>
           <div class="row"><button class="ghost" id="btn-telemetry"></button></div>
+          <div class="row" id="row-fs"><button class="ghost" id="btn-fs"></button></div>
           </div>
           <div class="col">
           <h2 id="set-save-k"></h2>

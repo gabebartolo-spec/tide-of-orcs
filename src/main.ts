@@ -11,6 +11,7 @@ import { CampScene } from './render/campScene';
 import { pointerAims } from './render/viewMap';
 import { setUiSound } from './data/audio';
 import { wantsCalm } from './ui/juice';
+import { armFullscreen } from './ui/fullscreen';
 
 const game = new GameController();
 const fieldCanvas = document.getElementById('game') as HTMLCanvasElement;
@@ -71,12 +72,12 @@ for (const t of ['pointerup', 'pointercancel', 'pointerleave'] as const) fieldCa
 // no long-press menu or callout on the field
 fieldCanvas.addEventListener('contextmenu', (e) => e.preventDefault());
 (document.getElementById('turn-msg') as HTMLElement).textContent = STR.turnSideways;
-window.addEventListener('resize', () => field.resize());
 // any press or key skips the replant ceremony
 const treeWrap = document.querySelector('.treewrap') as HTMLElement;
 const skipCeremony = (): void => { if (field.ceremony.active) field.ceremony.skip(); };
 fieldCanvas.addEventListener('pointerdown', skipCeremony); addEventListener('keydown', skipCeremony);
 void field.sprites.load();
+armFullscreen();
 // dev-only handle for checking render work in the browser
 if (import.meta.env.DEV) Object.assign(window, { __tide: { game, field, tree, campScene } });
 
@@ -84,7 +85,10 @@ if (import.meta.env.DEV) Object.assign(window, { __tide: { game, field, tree, ca
 fetch('./build.json').then((r) => (r.ok ? r.json() : null)).then((b) => { if (b) document.getElementById('build')!.textContent = `${b.tag} · ${b.sha}`; }).catch(() => {});
 
 let last = performance.now(), acc = 0, hudT = 0, saveT = 0;
+// A coarse portrait phone shows the rotate prompt (style.css .turn): the sim holds still behind it (TB-218)
+const portraitMq = matchMedia('(orientation: portrait) and (pointer: coarse)');
 function frame(now: number): void {
+  if (portraitMq.matches) { last = now; requestAnimationFrame(frame); return; }
   const dt = Math.min(0.25, (now - last) / 1000); last = now;
   // a mythic drop briefly holds, then slows the field (TB-105)
   acc += dt * field.timeScale;

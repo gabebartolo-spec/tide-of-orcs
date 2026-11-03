@@ -1,4 +1,5 @@
-﻿/* Layout: battlefield canvas on the left with a rally bar beneath it, a tabbed grove panel (skill tree / replant) on the right; stacks on phones. */
+﻿@charset "utf-8";
+/* Layout: battlefield canvas on the left with a rally bar beneath it, a tabbed grove panel (skill tree / replant) on the right; stacks on phones. */
 /* Fonts ship with the game so the desktop build works offline (TB-118). Heartwood, the game's own face (tools/typeface, TB-135), is the only
    font: DOM and canvas alike, no fallback faces (TB-137). One weight, no italic. */
 @font-face { font-family: "Heartwood"; font-style: normal; font-weight: 400; font-display: swap; src: url("./fonts/heartwood-400.woff2") format("woff2"); }
@@ -15,9 +16,9 @@
   color-scheme: dark;
 }
 /* UI scale (TB-143, TB-191): every size is in rem, and the root font is 1/54 of the window height (or 1/96 of its width,
-   whichever is smaller): 20 px at 1920Ã—1080, 40 px at 3840Ã—2160 (DPR 1), 20 CSS px = 40 device px at 4K DPR 2. Smaller
+   whichever is smaller): 20 px at 1920×1080, 40 px at 3840×2160 (DPR 1), 20 CSS px = 40 device px at 4K DPR 2. Smaller
    windows stop at 16 px. The smallest text is 0.875rem, 1.62% of screen height, readable from a couch on a TV.
-   --text-scale is Settings â€º Text size (0.8â€“1.6), set by src/render/textScale.ts. */
+   --text-scale is Settings › Text size (0.8–1.6), set by src/render/textScale.ts. */
 html { font-size: calc(clamp(16px, min(100vw / 96, 100vh / 54), 80px) * var(--text-scale, 1)); }
 html, body { height: 100%; }
 /* Heartwood has one weight and no italic: never let the browser fake bold or slant it */
@@ -258,11 +259,11 @@ textarea, input { -webkit-user-select: text; user-select: text; }
 button, select, .tabs { touch-action: manipulation; }
 /* Portrait phone: the 15:8 field would be a strip, so ask for landscape. */
 .turn { display: none; }
-@media (orientation: portrait) and (pointer: coarse) and (max-width: 600px) {
+@media (orientation: portrait) and (pointer: coarse) {
   .turn { display: flex; position: fixed; inset: 0; z-index: 10; align-items: center; justify-content: center; padding: 2rem;
     background: var(--ink) url("./wood/gilt.svg") center / 20rem 20rem; text-align: center; }
   .turn p { font-family: var(--display); font-size: 1.5rem; line-height: 1.4; max-width: 16ch; margin: 0; }
-  .turn p::before { content: "âŸ³"; display: block; font-size: 3rem; color: var(--amber); margin-bottom: 0.5rem; }
+  .turn p::before { content: ""; display: block; width: 4rem; height: 4rem; margin: 0 auto 0.75rem; background: var(--amber); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48' fill='none' stroke='black' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='14' y='4' width='20' height='36' rx='4'/%3E%3Cpath d='M4 30a14 14 0 0 0 8 12M44 18a14 14 0 0 0-8-12M12 42l-2-6M12 42l6-1M36 6l2 6M36 6l-6 1'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48' fill='none' stroke='black' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='14' y='4' width='20' height='36' rx='4'/%3E%3Cpath d='M4 30a14 14 0 0 0 8 12M44 18a14 14 0 0 0-8-12M12 42l-2-6M12 42l6-1M36 6l2 6M36 6l-6 1'/%3E%3C/svg%3E") center / contain no-repeat; }
 }
 /* Short landscape screens (phones): slimmer frames and plaques so the field and the Grove get the room. */
 @media (max-height: 540px) {
@@ -350,7 +351,7 @@ body[data-mode="camp"] .campwrap { flex: 1 1 0; min-height: 0; height: auto; }
 .prestige.split.three .hwtree { grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); }
 @media (max-width: 860px) { .prestige.split.three { grid-template-columns: 1fr; } }
 
-/* Game HUD (TB-195b, docs/plans/game-ui.md Â§2, ART-STYLE Â§Motion): objects over the field, not a text row. A lit timber wall bar
+/* Game HUD (TB-195b, docs/plans/game-ui.md §2, ART-STYLE §Motion): objects over the field, not a text row. A lit timber wall bar
    that cracks, a faceted starlight gem with a rolling odometer, the wave on a hanging cloth banner with a CLEARED stamp.
    Colours are palette tokens (the extra ones here mirror src/render/palette.ts). Numbers in data/presentation.ts HUD. */
 :root { --grove: #9fc48f; --star-gold: #ffd36b; --spark: #f4eaa6; --hud-roll: 380ms; }
@@ -812,3 +813,25 @@ body:not([data-mode="camp"]) :is(header .stat, .hud-wave) { width: 16rem; min-wi
 
 /* TB-195b r9: reserve the odometer width so the plaques to its right do not shift as the count grows */
 .odo { min-width: 4.4ch; justify-content: flex-start; }
+
+/* Mobile layout foundation (TB-218, Pixel 8 landscape 915x412): zoom lock, safe-area insets, short HUD. */
+html, body { touch-action: pan-x pan-y; }
+#game { touch-action: none; }
+.panel, #pane-satchel, #pane-prestige, #pane-settings, #fallen, #detail { touch-action: pan-y; }
+@media (max-height: 540px) {
+  body:not([data-mode="camp"]) header { padding-bottom: 0.5rem; padding-left: max(1.75rem, env(safe-area-inset-left)); padding-right: max(1.75rem, env(safe-area-inset-right)); }
+  body:not([data-mode="camp"]) .rally { left: max(1.5rem, env(safe-area-inset-left)); right: max(1.5rem, env(safe-area-inset-right)); bottom: max(1.25rem, env(safe-area-inset-bottom)); }
+  body[data-mode="camp"] .panel { margin-inline: max(0px, env(safe-area-inset-left)) max(0px, env(safe-area-inset-right)); }
+  .fallen { padding-left: max(1.25rem, env(safe-area-inset-left)); padding-right: max(1.25rem, env(safe-area-inset-right)); padding-bottom: max(1.25rem, env(safe-area-inset-bottom)); }
+}
+@media (max-width: 600px) { .hud-wave { flex-shrink: 1; min-width: 0; } .hud { flex-wrap: wrap; min-width: 0; } }
+/* Phone landscape HUD (TB-218): the desktop plaques total about 1360px; at 915px the stats were clipped. Narrower plaques, a smaller wall bar. */
+@media (pointer: coarse) and (max-height: 540px) {
+  body:not([data-mode="camp"]) .hud { gap: 0.5rem; min-width: 0; }
+  body:not([data-mode="camp"]) .hud-wallbox { zoom: 0.65; }
+  body:not([data-mode="camp"]) .hud-wall .lbl { font-size: 1.375rem; }
+  body:not([data-mode="camp"]) :is(header .stat, .hud-wave) { width: 7rem; min-width: 0; padding-inline: 0.25rem; flex-shrink: 0; }
+  body:not([data-mode="camp"]) .hud .stats { gap: 0.5rem; }
+  body:not([data-mode="camp"]) header .stat .k, body:not([data-mode="camp"]) .hud-wave .k { font-size: 1rem; }
+  body:not([data-mode="camp"]) header .stat .v, body:not([data-mode="camp"]) .hud-wave .v { font-size: 1.5rem; }
+}

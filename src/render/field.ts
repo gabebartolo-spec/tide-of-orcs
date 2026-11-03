@@ -18,7 +18,7 @@ import { orcAnimT, orcState, orcSwingT, swingClipT, vanState } from './actorStat
 import { Ground, decorImg } from './ground';
 import { Ambience } from './ambience';
 import { Interp } from './interp';
-import { FIELD_VIEW, GROUND, LOOT_VFX, ORC_SPRITE, SKY, VFX, dusk } from '../data/presentation';
+import { FIELD_VIEW, PHONE_QUERY, GROUND, LOOT_VFX, ORC_SPRITE, SKY, VFX, dusk } from '../data/presentation';
 import { SLOTS } from '../data/loot';
 import { setTiers } from '../sim/gear';
 
@@ -94,11 +94,19 @@ export class FieldRenderer {
     if (typeof ResizeObserver !== 'undefined') new ResizeObserver(() => this.resize()).observe(canvas);
   }
 
+  /** Resizing clears the canvas and reallocates its backing store, so a URL-bar animation (many equal-size callbacks) must not redo it (TB-218). */
   resize(): void {
     const dpr = Math.min(2, window.devicePixelRatio || 1);
     const r = this.canvas.getBoundingClientRect();
-    this.canvas.width = Math.round(r.width * dpr); this.canvas.height = Math.round(r.height * dpr);
+    const w = Math.round(r.width * dpr), h = Math.round(r.height * dpr);
+    this.phone = typeof matchMedia === 'function' && matchMedia(PHONE_QUERY).matches;
+    if (w === this.canvas.width && h === this.canvas.height) return;
+    this.canvas.width = w; this.canvas.height = h; this.resizes++;
   }
+  /** Phone landscape layout (coarse pointer, short screen). */
+  phone = false;
+  /** Backing-store reallocations, for the resize regression check. */
+  resizes = 0;
 
   /** Turn sim events into particles, strokes, blood, text and shake. */
   consume(events: SimEvent[], s: SimState): void {
@@ -316,7 +324,7 @@ export class FieldRenderer {
     g.setTransform(sx, 0, 0, sy, ox, oy);
     // The wall bar, barricade and vanguard counts are the DOM HUD now (TB-195b, src/ui/hud.ts); the wave strip stays on the field.
     // TB-207: the strip floats inside the field (inset clear of the full-screen side crop), rounded, instead of running along its edge
-    const wx = BAR_X + BAR_W / 2 + FIELD_VIEW.reach + 12, wy = H - 15, ww = W - 40 - wx, wh = 6, wt = Math.min(1, s.run.waveT / WAVE_LEN);
+    const wx = BAR_X + BAR_W / 2 + FIELD_VIEW.reach + 12, wy = H - 15 - (this.phone ? FIELD_VIEW.phoneStripLift : 0), ww = W - 40 - wx, wh = 6, wt = Math.min(1, s.run.waveT / WAVE_LEN);
     g.fillStyle = P.ink; g.globalAlpha = 0.6; g.beginPath(); g.roundRect(wx - 2, wy - 2, ww + 4, wh + 4, wh / 2 + 2); g.fill(); g.globalAlpha = 1;
     g.fillStyle = P.dim45; g.beginPath(); g.roundRect(wx, wy, ww, wh, wh / 2); g.fill();
     if (wt > 0) { g.fillStyle = P.amber; g.beginPath(); g.roundRect(wx, wy, Math.max(wh, ww * wt), wh, wh / 2); g.fill(); }

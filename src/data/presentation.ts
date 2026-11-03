@@ -277,7 +277,9 @@ export const REPORT = { lead: 350, gap: 380, roll: 520, stampAfter: 300, stampIn
 export const SATCHEL_UI = { lines: 4, gap: 1.25, snap: 260 } as const;
 
 /** Full-screen field (TB-207): reach is the half width around the barricade that the wave bar clears. */
-export const FIELD_VIEW = { reach: 24 } as const;
+export const FIELD_VIEW = { reach: 24, phoneStripLift: 28 } as const;
+/** Phone landscape (TB-218): coarse pointer on a short screen. The wave strip lifts `phoneStripLift` world px clear of the gesture bar. */
+export const PHONE_QUERY = '(pointer: coarse) and (max-height: 540px)';
 
 /** Baked burning/chilled sprite frames (TB-216d). A glowing frame bakes whole at its drawn device height snapped to
  *  `quantum` px, with its sub-pixel offset snapped to 1/`sub` px, and is blitted 1:1 on whole pixels (TB-216f); `steps` is the per-doubling bucket of heightBucket(); past `cap` baked

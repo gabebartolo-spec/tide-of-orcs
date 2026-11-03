@@ -20,6 +20,7 @@ import { LOOT_BANNER, REPORT } from '../data/presentation';
 import { LOOT_TOAST } from '../data/lootTables';
 import { RARITIES } from '../data/loot';
 import { applyTextScale } from '../render/textScale';
+import { initFullscreenButton } from './fullscreen';
 import { CampPane } from './camp';
 import { armHover, burst, calm, countValue, pop, press, tween } from './juice';
 import { reportRows, reportTimes } from './report';
@@ -255,6 +256,7 @@ export class Panel {
     $<HTMLInputElement>('set-text').oninput = (e) => { this.game.settings.textScale = Number((e.target as HTMLInputElement).value); this.settingsApplied(); };
     $<HTMLInputElement>('set-text').onchange = () => this.game.save();
     $<HTMLSelectElement>('set-num').onchange = (e) => { this.game.settings.numberFormat = (e.target as HTMLSelectElement).value as NumberFormat; this.settingsChanged(); };
+    initFullscreenButton($('btn-fs'), STR.fsEnter, STR.fsExit);
     $('btn-export').onclick = () => {
       const blob = this.game.exportSave(), box = $<HTMLTextAreaElement>('set-blob'); box.value = blob; box.select();
       navigator.clipboard?.writeText(blob).then(() => this.toast(STR.exported), () => {});

@@ -1,0 +1,12 @@
+{
+  "name": "Let's Hunt Some Orc!",
+  "short_name": "Hunt Orcs",
+  "start_url": "/",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#161d15",
+  "theme_color": "#161d15",
+  "icons": [
+    { "src": "/favicon.png", "sizes": "64x64", "type": "image/png", "purpose": "any" }
+  ]
+}
