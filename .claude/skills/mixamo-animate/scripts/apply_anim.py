@@ -390,6 +390,11 @@ if os.environ.get("BOWALIGN"):  # each frame turn the bow hand so the bow stands
         sc.frame_set(f); bpy.context.view_layer.update(); M3 = w.matrix_world.to_3x3()
         d = (M3 @ ax).normalized(); b = (M3 @ bk); b = (b - d * b.dot(d)).normalized()
         R =(Matrix((u, ar, u.cross(ar))).transposed() @ Matrix((d, b, d.cross(b))).transposed().inverted()).to_4x4()
+        if os.environ.get("STRYAW"):  # TB-203: turn the braced bow about its limb axis so the string passes the inside of the
+            # forearm (where a real archer's arm guard sits) while no arrow is on the string; full deg up to frame fa, back to 0 by fb
+            dg_, fa_, fb_ = map(float, os.environ["STRYAW"].split(",")); k_ = f - f0
+            yw = dg_ if k_ <= fa_ else (0.0 if k_ >= fb_ else dg_ * (fb_ - k_) / (fb_ - fa_))
+            R = Matrix.Rotation(math.radians(yw), 4, u) @ R
         wm = tgt.matrix_world @ pb.matrix; t = wm.translation.copy()
         pb.matrix = tgt.matrix_world.inverted() @ (Matrix.Translation(t) @ R @ Matrix.Translation(-t) @ wm); _unscale(pb); bpy.context.view_layer.update()
         pb.keyframe_insert("rotation_quaternion", frame=f)
@@ -478,7 +483,7 @@ if os.environ.get("QUIVER"):  # quiver on the back (Spine2) with arrows, and a n
     # length) it runs from the fingers through the mouth down the quiver axis. Once out it trails toward the mouth and
     # turns onto the shot line (draw hand -> bow hand) as far as body clearance allows, never back (s only grows), so an
     # archer's over-the-shoulder carry, never through the head. ARROWPATH=0 shows the shot line on every frame (probe).
-    s_ = 0.0
+    s_ = 0.0; modes = []
     for f in range(f0, f1 + 1):
         sc.frame_set(f); bpy.context.view_layer.update()
         nk = W @ (rh.tail + (rh.tail - rh.head) * 0.4); rest_ = W @ (lh.tail + (lh.tail - lh.head) * 0.2)
@@ -505,6 +510,7 @@ if os.environ.get("QUIVER"):  # quiver on the back (Spine2) with arrows, and a n
                     if hits(nk, Quaternion().slerp(qd, s) @ tr, rest_) == 0: best = s; break
                 s_ = best; d_ = Quaternion().slerp(qd, s_) @ tr; mode = f"turn {s_:.1f}"
         sv = hits(nk, d_.normalized(), rest_) if on else 0; shown.append(sv) if on else None
+        modes.append(mode if on else "off")
         print("ARROW", f - f0, "hands", round((rest_ - nk).length, 3), "shot hits", hs, "shown hits", sv, "->", mode)
         if os.environ.get("ANCHOR"):  # same measure as the clip probe: nock vs head centre, and the shot line's miss, in hip heights and head lengths
             hd_, tp_ = W @ tgt.pose.bones["mixamorig:Head"].head, W @ tgt.pose.bones["mixamorig:HeadTop_End"].head; hc = (hd_ + tp_) / 2; hl = (tp_ - hd_).length
@@ -518,6 +524,60 @@ if os.environ.get("QUIVER"):  # quiver on the back (Spine2) with arrows, and a n
         for fc in (o.animation_data.action.fcurves if hasattr(o.animation_data.action, "fcurves") else []):
             for k in fc.keyframe_points: k.interpolation = "CONSTANT"
     print("ARROWSUM shot-line body hits", tot[0], "bow-hand", tot[1], "per frame from", af, shots, "| shown arrow hits", sum(shown), shown)
+    if os.environ.get("STRPROBE") or os.environ.get("STRDRAW"):  # bowstring (TB-203): STRDRAW pulls the string to the nock while the
+        # arrow sits on the shot line (a real draw: tips -> nock V), STRPROBE prints per frame the string's clearance from the bow arm
+        wb = bpy.data.objects["wpn_bow"]; A_ = Vector(wb["bow_ax"]).normalized(); Bk = Vector(wb["bow_back"]); Bk = (Bk - A_ * Bk.dot(A_)).normalized()
+        co = [v.co.copy() for v in wb.data.vertices]; sv = [i for i, c in enumerate(co) if c.dot(Bk) < float(os.environ.get("STRS", "-0.075"))]
+        it, ib = max(sv, key=lambda i: co[i].dot(A_)), min(sv, key=lambda i: co[i].dot(A_)); e0, e1 = co[ib].copy(), co[it].copy(); ln = e1 - e0
+        # the string proper = the thin tube along tip-to-tip (<18 mm from that line); the raw s-cut also caught grip and limb-web
+        # verts, which the draw key stretched into a sheet (v2 first render)
+        uf = lambda c: (c - e0).dot(ln) / ln.length_squared
+        sv = [i for i, c in enumerate(co) if 0.02 < uf(c) < 0.98 and (c - (e0 + ln * uf(c))).length < 0.018]
+        U = {i: max(0.0, min(1.0, uf(co[i]))) for i in sv}; sS = e0.dot(Bk)
+        print("STRING verts", len(sv), "len", round(ln.length, 3), "brace s", round(sS, 3))
+        if os.environ.get("STRDRAW"):
+            if not wb.data.shape_keys: wb.shape_key_add(name="Basis")
+            for f in range(f0, f1 + 1):
+                if modes[f - f0] not in ("shot", "turn 1.0"): continue
+                sc.frame_set(f); bpy.context.view_layer.update()
+                nl = wb.matrix_world.inverted() @ (W @ (rh.tail + (rh.tail - rh.head) * 0.4))
+                if nl.dot(Bk) >= sS: continue  # nock not behind the braced string: nothing to pull
+                um = max(0.05, min(0.95, (nl - e0).dot(ln) / ln.length_squared)); k_ = wb.shape_key_add(name=f"draw{f}", from_mix=False)
+                for i in sv:
+                    u = U[i]; S_ = e0 + ln * u; V_ = e0 + (nl - e0) * (u / um) if u <= um else nl + (e1 - nl) * ((u - um) / (1 - um))
+                    k_.data[i].co = co[i] - S_ + V_
+                for g in range(f0, f1 + 2):
+                    k_.value = 1.0 if g == f else 0.0; k_.keyframe_insert("value", frame=g)
+            if wb.data.shape_keys.animation_data:
+                for fc in (wb.data.shape_keys.animation_data.action.fcurves if hasattr(wb.data.shape_keys.animation_data.action, "fcurves") else []):
+                    for kp in fc.keyframe_points: kp.interpolation = "CONSTANT"
+            print("STRDRAW frames", [f - f0 for f in range(f0, f1 + 1) if modes[f - f0] in ("shot", "turn 1.0")])
+        if os.environ.get("STRPROBE"):
+            own = []
+            for p_ in bo.data.polygons:
+                ws = {}
+                for vi in p_.vertices:
+                    for g in bo.data.vertices[vi].groups: n_ = bo.vertex_groups[g.group].name; ws[n_] = ws.get(n_, 0) + g.weight
+                own.append(max(ws, key=ws.get).replace("mixamorig:", "") if ws else "-")
+            ARMB = ("LeftForeArm", "LeftHand", "LeftArm"); res = []
+            aidx = [i for i, o_ in enumerate(own) if o_.startswith(ARMB) and not any(k in o_ for k in ("Thumb", "Index", "Middle", "Ring", "Pinky"))]
+            for f in range(f0, f1 + 1):
+                sc.frame_set(f); bpy.context.view_layer.update(); dg = bpy.context.evaluated_depsgraph_get()
+                m_ = bo.evaluated_get(dg).to_mesh(); P_ = [bo.matrix_world @ v.co for v in m_.vertices]
+                ps = [m_.polygons[i].vertices[:] for i in aidx]
+                bv = BVHTree.FromPolygons(P_, ps); bo.evaluated_get(dg).to_mesh_clear()
+                wm_ = wb.evaluated_get(dg).to_mesh(); SW = [wb.matrix_world @ wm_.vertices[i].co for i in sv[::3]]; wb.evaluated_get(dg).to_mesh_clear()
+                best = (9, "-")
+                for p in SW:
+                    loc, nrm, fi, dd = bv.find_nearest(p)
+                    if loc is None: continue
+                    sd = -dd if (dd < 0.05 and (p - loc).dot(nrm) < 0) else dd
+                    if sd < best[0]: best = (sd, own[aidx[fi]])
+                fa = tgt.pose.bones["mixamorig:LeftForeArm"]; a0, a1 = W @ fa.head, W @ fa.tail
+                from mathutils.geometry import intersect_point_line
+                cl = min(((p - intersect_point_line(p, a0, a1)[0]).length if 0 <= intersect_point_line(p, a0, a1)[1] <= 1 else min((p - a0).length, (p - a1).length)) for p in SW)
+                res.append(round(best[0] * 100, 1)); print("STR", f - f0, "surf_cm", round(best[0] * 100, 1), best[1], "bone_cm", round(cl * 100, 1), modes[f - f0])
+            print("STRSUM min surf cm", min(res), "frames inside", [i for i, r in enumerate(res) if r < 0])
     if os.environ.get("ARROWONLY"): sys.exit(0)  # probe only, no render
 if os.environ.get("LHPROBE"):  # two-hand weapon: OFFS (local Euler XYZ, deg) that lays the left fist hole (env LHDIR, rest world) along the haft
     pb = tgt.pose.bones["mixamorig:" + os.environ.get("PSIDE", "Left") + "Hand"]; gr = bpy.data.objects["grip_r"]; gl = bpy.data.objects["grip_l"]
