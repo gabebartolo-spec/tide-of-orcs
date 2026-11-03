@@ -51,6 +51,12 @@ ANIMS = {
 for _b in ("bowyer", "forge", "kitchen", "training"):
     for _l in (1, 2, 3): ANIMS[f"camp.{_b}.{_l}"] = (1, False, f"camp.{_b}.{_l}", 0)
 anchors = json.load(open(os.path.join(src, "anchors.json"), encoding="utf-8-sig"))
+# Tracked anchor-x overrides (source px of the 512 frame), applied over anchors.json so the change lives in git, not only in tide-assets.
+# TB-210: the wolf rider renders with its rig origin at the wolf's middle (x 256); packing anchors it at the wolf's chest (x 430) so the
+# muzzle stops at the barricade instead of the body overlapping the posts. The ground shadow moves back with ORC_SHADOW (presentation.ts).
+ANCHOR_X = {"orc.wolfrider": 430.0, "orc.wolfrider.attack": 430.0}
+for _k, _x in ANCHOR_X.items():
+    if _k in anchors: anchors[_k] = [_x] + list(anchors[_k][1:])
 
 def frames(key):
     fs = [(int(m.group(1)), f) for f in os.listdir(src) if (m := re.fullmatch(re.escape(key) + r"_(\d+)\.png", f))]

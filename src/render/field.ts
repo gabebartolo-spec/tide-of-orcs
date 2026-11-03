@@ -17,7 +17,7 @@ import { orcAnimT, orcState, orcSwingT, swingClipT, vanState } from './actorStat
 import { Ground, decorImg } from './ground';
 import { Ambience } from './ambience';
 import { Interp } from './interp';
-import { FIELD_VIEW, GROUND, LOOT_VFX, ORC_SPRITE, SKY, VFX, dusk } from '../data/presentation';
+import { FIELD_VIEW, GROUND, LOOT_VFX, ORC_SHADOW, ORC_SHADOW_BASE, ORC_SPRITE, SKY, VFX, dusk } from '../data/presentation';
 import { SLOTS } from '../data/loot';
 import { setTiers } from '../sim/gear';
 
@@ -461,7 +461,8 @@ export class FieldRenderer {
 
   private orc(s: SimState, o: Orc): void {
     const g = this.g, wind = this.windUp(o), d = this.interp.off(o); this.at(o.x + d.dx + wind.dx, o.y + d.dy, false);
-    g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, o.r * 0.9, o.r * 0.9, o.r * 0.35, 0, 0, 6.28); g.fill();
+    const sh = ORC_SHADOW[o.kind] ?? ORC_SHADOW_BASE;
+    g.fillStyle = P.shadow; g.beginPath(); g.ellipse(o.r * sh.dx, o.r * 0.9, o.r * sh.rx, o.r * sh.ry, 0, 0, 6.28); g.fill();
     // Burning or chilled: the orc's own body takes the colour and a soft rim of it, so shading still reads (TB-089).
     const tint = o.burn > 0 ? P.fireTint : o.chill > 0 ? P.frostTint : '', glow = o.burn > 0 ? P.fire : o.chill > 0 ? P.frost : '';
     let k = this.orcKeys.get(o.kind);

@@ -26,6 +26,13 @@ export const dusk = (t: number): number => (1 - Math.cos((2 * Math.PI * t) / SKY
  *  radius, so the boss (r 24) reads half again as big as a brute (r 16). Kinds not listed draw `orc.<kind>`. */
 export const ORC_SPRITE: Readonly<Partial<Record<string, string>>> = { elite: 'berserker', boss: 'brute' };
 
+/** Ground shadow under an orc, in units of its radius: centre offset dx (toward its back, +x) and half-width rx / half-height ry.
+ *  Default: a disc under the feet. Wolf rider (TB-210): its sprite anchors at the wolf's chest (anchors.json x 430 of 512), so the
+ *  shadow moves back to the wolf's ground centre (x 256): 174 source px at 0.0136 r/px (run, 229 px tall = 3.11 r) to 0.0146
+ *  (attack, 237 px = 3.46 r), mean 2.4 r; rx 1.6 r spans the wolf's torso (about 235 px). */
+export const ORC_SHADOW: Readonly<Partial<Record<string, { dx: number; rx: number; ry: number }>>> = { wolfrider: { dx: 2.4, rx: 1.6, ry: 0.4 } };
+export const ORC_SHADOW_BASE = { dx: 0, rx: 0.9, ry: 0.35 } as const;
+
 /** Render interpolation (TB-194): actors draw between their last two sim steps; a move longer than `snap` field units in one step (a pooled slot reused, a leap) snaps instead of sliding. */
 export const INTERP = { snap: 40 };
 
