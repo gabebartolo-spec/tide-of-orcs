@@ -183,6 +183,8 @@ export const NODE: Readonly<Record<NodeId, SkillNode>> = Object.fromEntries(NODE
 export const TREE_CANVAS = { w: 1400, h: 1320 } as const;
 /** Tree view: opening zoom and focus (the root), zoom range as multiples of fit-to-width, wheel step, px of movement before a press becomes a drag. */
 export const TREE_VIEW = { startZoom: 1, focusX: 700, focusY: 890, minZoom: 0.6, maxZoom: 5, wheelStep: 1.15, dragPx: 6, hitR: 20,
+  /** Touch screens (TB-218): a tap may wobble this many layout px before it counts as a drag, and a node's hit circle is at least this many CSS px across its radius (48 px wide). */
+  touchDragPx: 12, touchHitPx: 24,
   /** Branch line bow as a fraction of its length; camera ease rate toward the selected node (1/s). */
   bow: 0.12, easeRate: 8,
   /** Screen px kept for the branch legend at the top of the view; the tree pans below it (TB-117). */

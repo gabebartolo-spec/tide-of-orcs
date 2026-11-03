@@ -106,7 +106,7 @@ fieldCanvas.addEventListener('pointerdown', skipCeremony); addEventListener('key
 void field.sprites.load();
 armFullscreen();
 // dev-only handle for checking render work in the browser
-if (import.meta.env.DEV) Object.assign(window, { __tide: { game, field, tree, campScene, audio } });
+if (import.meta.env.DEV) Object.assign(window, { __tide: { game, field, tree, campScene, audio, panel } });
 
 // build stamp (written by the itch workflow)
 fetch('./build.json').then((r) => (r.ok ? r.json() : null)).then((b) => { if (b) document.getElementById('build')!.textContent = `${b.tag} · ${b.sha}`; }).catch(() => {});

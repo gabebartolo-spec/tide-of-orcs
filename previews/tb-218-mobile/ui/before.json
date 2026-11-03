@@ -1,0 +1,983 @@
+{
+ "915x412": {
+  "run": {
+   "smallCount": 0,
+   "small": [],
+   "textCount": 0,
+   "text": []
+  },
+  "settingsOverlay": {
+   "smallCount": 8,
+   "small": [
+    {
+     "n": "set-vol",
+     "w": 192,
+     "h": 24
+    },
+    {
+     "n": "set-motion",
+     "w": 192,
+     "h": 44
+    },
+    {
+     "n": "set-quality",
+     "w": 192,
+     "h": 44
+    },
+    {
+     "n": "set-text",
+     "w": 192,
+     "h": 24
+    },
+    {
+     "n": "set-num",
+     "w": 192,
+     "h": 44
+    },
+    {
+     "n": "btn-fs",
+     "off": true,
+     "t": 454,
+     "b": 503
+    },
+    {
+     "n": "btn-mute",
+     "off": true,
+     "t": 523,
+     "b": 571
+    },
+    {
+     "n": "btn-reset",
+     "w": 116,
+     "h": 44
+    }
+   ],
+   "textCount": 0,
+   "text": [],
+   "panel": {
+    "top": 12,
+    "bottom": 400,
+    "left": 24,
+    "right": 891,
+    "h": 388,
+    "sh": 591,
+    "ch": 388
+   },
+   "pane": {
+    "top": 65,
+    "bottom": 577,
+    "left": 24,
+    "right": 891,
+    "h": 512,
+    "sh": 512,
+    "ch": 512
+   }
+  },
+  "grove": {
+   "smallCount": 3,
+   "small": [
+    {
+     "n": "camp-go",
+     "w": 176,
+     "h": 44
+    },
+    {
+     "n": "tree-full",
+     "w": 139,
+     "h": 45
+    },
+    {
+     "n": "buy-btn",
+     "w": 82,
+     "h": 44
+    }
+   ],
+   "textCount": 0,
+   "text": [],
+   "pane": {
+    "top": 131,
+    "bottom": 408,
+    "left": 0,
+    "right": 915,
+    "h": 277,
+    "sh": 277,
+    "ch": 277
+   },
+   "tree": {
+    "top": 131,
+    "bottom": 408,
+    "left": 0,
+    "right": 675,
+    "h": 277,
+    "sh": 277,
+    "ch": 277
+   },
+   "detail": {
+    "top": 131,
+    "bottom": 408,
+    "left": 675,
+    "right": 915,
+    "h": 277,
+    "sh": 277,
+    "ch": 277
+   },
+   "buy": {
+    "top": 221,
+    "bottom": 265,
+    "left": 823,
+    "right": 905,
+    "h": 44,
+    "sh": 44,
+    "ch": 44
+   },
+   "tabs": {
+    "top": 60,
+    "bottom": 131,
+    "left": 0,
+    "right": 915,
+    "h": 71,
+    "sh": 71,
+    "ch": 71
+   },
+   "bar": {
+    "top": 0,
+    "bottom": 60,
+    "left": 0,
+    "right": 915,
+    "h": 60,
+    "sh": 60,
+    "ch": 60
+   }
+  },
+  "satchel": {
+   "smallCount": 2,
+   "small": [
+    {
+     "n": "camp-go",
+     "w": 176,
+     "h": 44
+    },
+    {
+     "n": "sat-filter",
+     "w": 139,
+     "h": 35
+    }
+   ],
+   "textCount": 0,
+   "text": [],
+   "pane": {
+    "top": 131,
+    "bottom": 408,
+    "left": 0,
+    "right": 915,
+    "h": 277,
+    "sh": 402,
+    "ch": 277
+   },
+   "detail": {
+    "top": 376,
+    "bottom": 529,
+    "left": 466,
+    "right": 904,
+    "h": 153,
+    "sh": 191,
+    "ch": 191
+   },
+   "grid": {
+    "top": 179,
+    "bottom": 362,
+    "left": 466,
+    "right": 904,
+    "h": 182,
+    "sh": 228,
+    "ch": 228
+   },
+   "acts": []
+  },
+  "camp": {
+   "smallCount": 1,
+   "small": [
+    {
+     "n": "camp-go",
+     "w": 176,
+     "h": 44
+    }
+   ],
+   "textCount": 0,
+   "text": [],
+   "pane": {
+    "top": 131,
+    "bottom": 408,
+    "left": 0,
+    "right": 915,
+    "h": 277,
+    "sh": 277,
+    "ch": 277
+   }
+  },
+  "replant": {
+   "smallCount": 12,
+   "small": [
+    {
+     "n": "camp-go",
+     "w": 176,
+     "h": 44
+    },
+    {
+     "n": "buy",
+     "w": 122,
+     "h": 44
+    },
+    {
+     "n": "buy",
+     "w": 122,
+     "h": 44
+    },
+    {
+     "n": "buy",
+     "w": 122,
+     "h": 44
+    },
+    {
+     "n": "buy",
+     "w": 122,
+     "h": 44
+    },
+    {
+     "n": "buy",
+     "off": true,
+     "t": 435,
+     "b": 479
+    },
+    {
+     "n": "buy",
+     "off": true,
+     "t": 435,
+     "b": 479
+    },
+    {
+     "n": "buy",
+     "off": true,
+     "t": 493,
+     "b": 537
+    },
+    {
+     "n": "buy",
+     "off": true,
+     "t": 493,
+     "b": 537
+    },
+    {
+     "n": "buy",
+     "off": true,
+     "t": 551,
+     "b": 595
+    },
+    {
+     "n": "buy",
+     "off": true,
+     "t": 551,
+     "b": 595
+    },
+    {
+     "n": "buy",
+     "off": true,
+     "t": 609,
+     "b": 653
+    }
+   ],
+   "textCount": 0,
+   "text": [],
+   "pane": {
+    "top": 131,
+    "bottom": 408,
+    "left": 0,
+    "right": 915,
+    "h": 277,
+    "sh": 556,
+    "ch": 277
+   },
+   "choose": [
+    98,
+    98,
+    98
+   ]
+  },
+  "settings": {
+   "smallCount": 13,
+   "small": [
+    {
+     "n": "camp-go",
+     "w": 176,
+     "h": 44
+    },
+    {
+     "n": "set-vol",
+     "w": 264,
+     "h": 19
+    },
+    {
+     "n": "set-motion",
+     "w": 154,
+     "h": 35
+    },
+    {
+     "n": "set-quality",
+     "w": 154,
+     "h": 35
+    },
+    {
+     "n": "set-text",
+     "w": 264,
+     "h": 19
+    },
+    {
+     "n": "set-num",
+     "w": 154,
+     "h": 35
+    },
+    {
+     "n": "btn-telemetry",
+     "w": 153,
+     "h": 39
+    },
+    {
+     "n": "btn-fs",
+     "off": true,
+     "t": 442,
+     "b": 481
+    },
+    {
+     "n": "btn-mute",
+     "off": true,
+     "t": 497,
+     "b": 537
+    },
+    {
+     "n": "set-blob",
+     "w": 437,
+     "h": 45
+    },
+    {
+     "n": "btn-export",
+     "w": 87,
+     "h": 39
+    },
+    {
+     "n": "btn-import",
+     "w": 89,
+     "h": 39
+    },
+    {
+     "n": "btn-reset",
+     "w": 93,
+     "h": 35
+    }
+   ],
+   "textCount": 0,
+   "text": [],
+   "pane": {
+    "top": 131,
+    "bottom": 408,
+    "left": 0,
+    "right": 915,
+    "h": 277,
+    "sh": 410,
+    "ch": 277
+   },
+   "vol": {
+    "top": 138,
+    "bottom": 157,
+    "left": 128,
+    "right": 392,
+    "h": 19,
+    "sh": 24,
+    "ch": 24
+   }
+  },
+  "fallen": {
+   "smallCount": 1,
+   "small": [
+    {
+     "n": "fallen-btn",
+     "off": true,
+     "t": 440,
+     "b": 469
+    }
+   ],
+   "board": {
+    "top": -57,
+    "bottom": 430,
+    "left": 170,
+    "right": 746,
+    "h": 488,
+    "sh": 480,
+    "ch": 352
+   },
+   "btn": {
+    "top": 440,
+    "bottom": 469,
+    "left": 314,
+    "right": 602,
+    "h": 29,
+    "sh": 29,
+    "ch": 29
+   },
+   "overlay": {
+    "top": 0,
+    "bottom": 412,
+    "left": 0,
+    "right": 915,
+    "h": 412,
+    "sh": 490,
+    "ch": 412
+   }
+  },
+  "replantSwipe": {
+   "scrollTop": 279,
+   "scrollable": true,
+   "pane": {
+    "top": 131,
+    "bottom": 408,
+    "left": 0,
+    "right": 915,
+    "h": 277,
+    "sh": 556,
+    "ch": 277
+   }
+  },
+  "settings16": {
+   "overflowY": "auto",
+   "sh": 410,
+   "ch": 277,
+   "panelOv": "visible",
+   "resetBottom": 343,
+   "vh": 412
+  }
+ },
+ "915x360": {
+  "run": {
+   "smallCount": 0,
+   "small": [],
+   "textCount": 0,
+   "text": []
+  },
+  "settingsOverlay": {
+   "smallCount": 9,
+   "small": [
+    {
+     "n": "set-vol",
+     "w": 192,
+     "h": 24
+    },
+    {
+     "n": "set-motion",
+     "w": 192,
+     "h": 44
+    },
+    {
+     "n": "set-quality",
+     "w": 192,
+     "h": 44
+    },
+    {
+     "n": "set-text",
+     "w": 192,
+     "h": 24
+    },
+    {
+     "n": "set-num",
+     "w": 192,
+     "h": 44
+    },
+    {
+     "n": "btn-telemetry",
+     "off": true,
+     "t": 385,
+     "b": 434
+    },
+    {
+     "n": "btn-fs",
+     "off": true,
+     "t": 454,
+     "b": 503
+    },
+    {
+     "n": "btn-mute",
+     "off": true,
+     "t": 523,
+     "b": 571
+    },
+    {
+     "n": "btn-reset",
+     "w": 116,
+     "h": 44
+    }
+   ],
+   "textCount": 0,
+   "text": [],
+   "panel": {
+    "top": 12,
+    "bottom": 348,
+    "left": 24,
+    "right": 891,
+    "h": 336,
+    "sh": 591,
+    "ch": 336
+   },
+   "pane": {
+    "top": 65,
+    "bottom": 577,
+    "left": 24,
+    "right": 891,
+    "h": 512,
+    "sh": 512,
+    "ch": 512
+   }
+  },
+  "grove": {
+   "smallCount": 3,
+   "small": [
+    {
+     "n": "camp-go",
+     "w": 176,
+     "h": 44
+    },
+    {
+     "n": "tree-full",
+     "w": 139,
+     "h": 45
+    },
+    {
+     "n": "buy-btn",
+     "w": 82,
+     "h": 44
+    }
+   ],
+   "textCount": 0,
+   "text": [],
+   "pane": {
+    "top": 131,
+    "bottom": 356,
+    "left": 0,
+    "right": 915,
+    "h": 225,
+    "sh": 225,
+    "ch": 225
+   },
+   "tree": {
+    "top": 131,
+    "bottom": 356,
+    "left": 0,
+    "right": 675,
+    "h": 225,
+    "sh": 225,
+    "ch": 225
+   },
+   "detail": {
+    "top": 131,
+    "bottom": 356,
+    "left": 675,
+    "right": 915,
+    "h": 225,
+    "sh": 225,
+    "ch": 225
+   },
+   "buy": {
+    "top": 221,
+    "bottom": 265,
+    "left": 823,
+    "right": 905,
+    "h": 44,
+    "sh": 44,
+    "ch": 44
+   },
+   "tabs": {
+    "top": 60,
+    "bottom": 131,
+    "left": 0,
+    "right": 915,
+    "h": 71,
+    "sh": 71,
+    "ch": 71
+   },
+   "bar": {
+    "top": 0,
+    "bottom": 60,
+    "left": 0,
+    "right": 915,
+    "h": 60,
+    "sh": 60,
+    "ch": 60
+   }
+  },
+  "satchel": {
+   "smallCount": 12,
+   "small": [
+    {
+     "n": "camp-go",
+     "w": 176,
+     "h": 44
+    },
+    {
+     "n": "item empty",
+     "off": true,
+     "t": 394,
+     "b": 474
+    },
+    {
+     "n": "item empty",
+     "off": true,
+     "t": 394,
+     "b": 474
+    },
+    {
+     "n": "sat-filter",
+     "w": 139,
+     "h": 35
+    },
+    {
+     "n": "item r-rare",
+     "off": true,
+     "t": 434,
+     "b": 507
+    },
+    {
+     "n": "item r-common",
+     "off": true,
+     "t": 434,
+     "b": 507
+    },
+    {
+     "n": "item r-rare",
+     "off": true,
+     "t": 434,
+     "b": 507
+    },
+    {
+     "n": "item r-common",
+     "off": true,
+     "t": 434,
+     "b": 507
+    },
+    {
+     "n": "item r-rare",
+     "off": true,
+     "t": 434,
+     "b": 507
+    },
+    {
+     "n": "item r-common",
+     "off": true,
+     "t": 514,
+     "b": 587
+    },
+    {
+     "n": "item r-common",
+     "off": true,
+     "t": 514,
+     "b": 587
+    },
+    {
+     "n": "item r-common",
+     "off": true,
+     "t": 514,
+     "b": 587
+    }
+   ],
+   "textCount": 0,
+   "text": [],
+   "pane": {
+    "top": 131,
+    "bottom": 356,
+    "left": 0,
+    "right": 915,
+    "h": 225,
+    "sh": 642,
+    "ch": 225
+   },
+   "detail": {
+    "top": 616,
+    "bottom": 769,
+    "left": 466,
+    "right": 904,
+    "h": 153,
+    "sh": 191,
+    "ch": 191
+   },
+   "grid": {
+    "top": 179,
+    "bottom": 602,
+    "left": 466,
+    "right": 904,
+    "h": 422,
+    "sh": 528,
+    "ch": 528
+   },
+   "acts": []
+  },
+  "camp": {
+   "smallCount": 1,
+   "small": [
+    {
+     "n": "camp-go",
+     "w": 176,
+     "h": 44
+    }
+   ],
+   "textCount": 0,
+   "text": [],
+   "pane": {
+    "top": 131,
+    "bottom": 356,
+    "left": 0,
+    "right": 915,
+    "h": 225,
+    "sh": 225,
+    "ch": 225
+   }
+  },
+  "replant": {
+   "smallCount": 12,
+   "small": [
+    {
+     "n": "camp-go",
+     "w": 176,
+     "h": 44
+    },
+    {
+     "n": "buy",
+     "w": 122,
+     "h": 44
+    },
+    {
+     "n": "buy",
+     "w": 122,
+     "h": 44
+    },
+    {
+     "n": "buy",
+     "off": true,
+     "t": 377,
+     "b": 421
+    },
+    {
+     "n": "buy",
+     "off": true,
+     "t": 377,
+     "b": 421
+    },
+    {
+     "n": "buy",
+     "off": true,
+     "t": 435,
+     "b": 479
+    },
+    {
+     "n": "buy",
+     "off": true,
+     "t": 435,
+     "b": 479
+    },
+    {
+     "n": "buy",
+     "off": true,
+     "t": 493,
+     "b": 537
+    },
+    {
+     "n": "buy",
+     "off": true,
+     "t": 493,
+     "b": 537
+    },
+    {
+     "n": "buy",
+     "off": true,
+     "t": 551,
+     "b": 595
+    },
+    {
+     "n": "buy",
+     "off": true,
+     "t": 551,
+     "b": 595
+    },
+    {
+     "n": "buy",
+     "off": true,
+     "t": 609,
+     "b": 653
+    }
+   ],
+   "textCount": 0,
+   "text": [],
+   "pane": {
+    "top": 131,
+    "bottom": 356,
+    "left": 0,
+    "right": 915,
+    "h": 225,
+    "sh": 556,
+    "ch": 225
+   },
+   "choose": [
+    98,
+    98,
+    98
+   ]
+  },
+  "settings": {
+   "smallCount": 13,
+   "small": [
+    {
+     "n": "camp-go",
+     "w": 176,
+     "h": 44
+    },
+    {
+     "n": "set-vol",
+     "w": 264,
+     "h": 19
+    },
+    {
+     "n": "set-motion",
+     "w": 154,
+     "h": 35
+    },
+    {
+     "n": "set-quality",
+     "w": 154,
+     "h": 35
+    },
+    {
+     "n": "set-text",
+     "w": 264,
+     "h": 19
+    },
+    {
+     "n": "set-num",
+     "w": 154,
+     "h": 35
+    },
+    {
+     "n": "btn-telemetry",
+     "off": true,
+     "t": 387,
+     "b": 426
+    },
+    {
+     "n": "btn-fs",
+     "off": true,
+     "t": 442,
+     "b": 481
+    },
+    {
+     "n": "btn-mute",
+     "off": true,
+     "t": 497,
+     "b": 537
+    },
+    {
+     "n": "set-blob",
+     "w": 437,
+     "h": 45
+    },
+    {
+     "n": "btn-export",
+     "w": 87,
+     "h": 39
+    },
+    {
+     "n": "btn-import",
+     "w": 89,
+     "h": 39
+    },
+    {
+     "n": "btn-reset",
+     "w": 93,
+     "h": 35
+    }
+   ],
+   "textCount": 0,
+   "text": [],
+   "pane": {
+    "top": 131,
+    "bottom": 356,
+    "left": 0,
+    "right": 915,
+    "h": 225,
+    "sh": 410,
+    "ch": 225
+   },
+   "vol": {
+    "top": 138,
+    "bottom": 157,
+    "left": 128,
+    "right": 392,
+    "h": 19,
+    "sh": 24,
+    "ch": 24
+   }
+  },
+  "fallen": {
+   "smallCount": 1,
+   "small": [
+    {
+     "n": "fallen-btn",
+     "off": true,
+     "t": 414,
+     "b": 443
+    }
+   ],
+   "board": {
+    "top": -83,
+    "bottom": 404,
+    "left": 170,
+    "right": 746,
+    "h": 488,
+    "sh": 480,
+    "ch": 352
+   },
+   "btn": {
+    "top": 414,
+    "bottom": 443,
+    "left": 314,
+    "right": 602,
+    "h": 29,
+    "sh": 29,
+    "ch": 29
+   },
+   "overlay": {
+    "top": 0,
+    "bottom": 360,
+    "left": 0,
+    "right": 915,
+    "h": 360,
+    "sh": 464,
+    "ch": 360
+   }
+  },
+  "replantSwipe": {
+   "scrollTop": 331,
+   "scrollable": true,
+   "pane": {
+    "top": 131,
+    "bottom": 356,
+    "left": 0,
+    "right": 915,
+    "h": 225,
+    "sh": 556,
+    "ch": 225
+   }
+  },
+  "settings16": {
+   "overflowY": "auto",
+   "sh": 410,
+   "ch": 225,
+   "panelOv": "visible",
+   "resetBottom": 343,
+   "vh": 360
+  }
+ }
+}

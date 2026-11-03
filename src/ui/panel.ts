@@ -38,12 +38,15 @@ import { P } from '../render/palette';
 const BUY_SPARKS = [P.starGold, P.frost, P.grove, P.lilac] as const;
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string): T => document.getElementById(id) as T;
+/** The primary pointer is a finger (a phone): no hover, so the tree tooltip opens on a tap (TB-218). */
+const touch = (): boolean => typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
 const VAN_NAME: Record<VanType, string> = { spear: 'Spearman', blade: 'Bladedancer' };
 
 export class Panel {
   private toastTimer = 0;
   private wipeArmed = false;
   private satchel: SatchelPane;
+  private plate = new Plate();
   /** Encampment card and Replant-tab list (TB-188b). */
   readonly camp: CampPane;
   /** Path cards on the Replant tab (TB-193c). */
@@ -88,10 +91,12 @@ export class Panel {
       tree.select(id); this.renderDetail();
     });
     // Tooltip plate (TB-195c): hovering a node shows what its next rank changes, beside the cursor
-    const plate = new Plate();
-    tree.canvas.addEventListener('mousemove', (e) => { const id = tree.hitTest(e.clientX, e.clientY); if (id) plate.show(id + ':' + rankOf(game.state, id), this.plateHtml(id), e.clientX, e.clientY); else plate.hide(); });
+    const plate = this.plate;
+    tree.canvas.addEventListener('mousemove', (e) => { if (touch()) return; const id = tree.hitTest(e.clientX, e.clientY); if (id) plate.show(id + ':' + rankOf(game.state, id), this.plateHtml(id), e.clientX, e.clientY); else plate.hide(); });
     tree.canvas.addEventListener('mouseleave', () => plate.hide());
-    tree.canvas.addEventListener('click', () => plate.hide());
+    // Touch has no hover (TB-218): a tap on a node shows the same plate beside the finger until the next tap, drag or empty tap.
+    tree.canvas.addEventListener('click', (e) => { if (!touch()) { plate.hide(); return; } const id = tree.hitTest(e.clientX, e.clientY); if (id) plate.show(id + ':' + rankOf(game.state, id), this.plateHtml(id), e.clientX, e.clientY); });
+    tree.canvas.addEventListener('pointerdown', () => { if (touch()) plate.hide(); });
     // Keyboard (GDD §13, TB-116): Tab walks the nodes branch by branch and leaves the tree at either end; Enter or Space buys.
     const order = tabOrder();
     tree.canvas.addEventListener('keydown', (e) => {
@@ -212,6 +217,7 @@ export class Panel {
 
   /** run: the field fills the screen; camp: the Grove, Satchel and Replant pages after a fall; settings: an overlay mid-run. */
   setMode(m: 'run' | 'camp' | 'settings'): void {
+    this.plate.hide(); // a tapped tree tooltip never outlives its page
     if (m !== 'camp') this.setTreeFull(false);
     if (document.body.dataset.mode !== m) this.onCue('uiPanel'); // TB-195g: the panel whoosh
     document.body.dataset.mode = m;
@@ -232,6 +238,7 @@ export class Panel {
 
   private tab: Tab = 'grove';
   setTab(k: Tab): void {
+    this.plate.hide();
     this.tab = k; $('camp-title').textContent = tabTitle(k); $('camp-go').textContent = k === 'prestige' ? STR.replantBtn : STR.campGo; document.body.dataset.tab = k;
     if (k !== 'camp') this.camp.close();
     if (k !== 'grove') this.setTreeFull(false);

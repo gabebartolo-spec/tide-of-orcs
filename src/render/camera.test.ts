@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { NODES, TREE_CANVAS, TREE_VIEW } from '../data/skillTree';
-import { centreOn, easeToward, fitCamera, panBy, startCamera, toWorld, wholeCamera, zoomAt } from './camera';
+import { centreOn, clampCamera, easeToward, fitCamera, panBy, startCamera, toWorld, wholeCamera, wholeZoom, zoomAt } from './camera';
 
 const VW = 380, VH = 460, FIT = VW / TREE_CANVAS.w, TOP = TREE_VIEW.legendH;
 
@@ -55,5 +55,13 @@ describe('wholeCamera (TB-189)', () => {
         expect(sy).toBeGreaterThanOrEqual(TREE_VIEW.legendH); expect(sy).toBeLessThanOrEqual(vh);
       }
     }
+  });
+});
+
+describe('clampCamera floor (TB-218)', () => {
+  it('lets a touch pinch settle at the whole-tree zoom instead of jumping to the normal minimum', () => {
+    const vw = 915, vh = 412, floor = wholeZoom(vw, vh);
+    expect(clampCamera({ x: 0, y: 0, z: floor }, vw, vh, floor).z).toBeCloseTo(floor);
+    expect(clampCamera({ x: 0, y: 0, z: floor / 2 }, vw, vh, floor).z).toBeCloseTo(floor);
   });
 });

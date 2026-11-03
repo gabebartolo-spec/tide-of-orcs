@@ -1,6 +1,6 @@
 import { renderScale } from './quality';
 import { BRANCH_COLOR, BRANCH_LABEL, NODE, NODES, NodeId, SkillNode, TREE_VIEW } from '../data/skillTree';
-import { Camera, centreOn, clampCamera, easeToward, startCamera, panBy, toWorld, wholeCamera, zoomAt } from './camera';
+import { Camera, wholeZoom, centreOn, clampCamera, easeToward, startCamera, panBy, toWorld, wholeCamera, zoomAt } from './camera';
 import { SimState } from '../sim/state';
 import { canBuy, pathLocked, rankOf, unlocked } from '../sim/tree';
 import { DragGuard } from './dragGuard';
@@ -35,6 +35,9 @@ const ringOf = (n: SkillNode): string => (n.path ? PATH_TINT[n.path].colour : BR
 const at = (a: number, c: number, b: number, u: number): number => (1 - u) * (1 - u) * a + 2 * (1 - u) * u * c + u * u * b;
 
 /** Skill tree canvas with pan (drag) and zoom (wheel / pinch). Camera is view state only. */
+/** A touch screen is the primary pointer (a phone), so taps need a fat hit circle and a wobble allowance. */
+const touchScreen = (): boolean => typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
+
 export class TreeRenderer {
   private g: CanvasRenderingContext2D;
   selected: NodeId = 'sharp';
@@ -88,20 +91,23 @@ export class TreeRenderer {
   private onMove(e: PointerEvent): void {
     const p = this.pts.get(e.pointerId); if (!p) return;
     const dx = (e.clientX - p.x) / this.ui, dy = (e.clientY - p.y) / this.ui;
-    if (this.full) { this.drag.travel(dx, dy); p.x = e.clientX; p.y = e.clientY; return; } // fixed camera: no pan or pinch
+    if (this.full && !touchScreen()) { this.drag.travel(dx, dy); p.x = e.clientX; p.y = e.clientY; return; } // mouse: fixed camera, no pan or pinch
     if (this.pts.size === 2) {
       const [a, b] = [...this.pts.values()];
       const other = (a === p ? b : a)!;
       const d0 = Math.hypot(p.x - other.x, p.y - other.y), d1 = Math.hypot(e.clientX - other.x, e.clientY - other.y);
       const [mx, my] = this.local({ clientX: (e.clientX + other.x) / 2, clientY: (e.clientY + other.y) / 2 });
-      if (d0 > 0) { this.cam = zoomAt(this.cam, mx, my, d1 / d0, this.vw, this.vh); this.stale = true; }
+      if (d0 > 0) { this.cam = zoomAt(this.cam, mx, my, d1 / d0, this.vw, this.vh, this.floor()); this.stale = true; }
       this.drag.pinch();
     } else {
-      if (this.drag.move(dx, dy, TREE_VIEW.dragPx)) this.canvas.classList.add('dragging');
-      if (this.drag.dragged) { this.cam = panBy(this.cam, dx, dy, this.vw, this.vh); this.stale = true; }
+      if (this.drag.move(dx, dy, touchScreen() ? TREE_VIEW.touchDragPx : TREE_VIEW.dragPx)) this.canvas.classList.add('dragging');
+      if (this.drag.dragged) { this.cam = panBy(this.cam, dx, dy, this.vw, this.vh, this.floor()); this.stale = true; }
     }
     p.x = e.clientX; p.y = e.clientY;
   }
+
+  /** Lowest zoom a pinch may reach: the whole-tree zoom in the full view, else the normal clamp. */
+  private floor(): number | undefined { return this.full ? wholeZoom(this.vw, this.vh) : undefined; }
 
   private local(e: { clientX: number; clientY: number }): [number, number] {
     const r = this.canvas.getBoundingClientRect(); return [(e.clientX - r.left) / this.ui, (e.clientY - r.top) / this.ui];
@@ -136,8 +142,8 @@ export class TreeRenderer {
   /** Select a node and ease the camera to centre it (snaps under reduced motion). */
   select(id: NodeId): void {
     this.selected = id;
-    if (this.full) return; // every node is already on screen
-    const n = NODE[id], t = centreOn(this.cam, n.x, n.y, this.vw, this.vh);
+    if (this.full && this.cam.z <= wholeZoom(this.vw, this.vh) * 1.01) return; // every node is already on screen
+    const n = NODE[id], t = centreOn(this.cam, n.x, n.y, this.vw, this.vh, this.floor());
     if (this.reducedMotion) { this.cam = t; this.target = null; } else { this.target = t; this.lastDraw = performance.now(); }
   }
 
@@ -146,8 +152,11 @@ export class TreeRenderer {
     if (this.drag.dragged) return null; // not cleared here: the hover tooltip also calls this; settle() clears it after the release click (TB-219)
     const [sx, sy] = this.local({ clientX, clientY }); if (sy < TREE_VIEW.legendH) return null; // the legend strip covers what is under it
     const [x, y] = toWorld(this.cam, sx, sy);
-    for (const n of NODES) if (Math.hypot(n.x - x, n.y - y) < TREE_VIEW.hitR) return n.id;
-    return null;
+    // A finger covers about 48 CSS px: the hit circle never shrinks below touchHitPx on screen at any zoom (TB-218); the nearest node wins.
+    const r = touchScreen() ? Math.max(TREE_VIEW.hitR, TREE_VIEW.touchHitPx / (this.cam.z * this.ui)) : TREE_VIEW.hitR;
+    let best: NodeId | null = null, bd = r;
+    for (const n of NODES) { const d = Math.hypot(n.x - x, n.y - y); if (d < bd) { bd = d; best = n.id; } }
+    return best;
   }
 
   /** The arcane tree (TB-163, neon TB-190): a dim neon glow along every locked link, then bark that grows along each bought link with a lit edge,

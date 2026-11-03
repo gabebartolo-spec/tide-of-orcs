@@ -6,7 +6,7 @@
  * PHONE_MIN and the rest scrolls inside the tab (the `.fitscroll` class); PC keeps the no-scroll page.
  * A pane marked `data-fit="scroll"` (Replant, TB-193f layout C) is never scaled: its cards stay full size and it scrolls.
  */
-const PHONE_MIN = 0.8;
+const PHONE_MIN = 1;
 /** Smallest scale the PC page bisects down to, and the bisection steps (0.6 / 2^7 ≈ 0.005 precision). */
 const FIT_MIN = 0.4, FIT_STEPS = 7;
 /** Smallest scale a pane may take: 1 for a scroll pane, PHONE_MIN on phones, else 0 (FIT_MIN then applies). */
