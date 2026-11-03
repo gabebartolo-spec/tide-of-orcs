@@ -1,3 +1,4 @@
+import { CampLevels, Mats } from '../data/camp';
 import { OrcKind } from '../data/orcs';
 import { HwLevels } from '../data/heartwood';
 import { Item, LootMeta, Rarity, freshLoot } from '../data/loot';
@@ -74,13 +75,19 @@ export interface RunState {
  *  tier: the highest boss tier unlocked (TB-148). */
 export interface MetaState { heartwood: number; lifetimeKills: number; bestWave: number; prestiges: number; hwLevels: HwLevels; loot: LootMeta; tier: number;
   /** Wave the next run starts at: one past the last checkpoint wave cleared (TB-159). 1 = none yet. */
-  checkpoint: number }
+  checkpoint: number;
+  /** Encampment (TB-188a, v13): building levels and materials, kept across runs. */
+  camp: CampMeta }
+export interface CampMeta { levels: CampLevels; mats: Mats }
+export const freshCamp = (): CampMeta => ({ levels: {}, mats: {} });
 
 export interface SimState {
   tick: number; t: number;
   rng: Rng;
   /** Loot rolls use their own stream so drops never shift combat randomness. */
   lootRng: Rng;
+  /** Camp material drops (TB-188a) use their own stream so they never shift combat or loot rolls. */
+  matRng: Rng;
   /** How pick-ups are equipped: the player by hand, or a balance-runner policy. Not saved. */
   lootPolicy: EquipPolicy;
   run: RunState; meta: MetaState; stats: Stats;
@@ -101,7 +108,7 @@ export function freshRun(): RunState {
   return { wave: 1, waveT: 0, runTime: 0, starlight: 0, earned: 0, kills: 0, levels: { root: 1 }, barHp: -1, bulwarkUsed: false, fallen: false, bossDone: 0, boss: null, thunder: 0, splinterUsed: false, freeRallyUsed: false,
     foeT: {}, stormT: 0, shotT: [0, 0, 0], knifeT: 0, hawkT: 0, treantT: 0, ballT: 0, tier: 1 };
 }
-export function freshMeta(): MetaState { return { heartwood: 0, lifetimeKills: 0, bestWave: 1, prestiges: 0, hwLevels: {}, loot: freshLoot(), tier: 1, checkpoint: 1 }; }
+export function freshMeta(): MetaState { return { heartwood: 0, lifetimeKills: 0, bestWave: 1, prestiges: 0, hwLevels: {}, loot: freshLoot(), tier: 1, checkpoint: 1, camp: freshCamp() }; }
 
 const makeOrc = (): Orc => ({ live: false, kind: 'grunt', x: 0, y: 0, hp: 0, maxhp: 0, spd: 0, r: 0, loot: 0, atk: 0, dead: false, burn: 0, hitT: 0, wob: 0, swingT: 0, champ: false, bleed: 0, slow: 0, pin: 0, root: 0, chill: 0, stun: 0, leapt: false, castT: 0, drum: false, gen: 0 });
 const makeShot = (): Projectile => ({ live: false, kind: 'arrow', x: 0, y: 0, vx: 0, vy: 0, dmg: 0, pierce: 0, life: 0, fx: 0, crit: 0, critX: 1, target: null, tgen: 0, first: false, hit: new Set(), sx: 0, sy: 0, tx: 0, ty: 0, t: 0, h: 0, r: 0, back: false });
@@ -110,7 +117,7 @@ const makeVan = (): Vanguard => ({ live: false, type: 'spear', line: false, x: 0
 
 export function createState(seed = 1, run: RunState = freshRun(), meta: MetaState = freshMeta()): SimState {
   const s: SimState = {
-    tick: 0, t: 0, rng: createRng(seed), lootRng: createRng(seed * 31 + 7), lootPolicy: 'player', run, meta, stats: applyGear(deriveStats(run.levels, meta.hwLevels), meta.loot),
+    tick: 0, t: 0, rng: createRng(seed), lootRng: createRng(seed * 31 + 7), matRng: createRng(seed * 17 + 3), lootPolicy: 'player', run, meta, stats: applyGear(deriveStats(run.levels, meta.hwLevels, meta.camp.levels), meta.loot),
     orcs: new Pool<Orc>(ORC_CAP, makeOrc), shots: new Pool<Projectile>(600, makeShot), vans: new Pool<Vanguard>(8, makeVan),
     wolf: { x: 260, y: FIELD.h / 2, tx: 260, ty: FIELD.h / 2, biteT: 0 },
     pack: [],
@@ -126,7 +133,7 @@ export function createState(seed = 1, run: RunState = freshRun(), meta: MetaStat
  *  a gear change only clamps, so swapping wall gear off and on cannot heal it (TB-198). */
 export function recompute(s: SimState, opts: { heal?: boolean } = {}): void {
   const before = s.stats.barMax;
-  s.stats = applyGear(deriveStats(s.run.levels, s.meta.hwLevels), s.meta.loot);
+  s.stats = applyGear(deriveStats(s.run.levels, s.meta.hwLevels, s.meta.camp.levels), s.meta.loot);
   if (opts.heal && s.stats.barMax > before) s.run.barHp += s.stats.barMax - before;
   s.run.barHp = Math.min(s.run.barHp, s.stats.barMax);
 }

@@ -2,6 +2,7 @@ import { HW_FX, HW_NODE, HW_NODES, HwId } from '../data/heartwood';
 import { BOSS_WAVE } from '../data/bosses';
 import { PRESTIGE } from '../data/balance';
 import { EventBus } from './events';
+import { campSpent } from './camp';
 import { MetaState, SimState, recompute } from './state';
 import { placeVanguard } from './vanguard';
 
@@ -9,7 +10,8 @@ export const hwRank = (m: MetaState, id: HwId): number => m.hwLevels[id] ?? 0;
 /** Heartwood paid into the tree so far. The passive Heartwood bonus counts all Heartwood earned, spent or not. */
 export const hwSpent = (m: MetaState): number =>
   HW_NODES.reduce((sum, n) => sum + n.costs.slice(0, hwRank(m, n.id)).reduce((a, c) => a + c, 0), 0);
-export const hwAvailable = (m: MetaState): number => m.heartwood - hwSpent(m);
+/** Heartwood left: earned minus the tree and the encampment (TB-188a). */
+export const hwAvailable = (m: MetaState): number => m.heartwood - hwSpent(m) - campSpent(m);
 export const hwCost = (m: MetaState, id: HwId): number | null => HW_NODE[id].costs[hwRank(m, id)] ?? null;
 export const hwUnlocked = (m: MetaState, id: HwId): boolean => (HW_NODE[id].req ?? []).every(([r, n]) => hwRank(m, r) >= n);
 /** Heartwood is spent only at a prestige (director, 1 Nov): while the run is fallen (a fall or a voluntary replant).

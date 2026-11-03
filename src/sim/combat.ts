@@ -1,3 +1,4 @@
+import { MAT_DROP, MAT_IDS } from '../data/camp';
 import { ARROWS, FIELD, LOB, PLAYER } from '../data/balance';
 import { FIREBALL } from '../data/orcs';
 import { spawnOrc } from './step';
@@ -30,12 +31,21 @@ export function rollFx(s: SimState): number {
 /** A companion or vanguard strike: rolls the unit's own crit (TB-111). */
 export const unitHit = (s: SimState, u: UnitFx, d: number): number => (u.crit > 0 && s.rng.next() < u.crit ? d * u.critMult : d);
 
+/** Common orcs may drop one camp material (TB-188a), banked at once in meta so it survives the run. */
+export function dropMat(s: SimState, ev: EventBus, o: Orc): void {
+  if (o.champ || !MAT_DROP.kinds.includes(o.kind) || s.matRng.next() >= MAT_DROP.chance) return;
+  const mat = MAT_IDS[Math.floor(s.matRng.next() * MAT_IDS.length)]!, m = s.meta.camp.mats;
+  m[mat] = (m[mat] ?? 0) + 1;
+  ev.push({ t: 'matDrop', mat, x: o.x, y: o.y });
+}
+
 export function kill(s: SimState, ev: EventBus, o: Orc): void {
   if (o.dead) return;
   o.dead = true;
   const loot = o.loot * s.stats.starMult;
   s.run.kills++; s.meta.lifetimeKills++; s.run.starlight += loot; s.run.earned += loot;
   if (o.champ && s.run.boss) s.run.boss.left--;
+  dropMat(s, ev, o);
   ev.push({ t: 'kill', x: o.x, y: o.y, loot, kind: o.kind });
   // Shatter: a chilled orc bursts and strikes those around it (which may shatter in turn; each orc dies once).
   if (o.chill > 0 && s.stats.shatter > 0) {

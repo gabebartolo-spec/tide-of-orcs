@@ -11,6 +11,8 @@ import { buy } from './sim/tree';
 import { summonBoss } from './sim/boss';
 import { castFireball } from './sim/combat';
 import { buyHw } from './sim/heartwood';
+import { upgradeBuilding } from './sim/camp';
+import { BuildingId } from './data/camp';
 import { HwId } from './data/heartwood';
 import { equip, reroll, salvage, setFilter, toggleHeirloom, toggleLock } from './sim/loot';
 import { ownedAffixes } from './sim/lootRoll';
@@ -50,6 +52,8 @@ export class GameController {
   clearAim(): void { this.aim = null; }
   buy(id: NodeId): boolean { return buy(this.state, this.events, id); }
   buyHw(id: HwId): boolean { const ok = buyHw(this.state, this.events, id); if (ok) this.save(); return ok; }
+  /** Encampment intent (TB-188a): raise a building one level; saves on success. */
+  upgradeBuilding(id: BuildingId): boolean { const ok = upgradeBuilding(this.state, this.events, id); if (ok) this.save(); return ok; }
   /** Satchel intents (TB-096): equipping recomputes Stats; every change saves. */
   equipItem(uid: string): boolean {
     const s = this.state, tiers = setTiers(s.meta.loot, s.stats.setBoost), ok = equip(s.meta.loot, uid);

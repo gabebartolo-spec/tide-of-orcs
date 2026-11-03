@@ -1,3 +1,4 @@
+import { CAMP_FX, CampLevels } from '../data/camp';
 import { NodeId } from '../data/skillTree';
 import { HW_FX, HwLevels } from '../data/heartwood';
 import { SATCHEL, SPOILS_FX } from '../data/lootTables';
@@ -77,7 +78,7 @@ const FOE_NODES: Partial<Record<OrcKind, [NodeId | null, NodeId, NodeId]>> = {
 /** A node line's factor at rank r (TB-147): m^r, or 1 + (m − 1) × r when STACKING.add (floored at 0.1 for shrinking lines). */
 const fx = (m: number, r: number): number => (STACKING.add ? Math.max(0.1, 1 + (m - 1) * r) : Math.pow(m, r));
 
-export function deriveStats(lv: Levels, hw: HwLevels = {}): Stats {
+export function deriveStats(lv: Levels, hw: HwLevels = {}, camp: CampLevels = {}): Stats {
   const L = (id: NodeId): number => lv[id] ?? 0;
   const kin = fx(NODE_FX.kinship, L('bond'));
   const muster = L('muster') > 0;
@@ -87,7 +88,7 @@ export function deriveStats(lv: Levels, hw: HwLevels = {}): Stats {
     dmg: fx(UNIT_DMG[u as Unit] ?? UNIT_FX.dmg, L(d)), rate: fx(UNIT_FX.rate, L(r)),
     crit: UNIT_FX.critPerRank * L(c), critMult: UNIT_FX.critMult0 + UNIT_FX.critxPerRank * L(x), spd: m ? fx(UNIT_FX.spd, L(m)) : 1,
   }])) as Record<Unit, UnitFx>;
-  return {
+  const st: Stats = {
     dmg: PLAYER.baseDmg * fx(NODE_FX.sharpDmg, L('sharp')),
     fireRate: PLAYER.baseFireRate * fx(NODE_FX.drawRate, L('draw')),
     lobCd: LOB.cd / fx(NODE_FX.drawRate, L('draw')),
@@ -154,4 +155,18 @@ export function deriveStats(lv: Levels, hw: HwLevels = {}): Stats {
     setBoost: L('resonance') ? SPOILS_FX.resonance : 0, echo: L('echo') ? SPOILS_FX.echo : 1,
     stormDmg: 1, bossDmg: 1, eliteDmg: 1,
   };
+  return applyCamp(st, camp);
+}
+
+/** Encampment buildings (TB-188a): each level's totals from CAMP_FX, layered on the tree's stats. */
+export function applyCamp(st: Stats, camp: CampLevels): Stats {
+  const b = Math.min(3, camp.bowyer ?? 0), f = Math.min(3, camp.forge ?? 0), k = Math.min(3, camp.kitchen ?? 0), t = Math.min(3, camp.training ?? 0);
+  st.dmg *= CAMP_FX.bowDmg[b]!; st.lobCd *= 1 - CAMP_FX.drawCut[b]!; st.radius *= CAMP_FX.radius[b]!;
+  const w = CAMP_FX.weaponDmg[f]!;
+  if (st.knives) st.knives.dmg *= w;
+  st.ballista *= w; st.stormDmg *= w;
+  st.itemFind += CAMP_FX.findPlus[f]!; st.rerollMult *= 1 - CAMP_FX.rerollCut[f]!;
+  st.barMax *= CAMP_FX.wallHp[k]!; st.barRegen += CAMP_FX.regenPlus[k]!; st.starMult *= CAMP_FX.starlight[k]!;
+  st.vanHp *= CAMP_FX.vanHp[t]!; st.vanDmg *= CAMP_FX.vanDmg[t]!; st.vanRespawn *= 1 - CAMP_FX.respawnCut[t]!;
+  return st;
 }
