@@ -38,6 +38,7 @@ export class FieldRenderer {
   private fx = new Particles();
   private shake = 0;
   private fenceBack: HTMLCanvasElement | null = null;
+  private fenceBroken: HTMLCanvasElement | null = null;
   private storms: { pts: [number, number][]; life: number; c: string }[] = [];
   private impacts: { x: number; y: number; r: number; life: number }[] = [];
   /** Fire puffs where a fireball landed (TB-127): discs that rise, swell and cool from pale core to ember to fire as they fade. */
