@@ -1,6 +1,6 @@
 // Field benchmark runner (TB-217). No dependencies: starts its own Vite dev server and a software-rendered headless Chrome,
-// loads tools/bench/bench.html, prints sim / draw / frame ms (mean, p50, p95) over the measured frames as one JSON line.
-//   node tools/bench/run.mjs [--port 5622] [--out dir] [--ref frozen.png] [--profile] [--frames 600] [--warm 120]
+// loads scripts/bench/bench.html, prints sim / draw / frame ms (mean, p50, p95) over the measured frames as one JSON line.
+//   node scripts/bench/run.mjs [--port 5622] [--out dir] [--ref frozen.png] [--profile] [--frames 600] [--warm 120]
 // --out writes frozen.png (the last frame) and, with --profile, bench.cpuprofile (open in DevTools > Performance).
 // --ref pixel-compares the frozen frame against a PNG from an earlier run and reports the differing pixel count.
 import { spawn } from 'node:child_process';
@@ -18,7 +18,7 @@ const kill = [], stop = () => { for (const p of kill) { try { if (process.platfo
 const deadline = setTimeout(() => { console.error('bench: timeout'); stop(); setTimeout(() => process.exit(2), 500); }, 120_000 * Number(arg('repeat', 1)));
 try {
   const vite = spawn(process.execPath, [join(root, 'node_modules/vite/bin/vite.js'), '--port', String(port), '--strictPort'], { cwd: root, stdio: 'ignore' }); kill.push(vite);
-  const url = `http://localhost:${port}/tools/bench/bench.html?${qs}`;
+  const url = `http://localhost:${port}/scripts/bench/bench.html?${qs}`;
   for (let i = 0; i < 80; i++) { try { if ((await fetch(url)).ok) break; } catch { /* not up yet */ } await sleep(250); }
   const prof = join(tmpdir(), `tide-bench-${port}`); try { rmSync(prof, { recursive: true, force: true }); } catch { /* a stale profile is harmless */ }
   const chrome = spawn(CHROME, [`--remote-debugging-port=${dbg}`, `--user-data-dir=${prof}`, '--headless=new', '--window-size=1600,900',

@@ -44,10 +44,23 @@ export function keepLoaded(atlas: Atlas, loaded: ReadonlySet<string>): Atlas | n
   return images.length ? { images, anims } : null;
 }
 
+/** The sheet as an ImageBitmap, or the decoded element itself when the browser has no createImageBitmap or it rejects. */
+export async function toBitmap<T extends CanvasImageSource>(img: T,
+  make: ((i: T) => Promise<ImageBitmap>) | undefined = typeof createImageBitmap === 'function' ? createImageBitmap : undefined): Promise<T | ImageBitmap> {
+  if (!make) return img;
+  try { return await make(img); } catch { return img; }
+}
+
+/** Free a sheet's bitmap memory on reload; an image element needs nothing. */
+export function closeSheet(s: unknown): void {
+  if (typeof ImageBitmap !== 'undefined' && s instanceof ImageBitmap) s.close();
+  else if (s && typeof (s as { close?: unknown }).close === 'function') (s as { close: () => void }).close();
+}
+
 export class Sprites {
   private atlas: Atlas | null = null;
-  /** Decoded sheets by atlas image name: ImageBitmaps where the browser has them (TB-217: a sub-rect draw from a bitmap
-   *  skips the image element's per-draw decode and upload checks, a third of the frame at 160 orcs), else the elements. */
+  /** Decoded sheets by atlas image name: ImageBitmaps where the browser has them (TB-217: pixel-identical; on the field
+   *  benchmark frame p95 fell, p50 did not move measurably, see ARCHITECTURE.md Performance budget), else the elements. */
   private imgs = new Map<string, HTMLImageElement | ImageBitmap>();
   /** Scratch canvas for tinting one frame without touching the sheet. */
   private tmp: HTMLCanvasElement | null = null;
@@ -65,13 +78,13 @@ export class Sprites {
       const settled = await Promise.allSettled(atlas.images.map(async (name) => {
         const img = new Image(); img.src = base + 'sprites/' + name;
         await img.decode();
-        const bmp = typeof createImageBitmap === 'function' ? await createImageBitmap(img).catch(() => null) : null;
-        return [name, bmp ?? img] as const;
+        return [name, await toBitmap(img)] as const;
       }));
       // one bad sheet drops only its own anims; the rest keep their sprites (TB-216c)
       const imgs = new Map(settled.flatMap((r) => (r.status === 'fulfilled' ? [r.value] : [])));
       const kept = keepLoaded(atlas, new Set(imgs.keys()));
       if (!kept) return false;
+      for (const old of this.imgs.values()) closeSheet(old);
       this.atlas = kept; this.imgs = imgs;
       return true;
     } catch { return false; } finally { this.loading = false; }

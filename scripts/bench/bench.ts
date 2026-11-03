@@ -1,4 +1,4 @@
-// Field benchmark page (TB-217). Served by the Vite dev server at /tools/bench/bench.html and driven by tools/bench/run.mjs.
+// Field benchmark page (TB-217). Served by the Vite dev server at /scripts/bench/bench.html and driven by scripts/bench/run.mjs.
 // A seeded late-wave state (every node at max rank, wave 60, 8 vanguard, the plain kept at ORC_CAP with mixed kinds) runs
 // warm + frames render frames at 60 Hz; each frame times the sim steps, the field draw's JS and the rAF frame gap. Math.random is seeded too, so the last frame (frozen.png) is pixel-repeatable for the same warm + frames.
 import { createState, recompute } from '../../src/sim/state';

@@ -485,9 +485,9 @@ export class FieldRenderer {
   private windUp(o: Orc): { dx: number; dy: number } {
     const w = this.wind; w.dx = 0; w.dy = 0;
     if (this.reducedMotion || !this.sim) return w;
-    if (o.x > BAR_X + BAR_W + o.r + 0.01 && !engagedVanguard(this.sim, o)) return w;
     const Wd = VFX.orcWind, u = (o.swingT / BARRICADE.orcSwing - (1 - Wd.from)) / Wd.from;
-    if (u <= 0) return w;
+    if (u <= 0) return w;  // checked before the vanguard scan so a walking orc costs no scan (TB-217)
+    if (o.x > BAR_X + BAR_W + o.r + 0.01 && !engagedVanguard(this.sim, o)) return w;
     const k = Math.min(1, u) * o.r;
     if (o.kind === 'boss') w.dy = k * Wd.liftBoss; else w.dx = k * (o.kind === 'brute' ? Wd.leanBrute : Wd.lean);
     return w;

@@ -102,9 +102,9 @@ function march(s: SimState, v: Vanguard, step: number, claimed: Set<Orc>): void 
 
 /** Called by the orc step: returns the vanguard this orc is engaging, if any. */
 export function engagedVanguard(s: SimState, o: Orc): Vanguard | null {
-  let found: Vanguard | null = null;
-  s.vans.forEach((v) => { if (!found && Math.hypot(v.x - o.x, v.y - o.y) < o.r + VANGUARD.engageRange) found = v; });
-  return found;
+  const reach = o.r + VANGUARD.engageRange;
+  for (const v of s.vans.items) if (v.live && Math.hypot(v.x - o.x, v.y - o.y) < reach) return v;  // first live in order, as before (TB-217)
+  return null;
 }
 
 export function hurtVanguard(s: SimState, ev: EventBus, v: Vanguard, amount: number): void {
