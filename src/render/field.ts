@@ -217,6 +217,15 @@ export class FieldRenderer {
     return (this.fenceBack = c);
   }
 
+  /** The fence panel darkened for a broken panel (TB-209), built once. */
+  private brokenFence(fence: HTMLImageElement): HTMLCanvasElement {
+    if (this.fenceBroken) return this.fenceBroken;
+    const c = document.createElement('canvas'); c.width = fence.width; c.height = fence.height;
+    const x = c.getContext('2d')!; x.drawImage(fence, 0, 0);
+    x.globalCompositeOperation = 'source-atop'; x.globalAlpha = GROUND.wallTiers.brokenShade; x.fillStyle = P.ink; x.fillRect(0, 0, c.width, c.height);
+    return (this.fenceBroken = c);
+  }
+
   draw(s: SimState, dt: number, aim: { x: number; y: number } | null = null): void {
     const g = this.g; this.sim = s;
     this.fx.update(dt); this.clock += dt;
@@ -257,9 +266,10 @@ export class FieldRenderer {
         for (let i = 0, y = y0 + dy; y < H; i++, y += step) {
           const alive = panelAlive(y, H, frac, i + r * T.rowSeed);
           g.globalAlpha = alive ? 1 : T.brokenAlpha;
-          const px = x0 + (alive ? 0 : inward * T.brokenDx), im = alive ? img : this.shadedFence(fence);
-          if (r) { g.save(); g.translate(px + w, y); g.scale(-1, 1); g.drawImage(im, 0, 0, w, lh); g.restore(); }  // mirrored: rope ties face the front row
-          else g.drawImage(im, px, y, w, lh);
+          const jit = ((((i + r * T.rowSeed) * T.breakScatter * 3) % 1) * 2 - 1) * T.jitter * sc;
+          const px = x0 + jit + (alive ? 0 : inward * T.brokenDx), py = y + (alive ? 0 : T.brokenDy * sc), im = alive ? img : this.brokenFence(fence);
+          if (r) { g.save(); g.translate(px + w, py); g.scale(-1, 1); g.drawImage(im, 0, 0, w, lh); g.restore(); }  // mirrored: rope ties face the front row
+          else g.drawImage(im, px, py, w, lh);
         }
       }
       g.globalAlpha = 1;

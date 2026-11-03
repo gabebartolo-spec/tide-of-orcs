@@ -101,10 +101,11 @@ export const GROUND = {
    *  behind the first, `rowDx` further back and `rowDy` of a step lower, mirrored so their rope ties face the front row,
    *  shaded by `rowShade`, each with its own ground shadow on its grove side (`shadowDx`, `shadowW` of the panel width). Rows
    *  reach at most `backMax` (scaled) behind the front row's base spot; any more pushes the wall toward the field, so the elf
-   *  keeps clear grass. A broken panel draws shaded at `brokenAlpha`, `brokenDx` inward (never widening the wall); `rowSeed` offsets each row's fixed golden-ratio break scatter (`breakScatter`). */
+   *  keeps clear grass. Each panel sits up to `jitter` left or right (fixed scatter) so row seams never run as one straight line. A broken panel
+   *  draws `brokenShade` darker at `brokenAlpha`, `brokenDx` inward (never widening the wall) and sunk `brokenDy`; `rowSeed` offsets each row's fixed golden-ratio break scatter (`breakScatter`). */
   wallTiers: {
     at: [1.9, 3.7, 7], perPerk: 0.5, rows: [1, 2, 2, 3], scale: [1, 1, 1.4, 1.4],
-    rowDx: -18, rowDy: 0.33, rowShade: 0.3, backMax: 18, shadowDx: -8, shadowW: 0.7, brokenAlpha: 0.9, brokenDx: 4, rowSeed: 7, breakScatter: 0.618034,
+    rowDx: -18, rowDy: 0.33, rowShade: 0.3, backMax: 18, shadowDx: -8, shadowW: 0.7, brokenAlpha: 0.9, brokenDx: 4, brokenDy: 2.5, brokenShade: 0.5, jitter: 0.8, rowSeed: 7, breakScatter: 0.618034,
   },
 } as const;
 
