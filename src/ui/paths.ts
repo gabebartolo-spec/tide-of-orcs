@@ -46,7 +46,7 @@ export class PathPicker {
 
   render(): void {
     const s = this.state(), cur = s.run.path ?? null, open = s.run.fallen; this.sig = `${cur}|${open}`;
-    this.root.innerHTML = `<div class="pathhead"><h2>${STR.pathsTitle}</h2><p>${open ? STR.pathsBody : STR.pathsClosed}</p></div>
+    this.root.innerHTML = `<div class="pathhead"><h2>${STR.pathsTitle}</h2></div>
       <div class="pathcards">${PATH_IDS.map((id) => `<button class="pathcard${cur === id ? ' on' : ''}" data-path="${id}" aria-pressed="${cur === id}" ${open ? '' : 'disabled'}>
         <canvas class="sigil" aria-hidden="true"></canvas><span class="name">${PATHS[id].name}</span><span class="desc">${PATHS[id].focus}</span><span class="bonus">${startBonus(id)}</span></button>`).join('')}</div>
       <button class="ghost pathnone" data-path="" aria-pressed="${cur === null}" ${open && cur !== null ? '' : 'disabled'}>${STR.pathNone}</button>`;

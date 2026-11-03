@@ -75,7 +75,6 @@ export class CampPane {
       ${now ? `<div class="desc"><b>${STR.campNow}:</b> ${now}</div>` : ''}
       ${nextLine}
       <div class="cost">${cost}</div>
-      ${c && !s.run.fallen ? `<div class="desc">${STR.campClosed}</div>` : ''}
       ${btn}`;
   }
 
