@@ -1,0 +1,16 @@
+{
+  "id": "01a1a032-a4fa-7571-ba51-08bd847d202c",
+  "type": "text-to-image",
+  "ai_model": "gpt-image-2",
+  "prompt": "Concept art of a single fantasy archer's bracer, a game item, shown alone in three-quarter view and centred on a plain pale grey background. It is an open curved forearm guard, a tapered half-cylinder of rust-orange leather, wider at the elbow end and narrower at the wrist, its open inner side turned slightly toward the viewer so the hollow inside is visible; a fox head embossed on the outer face and a strip of white fur along the elbow edge; two leather straps with small buckles holding it closed. No arm, no hand, no stand, no other objects. Stylised low-poly toy-miniature look, flat matte colours, soft even lighting, no outlines, no text.",
+  "status": "SUCCEEDED",
+  "progress": 100,
+  "created_at": 1793689036034,
+  "started_at": 1793689036039,
+  "finished_at": 1793689066471,
+  "expires_at": 1793948266471,
+  "image_urls": [
+    "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/uploads/image_01a1a032-a4fa-7571-ba51-08bd847d202c_0.png?Expires=1793948266&Signature=owcopPyhQIWLqKhwiLTwdXOVqACn3qVQznOn~KhOclew66uhrZINmxkl8KovmI8QOpmv-X0RDe-vAbQSiyRAnmLS9bl1RGJWXS82z7G4pAMP6Te24FDQt5EaWcAVLkKc7HbwhX8kaSKV6zCmRoAHWBDHxPpm8c2vNqXlM~QA8gGYh-tsyRaP4u~kya2GdYA~IlcrbTlGVDAdJID5FmhxLFKqJBLGMaL~9aI5bQ0QT82hCu4WjyPTgWAK2jevHS~Fw~G5gDEI6QMm5KGEiUitk~gw1MPin7teaxj3xIwqwEbpeEG73ydRdB4~YI9iQJHK5d0Z5HYkvMgotmiWw666VA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "consumed_credits": 9
+}

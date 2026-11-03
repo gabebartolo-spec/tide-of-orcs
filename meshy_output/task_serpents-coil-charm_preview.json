@@ -1,0 +1,23 @@
+{
+  "id": "01a19ffd-e48e-76ae-ab70-c89a79a91596",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 798596193,
+  "prompt": "Serpent charm pendant, a game item prop. A small snake coiled into a ring biting its own tail, hung on a short cord loop. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793685580537,
+  "progress": 100,
+  "started_at": 1793685580542,
+  "finished_at": 1793685593559,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19ffd-e48e-76ae-ab70-c89a79a91596/output/model.glb?Expires=4947264000&Signature=bug15I126v21TpjdYWHY8iJtDIw~ItK53reK81HV~X9GhD6ljYHgTWKviWp202NLk4tFV5d-7RQt322csyL7bf89wRNjVBTOG3LeYzZljPfKDDAp1uwNNZAxvU-MJ~EtXraMjY8O8lEwEDmBGbBL229bQAfh-qrWv~Xe-L0ShZsh-fM8Dz161xurXA-lQktxiqMxVH~yWguYODxqm63SBkyfsemsw-udGi6Ke3xeXdwPfv0JxEaG81IX3cI-N-Bi7FwrL~ATcrrBcl~sMaQ67Ra5gieZmZTpMkxNntRlGrlcsrzdMmpHUelAKB2leFPRJvn9-52NrEYLyaD6VLeiLQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19ffd-e48e-76ae-ab70-c89a79a91596/output/preview.png?Expires=4947264000&Signature=hll~KKAR63HM~2nPZbVssGonk2T5CKgbkIvW9cMT20vL2lFo~vHBEAaqFgY1mm1vZXC5lKDKD7rrFZ4pQRhOESNolL9n7YY8bo8RM-mrs4OH3DsniWtejjHRro8-KUCvNyWAvq5B9gUUkNN9VNVrwqT9h77Pxjr-BI8Gxiv5BsaywPXE5pKqLJ2dlCD7SL5aE1AYlEScf33uz4Y-Y491AhB4oOZLmvaJM2I~Lfo8Zleia8yIqIoLDfxpx8pxblN4WqK737abRRoNYTmdJ~nth7TYXL6ssjL5Zb6aJUqDge~zr3GI6cZKHeIKB6wVDHOxeolDPZVJxWMbxHMFHeRrhA__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

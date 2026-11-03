@@ -1,0 +1,23 @@
+{
+  "id": "01a1a000-7ab5-724a-9abc-933d229fcf41",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 1536610867,
+  "prompt": "Fox bracer, a game item prop, unbuckled and laid flat on the ground, outer face up, seen from above. A single tapered plate, wider at the elbow end and narrower at the wrist end, gently domed, with a fox head emblem embossed in its centre and a fur trim along the wide end, with two straps lying splayed out flat to either side, each ending in a small buckle. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793685750146,
+  "progress": 100,
+  "started_at": 1793685750151,
+  "finished_at": 1793685765218,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a000-7ab5-724a-9abc-933d229fcf41/output/model.glb?Expires=4947264000&Signature=ZR00E8CU~G9zl-nigDeN14S6eCiSSWCK~A13o8bwL53G4LUyhlqjVT8D2lv~xtAW8NaY4BDcesJq6ALzcZCale3g7xx60mTZnH6dbZgrq2XtTL7guNVlwP6e9llC6IAYQ7kwL~T6-~iqA83xK14pgZzEXSTGpClg-H47q~aTGtR0hMOONC0GTyV4IZTflD640bBLUeXAroLtfm78fHpTZ95H4f2BnQvKkA-XfoVYXHgngzqqyR~ObPpsp~CfdjY0Ye4hYj21gR6PgIP6vzKsNWMt2nL9-DpW6xWDDKCDtB5gQ7qixWRhrh9mR~6jW10bnRgkf3Hd44v4g9CnA8LnmA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a000-7ab5-724a-9abc-933d229fcf41/output/preview.png?Expires=4947264000&Signature=gQ5hRtzDiKD6uglriXvkSKVQO~IFX5Sw8pc9huJR-pqHSswH0ZxYGXquXiDB1nZ9rWYLhf-l7q89N2ZSP3Tr0V9KI5CKXIRjjcA9n8zvFtHMm9xaoOY8eCXlzAPIv5PlDQ35GosKTrBt911EapZveD1I1YPgqHERnYva9oVS6a4NwP8Nl1N8ASbghZW4uJpfQ5nCCE-mQv5GT09p1JEs1eDUGEr-kfcbiYqiI7wXMAcW0iix3Pmbcm~psPdamv-n7mGXUzVu6jS97BF0Et8IdyDWWkvhNwccOqaUoYuMx5zDA6I0DT6aoxWNbMzwP2HNJCsSZyTVkyCqSD4IlAIXxQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

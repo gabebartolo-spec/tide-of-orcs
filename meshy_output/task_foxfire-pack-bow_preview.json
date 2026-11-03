@@ -1,0 +1,23 @@
+{
+  "id": "01a19ffe-be5b-7553-83ac-00adc762180a",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 2592308508,
+  "prompt": "Fox bow, a game item prop. A recurve bow with a carved fox head at the upper tip and a bushy fox tail tied at the grip, a single taut string, no arrow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793685636348,
+  "progress": 100,
+  "started_at": 1793685636353,
+  "finished_at": 1793685648756,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19ffe-be5b-7553-83ac-00adc762180a/output/model.glb?Expires=4947264000&Signature=HOIM3x7RHaUGtfsmFF0stkT-~shzW93GUX3HhB1iuCyC9HW6RDc6-rQy-M2Q5xYDHWih6nul~ZQLgth7ffaxcmg0iAOm9hPCKU0sFFb~h52gGCPIfgIVrwH4L31nU-vV6fAt5WxJJX-g48vUIiHnfE9WGu-bcgayLWNETuGmOeDz6PC~Yc2xgfVCuCgPbuG7n6Gqq1xsyA60zzwPGhPwnsLo9GNUTEk775~guf9wZuhMq5nNINuvJzaP04xI4GLz6oA1W-Xv-stTTKy2gCAfU6w4ddekk8oACECUDJFdJWGXZWDV9c0zKgbDo6SHEmXkSAQTMyNJ6xXIbBytrWY2xw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19ffe-be5b-7553-83ac-00adc762180a/output/preview.png?Expires=4947264000&Signature=qofVyISBZ-91M5T8JxMEAtcMaZcwt14kEA0zpHkBckYNwl-MiFk0zpT2I8j-G3OMN15BFTWecrxBUi3LBQOEXQU4zRE7JAuQedCTTYGq3IrOqM8hQilh0mBqh9ypMyWSdIXuc82v--utxrgo7ykWJUyOM7YOuK~itPHmjhnT-G2f1YclXvkXOC4c0QpDsqgWSzNBt4B9YVkPeB838drUd0F~On~sU7wKmeUn8Zv-FwHUg8OhB4C-eSkTNHe7XgcY6SU4vu8up4C3C1eJOFfQkkuMf~KXq1HVlffg-a1M9CSZIBX7KMuiEaqiPX4YmdU~4QaRWsvpk-6ViIiOvAp8SQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

@@ -1,0 +1,27 @@
+{
+  "id": "01a1a026-0e10-74b8-af86-2efb8fae74b3",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 387006268,
+  "prompt": "Magpie arrow quiver, a game item prop, standing upright. A cylindrical tube covered in layered black and white feathers with gold coins sewn on the rim, a strap, five fletched arrow shafts rising out of the open top, no bow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Glossy black-blue magpie with bone-white patches, ochre-gold coins, rust-brown strap, black-and-white fletching.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793688212674,
+  "progress": 100,
+  "started_at": 1793688212680,
+  "finished_at": 1793688236544,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a026-0e10-74b8-af86-2efb8fae74b3/output/model.glb?Expires=4947264000&Signature=Wt5jELERM4w6UEi8iHS3T1f-sRsojo4p83jLNo0t68PGiGu1~DMcki7vfTVUBDSNsqTAJpcganlh2vxVlo8tTjZTFVUjmKNzRs43OX0qWizi8EDZlqZy~k6IKPovyZ~aXHgJ6X8jveTKHVdxCsPYp~rRhV8ob2duoyzUJWwPu0IfmoF9tActbX7OQ-AI1tPitSgbh5WFczPUUDTZdujitsc1no2mvUz1MroIkmAXPcCALXruetXKWjDPRY10S8ELYsGv2CIhfKZrvFRpPDXc6XwV4oquiFWwSi9IyvYSw79s4FyY-8Pm9IJx8VYYKv32H5dv2PYi4weR~xYJESsA7g__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a026-0e10-74b8-af86-2efb8fae74b3/output/preview.png?Expires=4947264000&Signature=O9qHMSztQ4uFNLe-fr8NaHbMr6IwhLnu3AEUu7apKOsND2VWYAMsN7QLv7~DILkR06rVzfb4i3cKpr2SKvYa8B6KQaPW2KVxxwxrQ51n1~c2eG~dyoqtW4p3-6H5uO8lgGyEphzg8jdFlnAsrmuh5ys0DOB9RMS-rzlTd5qO-L834gfxHYo5IGRrpkUcE7~2aIRtTGXvTAt2vTZh0Ps9jfefcd3PH7l3mSgknE6O7vMBdBFqaeqEOYhO-oIIcvkCNmcQ2qRKAwuyA9Bvbewc205acAgfzlMic5qP-t9hN45YTsIChq9CaDzcf9so8eGPpUAX7EJ0gu4OO9TOKJWs7A__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a026-0e10-74b8-af86-2efb8fae74b3/output/texture_0.png?Expires=4947264000&Signature=gAAh7Gc8HM9bhkw3~Dz~jxcKS5pE248wZmouMNBdUhSIKtfsIXes~g-LGTsL9Hh6kscp~FZxDUF8Mr5uXmugGG6W-fIxSJMWeLqiFucFDLivfue~S0efd9MTZdA3C6sX94~p-8FvfMi-3a1pRlGASKgtZf03BtvHMNkn7qAOlaZQMXtp4a7JsJEJ5tTK~jwdv-fnd4nK5m2OTNkGLE~0He97LOxeregj2sCv5mDkL6BIBndSMdkw~DYrJgTvnsM5cyVvoZNoGl7R0XDjc6JeHyTHA0KUioupURPluoyulvSan3RnpV6xY6nIKBSSCHVLpgWA35-LKY2tSD6GYHoxrQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

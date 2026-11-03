@@ -1,0 +1,27 @@
+{
+  "id": "01a1a026-f76d-74f1-b355-7bf198b15a3e",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 4166437269,
+  "prompt": "Mythic serpent fang bow, a game item prop. A recurve bow whose limbs are a long snake's body, the upper tip a snake head with an open mouth and two long curved white fangs, a single taut string, no arrow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Deep sage-green snake scales with ochre-gold bands, bone-white fangs, a pale green venom drop, bone string.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793688272054,
+  "progress": 100,
+  "started_at": 1793688272071,
+  "finished_at": 1793688298789,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a026-f76d-74f1-b355-7bf198b15a3e/output/model.glb?Expires=4947264000&Signature=Kfg6eCRURTcGwVQG-wIz-hCtGj7b5ODv9~6Elv8qgBl0AJrFJiQ59w00eqwF-mywrZrBuUR8I7m0kucy8TVUarNH10YV8fr7~zZzBmDT1swBatfLzqU4hIWKR8t9xfbJbaVbyOAvOkLUMB7tRfPc7VsIJIvbxZXlBtX917dAGRObXYmGdh4dGsQQLkhITS9esvB6WfdZ~xc6w2EQW9SGqKTWRqBglahMcV-K-oJLsJYTEb~LUZdBZToPejn87WKyVcUiK59sw29dxV2hHzYqWNU2~-hgpnwcxeITeb7PzhkGknzeYi7IGXSdgLxNzil1S3HbKjpH~eQ7RCpmbktzyg__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a026-f76d-74f1-b355-7bf198b15a3e/output/preview.png?Expires=4947264000&Signature=AECnU-k2RdleIlH9~vuuBFEz1-if3Bsw7sUAY4Fr1b86d1NYqoCFjBUEIu83QB1myTMxhqAljr~nNOn57SK2aERIY3v7I-gC9VFjnaB6Qptpc~TPgG2uOUdq6U23fL1dhizcydgnA2b-dBDQ5LsoC0EIkc-c7xTTbuaA-A7rgWutRXLoisaaHVsLvREZPxAyJeVtBzB6QRSpOs8rumRFozGLhOEYhAPdbI2Zx-d33SHl1wrZFx0yjayndwPu7rD7brBSMbvBNlXjKhREsJjRbJrYrH~2Exa8JklXG4Q1w0YOPzUFdF0Ovxp-x6CfxxgT3G8NNj5HMVGMS-aYwXDA9g__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a026-f76d-74f1-b355-7bf198b15a3e/output/texture_0.png?Expires=4947264000&Signature=IbS3nLmndQfRNt4vAQ7ag07s8T44xN76EmC9rXRkwoW4c1Dh23aU8omoluQb2TZaahsRaAhD6pUwdpQLdBtnBRve-xubLLF~2JNDI-tGVysTqaZ6WIxGf6UkXz8Ydmt7Wk-sR~GpI0svWHyl2eI4dAyTJTdeQ60a8cSBYC-UiX7RvzcG0Vrwt4PLrnsjLJaVqTttkNS1Wz9qeGXLao0YJ~Nloli~Svhv2U6tPJbymWIn-hDJdKXY6yJv5XpzTHoTS6NiYDDIrH58sQw9uOn3ddSsN10gQWupNM0vnrsLg1gaJ1B3Oo3xoWQdBbTH9CiS~WOCW7ozWWh3UnbgDh7iTQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

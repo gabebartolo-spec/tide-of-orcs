@@ -1,0 +1,31 @@
+{
+  "id": "01a1a03d-e3d3-70da-b8cf-53ab993a5c8e",
+  "type": "image-to-3d",
+  "name": "",
+  "art_style": "",
+  "object_prompt": "",
+  "style_prompt": "",
+  "negative_prompt": "",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Glossy black-blue magpie with bone-white patches, ochre-gold coin and buckles, rust-brown straps.",
+  "texture_image_url": "",
+  "text_style_prompt": "",
+  "image_style_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793689774106,
+  "progress": 100,
+  "started_at": 1793689774112,
+  "finished_at": 1793689807718,
+  "expires_at": 1793949007718,
+  "task_error": null,
+  "model_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a03d-e3d3-70da-b8cf-53ab993a5c8e/output/model.glb?Expires=1793949007&Signature=H97I9w~4g4vsoiRrxMX72vpvUmA4MozajICJb63Ayte0V4WvzGVfRzZPWpOQc6grrZAPy5F-atEPlTiYsDqzRDUA8gKXKZVgpnyfdc6jJ9a3Kp5U58~DHMAOlu22txqfRqBM-6pR6T-goQgmF4nyTPOvmkKKEbOIqLqz41KGgL9dkTigjIxIb0LcCEbSeyNGftURdodJyr~6cGxPkD46WlZN4ux3d31~wsMucC0pPphBarsQN2rXoa9tTSMjBnCQ-VFmmuqCJKxaM2qWB4EwnJXyyDRM3kTffLZDMzc-GMNdA4oitM2~XreALSQyL4hSTeG0bfQXBU1Iyq~lG9fOvQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a03d-e3d3-70da-b8cf-53ab993a5c8e/output/model.glb?Expires=1793949007&Signature=H97I9w~4g4vsoiRrxMX72vpvUmA4MozajICJb63Ayte0V4WvzGVfRzZPWpOQc6grrZAPy5F-atEPlTiYsDqzRDUA8gKXKZVgpnyfdc6jJ9a3Kp5U58~DHMAOlu22txqfRqBM-6pR6T-goQgmF4nyTPOvmkKKEbOIqLqz41KGgL9dkTigjIxIb0LcCEbSeyNGftURdodJyr~6cGxPkD46WlZN4ux3d31~wsMucC0pPphBarsQN2rXoa9tTSMjBnCQ-VFmmuqCJKxaM2qWB4EwnJXyyDRM3kTffLZDMzc-GMNdA4oitM2~XreALSQyL4hSTeG0bfQXBU1Iyq~lG9fOvQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a03d-e3d3-70da-b8cf-53ab993a5c8e/output/preview.png?Expires=1793949007&Signature=qhRO1oBu9trrVUJ1AV0Bycw4o3jYwz7Bjy0ZGfxdvmd4d45v1Tqvw-exalbKp304sUaQxe61XtXC1swxbS~DvzGwWZFi9o1O415MqJKWJE~KiIjHPCugN4woFoRgkK0IKueYXRyreEyph7f36f~9vwQRzpGmgervRkClnLJarFOsf~Ou16RdHhNC9QzGVOJoga0zb-fms8G-iObpcuZuJeLjFEyz7dz0k1iErexpK7CnJNKPuVBMzq8gM1UKty-orqnxpGl6x1I541zdGNXzjC9CeJndhOy9~30fx4tSCuwCiv7kCB8guk2-LlfrUW3wQ0CrfQMBaM-avPcUEb4CiQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a03d-e3d3-70da-b8cf-53ab993a5c8e/output/texture_0.png?Expires=1793949007&Signature=Ggj3ftxkyQmx8l40eM8JCm5XMXDAQjMM896Iw82PdAL6hcY8T43x2hw3y7VP2vsOy-YsnMTZJ~hJTaoZQWyoTbb6msfCrKpkC9pmy3ubbg52wEH8aUaCAZn3-xSvUc8B7ZhsbWgp6Ms7TI3bvKMUl1pW-d~81QasDdUwA85t5LLxikt87oQzR4rXI1tr5VLXDDgxOQlebH9pgJBwscwWK1M8yfcdMM0KtcYMt14RyYAlSMwoicd1I49FMSScr~0HH0pSig3IX~M1zQ9Nf-KnEWDQPKarPApvD-C2Jrr83jzL0Y4JVIUtX5mFbcfOrRXuSZFJZHtdPVVumvBGe4Gi6Q__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 15
+}

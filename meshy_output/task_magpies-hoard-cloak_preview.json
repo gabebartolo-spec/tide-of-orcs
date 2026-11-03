@@ -1,0 +1,23 @@
+{
+  "id": "01a1a005-ace9-7300-96dd-7bedba4b546b",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 468294000,
+  "prompt": "Magpie feather hooded cloak, a game item prop, displayed standing as if worn by an invisible figure. Cloth to the ground with black and white feathers over the shoulders and a hood, small gold trinkets hanging from the hem, no body. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793686091296,
+  "progress": 100,
+  "started_at": 1793686091301,
+  "finished_at": 1793686104933,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a005-ace9-7300-96dd-7bedba4b546b/output/model.glb?Expires=4947264000&Signature=NMKMC7OOur18u7ejb0MQ9gGo46n0jpq8qzI~SJw4GtXtcOfClNqw6f3aYrnJ9FrQdCJSl~wKocUtOteuv3NZEevuQxJnODlRK4vJmqXH1SP13LGDDz~AOwUUaYcuQ8z8JREk7-16WKxRDv05jp2a5uk~glb4RVjsVNHGpM1k~w7gg1ES9Opv6Tof85t0BHGPcymsvDyKS61KwtgTp1sefKwfMfSuyA5ogsmr4zwQBb7K0ec8EyU4e4EbYvAhHn1W1jRxO7uHDC~FSlHuE3-0rclbgj3lSd-VS0qMEH73IBsSZY37ZzeSEqkj5H95R9f3rG7RZtt5XoF14fxq4bEbLQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a005-ace9-7300-96dd-7bedba4b546b/output/preview.png?Expires=4947264000&Signature=Pi4ySnBDHMZHytB~dM5mMmlMt~-BQ0v0Hv9k893Bq4bk26FHhrO-zGG0czrQsFE6csd2VpnbBiH3flBRi7A3PCNIIIT3HUlnS~AscOT~2dolqhSukxWsEoWb1Yqjmr5N3lKj1r8gkvluGSG-d9Gf5fdgwSSfkQGHGK83FL3tp7mOc1aI4PE~fjv7T0ryLEjTagtEzSfaRXs-hy8KXC4ifLoRaXSrBVD-iXFqVOB2CL3sjp5uoeH1tHBq7BCVCLVEPWqIgpM1hkQ~S1wdKTiF-2VViMcmvTLElD4WFS98q7N~3LiRwyRAphDn0XuZtx~JmEMWOZJiFep2qrKD5SUY2Q__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

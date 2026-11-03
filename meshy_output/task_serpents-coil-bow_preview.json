@@ -1,0 +1,23 @@
+{
+  "id": "01a19ffa-8a9d-727d-a8e8-ab513ee818ff",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 961538450,
+  "prompt": "Serpent bow, a game item prop. A recurve bow whose wooden limbs are carved as a coiled snake body with a snake head at the upper tip, a wrapped grip and a single taut string, no arrow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793685360804,
+  "progress": 100,
+  "started_at": 1793685360812,
+  "finished_at": 1793685376393,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19ffa-8a9d-727d-a8e8-ab513ee818ff/output/model.glb?Expires=4947264000&Signature=c0pN5ZKaPydf-dGj39ZEUqmbBzqtsTlFFM41IsQ3mTtZqZ2zPMWqZk7fBECW5XlidETtcUJDw6yBYX64bOJATzAwUi-c3-lAX1~94K0vGMEwfNr3faZxxhGcO-FOQhJ1BLfls1OrkYC6EslNFcF6DcS~tY31HsOIUmraZuM7E9ZzvgmCFtdUGZsipYzvRn125JKEN77xYnrzXRh0~xdedUhkiro5oEV4KuOfHj-ET~DeNhjQ6CTCgcfJT5S67dgI54uimPUHza2b7QILlpQSOtlZw8Ud7-yub3P2EXbOS3e13IxJtGncXH5PDsrTAp7pGXLy6MyjIkQgEeuukYUSDw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19ffa-8a9d-727d-a8e8-ab513ee818ff/output/preview.png?Expires=4947264000&Signature=CxlhjxNn2i0T2X4a28uGS3lhm8oD0A9mkK1ipaohKFSiLorHlj21B-VGRQRVvT3uj1z0~9fhSfccLS-cFqAA7SYlvfATarEddWgCtdnAjosHvowTlU1yuCD6tEMZ3OSGw14i04D6tCOkIeYsUmyqykcO-aWEQnbH~vqNvJPdb2JWdeOl3xLYclFADAQrbgJX~em5JaEEcwLf2cAZqREsmeiRyPGkGynxGL7FtkbqbDsDZ54MseQLPi0p92mvxFsj29QqB3EBaz5dDsRnps3Kva6dWJ1SF3B0rKXkuvV-sVQeU5KwqIpDbXNciXvTvju6Bz32toYBJQKtuwqP4VwLMg__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

@@ -1,0 +1,27 @@
+{
+  "id": "01a1a026-98f0-71d8-89b0-df05380b1aa7",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 1373673321,
+  "prompt": "Magpie charm pendant, a game item prop. A small carved magpie bird holding a gold ring in its beak, hung on a short cord loop. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Glossy black-blue magpie with bone-white patches, ochre-gold ring, rust-brown cord.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793688247793,
+  "progress": 100,
+  "started_at": 1793688247798,
+  "finished_at": 1793688274296,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a026-98f0-71d8-89b0-df05380b1aa7/output/model.glb?Expires=4947264000&Signature=GBAfKISYk7dhmrO4msQYSd-WAU716HQhlvpgjee9D5JpMH4tCN7OobaUKxrl3bjxESg8jRHJe6rQWNaMvQF--dObH9C401EADfNNT2pLbBgo93Ue1R3lkXifBzBRCN5BUDoOLrioW6g9uISoVwQOCn1TtEi-2YL-QkeyMfi7NuXpJNcBarz-rHKsComzSL~6RI9olOIRSlhmbyBhxX8A7a-BRw4IqD8XKRKskRC81vjWMB6bJj73tmudD9lTWmnuVCSdKU5j7~fN3QkcmNA3Iwl1oIilT6ZpADaJ4tJjcBEcFOGWDTF5kOBRUVTaSsY6J53eDoWH3zHf7zIeTLBbBw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a026-98f0-71d8-89b0-df05380b1aa7/output/preview.png?Expires=4947264000&Signature=Qo6pEIR4FEKjcvVDm3-kO1-LCaavYKkL7r7hty5ePj4ipP7Wz9cVNn~1Zh6WsxXe~tx1H9ZP2E9ht6nWnQ-xaS1Yjk4MLFcQBTDH-C~rTGafjinYsUxIDhJzgAPiZPNVc9DKhrhusKY0PZLoz8v98xknM5gXHjMaI9mte59iPRwgXmHJ~XsTH2PUDYLq8cK1v-9GnA54vy1pPIw5U5CYW377fBm814o6aIJvXLdlLWul8MIGaz8O6L62qmPJLyJbfehVGsPn7eFkB0piUrhfRYc9kmuRhG9Wf5DcyC40SKDNhaj~JMCngtdgxCzzLs7MgmHpriHK2kmRN3SEHNp-5A__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a026-98f0-71d8-89b0-df05380b1aa7/output/texture_0.png?Expires=4947264000&Signature=ACHp7Golosf93XHTbI-As~47HJIV2n5rASuD5ObY9sHAN7EYGxSdDCnj3CSyWqKcx~zrrTkIaWGtqZG8ZYH78QIgFsAXpg3XU86n3oUAmi89OcCuyHArNFA428uhqsD8-aO5efWMJRqQgYkAwtvYxLTudf4xtNqoqNZjLpxuxU~AS3N6Sa12YfAeXhKXK3qOClvRI~awezuQivpbIQG6a3bwXagfpgEdLqZkKyHYv0pW~9g2ZvD6XN00qWEqe1zyvyeNX8S77bwB4OidYaDgU4eVNDVtGXx8diRcaaGGrp8gVYM8LeaKDC0~hLjZ8BbkUS1Cuz89JURMn1EYqqxeag__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

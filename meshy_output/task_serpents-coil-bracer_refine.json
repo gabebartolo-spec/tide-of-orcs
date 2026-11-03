@@ -1,0 +1,27 @@
+{
+  "id": "01a1a023-3de6-7060-bbcb-3293c08adc59",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 904339613,
+  "prompt": "Snakescale bracer, a game item prop, unbuckled and laid flat on the ground, outer face up, seen from above. A single tapered plate, wider at the elbow end and narrower at the wrist end, gently domed, covered in diamond snake scales with a small snake head emblem at the wide end, with two straps lying splayed out flat to either side, each ending in a small buckle. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Deep dusty sage-green with bone-coloured scale patterns, rust-brown straps, ochre buckles.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793688028387,
+  "progress": 100,
+  "started_at": 1793688028394,
+  "finished_at": 1793688057126,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a023-3de6-7060-bbcb-3293c08adc59/output/model.glb?Expires=4947264000&Signature=gPCckiG9yGsvYastH7r5ZxFQERCq~O4tQjF8aA8Sjbw0vdkXMosR1Q2NnsKY7orHhhtXLXH75jrS6tvBlbSV19m5p9UwpSUhbBpMDeD6h1RlcvC78n~ZLHH98Nv1RQA1i-~Ew9h6z6UBv5I~3Vx0JlH3bmAWxfj6VCVVU2DRGzgBKUog7yKw1A14EBGVOWdjq6AxEppABEgy~K957irYrfr9EhdEBMp5UzrAz~VWBBolvNAvSNjdjkvMVo6TY1vvMF4HhOzV44-nTQsFpEYN8s3JbWtEmBmmehAJtjQIVrK85s~gyelWZPk712UaeaodVOzY8jxXVhybciVbS52MWQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a023-3de6-7060-bbcb-3293c08adc59/output/preview.png?Expires=4947264000&Signature=oKcst0GFkTSjB1K0nhUvncEI6gR0CiucUhu1Ixx90iK2gp4oxxTeb4Y5DR4o1Bl4P2qDvU-uWkvqTqlEMq5u6k0BJ1NwWLB3IBN8Ls7wnh5u93aMVIbhp-B-2OeeN9rZfbVrz4LckI~SjIrHsW6H1Pe-egiyrS~5Eh-kxi5oGo1csIwCljT9zRDM5JvQyH3R-QiGknf24D8-X8Yu5RSptSmPgY4vLsEowHHhPJRKpUq6I5gbGA92~q0DUV8wsPd1QN3dnSA4oQjqjjISRzjJzckRxgBg4Bxd9lENuevykx0dMLxAgS06F1VD4thZcIMBknkZ6KxaZTn3WsMEvh0AgA__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a023-3de6-7060-bbcb-3293c08adc59/output/texture_0.png?Expires=4947264000&Signature=dukv1AQtN9l-dLTzcqEzQhlxTig9w-ha8TO0CMQhBXNoDsq~7PfS7oEAVi4~QRgwav0iV6kwMDnHeQn~mKJzCJrF-OIyDBBqv2HJfbUu3StqJ1i~T7gmbPZv-SYfsem3Yev4LWzEE0NYtNnER6F6Wn8KN0xygf-LFQQP7ZLMhzFXmDNG8Vql9mqO0jEz13ZemEsczzCYKI4YLaFHBt4zYTXpj4peGAX-m9x8Uz7cNEbX7WVajpMC822w5Ty~8tqR1H3Z3MiRiBTiftrx7AG1JjkfNMcOFYJkPc--Tmj1y5ySKCdexpBK47zSV43dc3vgEoba0GFI9hqjoo3nSSJAzg__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

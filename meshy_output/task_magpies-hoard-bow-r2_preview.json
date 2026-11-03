@@ -1,0 +1,23 @@
+{
+  "id": "01a1a023-39ab-74d0-ba30-b0c71de15a4d",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 476730964,
+  "prompt": "Magpie recurve bow, a game item prop, standing upright. One wooden stave bent into a smooth D-curve from tip to tip, a wrapped grip at the middle, and a single taut straight bowstring between the two tips with clear open space between string and stave, black and white feathers bound at the grip and two small gold coins hanging from the grip on a cord, no arrow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793688027473,
+  "progress": 100,
+  "started_at": 1793688027479,
+  "finished_at": 1793688039956,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a023-39ab-74d0-ba30-b0c71de15a4d/output/model.glb?Expires=4947264000&Signature=U8jAV8ZFWNdfk0pOQAZjR5muiJ2AQ-pDSoErEefFW51cGcIUx3XAPZbArXE0j4U6mgInUOLZAKtMZ6gtXwDN5vpYc3Ip9soEtA30VfkpAnokwYbyruJM0qJcbw6kEt5ctCAPe7OU6M7Fax7WIj46vf~ss9bksgNLdxctLKWQ7wFHFMW6G0fqY4~MWKqTjLS8DqhF5k9puFraxj~tANXxoVcMUHe7~cBSSpuKEc-S-93EjURP3Jaup87Rt0mrFLaHbYk4sDow7vWuLRUJ58-NAR9tnzvHpdm4j1v3~ZG7~-X2LlIZLlJ3w7tq6Y9bfRvs6KNysB~AnCXoSD00T9Iehw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a023-39ab-74d0-ba30-b0c71de15a4d/output/preview.png?Expires=4947264000&Signature=W9defsmbijzGCbpSU8D~-y9ZifbnsuVv8jVpTi67B44tn~ZuQPBbLdceip8aVWzpLgqwYUU21zAtrvJKUw8boBdIo-GUomGjle6216VODGWnJZ5csi2XtpMrb23ZfCPhWx~STvFPIbN6we7FegoN8O-fRK5ETo7N9rtrKMEWjj2y2Qstnjy3F7GzHNC14KVKOnOiaHEdYRbsi8Rx3RBR~2qXhIMrhy9QmGYo5skfKlOR6x0BxY7IBkK0pForDLqGsim6dwEztkyA~RfcOpD2d9Vaq4dd4~1Rulw~GeWYmUNz1mZjd5JTBJ3eroLMjboikpkE-hwYOz74HOrhv-q8Bg__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

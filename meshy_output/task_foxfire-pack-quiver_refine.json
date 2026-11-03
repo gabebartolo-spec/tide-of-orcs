@@ -1,0 +1,27 @@
+{
+  "id": "01a1a024-a5b7-70f4-b200-d544ff2f03f1",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 1908001015,
+  "prompt": "Fox fur arrow quiver, a game item prop, standing upright. A cylindrical tube of fox fur with a fox-head clasp near the rim, a strap, five fletched arrow shafts rising out of the open top, no bow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Warm rust-orange fox red with bone-white fur tips, rust-brown strap, bone arrow shafts with orange fletching.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793688120109,
+  "progress": 100,
+  "started_at": 1793688120116,
+  "finished_at": 1793688145924,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a024-a5b7-70f4-b200-d544ff2f03f1/output/model.glb?Expires=4947264000&Signature=Sys-tKUQclX25ve~PnyEFD3aiNbOdq7PtC7uclNJA~NhRgxPqukG9JgazsniS~-8OIp7ef-MHS1GCYb6SIEKtd1WPjEzlPyhrvjglf90Cz~IQut1aBoWHm5dEvJn~DkVu07ZOhgUnvAjmhhVzC3FyPwJYigbahppSj0tVpoOUPE~s7WE4Isiw5rO5Qzm~RT5nAe6~TPrzo525ebRF2zckph5PzgKDo~AbLahNsYvaGCb-5PhCt2cEXh-Sd~wVnQuQIu87bGmg6viHXiRtLQQwZa1E0Q1rfIZiyHMgCEOKpFB1g6ls5PgfpqbMsYX4xxlXmPayCiC~eW8Y9pUjEpAhQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a024-a5b7-70f4-b200-d544ff2f03f1/output/preview.png?Expires=4947264000&Signature=a6bFerfSlzcxcoZSNhfZyzQGXFA8K9FP4Q7yDcBd5SaTMiTiFJv~byb6HKGZN1NzBJaH9WlO088Je5Pb7XjsrZVH8jIstSax59o3qkJ0xj-L3~1Sr19a7bFmb6Bi5tfEWk8m~BZnC4M-BHqF1Q5DEsjiHIrbj3nqW04G6xb6VJblhCgWrV5iElAw5xw80seOtASUT5hD8W8b~~8P60gKvAz8~sDrt33QF7yB0KakpiO7tF8kux~HdTLSIHO-HNfYR2G5DkTq-QfrDQft0yuaX96AyX1f-8nuf~Fad6kpjMt49hD7MY1OUqn2M-PC6Yd-0huD5Z52ihvOUfJptQCXwg__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a024-a5b7-70f4-b200-d544ff2f03f1/output/texture_0.png?Expires=4947264000&Signature=ackvtQmfnGSKRcAVJfaOxuc1xgndxq80zmO6MAhe6bBgNx0r2v3TiBzBRTYBLUbPNC0nKupwqxLOC5x16tFB0SLob05ViZ3rrRKIgqDzoIXsW35tHhXyLpWQ4uWPNUoo7gd8jJufoJSaD3M3WtDpcge3Yabhfe2dnDOUo~~Po0c~GBPynz3xzi2fz3TBH1-uoWWUuN28hVIbkHvPOMRwlTXwormgCkroOT4CU4Qj4vFDJGmGnCR9keyy0fUoITZCvqX5HZThSpTIZmkWi47tP2IABMOVWDrbaCciCIRgV6p0i5x7s832SFLaS~xVVe-XD6yxYkCH5ah5cPdDlVnaCA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

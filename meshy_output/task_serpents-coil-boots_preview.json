@@ -1,0 +1,23 @@
+{
+  "id": "01a19ffd-3147-71d7-9efa-d93fa250d977",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 1118813963,
+  "prompt": "Pair of snakeskin boots, a game item prop. Two knee-high boots of snakeskin with a small snake coiled around each ankle, pointed toes, standing side by side, no legs. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793685534700,
+  "progress": 100,
+  "started_at": 1793685534706,
+  "finished_at": 1793685549650,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19ffd-3147-71d7-9efa-d93fa250d977/output/model.glb?Expires=4947264000&Signature=pIn8gKVrfCYuGdKMRSkIwMEYdrdbu4UH2s2K3pTWXy0ysXQAwLnSv8aC7rDaBUxv3RVD0cOph6bkC6FO2SefawzpCFoTnT1M1a1YDNGQ5mF1lFY7a-M~vRg5eUtl4I-HzjMWwo61dYJIWYndeFZqyoiPVtxEOspvtbWXJo5wMP7NKeZDHx4RoiJvTrxM7s1uL5EqGiQ0K5FieUIfCJqKxm-xsPQ5XG3ioa7gyru1CZQen6bCMQITEvAg09-wkWRjtu5-wlyyCCGQkLeuFaXqhLWLOmgsfI44FcVLy4kF2sttUt24lfDinbpYTHlvJtasHngiwzwOyExXRwKdwMFZnQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19ffd-3147-71d7-9efa-d93fa250d977/output/preview.png?Expires=4947264000&Signature=JHDbIgdxe2LEkU9N~8brHJJPLkNsm93hMgo2qsiSmBqfEbaDhrv8SDwNwQ7duhI33KIBGAWcAYN5tpq9~JAGa4SEMeNRisQjQI~mE1yyY47cIgshcUzVbDmHzr8w~YcX7BPygAvRTE1u-Q-gw-lspcbw-NxbxjlBiYPkG9ZPZ0wDrV75MUj~AfE1bkcGGj7EU1QBtsMrWxAtMojll5PBLDrj6LtLJFx2sAqAwz4U1O~XruD-0k6-O~1eWnKkmnRgIhUsynYoQx~X-RvbXElmBnYKOm1iek1zmYuiHAC~k6~BIn8GgKOhpUrm2cYw3gAm4ipv7yQ0dwi4vx7eyGZsKw__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

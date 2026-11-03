@@ -1,0 +1,27 @@
+{
+  "id": "01a1a028-3a01-73d8-869b-0a89c39e0120",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 3360327682,
+  "prompt": "Round carved medallion emblem, a game item prop, standing upright facing forward. A flat thick disc with a raised rim, a fox head with pointed ears in relief on its face. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Rust-orange disc, bone-white fox head, ochre-gold rim.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793688355086,
+  "progress": 100,
+  "started_at": 1793688355092,
+  "finished_at": 1793688394068,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a028-3a01-73d8-869b-0a89c39e0120/output/model.glb?Expires=4947264000&Signature=Fr2esRgg7Suj6mkn80Ye2mbEkdAguZ8CegXpmRjKJnY8IWYs9-eGb9obOZRmpamCEc9BswKV1DfIBVjZR0QF59pPILO3yCHkE9E~LpU-eXxEw0o0UjGWM2mDu3kg8X4dn6NihvN87pbwB0V0FUkH6M8CIwAhrxKw0N1Hj4Jy8PBfW8b8doKObsvFyrc5q8WAEMLfENZRRSWzDCFWHdvdoqwMvyG0xPoZF58PC8nIVp~XLrf2Wn5DjWWvDI7F0vNgf~nkODECaXkPyGGejd8ut3zhSh9lmXHySPXxT2pU7xtHM9jJuqIlJKZllOqRJowq9Qh8CC8Q08fHs5QCfoVKjw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a028-3a01-73d8-869b-0a89c39e0120/output/preview.png?Expires=4947264000&Signature=mnMkNAuyej5JU~oxh3KIMsbk2cQNkF8L-HsqeTVYTHSpCcIbADVhGiFsqad1JV2zizk1URfcUtjE0dBro6J1F3kuVvSMLtLfxkXagSxfUidxDHUChoOzmqcBmcrfCJyAAvUCRpoRD~k1OtMYJbdREJOPdzwmfMAxoj7RTwjfwUfHzpcUBidC2YnCkC0JzVXy5a433IxUOP1363aer9rUGngLxXTkgos9idDh8lAz3NAh7Bigm~AQ6T1RUbOh~76qZAJLXDFSnV7U20x5EU1xl1Eh7vsu~3HONXuYx2PTv~haLQ4sA0B~9COm14zr2yhg0Utkx2rlf24Ot4-eTd5qYQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a028-3a01-73d8-869b-0a89c39e0120/output/texture_0.png?Expires=4947264000&Signature=cAWfIEO98g1OmGkVZfLBDvl9g19OJtChOdAz3uQz~q0EsUmxcNuL9rxKtHSxsohBlhOh51cOunl8CBi4WXB7~cnmPdhIvW7rTmOaOpvx0h5JGPilQFk80v0VYPDTlxt6hYudBk4YEtHGn95KVLbVcCwu6BU~oY1xAhCoNo0pYLRcee6x6ZANaXPu2Q~WJq2EcH~1ZLVkzcsb9BDiMxsNifYpIbAmWyn~8DWgXq~dTdCC2jWqn94kO9pU-h0jdEA~M0csvPaEM-YMa5pyEAc792ZcNoqH8QToCymnz6Ke-PKRBNgztp92-6bIBjWQdJFw~-X3X9I6~-T-h2VA3jPBOw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

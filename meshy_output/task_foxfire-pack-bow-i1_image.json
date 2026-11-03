@@ -1,0 +1,16 @@
+{
+  "id": "01a1a033-4106-7624-a4a1-f536fcbf8bb1",
+  "type": "text-to-image",
+  "ai_model": "gpt-image-2",
+  "prompt": "Concept art of a single fantasy fox bow, a game item, shown alone in three-quarter view and centred on a plain pale grey background. It is a recurve bow standing upright: one curved stave from top tip to bottom tip with a wrapped grip in the middle and one thin taut bowstring running straight from tip to tip, clear open space between string and stave; the stave is rust-orange wood, the top tip is carved as a small fox head with pointed ears, and a little white-tipped fox tail hangs from the grip. No arrow. No arm, no hand, no stand, no other objects. Stylised low-poly toy-miniature look, flat matte colours, soft even lighting, no outlines, no text.",
+  "status": "SUCCEEDED",
+  "progress": 100,
+  "created_at": 1793689075992,
+  "started_at": 1793689075999,
+  "finished_at": 1793689104956,
+  "expires_at": 1793948304956,
+  "image_urls": [
+    "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/uploads/image_01a1a033-4106-7624-a4a1-f536fcbf8bb1_0.png?Expires=1793948304&Signature=h4LXa47os6pKYrAuV1kalHI~pBZNg7VVQmxoUc6jgtC-kWKcYsapIi-M-Q2jgarMmzXohqPz02C0F9PWzdHhq2Ocnas4OeZBxvT~sJmA46AM3GRuqvJCR8htUdbHEkrb9YBwbK1y0IW-C7xVanHNy45NxJSOg6f8lEihWt-jVlz4-DCNk~EL~6YaPlrArSf7rH3Qnggik1PGCRteumxmpqxWRdVYBmBp3UEBw7EcsGG96lj9sMdMAaiuGTgj~7MJKtmvRcmkrU6ZlglURoWx7eiD3XOuxSG1gAeZbA2aJdPy8Dd4wel1m6Ko1MMW8s12BhKDqXSC8bmX-8Wv7~xiig__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "consumed_credits": 9
+}

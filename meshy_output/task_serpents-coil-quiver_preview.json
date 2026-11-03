@@ -1,0 +1,23 @@
+{
+  "id": "01a19ffa-fc24-739f-b17c-f9d4d1697b32",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 2593634902,
+  "prompt": "Snakeskin arrow quiver, a game item prop, standing upright. A cylindrical tube of snakeskin with a snake coiled around it from bottom to rim, a strap, five fletched arrow shafts rising out of the open top, no bow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793685390102,
+  "progress": 100,
+  "started_at": 1793685390108,
+  "finished_at": 1793685403578,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19ffa-fc24-739f-b17c-f9d4d1697b32/output/model.glb?Expires=4947264000&Signature=dvuHmlzfgXO0~9HLBmFBi5gafYLD6TFRPaf6Wo6CicrVW7uwWILoYeiRRS8EZZD6rVrerCyHO9-fpWnHHlxVkjlvehw7TPB6mmFEy8R4PQWLJJzp6tYnSLYLsit6W~5XEyPKZjbR3HGA~EzPoiht92KA3echqVRAP1W1~0bZo8dNk0UHPOuGIp3YuMw4b0Vt2b8broyQfMHbe6dUl2t9vsWfKBeaWvNjAGWW~-hudWFVlmxZvtbHsoMxYjz~2XQK4JlFB5Hz6rJd7IfPksRyIN2vL53RNME9-XePFbfm2g8IgzbTXWAwgrnwgiDmg0p5qXBA7FcGXUDdAgThbM8h~g__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19ffa-fc24-739f-b17c-f9d4d1697b32/output/preview.png?Expires=4947264000&Signature=ND3HXvunNtNLM5hkuog0jcTY~lgz1BDOnnCTR6tAcGCw9Ub9uuVnUUtz56V2hfNz4b3nXI0a12ug8N3oUYjsHV~E~8osUQhTJgJXICytuChIeKWCqHBOZpzAn3-rH-8iR9CSZ8wtv4AL6~gyxNyvOMWCAjTrNy4GUA5LobDAaAThWXNGfheAT6vK0wLzomKlqY6TF~poUAsnsugyRCyselktnYjbKlPk8MDA2BOGGVaP~5kN5HAPUQyWwyYEMWEB5SRl52TxkR8lE4Q5K1y2t1B0DHbKRmNIggstPxHADsiMVUM0RBvF6Tjlm-B9xmI7xGn8~HcYJTvug16C-dmgEQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

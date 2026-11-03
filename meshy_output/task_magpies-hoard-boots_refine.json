@@ -1,0 +1,27 @@
+{
+  "id": "01a1a026-692f-76e1-a83e-fb01a83451dd",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 2326363795,
+  "prompt": "Pair of magpie boots, a game item prop. Two ankle boots with black and white feather cuffs and a gold coin buckle on each, standing side by side, no legs. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Glossy black-blue magpie with bone-white patches, ochre-gold buckles, rust-brown soles.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793688236856,
+  "progress": 100,
+  "started_at": 1793688236862,
+  "finished_at": 1793688269308,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a026-692f-76e1-a83e-fb01a83451dd/output/model.glb?Expires=4947264000&Signature=PiILYGX7SGBFmA3Z1RJUXKQ8fZrkSFRF7P0bHraJ4uO1ueLnBB3yK24SyvK3fGvCLQzZgq1DYZ2wSyoXJufS70Pd~DLpV7XxSyLGKXyqEz1e7SuFsY5YXAZ5xp5vH0jgy8i0a-bdlNOKUvrEaYq7kIiBBFvzfCWwVgipcLjmq32mvHSHVd3DKUvB8O0fmbSXzioDDiQFeL24zqS2xh2cY47iDa-HjjJhcJ8Y0MZwLRuV25C5dk3L~UlYecF8x4dUKtA0cx9AmhJB~DTIvrcmSMf9Uy-I07-nIfN0dP1kg2~T8nGJLg58-un40XQsDIocu002p4F2L-GI8kGnr5slMg__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a026-692f-76e1-a83e-fb01a83451dd/output/preview.png?Expires=4947264000&Signature=BSgemjWhPXgoE5ON~SgFRpOjl1brq7VjBBKDTuDYIYzAT7527F90JxNLJhDJUlQ0Y2tFYTM0KxhYM-amKfd9Eoj7l-D5OhUIm17D57MkSZMuP0mFS3jygtAo0AwrNUpd8H15VZ39cJmu3YQwB9X8IMHFHtMEa9IewbKg1RkWtflEDs5vwTCq6IC96OZ7XAl7aY8DZGXY7aJnHUHOUcvxhKwoZL0s6i7SxoqcrX0~GoLOxt8qKcOny2a-aVNtmIWHDgmhon9Z9i42TMwvs85io7KXzwte66yWtE1Ixqkxvn5uaGy8JgYzSiNMwxT3UhS95WOSWnKfUYtZY14pQ15Tbw__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a026-692f-76e1-a83e-fb01a83451dd/output/texture_0.png?Expires=4947264000&Signature=Si6KMNhjQGL-ZKKtaRGDkfTXUMWHgL0ufcP7C4ZNycRnypkL5UE66bxonLI0TOnouOA477Ee99RNfPnSJrlYzAdyKvskFNabqhsXJAXKreE~hRjRNK1-g61IVO9QnTfaxEx-Kgdq0~j0xKbIPtd3p-znL4CWFXATlpL9Ax0XSIVLqbcRhIbyis6y6SMqYqHwfa36Am3Dvdw7SQOxwsXFC9~uodQjxuM4Lx1VHv4dRKlmcTBr3QPeGs7~sF9eR7Bw5mWIRBPR5UgioJb7gpaZs2ym-tXuNy0BPoFO~Y1V-0oyzkix1skwJ7w-7LTxnUKShPNLnftBiIQcD6hsVANvgw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

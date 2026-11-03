@@ -1,0 +1,23 @@
+{
+  "id": "01a19fff-cf4c-77a4-8cd4-b7337142c076",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 782872751,
+  "prompt": "Fox fur arrow quiver, a game item prop, standing upright. A cylindrical tube of fox fur with a fox-head clasp near the rim, a strap, five fletched arrow shafts rising out of the open top, no bow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793685705920,
+  "progress": 100,
+  "started_at": 1793685705925,
+  "finished_at": 1793685718889,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19fff-cf4c-77a4-8cd4-b7337142c076/output/model.glb?Expires=4947264000&Signature=ojiQ8xXMqkck5uzyP3Uh8MIRUhCCQ~06MyY34L8s1wvYW9EUIVktpPiI4BDzGPQBEKFlZWuv41roPYntnIYl03p2opSp8J0Az5KTT8Mnyo3YJBFU01o~jdaoJVgtItaQYWWtEnCqeAPENoQRN0qJ-5f-2aVZsWmLNqNoJYZCkS79rW8K2QpghFnicUlY5Q~9BV3XPjpHm05m0Aue3p5EJckRjg6shsskq0Hq8YH6Pyl7kKBonVXpjbk5pEmj0aVebn05SJlFkYbC8gDKfjPVL6B9tNQjrKgpI~G4W0limIR-RJi0lnWIBv43vcRyow-I-IxEwa2AtiAstLqJtFE2~w__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19fff-cf4c-77a4-8cd4-b7337142c076/output/preview.png?Expires=4947264000&Signature=kO0FZHBd8hGgTFX6CmBfLhivMcolT7tc2BfY73~4UUZXsolwpjGToLNa2n1~AOd3005UZpsrlvU4hVH93RMg4e-hT7NWr~9n7vzlDwqeOo1jZeCrZBPowTLPgsEhkuN2sChAcWbQbsn1qOcN7kw3LATfNZRaGrkQNA4Nw~SQuFXkM4YeweIh7NYykGdtBI~kBU-PUqgygxGd0cMplT5c-0QVqEb5l1ofsZ7JtsQcje5KIHq5vHm85aT5L2tDoZl2jw-dxFUiPxN4IUkfENrybmQiuDo7vnaZTbv8-edoSYU6XRaayaPJpYWybIpFFzRFl-c8rdnZLJlNOQsFGx6baA__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

@@ -1,0 +1,23 @@
+{
+  "id": "01a1a004-6fa2-73f7-910e-b1814a9f5b23",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 1614076586,
+  "prompt": "Magpie bracer, a game item prop, unbuckled and laid flat on the ground, outer face up, seen from above. A single tapered plate, wider at the elbow end and narrower at the wrist end, gently domed, covered in overlapping black and white feathers with a large gold coin set in its centre, with two straps lying splayed out flat to either side, each ending in a small buckle. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793686009144,
+  "progress": 100,
+  "started_at": 1793686009151,
+  "finished_at": 1793686024836,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a004-6fa2-73f7-910e-b1814a9f5b23/output/model.glb?Expires=4947264000&Signature=CxjkhtMX2kDmUHdItGTa8K0GSoQqvXOdAfJ~bZPBG9TmEBCid-Ftx5ORkwg4NHlcDzXoxp18faEVLLc~wXh9YsLFlyAQ8EPGc~hgWhugjnPLm3PZFcYZiuamJPXbofOygEY8hAyOl~Ae0Fmh1kGCy0Zc5dSY0OSGKL7Ts1GtKITjX8hSCYHrMcgHUGDCO56pwwITFGK2LBFKrhRXYIsRmc6jmdRENcDW5aX9O6VX9wvC0eBK39sgb4ANac4PKtzTO2rvezi8NF8WRA8y3qesXyvFrQGJouqoNwVfAe2yXY5KtVREn98NqM00k4-~ioDTzjGDuutuGjdYpvdj74TXeQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a004-6fa2-73f7-910e-b1814a9f5b23/output/preview.png?Expires=4947264000&Signature=emGZY-hKDlfntud88V-tlE9Aa3Ka2TKMewhnhuGMg8u8O42B-lUzATpElIgK8qm3YppW0XDhE~SsCBZGuipM1Tc2CalnZi7X-HbyY4t2ExniIifdHOtZh5wTSuf-xyf72reZvO2NgRl9tjMrRF1nLedDXm0-0vta2782N8Gwod1Z8Q9lEITa6UtoN-df1P4pz5ImBqvVHhIbCW7c4Z~23kDHiGNrf923RwfuWpThqONGEYtFxEJcGt-~oxKr0eag8s1nmLFJYdmgvZW~4dRYD-0W6b5bgcnzdzFz0-CK4b-7HRPyRNp25BJsNrkYKVQg~orKdzly6EULe8CqTNrdwA__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

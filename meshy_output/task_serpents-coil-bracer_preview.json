@@ -1,0 +1,23 @@
+{
+  "id": "01a19ffb-8140-71da-82aa-4cd78951994a",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 328717999,
+  "prompt": "Snakescale bracer, a game item prop, unbuckled and laid flat on the ground, outer face up, seen from above. A single tapered plate, wider at the elbow end and narrower at the wrist end, gently domed, covered in diamond snake scales with a small snake head emblem at the wide end, with two straps lying splayed out flat to either side, each ending in a small buckle. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793685424238,
+  "progress": 100,
+  "started_at": 1793685424243,
+  "finished_at": 1793685436167,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19ffb-8140-71da-82aa-4cd78951994a/output/model.glb?Expires=4947264000&Signature=cT~tdDhPx2Wz6hv40WxKJ2NvIpPTVUYq6yd2YhCgfbVAPwv2ZvsBclF60pT5tOHL2Q7mWsvo89O9FWBXJ8RdCzZ8NTG07uMnUbfXL7BTcvG2KVng2kVvhpatHakUGaUdUy0CqUhCKizFMgV5zdZfsHABvlz5pJRbTUtNwROR87ib7fKYbazXRZBfvc2EA9pcq85PLVAKGsw5Y923YViUcNLeokn09mMjKnEd~~72FnWiJAbwf~LVQ0J8ZGTqRiVgiOSmRF3vfC3LGSjnpQnRCeC9ZyI9NB8wpgjDOYr0JBBl1~2HYKzEg3UXjfe~UYsECHNuKoBWQaT456O9IcQAqA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19ffb-8140-71da-82aa-4cd78951994a/output/preview.png?Expires=4947264000&Signature=nNpwKxrqTRTo5fApEUyQ-ruyu-bNUp5JDgRHEFc2PaeO8Yk0exnU0HMnYNpmtV4k0pw0b7r2ESUP8jH-3Xiu24YfA07JnkWNDjwN6jQx2YXqTjZ0Uh7xMDCVRUBS5ysnIPdFxbL5kI-UCKPHC8y6CgB~0fv32MDVOUSGn7Ua-5D04tYPl0Qtk4XlLwxq4ga4JV11D~6bDj2ZbbzRV9~cf1KQuu4NxNpvP~6LtW3RLEqF~NFkmfVgUjn1K7dnHxbNBMQK2Dis0aRQv~lfuS7Ts46YVVrQDJk6iYD6nm~eiomaJD7Nh8oc8knTkoeBptnZ1k69CUUJ5QxR9t5V1mMqfg__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}
