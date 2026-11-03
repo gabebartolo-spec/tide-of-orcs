@@ -35,12 +35,12 @@ the field opens its card with its level, costs and the next upgrade; upgrades ar
   . Placeholder costs (P-188) in BALANCE ## Proposed; tuning waits for the balance phase.
 2. **TB-188b UI (done):** click a building → its card (upgrade, cost, effect). A "Camp" section on the Replant tab lists all four.
 3. **TB-188c Placeholder art (done):** palette-token vector drawings of each building at levels 0/1/3, so the loop plays before the final art.
-4. **TB-188d Final art:** buildings as sprites at the game angle (GAMECAM 20), like the fence. The source is Tripo; every frame is screened, then sent to the director before packing.
+4. **TB-188d Final art (done, 470f4c3):** buildings as sprites at the game angle (GAMECAM 20), like the fence. The source is Tripo (H3.1 text to 3D, one model per building per level, 12 in all), rendered headless in Blender by `render_camp.ps1` into `sheet_camp.webp` (keys `camp.<id>.<lv>`); the vector art stays as the fallback until the sheet loads.
 5. **TB-188e Life:** idle animations (sparks, smoke, dummy hits) and upgrade moments (build dust, banner raise, sound).
 
 ## 4. Decisions (director, 3 Nov)
 1. **Currency:** Heartwood plus a farmable material per building, dropped by common orcs. Buildings
    are permanent. Each building has its own material, e.g. bowyer = sinew, forge = iron, kitchen = meat,
    training = hide (`src/data/camp.ts`). Grunts and other common orcs drop them during a run, and they are kept across runs. Drop rates go to BALANCE ## Proposed.
-2. **Art source:** Tripo for the camp models.
+2. **Art source:** Tripo, not Meshy (the director switched the source to Tripo for TB-188d). **Spend: the director approved 780 Tripo credits** for the 12 models at H3.1 best quality (65 each), above the usual 500-per-session threshold.
 3. **Levels:** 3 per building.
