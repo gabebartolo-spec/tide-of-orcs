@@ -12,6 +12,9 @@ export const hwSpent = (m: MetaState): number =>
   HW_NODES.reduce((sum, n) => sum + n.costs.slice(0, hwRank(m, n.id)).reduce((a, c) => a + c, 0), 0);
 /** Heartwood left: earned minus the tree and the encampment (TB-188a). */
 export const hwAvailable = (m: MetaState): number => m.heartwood - hwSpent(m) - campSpent(m);
+/** A loaded save whose tree and buildings cost more than it ever earned (seen: all four buildings at level 3, 124 Heartwood,
+ *  with 0 earned, so the HUD read -124 / 0) is lifted to what those levels cost: owned levels prove that much was earned. */
+export function repairHeartwood(m: MetaState): void { m.heartwood = Math.max(m.heartwood, hwSpent(m) + campSpent(m)); }
 export const hwCost = (m: MetaState, id: HwId): number | null => HW_NODE[id].costs[hwRank(m, id)] ?? null;
 export const hwUnlocked = (m: MetaState, id: HwId): boolean => (HW_NODE[id].req ?? []).every(([r, n]) => hwRank(m, r) >= n);
 /** Heartwood is spent only at a prestige (director, 1 Nov): while the run is fallen (a fall or a voluntary replant).
