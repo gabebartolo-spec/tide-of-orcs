@@ -23,6 +23,7 @@ import { applyTextScale } from '../render/textScale';
 import { CampPane } from './camp';
 import { burstAt, press } from './juice';
 import { Hud } from './hud';
+import { Plate, oneLine, plateRows } from './plate';
 import { PathPicker, pathHint } from './paths';
 import { PATHS } from '../data/paths';
 import { drawSigil } from '../render/sigil';
@@ -79,6 +80,11 @@ export class Panel {
       if (tree.selected === id) { if (canBuy(game.state, NODE[id])) this.buy(id); else this.onCue('denied'); } else this.onCue('click');
       tree.select(id); this.renderDetail();
     });
+    // Tooltip plate (TB-195c): hovering a node shows what its next rank changes, beside the cursor
+    const plate = new Plate();
+    tree.canvas.addEventListener('mousemove', (e) => { const id = tree.hitTest(e.clientX, e.clientY); if (id) plate.show(id + ':' + rankOf(game.state, id), this.plateHtml(id), e.clientX, e.clientY); else plate.hide(); });
+    tree.canvas.addEventListener('mouseleave', () => plate.hide());
+    tree.canvas.addEventListener('click', () => plate.hide());
     // Keyboard (GDD §13, TB-116): Tab walks the nodes branch by branch and leaves the tree at either end; Enter or Space buys.
     const order = tabOrder();
     tree.canvas.addEventListener('keydown', (e) => {
@@ -103,7 +109,7 @@ export class Panel {
   renderHw(): void {
     const s = this.game.state, m = s.meta;
     $('hw-tree').innerHTML = HW_NODES.map((n) => { const r = hwRank(m, n.id), c = hwCost(m, n.id); return `
-      <div class="hwnode"><div><div class="name">${n.name} <span class="desc">${STR.hwRank(r, n.costs.length)}</span></div><div class="desc">${n.desc}</div>${hwUnlocked(m, n.id) ? '' : `<div class="desc">${STR.hwNeeds((n.req ?? []).map(([r, k]) => `${HW_NODE[r].name} ${k}`).join(', '))}</div>`}</div>
+      <div class="hwnode"><div><div class="name">${n.name} <span class="desc">${STR.hwRank(r, n.costs.length)}</span></div><div class="desc" title="${n.desc}">${oneLine(n.desc)}</div>${hwUnlocked(m, n.id) ? '' : `<div class="desc">${STR.hwNeeds((n.req ?? []).map(([r, k]) => `${HW_NODE[r].name} ${k}`).join(', '))}</div>`}</div>
       <button class="buy" data-hw="${n.id}" ${canBuyHw(s, n.id) ? '' : 'disabled'}>${c === null ? STR.complete : STR.hwCost(c)}</button></div>`; }).join('');
   }
 
@@ -176,12 +182,22 @@ export class Panel {
     this.renderDetail();
   }
 
+  /** A node's tooltip plate: name and rank, now → next rows, the cost as a gem chip, one line of flavour. */
+  private plateHtml(id: keyof typeof NODE): string {
+    const s = this.game.state, n = NODE[id], lvl = rankOf(s, id), maxed = lvl >= n.max, un = unlocked(s, n);
+    const rows = maxed ? [] : plateRows(...((p) => [p.now, p.next] as const)(this.game.previewNode(id)));
+    return `<div class="ph"><span class="nm">${n.name}</span>${n.max > 1 ? `<span class="rk">${STR.rank(lvl, n.max)}</span>` : ''}</div>`
+      + (rows.length ? `<div class="pk">${STR.plateNext}</div>` + rows.map((r) => `<div class="pr"><span class="pl">${r.label}</span><span class="pn">${r.now}</span><span class="pa">→</span><span class="px ${r.up ? 'up' : 'down'}">${r.next}</span></div>`).join('') : '')
+      + `<div class="pf">${oneLine(n.desc)}</div>`
+      + `<div class="pc">${maxed ? `<span class="done">${STR.plateMax}</span>` : !un && n.parent ? `<span class="lock">${STR.plateLocked(NODE[n.parent].name)}</span>` : n.base === 0 ? '' : `<span class="chip">${fmt(costOf(s, n))}</span>`}</div>`;
+  }
+
   renderDetail(): void {
     const s = this.game.state, n = NODE[this.tree.selected], lvl = rankOf(s, n.id), cost = costOf(s, n), maxed = lvl >= n.max, un = unlocked(s, n), hint = pathHint(s, n);
     $('detail').innerHTML = `
       <div class="branch"${n.path ? ` data-path="${n.path}"` : ` style="color:${BRANCH_COLOR[n.branch]}"`}>${n.path ? PATHS[n.path].name : BRANCH_LABEL[n.branch]}${hint ? ' · ' + hint : n.parent && !un ? ' · ' + STR.needs(NODE[n.parent].name) : ''}</div>
       <div class="name"><span>${n.name}</span><span style="font-size:0.875rem;color:var(--cream-dim)">${n.max > 1 ? STR.rank(lvl, n.max) : lvl ? STR.learned : ''}</span></div>
-      <div class="desc">${n.desc}</div>
+      <div class="desc" title="${n.desc}">${oneLine(n.desc)}</div>
       <div class="row"><span style="font-variant-numeric:tabular-nums;color:var(--amber)">${maxed ? STR.fullyGrown : n.base === 0 ? '' : STR.starlightCost(fmt(cost))}</span>
       <button class="buy" id="buy-btn" ${canBuy(s, n) ? '' : 'disabled'}>${maxed ? STR.complete : !un ? STR.locked : lvl ? STR.improve : STR.learn}</button></div>`;
     $('buy-btn').onclick = () => this.buy(n.id);

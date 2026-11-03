@@ -352,41 +352,35 @@ body.tree-full #pane-grove .detail .name { font-size: 1.5rem; }
 :root { --grove: #9fc48f; --star-gold: #ffd36b; --spark: #f4eaa6; --hud-roll: 380ms; }
 .hud { display: flex; align-items: flex-start; gap: 1.5rem; flex-wrap: wrap; margin-right: auto; }
 .hud-wallbox { display: flex; flex-direction: column; gap: 0.25rem; }
-.hud-wall { position: relative; width: 17rem; height: 2.25rem; border: solid transparent; border-width: 0.5rem 0.75rem;
-  border-image: url("./wood/button.png") 20 30 fill / 0.5rem 0.75rem stretch;
-  filter: drop-shadow(0 0.25rem 0.375rem color-mix(in srgb, var(--ink) 80%, transparent)); --tone: var(--grove); }
+.hud-wall { position: relative; width: 16rem; height: 2rem; --tone: var(--grove); background: image-set(url("/ui/wallbar.webp") 1x, url("/ui/wallbar@2x.webp") 2x) center / 100% 100% no-repeat;
+  filter: drop-shadow(0 0.25rem 0.375rem color-mix(in srgb, var(--ink) 80%, transparent)); }
+.hud-wall[data-crack="1"] { background-image: image-set(url("/ui/wallbar-crack1.webp") 1x, url("/ui/wallbar-crack1@2x.webp") 2x); }
+.hud-wall[data-crack="2"] { background-image: image-set(url("/ui/wallbar-crack2.webp") 1x, url("/ui/wallbar-crack2@2x.webp") 2x); }
+.hud-wall[data-crack="3"] { background-image: image-set(url("/ui/wallbar-crack3.webp") 1x, url("/ui/wallbar-crack3@2x.webp") 2x); }
 .hud-wall[data-tone="mid"] { --tone: var(--amber); } .hud-wall[data-tone="low"] { --tone: var(--rose); }
-.hud-wall::before { content: ""; position: absolute; inset: -0.125rem -0.25rem; background: var(--grain), linear-gradient(color-mix(in srgb, var(--amber) 22%, var(--ink-2)), var(--ink-2)); box-shadow: inset 0 0.125rem 0.25rem var(--ink); }
-.hud-wall .fill { position: absolute; left: -0.25rem; top: -0.125rem; bottom: -0.125rem; max-width: calc(100% + 0.5rem); transition: width var(--hud-roll) cubic-bezier(.34, 1.4, .64, 1);
-  background: var(--grain), linear-gradient(color-mix(in srgb, var(--tone) 55%, var(--cream)), var(--tone) 45%, color-mix(in srgb, var(--tone) 60%, var(--ink)));
-  box-shadow: 0 0 0.75rem color-mix(in srgb, var(--tone) 70%, transparent), inset 0 -0.125rem 0 color-mix(in srgb, var(--ink) 50%, transparent); }
+/* the lit heartwood fill sits in the carved channel (28, 12, 28 px of the 320x40 piece) and is clipped by width, never stretched */
+.hud-wall .fill { position: absolute; left: 1.4rem; top: 0.6rem; height: 0.8rem; max-width: 13.2rem; transition: width var(--hud-roll) cubic-bezier(.34, 1.4, .64, 1);
+  background: image-set(url("/ui/wallbar-fill.webp") 1x, url("/ui/wallbar-fill@2x.webp") 2x) left center / 15.2rem 0.8rem no-repeat; box-shadow: 0 0 0.625rem color-mix(in srgb, var(--tone) 75%, transparent); }
 .hud-wall[data-tone="low"] .fill { animation: wall-throb 0.9s ease-in-out infinite alternate; }
-@keyframes wall-throb { to { box-shadow: 0 0 1.375rem var(--tone), inset 0 -0.125rem 0 color-mix(in srgb, var(--ink) 50%, transparent); } }
-.hud-wall .cracks { position: absolute; left: -0.25rem; top: -0.125rem; width: calc(100% + 0.5rem); height: calc(100% + 0.25rem); fill: none; stroke: var(--ink);
-  filter: drop-shadow(0.0625rem 0.0625rem 0 color-mix(in srgb, var(--cream) 70%, transparent)); }
-.hud-wall .cracks path { opacity: 0; stroke-width: 0.3125rem; stroke-linejoin: round; vector-effect: non-scaling-stroke; transition: opacity 0.2s; }
-.hud-wall[data-crack="1"] .c1, .hud-wall[data-crack="2"] :is(.c1, .c2), .hud-wall[data-crack="3"] path { opacity: 0.9; }
-.hud-wall .lbl { position: relative; display: block; text-align: center; font-size: 0.875rem; line-height: 1.25rem; letter-spacing: .1em; color: var(--text); font-variant-numeric: tabular-nums; white-space: nowrap;
+@keyframes wall-throb { to { box-shadow: 0 0 1.25rem var(--tone); } }
+.hud-wall .cracks { display: none; }
+.hud-wall .lbl { position: absolute; inset: 0; display: block; text-align: center; font-size: 0.875rem; line-height: 2rem; letter-spacing: .1em; color: var(--text); font-variant-numeric: tabular-nums; white-space: nowrap;
   text-shadow: 0 0.0625rem 0.125rem var(--ink), 0 0 0.25rem var(--ink), 0 0 0.25rem var(--ink); }
 .hud-van { font-size: 0.875rem; letter-spacing: .1em; color: var(--text-dim); padding-left: 0.75rem; }
-.hud-star { display: flex; align-items: center; gap: 0.5rem; }
-.hud-gem { position: relative; width: 2.5rem; height: 2.75rem; flex: none; filter: drop-shadow(0 0 0.5rem color-mix(in srgb, var(--star-gold) 70%, transparent)) drop-shadow(0 0.1875rem 0.25rem var(--ink)); animation: gem-breathe 2.6s ease-in-out infinite alternate; }
-.hud-gem::before, .hud-gem .cut { content: ""; position: absolute; inset: 0; clip-path: polygon(50% 0, 100% 34%, 50% 100%, 0 34%); }
-.hud-gem::before { background: linear-gradient(160deg, var(--spark), var(--star-gold) 40%, var(--amber) 70%, var(--timber-dark)); }
-.hud-gem .cut { inset: 0.25rem 0.3125rem 0.375rem; background:
-  linear-gradient(115deg, color-mix(in srgb, var(--cream) 85%, transparent) 0 22%, transparent 22%),
-  conic-gradient(from 200deg at 50% 38%, var(--star-gold), var(--spark), var(--amber), var(--star-gold)); opacity: 0.85; }
-@keyframes gem-breathe { to { filter: drop-shadow(0 0 1rem color-mix(in srgb, var(--star-gold) 90%, transparent)) drop-shadow(0 0.1875rem 0.25rem var(--ink)); } }
+.hud-star { display: flex; align-items: center; gap: 0.25rem; }
+/* gem piece: 100 px with 14 px of baked glow round a 72 px gem */
+.hud-gem { width: 5rem; height: 5rem; margin: -0.875rem -0.5rem -0.875rem -0.875rem; flex: none; background: image-set(url("/ui/gem.webp") 1x, url("/ui/gem@2x.webp") 2x) center / contain no-repeat; animation: gem-breathe 2.6s ease-in-out infinite alternate; }
+.hud-gem .cut { display: none; }
+@keyframes gem-breathe { to { filter: brightness(1.15); } }
 .odo { display: inline-flex; font-family: var(--display); font-size: 2rem; line-height: 1; height: 1em; overflow: hidden; color: var(--star-gold); font-variant-numeric: tabular-nums;
   text-shadow: 0 0 0.5rem color-mix(in srgb, var(--star-gold) 50%, transparent), 0 0.125rem 0.125rem var(--ink); }
 .odo .od { display: inline-block; height: 1em; overflow: hidden; }
 .odo .strip { display: block; white-space: pre; text-align: center; transition: transform var(--hud-roll) cubic-bezier(.34, 1.4, .64, 1); }
-.hud-wave { position: relative; display: flex; flex-direction: column; align-items: center; min-width: 6rem; padding: 1.875rem 1.125rem 1.25rem; margin-top: -1.625rem;
-  background: var(--grain), linear-gradient(color-mix(in srgb, var(--rose) 55%, var(--ink)), color-mix(in srgb, var(--rose) 35%, var(--ink)));
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 0.75rem), 0 100%);
-  box-shadow: inset 0.1875rem 0 0 var(--amber), inset -0.1875rem 0 0 var(--amber), inset 0 -0.25rem 0.5rem color-mix(in srgb, var(--ink) 60%, transparent); }
+.hud-wave { position: relative; display: flex; flex-direction: row; align-items: baseline; gap: 0.5rem; justify-content: center; box-sizing: border-box; min-width: 12.8rem; height: 3.6rem; padding: 0.9rem 0 0; margin-top: -0.25rem;
+  border: solid transparent; border-width: 0 2.4rem; border-image: image-set(url("/ui/banner.webp") 1x, url("/ui/banner@2x.webp") 2x) 0 48 fill / 0 2.4rem stretch;
+  filter: drop-shadow(0 0.25rem 0.375rem color-mix(in srgb, var(--ink) 80%, transparent)); }
 .hud-wave .k { font-size: 0.875rem; letter-spacing: .16em; text-transform: uppercase; color: var(--amber); }
-.hud-wave .v { font-family: var(--display); font-size: 1.75rem; line-height: 1.1; color: var(--text); white-space: nowrap; }
+.hud-wave .v { font-family: var(--display); font-size: 1.5rem; line-height: 1; color: var(--text); white-space: nowrap; }
 .hud-wave .stamp { position: absolute; left: 50%; top: 58%; transform: translate(-50%, -50%) rotate(-12deg); padding: 0.125rem 0.5rem; font-family: var(--display); font-size: 1.125rem;
   letter-spacing: .14em; text-transform: uppercase; color: var(--grove); border: 0.1875rem double var(--grove); background: color-mix(in srgb, var(--ink) 70%, transparent); white-space: nowrap; pointer-events: none; }
 .hud .stats { margin-left: 0; align-self: center; }
@@ -420,3 +414,28 @@ body[data-mode="camp"] :is(.hud-wallbox, .hud-wave) { display: none; }
 .detail .branch[data-path] { color: var(--pc); }
 .ptag { display: inline-block; padding: 0 0.375rem; border-radius: 0.25rem; font-size: 0.875rem; line-height: 1.35; color: var(--pc); border: 0.0625rem solid color-mix(in srgb, var(--pc) 60%, transparent); background: color-mix(in srgb, var(--pc) 12%, var(--ink)); }
 .itemdetail .head .ptag { margin-left: auto; }
+
+/* TB-195c tooltip plate: the carved plate piece (9-slice 40 px = 2rem) follows the cursor over a tree node */
+.plate { position: fixed; z-index: 60; pointer-events: none; box-sizing: border-box; width: 19rem; color: var(--text);
+  border: 2rem solid transparent; border-image: image-set(url("/ui/plate.webp") 1x, url("/ui/plate@2x.webp") 2x) 40 fill / 2rem stretch;
+  filter: drop-shadow(0 0.375rem 0.75rem color-mix(in srgb, var(--ink) 85%, transparent)); }
+.plate[hidden] { display: none; }
+.plate > * { margin: 0 -0.5rem; }
+.plate > :first-child { margin-top: -0.75rem; } .plate > :last-child { margin-bottom: -0.75rem; }
+.plate > * + * { margin-top: 0.375rem; }
+.plate .ph { display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem; }
+.plate .nm { font-family: var(--display); font-size: 1.25rem; line-height: 1.1; }
+.plate .rk { font-size: 0.875rem; color: var(--text-dim); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.plate .pk { font-size: 0.875rem; letter-spacing: .14em; text-transform: uppercase; color: var(--amber); }
+.plate .pr { display: grid; grid-template-columns: 1fr auto auto auto; align-items: baseline; gap: 0.375rem; font-variant-numeric: tabular-nums; }
+.plate .pl { font-size: 0.875rem; color: var(--text-dim); }
+.plate .pn { font-family: var(--display); font-size: 1.25rem; color: var(--text-dim); }
+.plate .pa { font-size: 0.875rem; color: var(--amber); }
+.plate .px { font-family: var(--display); font-size: 1.5rem; }
+.plate .px.up { color: var(--grove); } .plate .px.down { color: var(--rose); }
+.plate .pf { font-style: italic; font-size: 0.875rem; color: var(--text-dim); line-height: 1.3; }
+.plate .pc { display: flex; justify-content: flex-end; }
+.plate .chip { display: inline-flex; align-items: center; gap: 0.25rem; font-family: var(--display); font-size: 1.125rem; color: var(--amber); }
+.plate .chip::before { content: ""; width: 1.25rem; height: 1.25rem; background: image-set(url("/ui/gem.webp") 1x, url("/ui/gem@2x.webp") 2x) center / contain no-repeat; }
+.plate .done, .plate .lock { font-size: 0.875rem; color: var(--text-dim); letter-spacing: .1em; text-transform: uppercase; }
+.detail .desc { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
