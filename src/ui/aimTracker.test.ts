@@ -10,11 +10,12 @@ describe('AimTracker (TB-218 I1)', () => {
     expect(t.down(c(1))).toBe(true); expect(t.down(c(2))).toBe(false);
     expect(t.move(2, 5, 5)).toBe(false); expect(t.move(1, 5, 5)).toBe(true);
   });
-  it('down f1, down f2, up f1: f2 takes over, then its lift clears', () => {
+  it('down f1, down f2, up f1: the aim clears and f2 does not take over', () => {
     const t = new AimTracker(); t.down(c(1)); t.down(c(2, 60, 70)); t.move(2, 62, 71);
-    const a = t.release(1); expect(a.wasOwner).toBe(true); expect(a.promoted).toMatchObject({ id: 2, x: 62, y: 71 });
-    expect(t.owner).toBe(2); expect(t.move(2, 9, 9)).toBe(true);
-    const b = t.release(2); expect(b.wasOwner).toBe(true); expect(b.promoted).toBeNull(); expect(t.owner).toBeNull(); expect(t.count).toBe(0);
+    const a = t.release(1); expect(a).toEqual({ wasOwner: true, promoted: null });
+    expect(t.owner).toBeNull(); expect(t.move(2, 9, 9)).toBe(false);
+    expect(t.release(2)).toEqual({ wasOwner: false, promoted: null }); expect(t.count).toBe(0);
+    expect(t.down(c(3))).toBe(true);
   });
   it('lifting the non-owner leaves the aim alone; the owner then clears it', () => {
     const t = new AimTracker(); t.down(c(1)); t.down(c(2));
@@ -37,7 +38,8 @@ describe('touch aim point (TB-218 I2, I3)', () => {
   });
   it('the lift fades to 0 at the bottom edge so the whole plain is reachable', () => {
     expect(liftFor('touch', 412, R, 16)).toBe(0); expect(liftFor('touch', 370, R, 16)).toBe(28);
-    expect(aimPoint('touch', 460, 392, R, 16, false, 20).y).toBe(R.bottom);   // a thumb at the gesture-bar line reaches the field bottom (TB-218)
+    expect(aimPoint('touch', 460, 412, R, 16, false, 20).y).toBe(R.bottom - 20);   // the circle never enters the bottom inset (TB-218)
+    expect(aimPoint('touch', 460, 392, R, 16, false, 20).y).toBe(R.bottom - 20);
     expect(aimPoint('touch', 460, 412, R, 16, false).y).toBe(412);
   });
   it('the circle stays on the field and below the HUD line in phone landscape', () => {

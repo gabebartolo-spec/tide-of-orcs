@@ -107,6 +107,12 @@ export class TreeRenderer {
   }
 
   /** Lowest zoom a pinch may reach: the whole-tree zoom in the full view, else the normal clamp. */
+  /** The full-screen opening view: the whole tree for a mouse; on a touch screen a readable zoom (labels 14 px, nodes 48 px apart), pinched out to the whole tree on demand (TB-218). */
+  private fullCamera(): Camera {
+    const coarse = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
+    return coarse ? clampCamera(startCamera(this.vw, this.vh), this.vw, this.vh, wholeZoom(this.vw, this.vh)) : wholeCamera(this.vw, this.vh);
+  }
+
   private floor(): number | undefined { return this.full ? wholeZoom(this.vw, this.vh) : undefined; }
 
   private local(e: { clientX: number; clientY: number }): [number, number] {
@@ -120,7 +126,7 @@ export class TreeRenderer {
     this.vw = r.width / this.ui; this.vh = r.height / this.ui; const sc = renderScale(r.width, r.height); this.dpr = sc * this.ui;
     this.canvas.width = Math.round(r.width * sc); this.canvas.height = Math.round(r.height * sc);
     // Keep the same framing when the panel resizes: scale zoom with width.
-    if (this.full) { this.cam = wholeCamera(this.vw, this.vh); this.target = null; return; }
+    if (this.full) { this.cam = this.fullCamera(); this.target = null; return; }
     this.cam = first ? startCamera(this.vw, this.vh) : clampCamera({ ...this.cam, z: this.cam.z * k }, this.vw, this.vh);
   }
 
@@ -132,7 +138,7 @@ export class TreeRenderer {
     const r = this.canvas.getBoundingClientRect(); if (!r.width || !r.height) return;
     this.ui = uiScale(); this.vw = r.width / this.ui; this.vh = r.height / this.ui; const sc = renderScale(r.width, r.height); this.dpr = sc * this.ui;
     this.canvas.width = Math.round(r.width * sc); this.canvas.height = Math.round(r.height * sc);
-    this.cam = on ? wholeCamera(this.vw, this.vh) : this.saved ? clampCamera(this.saved, this.vw, this.vh) : startCamera(this.vw, this.vh);
+    this.cam = on ? this.fullCamera() : this.saved ? clampCamera(this.saved, this.vw, this.vh) : startCamera(this.vw, this.vh);
     this.stale = true;
   }
 

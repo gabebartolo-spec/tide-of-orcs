@@ -1,6 +1,6 @@
 /** Who owns the aim (TB-218 I1): one pointer at a time may set or clear it. Pure; main.ts feeds it pointer events.
- *  A finger or pen is tracked from contact to release. When the owner lifts and another canvas contact is still down,
- *  that contact takes over; when none is left, the aim is cleared. */
+ *  A finger or pen is tracked from contact to release. When the owner lifts the aim clears, even if another
+ *  contact is still down (it does not take over; a fresh press can own the aim). */
 export type ContactType = 'touch' | 'pen';
 export interface Contact { id: number; type: ContactType; x: number; y: number }
 export interface Release { wasOwner: boolean; promoted: Contact | null }
@@ -27,9 +27,8 @@ export class AimTracker {
   release(id: number): Release {
     if (!this.contacts.delete(id)) return { wasOwner: false, promoted: null };
     if (this.ownerId !== id) return { wasOwner: false, promoted: null };
-    const next = this.contacts.values().next().value as Contact | undefined;
-    this.ownerId = next ? next.id : null;
-    return { wasOwner: true, promoted: next ? { ...next } : null };
+    this.ownerId = null;   // single owner: a still-held finger never inherits the aim; the next press does
+    return { wasOwner: true, promoted: null };
   }
   /** Window blur / page hidden: forget everything. */
   reset(): void { this.contacts.clear(); this.ownerId = null; }

@@ -42,6 +42,7 @@ for (const b of [muteSettings, muteCorner]) b.addEventListener('click', () => se
 addEventListener('keydown', (e) => { if ((e.key === 'm' || e.key === 'M') && !e.repeat && !e.ctrlKey && !e.metaKey && !e.altKey && !(e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLSelectElement)) setMuted(!muted); });
 // Browsers block audio until the first gesture; a touch counts on release (pointerup, touchend) as well as on press.
 for (const t of ['pointerdown', 'pointerup', 'touchend', 'keydown'] as const) addEventListener(t, () => audio.unlock(), { capture: true });
+(window.requestIdleCallback ?? ((f: () => void) => setTimeout(f, 1500)))(() => audio.prepare());
 
 panel.onSettings = () => { applyVolume(); applyMotion(); };
 panel.onCue = (c) => audio.play(c);
@@ -50,7 +51,7 @@ setUiSound((c) => audio.play(c));
 
 // Aiming: the bow follows the pointer while it is over the field. No clicking; the bow looses on its own.
 // Touch (TB-155, TB-218): the elf aims while a finger is held on the plain; the circle sits above the fingertip (lift fades at the
-// bottom) and below the HUD. One pointer owns the aim (AimTracker): when it lifts another held finger takes over, else the aim clears.
+// bottom) and below the HUD. One pointer owns the aim (AimTracker): when it lifts the aim clears.
 // A pen aims only in contact; a mouse follows the cursor and clears on leave.
 const tracker = new AimTracker();
 const phoneMq = matchMedia(PHONE_QUERY);
@@ -74,7 +75,6 @@ const releaseContact = (e: PointerEvent): void => {
   const r = tracker.release(e.pointerId);
   if (!r.wasOwner) return;
   if (e.type === 'pointercancel') game.dropAim(); else game.clearAim();
-  if (r.promoted) aimAt(r.promoted.type, r.promoted.x, r.promoted.y);
 };
 const dropAllAim = (): void => { tracker.reset(); game.dropAim(); };
 fieldCanvas.addEventListener('pointerdown', (e) => {
@@ -111,7 +111,7 @@ if (import.meta.env.DEV) Object.assign(window, { __tide: { game, field, tree, ca
 // build stamp (written by the itch workflow)
 fetch('./build.json').then((r) => (r.ok ? r.json() : null)).then((b) => { if (b) document.getElementById('build')!.textContent = `${b.tag} · ${b.sha}`; }).catch(() => {});
 
-let last = performance.now(), acc = 0, hudT = 0, saveT = 0, campDraw = 0;
+let last = performance.now(), acc = 0, hudT = 0, saveT = 0, campDraw = 0, treeDue = false;
 const STALL_S = 0.1;
 // Draw pacing (TB-218 P3): the sim keeps its fixed step every frame; the field draws at most every quality.q.drawGap ms (60 Hz on a 120 Hz screen),
 // carrying the skipped frames' dt into the next draw, and feeds the governor the draw-to-draw time.
@@ -120,8 +120,11 @@ let lastDraw = 0, drawDt = 0;
 let away = false;
 const goAway = (): void => { away = true; audio.suspend(); dropAllAim(); };
 let resync = false;   // the next frame restarts the clock from its own timestamp (an event time can be later than a frame's)
-const comeBack = (): void => { away = false; resync = true; audio.resume(); };
-addEventListener('resize', () => { resync = true; }); addEventListener('orientationchange', () => { resync = true; });
+const comeBack = (): void => { away = false; resync = true; settleUntil = performance.now() + SETTLE_MS; audio.resume(); };
+// a resize or rotation re-arms a settle window: for SETTLE_MS every frame advances at most one tick, so a slow layout frame is never caught up (TB-218)
+const SETTLE_MS = 600; let settleUntil = 0;
+const settle = (): void => { resync = true; settleUntil = performance.now() + SETTLE_MS; };
+addEventListener('resize', settle); addEventListener('orientationchange', settle);
 document.addEventListener('visibilitychange', () => { if (document.hidden) goAway(); else comeBack(); });
 addEventListener('pageshow', comeBack);
 // A coarse portrait phone shows the rotate prompt (style.css .turn): the sim holds still behind it (TB-218)
@@ -130,7 +133,7 @@ function frame(now: number): void {
   if (away || portraitMq.matches) { last = now; lastDraw = 0; requestAnimationFrame(frame); return; }
   if (resync) { resync = false; last = now; acc = 0; }
   // a stalled frame (rotation layout, tab restore) advances one step, never a catch-up burst (TB-218)
-  const gap = Math.max(0, (now - last) / 1000), dt = gap > STALL_S ? STEP : Math.min(0.25, gap); last = now;
+  const gap = Math.max(0, (now - last) / 1000), dt = gap > STALL_S || now < settleUntil ? Math.min(STEP, gap) : Math.min(0.25, gap); last = now;
   // a mythic drop briefly holds, then slows the field (TB-105)
   acc += dt * field.timeScale;
   // the field holds still while the replant ceremony plays
@@ -151,7 +154,9 @@ function frame(now: number): void {
   const paced = now - campDraw >= quality.q.drawGap - 1;
   if (paced && !document.hidden && campView.offsetParent) { campScene.draw(game.state.meta.camp.levels, now / 1000); }
   treeWrap.classList.toggle('burning', field.ceremony.burning);
-  hudT += dt; if (hudT > 0.15) { hudT = 0; panel.update(); tree.draw(game.state, game.state.t); } else if (paced && tree.live) tree.draw(game.state, game.state.t);
+  // the Grove canvas draws once per paced frame at most, and only while it is on screen (TB-218)
+  hudT += dt; if (hudT > 0.15) { hudT = 0; treeDue = true; panel.update(); }
+  if (paced && (tree.live || treeDue && treeWrap.offsetParent !== null)) { treeDue = false; tree.draw(game.state, game.state.t); }
   if (paced) campDraw = now;
   saveT += dt; if (saveT > 20) { saveT = 0; game.save(); }
   requestAnimationFrame(frame);

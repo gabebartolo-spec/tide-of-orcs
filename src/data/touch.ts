@@ -6,8 +6,6 @@ export const TOUCH = {
   liftFadeRem: 5.25,
   /** A press that starts this close to a side edge (or inside the bottom safe-area inset) is a system gesture, not an aim. */
   edgePx: 24,
-  /** With a bottom inset, the last this-many px above the gesture bar stretch down to the field bottom edge. */
-  reachPx: 24,
   /** Phone landscape: the circle is never placed above this line, so it is never under the HUD plates. */
   hudBottomPx: 90,
   /** Dead margin around the Settings button, so a thumb on the plain cannot open it by accident. */

@@ -943,3 +943,38 @@ header, #hud, #toast, #campview, .wrap, .play { touch-action: pan-x pan-y; }
   .pathcard { column-gap: 0.5rem; grid-template-columns: 3.5rem minmax(0, 1fr); } .pathcard .sigil { width: 3.5rem; height: 3.5rem; }
   .fallen { gap: 0.75rem; } .fallen .report { flex: 0 1 auto; min-width: 0; } .fallen .march { flex: 0 0 auto; min-width: 9rem; max-width: 40vw; }
 }
+
+/* ---- TB-218 round 2: Pixel 8 flaw pass (final overrides; phone landscape only unless stated) ---- */
+/* Portrait phone: only the rotate prompt exists; the game layout is not rendered, so nothing sits off screen behind it. */
+@media (orientation: portrait) and (pointer: coarse) { .wrap { display: none; } }
+@media (pointer: coarse) and (max-height: 540px) and (orientation: landscape) {
+  :root { --edge: max(34px, 0px); }
+  /* HUD plates: the banner art keeps a thin border and the plate grows with its numerals, so 'WAVE 128' and 'HEARTWOOD 50/1234' stay inside */
+  body:not([data-mode="camp"]) :is(header .stat, .hud-wave) { width: auto; min-width: 6.5rem; max-width: none; flex: 0 0 auto; gap: 0.25rem; padding: 0.8rem 0.25rem 0; border-width: 0 1.1rem; border-image-width: 0 1.1rem; }
+  body:not([data-mode="camp"]) header .stat .k, body:not([data-mode="camp"]) .hud-wave .k { font-size: 0.875rem; letter-spacing: 0; }
+  body:not([data-mode="camp"]) header .stat .v, body:not([data-mode="camp"]) .hud-wave .v { font-size: 1.375rem; }
+  body:not([data-mode="camp"]) .hud .stats { gap: 0.25rem; }
+  body:not([data-mode="camp"]) .hud { gap: 0.25rem; }
+  /* Grove: the Full-screen / Close button leaves the legend strip and sits at the bottom corner of the tree */
+  .treefull { top: auto; bottom: 0.5rem; right: 0.5rem; }
+  body.tree-full #pane-grove { padding-left: max(34px, env(safe-area-inset-left, 0px)); padding-right: max(34px, env(safe-area-inset-right, 0px)); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; }
+  body.tree-full #pane-grove .detail { flex-basis: 18rem; }
+  /* camp panes and Settings: 34 px from both screen edges (or the inset, whichever is larger) */
+  body[data-mode="camp"] .wrap { padding-left: max(34px, env(safe-area-inset-left, 0px)); padding-right: max(34px, env(safe-area-inset-right, 0px)); }
+  body[data-mode="camp"] header { margin-inline: calc(-1 * max(34px, env(safe-area-inset-left, 0px))) calc(-1 * max(34px, env(safe-area-inset-right, 0px))); padding-left: max(34px, env(safe-area-inset-left, 0px)); padding-right: max(34px, env(safe-area-inset-right, 0px)); }
+  body[data-mode="settings"] .panel { left: max(34px, env(safe-area-inset-left, 0px)); right: max(34px, env(safe-area-inset-right, 0px)); }
+  body:not([data-mode="camp"]) header { padding-left: max(34px, env(safe-area-inset-left)); padding-right: max(34px, env(safe-area-inset-right)); }
+  body:not([data-mode="camp"]) .rally { left: max(34px, env(safe-area-inset-left)); right: max(34px, env(safe-area-inset-right)); }
+  .fallen { padding-left: max(34px, env(safe-area-inset-left)); padding-right: max(34px, env(safe-area-inset-right)); }
+  /* Satchel: the picked item's card is a short strip so the bag keeps its rows; the filter shows its whole label */
+  .prestige.satchel > #sat-detail { max-height: 6.25rem; }
+  #sat-detail .affixes { margin: 0.125rem 0; font-size: 0.875rem; line-height: 1.25; }
+  #sat-detail .name { font-size: 1.125rem; }
+  .prestige.satchel > .satbar { flex-wrap: nowrap; gap: 0.5rem; }
+  .prestige.satchel > .satbar .set { flex: 1 1 auto; min-width: 0; justify-content: flex-end; }
+  .satbar #sat-filter { flex: 1 1 11rem; width: 11rem; min-width: 11rem; padding-inline: 0.5rem 1.75rem; text-overflow: clip; letter-spacing: 0; }
+  /* Fallen: the wax seal is decoration and sat over the Heartwood number: it goes; the board clears the HUD and scrolls */
+  .fallen .seal { display: none; }
+  .fallen .report { overflow: visible; }
+}
+@media (pointer: coarse) and (max-height: 380px) and (orientation: landscape) { .fallen { padding-top: 4.75rem; } .prestige.satchel > #sat-detail { max-height: 5.5rem; } }

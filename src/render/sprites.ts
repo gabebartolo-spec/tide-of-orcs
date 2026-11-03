@@ -37,6 +37,9 @@ export function parseAtlas(raw: unknown): Atlas | null {
   return { images: [...images].sort(), anims };
 }
 
+/** Sheets that gate the first frame; the others load SHEETS_LATER_MS after them, one by one (TB-218). */
+const SHEETS_FIRST = ['sheet_elf.webp', 'sheet_orcs.webp'], SHEETS_LATER_MS = 2500;
+
 /** The atlas without anims whose sheet failed to load; null when no sheet loaded (TB-216c). */
 export function keepLoaded(atlas: Atlas, loaded: ReadonlySet<string>): Atlas | null {
   const anims: Record<string, Anim> = {};
@@ -74,16 +77,31 @@ export class Sprites {
       // phone tier (TB-218 P6): half-size sheets under sprites/half/, frame rects halved to match (92 MB -> 23 MB decoded)
       const dir = quality.q.cheap ? 'sprites/half/' : 'sprites/';
       if (quality.q.cheap) atlas = halveAtlas(atlas);
-      const settled = await Promise.allSettled(atlas.images.map(async (name) => {
-        const img = new Image(); img.src = base + dir + name;
-        await img.decode();
-        return [name, img] as const;
-      }));
+      const full = atlas;
+      const fetchSheets = async (names: string[]): Promise<Map<string, HTMLImageElement>> => {
+        const settled = await Promise.allSettled(names.map(async (name) => {
+          const img = new Image(); img.src = base + dir + name;
+          await img.decode();
+          return [name, img] as const;
+        }));
+        return new Map(settled.flatMap((r) => (r.status === 'fulfilled' ? [r.value] : [])));
+      };
+      // first paint needs only the elf and the first orcs (TB-218 payload): those sheets gate `loading`, the rest stream in afterwards
+      const first = full.images.filter((n) => SHEETS_FIRST.includes(n)), later = full.images.filter((n) => !SHEETS_FIRST.includes(n));
       // one bad sheet drops only its own anims; the rest keep their sprites (TB-216c)
-      const imgs = new Map(settled.flatMap((r) => (r.status === 'fulfilled' ? [r.value] : [])));
-      const kept = keepLoaded(atlas, new Set(imgs.keys()));
+      const imgs = await fetchSheets(first.length ? first : full.images);
+      const kept = keepLoaded(full, new Set(imgs.keys()));
       if (!kept) return false;
       this.atlas = kept; this.imgs = imgs; this.clearBakes();
+      if (first.length && later.length) void (async () => {
+        await new Promise((r) => setTimeout(r, SHEETS_LATER_MS));
+        for (const name of later) {   // one at a time: no decode burst while the run plays
+          const more = await fetchSheets([name]);
+          if (!more.size) continue;
+          for (const [k, v] of more) imgs.set(k, v);
+          this.atlas = keepLoaded(full, new Set(imgs.keys())) ?? this.atlas; this.imgs = imgs; this.clearBakes();
+        }
+      })();
       return true;
     } catch { return false; } finally { this.loading = false; }
   }

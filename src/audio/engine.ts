@@ -24,25 +24,41 @@ export class AudioEngine {
 
   constructor(private base = './audio/') {}
 
-  /** Browsers need a user gesture before audio can start. */
-  unlock(): void {
-    if (this.ctx) { void this.ctx.resume(); return; }
-    if (typeof AudioContext === 'undefined') return;
+  private started = false;
+  /** Build the context and gain graph without a gesture (it stays suspended): `new AudioContext` costs about 80 ms on a phone,
+   *  so main.ts calls this at idle and the first touch only has to resume (TB-218 first-touch hitch). */
+  prepare(): void {
+    if (this.ctx || typeof AudioContext === 'undefined') return;
     this.ctx = new AudioContext();
     this.master = this.ctx.createGain(); this.master.gain.value = this.volume; this.master.connect(this.ctx.destination);
     this.amb = this.ctx.createGain(); this.amb.gain.value = AUDIO.ambientGain; this.amb.connect(this.master);
     this.music = this.ctx.createGain(); this.music.gain.value = AUDIO.musicGain; this.music.connect(this.master);
     this.streaming = quality.q.cheap && typeof Audio !== 'undefined';
-    for (const b of MUSIC) {
-      const g = this.ctx.createGain(); g.gain.value = b === this.bed ? 1 : 0; g.connect(this.music); this.beds.set(b, g);
-      if (this.streaming) { if (b === this.bed) this.stream(b, g); }
-      else void this.load(b).then((buf) => { if (buf) this.loop(buf, g); });
-    }
+    for (const b of MUSIC) { const g = this.ctx.createGain(); g.gain.value = b === this.bed ? 1 : 0; g.connect(this.music); this.beds.set(b, g); }
     this.boss = this.ctx.createGain(); this.boss.gain.value = 0; this.boss.connect(this.music);
-    if (!this.streaming) void this.load(BOSS_BED).then((buf) => { if (buf && this.bossPending) this.startBoss(); });
-    for (const [c, d] of Object.entries(CUES)) void this.load(d.file ?? c, c);
+  }
+
+  /** Browsers need a user gesture before audio can start. The decodes run one at a time after the gesture frame, never in it. */
+  unlock(): void {
+    this.prepare();
+    if (!this.ctx) return;
+    void this.ctx.resume();
+    if (this.started) return;
+    this.started = true;
+    setTimeout(() => void this.startLoads(), 0);
+  }
+
+  private async startLoads(): Promise<void> {
+    const gap = (): Promise<void> => new Promise((r) => setTimeout(r, 40));   // a breath between decodes keeps touch frames short
+    for (const b of MUSIC) {
+      const g = this.beds.get(b)!;
+      if (this.streaming) { if (b === this.bed) this.stream(b, g); }
+      else { const buf = await this.load(b); if (buf) this.loop(buf, g); await gap(); }
+    }
     if (this.streaming) this.stream(AMBIENT, this.amb);
-    else void this.load(AMBIENT).then((b) => { if (b) this.loop(b, this.amb); });
+    else { const b = await this.load(AMBIENT); if (b) this.loop(b, this.amb); await gap(); }
+    for (const [c, d] of Object.entries(CUES)) { await this.load(d.file ?? c, c); await gap(); }
+    if (!this.streaming) { const buf = await this.load(BOSS_BED); if (buf && this.bossPending) this.startBoss(); }
   }
 
   /** Play `name` as a looping media element into `out` (created once per name, then reused). */

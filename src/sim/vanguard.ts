@@ -102,9 +102,10 @@ function march(s: SimState, v: Vanguard, step: number, claimed: Set<Orc>): void 
 
 /** Called by the orc step: returns the vanguard this orc is engaging, if any. */
 export function engagedVanguard(s: SimState, o: Orc): Vanguard | null {
-  let found: Vanguard | null = null;
-  s.vans.forEach((v) => { if (!found && Math.hypot(v.x - o.x, v.y - o.y) < o.r + VANGUARD.engageRange) found = v; });
-  return found;
+  if (s.vans.count === 0) return null;
+  const items = s.vans.items, reach = o.r + VANGUARD.engageRange;   // an index loop: no closure per orc per frame (TB-218)
+  for (let i = 0; i < items.length; i++) { const v = items[i]!; if (v.live && Math.hypot(v.x - o.x, v.y - o.y) < reach) return v; }
+  return null;
 }
 
 export function hurtVanguard(s: SimState, ev: EventBus, v: Vanguard, amount: number): void {
