@@ -147,7 +147,7 @@ export class SatchelPane {
     const cmp = cur && cur.uid !== it.uid ? `<div class="desc">${STR.satchelVs(itemName(cur), Math.round((itemScore(it) - itemScore(cur)) * 100))}</div>` : '';
     $('sat-detail').innerHTML = `<div class="head">${glyph(it.slot, it, true)}<div class="title"><div class="name r-${it.rarity}">${itemName(it)}</div>
       <div class="desc">${STR.rarityName[it.rarity]} · ${myth?.kind ? STR.kindInSlot(myth.kind, `${STR.slotName[it.slot]}`) : STR.slotName[it.slot]} · ${STR.itemLevel(it.ilvl)}</div></div>${pathTag(it)}</div>
-      <ul class="affixes">${lines}</ul>${it.set ? setBlock(it.set, setCounts(l)[it.set] ?? 0, this.game.state.stats.setBoost) : ''}${myth ? `<div class="desc">${STR.mythicLine(STR.mythicPower[myth.id] ?? '')}</div>` : ''}${cmp}
+      <ul class="affixes">${lines}</ul>${it.set && !setCounts(l)[it.set] ? setBlock(it.set, 0, this.game.state.stats.setBoost) : ''}${myth ? `<div class="desc">${STR.mythicLine(STR.mythicPower[myth.id] ?? '')}</div>` : ''}${cmp}
       <div class="row">${worn ? `<span class="desc">${STR.satchelWornNow}</span>` : `<button class="buy" data-act="equip">${STR.equip}</button>`}
       <button class="buy" data-act="lock">${it.locked ? STR.unlock : STR.lock}</button>
       ${hwRank(this.game.state.meta, 'hw_heirloom') && (worn || l.heirloom === it.uid) ? `<button class="buy" data-act="heirloom">${l.heirloom === it.uid ? STR.unheirloom : STR.heirloom}</button>` : ''}
