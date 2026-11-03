@@ -353,7 +353,9 @@ body[data-mode="camp"] .campwrap { flex: 1 1 0; min-height: 0; height: auto; }
 /* Game HUD (TB-195b, docs/plans/game-ui.md Â§2, ART-STYLE Â§Motion): objects over the field, not a text row. A lit timber wall bar
    that cracks, a faceted starlight gem with a rolling odometer, the wave on a hanging cloth banner with a CLEARED stamp.
    Colours are palette tokens (the extra ones here mirror src/render/palette.ts). Numbers in data/presentation.ts HUD. */
-:root { --grove: #9fc48f; --star-gold: #ffd36b; --spark: #f4eaa6; --hud-roll: 380ms; }
+:root { --grove: #9fc48f; --star-gold: #ffd36b; --spark: #f4eaa6; --hud-roll: 380ms;
+  /* game HUD (TB-195c), mirrors P.hudEmber/hudDanger/groveDeep/groveHi/woodRim/woodShade */
+  --hud-ember: #d2601e; --hud-danger: #b3261e; --grove-deep: #2f4a28; --grove-hi: #cfe8b8; --wood-rim: #c8a06a; --wood-shade: #2a1a0a; }
 .hud { display: flex; align-items: flex-start; gap: 1.5rem; flex-wrap: wrap; margin-right: auto; }
 .hud-wallbox { display: flex; flex-direction: column; gap: 0.25rem; }
 .hud-wall { position: relative; width: 16rem; height: 2rem; --tone: var(--grove); background: image-set(url("/ui/wallbar.webp") 1x, url("/ui/wallbar@2x.webp") 2x) center / 100% 100% no-repeat;
@@ -727,12 +729,12 @@ body:not([data-mode="camp"]) header { position: fixed; inset: 0 0 auto 0; width:
   border: 0; box-shadow: none; pointer-events: none; background: linear-gradient(color-mix(in srgb, var(--ink) 88%, transparent), color-mix(in srgb, var(--ink) 66%, transparent) 30%, color-mix(in srgb, var(--ink) 22%, transparent) 62%, color-mix(in srgb, var(--ink) 6%, transparent) 85%, transparent); }
 body:not([data-mode="camp"]) header .stat .k { font-size: 1.125rem; color: var(--text); }
 body:not([data-mode="camp"]) header .stat .v { font-size: 1.625rem; }
-body:not([data-mode="camp"]) .hud-wave .k { font-size: 1.125rem; font-weight: 700; color: #ffd98a; text-shadow: 0 0.0625rem 0.125rem #2a1a0a, 0 0 0.25rem #2a1a0a; }
-body:not([data-mode="camp"]) header .stat .v.heart { color: color-mix(in srgb, var(--rose) 55%, #fff4dc); }
-body:not([data-mode="camp"]) .hud-wave .v { font-size: 1.875rem; font-weight: 700; color: #fff4dc; text-shadow: 0 0 0.125rem #2a1a0a, 0 0.0625rem 0.125rem #2a1a0a; }
+body:not([data-mode="camp"]) .hud-wave .k { font-size: 1.125rem; font-weight: 700; color: var(--text); text-shadow: 0 0.0625rem 0.125rem var(--wood-shade), 0 0 0.25rem var(--wood-shade); }
+body:not([data-mode="camp"]) header .stat .v.heart { color: color-mix(in srgb, var(--rose) 55%, var(--text)); }
+body:not([data-mode="camp"]) .hud-wave .v { font-size: 1.875rem; font-weight: 700; color: var(--text); text-shadow: 0 0 0.125rem var(--wood-shade), 0 0.0625rem 0.125rem var(--wood-shade); }
 body:not([data-mode="camp"]) header .stat .v { font-weight: 700; }
-body:not([data-mode="camp"]) header .stat { padding: 0.125rem 0.625rem; border-radius: 999px; background: color-mix(in srgb, var(--ink) 70%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--cream, #f3e6c8) 25%, transparent); text-shadow: 0 0.0625rem 0.0625rem var(--ink), 0 0 0.375rem var(--ink), 0 0 0.75rem var(--ink); }
-.hud-wall .lbl { font-size: 1.125rem; font-weight: 700; color: #fff4dc; text-shadow: 0 0 0.125rem #2a1a0a, 0.0625rem 0.0625rem 0 #2a1a0a, -0.0625rem -0.0625rem 0 #2a1a0a, 0.0625rem -0.0625rem 0 #2a1a0a, -0.0625rem 0.0625rem 0 #2a1a0a; }
+body:not([data-mode="camp"]) header .stat { padding: 0.125rem 0.625rem; border-radius: 999px; background: color-mix(in srgb, var(--ink) 70%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--cream) 25%, transparent); text-shadow: 0 0.0625rem 0.0625rem var(--ink), 0 0 0.375rem var(--ink), 0 0 0.75rem var(--ink); }
+.hud-wall .lbl { font-size: 1.125rem; font-weight: 700; color: var(--text); text-shadow: 0 0 0.125rem var(--wood-shade), 0.0625rem 0.0625rem 0 var(--wood-shade), -0.0625rem -0.0625rem 0 var(--wood-shade), 0.0625rem -0.0625rem 0 var(--wood-shade), -0.0625rem 0.0625rem 0 var(--wood-shade); }
 /* Settings mid-run: wide enough that its two columns never overlap */
 body[data-mode="settings"] .panel { width: min(60rem, calc(100vw - 3rem)); }
 body:not([data-mode="camp"]) .rally { position: fixed; left: 0; right: 0; bottom: 0; padding: 2.5rem 1.75rem 1.25rem; z-index: 2;
@@ -752,9 +754,9 @@ body:not([data-mode="camp"]) .hud .stats { gap: 1rem; flex-wrap: nowrap; }
 body:not([data-mode="camp"]) header .stat { position: relative; align-items: baseline; justify-content: center; gap: 0.5rem; box-sizing: border-box; min-width: 10rem; height: 3.6rem;
   padding: 0.9rem 0.75rem 0; margin-top: -0.25rem; border-radius: 0; background: none; box-shadow: none; border: solid transparent; border-width: 0 2.4rem;
   border-image: image-set(url("/ui/banner.webp") 1x, url("/ui/banner@2x.webp") 2x) 0 48 fill / 0 2.4rem stretch;
-  filter: drop-shadow(0 0.25rem 0.375rem color-mix(in srgb, var(--ink) 80%, transparent)); text-shadow: 0 0 0.125rem #2a1a0a, 0 0.0625rem 0.125rem #2a1a0a; }
-body:not([data-mode="camp"]) header .stat .k { font-weight: 700; color: #ffd98a; }
-body:not([data-mode="camp"]) header .stat .v { line-height: 1; color: #fff4dc; white-space: nowrap; }
+  filter: drop-shadow(0 0.25rem 0.375rem color-mix(in srgb, var(--ink) 80%, transparent)); text-shadow: 0 0 0.125rem var(--wood-shade), 0 0.0625rem 0.125rem var(--wood-shade); }
+body:not([data-mode="camp"]) header .stat .k { font-weight: 700; color: var(--text); }
+body:not([data-mode="camp"]) header .stat .v { line-height: 1; color: var(--text); white-space: nowrap; }
 .hud-wall { --chan: 13.2rem; }
 .hud-wall .fill { width: calc(var(--frac, 1) * var(--chan)); max-width: none; }
 .hud-wall .fill::after { content: ""; position: absolute; inset: 0; background: var(--tone); mix-blend-mode: color; opacity: 0; transition: opacity var(--hud-roll) ease-out; }
@@ -766,34 +768,26 @@ body:not([data-mode="camp"]) .hud-wall .lbl { line-height: 2.5rem; padding: 0 2.
    gets a carved dark stroke over the lit fill; the odometer settles without overshoot and fades each cell's top and bottom so a
    rolling digit never shows two rows; the CLEARED stamp replaces the wave text on a cream-on-forest seal; a buy keeps its label above the burst. */
 body:not([data-mode="camp"]) :is(header .stat, .hud-wave) { min-width: 13.5rem; padding: 0.9rem 0.75rem 0; align-items: baseline; }
-body:not([data-mode="camp"]) :is(header .stat .k, .hud-wave .k) { font-size: 1.125rem; font-weight: 700; letter-spacing: .02em; color: #ffd98a; }
+body:not([data-mode="camp"]) :is(header .stat .k, .hud-wave .k) { font-size: 1.125rem; font-weight: 700; letter-spacing: .02em; color: var(--text); }
 body:not([data-mode="camp"]) :is(header .stat .v, .hud-wave .v) { font-family: var(--display); font-size: 1.75rem; font-weight: 700; line-height: 1; }
-body:not([data-mode="camp"]) .hud-wall .lbl { -webkit-text-stroke: 0.25rem #2a1a0a; paint-order: stroke fill; }
 .hud-wall:is([data-tone="mid"], [data-tone="low"]) .fill::after { opacity: 1; }
 .hud-wall[data-tone="low"] .fill::after { mix-blend-mode: normal; opacity: .7; }
-.odo .strip { transition-timing-function: cubic-bezier(.2, .7, .3, 1); }
-.odo .od { -webkit-mask-image: linear-gradient(transparent, #000 22%, #000 78%, transparent); mask-image: linear-gradient(transparent, #000 22%, #000 78%, transparent); }
 .hud-wave:has(.stamp:not([hidden])) > :not(.stamp) { visibility: hidden; }
-.hud-wave .stamp { top: 55%; font-size: 1.5rem; font-weight: 700; color: #f3f8e6; border-color: #cfe8b8; background: #2f4a28; letter-spacing: .1em;
-  box-shadow: 0 0.125rem 0.375rem #000a; text-shadow: 0 0.0625rem 0 #1a2a14; }
+.hud-wave .stamp { top: 55%; font-size: 1.5rem; font-weight: 700; color: var(--cream); border-color: var(--grove-hi); background: var(--grove-deep); letter-spacing: .1em;
+  box-shadow: 0 0.125rem 0.375rem var(--ink); text-shadow: 0 0.0625rem 0 var(--ink); }
 #buy-btn { position: relative; z-index: 1001; }
 /* TB-195b round 3 (4 Nov): cracks are dark strokes drawn over bar and fill so each stage reads at HUD scale; amber is a burnt-orange
    band distinct from the gold fill; the label sits on a dark plate; the buy burst rises from above the button, clear of its label. */
 .hud-wall::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: none center / 100% 100% no-repeat; z-index: 1; }
-.hud-wall[data-crack="1"]::after { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 40' preserveAspectRatio='none'%3E%3Cg fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cg stroke='%23e8cf9a' stroke-width='4.4'%3E%3Cpath d='M232 6 l-6 9 l7 6 l-5 12'/%3E%3Cpath d='M226 15 l-9 3'/%3E%3C/g%3E%3Cg stroke='%231a0f05' stroke-width='2.2'%3E%3Cpath d='M232 6 l-6 9 l7 6 l-5 12'/%3E%3Cpath d='M226 15 l-9 3'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
-.hud-wall[data-crack="2"]::after { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 40' preserveAspectRatio='none'%3E%3Cg fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cg stroke='%23e8cf9a' stroke-width='4.4'%3E%3Cpath d='M232 6 l-6 9 l7 6 l-5 12'/%3E%3Cpath d='M226 15 l-9 3'/%3E%3Cpath d='M150 5 l5 10 l-7 8 l4 11'/%3E%3Cpath d='M148 23 l10 4'/%3E%3C/g%3E%3Cg stroke='%231a0f05' stroke-width='2.2'%3E%3Cpath d='M232 6 l-6 9 l7 6 l-5 12'/%3E%3Cpath d='M226 15 l-9 3'/%3E%3Cpath d='M150 5 l5 10 l-7 8 l4 11'/%3E%3Cpath d='M148 23 l10 4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
-.hud-wall[data-crack="3"]::after { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 40' preserveAspectRatio='none'%3E%3Cg fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cg stroke='%23e8cf9a' stroke-width='4.4'%3E%3Cpath d='M232 6 l-6 9 l7 6 l-5 12'/%3E%3Cpath d='M226 15 l-9 3'/%3E%3Cpath d='M150 5 l5 10 l-7 8 l4 11'/%3E%3Cpath d='M148 23 l10 4'/%3E%3Cpath d='M72 6 l-4 9 l8 7 l-6 12'/%3E%3Cpath d='M76 22 l9 -3'/%3E%3Cpath d='M272 9 l-5 8 l5 9'/%3E%3C/g%3E%3Cg stroke='%231a0f05' stroke-width='2.2'%3E%3Cpath d='M232 6 l-6 9 l7 6 l-5 12'/%3E%3Cpath d='M226 15 l-9 3'/%3E%3Cpath d='M150 5 l5 10 l-7 8 l4 11'/%3E%3Cpath d='M148 23 l10 4'/%3E%3Cpath d='M72 6 l-4 9 l8 7 l-6 12'/%3E%3Cpath d='M76 22 l9 -3'/%3E%3Cpath d='M272 9 l-5 8 l5 9'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
-.hud-wall[data-tone="mid"] { --tone: #d2601e; }
+.hud-wall[data-tone="mid"] { --tone: var(--hud-ember); }
 .hud-wall[data-tone="mid"] .fill::after { mix-blend-mode: normal; opacity: .75; }
 body:not([data-mode="camp"]) .hud-wall .lbl { inset: auto; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 2; padding: 0 0.625rem; line-height: 1.5rem;
-  border-radius: 0.375rem; background: color-mix(in srgb, #1a0f05 78%, transparent); -webkit-text-stroke: 0; text-shadow: 0 0.0625rem 0.125rem #000; }
-.odo .od { -webkit-mask-image: none; mask-image: none; }
-.odo .strip { transition: none; }
+  border-radius: 0.375rem; background: color-mix(in srgb, var(--wood-shade) 78%, transparent); -webkit-text-stroke: 0; text-shadow: 0 0.0625rem 0.125rem #000; }
 /* the label plate hangs just under the bar so the fill and cracks stay unobstructed */
 body:not([data-mode=camp]) .hud-wallbox { gap: 0; }
 body:not([data-mode=camp]) .hud-wall { margin-bottom: 1.75rem; }
 body:not([data-mode=camp]) .hud-wall .lbl { top: calc(100% + 0.125rem); transform: translateX(-50%); font-size: 1rem; line-height: 1.375rem; }
-body:not([data-mode=camp]) header .stat .v.heart { color: color-mix(in srgb, var(--rose) 35%, #fff4dc); }/* round 3b: one plaque width for Wave, Slain and Heartwood; the stamp sits level-ish inside the plaque; each crack is a dark stroke
+body:not([data-mode=camp]) header .stat .v.heart { color: color-mix(in srgb, var(--rose) 35%, var(--text)); }/* round 3b: one plaque width for Wave, Slain and Heartwood; the stamp sits level-ish inside the plaque; each crack is a dark stroke
    over a pale split so it reads on the lit fill and on the drained channel alike. */
 body:not([data-mode="camp"]) :is(header .stat, .hud-wave) { width: 16rem; min-width: 16rem; }
 .hud-wave .stamp { top: 56%; font-size: 1.25rem; padding: 0 0.5rem; line-height: 1.6rem; }
@@ -802,13 +796,91 @@ body:not([data-mode="camp"]) :is(header .stat, .hud-wave) { width: 16rem; min-wi
 .hud-wave > :not(.stamp) { transition: opacity 0.15s ease-out; }
 
 /* TB-195b round 6: the low tone is a deep danger red, not pale salmon. */
-.hud-wall[data-tone="low"] { --tone: color-mix(in srgb, var(--rose) 55%, #8a1f1a); }
+.hud-wall[data-tone="low"] { --tone: var(--hud-danger); }
 /* round 7: deep danger red on low; rolling digits fade out before the window edge; the wave text crossfades in under the fading stamp */
-.hud-wall[data-tone="low"] { --tone: #b3261e; }
+.hud-wall[data-tone="low"] { --tone: var(--hud-danger); }
 .hud-wall[data-tone="low"] .fill::after { mix-blend-mode: normal; opacity: .9; }
-.odo .od { -webkit-mask-image: linear-gradient(transparent 6%, #000 26%, #000 74%, transparent 94%); mask-image: linear-gradient(transparent 6%, #000 26%, #000 74%, transparent 94%); }
 .hud-wave.stamp-ending:has(.stamp:not([hidden])) > :not(.stamp), .hud-wave.stamp-ending > :not(.stamp) { opacity: 1; transition: opacity 0.15s ease-out; }
 .hud-wave .stamp { opacity: 0; }
 
 /* TB-195b r9: reserve the odometer width so the plaques to its right do not shift as the count grows */
 .odo { min-width: 4.4ch; justify-content: flex-start; }
+
+/* TB-195c refined game HUD (4 Nov). One coherent block that wins over the accreted TB-195b rules above.
+   TYPE: Heartwood ships one weight (400) and synthesis is off, so every HUD label and numeral is that real weight; the weight the eye
+   reads comes from size, tracking and one shared 0.03em same-colour stroke, and a 1-px ink outline lifts it off wood and forest.
+   Label 1.125rem / numeral 1.75rem (wave numeral 2.25rem, the hero), one baseline; colour --text everywhere, starlight --star-gold on an
+   --ink plate. MATERIAL: each plaque is its own plate (grain flipped or toned per plaque) with a hairline contact shadow under a soft cast shadow. The wall bar is 22 x 2.75 rem with 25/50/75 % ticks, tapered cracks, a rose damage trail and a hit flash. */
+:root { --hud-weight: 0.03em; --hud-outline: color-mix(in srgb, var(--ink) 78%, transparent); }
+:root { font-synthesis: none; }
+body:not([data-mode="camp"]) :is(.hud-wave, header .stat, .odo, .hud-wall .lbl) {
+  font-variant-numeric: lining-nums tabular-nums; font-weight: 400; -webkit-text-stroke: var(--hud-weight) currentColor; }
+body:not([data-mode="camp"]) :is(.hud-wave, header .stat) :is(.k, .v) {
+  font-weight: 400; color: var(--text); line-height: 1; white-space: nowrap;
+  text-shadow: 0 0.0625rem 0 var(--hud-outline), 0 -0.0625rem 0 var(--hud-outline), 0.0625rem 0 0 var(--hud-outline), -0.0625rem 0 0 var(--hud-outline), 0 0 0.25rem var(--wood-shade); }
+body:not([data-mode="camp"]) :is(.hud-wave, header .stat) .k { font-size: 1.125rem; letter-spacing: .06em; text-transform: uppercase; }
+body:not([data-mode="camp"]) :is(.hud-wave, header .stat) .v { font-size: 1.75rem; }
+body:not([data-mode="camp"]) .hud-wave .k { font-size: 1.25rem; }
+body:not([data-mode="camp"]) .hud-wave .v { font-size: 2.25rem; }
+body:not([data-mode="camp"]) header .stat .v.heart { color: color-mix(in srgb, var(--rose) 35%, var(--text)); }
+
+/* plaques: the plate is a pseudo so it can turn and tone per plaque; text stays upright above it */
+body:not([data-mode="camp"]) :is(header .stat, .hud-wave) {
+  position: relative; isolation: isolate; border: 0; border-image: none; filter: none; box-sizing: border-box; width: 14rem; min-width: 14rem; height: 3.4rem;
+  padding: 0.7rem 0.75rem 0; align-items: baseline; justify-content: center; gap: 0.5rem; }
+body:not([data-mode="camp"]) .hud-wave { height: 3.7rem; padding-top: 0.75rem; }
+body:not([data-mode="camp"]) :is(header .stat, .hud-wave)::before {
+  content: ""; position: absolute; inset: 0; z-index: -2; box-sizing: border-box; border: solid transparent; border-width: 0 2.4rem;
+  border-image: image-set(url("/ui/banner.webp") 1x, url("/ui/banner@2x.webp") 2x) 0 48 fill / 0 2.4rem stretch;
+  filter: drop-shadow(0 0.0625rem 0 var(--wood-shade)) drop-shadow(0 0.3125rem 0.375rem color-mix(in srgb, var(--ink) 72%, transparent)); }
+body:not([data-mode="camp"]) .hud .stats .stat:nth-child(1)::before { transform: scaleX(-1); }
+body:not([data-mode="camp"]) .hud .stats .stat:nth-child(2)::before { filter: brightness(.92) saturate(1.08) drop-shadow(0 0.0625rem 0 var(--wood-shade)) drop-shadow(0 0.3125rem 0.375rem color-mix(in srgb, var(--ink) 72%, transparent)); }
+body:not([data-mode="camp"]) .hud-wave::before { filter: brightness(1.05) drop-shadow(0 0.0625rem 0 var(--wood-shade)) drop-shadow(0 0.3125rem 0.375rem color-mix(in srgb, var(--ink) 72%, transparent)); }
+/* starlight: gem seated a touch calmer, the count on an ink plate with an ink outline in place of the glow */
+body:not([data-mode="camp"]) .hud-gem { filter: saturate(.85) drop-shadow(0 0 0.5rem color-mix(in srgb, var(--star-gold) 35%, transparent)); }
+body:not([data-mode="camp"]) .odo {
+  font-size: 2rem; line-height: 1.25; height: 1.25em; padding: 0 0.5rem; border-radius: 0.5rem; background: color-mix(in srgb, var(--ink) 60%, transparent); color: var(--star-gold);
+  text-shadow: 0 0.0625rem 0 var(--hud-outline), 0 -0.0625rem 0 var(--hud-outline), 0.0625rem 0 0 var(--hud-outline), -0.0625rem 0 0 var(--hud-outline); }
+.odo .od { height: 1.25em; -webkit-mask-image: linear-gradient(transparent, #000 12%, #000 88%, transparent); mask-image: linear-gradient(transparent, #000 12%, #000 88%, transparent); }
+.odo .strip { line-height: 1.25; transition: none; will-change: transform; }
+
+/* wall bar: 22 x 2.75 rem (the 320x40 piece at 1.2x); fill snaps down, eases up with under 3 % overshoot, rose trail drains after */
+body:not([data-mode="camp"]) .hud-wall { width: 22rem; height: 2.75rem; --chan: 18.15rem; margin-bottom: 1.625rem; }
+body:not([data-mode="camp"]) .hud-wall .fill { left: 1.925rem; top: 0.825rem; height: 1.1rem; background-size: 20.9rem 1.1rem;
+  transition: width var(--hud-down) var(--hud-ease-settle); }
+body:not([data-mode="camp"]) .hud-wall[data-dir="up"] .fill { transition: width var(--hud-roll) cubic-bezier(.3, 1.04, .5, 1); }
+.hud-wall .trail { position: absolute; left: 1.925rem; top: 0.825rem; height: 1.1rem; width: calc(var(--frac, 1) * var(--chan)); border-radius: 0.25rem; background: var(--rose); opacity: .9;
+  transition: width var(--hud-trail) var(--hud-ease-drain) var(--hud-trail-delay); }
+.hud-wall[data-dir="up"] .trail { transition: none; }
+.hud-wall .flash { position: absolute; inset: 0; z-index: 3; border-radius: 0.4rem; pointer-events: none; opacity: 0; }
+.hud-wall .flash.on { animation: wall-flash 1 linear both; }
+@keyframes wall-flash { 0% { background: var(--cream); opacity: var(--flash, .55); } 100% { background: var(--rose); opacity: 0; } }
+.hud-wall:is([data-tone="mid"]) { --tone: var(--hud-ember); }
+.hud-wall[data-tone="low"] { --tone: var(--hud-danger); }
+.hud-wall[data-tone="low"] .fill { animation: wall-throb var(--throb, .9s) ease-in-out infinite alternate; }
+.hud-wall[data-tone="low"] { animation: wall-frame var(--throb, .9s) ease-in-out infinite alternate; }
+@keyframes wall-frame { from { filter: drop-shadow(0 0 0.25rem color-mix(in srgb, var(--rose) 18%, transparent)); } to { filter: drop-shadow(0 0 0.75rem color-mix(in srgb, var(--rose) 45%, transparent)); } }
+:root[data-calm] .hud-wall[data-tone="low"] { animation: none; }
+
+/* cracks: tapered splits with a lit lip on one side, through frame and fill; ticks mark 25/50/75 % of the channel */
+.hud-wall .cracks { display: block; position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; overflow: visible; }
+.hud-wall .cracks .ticks rect { fill: color-mix(in srgb, var(--ink) 60%, transparent); }
+.hud-wall .cracks :is(.c1, .c2, .c3) { display: none; }
+.hud-wall:is([data-crack="1"], [data-crack="2"], [data-crack="3"]) .cracks .c1, .hud-wall:is([data-crack="2"], [data-crack="3"]) .cracks .c2, .hud-wall[data-crack="3"] .cracks .c3 {
+  display: inline; animation: crack-in var(--crack-ms, 220ms) var(--hud-ease-settle, ease-out) both; }
+.cracks .core polygon { fill: var(--ink); } .cracks .lip polygon { fill: var(--wood-rim); }
+@keyframes crack-in { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+:root[data-calm] .hud-wall .cracks :is(.c1, .c2, .c3) { animation: none; }
+
+/* wall label: a small ink plate hanging under the bar, same face as the plaques */
+body:not([data-mode=camp]) .hud-wall .lbl { font-size: 1.125rem; letter-spacing: .06em; line-height: 1.5rem; color: var(--text); background: color-mix(in srgb, var(--ink) 55%, transparent);
+  text-shadow: 0 0.0625rem 0 var(--hud-outline), 0 -0.0625rem 0 var(--hud-outline), 0.0625rem 0 0 var(--hud-outline), -0.0625rem 0 0 var(--hud-outline); }
+
+/* CLEARED stamp: deep grove seal, one solid border, ring thrown at contact; crossfades with the wave text */
+body:not([data-mode="camp"]) .hud-wave .stamp { top: 56%; font-size: 1.5rem; line-height: 1.75rem; letter-spacing: .08em; padding: 0 0.625rem; font-weight: 400; color: var(--cream);
+  background: var(--grove-deep); border: 0.125rem solid var(--grove-hi); box-shadow: 0 0.1875rem 0.25rem color-mix(in srgb, var(--ink) 70%, transparent); text-shadow: 0 0.0625rem 0 var(--ink); -webkit-text-stroke: var(--hud-weight) currentColor; }
+.hud-wave .stamp.ring { animation: stamp-ring 240ms ease-out 1; }
+@keyframes stamp-ring { from { box-shadow: 0 0.1875rem 0.25rem color-mix(in srgb, var(--ink) 70%, transparent), 0 0 0 0 color-mix(in srgb, var(--grove-hi) 40%, transparent); }
+  to { box-shadow: 0 0.1875rem 0.25rem color-mix(in srgb, var(--ink) 70%, transparent), 0 0 0 var(--ring, 1.2rem) transparent; } }
+.hud-wave.stamp-ending > :not(.stamp), .hud-wave.stamp-ending:has(.stamp:not([hidden])) > :not(.stamp) { opacity: 1; transition: opacity var(--hud-stamp-out, 400ms) linear; }
+.hud-wave > :not(.stamp) { transition: opacity var(--hud-stamp-out, 400ms) linear; }

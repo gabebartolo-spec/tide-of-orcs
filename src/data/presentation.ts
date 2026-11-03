@@ -240,30 +240,42 @@ export const JUICE = {
   /** Particle burst (TB-195b: reads at 1080p, Hades-like): count, speed range (rem/s), life range (s), size range (rem), gravity (rem/s²),
    *  drag per 1/60 s; `lift` is an upward kick (rem/s) so sparks arc up then fall; `fan` the half-angle (rad) of the spray round straight
    *  up; `glow` the halo radius × size; `flare` a bright ring at the origin (rem radius) and its life (s); `spawn` the radius (rem) sparks scatter from so frame 1 is no blob. Rem so 1080p and 4K match. */
-  burst: { count: 64, speedMin: 6, speedMax: 19, lifeMin: 0.5, lifeMax: 1.0, sizeMin: 0.16, sizeMax: 0.4, gravity: 34, drag: 0.93, lift: 8, fan: 1.9, glow: 1.8, glowAlpha: 0.14, flare: 1.6, flareLife: 0.28, spawn: 5 },
+  burst: { count: 64, speedMin: 6, speedMax: 19, lifeMin: 0.5, lifeMax: 1.0, sizeMin: 0.16, sizeMax: 0.4, gravity: 22, drag: 0.93, lift: 8, fan: 1.9, glow: 1.8, glowAlpha: 0.14, flare: 1.6, flareLife: 0.28, flare2: 1.1, flare2Delay: 0.16, spawn: 5, hero: 0.28, heroSize: 2.3, heroLife: 1.35, streak: 0.03 },
   /** Stagger: ms between list children entering. */
   stagger: 30,
   /** Stagger: px each child rises from as it enters. */
   rise: 8,
 } as const;
 
-/** Game HUD over the field (TB-195b, docs/plans/game-ui.md §2): starlight gem with an odometer, the wave banner and its clear stamp,
+/** Game HUD over the field (TB-195b, refined TB-195c, docs/plans/game-ui.md §2): starlight gem with an odometer, the wave banner and its clear stamp,
  *  the lit timber wall bar. Times in ms, sizes in rem. */
 export const HUD = {
   /** Wall bar crack stages: one more crack shows as the barricade falls below each fraction (highest first). */
   cracks: [0.75, 0.5, 0.25] as readonly number[],
   /** Wall bar fill colour bands: above `high` it glows grove, above `low` amber, else rose (and the bar throbs). */
   high: 0.5, low: 0.25,
-  /** Odometer: ms each digit rolls to its new place. */
-  roll: 380,
-  /** Gem sparkle: smallest starlight gain that sparkles, ms between sparkles, burst scale. */
-  sparkleMin: 1, sparkleGap: 900, sparkleScale: 0.3,
-  /** Wave-clear stamp: ms it slams in (from `stampFrom` scale), ms it holds, ms it fades. */
-  stampIn: 260, stampFrom: 1.5, stampHold: 1100, stampOut: 400,
-  /** Wall bar shake on a hit: rem amplitude per hit fraction of max HP (capped at `shakeMax`), ms. */
-  shakeK: 6, shakeMax: 0.6, shakeMs: 360,
-  /** Odometer: ms each changed digit's strip rolls from its old digit to its new one (all together, no overshoot). */
-  odoRoll: 480,
+  /** Three curves for the whole HUD (TB-195c): impact = hard in, no overshoot; settle = lands with a small spring; drain = slow out. */
+  ease: { impact: 'cubic-bezier(.55, 0, .85, .35)', settle: 'cubic-bezier(.2, .7, .3, 1)', drain: 'cubic-bezier(.2, .6, .3, 1)', settleBack: 1.7 },
+  /** Wall fill: ms it snaps to a lower HP, ms it eases up on a repair (overshoot <= 3 %), ms the rose damage trail waits then drains. */
+  fillDown: 90, fillUp: 380, trailDelay: 250, trailDrain: 320,
+  /** Low-HP throb period (s): `throbAt25` at the low band edge, `throbAt10` at 10 % and below. */
+  throbAt25: 0.9, throbAt10: 0.45,
+  /** Odometer: ms each changed digit rolls, ms between right-to-left digit starts, ms of landing flash, minimum ms between displayed
+   *  rolls (a kill stream coalesces to one roll per gap), blur (rem) at the start of a roll. */
+  odoRoll: 380, odoStagger: 40, odoLand: 90, odoGap: 250, odoBlur: 0.06,
+  /** Gem glint: smallest starlight gain that glints, ms between glints, glint scale, scale of a big gain (>= `sparkleBig` of the total), and that fraction. */
+  sparkleMin: 1, sparkleGap: 450, sparkleScale: 0.12, sparkleBigScale: 0.3, sparkleBig: 0.05,
+  /** Wave-clear stamp: ms of anticipation (scale `stampPre`, opacity rising), ms it slams in (from `stampFrom` to `stampLow`), ms it settles to 1,
+   *  turn from `stampTurnFrom` to `stampTurn` degrees, ms it holds, ms it fades, banner jolt (rem, ms), contact ring (rem). */
+  stampPre: 60, stampPreScale: 1.6, stampFrom: 1.7, stampLow: 0.94, stampSlam: 120, stampSettle: 140, stampTurnFrom: -9, stampTurn: -3,
+  stampHold: 900, stampOut: 400, stampJolt: 0.25, stampJoltMs: 66, stampRing: 1.2,
+  /** Wall hit (TB-195c): shake at `shakeHz` decaying e^(-shakeDecay t) over `shakeMs`; amplitude rem per hit fraction (capped at `shakeMax`, floor
+   *  `shakeMin`); the second axis is `shakeY` of the first, a quarter turn behind; white->rose flash of `flashMs`; crack draw-on `crackMs`, its stronger
+   *  shake (rem), the tone band changing `toneLag` ms after the crack, `chips` timber chips. */
+  shakeK: 6, shakeMax: 0.6, shakeMin: 0.1875, shakeMs: 280, shakeHz: 10, shakeDecay: 6, shakeY: 0.4,
+  flashMs: 60, flashAlpha: 0.55, crackMs: 220, crackShake: 0.9, toneLag: 120, chips: 5,
+  /** Where along the bar each crack stage sits (fraction of its width), for the chips. */
+  crackX: [0.725, 0.47, 0.225] as readonly number[],
 } as const;
 
 /** Tooltip plates (TB-195c): rows = most now → next lines shown; gap = rem from the cursor; in = ms spring-in; w = plate width in rem. */

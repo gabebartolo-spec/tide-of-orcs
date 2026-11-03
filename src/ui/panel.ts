@@ -32,7 +32,7 @@ import { drawSigil } from '../render/sigil';
 import { P } from '../render/palette';
 
 /** Buy sparks (TB-195b): starlight gold, frost blue, grove green and lilac, so they read against the gold button. */
-const BUY_SPARKS = [P.starGold, P.frost, P.grove, P.lilac] as const;
+const BUY_SPARKS = [P.starGold, P.spark, P.amber] as const; // TB-195c: the HUD's own gold family, no pastels
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string): T => document.getElementById(id) as T;
 const VAN_NAME: Record<VanType, string> = { spear: 'Spearman', blade: 'Bladedancer' };
