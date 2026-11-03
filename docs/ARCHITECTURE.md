@@ -24,7 +24,7 @@ tide-of-orcs/
       orcs.ts           ORC_TYPES, ORC_KINDS, FOE_FX (Fury/Swarm)
       bosses.ts         BOSS_WAVE, BOSS_SCRIPT (TB-081)
       heartwood.ts      HW_NODES, HW_FX (TB-053)
-      audio.ts          AUDIO, CUES, cueFor(event) (TB-062)
+      audio.ts          AUDIO, CUES (optional `file` stem, e.g. ui/click), cueFor(event) (TB-062), uiSound hook (TB-195a)
       presentation.ts   SKY, dusk(t): render-only timings (TB-061)
       strings.ts        STR: all user-facing copy
     sim/
