@@ -1,3 +1,4 @@
+import { bindSaveTriggers } from './saveTriggers';
 import { STEP } from './data/balance';
 import { GameController } from './game';
 import { FieldRenderer } from './render/field';
@@ -98,5 +99,4 @@ function frame(now: number): void {
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
-addEventListener('pagehide', () => game.save());
-addEventListener('beforeunload', () => game.save());
+bindSaveTriggers(window, document, () => game.save());

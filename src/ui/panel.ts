@@ -282,8 +282,8 @@ export class Panel {
   private importTimer = 0;
   private wipeTimer = 0;
   private reportTimers: number[] = [];
-  /** After an import or wipe the old satchel pick and new-loot badge belong to the old game (TB-199). */
-  private resetSatchelView(): void { this.satchel.selected = null; this.markNew(0); }
+  /** After an import or wipe the old satchel pick, new-loot badge (TB-199) and tide pick (TB-216b) belong to the old game. */
+  private resetSatchelView(): void { this.satchel.selected = null; this.markNew(0); this.pickTier = 0; }
   private importSave(): void {
     const btn = $('btn-import'), str = $<HTMLTextAreaElement>('set-blob').value;
     if (!str.trim()) return;
