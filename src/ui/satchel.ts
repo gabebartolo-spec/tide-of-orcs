@@ -36,6 +36,9 @@ const setBlock = (id: string, n: number, boost = 0): string => {
   return `<div class="set"><div class="k">${STR.setProgress(name, n)}</div>${([2, 4, 6] as const).map((t, i) => `<div class="tier${n > 0 && n + boost >= t ? ' on' : ''}">${t} · ${fx[i]}</div>`).join('')}</div>`;
 };
 
+/** A finger selects with a tap and wears with the Wear button; a long-press must not start a drag ghost (TB-218). */
+const coarse = (): boolean => typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
+
 export class SatchelPane {
   selected: string | null = null;
   private sig = '';
@@ -125,7 +128,7 @@ export class SatchelPane {
     const l = this.loot, worn = new Set(Object.values(l.equipped));
     this.sig = this.signature(); ($('sat-filter') as HTMLSelectElement).value = l.lootFilter.minRarity;
     const cell = (slot: Slot, it?: Item, w = false) => it
-      ? `<button class="item r-${it.rarity}${it.uid === this.selected ? ' sel' : ''}" data-uid="${it.uid}"${w ? ` data-pocket="${slot}"` : ' draggable="true"'}>${glyph(slot, it)}<span class="txt"><span class="slot">${STR.slotName[slot]}${it.locked ? STR.lockedMark : ''}${it.uid === l.heirloom ? STR.heirloomMark : ''}</span><span class="nm">${itemName(it)}</span>${pathTag(it)}</span></button>`
+      ? `<button class="item r-${it.rarity}${it.uid === this.selected ? ' sel' : ''}" data-uid="${it.uid}"${w ? ` data-pocket="${slot}"` : (coarse() ? '' : ' draggable="true"')}>${glyph(slot, it)}<span class="txt"><span class="slot">${STR.slotName[slot]}${it.locked ? STR.lockedMark : ''}${it.uid === l.heirloom ? STR.heirloomMark : ''}</span><span class="nm">${itemName(it)}</span>${pathTag(it)}</span></button>`
       : `<div class="item empty"${w ? ` data-pocket="${slot}"` : ''}>${glyph(slot)}<span class="txt"><span class="slot">${STR.slotName[slot]}</span></span></div>`;
     $('sat-worn').innerHTML = SLOTS.map((s) => cell(s, l.items.find((i) => i.uid === l.equipped[s]), true)).join('');
     const boost = this.game.state.stats.setBoost, sets = Object.entries(setCounts(l));

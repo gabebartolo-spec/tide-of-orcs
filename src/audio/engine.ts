@@ -37,6 +37,10 @@ export class AudioEngine {
     void this.load(AMBIENT).then((b) => { if (b) this.loop(b, this.amb); });
   }
 
+  /** The page went to the background (TB-218): stop the audio clock and the output. */
+  suspend(): void { if (this.ctx && this.ctx.state === 'running') void this.ctx.suspend(); }
+  resume(): void { if (this.ctx && this.ctx.state !== 'running') void this.ctx.resume(); }
+
   setVolume(v: number): void { this.volume = v; if (this.ctx) this.master.gain.value = v; }
 
   consume(events: SimEvent[]): void {

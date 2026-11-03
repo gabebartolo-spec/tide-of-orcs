@@ -835,3 +835,23 @@ html, body { touch-action: pan-x pan-y; }
   body:not([data-mode="camp"]) header .stat .k, body:not([data-mode="camp"]) .hud-wave .k { font-size: 1rem; }
   body:not([data-mode="camp"]) header .stat .v, body:not([data-mode="camp"]) .hud-wave .v { font-size: 1.5rem; }
 }
+
+/* Touch input (TB-218 slice I): the HUD never eats a touch (a finger that starts over it aims), no drag ghosts or selection handles,
+   and a corner mute toggle in the run view. Pointer-gated: the desktop mouse view is unchanged. */
+img { -webkit-user-drag: none; }
+button img, .item img { pointer-events: none; }
+.mute-corner { display: none; }
+@media (pointer: coarse) {
+  body[data-mode="run"] header > .hud, body[data-mode="run"] header > .hud * { pointer-events: none; }
+  #btn-mute { min-height: 3rem; }
+  body[data-mode="run"] #btn-settings { min-width: 3rem; min-height: 3rem; margin-left: 3.5rem; }
+  body[data-mode="run"] .mute-corner { display: block; position: fixed; z-index: 4; box-sizing: border-box; width: 3rem; height: 3rem; padding: 0.625rem;
+    left: max(1.75rem, env(safe-area-inset-left)); bottom: max(1.25rem, env(safe-area-inset-bottom)); border: 0.0625rem solid var(--line); border-radius: 0.5rem;
+    background: color-mix(in srgb, var(--ink) 70%, transparent); color: var(--text); }
+}
+.mute-corner svg { display: block; width: 100%; height: 100%; fill: currentColor; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.mute-corner .wave, .mute-corner .slash { fill: none; }
+.mute-corner .slash { display: none; stroke: var(--rose); }
+.mute-corner[aria-pressed="true"] .slash { display: block; }
+.mute-corner[aria-pressed="true"] .wave { display: none; }
+#btn-mute[aria-pressed="true"] { border-color: var(--rose); }
