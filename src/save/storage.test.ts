@@ -7,7 +7,7 @@ const mem = new Map<string, string>();
 (globalThis as { localStorage?: unknown }).localStorage = {
   getItem: (k: string) => mem.get(k) ?? null, setItem: (k: string, v: string) => { mem.set(k, v); }, removeItem: (k: string) => { mem.delete(k); },
 };
-const save = (): Save => ({ version: CURRENT_VERSION as 12, savedAt: 0, run: freshRun(), meta: freshMeta(), settings: defaultSettings() });
+const save = (): Save => ({ version: CURRENT_VERSION as 13, savedAt: 0, run: freshRun(), meta: freshMeta(), settings: defaultSettings() });
 
 describe('failed save load (TB-199)', () => {
   beforeEach(() => { mem.clear(); clearLoadFailed(); });
