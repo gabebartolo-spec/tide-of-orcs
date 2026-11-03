@@ -11,6 +11,8 @@ export class AudioEngine {
   private bed: Bed = MUSIC[0];
   private boss!: GainNode;
   private bossSrc: AudioBufferSourceNode | null = null;
+  /** A boss wave began before the boss track finished loading; start it when the load lands. */
+  private bossPending = false;
   private bufs = new Map<string, AudioBuffer | null>();
   private lastAt = new Map<Cue, number>();
   private volume = 1;
@@ -30,7 +32,7 @@ export class AudioEngine {
       void this.load(b).then((buf) => { if (buf) this.loop(buf, g); });
     }
     this.boss = this.ctx.createGain(); this.boss.gain.value = 0; this.boss.connect(this.music);
-    void this.load(BOSS_BED);
+    void this.load(BOSS_BED).then((buf) => { if (buf && this.bossPending) this.startBoss(); });
     for (const c of Object.keys(CUES)) void this.load(c);
     void this.load(AMBIENT).then((b) => { if (b) this.loop(b, this.amb); });
   }
@@ -52,7 +54,10 @@ export class AudioEngine {
 
   /** Boss track from its first bar; the run's bed fades out under it. */
   private startBoss(): void {
-    const ctx = this.ctx, buf = this.bufs.get(BOSS_BED); if (!ctx || !buf) return;
+    const ctx = this.ctx; if (!ctx) return;
+    const buf = this.bufs.get(BOSS_BED);
+    if (!buf) { this.bossPending = !this.bufs.has(BOSS_BED); return; }
+    this.bossPending = false;
     this.bossSrc?.stop();
     const src = ctx.createBufferSource(); src.buffer = buf; src.loop = true; src.connect(this.boss); src.start();
     this.bossSrc = src;
@@ -61,6 +66,7 @@ export class AudioEngine {
   }
 
   private endBoss(): void {
+    this.bossPending = false;
     const ctx = this.ctx, src = this.bossSrc; if (!ctx || !src) return;
     this.ramp(this.boss.gain, 0, AUDIO.bossFade);
     this.ramp(this.beds.get(this.bed)!.gain, 1, AUDIO.bossFade);

@@ -105,7 +105,9 @@ export class Sprites {
       if (c.width < fw || c.height < fh) { c.width = Math.max(c.width, fw); c.height = Math.max(c.height, fh); }
       cg.clearRect(0, 0, fw, fh); cg.globalCompositeOperation = 'source-over'; cg.drawImage(img, fx, fy, fw, fh, 0, 0, fw, fh);
       cg.globalCompositeOperation = 'source-atop'; cg.fillStyle = tint; cg.fillRect(0, 0, fw, fh);
+      if (flash) g.filter = 'brightness(2.2)';
       g.drawImage(c, 0, 0, fw, fh, dx, dy, w, h);
+      if (flash) g.filter = 'none';
     }
     return true;
   }
