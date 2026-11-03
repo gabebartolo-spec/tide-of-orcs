@@ -21,7 +21,8 @@ import { Rarity } from './data/loot';
 import { Save, CURRENT_VERSION, sanitizeSettings } from './save/schema';
 import { clearLoadFailed, clearSave, exportSave, importSave, readSave, writeSave } from './save/storage';
 import { LootKind, LootRecord, appendLoot, appendTelemetry, lootRecord, lootStart, readLoot, readTelemetry, runRecord, telemetryJson } from './save/telemetry';
-import { setTiers } from './sim/gear';
+import { applyGear, setTiers } from './sim/gear';
+import { Stats, deriveStats } from './sim/stats';
 import { SimEvent } from './sim/events';
 import { gain } from './sim/prestige';
 
@@ -52,6 +53,11 @@ export class GameController {
   setAim(x: number, y: number): void { this.aim = { x, y }; }
   clearAim(): void { this.aim = null; }
   buy(id: NodeId): boolean { return buy(this.state, this.events, id); }
+  /** Tooltip plate preview (TB-195c): the stats now and with one more rank of id. Read-only. */
+  previewNode(id: NodeId): { now: Stats; next: Stats } {
+    const s = this.state, lv = { ...s.run.levels, [id]: (s.run.levels[id] ?? 0) + 1 };
+    return { now: s.stats, next: applyGear(deriveStats(lv, s.meta.hwLevels, s.meta.camp.levels, s.run.path ?? null), s.meta.loot) };
+  }
   buyHw(id: HwId): boolean { const ok = buyHw(this.state, this.events, id); if (ok) this.save(); return ok; }
   /** Encampment intent (TB-188a): raise a building one level; saves on success. */
   upgradeBuilding(id: BuildingId): boolean { const ok = upgradeBuilding(this.state, this.events, id); if (ok) this.save(); return ok; }

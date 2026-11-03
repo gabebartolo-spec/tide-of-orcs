@@ -178,3 +178,6 @@ export const HUD = {
   /** Wall bar shake on a hit: rem amplitude per hit fraction of max HP (capped at `shakeMax`), ms. */
   shakeK: 6, shakeMax: 0.35, shakeMs: 220,
 } as const;
+
+/** Tooltip plates (TB-195c): rows = most now → next lines shown; gap = rem from the cursor; in = ms spring-in; w = plate width in rem. */
+export const PLATE = { rows: 3, gap: 1.25, in: 120, w: 19 } as const;
