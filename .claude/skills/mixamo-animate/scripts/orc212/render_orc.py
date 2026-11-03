@@ -29,6 +29,29 @@ for o in bpy.data.objects:
         mw = o.matrix_world.copy(); o.parent = None; o.matrix_world = mw
         md = o.modifiers.new("arm", 'ARMATURE'); md.object = axa if axe else bip
 ac = bip.animation_data.action; f0, f1 = map(int, ac.frame_range)
+def fcs(act):  # Blender 5 layered actions: every fcurve with its channelbag
+    for L in act.layers:
+        for st in L.strips:
+            for cb in st.channelbags:
+                for fc in list(cb.fcurves): yield cb, fc
+ARMFROM = os.environ.get("ARMFROM")  # walk (TB-212 critic: the clip carries the axe level like a rifle): both arms + axe from the model's own ANM_IDLE (axe hanging at the side), frame for frame
+ARM = lambda b: b.startswith(("Bip001 R ", "Bip001 L ")) and not any(k in b for k in ("Thigh", "Calf", "Foot", "Toe"))
+if ARMFROM:
+    old = set(bpy.data.objects); bpy.ops.import_scene.fbx(filepath=ARMFROM); new = [o for o in bpy.data.objects if o not in old]
+    b2 = next(o for o in new if o.name.startswith("Bip001")); a2 = next(o for o in new if o.name.startswith("Armature") and o.type == 'ARMATURE')
+    i0, i1 = map(int, b2.animation_data.action.frame_range); IDLE = []
+    for F in range(i0, i1):
+        sc.frame_set(F); bpy.context.view_layer.update()
+        hw = b2.matrix_world @ b2.pose.bones["Bip001 R Hand"].matrix; aw = a2.matrix_world @ a2.pose.bones["Axe_1_Dummy"].matrix
+        IDLE.append(({pb.name: pb.matrix_basis.copy() for pb in b2.pose.bones if ARM(pb.name)}, hw.inverted() @ aw))
+    for o in new: bpy.data.objects.remove(o, do_unlink=True)
+    for cb, fc in fcs(ac):
+        if any(f'"{b}"' in fc.data_path for b in IDLE[0][0]): cb.fcurves.remove(fc)
+    axa.animation_data.action = None
+    print("ARMFROM idle frames", len(IDLE), "arm bones", len(IDLE[0][0]))
+FADE = os.environ.get("AXEFADE")  # death (TB-212 critic: the axe popped out between frames 2 and 3): fade it linearly over a:b instead
+if FADE:
+    fa, fb = map(int, FADE.split(":")); ma.surface_render_method = 'BLENDED'; abs_ = ma.node_tree.nodes["Principled BSDF"].inputs["Alpha"]
 if os.environ.get("LOOP"): f1 -= 1
 cam = bpy.data.objects.new("cam", bpy.data.cameras.new("cam")); sc.collection.objects.link(cam); sc.camera = cam
 cam.data.type = "ORTHO"; cam.data.ortho_scale = ORTHO
@@ -47,6 +70,15 @@ TRACK = bool(os.environ.get("TRACK")); sc.frame_set(f0); bpy.context.view_layer.
 for i, F in enumerate(range(f0, f1 + 1)):
     if i % STEP: continue
     sc.frame_set(F)
+    if ARMFROM:
+        pose, rel = IDLE[n % len(IDLE)]
+        for b, m in pose.items(): bip.pose.bones[b].matrix_basis = m
+        bpy.context.view_layer.update(); axa.pose.bones["Axe_1_Dummy"].matrix = axa.matrix_world.inverted() @ (bip.matrix_world @ bip.pose.bones["Bip001 R Hand"].matrix) @ rel
+        bpy.context.view_layer.update()
+    if FADE:
+        al = min(1, max(0, (fb - n) / (fb - fa))); abs_.default_value = al
+        for o in bpy.data.objects:
+            if o.name.startswith("polySurface34"): o.hide_render = al <= 0
     if TRACK:  # death: the clip falls ~2 m backward; follow the pelvis along the ground so the body stays on its anchor
         c0 = cam.location.copy(); dv = bip.matrix_world @ bip.pose.bones["Bip001 Pelvis"].head - P0; cam.location = base + Vector((dv.x, dv.y, 0))
     if os.environ.get("GROUND"):  # death (TB-212 critic): the clip's knock-back lifts the whole body off the ground; drop the frame so the lowest point sits on it
@@ -55,10 +87,8 @@ for i, F in enumerate(range(f0, f1 + 1)):
             if o.type == 'MESH' and not o.name.startswith(("polySurface34", "Box001")) and not o.hide_render:  # body only: the axe haft can poke below; Box001 is a hidden helper pinned at z 0
                 e = o.evaluated_get(dg); lo = min([lo] + [(e.matrix_world @ v.co).z for v in e.data.vertices])
         if lo > 0: cam.location.z = base.z + lo
-        print("LO", n, round(lo, 3))
-    if os.environ.get("AXEHIDE"):  # death (TB-212 critic): from this frame the clip throws the axe free and it stands through the body; drop it from the render
-        for o in bpy.data.objects:
-            if o.name.startswith("polySurface34"): o.hide_render = n >= int(os.environ["AXEHIDE"])
+        hz = (bip.matrix_world @ bip.pose.bones["Bip001 Head"].head).z - lo; pz = (bip.matrix_world @ bip.pose.bones["Bip001 Pelvis"].head).z - lo
+        print("LO", n, round(lo, 3), "HEADZ", round(hz, 2), "PELZ", round(pz, 2))
     sc.render.filepath = f"{OUT}/{KEY}_{n}.png"; bpy.ops.render.render(write_still=True); n += 1
 sc.frame_set(f0); cam.location = base; bpy.context.view_layer.update()
 g = world_to_camera_view(sc, cam, Vector((0, 0, 0)))

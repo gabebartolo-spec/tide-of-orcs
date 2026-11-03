@@ -1,12 +1,13 @@
 #!/bin/sh
-# Usage: run_all.sh <out> [textures dir; recolor.py output for the green skin]. Spec = key:clip:loop:track(death: TRACK GROUND AXEHIDE=3):ortho:camy.
+# Usage: run_all.sh <out> [textures dir; recolor.py output for the green skin]. Spec = key:clip:loop:track(death: TRACK GROUND AXEFADE=2:6):ortho:camy:armfrom.
 # Render the TB-212 grunt clips at the field camera (and the front, CAMROT 90) into $1/game and $1/front, through the render slot.
-W=C:/Users/DANTE/Documents/GitHub/tide-of-orcs-wt; S=C:/Users/DANTE/Documents/tide-assets/sketchfab/orc; O=$1; T=${2:-$S/textures}; H=$(cd "$(dirname "$0")" && pwd)
-for spec in "orc.grunt:ANM_WALK:1::3.0:0" "orc.grunt.attack:ANM_ATTACK_CRIT:1::3.8:-0.3" "orc.grunt.death:ANM_DEATH::1:3.0:0"; do
-  IFS=: read k c l t o y <<E
+# Walk: ANM_WALK legs/torso with both arms + axe from the model's own ANM_IDLE (low two-hand carry; critic: the walk's own level carry read as a rifle).
+W=C:/Users/DANTE/Documents/GitHub/tide-of-orcs-wt; S=C:/Users/DANTE/Documents/tide-assets/sketchfab/orc; A=$S/source/FBX/Animations; O=$1; T=${2:-$S/textures}; H=$(cd "$(dirname "$0")" && pwd)
+for spec in "orc.grunt:ANM_WALK:1::3.0:0:ANM_IDLE" "orc.grunt.attack:ANM_ATTACK_CRIT:1::3.8:-0.3:" "orc.grunt.death:ANM_DEATH::1:3.0:0:"; do
+  IFS=: read k c l t o y f <<E
 $spec
 E
   for v in game:0 front:90; do
-    ORTHO=$o CAMY=$y LOOP=$l TRACK=$t GROUND=$t AXEHIDE=${t:+3} CAMROT=${v#*:} bash $W/blender_slot.sh -b --factory-startup --python "$H/render_orc.py" -- "$S/source/FBX/Animations/$c.fbx" "$T" "$O/${v%%:*}" "$k" 2>&1 | grep -E "ANCHOR|FRAMES|Error" | sed "s/^/$k ${v%%:*} /"
+    ARMFROM=${f:+$A/$f.fbx} ORTHO=$o CAMY=$y LOOP=$l TRACK=$t GROUND=$t AXEFADE=${t:+2:6} CAMROT=${v#*:} bash $W/blender_slot.sh -b --factory-startup --python "$H/render_orc.py" -- "$A/$c.fbx" "$T" "$O/${v%%:*}" "$k" 2>&1 | grep -E "ANCHOR|FRAMES|LO |Error" | sed "s/^/$k ${v%%:*} /"
   done
 done
