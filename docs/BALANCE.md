@@ -92,7 +92,7 @@ cap = 2 + ranks        mend = 0.03 × mend × maxhp per second
 
 ### Economy
 - Provoke is per kind now (TB-080, see Fury/Swarm above). Blood Banners retired.
-- Node price at purchase: `cost = round(base × growth^rank × 1.1^max(0, w − 10))` (wave-scaled since P-001; ×1 to wave 10, ×4.18 at 25, ×45.3 at 50; rate 1.25 until P-142).
+- Node price at purchase: `cost = round(round(base × growth^rank) × 1.1^max(0, w − 10))` (the rank price is rounded first, then the wave-scaled price; director 4 Nov kept the code) (wave-scaled since P-001; ×1 to wave 10, ×4.18 at 25, ×45.3 at 50; rate 1.25 until P-142).
 - `starMult = 1.08^glean` (Gleaning sits under War Drums, 5 ranks; P-142). Heartwood gives no passive bonus (P-142): it is only spent on the Heartwood tree.
 
 ### Prestige
