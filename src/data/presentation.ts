@@ -215,13 +215,13 @@ export const CAMP_DRAW_ORDER = [...BUILDINGS].sort((a, b) => CAMP_SPOTS[a.id].y 
 export const CAMP_FAUNA = {
   elk: [
     { dx: -105, dy: -22, flip: false, phase: 0 }, { dx: 70, dy: -40, flip: false, phase: 0.55 },
-    { dx: 312, dy: 0, flip: false, phase: 0.2 },
+    { dx: 300, dy: -26, flip: false, phase: 0.2 },
   ],
   birds: { n: 5, y0: -262, y1: -228, speed: [9, 16], flap: [1.4, 2.4], span: 7, a: 0.8 },
 } as const;
 /** Elk sheet layout (scene units for the rect; `n` frames in a grid of `cols`, played at `fps`), written by post_elk.py. */
 export interface CampSheetRect { readonly x: number; readonly y: number; readonly w: number; readonly h: number; readonly n: number; readonly cols: number; readonly fps: number }
-export const CAMP_ELK_ART: CampSheetRect = /*ELK*/{ x: 538.2, y: -183.5, w: 97.5, h: 88.8, n: 64, cols: 8, fps: 6.0 }/*EEND*/;
+export const CAMP_ELK_ART: CampSheetRect = /*ELK*/{ x: 557.0, y: -161.0, w: 68.0, h: 61.7, n: 64, cols: 8, fps: 6.0 }/*EEND*/;
 
 export const CAMP_LIFE = {
   cap: 120,

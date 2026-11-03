@@ -210,7 +210,7 @@ scene pixel scale to an offscreen canvas and blitted, so the camp costs four `dr
 ## Camp elk (TB-208)
 The animals grazing behind the camp are the Sketchfab "Realistic Animated Elk" (WildMesh 3D, CC BY 4.0), never a code-drawn
 creature. `render_camp_backdrop.py` pass `elk` imports the gltf into the camp scene (same camera, sun, sky fill and shadow
-catcher as the buildings), scales it to `ELK_LEN` 66 units nose to tail, and renders the model's own `Stand_Eating_01` clip
+catcher as the buildings), scales it to `ELK_LEN` 45 units nose to tail (shoulder about 0.75 of a villager's height; 66 read 1.4x too big), renders at `PX` 3 (204x185 px cells, sheet 0.47 MB), and renders the model's own `Stand_Eating_01` clip
 as authored every 4th frame (`ELK_STEP` 4: 64 frames, 6 fps, loops; every 8th frame snapped the head down in one step).
 The render border keeps 0.04 of the frame clear left and below so the shadow, which falls lower left like the buildings', is
 never cut. The pass also renders `bg.png`, the empty plate: `post_elk.py` divides the shadow catcher's veil out of each frame
@@ -218,4 +218,4 @@ against it (a' = (a - bg) / (1 - bg), the faint occlusion halo ramped to zero), 
 border, crops all frames to one shared rect, packs `public/decor/camp/elk.webp` (8 per row) and prints `CAMP_ELK_ART`. Each
 elk in `CAMP_FAUNA.elk` is offset and starts at its own `phase` so the herd does not graze in step. None is mirrored: a flip
 mirrors the baked shadow against the camp sun. Elk stand at least one elk length clear of every building and of the
-Materials panel.
+Materials panel, and all graze on the open meadow in one band (dy -22 to -40), never in the treeline grass.

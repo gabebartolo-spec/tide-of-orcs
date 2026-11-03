@@ -15,7 +15,7 @@ ROAD_Y, ROAD_HALF = 232, 13                       # road centre and half width (
 # building centres (scene x) and screen-width footprint at level 3 in scene units; levels 1/2 are LV_K of it
 SPOTS = {"bowyer": (230, 234, BACK_Y), "forge": (470, 234, FRONT_Y), "kitchen": (730, 242, BACK_Y), "training": (975, 278, FRONT_Y)}  # director 3 Nov round 3: 1.6x round 2, two staggered rows in a full-screen 1194x672 view
 LV_K = {1: 0.8, 2: 0.9, 3: 1.0}
-PX = float(os.environ.get("PX", "4"))
+PX = float(os.environ.get("PX", "4"))   # the elk pass is rendered with PX=3 (TB-208)
 ONLY = [s for s in os.environ.get("ONLY", "").split(",") if s]
 CAMP = r"C:\Users\DANTE\Documents\tide-assets\camp"
 rng = random.Random(1886)
@@ -272,7 +272,7 @@ for sx, sy, sz in ((470, -40, 0.32), (520, -52, 0.2), (1080, -30, 0.4), (1130, -
 # Stand_Eating_01 clip played exactly as authored, rendered frame by frame in its own pass so the scene can loop it.
 ELK = os.environ.get("ELK", "C:/Users/DANTE/Documents/tide-assets/sketchfab/elk/scene.gltf")
 ELK_AT = (600, -110)            # scene (x, y) of the elk's hooves
-ELK_LEN = float(os.environ.get("ELK_LEN", "66"))   # nose-to-tail length, scene units (a real elk is ~2.4 m to a ~8 m building)
+ELK_LEN = float(os.environ.get("ELK_LEN", "45"))   # nose-to-tail length, scene units (a real elk is ~2.4 m to a ~8 m building)
 ELK_CLIP, ELK_STEP = "Stand_Eating_01", int(os.environ.get("ELK_STEP", "4"))   # the model's graze loop (256 frames at 24 fps)
 def load_elk():
     before = set(sc.objects); bpy.ops.import_scene.gltf(filepath=ELK)
