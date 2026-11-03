@@ -61,6 +61,8 @@ export interface StatLine { stat: string; op: 'mul' | 'add'; value: number }
 /** `path` (TB-193a): a path set drops only while that path is the run's chosen path. */
 export interface SetDef { id: string; name: string; bonus: Record<2 | 4 | 6, StatLine[]>; path?: PathId }
 /** Set effect numbers (TB-099, BALANCE ## Proposed P-099). Field distances are in field px (~20 px per metre). */
+/** Chance a legendary drop rolls as a set piece (TB-219; was inline in lootRoll). */
+export const SET_CHANCE = 0.5;
 export const SET_FX = {
   knifeRate: 0.25, bleedAmp: 0.3, bleedSecs: 3, fanEvery: 3, fanKnives: 5, fanRad: 0.18,
   burn: 0.3, burnSpread: 2, spreadReach: 90, cinderSecs: 4, slow: 0.25,

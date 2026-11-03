@@ -1,5 +1,5 @@
 import { MAT_DROP, MAT_IDS } from '../data/camp';
-import { ARROWS, FIELD, LOB, PLAYER } from '../data/balance';
+import { ARROWS, FIELD, LOB, PLAYER, SIM_MISC } from '../data/balance';
 import { FIREBALL } from '../data/orcs';
 import { spawnOrc } from './step';
 import { EventBus } from './events';
@@ -116,7 +116,7 @@ export function addZone(s: SimState, kind: Zone['kind'], x: number, y: number, r
 
 export function damage(s: SimState, ev: EventBus, o: Orc, amt: number, byLob = false): void {
   if (o.dead) return;
-  o.hp -= amt * takenMult(s, o); o.hitT = 0.12;
+  o.hp -= amt * takenMult(s, o); o.hitT = SIM_MISC.hitFlash;
   if (o.hp <= 0) kill(s, ev, o, byLob);
 }
 
@@ -126,7 +126,7 @@ export function poisonOrc(o: Orc, dps: number): void { o.poisonDps = Math.max(dp
 export function shoot(s: SimState, kind: ProjectileKind, x: number, y: number, ang: number, speed: number, dmg: number, pierce: number, target: Orc | null, fx = 0, crit = 0, critX = 1): void {
   const p = s.shots.alloc(); if (!p) return;
   p.kind = kind; p.x = x; p.y = y; p.vx = Math.cos(ang) * speed; p.vy = Math.sin(ang) * speed;
-  p.dmg = dmg; p.pierce = pierce; p.life = 2.2; p.target = target; p.hit.clear(); p.back = false; p.fx = fx; p.crit = crit; p.critX = critX;
+  p.dmg = dmg; p.pierce = pierce; p.life = SIM_MISC.shotLife; p.target = target; p.tgen = target ? target.gen : 0; p.hit.clear(); p.back = false; p.fx = fx; p.crit = crit; p.critX = critX;
 }
 
 /** The elf's arcing shot: lands at (tx, ty) after LOB.flight and strikes every orc within the circle, 1 + pierce times.
@@ -222,7 +222,7 @@ export function bounce(s: SimState, x: number, y: number, dmg: number, hops: num
   const tg = nearestOrc(s, x, y, (o) => !hit.has(o) && (o.x - x) ** 2 + (o.y - y) ** 2 < ARROWS.bounce.jump ** 2);
   if (!tg) return;
   const p = s.shots.alloc(); if (!p) return;
-  p.kind = 'bounce'; p.x = x; p.y = y; p.vx = p.vy = 0; p.dmg = dmg; p.pierce = hops; p.life = 2.2; p.target = tg;
+  p.kind = 'bounce'; p.x = x; p.y = y; p.vx = p.vy = 0; p.dmg = dmg; p.pierce = hops; p.life = SIM_MISC.shotLife; p.target = tg; p.tgen = tg.gen;
   p.hit.clear(); hit.forEach((o) => p.hit.add(o));
 }
 
