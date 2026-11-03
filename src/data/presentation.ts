@@ -39,7 +39,7 @@ export const VFX = {
   blood: { hit: 4, kill: 10, vanHit: 4, vanFell: 10, speed: 70, lift: 60, gravity: 420, size: 2, drop: 6, splatLife: 6, splatAlpha: 0.55, dropSplat: 1.6, killSplat: 0.8, vanSplat: 9 },
   /** Orc wind-up: lean back over the last `from` fraction of the swing, `lean` × r (brute/boss own values). */
   /** Where the blow lands in each attack clip (0..1 of its frames), read off the frames: the clip is timed so this frame meets the sim hit (TB-161). */
-  strike: { spear: 72 / 99, blade: 34 / 110, orc: 44 / 69, archer: 33 / 44, ogre: 22 / 59 },  // ogre: the cleaver slam lands on frame 22 of its 59-frame combo (TB-211); TB-194: same clip frames, now every frame at 30 fps (was 36/50, 17/55, 22/35 of the even frames); archer: the companion's release, frame 33 of 44 (TB-203)
+  strike: { spear: 72 / 99, blade: 34 / 110, orc: 44 / 69, archer: 33 / 44, ogre: 20 / 33 },  // ogre: the cleaver chop bottoms out on frame 20 of its 33-frame spliced combo (TB-211 round 3: take 173-193, then a 12-frame crossfade into the take's return, 220-231); TB-194: same clip frames, now every frame at 30 fps (was 36/50, 17/55, 22/35 of the even frames); archer: the companion's release, frame 33 of 44 (TB-203)
   /** Orc walk/attack switch crossfade, s (TB-211: the ogre's own combo starts mid-stride, so the switch would jump). */
   orcBlend: 0.2,
   orcWind: { from: 0.6, lean: 0.4, leanBrute: 0.5, liftBoss: 0.35 },

@@ -1,5 +1,5 @@
 # TB-211 Orc Ogre: import Sketchfab "Troll_Orc" (Reizake, CC BY) FBX, relink textures, play its own take, ortho renders.
-# Env: VIEW=game|front|side|top (comma list), FORTHO front/back ortho (front crop), BOFF "bone:ax,ay,az,deg:f0,f1,f2,f3;..." (extra bone turn ramped in f0..f1, held, out f2..f3), GAMECAM deg, YAW deg, ORTHO, RES, FRAMES "a-b" or "a,b,c", HEIGHT m, INPLACE=1
+# Env: VIEW=game|front|side|top (comma list), FORTHO front/back ortho (front crop), SPLICE "a:b:N" (attack: skip take a+1..b-1 with an N-frame crossfade, splice.py), BOFF "bone:ax,ay,az,deg:f0,f1,f2,f3;..." (extra bone turn ramped in f0..f1, held, out f2..f3), GAMECAM deg, YAW deg, ORTHO, RES, FRAMES "a-b" or "a,b,c", HEIGHT m, INPLACE=1
 # Usage: blender -b --factory-startup --python render_ogre.py -- <Troll_Orc.fbx> <textures dir> <outdir> <prefix>
 import bpy, math, sys, os
 from mathutils import Vector, Euler
@@ -119,11 +119,16 @@ def boff(f):
         if pb.rotation_mode == 'QUATERNION': pb.rotation_quaternion = pb.rotation_quaternion @ q
         else: pb.rotation_euler = (pb.rotation_euler.to_quaternion() @ q).to_euler(pb.rotation_mode)
     bpy.context.view_layer.update(); WP.matrix_world = hw() @ rel; bpy.context.view_layer.update()
+SPLICE = E("SPLICE")  # TB-211 round 3: "a:b:N" plays take 173..a, crossfades into the take from b over N frames, then b+N..231 (splice.py)
+if SPLICE:
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); import splice
+    frames = splice.seq(SPLICE)
 for v in VIEWS:
     place(v)
     cam.data.ortho_scale = float(E("FORTHO", str(ORTHO))) if v in ("front", "back") else ORTHO
     for i, f in enumerate(frames):
-        sc.frame_set(f); boff(f)
+        if SPLICE: splice.apply(sc, arm, WP, HB, f)
+        else: sc.frame_set(f); boff(f)
         if INPLACE:  # cancel the take's ground drift of the root (keep height)
             d = rootw() - r0; piv.location.x -= d.x; piv.location.y -= d.y; bpy.context.view_layer.update()
         if E("PROBE"): rw = rootw(); print("ROOT", f, tuple(round(x, 3) for x in rw))
