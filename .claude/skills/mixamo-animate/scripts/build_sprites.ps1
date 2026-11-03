@@ -76,7 +76,9 @@ $jobs = @(
       IDLEPOSE = "$a\archer\v3\idle0.json"; BOWALIGNF = "8,15"; FINGCOPY = "Right:Index>Middle,Ring,Pinky;Left:Index>Middle,Ring,Pinky" } }
 )
 # orc.wolfrider + orc.wolfrider.attack are NOT apply_anim jobs (TB-210): blam's "Orc animation" plays its own clips. Bake, then render
-# (through blender_slot.sh, ORTHO 1.8, STEP 1, GAMECAM 20; ANCHOR 256.00 389.65 -> anchors.json [256, 389.65, 1.8] for both keys):
+# (through blender_slot.sh, ORTHO 1.8, STEP 1, GAMECAM 20, CAMYAW=180 MIRROR=0 so the axe side faces the camera, WOLFGAIN=1.8 lifts
+# the near-black coat; ANCHOR prints 256.00 389.65 but anchors.json holds [430, 389.65, 1.8] for both keys: the wolf's chest, so the
+# muzzle stops at the barricade instead of the body overlapping the posts):
 #   PARTS=ORC_Units_Body_A,ORC_Units_Head_A,ORC_Units_Arms_A,ORC_Units_Legs_A,ORC_Units_Shoulderpads_A,ORC_Units_Axe,Wolf YAW=90
 #   CLIP=03_run (prints SCALE 41.745; pass SCALE=41.745 for 07_attack_A) wolfrider_blam\build_blam.py <Orc_LightCavalry.fbx> <out.blend>
 #   wolfrider_blam\render_blam.py <blend> $o orc.wolfrider | orc.wolfrider.attack   (blends kept in $a\wolfrider_blam)

@@ -1,6 +1,6 @@
 # render_blam.py <blend> <frames dir> <key> : TB-210 sprite frames for the blam wolf rider. render_wr_sheet.py unchanged (field camera,
 # GAMECAM, ORTHO, RES, STEP, mirror so the wolf faces screen-right, approved lighting) plus CAMYAW (deg: orbit the camera about Z
-# for front/turnaround checks; 0 = the game flank), MIRROR=0 to skip the flip, and FRAMES (comma list of scene frames). The anchor
+# for front/turnaround checks; 0 = the flank in the old GIFs, 180 = the rider's axe side, used for the game sheets with MIRROR=0), MIRROR=0 to skip the flip, and FRAMES (comma list of scene frames). The anchor
 # is the world origin: build_blam.py puts the wolf's ground centre there.
 # Camera sits on +Y (the flank the director approved in the GIFs), GAMECAM deg above the ground plane, ortho ORTHO, RES px,
 # then each frame is mirrored so the wolf faces screen-right like every other actor (pack_sprites mirrors orcs to march left).
@@ -34,6 +34,18 @@ for mt in bpy.data.materials:
     if mt.use_nodes:
         for nd in mt.node_tree.nodes:
             if nd.type=="BSDF_PRINCIPLED": nd.inputs["Roughness"].default_value=1.0; nd.inputs["Metallic"].default_value=0.0
+# WOLFGAIN: lift the wolf coat's value (HSV Value multiplier on its base colour) so the near-black fur separates from the rider's
+# dark legs and boots at sprite scale (TB-210 critic). Texture only; no pose or mesh change.
+WG=float(os.environ.get("WOLFGAIN","1"))
+if WG!=1:
+    for mt in bpy.data.materials:
+        if "wolf" not in mt.name.lower() or not mt.use_nodes: continue
+        nt=mt.node_tree
+        for nd in [n for n in nt.nodes if n.type=="BSDF_PRINCIPLED"]:
+            sk=nd.inputs["Base Color"]
+            if not sk.links: continue
+            src=sk.links[0].from_socket; hs=nt.nodes.new("ShaderNodeHueSaturation"); hs.inputs["Value"].default_value=WG
+            nt.links.new(src,hs.inputs["Color"]); nt.links.new(hs.outputs["Color"],sk); print("WOLFGAIN",mt.name,WG)
 arm=[o for o in bpy.data.objects if o.type=='ARMATURE'][0]
 os.makedirs(OUTDIR,exist_ok=True)
 n=0
