@@ -39,6 +39,8 @@ export const VFX = {
   blade: { fold: 0.5, r: 26, half: 0.8, life: 0.15, width: 2.5 },
   /** Elf: string pull (px) at full draw. */
   bow: { pull: 5 },
+  /** Elf shot loop (TB-202): seconds to crossfade full draw back to draw frame 0 after each lob (director 3 Nov), and idle <-> draw when aim starts or stops. */
+  elfShot: { release: 0.15, aim: 0.15 },
   /** Projectile trails: ghost count per kind, spacing along the path (s), alpha of the first ghost. */
   trail: { lob: 3, arrow: 3, bolt: 4, knife: 2, bounce: 8, star: 2, gap: 0.025, alpha: 0.45, lobSpacing: 2 },
   /** Lob landing: dust ring on the ground (× circle radius), its life. */
