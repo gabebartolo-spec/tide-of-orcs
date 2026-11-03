@@ -237,19 +237,21 @@ export const CAMP_UPGRADE = {
   seed: 188,
   /** Build dust: `n` soft puffs per moment along the image base (`dy` of its height up, `spread` of its width, `lift` units of
    *  scatter up); life range (s), start velocity range (units/s), `grav` (units/s², negative = rises), `drag` per s, radius range at
-   *  birth `r0` growing by `grow` × over life, `squash` height/width, peak alpha `a` reached by `fadeIn` of life, `earth` the
+   *  birth `r0` (`from` × of it at the start) growing to `grow` × over life, `squash` height/width, peak alpha `a` reached by `fadeIn` of life from a `floor` share at birth (so the model swap is never bare), `earth` the
    *  share of darker earth puffs; each puff is a `tex` px radial gradient, solid out to `core` of its radius. */
-  dust: { n: 48, spread: 0.8, dy: 0.06, lift: 42, life: [0.8, 1.35], vx: [-28, 28], vy: [-72, -26], grav: -10, drag: 1.4, r0: [9, 18], grow: 2.4, tex: 64, core: 0.3, squash: 0.86, a: 0.5, fadeIn: 0.12, earth: 0.35 },
+  dust: { n: 72, spread: 0.5, dy: 0.06, lift: 28, life: [0.8, 1.35], vx: [-12, 12], vy: [-44, -14], grav: -10, drag: 1.4, r0: [12, 22], from: 1, grow: 1.9, tex: 64, core: 0.3, squash: 0.86, a: 0.3, floor: 0.3, fadeIn: 0.2, earth: 0.35 },
   /** Banner: public/decor/camp/upgrade_banner.webp (cut from the forge level 3 render) hung by its rod from a point on each level's
    *  image (`at[id][lv - 1]` = fractions of the image's width and height from its top-left), drawn `w`×`h` units. It unrolls down
-   *  over `roll` (s from the moment's start), swings `swing` rad at `wave` Hz damped by `damp` per s, and fades over the last `fade` s. */
+   *  over `roll` (s from the moment's start), swings `swing` rad at `wave` Hz damped by `damp` per s, fades in over `in` s and out (eased) between the `out` times. */
   banner: {
-    w: 45, h: 61, roll: [0.15, 0.6], wave: 1.1, swing: 0.07, damp: 1.2, fade: 0.3,
+    /** Hue turn applied once at load to the render's green (hues `from`..`to` degrees are set to `hue`, keeping lightness and saturation; down to `edge` on the cloth columns `cloth` outside the `glyph` box (fractions x0,y0,x1,y1), so the olive edge goes too; pixels under `minChroma` are left; the lilac fringe of the rod knot, hues `stray`, goes too). */
+    tint: { from: 62, edge: 50, to: 170, cloth: [0.2, 0.85], glyph: [0.3, 0.15, 0.73, 0.65], hue: 354, minChroma: 0.02, stray: [270, 345] },
+    w: 45, h: 61, roll: [0.15, 0.6], in: 0.25, wave: 1.1, swing: 0.07, damp: 1.2, out: [0.5, 1.0],
     at: {
-      bowyer: [[0.78, 0.46], [0.64, 0.42], [0.5, 0.44]],
-      forge: [[0.8, 0.62], [0.39, 0.47], [0.39, 0.38]],
-      kitchen: [[0.7, 0.24], [0.58, 0.14], [0.65, 0.45]],
-      training: [[0.16, 0.16], [0.74, 0.34], [0.67, 0.08]],
+      bowyer: [[0.74, 0.46], [0.58, 0.42], [0.5, 0.44]],
+      forge: [[0.8, 0.62], [0.5, 0.47], [0.5, 0.36]],
+      kitchen: [[0.7, 0.24], [0.58, 0.14], [0.54, 0.38]],
+      training: [[0.16, 0.16], [0.61, 0.37], [0.55, 0.18]],
     },
   },
 } as const;

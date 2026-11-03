@@ -36,6 +36,8 @@ export class CampArt {
       if (!c) { c = this.paint(b.id, lv, p.w, p.h, px); this.cache.set(key, c); }
       g.drawImage(c, p.x - p.w / 2 - PAD, p.y - p.h - PAD, p.w + PAD * 2, p.h + PAD * 2);
     }
+    // fetch each building's next level ahead, so an upgrade swaps to loaded art, never the vector placeholder
+    for (const b of CAMP_DRAW_ORDER) { const lv = Math.min(3, levels[b.id] ?? 0); if (lv < 3) img(`${b.id}${lv + 1}`); }
   }
 
   private paint(id: BuildingId, lv: number, w: number, h: number, px: number): HTMLCanvasElement {
