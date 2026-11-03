@@ -9,10 +9,11 @@ interface Tree { x: number; dy: number; key: string; h: number; flip: boolean; f
 interface Spot { x: number; off: number; key: string; h: number; flip: boolean; shadow: number }
 const BUSH = 'bush';
 
-/** A kind from `kinds`, never the same as its left neighbour (when there is a choice), so no two identical sprites stand side by side. */
-function pick(kinds: readonly string[], u: number, prev?: string): string {
-  const i = Math.floor(u * kinds.length), k = kinds[i]!;
-  return k === prev ? kinds[(i + 1) % kinds.length]! : k;
+/** A kind from `kinds`, never the same as its two left neighbours (when there is a choice), so no two identical sprites stand side by side. */
+function pick(kinds: readonly string[], u: number, prev?: string, prev2?: string): string {
+  const n = kinds.length, i = Math.floor(u * n);
+  for (let d = 0; d < n; d++) { const k = kinds[(i + d) % n]!; if (k !== prev && (k !== prev2 || n < 3)) return k; }
+  return kinds[i]!;
 }
 
 /** Real height in world units of a tree sprite: its model height x `unit`, with a small size spread (u in 0..1). */
@@ -47,7 +48,7 @@ function row(r: number, skirt = false): Tree[] {
     const young = skirt && rng.next() < T.skirt.young;
     out.push({
       x, flip, far: skirt && rng.next() < T.skirt.far, dy: (rng.next() - 0.5) * 2 * (skirt ? T.skirt.lift : T.lift),
-      key: young ? T.skirt.kinds[Math.floor(rng.next() * T.skirt.kinds.length)]! : bush ? BUSH : pick(kinds, rng.next(), out[out.length - 1]?.key),
+      key: young ? T.skirt.kinds[Math.floor(rng.next() * T.skirt.kinds.length)]! : bush ? BUSH : pick(kinds, rng.next(), out[out.length - 1]?.key, out[out.length - 2]?.key),
       h: 0,
     });
     const tr = out[out.length - 1]!, u = rng.next(), v = rng.next();
@@ -158,14 +159,7 @@ export class Treeline {
   draw(g: CanvasRenderingContext2D, x0: number, y0: number, x1: number): void {
     // a hidden or zero-size canvas gives a NaN view: createLinearGradient would throw and end the frame loop (ground.ts guards the same way)
     if (!Number.isFinite(x0) || !Number.isFinite(y0) || !Number.isFinite(x1)) return;
-    this.begin(g, y0); this.treesUpTo(g, y0, x0, x1, Infinity); this.skirtGround(g, y0, x0, x1); this.skirtUpTo(g, y0, x0, x1, Infinity); this.end(g);
-  }
-  /** Soft contact shadow where the bushes meet the meadow, so the forest edge sits on the ground instead of a hard line. */
-  skirtGround(g: CanvasRenderingContext2D, y0: number, x0: number, x1: number): void {
-    if (!Number.isFinite(x0) || !Number.isFinite(y0) || !Number.isFinite(x1)) return;
-    const sb = this.skirtBase(y0), cg = g.createLinearGradient(0, sb - 4, 0, sb + T.contact);
-    cg.addColorStop(0, P.noShadow); cg.addColorStop(0.2, P.shadow); cg.addColorStop(1, P.noShadow);
-    g.fillStyle = cg; g.fillRect(x0, sb - 4, x1 - x0, T.contact + 4);
+    this.begin(g, y0); this.treesUpTo(g, y0, x0, x1, Infinity); this.skirtUpTo(g, y0, x0, x1, Infinity); this.end(g);
   }
   /** Baseline of the bush skirt: the barricade starts just above it so the bushes cover its cut top. */
   skirtBase(y0: number): number { return y0 + T.first + (this.count(y0) - 1) * T.gap + T.skirt.lift; }

@@ -371,7 +371,7 @@ export class FieldRenderer {
     tl.begin(g, y0);
     let i = 0;
     for (; i < orcs.length && orcs[i]!.y < edge; i++) { tl.treesUpTo(g, y0, x0, x1, orcs[i]!.y); this.orcDraw(s, orcs[i]!, dt); }
-    tl.treesUpTo(g, y0, x0, x1, Infinity); tl.skirtGround(g, y0, x0, x1);
+    tl.treesUpTo(g, y0, x0, x1, Infinity);
     this.orcsIn = i;
   }
 

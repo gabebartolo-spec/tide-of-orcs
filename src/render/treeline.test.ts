@@ -29,7 +29,7 @@ describe('treeline', () => {
     await new Promise((r) => setTimeout(r, 0));
     const t = new Treeline(), { g, calls } = mockCtx();
     t.draw(g, -400, 0, 1300);
-    expect(calls.grad).toBe(1);
+    expect(calls.grad).toBe(0);  // no full-width ground band: each bush casts its own shadow
     expect(calls.draw.length).toBeGreaterThan(0);
     for (const a of calls.draw) expect(a[7]).toBeGreaterThan(0);  // drawImage(im, sx, sy, sw, sh, dx, dy, dw, dh)
   });
@@ -45,8 +45,7 @@ describe('treeline', () => {
       expect(rowScale(r) * tall).toBeLessThanOrEqual(rowRoom(r) + 1e-9);
       expect(rowScale(r)).toBeGreaterThan(0.85);
     }
-    expect(rowKinds(0)).not.toContain('pine_3');
-    expect(rowKinds(1)).toContain('pine_3');
+    expect(rowKinds(0)).toContain('pine_3');  // the tallest pine stands even in the farthest row
   });
   it('draws trees only down to the y asked for, so an orc can stand between the rows, and the skirt waits for its own call', async () => {
     await new Promise((r) => setTimeout(r, 0));
