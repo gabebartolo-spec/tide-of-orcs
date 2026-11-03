@@ -15,8 +15,8 @@ import { HwId } from './data/heartwood';
 import { equip, reroll, salvage, setFilter, toggleHeirloom, toggleLock } from './sim/loot';
 import { ownedAffixes } from './sim/lootRoll';
 import { Rarity } from './data/loot';
-import { Save, defaultSettings, CURRENT_VERSION } from './save/schema';
-import { clearSave, exportSave, importSave, readSave, writeSave } from './save/storage';
+import { Save, CURRENT_VERSION, sanitizeSettings } from './save/schema';
+import { clearLoadFailed, clearSave, exportSave, importSave, readSave, writeSave } from './save/storage';
 import { LootKind, LootRecord, appendLoot, appendTelemetry, lootRecord, lootStart, readLoot, readTelemetry, runRecord, telemetryJson } from './save/telemetry';
 import { setTiers } from './sim/gear';
 import { SimEvent } from './sim/events';
@@ -25,7 +25,7 @@ import { gain } from './sim/prestige';
 export class GameController {
   state: SimState;
   readonly events = new EventBus();
-  settings = defaultSettings();
+  settings = sanitizeSettings(null);
   /** Current pointer aim on the field in logical coordinates, or null. Set by the UI every frame it changes. */
   aim: { x: number; y: number } | null = null;
   /** Loot telemetry (TB-107) waits here and is written with each save, not per drop. */
@@ -34,7 +34,7 @@ export class GameController {
   constructor(seed = (Date.now() % 2147483647) | 0) {
     const save = readSave();
     if (save) {
-      this.settings = { ...defaultSettings(), ...save.settings };
+      this.settings = sanitizeSettings(save.settings);
       this.state = createState(seed, { ...freshRun(), ...save.run }, { ...freshMeta(), ...save.meta });
     } else {
       this.state = createState(seed);
@@ -80,7 +80,7 @@ export class GameController {
   canPullBack(): boolean { return canPullBack(this.state); }
   pullBack(): boolean { return pullBack(this.state, this.events); }
   canReplant(): boolean { return canReplant(this.state); }
-  replant(tier?: number): number { const rec = runRecord(this.state, gain()); const hw = replant(this.state, this.events, tier); appendTelemetry({ ...rec, heartwoodGained: hw, heartwoodTotal: this.state.meta.heartwood }); this.save(); return hw; }
+  replant(tier?: number): number { if (!canReplant(this.state)) return 0; const rec = runRecord(this.state, gain()); const hw = replant(this.state, this.events, tier); appendTelemetry({ ...rec, heartwoodGained: hw, heartwoodTotal: this.state.meta.heartwood }); this.save(); return hw; }
   /** Finished-run records as an export file (TB-070). */
   telemetry(): { json: string; runs: number; loot: number } { this.save(); const runs = readTelemetry(), loot = readLoot(); return { json: telemetryJson(runs, undefined, loot), runs: runs.length, loot: loot.length }; }
 
@@ -90,7 +90,8 @@ export class GameController {
   importSave(str: string): void {
     const s = importSave(str);
     this.state = createState(1, { ...freshRun(), ...s.run }, { ...freshMeta(), ...s.meta });
-    this.settings = { ...defaultSettings(), ...s.settings }; this.save();
+    this.settings = sanitizeSettings(s.settings); this.lootLog = []; clearLoadFailed(); this.save();
   }
-  wipe(): void { clearSave(); this.state = createState(1); }
+  /** Wipe drops the buffered loot telemetry too, so a fresh game never logs the old one's drops (TB-199). */
+  wipe(): void { clearSave(); this.lootLog = []; this.state = createState(1); }
 }
