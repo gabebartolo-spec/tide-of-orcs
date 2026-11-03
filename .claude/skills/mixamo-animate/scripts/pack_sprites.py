@@ -11,10 +11,11 @@ from PIL import Image
 src, dst = sys.argv[1], sys.argv[2]
 RES, PX_PER_M, SHEET_W, PAD = 512, 110, 2048, 2
 # TB-194: four sheets (each <= 2 MB) since attacks are packed at 30 fps (every clip frame); was orcs + elf (TB-129)
-SHEETS = {"orcs": "sheet_orcs.webp", "orcs2": "sheet_orcs2.webp", "elf": "sheet_elf.webp", "van": "sheet_van.webp", "camp": "sheet_camp.webp"}
+SHEETS = {"orcs": "sheet_orcs.webp", "orcs2": "sheet_orcs2.webp", "elf": "sheet_elf.webp", "van": "sheet_van.webp", "camp": "sheet_camp.webp", "archer": "sheet_archer.webp"}
 ORCS2 = ("orc.runner", "orc.brute", "orc.wolfrider", "hawk")
 def sheet_of(key):
     if key.startswith("camp."): return SHEETS["camp"]
+    if key.startswith("archer"): return SHEETS["archer"]  # TB-203 companion archer: its own sheet (206 frames would push sheet_elf past 2 MB)
     if key.startswith(ORCS2): return SHEETS["orcs2"]
     if key.startswith("orc."): return SHEETS["orcs"]
     return SHEETS["van" if key.startswith("van.") else "elf"]
@@ -37,6 +38,8 @@ ANIMS = {
     "orc.brute.attack": (30, True, "orc.brute", 2.4),
     "elf": (30, False, "elf", 3.0),  # idle loop, every clip frame (TB-144)
     "elf.attack": (30, False, "elf", 3.0),  # all 32 frames; field.ts scrubs it with the bow charge
+    "archer": (30, False, "archer", 3.0),  # TB-203 companion idle v7, 162 frames (5% slower resample of the elf idle)
+    "archer.attack": (30, False, "archer", 3.0),  # TB-203 v7: 44 frames, release at frame 33; field.ts plays it on each volley
     "wolf": (25, False, "wolf", 1.6),  # TB-160 companion run, blam's CC BY Sketchfab wolf retextured; ortho 2.4 is a stand-in (the gltf is 1/100 scale)
     "wolf.attack": (25, False, "wolf", 1.6),  # all 33 bite frames; field.ts scrubs it with the bite cooldown
     "hawk": (30, False, "hawk", 3.0),  # TB-068 companion flight v1 (director 3 Nov): OSU CC BY Sketchfab hawk, its own Wings Flapping clip, frames 0-29 (render_hawk.py VIEW=game YAW=90); anchor = bird centre
