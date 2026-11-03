@@ -5,7 +5,7 @@ class FakeImage {
   set src(_v: string) { queueMicrotask(() => this.onload?.()); }
 }
 vi.stubGlobal('Image', FakeImage);
-const { Treeline, treeHeight, rowScale, rowKinds, rowRoom } = await import('./treeline');
+const { Treeline, treeHeight, rowScale, rowKinds, rowRoom, fitSize } = await import('./treeline');
 const { TREELINE } = await import('../data/presentation');
 
 function mockCtx() {
@@ -66,5 +66,20 @@ describe('treeline', () => {
     t.draw(g, -400, -26, 1300);
     expect(calls.draw.length).toBeGreaterThan(0);
     for (const a of calls.draw) { expect(a[6]! / a[7]!).toBeCloseTo(0.5); expect(a[2]! / a[3]!).toBeCloseTo(0.5); }  // FakeImage is 100x200: dest and source keep its aspect
+  });
+});
+
+describe('treeline sharpness and canopy', () => {
+  it('fits a sprite to whole device pixels at its own aspect, at any scale', () => {
+    for (const hd of [37, 90.4, 145.6, 290]) {
+      const { w, h } = fitSize(206 / 465, hd);
+      expect(Number.isInteger(w) && Number.isInteger(h)).toBe(true);
+      expect(Math.abs(w / h - 206 / 465)).toBeLessThan(0.5 / h + 1e-9);  // rounding to a pixel is the only change: never a squash
+    }
+  });
+  it('the canopy rows hold only the tall pines, so crowns reach the view top', () => {
+    for (let r = 0; r < TREELINE.fill.rows; r++) for (const k of rowKinds(r)) expect(TREELINE.heights[k]).toBeGreaterThanOrEqual(7);
+    expect(rowKinds(0)).not.toContain('oak_green_1'); expect(rowKinds(0)).not.toContain('spruce_3');
+    expect(rowKinds(TREELINE.fill.rows + 1).length).toBeGreaterThan(rowKinds(0).length);
   });
 });

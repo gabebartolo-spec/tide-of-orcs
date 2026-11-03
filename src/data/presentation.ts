@@ -19,6 +19,8 @@ export const TREELINE = {
     young: 0.3, kinds: ['oak_green_1', 'oak_green_2', 'spruce_2', 'spruce_3'] as const, youngH: [24, 38] as const, wallBush: 0.8 },
   /** Pre-scaled sprite levels stop below `mipMin` px high; the soft ground shadow is `shadowPx` wide and `shade` x the sprite width under a tree and a bush. */
   mipMin: 24, shadowPx: 64, shade: { tree: 0.45, bush: 0.85 },
+  /** Device-exact sprite cache: most entries kept before it is rebuilt. The first `fill.rows` rows (the canopy against the view top) hold only kinds at least `fill.min` x the tallest that fits. */
+  exactCap: 700, fill: { rows: 2, min: 0.68 },
   /** World units per model unit, and the random size spread (x unit) of one tree. */
   unit: 9.5, size: [0.96, 1.04] as const,
   /** Rows hang from the view top (`first` + row x `gap` down to a base, `lift` of jitter); a row only holds kinds up to `slack` x its room, then shrinks as one. */
@@ -101,9 +103,9 @@ export const GROUND = {
   rocks: { n: 18, r: [2.6, 5.5], squash: 0.62, pebbles: [0, 3], pebbleR: [1, 1.8] },
   /** Sunlit pale-green drifts that vary the greens (TB-166): count, blobs, radius, squash, scatter. */
   sunlit: { n: 8, blobs: [4, 7], r: [16, 30], squash: 0.45, spread: 38 },
-  /** Vector meadow flowers (TB-166): drifts along the top/bottom borders (edge = band depth as a fraction of H), flowers per
+  /** Vector meadow flowers (TB-166): drifts along the bottom border (edge = band depth as a fraction of H) and just below the forest at the top (`topY`, plain units: the forest covers the plain above it), flowers per
    *  drift, drift size; loose singles in the lane; petal radius; stem height; weight per kind. */
-  flowers: { drifts: 16, per: [24, 36], driftW: 90, driftH: 22, edge: 0.22, lane: 40, r: [2.4, 3.8], stem: [3, 8], kinds: { daisy: 4, violet: 3, buttercup: 2, blossom: 1 } },
+  flowers: { drifts: 16, per: [24, 36], driftW: 90, driftH: 22, edge: 0.22, topY: [150, 185] as const, lane: 40, r: [2.4, 3.8], stem: [3, 8], kinds: { daisy: 4, violet: 3, buttercup: 2, blossom: 1 } },
   /** Fence barricade (director 2 Nov, Sketchfab "the fence"): panel draw width, vertical step between stacked panels (units). */
   fence: { w: 30, step: 22 },
 } as const;

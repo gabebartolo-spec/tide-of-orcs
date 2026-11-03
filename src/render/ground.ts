@@ -59,14 +59,13 @@ export function layoutGround(seed: number = GROUND.seed, wild = false): GroundLa
   const pick = (): FlowerKind => { let r = rng.next() * total; for (const [k, w] of kinds) if ((r -= w) < 0) return k; return kinds[0]![0]; };
   const flower = (x: number, y: number, kind: FlowerKind, scale = 1): void => { L.flowers.push({ x: clampX(x), y: clampY(y), kind, r: span(rng, F.r) * scale, stem: span(rng, F.stem) * scale, rot: rng.next() * 1.26 }); };
   const band = H * F.edge, slot = W / Math.ceil(F.drifts / 2);
-  for (let i = 0; i < F.drifts; i++) {
+  for (let i = 0; i < (wild ? 0 : F.drifts); i++) {  // the wild meadow above the plain is forest floor: no flowers (they showed through the trees as stray flecks)
     const top = i % 2 === 0, cx = slot * (Math.floor(i / 2) + 0.5 + (top ? 0 : 0.5)) + near(rng, slot * 0.45);  // a wide nudge so the drifts never fall into a visible even rhythm
-    // wild (the meadow beyond the plain, TB-207): drifts scattered over the whole tile, clear of its foot where the plain's own top drifts sit
-    const cy = wild ? band * 0.4 + rng.next() * (H - band * 2) : top ? band * (0.25 + rng.next() * 0.5) : H - band * (0.25 + rng.next() * 0.5), main = pick();
+    const cy = top ? F.topY[0] + rng.next() * (F.topY[1] - F.topY[0]) : H - band * (0.25 + rng.next() * 0.5), main = pick();
     // each drift leans on one kind with a sprinkle of others, so it reads as a wild meadow
     for (let k = count(rng, F.per); k > 0; k--) flower(cx + near(rng, F.driftW / 2), cy + near(rng, F.driftH), rng.next() < 0.7 ? main : pick());
   }
-  for (let i = 0; i < F.lane * (wild ? 3 : 1); i++) flower(across(rng.next()), band + rng.next() * (H - band * 2), pick(), wild ? 1 : 0.75);
+  for (let i = 0; i < (wild ? 0 : F.lane); i++) flower(across(rng.next()), band + rng.next() * (H - band * 2), pick(), 0.75);
   L.tufts.sort((a, b) => a.y - b.y); L.rocks.sort((a, b) => a.y - b.y); L.flowers.sort((a, b) => a.y - b.y);
   return L;
 }

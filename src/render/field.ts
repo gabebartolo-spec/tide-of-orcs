@@ -366,13 +366,12 @@ export class FieldRenderer {
   }
 
 
-  /** The forest edge along the top of the view (TB-220): the tree rows, with every orc still walking inside the forest drawn between them; the wall and the bush skirt follow. */
+  /** The forest edge along the top of the view (TB-220): the tree rows, then every orc still walking inside the forest (whole, never cut to a head or a weapon by a trunk); the wall and the bush skirt, which still hides their feet, follow. */
   private forest(s: SimState, orcs: Orc[], dt: number): void {
     const { x0, y0, x1 } = this.vis, tl = this.treeline, edge = tl.skirtEdge(y0), g = this.g;
-    tl.begin(g, y0);
+    tl.begin(g, y0); tl.treesUpTo(g, y0, x0, x1, Infinity);
     let i = 0;
-    for (; i < orcs.length && orcs[i]!.y < edge; i++) { tl.treesUpTo(g, y0, x0, x1, orcs[i]!.y); this.orcDraw(s, orcs[i]!, dt); }
-    tl.treesUpTo(g, y0, x0, x1, Infinity);
+    for (; i < orcs.length && orcs[i]!.y < edge; i++) this.orcDraw(s, orcs[i]!, dt);
     this.orcsIn = i;
   }
 

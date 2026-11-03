@@ -28,7 +28,10 @@ export function rowRoom(r: number): number { return T.first + r * T.gap - T.lift
 export function rowKinds(r: number): readonly string[] {
   const room = rowRoom(r) * T.slack, k = 1 + r * T.grow;
   const ok = T.kinds.filter((n) => treeHeight(n, 1) * k <= room);
-  return ok.length ? ok : [T.kinds.reduce((a, b) => (T.heights[b]! < T.heights[a]! ? b : a))];
+  if (!ok.length) return [T.kinds.reduce((a, b) => (T.heights[b]! < T.heights[a]! ? b : a))];
+  // the top rows are the canopy: only the tall kinds stand there (>= `fill.min` x the tallest that fits), so crowns reach the view top and no bare strip shows above them
+  const tall = Math.max(...ok.map((n) => T.heights[n]!));
+  return r < T.fill.rows ? ok.filter((n) => T.heights[n]! >= tall * T.fill.min) : ok;
 }
 
 /** One scale for the whole row, from its tallest kind: 1 when that tree fits, less when it would pass the view top. Same species, same size. */
@@ -60,6 +63,8 @@ function row(r: number, skirt = false): Tree[] {
 }
 
 const imgs = new Map<string, HTMLImageElement>();
+/** Device-exact copies: one canvas per (sprite, flip, whole device height), so a tree is blitted 1:1 on a whole device pixel (no second resample, no shimmer). */
+const exact = new Map<string, HTMLCanvasElement>();
 /** Pre-scaled copies of each sprite, halved level by level (a mip chain): a 2x-25x downscale straight from the full sprite stair-steps, a 1x-2x one from the right level does not. */
 const mips = new Map<string, HTMLCanvasElement[]>();
 let started = false;
@@ -106,6 +111,25 @@ function level(v: string, im: HTMLImageElement, need: number): { src: CanvasImag
   return { src, k };
 }
 
+/** Size in device px of a sprite `hd` high: the width follows the source aspect (rounded to a whole pixel), so nothing squashes. */
+export function fitSize(aspect: number, hd: number): { w: number; h: number } {
+  const h = Math.max(1, Math.round(hd)); return { w: Math.max(1, Math.round(h * aspect)), h };
+}
+
+/** The sprite at exactly `hd` device px high (flipped if asked): the nearest mip level at or above it, then one 1x-2x high-quality step down. Null where there is no DOM. */
+function exactSprite(v: string, im: HTMLImageElement, hd: number, flip: boolean): HTMLCanvasElement | null {
+  if (typeof document === 'undefined') return null;
+  const { w, h } = fitSize(im.width / im.height, hd), id = `${v}|${flip ? 1 : 0}|${h}`, hit = exact.get(id); if (hit) return hit;
+  if (exact.size >= T.exactCap) exact.clear();
+  const c = document.createElement('canvas'); c.width = w; c.height = h;
+  const x = c.getContext('2d'); if (!x) return null;
+  const lv = level(v, im, h);
+  x.imageSmoothingEnabled = true; x.imageSmoothingQuality = 'high';
+  if (flip) { x.translate(w, 0); x.scale(-1, 1); }
+  x.drawImage(lv.src, 0, 0, im.width / lv.k, im.height / lv.k, 0, 0, w, h);
+  exact.set(id, c); return c;
+}
+
 /** Painted forest edge along the top of the view: as many rows as the window has room for above the plain, far to near.
  *  Trees and the bush skirt are depth-sorted against the orcs (see `treesUpTo`, `skirtUpTo`), so a walker in the forest stands behind the trunks and bushes in front of it. */
 export class Treeline {
@@ -131,7 +155,7 @@ export class Treeline {
     const sb = T.first + (n - 1) * T.gap + T.skirt.lift;
     this.skirt.forEach((tr, i) => {
       const base = sb - T.skirt.offset * (T.skirt.rows - 1 - i);
-      for (const t of tr) this.edges.push({ x: t.x, off: base + t.dy, key: t.far ? `${t.key}_far` : t.key, h: t.h, flip: t.flip, shadow: T.shade.bush });
+      for (const t of tr) if (t.key === BUSH || Math.abs(t.x - wallX) >= T.cap.clear) this.edges.push({ x: t.x, off: base + t.dy, key: t.far ? `${t.key}_far` : t.key, h: t.h, flip: t.flip, shadow: T.shade.bush });
       // one tall bush on the barricade's column in each skirt row hides the cut top of the wall
       this.edges.push({ x: wallX + (i ? 7 : -7), off: base, key: BUSH, h: T.skirt.h[1] * T.skirt.wallBush, flip: i === 1, shadow: T.shade.bush });
     });
@@ -141,7 +165,7 @@ export class Treeline {
   begin(g: CanvasRenderingContext2D, y0: number): void {
     this.layout(this.count(y0)); this.ri = 0; this.si = 0;
     this.q = g.imageSmoothingQuality; g.imageSmoothingQuality = 'high';  // the field's default is 'low': the sprites are always scaled, never 1:1
-    const m = (g as { getTransform?: () => DOMMatrix }).getTransform?.(); this.px = m ? Math.hypot(m.a, m.b) || 1 : 1;
+    const m = (g as { getTransform?: () => DOMMatrix }).getTransform?.(); const px = m ? Math.hypot(m.a, m.b) || 1 : 1; if (px !== this.px) exact.clear(); this.px = px;
   }
   /** End of the frame's forest: put the smoothing back the way the rest of the field expects it. */
   end(g: CanvasRenderingContext2D): void { g.imageSmoothingQuality = this.q; }
@@ -168,7 +192,17 @@ export class Treeline {
     const w = (im.width / im.height) * s.h; if (s.x + w / 2 < x0 || s.x - w / 2 > x1) return;
     const by = y0 + s.off, sh = shadowSprite();
     if (sh) { const sw = Math.min(w, s.h * 1.2) * s.shadow; g.drawImage(sh, s.x - sw / 2, by - sw * 0.25, sw, sw * 0.5); }
-    // a fractional source rectangle: the padded mip keeps the sprite's exact aspect, so nothing squashes
+    // device-exact path: a pre-scaled copy blitted 1:1 on a whole device pixel, so the edge is as clean at 1x as at 2x
+    const m = (g as { getTransform?: () => DOMMatrix }).getTransform?.();
+    if (m && m.b === 0 && m.c === 0 && m.a > 0 && m.d > 0) {
+      const ex = exactSprite(s.key, im, s.h * m.d, s.flip);
+      if (ex) {
+        const dx = Math.round(m.a * s.x + m.e - ex.width / 2), dy = Math.round(m.d * by + m.f - ex.height);
+        g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(ex, dx, dy); g.setTransform(m);
+        return;
+      }
+    }
+    // no DOM or a skewed view: a fractional source rectangle (the padded mip keeps the sprite's exact aspect, so nothing squashes)
     const lv = level(s.key, im, s.h * this.px), sw = im.width / lv.k, shh = im.height / lv.k;
     if (s.flip) { g.save(); g.translate(s.x, 0); g.scale(-1, 1); g.drawImage(lv.src, 0, 0, sw, shh, -w / 2, by - s.h, w, s.h); g.restore(); }
     else g.drawImage(lv.src, 0, 0, sw, shh, s.x - w / 2, by - s.h, w, s.h);
