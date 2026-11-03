@@ -543,10 +543,21 @@ body[data-mode="camp"] :is(.hud-wallbox, .hud-wave) { display: none; }
 @keyframes pocket-want { 0%, 100% { filter: drop-shadow(0 0 0.25rem var(--amber)); } 50% { filter: drop-shadow(0 0 1.25rem var(--amber)); } }
 :root[data-calm] #sat-worn .item.want { animation: none; filter: drop-shadow(0 0 0.75rem var(--amber)); }
 :root[data-calm] :is(#sat-grid, #sat-worn) .item { transition: none; } :root[data-calm] :is(#sat-grid, #sat-worn) .item:hover { transform: none; }
-/* The picked item's card sits under the bag (right), not under the doll, so the page keeps its scale with an item picked. */
+/* The picked item's card sits under the bag (right), not under the doll, so the page keeps its scale with an item picked.
+   TB-206b: three rows (label | bag bar, doll | bag, sets | card), and the
+   card compact (affixes in two columns, small reroll buttons), so a worn set piece with rerolls fits at scale >= 0.95. */
 @media (min-width: 861px) and (orientation: landscape) {
-  .prestige.satchel > .stat { grid-row: 2; } .prestige.satchel > #sat-worn { grid-row: 3 / span 2; } .prestige.satchel > #sat-sets { grid-row: 5; }
-  .prestige.satchel > #sat-grid { grid-row: 2 / span 2; } .prestige.satchel > #sat-detail { grid-column: 2; grid-row: 4 / span 2; }
+  .prestige.satchel > .stat { grid-row: 1; } .prestige.satchel > .satbar { grid-row: 1; }
+  .prestige.satchel > #sat-worn { grid-row: 2; } .prestige.satchel > #sat-sets { grid-row: 3; }
+  .prestige.satchel > #sat-grid { grid-row: 2; } .prestige.satchel > #sat-detail { grid-column: 2; grid-row: 3; align-self: start; }
+  .prestige.satchel > #sat-detail, .prestige.satchel > #sat-grid, .prestige.satchel > #sat-worn { margin: 0; }
+  .itemdetail .glyph.big { width: 4rem; height: 4rem; } .itemdetail .glyph.big img { width: 3.75rem; height: 3.75rem; }
+  .itemdetail .affixes { margin: 0.25rem 0; }
+  .itemdetail .affixes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 1rem; row-gap: 0.25rem; }
+  .itemdetail .affixes li { display: flex; flex-wrap: wrap; align-items: center; gap: 0.375rem; }
+  .itemdetail .affixes .buy { padding: 0.125rem 0.625rem; min-height: 0; }
+  .itemdetail .row { margin-top: 0.25rem; }
+  .sets .set, .itemdetail .set { display: grid; grid-template-columns: 8.5rem repeat(3, minmax(0, 1fr)); column-gap: 0.75rem; align-items: start; text-align: left; margin: 0.125rem 0; }
 }
 /* HUD outside the field (TB-195i, director 3 Nov): the wall bar, starlight, wave plank, Slain/Heartwood and Settings sit in a
    carved bar above the field instead of over it, so no HUD piece covers the plain; the field shrinks to fit under the bar. */
