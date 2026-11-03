@@ -2,7 +2,8 @@
 import { LootMeta } from '../data/loot';
 import { AFFIXES, MYTHICS, MYTHIC_FX, SETS, StatLine } from '../data/lootTables';
 import { equippedItems } from './loot';
-import { Stats } from './stats';
+import { PATH_FX } from '../data/paths';
+import { Stats, companions } from './stats';
 
 export interface GearTotals { mul: Record<string, number>; add: Record<string, number> }
 
@@ -20,12 +21,14 @@ export function gearTotals(l: LootMeta, setBoost = 0): GearTotals {
 }
 
 /** Stats fields gear may scale. */
-const MUL_FIELDS = ['dmg', 'stormDmg', 'bossDmg', 'eliteDmg', 'fireRate', 'radius', 'starMult', 'kin', 'wolf', 'ballista', 'barMax', 'barRegen', 'spikes', 'vanHp', 'vanDmg', 'vanMend', 'burn', 'chainJump', 'petDmg'] as const;
+const MUL_FIELDS = ['dmg', 'stormDmg', 'bossDmg', 'eliteDmg', 'fireRate', 'radius', 'starMult', 'kin', 'wolf', 'ballista', 'barMax', 'barRegen', 'spikes', 'vanHp', 'vanDmg', 'vanMend', 'burn', 'chainJump', 'petDmg', 'vanRespawn'] as const;
 /** Integer stats take whole points only; crit is a chance. */
 const ADD_FIELDS = {
   crit: false, pierce: true, arrows: true, barRegen: false, chain: true, rebound: true, bleedAmp: false, knifeFan: true, burnSpread: true, cinder: true,
   boltShove: true, boltPin: true, moonCrit: true, moonwell: true, petHaste: false, extraWolves: true, treantRoot: true, freeRally: true,
   knifeReturn: true, burnRamp: true, stormStore: true, stakes: true, fullMoon: true, petReturn: true, wallSplinter: true, starCloak: true,
+  // path sets and mythics (TB-193a)
+  venom: false, venomBurst: true, fang: true, packBuff: false, foxfire: true, shardP: false, hoardEvery: true, talon: true,
 } as const;
 
 export function applyGear(st: Stats, l: LootMeta): Stats {
@@ -53,6 +56,10 @@ export function applyGear(st: Stats, l: LootMeta): Stats {
   if (st.homing && st.fullMoon) st.lobCd *= MYTHIC_FX.moonDraw; // Echo never draws faster (TB-198)
   // Oakspine: a wider strike circle (its root is in combat.impact)
   if (st.stakes) st.radius *= MYTHIC_FX.oakRadius;
+  // Foxfire Pack 6: the vanguard hits harder for every companion in the field; Foxfire Tail: the fox grows with them
+  const pack = companions(st);
+  if (st.packBuff) st.vanDmg *= 1 + st.packBuff * pack;
+  if (st.foxfire) st.foxfire = st.dmg * PATH_FX.foxMult * (1 + PATH_FX.foxGrow * pack);
   return st;
 }
 

@@ -1,10 +1,11 @@
 import { PRESTIGE } from '../data/balance';
 import { EventBus } from './events';
-import { SimState, freshRun } from './state';
+import { SimState, freshRun, recompute } from './state';
 import { hwRank, startRun } from './heartwood';
 
 import { HW_FX } from '../data/heartwood';
 import { growHeirloom } from './loot';
+import { PathId, isPath } from '../data/paths';
 
 /** Heartwood a fall or a voluntary replant pays: none since TB-171. Only cleared bosses pay Heartwood. */
 export const gain = (): number => PRESTIGE.fallGain;
@@ -22,19 +23,28 @@ export function pullBack(s: SimState, ev: EventBus): boolean {
   return true;
 }
 
-/** tier: the boss tier the next run plays at (TB-148), clamped to those unlocked; the highest unlocked if omitted. */
-export function replant(s: SimState, ev: EventBus, tier = s.meta.tier): number {
+/** Pick the specialisation path (TB-193a) on the Replant screen, while the run has fallen; null clears it. The pick carries
+ *  into the next run and can change at every Replant. Its branch nodes become buyable at once. */
+export function choosePath(s: SimState, path: PathId | null): boolean {
+  if (!s.run.fallen || (path !== null && !isPath(path)) || s.run.path === path) return false;
+  s.run.path = path; recompute(s);
+  return true;
+}
+
+/** tier: the boss tier the next run plays at (TB-148), clamped to those unlocked; the highest unlocked if omitted.
+ *  path: the next run's specialisation (TB-193a); the one already chosen if omitted. */
+export function replant(s: SimState, ev: EventBus, tier = s.meta.tier, path: PathId | null = s.run.path ?? null): number {
   if (!canReplant(s)) return 0;
   const hw = gain(), forced = s.run.fallen;
   s.meta.heartwood += hw; s.meta.prestiges++; s.meta.bestWave = Math.max(s.meta.bestWave, s.run.wave);
   if (hwRank(s.meta, 'hw_heirloom')) growHeirloom(s.meta.loot, HW_FX.heirloomIlvl);
   // The Grove tree and banked starlight carry into the next run (TB-136): the tree is bought only between runs
   const levels = s.run.levels, starlight = s.run.starlight;
-  s.run = freshRun(); s.run.levels = levels; s.run.starlight = starlight;
+  s.run = freshRun(); s.run.levels = levels; s.run.starlight = starlight; s.run.path = isPath(path) ? path : null;
   s.run.tier = Math.max(1, Math.min(s.meta.tier, Math.floor(tier)));
   s.orcs.clear(); s.shots.clear(); s.vans.clear(); s.zones.clear();
   // run-only set and mythic state starts over with the run
-  s.knifeN = 0; s.vanRespawn.length = 0;
+  s.knifeN = 0; s.vanRespawn.length = 0; s.fangN = 0;
   s.run.barHp = 0; startRun(s);
   ev.push({ t: 'replant', heartwood: hw, forced });
   return hw;

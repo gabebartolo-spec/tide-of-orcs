@@ -1,4 +1,5 @@
 /** Skill tree nodes. Mirrors docs/SKILL-TREE.md exactly. Ids are stable API. */
+import type { PathId } from './paths';
 
 export type Branch = 'Bow' | 'Companions' | 'Armoury' | 'Grove' | 'Barricade' | 'Vanguard' | 'Spoils';
 
@@ -15,7 +16,9 @@ export type NodeId =
   | 'muster' | 'shield' | 'drill' | 'ranks' | 'mend' | 'champion' | 'swiftmuster'
   | 'hunter' | 'scavenger' | 'trophy' | 'sharpeyes' | 'hoard' | 'resonance' | 'echo'
   // TB-111
-  | 'kindle' | 'wildfire' | 'firechance' | 'frostchance' | 'static' | 'shockchance' | 'rebdmg' | 'rebchance' | 'moondmg' | 'moonreach' | 'moonchance' | 'stardmg' | 'starcount' | 'starchance' | 'knifedmg' | 'knifefan' | 'boltpin' | 'windlass' | 'deadly' | 'wolfrate' | 'wolfcrit' | 'wolfcritx' | 'wolfspd' | 'rangerdmg' | 'rangerrate' | 'rangercrit' | 'rangercritx' | 'wardendmg' | 'wardenrate' | 'wardencrit' | 'wardencritx' | 'hawkdmg' | 'hawkrate' | 'hawkcrit' | 'hawkcritx' | 'treantdmg' | 'treantrate' | 'treantcrit' | 'treantcritx' | 'spearrate' | 'spearcrit' | 'spearcritx' | 'spearspd' | 'bladedmg' | 'bladerate' | 'bladecrit' | 'bladecritx' | 'bladespd';
+  | 'kindle' | 'wildfire' | 'firechance' | 'frostchance' | 'static' | 'shockchance' | 'rebdmg' | 'rebchance' | 'moondmg' | 'moonreach' | 'moonchance' | 'stardmg' | 'starcount' | 'starchance' | 'knifedmg' | 'knifefan' | 'boltpin' | 'windlass' | 'deadly' | 'wolfrate' | 'wolfcrit' | 'wolfcritx' | 'wolfspd' | 'rangerdmg' | 'rangerrate' | 'rangercrit' | 'rangercritx' | 'wardendmg' | 'wardenrate' | 'wardencrit' | 'wardencritx' | 'hawkdmg' | 'hawkrate' | 'hawkcrit' | 'hawkcritx' | 'treantdmg' | 'treantrate' | 'treantcrit' | 'treantcritx' | 'spearrate' | 'spearcrit' | 'spearcritx' | 'spearspd' | 'bladedmg' | 'bladerate' | 'bladecrit' | 'bladecritx' | 'bladespd'
+  // TB-193a path branches
+  | 'coil' | 'viper' | 'venom' | 'toxin' | 'gaze' | 'foxden' | 'foxhide' | 'foxrun' | 'foxpack' | 'cunning' | 'magpie' | 'glitter' | 'trinket' | 'haggle' | 'shiny';
 
 export interface SkillNode {
   id: NodeId;
@@ -28,10 +31,14 @@ export interface SkillNode {
   x: number;
   y: number;
   desc: string;
+  /** Path branch (TB-193a): buyable, and counted in Stats, only while this path is the run's chosen path. */
+  path?: PathId;
 }
 
 const n = (id: NodeId, name: string, branch: Branch, parent: NodeId | null, max: number, base: number, growth: number, x: number, y: number, desc: string): SkillNode =>
   ({ id, name, branch, parent, max, base, growth, x, y, desc });
+
+const p = (path: PathId, x: SkillNode): SkillNode => ({ ...x, path });
 
 export const NODES: readonly SkillNode[] = [
   n('root', 'Waking', 'Grove', null, 1, 0, 1, 700, 890, 'An elf, a bow, a wall of timber, an endless tide. Begin.'),
@@ -153,6 +160,22 @@ export const NODES: readonly SkillNode[] = [
   n('bladecrit', 'Blade Edge', 'Vanguard', 'champion', 5, 3520, 2.0, 281, 689, 'Bladedancer strikes: +5% chance per rank to crit for double damage.'),
   n('bladecritx', 'Whirling Edge', 'Vanguard', 'bladecrit', 5, 4400, 2.0, 273, 627, 'Bladedancers crits +50% damage per rank.'),
   n('bladespd', 'Light Feet', 'Vanguard', 'champion', 3, 2200, 2.0, 180, 746, 'Bladedancers move 15% faster per rank.'),
+  // Path branches (TB-193a): costs and effects are BALANCE P-193 placeholders
+  p('serpent', n('coil', 'Coiled Patience', 'Bow', 'root', 5, 400, 2.0, 440, 100, '+4% crit chance per rank.')),
+  p('serpent', n('viper', "Viper's Bite", 'Bow', 'coil', 5, 600, 2.0, 360, 60, 'Your crits strike +30% harder per rank.')),
+  p('serpent', n('venom', 'Venom', 'Bow', 'coil', 1, 1500, 1, 500, 40, 'Your crits poison orcs for 3 s.')),
+  p('serpent', n('toxin', 'Toxin', 'Bow', 'venom', 5, 1200, 2.0, 420, 30, 'Poison +30% damage per rank.')),
+  p('serpent', n('gaze', "Serpent's Gaze", 'Bow', 'viper', 3, 900, 2.2, 280, 60, 'Your strike circle +8% wider per rank.')),
+  p('fox', n('foxden', 'Den Mother', 'Vanguard', 'root', 5, 400, 2.0, 80, 450, 'Vanguard and companions +15% damage per rank.')),
+  p('fox', n('foxhide', 'Fox Hide', 'Vanguard', 'foxden', 5, 500, 2.0, 80, 530, 'Vanguard +20% health per rank.')),
+  p('fox', n('foxrun', 'Swift Return', 'Vanguard', 'foxden', 5, 500, 2.0, 150, 500, 'Fallen vanguard return 12% sooner per rank.')),
+  p('fox', n('foxpack', 'Pack Tactics', 'Vanguard', 'foxhide', 2, 1500, 2.6, 80, 610, '+1 vanguard may stand at once per rank.')),
+  p('fox', n('cunning', 'Cunning', 'Vanguard', 'foxrun', 5, 800, 2.0, 150, 580, 'Companions strike 10% more often per rank.')),
+  p('magpie', n('magpie', "Magpie's Eye", 'Spoils', 'root', 5, 300, 2.0, 100, 1100, '+10% starlight from every orc per rank.')),
+  p('magpie', n('glitter', 'Glitter', 'Spoils', 'magpie', 5, 500, 2.0, 180, 1100, 'Item Find +5% per rank.')),
+  p('magpie', n('trinket', 'Lucky Trinket', 'Spoils', 'glitter', 3, 800, 2.2, 260, 1100, 'Luck +3% per rank.')),
+  p('magpie', n('haggle', 'Haggler', 'Spoils', 'magpie', 3, 600, 2.2, 100, 1180, 'Rerolls cost 10% less Glimmer per rank.')),
+  p('magpie', n('shiny', 'Shiny Things', 'Spoils', 'haggle', 3, 700, 2.2, 180, 1180, 'Salvage gives +20% Glimmer per rank.')),
 ];
 
 export const NODE: Readonly<Record<NodeId, SkillNode>> = Object.fromEntries(NODES.map((x) => [x.id, x])) as Record<NodeId, SkillNode>;

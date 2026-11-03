@@ -1,13 +1,15 @@
 /** Seeded loot rolls (TB-092): drop chance, rarity with pity, item level, affixes. Pure; takes the sim RNG. */
 import { OrcKind } from '../data/orcs';
 import { Item, LootMeta, RARITIES, Rarity } from '../data/loot';
-import { AFFIXES, AFFIX_NEEDS, AffixDef, BASES, DROP, Feature, MYTHICS, RARITY, SETS, affixScale } from '../data/lootTables';
+import { AFFIXES, AFFIX_NEEDS, AffixDef, BASES, DROP, Feature, MYTHICS, RARITY, SETS, affixScale, forPath } from '../data/lootTables';
 import { Rng } from './rng';
 import { Stats } from './stats';
+import { PathId } from '../data/paths';
 
 export const LOOT_TIER: Record<OrcKind, number> = { grunt: 1, runner: 2, brute: 3, elite: 4, berserker: 4, wolfrider: 4, shaman: 4, drummer: 4, boss: 5 };
 /** bump: rarity steps added after the roll (Boss Hoard), never past legendary. has: which affixes may roll (default all). */
-export interface LootMods { itemFind: number; luck: number; bump?: number; has?: AffixFilter }
+/** path: the run's chosen path; its set and mythic join the pools, other paths' never drop (TB-193a). */
+export interface LootMods { itemFind: number; luck: number; bump?: number; has?: AffixFilter; path?: PathId | null }
 export type AffixFilter = (a: AffixDef) => boolean;
 
 const OWNS: Record<Feature, (st: Stats) => boolean> = {
@@ -81,10 +83,10 @@ export function rollDrop(rng: Rng, loot: LootMeta, kind: OrcKind, wave: number, 
     loot.pity.mythic = rarity === 'mythic' ? 0 : loot.pity.mythic + 1;
   }
   const ilvl = itemLevel(wave, prestiges);
-  const myth = rarity === 'mythic' ? pick(rng, MYTHICS) : null;
+  const myth = rarity === 'mythic' ? pick(rng, forPath(MYTHICS, mods.path)) : null;
   const base = pick(rng, myth ? BASES.filter((b) => b.slot === myth.slot) : BASES);
   const item: Item = { uid: `i${loot.nextUid++}`, base: base.id, slot: base.slot, rarity, ilvl, affixes: rollAffixes(rng, RARITY.affixes[rarity], ilvl, mods.has) };
   if (myth) item.mythic = myth.id;
-  else if (rarity === 'legendary' && rng.next() < 0.5) item.set = pick(rng, SETS).id;
+  else if (rarity === 'legendary' && rng.next() < 0.5) item.set = pick(rng, forPath(SETS, mods.path)).id;
   return item;
 }

@@ -156,6 +156,13 @@ Report columns per minute: wave, starlight, kills/min, kills, wall %, vanguard c
 
 ## Proposed
 
+### P-193 Specialisation paths (TB-193a): placeholder, untuned
+No sims run (director, 3 Nov). Every number lives in `PATH_FX` (`src/data/paths.ts`); node costs in `src/data/skillTree.ts`.
+- Starting bonus: Serpent crit +0.05; Fox vanguard and companion damage ×1.1; Magpie starlight ×1.1.
+- Nodes per rank: coil crit +0.04; viper crit mult +0.3; venom 0.5 × dmg per s for 3 s; toxin poison ×(1+0.3r); gaze radius ×(1+0.08r); foxden vanguard and companion damage ×(1+0.15r); foxhide vanguard HP ×(1+0.2r); foxrun respawn ×0.88^r; foxpack +1 cap; cunning companion rate ×(1+0.1r); magpie starlight ×(1+0.1r); glitter Item Find +0.05; trinket luck +0.03; haggle reroll ×(1−0.1r); shiny salvage ×(1+0.2r).
+- Sets: Serpent's Coil crit +0.05 / venom 0.5 / burst 1 × dmg within 60 px; Foxfire Pack damage ×1.15 / respawn ×0.7 / vanguard damage +0.1 per companion; Magpie's Hoard starlight ×1.15 / shard 10% at 2× / every 5th drop +1 rarity.
+- Mythics: Fang every 5th shot venom (0.5 × dmg per s) +2 split lobs; Foxfire Tail bite 0.5 × dmg × (1 + 0.25 per companion); Talon +1× starlight on arrow kills, 2% extra drop roll.
+
 ### P-188 Elf encampment (TB-188a): placeholder, untuned
 No sims run (director, 3 Nov). Numbers live in `src/data/camp.ts`.
 - Cost per level (all four buildings): L1 3 Heartwood + 10 material, L2 8 + 30, L3 20 + 80. Heartwood is shared with the Heartwood tree; spent only while fallen.

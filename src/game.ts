@@ -4,7 +4,8 @@
  */
 import { NodeId } from './data/skillTree';
 import { EventBus } from './sim/events';
-import { canPullBack, canReplant, pullBack, replant } from './sim/prestige';
+import { canPullBack, canReplant, choosePath, pullBack, replant } from './sim/prestige';
+import { PathId } from './data/paths';
 import { SimState, createState, freshMeta, freshRun, recompute } from './sim/state';
 import { Inputs, step } from './sim/step';
 import { buy } from './sim/tree';
@@ -84,7 +85,9 @@ export class GameController {
   canPullBack(): boolean { return canPullBack(this.state); }
   pullBack(): boolean { return pullBack(this.state, this.events); }
   canReplant(): boolean { return canReplant(this.state); }
-  replant(tier?: number): number { if (!canReplant(this.state)) return 0; const rec = runRecord(this.state, gain()); const hw = replant(this.state, this.events, tier); appendTelemetry({ ...rec, heartwoodGained: hw, heartwoodTotal: this.state.meta.heartwood }); this.save(); return hw; }
+  /** Specialisation path (TB-193a): picked on the Replant screen, carried into the next run. */
+  choosePath(path: PathId | null): boolean { const ok = choosePath(this.state, path); if (ok) this.save(); return ok; }
+  replant(tier?: number, path?: PathId | null): number { if (!canReplant(this.state)) return 0; const rec = runRecord(this.state, gain()); const hw = replant(this.state, this.events, tier, path === undefined ? this.state.run.path ?? null : path); appendTelemetry({ ...rec, heartwoodGained: hw, heartwoodTotal: this.state.meta.heartwood }); this.save(); return hw; }
   /** Finished-run records as an export file (TB-070). */
   telemetry(): { json: string; runs: number; loot: number } { this.save(); const runs = readTelemetry(), loot = readLoot(); return { json: telemetryJson(runs, undefined, loot), runs: runs.length, loot: loot.length }; }
 

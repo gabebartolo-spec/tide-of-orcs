@@ -13,8 +13,9 @@ describe('loot tables (TB-091)', () => {
     for (const s of SLOTS) expect(BASES.filter((b) => b.slot === s)).toHaveLength(4);
   });
   it('has 7 sets with rising bonuses and 8 mythics', () => {
-    expect(SETS).toHaveLength(7); expect(MYTHICS).toHaveLength(8);
-    for (const s of SETS) expect(s.bonus[2][0]!.value).toBeLessThan(s.bonus[6][0]!.value);
+    expect(SETS).toHaveLength(10); expect(MYTHICS).toHaveLength(11);
+    // path sets (TB-193a) carry different bonuses per tier; the scaling rule is for the first seven
+    for (const s of SETS.filter((x) => !x.path)) expect(s.bonus[2][0]!.value).toBeLessThan(s.bonus[6][0]!.value);
   });
   it('weights sum to 100 and bosses never drop commons', () => {
     const w = Object.values(RARITY.weights);

@@ -39,14 +39,14 @@ describe('rng', () => {
 
 describe('stats', () => {
   it('every node at max rank changes at least one stat', () => {
-    const base = deriveStats({ root: 1 });
+    const base = (n?: { path?: import("../data/paths").PathId }) => deriveStats({ root: 1 }, {}, {}, n?.path ?? null);
     for (const n of NODES) {
       if (n.id === 'root') continue;
       const lv: Record<string, number> = { root: 1 };
       // own the whole ancestor chain so dependent stats (e.g. ranks needs muster) resolve
       let p: typeof n | undefined = n; while (p) { lv[p.id] = p.max; p = p.parent ? NODE[p.parent] : undefined; }
-      const st = deriveStats(lv);
-      expect(JSON.stringify(st), n.id).not.toBe(JSON.stringify(base));
+      const st = deriveStats(lv, {}, {}, n.path ?? null); // a path node counts only on its path (TB-193a)
+      expect(JSON.stringify(st), n.id).not.toBe(JSON.stringify(base(n)));
     }
   });
   it('Heartwood grants no passive bonus (P-142): stats depend only on the trees', () => {

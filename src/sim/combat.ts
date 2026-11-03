@@ -10,6 +10,7 @@ import { SPOILS_FX } from '../data/lootTables';
 import { noteDrop, pickUp } from './loot';
 import { lootMods } from './gear';
 import { MYTHIC_FX, SET_FX } from '../data/lootTables';
+import { PATH_FX } from '../data/paths';
 
 export function nearestOrc(s: SimState, x: number, y: number, filter?: (o: Orc) => boolean): Orc | null {
   let best: Orc | null = null, bd = Infinity;
@@ -22,7 +23,8 @@ export function nearestOrc(s: SimState, x: number, y: number, filter?: (o: Orc) 
 }
 
 /** Enchantment bits a shot carries (TB-111): each owned type rolls its own chance per shot. */
-export const FX = { FIRE: 1, FROST: 2, SHOCK: 4, BOUNCE: 8, MOON: 16, ALL: 31 } as const;
+/** VENOM (TB-193a) is set only by the Fang's venom arrow, never rolled, and is not in ALL. */
+export const FX = { FIRE: 1, FROST: 2, SHOCK: 4, BOUNCE: 8, MOON: 16, ALL: 31, VENOM: 32 } as const;
 export function rollFx(s: SimState): number {
   const st = s.stats, r = (p: number): boolean => p > 0 && s.rng.next() < p;
   return (r(st.fireP) ? FX.FIRE : 0) | (r(st.frostP) ? FX.FROST : 0) | (r(st.shockP) ? FX.SHOCK : 0) | (r(st.rebP) ? FX.BOUNCE : 0) | (r(st.moonP) ? FX.MOON : 0);
@@ -39,10 +41,15 @@ export function dropMat(s: SimState, ev: EventBus, o: Orc): void {
   ev.push({ t: 'matDrop', mat, x: o.x, y: o.y });
 }
 
-export function kill(s: SimState, ev: EventBus, o: Orc): void {
+/** `byLob`: the elf's arrow struck the killing blow (The Magpie's Talon, TB-193a). */
+export function kill(s: SimState, ev: EventBus, o: Orc, byLob = false): void {
   if (o.dead) return;
   o.dead = true;
-  const loot = o.loot * s.stats.starMult;
+  const st = s.stats;
+  let loot = o.loot * st.starMult;
+  // Magpie's Hoard 4: a bonus shard; the Talon steals more from an arrow kill (rolled on the loot stream, TB-193a)
+  if (st.shardP && s.lootRng.next() < st.shardP) loot += o.loot * st.starMult * PATH_FX.shardMult;
+  if (st.talon && byLob) loot += o.loot * st.starMult * PATH_FX.talonStar;
   s.run.kills++; s.meta.lifetimeKills++; s.run.starlight += loot; s.run.earned += loot;
   if (o.champ && s.run.boss) s.run.boss.left--;
   dropMat(s, ev, o);
@@ -59,7 +66,12 @@ export function kill(s: SimState, ev: EventBus, o: Orc): void {
     if (!n) break;
     n.burn = s.stats.burnSecs; ev.push({ t: 'burnSpread', x: o.x, y: o.y, tx: n.x, ty: n.y });
   }
-  dropLoot(s, ev, o);
+  // Serpent's Coil 6: a poisoned orc bursts, striking and poisoning those around it
+  if (o.poison > 0 && st.venomBurst) {
+    const R = PATH_FX.burstReach, dps = o.poisonDps;
+    s.orcs.forEach((q) => { if (!q.dead && (q.x - o.x) ** 2 + (q.y - o.y) ** 2 < (R + q.r) ** 2) { poisonOrc(q, dps); damage(s, ev, q, st.dmg * PATH_FX.burst); } });
+  }
+  dropLoot(s, ev, o, st.talon && byLob && s.lootRng.next() < PATH_FX.talonDrop ? 1 : 0);
   // TB-087: a slain wolf rider's orc fights on afoot as a grunt (a boss-wave rider's grunt still counts toward the wave)
   if (o.kind === 'wolfrider') {
     const g = spawnOrc(s, 'grunt', o.y, o.champ);
@@ -70,15 +82,19 @@ export function kill(s: SimState, ev: EventBus, o: Orc): void {
 }
 
 /** Roll this kill's drop (TB-094) and pick it up; re-derive stats if what is worn changed. */
-function dropLoot(s: SimState, ev: EventBus, o: Orc): void {
+/** `extra`: more rolls (the Talon's stolen drop). */
+function dropLoot(s: SimState, ev: EventBus, o: Orc, extra = 0): void {
   const l = s.meta.loot, st = s.stats, boss = o.kind === 'boss';
   let worn: string | null = null; // snapshot only once a drop lands (TB-198)
-  const mods = { ...lootMods(l, st), bump: boss && st.hoard ? 1 : 0, has: ownedAffixes(st) };
+  const mods = { ...lootMods(l, st), bump: boss && st.hoard ? 1 : 0, has: ownedAffixes(st), path: st.path };
   // Warboss Tithe: bosses drop twice; Trophy: kills on every tenth wave roll twice
-  const rolls = boss ? st.bossDrops : st.trophy && s.run.wave % SPOILS_FX.trophyEvery === 0 ? 2 : 1;
+  const rolls = (boss ? st.bossDrops : st.trophy && s.run.wave % SPOILS_FX.trophyEvery === 0 ? 2 : 1) + extra;
   for (let i = 0; i < rolls; i++) {
-    const it = rollDrop(s.lootRng, l, o.kind, s.run.wave, s.meta.prestiges, mods);
+    // Magpie's Hoard 6: every Nth item dropped rolls one rarity higher
+    const up = st.hoardEvery > 0 && (s.run.hoardN + 1) % st.hoardEvery === 0 ? 1 : 0;
+    const it = rollDrop(s.lootRng, l, o.kind, s.run.wave, s.meta.prestiges, { ...mods, bump: mods.bump + up });
     if (!it) continue;
+    if (st.hoardEvery > 0) s.run.hoardN++;
     worn ??= JSON.stringify(l.equipped);
     noteDrop(s.run, it);
     pickUp(l, it, s.lootPolicy, st.satchelCap, st);
@@ -98,11 +114,14 @@ export function addZone(s: SimState, kind: Zone['kind'], x: number, y: number, r
   z.kind = kind; z.x = x; z.y = y; z.r = r; z.life = life; z.used = false;
 }
 
-export function damage(s: SimState, ev: EventBus, o: Orc, amt: number): void {
+export function damage(s: SimState, ev: EventBus, o: Orc, amt: number, byLob = false): void {
   if (o.dead) return;
   o.hp -= amt * takenMult(s, o); o.hitT = 0.12;
-  if (o.hp <= 0) kill(s, ev, o);
+  if (o.hp <= 0) kill(s, ev, o, byLob);
 }
+
+/** Poison (TB-193a): a fresh dose resets the clock and keeps the stronger dose. */
+export function poisonOrc(o: Orc, dps: number): void { o.poisonDps = Math.max(dps, o.poison > 0 ? o.poisonDps : 0); o.poison = PATH_FX.venomSecs; }
 
 export function shoot(s: SimState, kind: ProjectileKind, x: number, y: number, ang: number, speed: number, dmg: number, pierce: number, target: Orc | null, fx = 0, crit = 0, critX = 1): void {
   const p = s.shots.alloc(); if (!p) return;
@@ -172,7 +191,10 @@ export function impact(s: SimState, ev: EventBus, p: { tx: number; ty: number; r
     if (frost) o.chill = ARROWS.frost.secs;
     if (stun) stunOrc(o, st.stunSecs);
     if (st.stakes) rootOrc(o, MYTHIC_FX.oakRootSecs * st.echo);
-    damage(s, ev, o, p.dmg * (crit ? st.critMult : moon ? SET_FX.moonCritMult : 1));
+    // Venom: crits poison; the Fang's venom arrow poisons everything it strikes (TB-193a)
+    if (crit && st.venom > 0) poisonOrc(o, st.dmg * st.venom * st.venomMult);
+    if (f & FX.VENOM) poisonOrc(o, st.dmg * Math.max(st.venom, PATH_FX.fangVenom) * st.venomMult);
+    damage(s, ev, o, p.dmg * (crit ? st.critMult : moon ? SET_FX.moonCritMult : 1), true);
   });
   ev.push({ t: 'impact', x: p.tx, y: p.ty, r: p.r });
   if (fire && st.cinder) addZone(s, 'cinder', p.tx, p.ty, p.r, SET_FX.cinderSecs);
