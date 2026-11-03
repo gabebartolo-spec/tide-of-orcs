@@ -1,3 +1,4 @@
+import { elfLayers, stepAimMix } from './elfPose';
 import { ARROWS, BARRICADE, FIELD, LOB, SOURCES, VANGUARD, WAVE_LEN } from '../data/balance';
 import { FIREBALL, ORC_TYPES, OrcKind } from '../data/orcs';
 import { SimEvent } from '../sim/events';
@@ -52,6 +53,8 @@ export class FieldRenderer {
   private ambience = new Ambience(BAR_X + BAR_W);
   /** Animation clock for sprite frames. */
   private clock = 0;
+  /** Elf shot loop (TB-202): idle<->draw mix (0 idle, 1 draw), clock at the last elf draw, last aimed charge, current lob cooldown. */
+  private aimMix = 0; private elfClock = 0; private lastCharge = 0; private lobCd = 1;
   /** Reused draw-order buffers and wind-up scratch (no per-frame allocation). */
   private vanBuf: Vanguard[] = [];
   private orcBuf: Orc[] = [];
@@ -243,6 +246,7 @@ export class FieldRenderer {
 
     if (s.stats.treant) { g.fillStyle = P.treantTrunk; g.fillRect(BAR_X + 40, H / 2 + 10, 14, 34); g.fillStyle = P.treantLeaf; g.beginPath(); g.arc(BAR_X + 47, H / 2 + 2, 22, 0, 6.28); g.fill(); g.fillStyle = P.treantLeaf2; g.beginPath(); g.arc(BAR_X + 40, H / 2 - 6, 14, 0, 6.28); g.fill(); }
 
+    this.lobCd = s.stats.lobCd;
     const drawn = Math.min(1, (s.run.shotT[0] ?? 0) / s.stats.lobCd), aiming = aim !== null && aim.x > BAR_X + BAR_W && !s.run.fallen;
     this.elf(ELF_X, H / 2, false, aiming ? drawn : -1);
     this.gearFx();
@@ -484,8 +488,15 @@ export class FieldRenderer {
   private elf(x: number, y: number, dim: boolean, draw = -1): void {
     const g = this.g; g.save(); g.translate(x, y); if (dim) g.globalAlpha = 0.85;
     g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 16, 12, 4, 0, 0, 6.28); g.fill();
-    const key = dim ? 'archer' : 'elf', aiming = draw >= 0, t = aiming ? Math.min(draw, 0.999) * this.sprites.duration(key + '.attack') : this.clock;
-    this.sprites.drawActor(g, key, aiming ? 'attack' : 'walk', t, 0, 16, ACTOR_R); g.restore();
+    const key = dim ? 'archer' : 'elf', aiming = draw >= 0;
+    if (dim) { this.sprites.drawActor(g, key, 'walk', this.clock, 0, 16, ACTOR_R); g.restore(); return; }
+    this.aimMix = stepAimMix(this.aimMix, aiming, this.clock - this.elfClock, VFX.elfShot.aim); this.elfClock = this.clock;
+    if (aiming) this.lastCharge = draw;
+    const a0 = g.globalAlpha;
+    for (const l of elfLayers(this.lastCharge, this.lastCharge * this.lobCd, this.aimMix, this.sprites.duration('elf.attack'), VFX.elfShot.release)) {
+      g.globalAlpha = a0 * l.alpha; this.sprites.drawActor(g, key, l.state, l.state === 'walk' ? this.clock : l.t, 0, 16, ACTOR_R);
+    }
+    g.restore();
   }
 
   private van(s: SimState, v: Vanguard): void {
