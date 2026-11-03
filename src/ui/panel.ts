@@ -1,3 +1,4 @@
+import { tabTitle, type Tab } from './tabTitle';
 import { PRESTIGE, VanType } from '../data/balance';
 import { CONFIRM_ARM_MS } from '../data/settings';
 import { BRANCH_COLOR, BRANCH_LABEL, NODE } from '../data/skillTree';
@@ -214,7 +215,7 @@ export class Panel {
     if (document.body.dataset.mode !== m) this.onCue('uiPanel'); // TB-195g: the panel whoosh
     document.body.dataset.mode = m;
     $('camp-go').hidden = m !== 'camp'; $('camp-close').hidden = m !== 'settings';
-    $('camp-title').textContent = m === 'settings' ? STR.tabSettings : STR.campTitle;
+    $('camp-title').textContent = tabTitle(this.tab);
     dispatchEvent(new Event('resize'));
     // The tree canvas has no size while hidden, so draw it once the camp page has laid out
     requestAnimationFrame(() => { this.tree.resize(); this.tree.draw(this.game.state, this.game.state.t); });
@@ -228,7 +229,9 @@ export class Panel {
     if (on) this.tree.canvas.focus();
   }
 
-  setTab(k: 'grove' | 'satchel' | 'camp' | 'prestige' | 'settings'): void {
+  private tab: Tab = 'grove';
+  setTab(k: Tab): void {
+    this.tab = k; $('camp-title').textContent = tabTitle(k);
     if (k !== 'camp') this.camp.close();
     if (k !== 'grove') this.setTreeFull(false);
     for (const t of ['grove', 'satchel', 'camp', 'prestige', 'settings'] as const) { $('pane-' + t).hidden = k !== t; $('tab-' + t).setAttribute('aria-selected', String(k === t)); }
