@@ -75,10 +75,11 @@ $jobs = @(
       NOCKFING = "1"; STRDRAW = "1"; LIMBBEND = "0.08"; STRNEAR = "0.16,0.40"; STRTURN = "0.03"; RETIME = "1.05"; STABLESH = "1"; HANDSMOOTH = "7,18,12"; DRAWRAMP = "5"; RELEASE = "5"; TAIL = "10"
       IDLEPOSE = "$a\archer\v3\idle0.json"; BOWALIGNF = "8,15"; FINGCOPY = "Right:Index>Middle,Ring,Pinky;Left:Index>Middle,Ring,Pinky" } }
 )
-# orc.wolfrider.attack is NOT an apply_anim job: the wolf rider is a Tripo "Other" rig driven by Quaternius Wolf "Attack" (no Mixamo skeleton).
-# Its 20 frames + anchor come from wolfrider\render_wr_sheet.py (same field camera, ORTHO 1.4, RES 512, mirrored to face screen-right):
-#   $env:ORTHO = "1.4"; & $bl -b --python "$s\wolfrider\render_wr_sheet.py" -- "$a\wolf_rider\wolfrider_anim6.blend" $o orc.wolfrider.attack
-# then put its ANCHOR line into anchors.json as [ax, ay, 1.4] by hand (SKILL.md step 6); pack_sprites.py below picks the frames up like any key.
+# orc.wolfrider + orc.wolfrider.attack are NOT apply_anim jobs (TB-210): blam's "Orc animation" plays its own clips. Bake, then render
+# (through blender_slot.sh, ORTHO 1.8, STEP 1, GAMECAM 20; ANCHOR 256.00 389.65 -> anchors.json [256, 389.65, 1.8] for both keys):
+#   PARTS=ORC_Units_Body_A,ORC_Units_Head_A,ORC_Units_Arms_A,ORC_Units_Legs_A,ORC_Units_Shoulderpads_A,ORC_Units_Axe,Wolf YAW=90
+#   CLIP=03_run (prints SCALE 41.745; pass SCALE=41.745 for 07_attack_A) wolfrider_blam\build_blam.py <Orc_LightCavalry.fbx> <out.blend>
+#   wolfrider_blam\render_blam.py <blend> $o orc.wolfrider | orc.wolfrider.attack   (blends kept in $a\wolfrider_blam)
 $anc = @{}; $af = "$o\anchors.json"; if (Test-Path $af) { (Get-Content $af | ConvertFrom-Json).PSObject.Properties | ForEach-Object { $anc[$_.Name] = $_.Value } }
 foreach ($j in $jobs) {
   if ($Only.Count -and $Only -notcontains $j.key) { continue }
