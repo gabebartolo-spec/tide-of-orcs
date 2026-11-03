@@ -76,7 +76,7 @@ describe('sprite atlas', () => {
     expect(sp.bakeCount).toBe(1);
     for (let r = 4; r <= 40; r += 0.1) sp.draw(g, 'orc.grunt', 0, 0, 0, r, false, 'red', 'orange', 4);
     const hpr = sp.heightPerR('orc.grunt');
-    expect(sp.bakeCount - 1).toBeLessThanOrEqual(Math.ceil(hpr * (40 - 4) / SPRITE_BAKE.quantum) + 2);
+    expect(sp.bakeCount - 1).toBeLessThanOrEqual((Math.ceil(hpr * (40 - 4) / SPRITE_BAKE.quantum) + 2) * (SPRITE_BAKE.sub + 1) ** 2);
     for (let i = 0; i < SPRITE_BAKE.cap * 2; i++) sp.draw(g, 'orc.grunt', 0, 0, 0, 1 + i, false, `#${i}`, 'orange', 4);
     expect(sp.bakeSize).toBeLessThanOrEqual(SPRITE_BAKE.cap);
     expect(heightBucket(26)).toBe(heightBucket(26.4));

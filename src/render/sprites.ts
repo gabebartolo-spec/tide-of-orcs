@@ -122,7 +122,7 @@ export class Sprites {
       // so blur, rim and edge pixels match the live draw with no resample of the body (TB-216f).
       // The frame's sub-pixel offset is baked in too (snapped to 1/SPRITE_BAKE.sub px) and the blit lands on whole device
       // pixels, so the bake is never resampled on the way to the screen.
-      const m = g.getTransform?.(), k = m ? Math.hypot(m.a, m.b) || 1 : 1, ex = m ? m.e : 0, ey = m ? m.f : 0, n = SPRITE_BAKE.sub;
+      const m = g.getTransform?.(), k = m ? Math.hypot(m.a, m.b) || 1 : 1, ex = m?.e || 0, ey = m?.f || 0, n = SPRITE_BAKE.sub;
       const hq = Math.max(1, Math.round(h * k / SPRITE_BAKE.quantum) * SPRITE_BAKE.quantum);
       const px = dx * k + ex, py = dy * k + ey, ix = Math.floor(px), iy = Math.floor(py);
       const ox = Math.round((px - ix) * n), oy = Math.round((py - iy) * n);
