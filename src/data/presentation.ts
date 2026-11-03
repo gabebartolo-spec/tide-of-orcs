@@ -135,35 +135,31 @@ export const TREE_LIGHT = {
 } as const;
 
 /** Camp scene (TB-188e, docs/plans/elf-encampment.md §1): the encampment has its own view on the Camp tab, drawn at house
- *  scale instead of in the field's grove strip. Scene units match field units (the elf stands ~38 units tall), and the view
- *  fits the `w` x `h` box to its canvas. `l3H` is the drawn height of every level-3 Tripo sprite (~3.5x the elf's frame: the Tripo frames include each building's ground island, so the
- *  structure itself reads ~3x the elf), so each
- *  building gets its own scale. `sky` is the share of the box above the horizon. The four finished buildings stand equally tall. TB-188g: CAMP_LV_SCALE multiplies that scale per building and level. */
-export const CAMP_SCENE = { w: 840, h: 210, l3H: 135, sky: 0.25, elf: { x: 805, y: 185, r: 12 } } as const;
-/** The Camp scene's backdrop (TB-188i), painted once per canvas size to an offscreen canvas. Scene units; y down from the box top.
- *  sky: gradient stops (top, horizon). trees: far forest silhouette, crowns of radius r every `step` with a jitter, two rows
- *  (far row paler). hills: one low band like the field's. ground: seeded patches and grass tufts. path: a worn track along the
- *  row through the buildings (y centre, half width, wave). shadow: contact ellipse under each building, rx = w * rx, ry. */
+ *  scale instead of in the field's grove strip. Scene units match field units (the elf in the field stands ~38 units tall), and
+ *  the view fits the `w` x `h` box to its canvas. `l3H` is the drawn height of every level-3 Tripo sprite (the frames include each
+ *  building's ground island), so each building gets its own scale. TB-188g: CAMP_LV_SCALE multiplies that scale per building and
+ *  level. TB-188j: no elf in the scene (director, 3 Nov). */
+export const CAMP_SCENE = { w: 780, h: 210, l3H: 135 } as const;
+/** The Camp scene's backdrop (TB-188j): one plate rendered in Blender in the buildings' style (render_camp_backdrop.py, same
+ *  camera and lights as the building sprites) to public/decor/camp_backdrop.webp. `plate` is the scene-unit rectangle the image
+ *  covers; keep it, `road` and the buildings' ground line in step with the constants at the top of that script. The road runs
+ *  in front of the row (centre y, half width), never under a building. `fill` colours the canvas outside the plate and the
+ *  whole view until the image loads. shadow: soft contact shadow under each building, rx = footprint w * rx, ry, alpha a. */
 export const CAMP_BACKDROP = {
-  seed: 1880,
-  trees: [
-    { y: 50, r: [7, 11], step: 9, lift: [0, 9] },
-    { y: 54, r: [5, 9], step: 7, lift: [0, 6] },
-  ],
-  hill: { y: 53, h: 6, w: 70 },
-  ground: { patches: 46, r: [10, 30], squash: 0.35, tufts: 90, blade: [2, 4] },
-  path: { y: 194, half: 7, amp: 3, wave: 160, edge: 1.2, pebbles: 40 },
-  shadow: { rx: 0.42, ry: 7, dy: -1 },
+  src: 'decor/camp_backdrop.webp',
+  plate: { x0: -200, x1: 1040, y0: -150, y1: 340 },
+  road: { y: 197, half: 13 },
+  shadow: { rx: 0.4, ry: 8, dy: -2, a: 0.45 },
 } as const;
 
 /** Each building's footprint in the camp scene: centre x, base y (ground line), width and height in scene units. One row,
- *  left to right, with the elf at the east end; widths are the level-3 sprites at `l3H` tall. Click targets, the Tripo
+ *  left to right; widths are the level-3 sprites at `l3H` tall. Click targets, the Tripo
  *  sprites and the level-0 placeholder all share it. */
 export const CAMP_SPOTS = {
-  bowyer: { x: 70, y: 185, w: 118, h: 135 },
-  forge: { x: 210, y: 185, w: 132, h: 135 },
-  kitchen: { x: 392, y: 185, w: 196, h: 135 },
-  training: { x: 640, y: 185, w: 256, h: 135 },
+  bowyer: { x: 70, y: 148, w: 118, h: 135 },
+  forge: { x: 210, y: 148, w: 132, h: 135 },
+  kitchen: { x: 392, y: 148, w: 196, h: 135 },
+  training: { x: 640, y: 148, w: 256, h: 135 },
 } as const;
 
 /** Per-level scale on each building's level-3 scale (TB-188g), index = level. Measured in the Camp tab (roof top to ground line,
@@ -190,13 +186,13 @@ export const CAMP_LIFE = {
   pennant: { pole: 11, len: 9, w: 5, amp: 1.8, freq: 0.35, amp2: 0.7, freq2: 0.6 },
   emit: {
     forge: [
-      [{ k: 'smoke', x: 210, y: 92 }, { k: 'sparks', x: 210, y: 92 }],
-      [{ k: 'smoke', x: 192, y: 84 }, { k: 'sparks', x: 192, y: 84 }],
-      [{ k: 'smoke', x: 207, y: 74 }, { k: 'sparks', x: 207, y: 74 }],
+      [{ k: 'smoke', x: 210, y: 55 }, { k: 'sparks', x: 210, y: 55 }],
+      [{ k: 'smoke', x: 192, y: 47 }, { k: 'sparks', x: 192, y: 47 }],
+      [{ k: 'smoke', x: 207, y: 37 }, { k: 'sparks', x: 207, y: 37 }],
     ],
-    kitchen: [[{ k: 'smoke', x: 390, y: 165 }], [{ k: 'smoke', x: 407, y: 148 }], [{ k: 'smoke', x: 382, y: 82 }]],
-    training: [[{ k: 'dust', x: 645, y: 170 }], [{ k: 'dust', x: 636, y: 154 }], [{ k: 'dust', x: 637, y: 164 }]],
-    bowyer: [[{ k: 'pennant', x: 71, y: 92 }], [{ k: 'pennant', x: 68, y: 83 }], [{ k: 'pennant', x: 71, y: 72 }]],
+    kitchen: [[{ k: 'smoke', x: 390, y: 128 }], [{ k: 'smoke', x: 407, y: 111 }], [{ k: 'smoke', x: 382, y: 45 }]],
+    training: [[{ k: 'dust', x: 645, y: 133 }], [{ k: 'dust', x: 636, y: 117 }], [{ k: 'dust', x: 637, y: 127 }]],
+    bowyer: [[{ k: 'pennant', x: 71, y: 55 }], [{ k: 'pennant', x: 68, y: 46 }], [{ k: 'pennant', x: 71, y: 35 }]],
   },
 } as const;
 

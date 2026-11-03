@@ -4,15 +4,13 @@ import { CAMP_SCENE, CAMP_SPOTS } from '../data/presentation';
 import { campFxText, campHit } from './camp';
 
 describe('camp UI (TB-188b, TB-188e scene)', () => {
-  it('hits each building at its footprint, and not the elf or open ground', () => {
+  it('hits each building at its footprint, and not open ground', () => {
     for (const b of BUILDINGS) { const p = CAMP_SPOTS[b.id]; expect(campHit(p.x, p.y - p.h / 2)).toBe(b.id); }
-    expect(campHit(CAMP_SCENE.elf.x, CAMP_SCENE.elf.y - 10)).toBeNull();
     expect(campHit(CAMP_SCENE.w / 2, 10)).toBeNull();
     expect(campHit(-5, 300)).toBeNull();
   });
-  it('fits every building in the scene, house tall, with no two footprints or the elf overlapping', () => {
+  it('fits every building in the scene, house tall, with no two footprints overlapping', () => {
     const boxes = BUILDINGS.map((b) => { const p = CAMP_SPOTS[b.id]; return [p.x - p.w / 2, p.y - p.h, p.x + p.w / 2, p.y] as const; });
-    const e = CAMP_SCENE.elf; boxes.push([e.x - 25, e.y - 45, e.x + 25, e.y]);
     for (const b of BUILDINGS) expect(CAMP_SPOTS[b.id].h).toBe(CAMP_SCENE.l3H);
     for (const [x0, y0, x1, y1] of boxes) { expect(x0).toBeGreaterThanOrEqual(0); expect(y0).toBeGreaterThanOrEqual(0); expect(x1).toBeLessThanOrEqual(CAMP_SCENE.w); expect(y1).toBeLessThanOrEqual(CAMP_SCENE.h); }
     for (let i = 0; i < boxes.length; i++) for (let j = i + 1; j < boxes.length; j++) {
