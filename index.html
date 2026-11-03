@@ -80,29 +80,20 @@
       <div class="tab" id="pane-camp" hidden>
         <div class="campwrap"><canvas id="campview"></canvas><div class="bcard" id="bcard" role="dialog" hidden></div></div>
       </div>
-      <div class="tab" id="pane-prestige" hidden>
+      <div class="tab" id="pane-prestige" data-fit="scroll" hidden>
         <div class="prestige split three">
           <div class="paths" id="paths"></div>
           <div class="col">
           <h2 id="pr-title"></h2>
-          <p id="pr-body"></p>
           <div><div class="stat"><span class="k" id="pr-gain-k"></span></div><div class="big" id="pr-gain">0</div></div>
-          <ul>
-            <li id="pr-each"></li>
-            <li id="pr-reset"></li>
-            <li id="pr-kept"></li>
-            <li id="pr-req"></li>
-          </ul>
           <div class="row"><button class="buy" id="pr-btn" disabled></button></div>
           </div>
           <div class="col">
           <h2 id="hw-title"></h2>
-          <p id="hw-body"></p>
           <div class="hwtree" id="hw-tree"></div>
           </div>
           <div class="col">
           <h2 id="camp-sec-title"></h2>
-          <p id="camp-sec-body"></p>
           <div class="camplist" id="camp-list"></div>
           </div>
         </div>
@@ -115,14 +106,12 @@
           <label class="set"><span id="set-text-k"></span><input type="range" id="set-text" min="0.8" max="1.6" step="0.1"><output id="set-text-v"></output></label>
           <label class="set"><span id="set-num-k"></span><select id="set-num"><option value="short"></option><option value="sci"></option></select></label>
           <h2 id="set-save-k"></h2>
-          <p id="set-save-hint"></p>
           <textarea id="set-blob" rows="4" spellcheck="false"></textarea>
           <div class="row"><button class="ghost" id="btn-export"></button><button class="ghost" id="btn-import"></button></div>
           <div class="row"><button class="ghost" id="btn-reset"></button></div>
           </div>
           <div class="col">
           <h2 id="set-tel-k"></h2>
-          <p id="set-tel-hint"></p>
           <div class="row"><button class="ghost" id="btn-telemetry"></button></div>
           </div>
         </div>

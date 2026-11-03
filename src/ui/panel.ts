@@ -50,10 +50,10 @@ export class Panel {
   constructor(private game: GameController, private tree: TreeRenderer) {
     // static copy
     $('tab-grove').textContent = STR.tabGrove; $('tab-camp').textContent = STR.tabCamp; $('tab-prestige').textContent = STR.tabReplant;
-    $('pr-title').textContent = STR.replantTitle; $('pr-body').textContent = STR.replantBody;
+    $('pr-title').textContent = STR.replantTitle;
     $('k-wave').textContent = STR.wave; $('k-kills').textContent = STR.slain; $('k-heart').textContent = STR.heartwood;
-    $('pr-gain-k').textContent = STR.replantGainK; $('pr-btn').textContent = STR.replantBtn;
-    $('pr-each').innerHTML = STR.replantEach(PRESTIGE.fallGain); $('pr-reset').textContent = STR.replantReset; $('pr-kept').textContent = STR.replantKept; $('btn-reset').textContent = STR.wipe;
+    $('pr-gain-k').textContent = STR.replantGainK;
+    $('btn-reset').textContent = STR.wipe;
     $('fallen-title').textContent = STR.fallenTitle; $('fallen-hw-k').textContent = STR.fallenHW; $('fallen-btn').textContent = STR.fallenToCamp;
     $('camp-title').textContent = STR.campTitle; $('camp-go').textContent = STR.campGo; $('camp-close').textContent = STR.campClose; $('btn-settings').textContent = STR.tabSettings;
     $('dep-boss').querySelector('.n')!.textContent = STR.summonBoss;
@@ -100,7 +100,7 @@ export class Panel {
     this.setTreeFull(false);
     $('hw-title').textContent = STR.hwTitle;
     $('hw-tree').onclick = (e) => { const id = (e.target as HTMLElement).closest('button')?.dataset.hw as HwId | undefined; if (id && game.buyHw(id)) { this.toast(STR.hwBought(HW_NODE[id].name)); this.renderHw(); } };
-    $('camp-sec-title').textContent = STR.campSecTitle; $('camp-sec-body').textContent = STR.campSecBody;
+    $('camp-sec-title').textContent = STR.campSecTitle;
     this.camp = new CampPane(game, $('bcard'), $('camp-list'), (msg) => { this.onCue('bought'); this.toast(msg); });
     this.paths = new PathPicker($('paths'), () => game.state, (p) => game.choosePath(p),
       (p) => { this.onCue(p ? 'uiPath' : 'click'); this.toast(p ? STR.pathChosen(PATHS[p].name) : STR.pathCleared); this.renderDetail(); }, drawSigil);
@@ -120,14 +120,13 @@ export class Panel {
   update(): void {
     const s = this.game.state;
     this.hud.starlight(s.run.starlight); this.hud.wall(s.run.barHp, s.stats.barMax, STR.barricadeHud(fmt(Math.max(0, s.run.barHp)), fmt(s.stats.barMax))); $('hud-van').hidden = !s.stats.muster; if (s.stats.muster) $('hud-van').textContent = STR.vanguardHud(s.vans.count, s.stats.vanCap); $('st-wave').textContent = s.run.tier > 1 ? STR.waveTide(s.run.wave, STR.tideName(s.run.tier)) : String(s.run.wave); $('st-kills').textContent = fmt(s.meta.lifetimeKills); $('st-heart').textContent = STR.heartAvail(hwSpendable(s));
-    $('hw-body').textContent = s.run.fallen ? STR.hwBody(hwSpendable(s)) : STR.hwClosed(hwSpendable(s));
     if (!$('pane-satchel').hidden) this.satchel.update();
     for (const b of $('hw-tree').querySelectorAll<HTMLButtonElement>('button[data-hw]')) b.disabled = !canBuyHw(s, b.dataset.hw as HwId);
     this.camp.update(); this.paths.update();
     const g = gain(), ok = s.run.wave >= PRESTIGE.voluntaryWave && !s.run.fallen;
     $('btn-pullback').hidden = !ok;
     $('pr-gain').textContent = '+' + g; ($('pr-btn') as HTMLButtonElement).disabled = !ok;
-    $('pr-req').textContent = ok ? STR.replantReady(s.meta.bestWave) : STR.replantFrom(PRESTIGE.voluntaryWave);
+    $('pr-btn').textContent = ok || s.run.fallen ? STR.replantBtn : STR.replantFrom(PRESTIGE.voluntaryWave);
     const b = document.getElementById('buy-btn') as HTMLButtonElement | null; if (b) b.disabled = !canBuy(s, NODE[this.tree.selected]);
     this.bossButton(); this.tierPicker();
   }
@@ -246,7 +245,7 @@ export class Panel {
     $('set-vol-k').textContent = STR.setVolume; $('set-motion-k').textContent = STR.setMotion; $('set-num-k').textContent = STR.setNumbers; $('set-text-k').textContent = STR.setText;
     const mo = $<HTMLSelectElement>('set-motion').options; mo[0]!.text = STR.motionSystem; mo[1]!.text = STR.motionFull; mo[2]!.text = STR.motionReduced;
     const no = $<HTMLSelectElement>('set-num').options; no[0]!.text = STR.numShort; no[1]!.text = STR.numSci;
-    $('set-save-k').textContent = STR.setSave; $('set-save-hint').textContent = STR.exportHint;
+    $('set-save-k').textContent = STR.setSave;
     $('btn-export').textContent = STR.exportBtn; $('btn-import').textContent = STR.importBtn;
     this.syncSettings();
     // Sliders apply on every input but save once on release (TB-199).
@@ -261,7 +260,7 @@ export class Panel {
       navigator.clipboard?.writeText(blob).then(() => this.toast(STR.exported), () => {});
     };
     $('btn-import').onclick = () => this.importSave();
-    $('set-tel-k').textContent = STR.setTel; $('set-tel-hint').textContent = STR.telHint; $('btn-telemetry').textContent = STR.telBtn;
+    $('set-tel-k').textContent = STR.setTel; $('btn-telemetry').textContent = STR.telBtn;
     $('btn-telemetry').onclick = () => {
       const { json, runs, loot } = this.game.telemetry(); if (!runs && !loot) { this.toast(STR.telNone); return; }
       const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([json], { type: 'application/json' }));
