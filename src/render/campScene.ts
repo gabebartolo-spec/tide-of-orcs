@@ -3,11 +3,10 @@ import { CAMP_SCENE } from '../data/presentation';
 import { CampArt } from './camp';
 import { CampBackdrop } from './campBackdrop';
 import { CampLife } from './campLife';
-import { P } from './palette';
 import type { Sprites } from './sprites';
 
 /** The Camp tab's scene (TB-188e, docs/plans/elf-encampment.md §1): the four encampment buildings at house scale in a meadow
- *  before a far forest, with the elf standing beside them for scale. The CAMP_SCENE box (scene units = field units) is fitted to the
+ *  before a far forest. The CAMP_SCENE box (scene units = field units) is fitted to the
  *  canvas and centred. Read-only: it draws sim state and maps clicks back to scene units for campHit. */
 export class CampScene {
   private art = new CampArt();
@@ -36,13 +35,10 @@ export class CampScene {
 
   draw(levels: Partial<Record<BuildingId, number>>, t: number): void {
     const g = this.canvas.getContext('2d')!, px = this.k * this.dpr;
-    const { elf } = CAMP_SCENE;
-    // static sky, forest, meadow, path and shadows, cached offscreen (TB-188i)
+    // static forest, meadow, road and contact shadows, cached offscreen (TB-188j)
     this.backdrop.draw(g, this.k, this.ox, this.oy, this.dpr);
     g.setTransform(px, 0, 0, px, this.ox * this.dpr, this.oy * this.dpr);
     this.art.draw(g, levels, px, this.sprites);
     this.life.draw(g, levels, t);
-    g.fillStyle = P.shadow; g.beginPath(); g.ellipse(elf.x, elf.y, elf.r, elf.r / 3, 0, 0, 6.28); g.fill();
-    this.sprites.drawActor(g, 'elf', 'walk', t, elf.x, elf.y, elf.r);
   }
 }
