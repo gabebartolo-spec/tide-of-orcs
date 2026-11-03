@@ -15,7 +15,6 @@ import { Sprites } from './sprites';
 import { orcAnimT, orcState, orcSwingT, swingClipT, vanState } from './actorState';
 import { Ground, decorImg } from './ground';
 import { Ambience } from './ambience';
-import { textScale } from './textScale';
 import { Interp } from './interp';
 import { GROUND, LOOT_VFX, ORC_SPRITE, SKY, VFX, dusk } from '../data/presentation';
 import { SLOTS } from '../data/loot';
@@ -296,11 +295,7 @@ export class FieldRenderer {
 
     // HUD overlays (no shake)
     g.setTransform(sx, 0, 0, sy, 0, 0);
-    g.fillStyle = P.dim; g.fillRect(12, 10, 150, 10);
-    g.fillStyle = frac > 0.5 ? P.wallBar : frac > 0.25 ? P.amber : P.rose; g.fillRect(12, 10, 150 * frac, 10);
-    g.fillStyle = P.text; const ts = textScale(); g.font = `${13 * ts}px Heartwood`; g.textAlign = 'left'; g.shadowColor = P.ink; g.shadowBlur = 4;
-    g.fillText(STR.barricadeHud(fmt(Math.max(0, s.run.barHp)), fmt(s.stats.barMax)), 12, 21 + 13 * ts); g.shadowBlur = 0;
-    if (s.stats.muster) g.fillText(STR.vanguardHud(s.vans.count, s.stats.vanCap), 12, 21 + 25 * ts);
+    // The wall bar, barricade and vanguard counts are the DOM HUD now (TB-195b, src/ui/hud.ts); the wave strip stays on the field.
     g.fillStyle = P.dim45; g.fillRect(0, H - 5, W, 5); g.fillStyle = P.amber; g.fillRect(0, H - 5, W * (s.run.waveT / WAVE_LEN), 5);
     if (this.flash > 0) { this.flash -= dt; g.globalAlpha = Math.max(0, this.flash / LOOT_VFX.flashLife) * this.flashA; g.fillStyle = this.flashC; g.fillRect(0, 0, W, H); g.globalAlpha = 1; }
     if (this.edge > 0) { const M = LOOT_VFX.mythic; g.globalAlpha = (this.edge / M.edge) * (0.6 + 0.4 * Math.sin(this.clock * M.flicker)); g.strokeStyle = P.rose; g.lineWidth = M.edgeW; g.strokeRect(M.edgeW / 2, M.edgeW / 2, W - M.edgeW, H - M.edgeW); g.globalAlpha = 1; }

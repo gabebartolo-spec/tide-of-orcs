@@ -150,10 +150,29 @@ export const JUICE = {
   count: { dur: 400, popFrom: 1.15, flash: 450 },
   /** Press: scale at the bottom of the press, ms down, ms back up on the spring. */
   press: { scale: 0.9, down: 50, up: 120 },
-  /** Particle burst: count, speed range (px/s), life range (s), size range (px), gravity (px/s²), drag per 1/60 s. */
-  burst: { count: 26, speedMin: 120, speedMax: 340, lifeMin: 0.35, lifeMax: 0.75, sizeMin: 1.5, sizeMax: 3.5, gravity: 520, drag: 0.94 },
+  /** Particle burst (TB-195b: reads at 1080p, Hades-like): count, speed range (rem/s), life range (s), size range (rem), gravity (rem/s²),
+   *  drag per 1/60 s; `lift` is an upward kick (rem/s) so sparks arc up then fall; `fan` the half-angle (rad) of the spray round straight
+   *  up; `glow` the halo radius × size; `flare` a bright ring at the origin (rem radius) and its life (s). Rem so 1080p and 4K match. */
+  burst: { count: 64, speedMin: 6, speedMax: 19, lifeMin: 0.5, lifeMax: 1.0, sizeMin: 0.16, sizeMax: 0.4, gravity: 34, drag: 0.93, lift: 8, fan: 1.9, glow: 3, flare: 2.4, flareLife: 0.28 },
   /** Stagger: ms between list children entering. */
   stagger: 30,
   /** Stagger: px each child rises from as it enters. */
   rise: 8,
+} as const;
+
+/** Game HUD over the field (TB-195b, docs/plans/game-ui.md §2): starlight gem with an odometer, the wave banner and its clear stamp,
+ *  the lit timber wall bar. Times in ms, sizes in rem. */
+export const HUD = {
+  /** Wall bar crack stages: one more crack shows as the barricade falls below each fraction (highest first). */
+  cracks: [0.75, 0.5, 0.25] as readonly number[],
+  /** Wall bar fill colour bands: above `high` it glows grove, above `low` amber, else rose (and the bar throbs). */
+  high: 0.5, low: 0.25,
+  /** Odometer: ms each digit rolls to its new place. */
+  roll: 380,
+  /** Gem sparkle: smallest starlight gain that sparkles, ms between sparkles, burst scale. */
+  sparkleMin: 1, sparkleGap: 900, sparkleScale: 0.3,
+  /** Wave-clear stamp: ms it slams in (from `stampFrom` scale), ms it holds, ms it fades. */
+  stampIn: 260, stampFrom: 2.4, stampHold: 1100, stampOut: 400,
+  /** Wall bar shake on a hit: rem amplitude per hit fraction of max HP (capped at `shakeMax`), ms. */
+  shakeK: 6, shakeMax: 0.35, shakeMs: 220,
 } as const;
