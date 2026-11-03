@@ -61,7 +61,8 @@ const magpie = (c: G, t: (typeof PATH_TINT)['magpie']): void => {
   c.fillStyle = P.starGold; c.fill();
 };
 
-/** Draw a path's sigil filling the canvas: a carved ring, the mark, and a glow when lit (the chosen path). */
+/** Draw a path's sigil filling the canvas: the medallion picture alone once loaded (TB-193h), else a carved ring and the
+ *  vector mark; a glow when lit (the chosen path). */
 export function drawSigil(cv: HTMLCanvasElement, path: PathId, lit: boolean): void {
   // a fixed backing size, so a card drawn while its tab is hidden (no layout yet) is still sharp when shown
   const w = SIGIL_PX, h = SIGIL_PX;
@@ -70,14 +71,21 @@ export function drawSigil(cv: HTMLCanvasElement, path: PathId, lit: boolean): vo
   const k = Math.min(w, h) / 100, t = PATH_TINT[path];
   c.setTransform(1, 0, 0, 1, 0, 0); c.clearRect(0, 0, w, h);
   c.setTransform(k, 0, 0, k, (w - 100 * k) / 2, (h - 100 * k) / 2);
+  const pic = pics.get(path);
+  if (pic) {
+    // TB-193h: the medallion picture alone, face-on, no ring or disc behind it; the chosen path glows round its edge
+    if (lit) { c.shadowColor = t.light; c.shadowBlur = 10 * k; }
+    c.drawImage(pic, 4, 4, 92, 92);
+    c.shadowColor = P.noShadow; c.shadowBlur = 0;
+    return;
+  }
+  want(path, cv, lit);
   c.beginPath(); c.arc(50, 50, 46, 0, 6.283); c.fillStyle = P.ink; c.fill();
   c.lineWidth = 3; c.strokeStyle = lit ? t.light : t.deep; c.shadowColor = lit ? t.light : P.noShadow; c.shadowBlur = lit ? 10 * k : 0; c.stroke();
   c.shadowColor = P.noShadow; c.shadowBlur = 0;
   c.beginPath(); c.arc(50, 50, 41, 0, 6.283); c.lineWidth = 1; c.strokeStyle = P.timberDark; c.stroke();
   c.save(); c.beginPath(); c.arc(50, 50, 44, 0, 6.283); c.clip();
   if (lit) { c.shadowColor = t.light; c.shadowBlur = 6 * k; }
-  const pic = pics.get(path);
-  if (pic) c.drawImage(pic, 8, 8, 84, 84);
-  else { want(path, cv, lit); if (path === 'serpent') serpent(c, PATH_TINT.serpent); else if (path === 'fox') fox(c, PATH_TINT.fox); else magpie(c, PATH_TINT.magpie); }
+  if (path === 'serpent') serpent(c, PATH_TINT.serpent); else if (path === 'fox') fox(c, PATH_TINT.fox); else magpie(c, PATH_TINT.magpie);
   c.restore();
 }
