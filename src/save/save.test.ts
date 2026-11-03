@@ -67,10 +67,10 @@ describe('v6 → v7', () => {
 
 describe('v7 → v8', () => {
   it('adds the once-per-run gear state to the saved run, unspent', () => {
-    const run: Partial<ReturnType<typeof freshRun>> = { ...freshRun(), wave: 12 }; delete run.thunder; delete run.splinterUsed; delete run.freeRallyUsed;
+    const run: Partial<ReturnType<typeof freshRun>> = { ...freshRun(), wave: 12 }; delete run.thunder; delete run.freeRallyUsed;
     const s = migrate(JSON.parse(JSON.stringify({ version: 7, savedAt: 0, run, meta: freshMeta(), settings: defaultSettings() })));
     expect(s.version).toBe(CURRENT_VERSION); expect(s.run.wave).toBe(12);
-    expect(s.run.thunder).toBe(0); expect(s.run.splinterUsed).toBe(false); expect(s.run.freeRallyUsed).toBe(false);
+    expect(s.run.thunder).toBe(0); expect(s.run.freeRallyUsed).toBe(false);
   });
 });
 
