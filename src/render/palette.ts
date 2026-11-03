@@ -43,3 +43,11 @@ export const P = {
 export const BRANCH_LIGHT: Readonly<Record<'Bow' | 'Companions' | 'Armoury' | 'Grove' | 'Barricade' | 'Vanguard' | 'Spoils', string>> = {
   Bow: '#b98cff', Companions: '#ffb35a', Armoury: '#ff6f5e', Grove: '#8ff07a', Barricade: '#ffc46e', Vanguard: '#6fd2ff', Spoils: '#ffe98a',
 };
+
+/** Specialisation paths (TB-193c). colour: node rings, labels, card rims; light: the neon of owned links and the chosen card's glow;
+ *  deep: the sigil's shaded body; pale: its lit marks. Mirrored in style.css as --path-<id> and --path-<id>-light. */
+export const PATH_TINT: Readonly<Record<'serpent' | 'fox' | 'magpie', { colour: string; light: string; deep: string; pale: string }>> = {
+  serpent: { colour: '#86c79a', light: '#5dffa8', deep: '#2f5a3e', pale: '#d8f5c8' },
+  fox: { colour: '#e39a5c', light: '#ff8a3d', deep: '#7a3f1e', pale: '#fbe3c4' },
+  magpie: { colour: '#a8bde0', light: '#7fb4ff', deep: '#28324a', pale: '#f2f4fa' },
+};

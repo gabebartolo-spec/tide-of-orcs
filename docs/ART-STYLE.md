@@ -24,6 +24,7 @@ Status: **Current** (v1.3, checked against `src/render/palette.ts` and `src/data
 | treeGlow | rgba(205,189,234,.22) | Arcane halo round grown skill-tree wood (TB-163) |
 | lightHot / linkDim / glowClear | #fff8ec / rgba(205,189,234,.26) / rgba(0,0,0,0) | Hot white core of owned tree links; thin still line of locked links; transparent gradient stop (TB-190b) |
 | BRANCH_LIGHT | Bow #b98cff, Companions #ffb35a, Armoury #ff6f5e, Grove #8ff07a, Barricade #ffc46e, Vanguard #6fd2ff, Spoils #ffe98a | Per-branch light colour for skill-tree bloom, pools, pulses and motes (TB-190b) |
+| PATH_TINT | Serpent #86c79a / light #5dffa8 / deep #2f5a3e / pale #d8f5c8; Fox #e39a5c / #ff8a3d / #7a3f1e / #fbe3c4; Magpie #a8bde0 / #7fb4ff / #28324a / #f2f4fa | Specialisation paths (TB-193c): node rings and labels, path-branch neon, sigils and the chosen card's glow; mirrored in style.css as `--path-<id>` |
 | spear | #8fb7c9 | Spearman cloak, vanguard HP bars, Vanguard branch |
 | blade | #cdbdea | Bladedancer cloak (shares lilac) |
 | amber | #e2a85b | Starlight, affordable pulse, buy and rally buttons, boss crown, burn, wall bar when under 50% |
