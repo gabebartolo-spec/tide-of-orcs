@@ -242,12 +242,13 @@ export class FieldRenderer {
     if (fence) {
       // stacked fence panels running into the field, top to bottom so each overlaps the one behind it
       const L = GROUND.fence, lh = L.w * fence.height / fence.width;
+      g.save(); g.beginPath(); g.rect(BAR_X - L.w, top, BAR_W + L.w * 2, H - top); g.clip();  // the top panel is taller than its step: cut it at the wall's top so no stake pokes up through the trees
       for (let i = 0, y = -lh / 2 - Math.ceil(-top / L.step) * L.step; y < H; i++, y += L.step) {
         const alive = y < 0 || y / H < frac || (i * 0.618034) % 1 < frac;  // same fixed break scatter as the planks
         g.globalAlpha = alive ? 1 : 0.3;
         g.drawImage(fence, BAR_X + BAR_W / 2 - L.w / 2 + (alive ? 0 : 5), y, L.w, lh);
       }
-      g.globalAlpha = 1;
+      g.globalAlpha = 1; g.restore();
     } else for (let y = -Math.ceil(-top / 18) * 18; y < H; y += 18) {
       // each plank breaks at a fixed point (golden-ratio scatter), so damage never flickers frame to frame
       const alive = y < 0 || y / H < frac || ((y / 18) * 0.618034) % 1 < frac;

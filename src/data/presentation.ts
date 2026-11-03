@@ -14,7 +14,7 @@ export const SKY = {
  *  model height (`kinds`, in model units) times `unit`, always with one uniform scale so nothing squashes or warps. */
 export const TREELINE = {
   seed: 207, span: [-700, 1600] as const,
-  first: 118, gap: 22, stop: -6, minRows: 2, skirt: { step: 17, h: [8, 30] as const, lift: 8, rows: 2, offset: 9, far: 0.35, gap: 0.8,
+  first: 118, gap: 22, stop: -6, minRows: 2, skirt: { step: 17, h: [8, 30] as const, lift: 12, rows: 2, offset: 9, far: 0.35, gap: 0.8,
     /** Share of skirt spots that hold a young tree (one of `kinds`, `youngH` units tall) instead of a bush, and the height of the bush that hides the wall's top (x the tallest bush). */
     young: 0.3, kinds: ['oak_green_1', 'oak_green_2', 'spruce_2', 'spruce_3'] as const, youngH: [24, 38] as const, wallBush: 0.8 },
   /** Pre-scaled sprite levels stop below `mipMin` px high; the soft ground shadow is `shadowPx` wide and `shade` x the sprite width under a tree and a bush. */
