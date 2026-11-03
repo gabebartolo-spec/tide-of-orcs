@@ -1,0 +1,16 @@
+{
+  "id": "01a1a033-b5aa-7437-b2af-96790a3970a2",
+  "type": "text-to-image",
+  "ai_model": "gpt-image-2",
+  "prompt": "Concept art of a single fantasy mythic serpent bow, a game item, shown alone in three-quarter view and centred on a plain pale grey background. It is a recurve bow standing upright: one curved stave from top tip to bottom tip with a wrapped grip in the middle and one thin taut bowstring running straight from tip to tip, clear open space between string and stave; the stave is a green snake's body with gold bands, the top tip is a snake head with open jaws and two long white fangs, and the bottom tip is its tail. No arrow. No arm, no hand, no stand, no other objects. Stylised low-poly toy-miniature look, flat matte colours, soft even lighting, no outlines, no text.",
+  "status": "SUCCEEDED",
+  "progress": 100,
+  "created_at": 1793689105845,
+  "started_at": 1793689105852,
+  "finished_at": 1793689136046,
+  "expires_at": 1793948336046,
+  "image_urls": [
+    "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/uploads/image_01a1a033-b5aa-7437-b2af-96790a3970a2_0.png?Expires=1793948336&Signature=Ebsz51fa2vgJ0zhD8vio0U6n7aYsLMf2kFspE80lJpsHvm2CS93HNqSkjKwdvEh3Lt97K8mR3~2QQNKa4sCEN-B08ErxxV3kzDT~tgoCLUgzoz3RYC3KONlLDKAg06OzIhnoul~8-NpaPNteH24GY3U7-2kNzMEgJGsNqIJmW0DpZLTPGvsFv6FJgCUHBYU0XHFM25qNEkFw60R28655CSMgZcLOSOsh4qAGwGUtLlGmum4egPt7LZNTaZhc4Sv8KKO2cyU21Ea~Xupcf-uRQlu7R0Y6IboRnB0XsYDHrK1mi4rKnasvEab-hXP5im3iKiwy~WOYdwlaupJzRrEISA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "consumed_credits": 9
+}

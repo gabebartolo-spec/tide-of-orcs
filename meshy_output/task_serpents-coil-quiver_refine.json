@@ -1,0 +1,27 @@
+{
+  "id": "01a1a022-ee68-71ea-a588-24a6043c7661",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 2740667179,
+  "prompt": "Snakeskin arrow quiver, a game item prop, standing upright. A cylindrical tube of snakeskin with a snake coiled around it from bottom to rim, a strap, five fletched arrow shafts rising out of the open top, no bow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Deep dusty sage-green with bone-coloured scale patterns, rust-brown strap, pale bone arrow shafts with sage fletching.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793688009324,
+  "progress": 100,
+  "started_at": 1793688009330,
+  "finished_at": 1793688036783,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a022-ee68-71ea-a588-24a6043c7661/output/model.glb?Expires=4947264000&Signature=NrcImgWY0v-RNG8oVklD17sGVM~cPru~QhzI~1FkT7Q2OuEEmWcW7GKMwSzCGymR9om-i01rug0kJUgfOjcH~PglBVa2KY1jU3eShZO5JsILY7Gme5nDckSBzfWre3Qp96eUTzSEkIhpLi4hDUXEdhoMuXTH4-0Qn4I~2Xw2D9IoFwyV5j72PxDAhAy8fg5P0OFJ22OkfHORs4qgmkRK8aoMYdhgv-tN569Eyd1BaHPzIHwJVv-16M7FmV4mqh58ojt8BjJ1zwPYpJOSRN2JZwBCqAdcyltY1pySQl2z~bwOb~G4mkkgOlXZ38gNnzouQDI4xEsqbVpAg~v3SOoTzQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a022-ee68-71ea-a588-24a6043c7661/output/preview.png?Expires=4947264000&Signature=KTVP~FUfbDUCY4wHKtNWZXtvCvbw56XmCerlnB-EIFLzlE1tKnKqwgFlQQ52BMec62Jwrx03NerWd6ULW-8a3k34DSV572L7g5e5ZnMGxVYyZMpFZUQhqATqb19UmKPjuE5ORasCKe-LjWyS3xT9tyVO3OA2OXhihGBruiD-idzzszL7MYXTfYzCo7hcHriLBwLmpjnBVftZfHVzYaomSMmQqARb0VQ7mJGzFCRSD80~iUM6c2QvNCgq4dkIhNXuy~uWZT~oBqmGwYmQrtE~b6vOLn2D6OSoZQOjih6e3LKna8ExNl0GIekK6EKrvgkXXs64jIjHYYW8EyUvtQd6Lg__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a022-ee68-71ea-a588-24a6043c7661/output/texture_0.png?Expires=4947264000&Signature=qk5zoldxKfwIJstAHq5cfYoRfayVVFSDOQghlLrzLN9aP7cjU-Y0qiwusYPmlDMTh5Ujqd7dZQuYXEIWCSmQVY37YRS734PK-eqER--joTSaJ7eQoukHjEZT-4bqao0bdcqvmM4dLbEFZY-2S31Xn5bBmsaQKGqZRDsP~xKG63ti4q7vNjEsIsDvCHm0jALHfQgPdmmgUSeh3QyYx1O4hz208bLh1B3eew1zpbIYrKZWpRbFYQnu4FjUJJv72bubrwyYkmTnrmOfX0WNCyJGKyrpBVbpHJ5h7PCAg4zCIt1G1N~vBUhBzXmsNLZ5xw1UJMrHYMQv7fOirgSJCbGwUA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

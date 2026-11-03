@@ -1,0 +1,23 @@
+{
+  "id": "01a1a009-33ac-72b3-8ed7-d8f577b552ac",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 3311145170,
+  "prompt": "Round carved medallion emblem, a game item prop, standing upright facing forward. A flat thick disc with a raised rim, a fox head with pointed ears in relief on its face. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793686322072,
+  "progress": 100,
+  "started_at": 1793686322080,
+  "finished_at": 1793686335992,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a009-33ac-72b3-8ed7-d8f577b552ac/output/model.glb?Expires=4947264000&Signature=M4daOJZb5zC3UZOheR7iZaE9NhuF5jFZQNR0lIbCp0mGqHaTvrW8g7OVppJmxXmQf5Cpmz8sWlGJoAYzBN4XCineDdLhCv1vyqhVeW1wEKAgRmAdDuuJDTDt8yqLH4s6-NoznY1zReDLnK1AICkZ2hfR4AmiVhctQu8lec3ddYHiYC1E-gJ6QwEtiA0yUQviMTtPvXps0-VJGWI-Q1UzXC8E~TDP7A9wSy~kCLyrqwgzgSDHfsQp6mpVdW5CyN580NkPQFlN3PUMXLp1p1K7cEzeIo53SDa4zLNShtfkvMoQaq07LluBFlKXBAnwPBH0DyoP-BWu5OrTCHSBh08j5w__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a009-33ac-72b3-8ed7-d8f577b552ac/output/preview.png?Expires=4947264000&Signature=lRCYHd9ieZCLJr3SRcOXgbjXfUPwVzrOFP3G1dJoZqfHIxKmvU5wMrD2Gnmtl6PIy09KqMQfBRwwTIucpVhtVo1dAo0dCjAFpIZzqCPj4P2jCNzpVfmTzOCbPWhjQQsMq1DSdz5N-4JJXwYJ7fzlyU05vjAgPMAu1II-cp9sfOJv6MlH2y2L6h45FomCHbumhcfH8b9LfUFwg348LEkNAA137skuySgOVGRWYelR0UEgmIs69~9m1CIM7KOnkT9FwG69pqz6YT7dGf2UBSmMQrQdyQq6jL0emK09LCzJb9W7tBa5S3H70tjR~MiU4f7UdVSBgvXWNBhqwVdFXyD5qQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

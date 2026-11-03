@@ -1,0 +1,27 @@
+{
+  "id": "01a1a026-4083-77ac-9d2d-09cea5eb6718",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 2042880648,
+  "prompt": "Magpie feather hooded cloak, a game item prop, displayed standing as if worn by an invisible figure. Cloth to the ground with black and white feathers over the shoulders and a hood, small gold trinkets hanging from the hem, no body. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Glossy black-blue magpie with bone-white patches, ochre-gold trinkets and clasp.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793688225364,
+  "progress": 100,
+  "started_at": 1793688225371,
+  "finished_at": 1793688254545,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a026-4083-77ac-9d2d-09cea5eb6718/output/model.glb?Expires=4947264000&Signature=Dcbc82niyZg-w9~SL1E8tJtOCNGvGHTQTx2pNiGh-Ihc1FzZuZ~UIiK4bAVEwwa9Q2WSYPQrXwdLzed39KR0KOzuD2uhlDT2Lpz2u0iYLnTs8zKSt0nAOovhjrA5TxX7dXy8~FgSyVCE1EQonghhp1ldsieqI1IfOL~IiEivqXNnrDfqe80UmWUZkjhN0-nENqRoFMsi0js6n9GboSzRg72wkb30M-u~WY~lLWEdpI7NvqEynqBJe6nWhbGMXxWxgJe-yyhwURw1~1hIdWDhUnwz1nA3SWm5XzPHslMsRWQYB2dojjn1JpC4BBrMr33DICBE55t~SEQdOv5kH0yA8A__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a026-4083-77ac-9d2d-09cea5eb6718/output/preview.png?Expires=4947264000&Signature=hHIu2yN6~2Q0TffTFlvWsSjmDQsnt7zu8APDmjMmz3g6iZdzrQfl7FnTMV4fkVBvbsD~1ivyF7FA~GRvKy3QX0p7JL3NmSndTW8iZc-3ULqKKVhyGoK8Jw2tprlYSWJ92yWxDZuBb1qXKwgq8j-SYbxNQjvb865oTWoXFEjBTsKjSjdHetJgwaJCEMEVBlM5mliTxU3Vdqts7zb9bPHZPa9tdbOqVMw-n9HuE8RcZw70BpaGxwEgeqE2M0fOzt3JUJvD7C1oMuMWdr9s8tHqF85Q5bT6PQrNCnUBHAHP7uWZ1D5rUH9acgKlf77XgkQBnYo7a7sIpu~gBwUYju0B8g__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a026-4083-77ac-9d2d-09cea5eb6718/output/texture_0.png?Expires=4947264000&Signature=hwijjqudEMyNQ9MUm6zwL8mNlR1EXeGjH1gc8ifIrHTkQpgSvY9hjn4JD0WthvFQXWpTCi1WM6DZdenMBqYUES~I~Xuf7WhGGZGL24FpNKCaFplQTGinpqt5LRq~acH7tZXAFeVdRkowo-c9kop0XSWweDvoxtjmQ8G4mwREdecYxnoCMUWzqj6Mj8W2BZ0~axb6XiV-Sc3UuRvtdBUqcaGUtL92U38NyiQW2RT-FnD8mGBPEbO8PiD2cHl-UEyx-~Sm8KQLbnYXBn8BMd3PaIqXQCBAjhAPMXGB4HjbvXE-m6vagEWzB9qPGSEqLTmDBb53uXFYER7qxP~OtcixuQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

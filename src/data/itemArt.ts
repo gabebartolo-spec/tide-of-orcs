@@ -1,6 +1,7 @@
 /** Item icons (TB-104): one 128 px transparent picture per item id, rendered from the approved Meshy model
- * (meshy_output/APPROVED.md, render_icons.py). Set pieces use their base's icon; a mythic uses its own. */
-import type { Item } from './loot';
+ * (meshy_output/APPROVED.md, render_icons.py). A mythic uses its own icon; a path set piece (TB-193d) its set's
+ * icon for that slot (`<set>-<slot>`); any other set piece its base's. */
+import { SLOTS, type Item } from './loot';
 
 /** Folder under public/ that holds `<id>.webp`. */
 export const ITEM_ICON_DIR = 'items';
@@ -15,10 +16,14 @@ export const ITEM_ICON_IDS: ReadonlySet<string> = new Set([
   'acorn-charm', 'bone-charm', 'amber-charm', 'star-charm',
   'last-knife', 'heart-of-kiln', 'thunders-memory', 'oakspine',
   'pale-moon', 'first-wolf', 'heartwood-splinter', 'starfall-cloak',
+  // Path sets and mythics (TB-193d)
+  ...['serpents-coil', 'foxfire-pack', 'magpies-hoard'].flatMap((s) => SLOTS.map((slot) => `${s}-${slot}`)),
+  'serpent-fang', 'foxfire-tail', 'magpies-talon',
 ]);
 
-/** The icon id for an item: its mythic id, else its base id; null when no icon exists. */
-export const itemIconId = (it: Pick<Item, 'base' | 'mythic'>): string | null => {
-  const id = it.mythic ?? it.base;
+/** The icon id for an item: its mythic id, else its set's slot icon, else its base id; null when no icon exists. */
+export const itemIconId = (it: Pick<Item, 'base' | 'mythic'> & Partial<Pick<Item, 'set' | 'slot'>>): string | null => {
+  const setId = it.set && it.slot ? `${it.set}-${it.slot}` : null;
+  const id = it.mythic ?? (setId && ITEM_ICON_IDS.has(setId) ? setId : it.base);
   return ITEM_ICON_IDS.has(id) ? id : null;
 };

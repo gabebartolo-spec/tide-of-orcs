@@ -1,0 +1,27 @@
+{
+  "id": "01a1a028-881f-733e-b4e3-a490a4aeefff",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 513518379,
+  "prompt": "Round carved medallion emblem, a game item prop, standing upright facing forward. A flat thick disc with a raised rim, a magpie bird in flight in relief on its face. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Dark blue-black disc, bone-white magpie, ochre-gold rim.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793688375137,
+  "progress": 100,
+  "started_at": 1793688375145,
+  "finished_at": 1793688418076,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a028-881f-733e-b4e3-a490a4aeefff/output/model.glb?Expires=4947264000&Signature=cmlkYo7MLP0PvFvbLHFT5~WPxXsbKSvStL1ODA4AEPfmupVUM5ZSpxKGxYSiKBhiS4J6KVrzzXduqIvriCE9S~amB0ZCkZ3E7HwmWv66ieDeh7tc-q7EYgfmbFXp0vEgUFkhyaEIiesgGn5Aii4po6HVnJjzS3DKsmwEu8VR7lN8WTCP0WrgR5PbrUul4gUXAlRZkkZEYu-BAayNNDMJo7hDppraguWd5W4v7~K2-bMwESGxAHVGyVDCrhnlUX~ji1XwGTmgduLahqIED8Z5CECzAZjax51n0~MROd57wGMY8lbkHQJrBw9QxJJztMf-R3E2HDc2IJ5ijmCAoJKCDQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a028-881f-733e-b4e3-a490a4aeefff/output/preview.png?Expires=4947264000&Signature=cypMolclvsPMu6BNgfHuRJEhjBDdS9IfUGpsOr29TLv7MhkZ-Vy4TkmIJoFPXAqndb-A66~ZGBv~NTpPUZcm9NCMrAOjh-NeuIlJmDdBciSX44s857SZK~qvHeeCFBTfPyn0G0foGwaXdL1xiZDMMDvazuG1b~0TPoFebCZ-fneZPP66vDpwCLBxmDXRdIz92~~1tL6U4L1AkK3kG0lt6SwfYPfDEoYpziLoZlKSpbH5AD28fEVLJWUjuZxBlahHNCWQGy6TM1IBm7bJDsSU0Khki9lkf6U5sWMCL79Bt6PHLo2gmnwxO6am1UUey1jaoIiJ7nHZ2o-jm5Dh7Yo3cA__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a028-881f-733e-b4e3-a490a4aeefff/output/texture_0.png?Expires=4947264000&Signature=qUI6ZDYGOWccsCToarTddSRfFFeeH5VZJqIjbT9kZil2trL6OGDv91UCJLsvGDzzo--A4i3wv9EEUiFf9Q2RAqcatRnu4lmjnMgkvvmCcv2hSWKcVcgnxcJsPVbD3FEEyFxP8o3MY~xGOH2btZYveoWFOWwNWRPiXhTQp9EwsFq4xP2B34TTOZE3HjpZWNjHiafQgAw~hYNBb3LIwjBZY6BEdYCN-ap42eHr9CHvS-LLf24qKhN5C86XGXn~fLFI2i0uDdm3qskUhp-uHC7QcTM8nJb~NozAt0gdet~~F2ulGfq9V1kB5koSVMHtsP~JulTBg86rkpN~n3neDmjG6w__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

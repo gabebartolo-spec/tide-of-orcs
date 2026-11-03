@@ -1,0 +1,16 @@
+{
+  "id": "01a1a033-da67-76f6-bc6b-a20c1b9cabbf",
+  "type": "text-to-image",
+  "ai_model": "gpt-image-2",
+  "prompt": "Concept art of a single fantasy fox charm pendant, a game item, shown alone in three-quarter view and centred on a plain pale grey background. It is a small carved fox head with two pointed ears and a white muzzle, hanging from a thin soft cord tied in a loop above it. No arm, no hand, no stand, no other objects. Stylised low-poly toy-miniature look, flat matte colours, soft even lighting, no outlines, no text.",
+  "status": "SUCCEEDED",
+  "progress": 100,
+  "created_at": 1793689115250,
+  "started_at": 1793689115255,
+  "finished_at": 1793689144649,
+  "expires_at": 1793948344649,
+  "image_urls": [
+    "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/uploads/image_01a1a033-da67-76f6-bc6b-a20c1b9cabbf_0.png?Expires=1793948344&Signature=NamG3DePnYiN-W89YwM0onKU7iVvCQ28~BAd-sLqjljVjbVzktNTq045XpSAGLH2pR6oh9d80p4tuj-I1SkPTjGlKUXT~UT3UK8WFM51YO67IgVQPvxbb6LYKfMnmcpCv1cPTyDYZDdADwkbyL3yakGPtJ86Kbya3MQ4lVxk7CehbNaBOPk4Wyno-ir1tGq7wi2GKzh9x1cbroxwEvG-swHC8MogAOWSy4fTjrtI0-iZJnZMGEb5wPc9s5KWvX4bjwIK0SsIfu-fQoKSrffa3sjjcSFnqyx6anLgslAuc8zqljr8GewWNaK13GbSiGTWgS7pKL2L73~jZa1PNF-JMA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "consumed_credits": 9
+}

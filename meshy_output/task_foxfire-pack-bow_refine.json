@@ -1,0 +1,27 @@
+{
+  "id": "01a1a024-49cd-71ad-95ba-633b4763473b",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 2137158510,
+  "prompt": "Fox bow, a game item prop. A recurve bow with a carved fox head at the upper tip and a bushy fox tail tied at the grip, a single taut string, no arrow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Warm rust-orange fox red with bone-white fur tips, ochre wood, bone string.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793688096595,
+  "progress": 100,
+  "started_at": 1793688096601,
+  "finished_at": 1793688122847,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a024-49cd-71ad-95ba-633b4763473b/output/model.glb?Expires=4947264000&Signature=cGiTOm4Ff7fFALkoqA8grUCvcVnMgK7Uwfky0v68bE8D9pIhGvU-wg1wF-Nj9xyhK-lCSSqde20DbTfCcjjrVtmvQMinJQ6TA7FwEvh4-EvLmYV9HOE0xyyJgqNxfUNnIXFNRLBtgn2t7f35ZOQ3zVmSgaPxK5aMnMMwTuxBXK6GLPU59lsAyzMMCGvkj3J-qlUYCg1uToyqCLHvL6NfxDwSegs~SM28A1bKJ4Pwrn~2mFXM33flkIZixB5TtP3uTfaAEqG3H958i33BHRo-ipjlm2piihvZwnlFgCHU8JuTOFrFs-4hqX7RBSfk4YmtrdAi0dONjHDs3v2FVPdlQg__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a024-49cd-71ad-95ba-633b4763473b/output/preview.png?Expires=4947264000&Signature=PhZ2B8xA38GhdasvwpInbhc04BiCTzeEC8~gsifqxBeIbPTn99RtvtlAsCX2xDG1paeRneneM4ujzJM~we76HT2SkOoBeMdmxtdhi5r7v0gaS5wVpkxR6muqhvQTrmzOO7jS8YO1qt1Gqv1EKfvnCZigbyG8GFSvoDnZTvxX2zYbg1a7Xd8AP9xp7qVP6JgpghXE1Ww-QzckWVUFIxkWG9gpR~USi2PuXxy4okfngWySCyZF3ZIgiAdsCoB1~tkCyrH8yGecjiPnTE7aBDJMwcxcBtAzCIYIJb0LRbw~7Mum5jVjjJO3EYBtfvfkzlow9hVca~NH3FXOBLZhTsdRQQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a024-49cd-71ad-95ba-633b4763473b/output/texture_0.png?Expires=4947264000&Signature=BSvSbQpMAjkBToAp6fGQ2TV4k6VBRrg8x4BmyWqqQzbcj4t9hHn96MTuerdGIVkzWAKGQ9qjwr5ighigJxJlcOc8rg3BpcFjDyxVYXMKQNHQxDMgzSGJ4MhwOx-EcYWBmQp7WOvexxDnFirtHdZer2FYdGqBW90-0BDNcZ2tsUFA9pwcl8NXMUVskv3BUi9JbnynAek-kZGog984j92JT9hvRnwpcjFY8AzNzFNhxK~ukpTRj1mj-orVyJwjDOPjRTrLjBrktaIDKEor-L8Rq2qIdHqebR8REtxr7ZYk4WbDNWZwhCKPxWEUt5-SFyK0xgu4u0~DshFN7zr3ayTKQw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

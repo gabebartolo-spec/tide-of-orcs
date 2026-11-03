@@ -1,0 +1,23 @@
+{
+  "id": "01a1a023-679c-711c-998e-479e77308b3d",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 3138614074,
+  "prompt": "Magpie archer's bracer, a game item prop, standing upright. A curved forearm guard shaped like an open cuff, wider at the elbow end, its outer face covered in overlapping black and white feathers with a large gold coin set in the middle, two buckled leather straps around it, no arm inside. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793688038677,
+  "progress": 100,
+  "started_at": 1793688038683,
+  "finished_at": 1793688051448,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a023-679c-711c-998e-479e77308b3d/output/model.glb?Expires=4947264000&Signature=PtkvOLH4JcOwztWreiFAgH4OiOfE~f-rRuLNBRzHc-7RG6tzMUGcIvA93dTGjijiYo8M9bGIPrv2dSBqdyVR9JRIHRgn6BGO~O1-AgutQjofTXL2frMBaNBy9KQSZbk1IL6jlh0tj5VCrGvh8-47S00Jhl3luBiOffKTaMLoI2ptT-dmsD4vsoglCQvb4Yja2YORC4ori0s~bUUV3lzJGFYYMwvHrBBbRvOwSc9YPVzIx4J-7dj7iFN-g5G~U4RKLWCUEUY6oJa7kAYM3J5jenrProDa3QkiIs7sV72yyLJjXObF~NgnIVDVrjR-WewNis2LTs4D3nF1Jvh-vN23lw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a023-679c-711c-998e-479e77308b3d/output/preview.png?Expires=4947264000&Signature=qNPdyMlletKcWMWT9rLGr7Jumz01tVR92VqWqJ1ze8yGWl0n~g7hZuye97nVt3tg0jS9A0G-oSqRXukszSy46790bP1DWeu1zsKqGgHqDEyquOjxd4J2kzM4940z89Pa~qtLMVvXXuY72lmC-pGOyFcX19zLGlLg3ckbvvzdzZPG~hDfaOpq0eX0Cg6MuR56Hlr8ToV6eA8Xs8Z2CnjzUkGuweoxnf27fSGX3JwpP39zXC0I28Q5W6AXDjw9XyCP1lMt0tYbpas0Zw3vGbtrUGIbc~ckdWmPP7yYmTOI3DjyF7xJQMQeiad6pwbwEwT6p3je2n7bssDLODW5AOT0aQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

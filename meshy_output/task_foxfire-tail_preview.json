@@ -1,0 +1,23 @@
+{
+  "id": "01a1a008-61ea-721d-bed2-ae03988120db",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 365367872,
+  "prompt": "Mythic foxfire tail charm, a game item prop. One large bushy fox tail curled into a crescent, its tip wreathed in flames, bound at the base with a gold ring and hung on a short cord loop. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793686267936,
+  "progress": 100,
+  "started_at": 1793686267943,
+  "finished_at": 1793686282231,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a008-61ea-721d-bed2-ae03988120db/output/model.glb?Expires=4947264000&Signature=JeLoyOdnEZoceXiu3~JJ7WD89UnnJn-B7wAveY82KDaTkUIHQNksn1dZBGksaZg-vpWKLDbgSp03NB3YHaEdQ6Bc~FSt9wuFboWhzxdw6SjTthBXVY7LiiDHuMB7LXUO1AURayO~lXrcD-SfLEBqTtlA-tguWyKkGztkoMJYC19qNaN6lTsw1qOIjBQP0hffieaVmzmKOSIOuiu4wgY8qaYta9EOAgdOCghH5TyYrDrIVeWWORQr9bbz6YPn2fcI3LMa58cUA19O17UEHelmCDB6keZXAyuQUmp1vKwVXaLRaVbd0u6foQZkiewIGywuVL3617V2r0czxSBEWQrzjw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a008-61ea-721d-bed2-ae03988120db/output/preview.png?Expires=4947264000&Signature=c103gwRfEZ5S7-VBqNEyU9EKedWwj1fD25azx3MKdxtasNxijh2AIkppTvX47XXGLUVtkFd9W-7GGJZ8TtnnxgoP1PAHRDoQn5nEBUNnh4x4YpkAyS~Xdnf7lRCRvku4M12XzWGJLVSjefGyiwtHAK5wFPXs54Pe7BfyZOcXRrW46EhWvr1RagIZyHQ-W28WE1JPMFwDgcms2PFB-TjKloVdCqLBAQgAGihJwTqIFdfcS~lsPPZEfuIk74MuFeP2IdtPessN5KFqSq3VDL28r30Hgtyw-LpYiJskldmzqAqhm0kN590VJCz6EP8IfEZWl3Bg0QCJ705ZRVpps0RT7w__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

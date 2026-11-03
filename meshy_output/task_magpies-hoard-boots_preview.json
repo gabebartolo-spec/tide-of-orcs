@@ -1,0 +1,23 @@
+{
+  "id": "01a1a006-9af2-768d-be85-8b6987bfa523",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 2342077980,
+  "prompt": "Pair of magpie boots, a game item prop. Two ankle boots with black and white feather cuffs and a gold coin buckle on each, standing side by side, no legs. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793686151594,
+  "progress": 100,
+  "started_at": 1793686151599,
+  "finished_at": 1793686165537,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a006-9af2-768d-be85-8b6987bfa523/output/model.glb?Expires=4947264000&Signature=e2nHlpnN2ln3bnggG8RLmcbMLLjRQQ-MLbC2J2DIqsZrOFXIkpkSg421tK8FXsg1FKtwgOFyzzq6uW-jA3SwtpF2987TI5PjPenGcTy-f~H579rv4La4Mlya3aCFYSUT03oKSyOEeILdbcESDM3CiLjkEef4X1e~29jk4ulkVLLyKd~4jgxLbG5QTMxaKWAo2Cv9S91uzRc9IswWTEgEXmIyqEMoRWlTon8nULpDZiE1n3vMmq-6s3MBKnUvr90Gw1KyCJ8~37CznB~CCH8aK~dwzp5Xk9vGr-zdASqws-tv6kMujlSsSq7VPVLSiJ2hZXOBzaQ8R7ba3yXX~mX7~g__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a006-9af2-768d-be85-8b6987bfa523/output/preview.png?Expires=4947264000&Signature=nxuMRky0U6Jm2PiuBLeiGUzr6iMe6IYyo4tsShaUx4gwU4kiVC~wljOnFW-xRXp-e~jlj9DfVU2l464T5iJ7BSE4l03VdQRT3TsU844awRmDfDtWI5U3oXCpN6~8eMZvS5XWKIggAaWzTRD4FTlJKxwCRo3Soyl~OzC4Y9q6nUzS4UVvlc4j~k1VfYSkXwXoa5eSY2YumFlBJ-XPk1Lv1WCmHZ2rzCjlqFfSHgg~Orgf2yjwcGf3hmOGf~Q0y0dcLg215IBCXl1rqsuZRw4Mmim06NRU~7BKtaVjRlm3OFdXbV7Uc5sTe33415vAATI9AGN0W6KGGJ0as5Ugp0ZYdA__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

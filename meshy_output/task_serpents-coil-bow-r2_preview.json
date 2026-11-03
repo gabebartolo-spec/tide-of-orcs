@@ -1,0 +1,23 @@
+{
+  "id": "01a1a022-e248-7616-ba1b-c8a50e5e7785",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 2672023056,
+  "prompt": "Serpent recurve bow, a game item prop, standing upright. One wooden stave bent into a smooth D-curve from tip to tip, a wrapped grip at the middle, and a single taut straight bowstring between the two tips with clear open space between string and stave, the stave carved with snake scales and the upper tip ending in a small snake head, no arrow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793688004522,
+  "progress": 100,
+  "started_at": 1793688004530,
+  "finished_at": 1793688016968,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a022-e248-7616-ba1b-c8a50e5e7785/output/model.glb?Expires=4947264000&Signature=JfDIAXL1p5LH4~b7T0R5pRsgm2tEvtbd5X3krEgrxBs8BDit3Vx702hP2t4h-3aKusjN2dENvo~AoC0dppZ9HMnlGcfEl3vpADMXP06yFf~ta-E9yQ1W16kU-J7rCeEhaeAcLsDZ~E-qgaCtE8hKe-tLhqgMKrsHBs-sA0238AV2Uxq9E1wUkRGNkYv1EaW4u9rLijbMYyr09MJXDigblTZbsRdV7OzSdZSSeAwLZVQDjewlVlYL6UnVz48xt~WQqS-JT78oZ001p8g814ujjCyFtSeXc11rRnYG0dL3UTxPncFiXSmwmrzHZJWjrNLxYlmju87n1UdmcKYlwCbHZg__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a022-e248-7616-ba1b-c8a50e5e7785/output/preview.png?Expires=4947264000&Signature=clmuXdDs-velckuIVLAGt6pQHNHB-oHjlynzxK6gFgpcXbuJ1qFlDSoYIeaQDXr9Amnnm-Qba298qYck~ZH86z2zF7MbsVmTyF0pWID8wRkP7ShAL2xe5rPSbZuUCxWa2YsE-J0yJEt76WbMXnsSKYfNvIgsDMNmiIL3~EbCC6c-vdQKnssY3PnP3A6gYcxB-WcX-DvmaIYSaNXeSszfHiDIOJIEY50vWoZpBHDHYrzVenOQzq2O6~d43mDGzGyXAC58Kq5oiulRN-VLDbM8XgiTCp03zuXiv-Fbglkz7uRbUJZLtg5htnKm8V5gGfZj2Ap2RrepobTvshoZUaEEkQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

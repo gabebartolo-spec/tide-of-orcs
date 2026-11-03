@@ -1,0 +1,23 @@
+{
+  "id": "01a1a002-f223-73ab-a060-fd612f855076",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 3865058447,
+  "prompt": "Fox charm pendant, a game item prop. A small carved fox head with two pointed ears, hung on a short cord loop. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793685911682,
+  "progress": 100,
+  "started_at": 1793685911687,
+  "finished_at": 1793685924159,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a002-f223-73ab-a060-fd612f855076/output/model.glb?Expires=4947264000&Signature=Sp83JPZ-oIPIz4oLHZlRw2TDqnoHUQy0Qx-vKE8A95Dbv5iuE6mkeE5Dz1t00y7SCIJap8AkKp6XdFvg9SLnX6SLED5F-ZHxCrjmy69VkNPGL-AnzDIPBiuJroxxIr8Tv3WYDvqFhR~3Vnf-9DhJ7dlJuKEdDqCIPLgDJd5LoXxmSPMHDFqeC3uTETwclWyFcwpQvjwxK2lYYKz5t22ATv1pH7BdbyjjVx3nOpjnvHWGxudBY9qsDO6q3jzu96hpLrTM5AdQiXu1uvTxar~a8Q6qsgYz3Snafc6nqOz~Eslc09rd1lTYhzTOq~tCky8TM21jpiUL20ph1xVsPzWzOQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a002-f223-73ab-a060-fd612f855076/output/preview.png?Expires=4947264000&Signature=mmzbqaM2Tx85hmRnrJuOeVQn6dg9WRi2Q94C3W1vZsLuFt48DrMKIMhRM7EVN7XZMqPgp7u9rGetKpEp0sWcSK8Kh3oAF-LPK7OeLaJVfn7pLrUBlR8hMQ1rlem~kQzecEYOz-H5uBk406hPgSl~tT2Q5ebsywZrd7eoMahnmqx2k4n3jNBrD7ltcm-aiYRa07LqM8iJ0CNzZwgX5eUoe~RTQuoYvBI6YFJt8OClJaqf0vhyiv7Lo0rISKlEsO8ljJnULKz0Xs-fZxvdi-bWLRmlFw7khFnLyLIMtr3NDZg~5NRpxZCWWuhZ2z2eJPMJhtEnLeilyM5yq6Bh5Rlitg__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

@@ -1,0 +1,27 @@
+{
+  "id": "01a1a023-6cf2-7019-8d7e-19c950a0ffe5",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 527207139,
+  "prompt": "Serpent hooded cloak, a game item prop, displayed standing as if worn by an invisible figure. Cloth to the ground with a diamond snake-scale pattern, a hood shaped like a snake's head, a coiled snake clasp at the throat, no body. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Deep dusty sage-green with bone-coloured scale patterns, an ochre snake clasp, darker sage hood lining.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793688040583,
+  "progress": 100,
+  "started_at": 1793688040587,
+  "finished_at": 1793688064543,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a023-6cf2-7019-8d7e-19c950a0ffe5/output/model.glb?Expires=4947264000&Signature=m7jNPF4vyzYoYuVMbV-jafXSecqVHecrlipv8b9kGp~T6~dFHdiInmPQk~hdIegeqj85xZzCyUkL8i~YP2eu9MK0QP3RMc88jTKALZ1tLsvvtJJsRFEm3Phm~Je-r6m5ej8BT4EwfROxRU~SgzTTorAok7Vxx76ruGjyNi~6sXC8SDHADSrajSH35pgYijzY~bFAoNmfq13PU-lq4eLaLcs2TCxy0qofLtk3RunWW8PHvBQaIgjHaO3hMvS3lSW-DXfmfBDjBMnlQtctOaEU0jEYpMD96xmeH4FasQrDfQuFtXdFYvtd6c5Mw6BKzrrHdjDdpjaXJIsx1jrB~EWiwQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a023-6cf2-7019-8d7e-19c950a0ffe5/output/preview.png?Expires=4947264000&Signature=XRHjb23PSvQCQN5LsBLTmajSBr22qPt41hTB8hmQ83MVDsux6shdNvaV-DOy8XKxM7eEf7wWDlnEZbm9qBTmLvuHBYiXPdC9b12UPbmjbjpV9lEwZN76Oo01mO-TggllR-puvwbGkvb1i~cZx0ofOZYASeb~mlmEIN0UbwmblzohbWN9tKBbNARZ9F1X9Ot9XfpQR7onSUruxzJcF7HiF2TJgtIbLRiFwf~zddp3rk7ATJOSJOII2F7~62h0gBY3BmFbcPB0VoAF8aG98KD0sPYKy0hUrSuuXU05Fowcjw~WPmMNGpCoxKcRQzSJqH1qyB7jhcczOWTPd83h9uhZhA__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a023-6cf2-7019-8d7e-19c950a0ffe5/output/texture_0.png?Expires=4947264000&Signature=bTRw-K1eL-4av89~ab-3DtYZGyZKYuI~BGL~niLJwNfDvZhwxijglai5lg1krsfoSNHV~kNOA9PebAs4tUVHXDZj0iX7AncHi76hJo3gHSFyOV-gNY53NgqjSw9eT-RzmVMosoyiUvMyZLzghtgd9V17-52lY5hU8ZYvtvD6~MP9Se~RDMw6wbe-YS62W4rvC4JKhWSVdoTjl6ObV87r3t0GebONd37zZoEYdhdARSdHlmlTI6w9MEPzpFgqs7pdWsgPeUzLV~oVJwkcOwZzjIJTrbNsLpPYC~3jXM3EDJ5Kf0F2Dapj8KYk5a8WJz874JK4o9NrVANDbE~vp1qPrA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

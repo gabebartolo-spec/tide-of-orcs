@@ -1,0 +1,23 @@
+{
+  "id": "01a1a006-fe31-745d-84da-93c262c632ee",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 3227697201,
+  "prompt": "Magpie charm pendant, a game item prop. A small carved magpie bird holding a gold ring in its beak, hung on a short cord loop. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793686176657,
+  "progress": 100,
+  "started_at": 1793686176662,
+  "finished_at": 1793686189783,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a006-fe31-745d-84da-93c262c632ee/output/model.glb?Expires=4947264000&Signature=E3oQF7TVUYLFL~2RFCxnX3lyqgJqc8KZ14tng26g4Mxo-CiPUf0szq1BlSJlGXWdrNdQ6lBzp-UgB~wlln2lj0wHnsJ9zLgL64ocqKSt72sx-aWMog1jxZ9ljXfAQKqbO307bSf-W2U3UNVgpeIg8MkZBqIUxQ4c6QKvIBI~GAdw-V~ew3i5XLLpWSbFvFKEm68suHnDTPMNYHSCXnyYuhShp80FNyvtXipZmjL47Yqp8exzlBHuzS4m1rpEkMeSxb0wxTeUksgKpiDAsxXARH0WcIY6xDKS3rl14mN4AL9F3Cl2pX5nQs-qPTtUYyjZt9XUqm5UoTWqeb3Q7SDpxA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a006-fe31-745d-84da-93c262c632ee/output/preview.png?Expires=4947264000&Signature=P~z7WNVK1TGFvvXvG1I5pm8CYQnpk-w~rindMx~dnQ8a2UVHbjmwGsb9I1gsjW5I2QZx4BBJoJAhnrqnU5bFRITw0TueTzMymQMaxfmXj7oQ9CMI0vZIb96kjMW6Q2fb~Sf~W8mNaxludnZopqpnisCs~lju23E1ajxYJu6LLL4ZHePqOVi2xPu1lonhs3UhgFphz9aKus3giHEpCFEnXai11eZyecWrG79siA4hhLIOl8NNRr1YIl-7vhNU9HH8YcuYITE0tDvUF2VT2cSpB-7qo6oYCxuota~QdCxO-3qQEEm4LcuNtYsYlhh51XnwOa0F8jW3aJjilPaey2xbvg__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

@@ -1,0 +1,23 @@
+{
+  "id": "01a1a002-0c87-76ef-851a-fe346964c78b",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 2376621451,
+  "prompt": "Pair of fox fur boots, a game item prop. Two ankle boots with thick fox fur cuffs and a small fox tail tuft at each heel, standing side by side, no legs. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793685852823,
+  "progress": 100,
+  "started_at": 1793685852828,
+  "finished_at": 1793685867296,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a002-0c87-76ef-851a-fe346964c78b/output/model.glb?Expires=4947264000&Signature=XdWQsRDsRKjHxD7qxFbXe-feX-7pRSHvMKkp0ShrY0-RZPfiWYzFBD9p7Ud1xdR6wRrTZyAE4EDE4xo6NH-VMQqeLeE9DKhovbhOVD9a94g8DkQM1qM2TJqDHyuj9XPNYhYj4K6Xxj7EsYrQS~jeUOAPOZC4p1G-Sm5aDSn39T7gehZRihkpEcsS9XsIZvi-kLscYm9FdElVB9gtdH2~RuUq5SN8tA1Lj4O2QnMNEzGd33GfL9Qmk2zBUcOsN~9fHAylA4Y1MwtLXAk4W1ocJTkHwT06j5sSgDVBy9XrO5U8xHe~OO1wKPIxo7Zx9c9LeRJCLttByVk3Zhtr61udlw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a002-0c87-76ef-851a-fe346964c78b/output/preview.png?Expires=4947264000&Signature=SAcQNTz9oj45mft~yJ9R2uO3DR2JiAkxfKdKKBAfjmCUa6FLni7i~R9GVpvYuOciOC7QeP2xhPGOlN6v9nX39XngqrxoonlOlLlAaaFzpX3gKtNAsx6Z0M~Wv6bB7Qay7XZ4qO098f~t2AErFlcX4qP0c~d2t0nqgX-eFjBTO1wMt6H1XCJbAARRElNAQcSRHdWZjbtz4nky-wablcKySVKvN-1VBqW0O2acWTysNiGK3bMPvThAvypf5qUGsVEL49TGsCH7M2i8HqOQEpSe3KvmJFAxKlTGcmSLVyNUvCEI1Cnc3uNa9OLxANsFiWLMTn0m~~V8w2FZZ2S7ZE4Rpg__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

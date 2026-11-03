@@ -1,13 +1,14 @@
 """Centre every approved icon in its square. Usage: python -P centre_icons.py <render_dir> <out_dir> [px=128] [margin=8]
-Reads APPROVED.md rows, takes <render_dir>/<stem>.png (any size, transparent), crops to the visible pixels
+Reads APPROVED.md (or the manifest named in argv 5) rows, takes <render_dir>/<stem>.png (any size, transparent), crops to the visible pixels
 (alpha > 8), scales to fit px - 2*margin keeping aspect, pastes centred on a px square and writes <out_dir>/<id>.webp."""
 import sys, os, re
 from PIL import Image
 src, out = sys.argv[1], sys.argv[2]
 px = int(sys.argv[3]) if len(sys.argv) > 3 else 128
 mg = int(sys.argv[4]) if len(sys.argv) > 4 else 8
+manifest = sys.argv[5] if len(sys.argv) > 5 else 'APPROVED.md'  # TB-193d: PATHS.md
 here = os.path.dirname(os.path.abspath(__file__))
-for line in open(os.path.join(here, 'APPROVED.md'), encoding='utf-8'):
+for line in open(os.path.join(here, manifest), encoding='utf-8'):
     m = re.match(r'\|\s*([a-z0-9-]+) \(\w+\)\s*\|\s*([\w.-]+)\.glb', line)
     if not m: continue
     iid, stem = m.groups()
