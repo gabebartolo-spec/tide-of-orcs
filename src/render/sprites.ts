@@ -116,9 +116,21 @@ export class Sprites {
     const fi = frameAt(a, t), [fx, fy, fw, fh] = a.frames[fi]!;
     const h = a.hPerR * r, w = h * (fw / fh), dx = x - w * a.ax, dy = y - h * a.ay;
     if (flash) g.filter = FLASH_FILTER;
-    if (tint || glow) {
-      const b = glow ? this.baked(img, a, fi, tint, glow, blur, heightBucket(h)) : this.baked(img, a, fi, tint, '', 0, 0), s = w / fw;
-      g.drawImage(b.c, 0, 0, b.c.width, b.c.height, dx - b.pad * s, dy - b.pad * s, w + 2 * b.pad * s, h + 2 * b.pad * s);
+    if (glow) {
+      // A glow frame is baked whole, as the live filter drew it (body, drop-shadow, tint), at the drawn device-pixel height
+      // (canvas filter lengths ignore the transform), snapped to SPRITE_BAKE.quantum px, and blitted 1:1 in device pixels,
+      // so blur, rim and edge pixels match the live draw with no resample of the body (TB-216f).
+      // The frame's sub-pixel offset is baked in too (snapped to 1/SPRITE_BAKE.sub px) and the blit lands on whole device
+      // pixels, so the bake is never resampled on the way to the screen.
+      const m = g.getTransform?.(), k = m ? Math.hypot(m.a, m.b) || 1 : 1, ex = m?.e || 0, ey = m?.f || 0, n = SPRITE_BAKE.sub;
+      const hq = Math.max(1, Math.round(h * k / SPRITE_BAKE.quantum) * SPRITE_BAKE.quantum);
+      const px = dx * k + ex, py = dy * k + ey, ix = Math.floor(px), iy = Math.floor(py);
+      const ox = Math.round((px - ix) * n), oy = Math.round((py - iy) * n);
+      const b = this.baked(img, a, fi, tint, glow, blur, hq, ox / n, oy / n);
+      g.drawImage(b.c, (ix - b.pad - ex) / k, (iy - b.pad - ey) / k, b.c.width / k, b.c.height / k);
+    } else if (tint) {
+      const b = this.baked(img, a, fi, tint, '', 0, 0);
+      g.drawImage(b.c, 0, 0, b.c.width, b.c.height, dx, dy, w, h);
     } else g.drawImage(img, fx, fy, fw, fh, dx, dy, w, h);
     if (flash) g.filter = 'none';
     return true;
@@ -132,19 +144,21 @@ export class Sprites {
   /** Frames held in the cache now (bounded by SPRITE_BAKE.cap). */
   bakeSize = 0;
 
-  private baked(img: CanvasImageSource, a: Anim, fi: number, tint: string, glow: string, blur: number, hb: number): Baked {
+  private baked(img: CanvasImageSource, a: Anim, fi: number, tint: string, glow: string, blur: number, hb: number, ox = 0, oy = 0): Baked {
     const byTint = getOr(this.bakes, tint, newMap), byGlow = getOr(byTint, glow, newMap);
-    const byBlur = getOr(byGlow, blur, newMap), byH = getOr(byBlur, hb, newMap);
+    const byBlur = getOr(byGlow, blur, newMap), byH = getOr(byBlur, hb * 4096 + ox * 64 + oy, newMap);
     const list = getOr(byH, a, newList);
     const hit = list[fi];
     if (hit) return hit;
-    if (this.bakeSize >= SPRITE_BAKE.cap) { this.bakes.clear(); this.bakeSize = 0; return this.baked(img, a, fi, tint, glow, blur, hb); }
+    if (this.bakeSize >= SPRITE_BAKE.cap) { this.bakes.clear(); this.bakeSize = 0; return this.baked(img, a, fi, tint, glow, blur, hb, ox, oy); }
     const [fx, fy, fw, fh] = a.frames[fi]!;
-    const srcBlur = hb ? blur * fh / hb : 0, pad = glow ? Math.ceil(srcBlur * 2) + 1 : 0;
-    const c = this.makeCanvas(); c.width = fw + 2 * pad; c.height = fh + 2 * pad;
+    // Glow bakes draw the frame at the device height hb (fractional width kept), so `blur` is in screen pixels as live.
+    const bh = glow ? hb : fh, bw = glow ? hb * fw / fh : fw;
+    const pad = glow ? Math.ceil(blur * 2) + 1 : 0;
+    const c = this.makeCanvas(); c.width = Math.ceil(bw + ox) + 2 * pad; c.height = Math.ceil(bh + oy) + 2 * pad;
     const cg = c.getContext('2d')!;
-    if (glow) cg.filter = `drop-shadow(0 0 ${srcBlur}px ${glow})`;
-    cg.drawImage(img, fx, fy, fw, fh, pad, pad, fw, fh);
+    if (glow) cg.filter = `drop-shadow(0 0 ${blur}px ${glow})`;
+    cg.drawImage(img, fx, fy, fw, fh, pad + ox, pad + oy, bw, bh);
     cg.filter = 'none';
     if (tint) {
       const tc = (this.tmp ??= this.makeCanvas()), tg = tc.getContext('2d')!;
@@ -152,7 +166,7 @@ export class Sprites {
       tg.clearRect(0, 0, fw, fh); tg.globalCompositeOperation = 'source-over'; tg.drawImage(img, fx, fy, fw, fh, 0, 0, fw, fh);
       tg.globalCompositeOperation = 'source-atop'; tg.fillStyle = tint; tg.fillRect(0, 0, fw, fh);
       tg.globalCompositeOperation = 'source-over';
-      cg.drawImage(tc, 0, 0, fw, fh, pad, pad, fw, fh);
+      cg.drawImage(tc, 0, 0, fw, fh, pad + ox, pad + oy, bw, bh);
     }
     this.bakeCount++; this.bakeSize++;
     return (list[fi] = { c, pad });
