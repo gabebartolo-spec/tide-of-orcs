@@ -45,6 +45,28 @@ describe('sprite atlas', () => {
       expect(sp.loading).toBe(false);
     } finally { globalThis.fetch = real; }
   });
+
+  it('bakes a burning or chilled frame once and redraws it with no per-actor filter (TB-216d)', () => {
+    const sp = new Sprites();
+    const filters: string[] = [];
+    const ctx = () => {
+      const o = { draws: 0, drawImage() { o.draws++; }, clearRect() {}, fillRect() {}, fillStyle: '', globalCompositeOperation: '' } as Record<string, unknown> & { draws: number };
+      let f = 'none';
+      Object.defineProperty(o, 'filter', { get: () => f, set: (v: string) => { f = v; filters.push(v); } });
+      return o;
+    };
+    sp.makeCanvas = () => { const c = ctx(); return { width: 0, height: 0, getContext: () => c } as unknown as HTMLCanvasElement; };
+    const priv = sp as unknown as { atlas: unknown; imgs: Map<string, unknown> };
+    priv.atlas = parseAtlas({ anims: { 'orc.grunt': anim } }); priv.imgs = new Map([['sheet_elf.webp', {}]]);
+    const g = ctx() as unknown as CanvasRenderingContext2D & { draws: number };
+    for (let i = 0; i < 160; i++) expect(sp.draw(g, 'orc.grunt', 0, i, 0, 10, false, 'red', 'orange', 4)).toBe(true);
+    expect(sp.bakeCount).toBe(1);
+    expect(g.draws).toBe(160);
+    expect(filters.filter((f) => f.startsWith('drop-shadow')).length).toBe(1);
+    sp.draw(g, 'orc.grunt', 1.5 / 12, 0, 0, 10, false, 'red', 'orange', 4);
+    sp.draw(g, 'orc.grunt', 0, 0, 0, 10, false, 'blue', 'cyan', 4);
+    expect(sp.bakeCount).toBe(3);
+  });
 });
 
 describe('sheet load failure (TB-216c)', () => {

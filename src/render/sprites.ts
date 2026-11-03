@@ -105,25 +105,61 @@ export class Sprites {
   heightPerR(key: string): number { return this.atlas?.anims[key]?.hPerR ?? 0; }
 
   /** Draw animation `key` with its feet at (x, y) for an actor of radius r. False when there is no sprite for it.
-   *  `tint` washes the frame's own pixels in that colour (shading shows through); `glow` rims it in a soft halo. */
+   *  `tint` washes the frame's own pixels in that colour (shading shows through); `glow` rims it in a soft halo.
+   *  A tinted or rimmed frame is baked once per (frame, tint, glow, blur, height) and reused, so a burning or chilled
+   *  pack costs one plain drawImage per orc, with no per-actor filter pass, offscreen redraw or string (TB-216d). */
   draw(g: CanvasRenderingContext2D, key: string, t: number, x: number, y: number, r: number, flash = false, tint = '', glow = '', blur = 0): boolean {
     const a = this.atlas?.anims[key], img = a && this.imgs.get(a.image);
     if (!a || !img) return false;
-    const [fx, fy, fw, fh] = a.frames[frameAt(a, t)]!;
+    const fi = frameAt(a, t), [fx, fy, fw, fh] = a.frames[fi]!;
     const h = a.hPerR * r, w = h * (fw / fh), dx = x - w * a.ax, dy = y - h * a.ay;
-    const f = flash || glow ? [flash ? 'brightness(2.2)' : '', glow ? `drop-shadow(0 0 ${blur}px ${glow})` : ''].filter(Boolean).join(' ') : '';
-    if (f) g.filter = f;
-    g.drawImage(img, fx, fy, fw, fh, dx, dy, w, h);
-    if (f) g.filter = 'none';
-    if (tint) {
-      const c = (this.tmp ??= document.createElement('canvas')), cg = c.getContext('2d')!;
-      if (c.width < fw || c.height < fh) { c.width = Math.max(c.width, fw); c.height = Math.max(c.height, fh); }
-      cg.clearRect(0, 0, fw, fh); cg.globalCompositeOperation = 'source-over'; cg.drawImage(img, fx, fy, fw, fh, 0, 0, fw, fh);
-      cg.globalCompositeOperation = 'source-atop'; cg.fillStyle = tint; cg.fillRect(0, 0, fw, fh);
-      if (flash) g.filter = 'brightness(2.2)';
-      g.drawImage(c, 0, 0, fw, fh, dx, dy, w, h);
-      if (flash) g.filter = 'none';
-    }
+    if (flash) g.filter = FLASH_FILTER;
+    if (tint || glow) {
+      const hb = Math.round(h), b = this.baked(img, a, fi, tint, glow, glow ? blur : 0, hb || 1), s = w / fw;
+      g.drawImage(b.c, 0, 0, b.c.width, b.c.height, dx - b.pad * s, dy - b.pad * s, w + 2 * b.pad * s, h + 2 * b.pad * s);
+    } else g.drawImage(img, fx, fy, fw, fh, dx, dy, w, h);
+    if (flash) g.filter = 'none';
     return true;
   }
+
+  /** Makes the bake canvases; swappable so tests run without a DOM. */
+  makeCanvas: () => HTMLCanvasElement = () => document.createElement('canvas');
+  private bakes = new Map<string, Map<string, Map<number, Map<number, Map<Anim, (Baked | undefined)[]>>>>>();
+  /** Number of frames baked so far (tests check reuse). */
+  bakeCount = 0;
+
+  private baked(img: CanvasImageSource, a: Anim, fi: number, tint: string, glow: string, blur: number, hb: number): Baked {
+    const byTint = getOr(this.bakes, tint, newMap), byGlow = getOr(byTint, glow, newMap);
+    const byBlur = getOr(byGlow, blur, newMap), byH = getOr(byBlur, hb, newMap);
+    const list = getOr(byH, a, newList);
+    const hit = list[fi];
+    if (hit) return hit;
+    const [fx, fy, fw, fh] = a.frames[fi]!;
+    const srcBlur = blur * fh / hb, pad = glow ? Math.ceil(srcBlur * 2) + 1 : 0;
+    const c = this.makeCanvas(); c.width = fw + 2 * pad; c.height = fh + 2 * pad;
+    const cg = c.getContext('2d')!;
+    if (glow) cg.filter = `drop-shadow(0 0 ${srcBlur}px ${glow})`;
+    cg.drawImage(img, fx, fy, fw, fh, pad, pad, fw, fh);
+    cg.filter = 'none';
+    if (tint) {
+      const tc = (this.tmp ??= this.makeCanvas()), tg = tc.getContext('2d')!;
+      if (tc.width < fw || tc.height < fh) { tc.width = Math.max(tc.width, fw); tc.height = Math.max(tc.height, fh); }
+      tg.clearRect(0, 0, fw, fh); tg.globalCompositeOperation = 'source-over'; tg.drawImage(img, fx, fy, fw, fh, 0, 0, fw, fh);
+      tg.globalCompositeOperation = 'source-atop'; tg.fillStyle = tint; tg.fillRect(0, 0, fw, fh);
+      tg.globalCompositeOperation = 'source-over';
+      cg.drawImage(tc, 0, 0, fw, fh, pad, pad, fw, fh);
+    }
+    this.bakeCount++;
+    return (list[fi] = { c, pad });
+  }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const newMap = (): Map<any, any> => new Map(), newList = (): (Baked | undefined)[] => [];
+const FLASH_FILTER = 'brightness(2.2)';
+interface Baked { c: HTMLCanvasElement; pad: number }
+function getOr<K, V>(m: Map<K, V>, k: K, mk: () => V): V {
+  let v = m.get(k);
+  if (v === undefined) { v = mk(); m.set(k, v); }
+  return v;
 }
