@@ -94,7 +94,7 @@ describe('glow bake scale (TB-216f)', () => {
     sp.draw(g, 'orc.grunt', 0, 0, 0, 10, false, '', 'cyan', 4);
     const pad = Math.ceil(4 * 2) + 1;
     expect(made[0]!.height - 2 * pad).toBe(heightBucket(h * 2));
-    expect(filters).toContain('drop-shadow(0 0 4px cyan)');
+    expect(filters).toContain(`drop-shadow(-${made[0]!.width / 2}px 0 4px cyan)`);
   });
 });
 

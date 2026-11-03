@@ -122,12 +122,12 @@ export class Sprites {
       // the live filter drew it, so the bake's resample never softens the orc (TB-216f).
       const m = g.getTransform?.(), k = m ? Math.hypot(m.a, m.b) || 1 : 1;
       const b = this.baked(img, a, fi, '', glow, blur, heightBucket(h * k)), s = h / (b.c.height - 2 * b.pad);
-      g.drawImage(b.c, 0, 0, b.c.width, b.c.height, dx - b.pad * s, dy - b.pad * s, w + 2 * b.pad * s, h + 2 * b.pad * s);
+      g.drawImage(b.c, 0, 0, b.w, b.c.height, dx - b.pad * s, dy - b.pad * s, w + 2 * b.pad * s, h + 2 * b.pad * s);
       g.drawImage(img, fx, fy, fw, fh, dx, dy, w, h);
     }
     if (tint) {
       const b = this.baked(img, a, fi, tint, '', 0, 0);
-      g.drawImage(b.c, 0, 0, b.c.width, b.c.height, dx, dy, w, h);
+      g.drawImage(b.c, 0, 0, b.w, b.c.height, dx, dy, w, h);
     } else if (!glow) g.drawImage(img, fx, fy, fw, fh, dx, dy, w, h);
     if (flash) g.filter = 'none';
     return true;
@@ -152,10 +152,12 @@ export class Sprites {
     // Glow bakes are sized to the bucketed device height hb, so `blur` is in screen pixels like the live filter was.
     const bh = glow && hb ? hb : fh, bw = glow && hb ? Math.max(1, Math.round(hb * fw / fh)) : fw;
     const pad = glow ? Math.ceil(blur * 2) + 1 : 0;
-    const c = this.makeCanvas(); c.width = bw + 2 * pad; c.height = bh + 2 * pad;
+    // A glow bake holds the halo alone: the frame is drawn in the right half and its drop-shadow thrown into the left
+    // half, which is the part drawn, so no soft copy of the body sits under the sharp body's edge pixels (TB-216f).
+    const cw = bw + 2 * pad, c = this.makeCanvas(); c.width = glow ? 2 * cw : cw; c.height = bh + 2 * pad;
     const cg = c.getContext('2d')!;
-    if (glow) cg.filter = `drop-shadow(0 0 ${blur}px ${glow})`;
-    cg.drawImage(img, fx, fy, fw, fh, pad, pad, bw, bh);
+    if (glow) cg.filter = `drop-shadow(${-cw}px 0 ${blur}px ${glow})`;
+    cg.drawImage(img, fx, fy, fw, fh, glow ? cw + pad : pad, pad, bw, bh);
     cg.filter = 'none';
     if (tint) {
       const tc = (this.tmp ??= this.makeCanvas()), tg = tc.getContext('2d')!;
@@ -166,7 +168,7 @@ export class Sprites {
       cg.drawImage(tc, 0, 0, fw, fh, pad, pad, bw, bh);
     }
     this.bakeCount++; this.bakeSize++;
-    return (list[fi] = { c, pad });
+    return (list[fi] = { c, pad, w: cw });
   }
 }
 
@@ -177,7 +179,7 @@ export function heightBucket(h: number): number {
   return Math.max(1, Math.round(2 ** (Math.round(Math.log2(Math.max(1, h)) * SPRITE_BAKE.steps) / SPRITE_BAKE.steps)));
 }
 const FLASH_FILTER = 'brightness(2.2)';
-interface Baked { c: HTMLCanvasElement; pad: number }
+interface Baked { c: HTMLCanvasElement; pad: number; w: number }
 function getOr<K, V>(m: Map<K, V>, k: K, mk: () => V): V {
   let v = m.get(k);
   if (v === undefined) { v = mk(); m.set(k, v); }
