@@ -13,7 +13,7 @@ The scene (`render/campScene.ts`, `CAMP_SCENE` and `CAMP_SPOTS` in `src/data/pre
 on grass, left to right **bowyer, forge, kitchen, training yard**, with the elf at the east end for scale. Scene units equal
 field units: the elf is drawn ~38 units tall and every level-3 sprite `CAMP_SCENE.l3H` = 135 (its frame includes the ground
 island, so the structure reads ~3x the elf). Each building gets its own scale from its level-3 sprite, so the four finished
-buildings stand equally tall; levels 1-2 keep their Tripo render ratio (level 1 is ~2x the elf). The box is fitted to the
+buildings stand equally tall; TB-188g: `CAMP_LV_SCALE` scales levels 1-2 per building so each upgrade grows (level 1 ~0.81, level 2 ~0.9 of that building's level-3 height; measured in the Camp tab from roof top to ground line, level 3 reads 2.3-2.9x the elf). The box is fitted to the
 canvas and centred; sky and grass run the full width.
 
 Each building has three looks: **level 0** (a frame or tent), **level 1** (built; level 2 adds a banner), and **level 3** (finished, with a banner,

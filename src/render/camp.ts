@@ -1,5 +1,5 @@
 import { BUILDINGS, BuildingId } from '../data/camp';
-import { CAMP_SCENE, CAMP_SPOTS } from '../data/presentation';
+import { CAMP_LV_SCALE, CAMP_SCENE, CAMP_SPOTS } from '../data/presentation';
 import { P } from './palette';
 import type { Sprites } from './sprites';
 
@@ -28,7 +28,7 @@ export class CampArt {
     for (const b of BUILDINGS) {
       const lv = Math.min(3, levels[b.id] ?? 0), p = CAMP_SPOTS[b.id], key = `${b.id}${lv}`;
       const h3 = sprites?.heightPerR(L3_KEYS[b.id]!) ?? 0;
-      if (lv > 0 && h3 > 0 && sprites!.draw(g, SPRITE_KEYS[key]!, 0, p.x, p.y, CAMP_SCENE.l3H / h3)) continue;
+      if (lv > 0 && h3 > 0 && sprites!.draw(g, SPRITE_KEYS[key]!, 0, p.x, p.y, CAMP_SCENE.l3H / h3 * CAMP_LV_SCALE[b.id][lv]!)) continue;
       let c = this.cache.get(key);
       if (!c) { c = this.paint(b.id, lv, p.w, p.h, px); this.cache.set(key, c); }
       g.drawImage(c, p.x - p.w / 2 - PAD, p.y - p.h - PAD, p.w + PAD * 2, p.h + PAD * 2);
