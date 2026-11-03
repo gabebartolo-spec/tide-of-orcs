@@ -1,6 +1,6 @@
 ﻿# Specialisation paths (TB-193) — DRAFT plan
 
-Director, 3 Nov: add specialisation with three paths. Each has a unique item set and an extra mythic weapon. This plan proposes how.
+Director, 3 Nov: add specialisation with three paths. Each has a unique item set and an extra mythic. This plan proposes how.
 Nothing is built until the director picks the open choices at the end.
 
 ## 1. The three paths
@@ -31,7 +31,7 @@ Nothing is built until the director picks the open choices at the end.
 | Mythic | Slot | Power |
 |---|---|---|
 | **Fang of the Coiled Serpent** | bow | Every 5th shot is a venom arrow that splits on impact into three |
-| **Foxfire Glaive** | charm | Calls a spectral fox that runs the wall line, biting orcs; it grows with companion count |
+| **Foxfire Tail** (a charm: a fox-tail talisman wreathed in foxfire) | charm | Calls a spectral fox that runs the wall line, biting orcs; it grows with companion count |
 | **The Magpie's Talon** | quiver | Arrows that kill steal a glint: +x starlight, and a small chance the orc drops an item |
 
 Each mythic gets a Meshy icon like the existing ones (public/items), and its own drop-moment effect (TB-192 handles drop hype).
