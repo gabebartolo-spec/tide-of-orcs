@@ -1,7 +1,22 @@
-/** Path sigils (TB-193c): placeholder vector marks for the three specialisation paths, drawn on the Replant cards until
- *  TB-193d's art lands. Palette tokens only. Drawn in a 100×100 box scaled to the canvas. */
+/** Path sigils (TB-193c, TB-193e): the Meshy sigil pictures (public/sigils/) on the Replant cards, with the vector
+ *  marks below as the fallback until a picture loads. Palette tokens only. Drawn in a 100×100 box scaled to the canvas. */
 import type { PathId } from '../data/paths';
 import { P, PATH_TINT } from './palette';
+import { pathSigilFile } from '../data/pathArt';
+
+/** Meshy sigil pictures (TB-193e), loaded once; a path missing here (not loaded yet, or failed) draws its vector mark. */
+const pics = new Map<PathId, HTMLImageElement>();
+const loading = new Set<PathId>();
+const waiting = new Map<PathId, Set<[HTMLCanvasElement, boolean]>>();
+const want = (path: PathId, cv: HTMLCanvasElement, lit: boolean): void => {
+  if (pics.has(path) || typeof Image === 'undefined') return;
+  let w = waiting.get(path); if (!w) waiting.set(path, (w = new Set())); w.add([cv, lit]);
+  if (loading.has(path)) return; loading.add(path);
+  const im = new Image();
+  im.onload = (): void => { pics.set(path, im); for (const [c, l] of waiting.get(path) ?? []) if (c.isConnected) drawSigil(c, path, l); waiting.delete(path); };
+  im.onerror = (): void => { waiting.delete(path); };
+  im.src = `${pathSigilFile(path)}`;
+};
 
 type G = CanvasRenderingContext2D;
 /** Backing pixels of a sigil canvas: crisp at the card's 4.25rem up to 4K. */
@@ -61,6 +76,8 @@ export function drawSigil(cv: HTMLCanvasElement, path: PathId, lit: boolean): vo
   c.beginPath(); c.arc(50, 50, 41, 0, 6.283); c.lineWidth = 1; c.strokeStyle = P.timberDark; c.stroke();
   c.save(); c.beginPath(); c.arc(50, 50, 44, 0, 6.283); c.clip();
   if (lit) { c.shadowColor = t.light; c.shadowBlur = 6 * k; }
-  if (path === 'serpent') serpent(c, PATH_TINT.serpent); else if (path === 'fox') fox(c, PATH_TINT.fox); else magpie(c, PATH_TINT.magpie);
+  const pic = pics.get(path);
+  if (pic) c.drawImage(pic, 8, 8, 84, 84);
+  else { want(path, cv, lit); if (path === 'serpent') serpent(c, PATH_TINT.serpent); else if (path === 'fox') fox(c, PATH_TINT.fox); else magpie(c, PATH_TINT.magpie); }
   c.restore();
 }
