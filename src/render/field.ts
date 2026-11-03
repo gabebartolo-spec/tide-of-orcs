@@ -17,7 +17,7 @@ import { orcAnimT, orcState, orcSwingT, swingClipT, vanState } from './actorStat
 import { Ground, decorImg } from './ground';
 import { Ambience } from './ambience';
 import { Interp } from './interp';
-import { FIELD_VIEW, GROUND, LOOT_VFX, ORC_SPRITE, SKY, VFX, dusk } from '../data/presentation';
+import { FIELD_VIEW, GROUND, LOOT_VFX, ORC_DEATH, ORC_SPRITE, SKY, VFX, dusk } from '../data/presentation';
 import { SLOTS } from '../data/loot';
 import { setTiers } from '../sim/gear';
 
@@ -75,6 +75,26 @@ export class FieldRenderer {
   private vis: { x0: number; y0: number; x1: number; y1: number } = { x0: 0, y0: 0, x1: W, y1: H };
   /** Sprite keys per orc kind, built once so the draw loop builds no strings (TB-183). */
   private orcKeys = new Map<string, { key: string; atk: string }>();
+  /** Fallen orcs playing their death clip (TB-214), and each kind's death key built once. */
+  private corpses: { key: string; x: number; y: number; r: number; born: number }[] = [];
+  private deathKeys = new Map<string, string>();
+  private deathKey(kind: string): string {
+    let k = this.deathKeys.get(kind);
+    if (k === undefined) { k = `orc.${ORC_SPRITE[kind] ?? kind}.death`; this.deathKeys.set(kind, k); }
+    return k;
+  }
+
+  /** Each corpse plays its death clip once at the spot it fell, holds the last frame, then fades (ORC_DEATH). */
+  private drawCorpses(): void {
+    const g = this.g;
+    for (let i = this.corpses.length - 1; i >= 0; i--) {
+      const c = this.corpses[i]!, dur = this.sprites.duration(c.key), t = this.clock - c.born, fadeT = t - dur - ORC_DEATH.hold;
+      if (fadeT >= ORC_DEATH.fade) { this.corpses.splice(i, 1); continue; }
+      g.globalAlpha = fadeT > 0 ? 1 - fadeT / ORC_DEATH.fade : 1; this.at(c.x, c.y, false);
+      this.sprites.draw(g, c.key, Math.min(t, dur * 0.999), 0, c.r * 0.9, c.r);
+    }
+    g.globalAlpha = 1; this.at(0, 0, false);
+  }
   /** Loot moments (TB-105): drop beams, the equip glow on the bow, the set-bonus leaf ring, the mythic screen-edge shimmer and slow-motion clock. */
   private beams: { x: number; y: number; life: number; max: number; c: string; ground: boolean; spiral: boolean; k: number }[] = [];
   /** Legendary/mythic field flash (TB-192): seconds left, peak alpha, colour. */
@@ -107,7 +127,9 @@ export class FieldRenderer {
         case 'kill': {
           const r = ORC_TYPES[e.kind as OrcKind]?.radius ?? ACTOR_R;
           fx.burst(e.x, e.y, P.orc, VFX.kill[0], VFX.kill[1]); fx.blood(e.x, e.y, footOf(r), P.bloodOrc, B.kill, 0); fx.splat(e.x, e.y + footOf(r), r * B.killSplat, P.bloodOrc);
-          fx.text(e.x, e.y - 14, '+' + fmt(e.loot), P.amber); break;
+          fx.text(e.x, e.y - 14, '+' + fmt(e.loot), P.amber);
+          const dk = this.deathKey(e.kind); if (this.sprites.duration(dk) > 0) this.corpses.push({ key: dk, x: e.x, y: e.y, r, born: this.clock });
+          break;
         }
         case 'hit': fx.burst(e.x, e.y, P.cream, VFX.hit[0], VFX.hit[1]); fx.blood(e.x, e.y, footOf(ACTOR_R), P.bloodOrc, B.hit, e.src === 'lob' ? 0 : 1); if (e.crit) fx.text(e.x, e.y - 22, 'crit', P.cream); break;
         case 'bleed': fx.blood(e.x, e.y, footOf(e.r), P.bloodOrc, B.hit, 1); break;
@@ -279,6 +301,7 @@ export class FieldRenderer {
     const vans = this.vanBuf, orcs = this.orcBuf; vans.length = 0; orcs.length = 0;
     s.vans.forEach((v) => { vans.push(v); }); vans.sort(byY); for (const v of vans) this.van(s, v);
     s.orcs.forEach((o) => { if (!o.dead) orcs.push(o); }); orcs.sort(byY);
+    this.drawCorpses();
     for (const o of orcs) { this.orc(s, o); if (o.burn > 0 && !this.reducedMotion && Math.random() < A.flameRate * dt) this.fx.flame(o.x + (Math.random() - 0.5) * o.r, o.y, Math.random() < 0.5 ? P.fire : P.amber); }
 
     this.drawBeams(dt);
