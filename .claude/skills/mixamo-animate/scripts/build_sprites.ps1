@@ -80,7 +80,9 @@ $jobs = @(
 # the near-black coat; ANCHOR prints 256.00 389.65 1.8, kept as is in anchors.json; pack_sprites.py ANCHOR_X moves x to 430, the
 # wolf's chest, so the muzzle stops at the barricade; frame hashes in wolfrider_blam/frames.sha256):
 #   PARTS=ORC_Units_Body_A,ORC_Units_Head_A,ORC_Units_Arms_A,ORC_Units_Legs_A,ORC_Units_Shoulderpads_A,ORC_Units_Axe,Wolf YAW=90
-#   CLIP=03_run (prints SCALE 41.745; pass SCALE=41.745 for 07_attack_A) wolfrider_blam\build_blam.py <Orc_LightCavalry.fbx> <out.blend>
+#   run:    SCALE=41.745 RARM=3 wolfrider_blam\build_gallop.py <Orc_LightCavalry.fbx> <$a\wolf_rider\ref_wolf\Wolf.fbx> <out.blend>
+#           (Quaternius CC0 Gallop, 17 frames, copied onto blam's wolf; rider = its own 03_run channels, right arm held at attack frame 3)
+#   attack: CLIP=07_attack_A SCALE=41.745 wolfrider_blam\build_blam.py <Orc_LightCavalry.fbx> <out.blend>
 #   wolfrider_blam\render_blam.py <blend> $o orc.wolfrider | orc.wolfrider.attack   (blends kept in $a\wolfrider_blam)
 $anc = @{}; $af = "$o\anchors.json"; if (Test-Path $af) { (Get-Content $af | ConvertFrom-Json).PSObject.Properties | ForEach-Object { $anc[$_.Name] = $_.Value } }
 foreach ($j in $jobs) {

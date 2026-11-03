@@ -43,7 +43,7 @@ ANIMS = {
     "wolf": (25, False, "wolf", 1.6),  # TB-160 companion run, blam's CC BY Sketchfab wolf retextured; ortho 2.4 is a stand-in (the gltf is 1/100 scale)
     "wolf.attack": (25, False, "wolf", 1.6),  # all 33 bite frames; field.ts scrubs it with the bite cooldown
     "hawk": (30, False, "hawk", 3.0),  # TB-068 companion flight v1 (director 3 Nov): OSU CC BY Sketchfab hawk, its own Wings Flapping clip, frames 0-29 (render_hawk.py VIEW=game YAW=90); anchor = bird centre
-    "orc.wolfrider": (30, True, "orc.wolfrider", 2.6),  # TB-210: blam's CC BY "Orc animation" (Orc_LightCavalry.fbx), its own 03_run clip, all 27 frames; wolfrider_blam/render_blam.py ORTHO 1.8
+    "orc.wolfrider": (30, True, "orc.wolfrider", 2.6),  # TB-210: blam's CC BY "Orc animation" (Orc_LightCavalry.fbx), run = Quaternius CC0 Wolf Gallop (17 frames) copied onto its wolf by wolfrider_blam/build_gallop.py RARM=3; render_blam.py ORTHO 1.8
     "orc.wolfrider.attack": (30, True, "orc.wolfrider", 2.6),  # TB-210: its own 07_attack_A clip (axe), all 41 frames, same ortho 1.8
 }
 # TB-188d: Tripo camp buildings, one static frame per building per level (render_camp.py, ORTHO 2.2, anchor = ground centre).
