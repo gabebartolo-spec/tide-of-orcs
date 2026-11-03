@@ -1,4 +1,4 @@
-import { ARROWS, BARRICADE, FIELD, VANGUARD, LOB, ORC_WOB, PLAYER, SOURCES, WAVE_LEN, checkpointFor, waveHP, waveInterval, waveLoot, waveSpeedMult } from '../data/balance';
+import { ARROWS, BARRICADE, FIELD, SIM_MISC, VANGUARD, LOB, ORC_WOB, PLAYER, SOURCES, WAVE_LEN, checkpointFor, waveHP, waveInterval, waveLoot, waveSpeedMult } from '../data/balance';
 import { FIREBALL, ORC_FX, ORC_KINDS, ORC_TYPES, OrcKind } from '../data/orcs';
 import { EventBus } from './events';
 import { Orc, Projectile, SimState, Wolf } from './state';
@@ -24,17 +24,17 @@ export function spawnOrc(s: SimState, kind: OrcKind, y?: number, champ = false):
   const o = s.orcs.alloc(); if (!o) { if (champ && s.run.boss) s.run.boss.left--; return null; }
   const T = ORC_TYPES[kind];
   const hp = waveHP(w) * T.hp * F.hp * tierHp(s.run.tier);
-  o.kind = kind; o.x = W + 24; o.y = y ?? 50 + s.rng.next() * (H - 100);
+  o.kind = kind; o.x = W + SIM_MISC.spawnXPad; o.y = y ?? SIM_MISC.spawnYPad + s.rng.next() * (H - 2 * SIM_MISC.spawnYPad);
   o.hp = hp; o.maxhp = hp; o.spd = T.speed * waveSpeedMult(w); o.r = T.radius; o.atk = hp * BARRICADE.orcAtkFrac;
   o.loot = waveLoot(w) * T.loot * F.loot * tierLoot(s.run.tier);
-  o.dead = false; o.burn = 0; o.bleed = 0; o.slow = 0; o.pin = 0; o.root = 0; o.chill = 0; o.stun = 0; o.poison = 0; o.poisonDps = 0; o.hitT = 0; o.wob = s.rng.next() * 6.28; o.swingT = s.rng.next(); o.champ = champ;
+  o.dead = false; o.burn = 0; o.bleed = 0; o.slow = 0; o.pin = 0; o.root = 0; o.chill = 0; o.stun = 0; o.poison = 0; o.poisonDps = 0; o.hitT = 0; o.wob = s.rng.next() * SIM_MISC.tau; o.swingT = s.rng.next(); o.champ = champ;
   o.gen++; o.leapt = false; o.castT = s.rng.next() * FIREBALL.every; o.drum = false;
   return o;
 }
 
 /* ---------- one fixed step ---------- */
 export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): void {
-  const st = s.stats, run = s.run;
+  let st = s.stats; const run = s.run; // st is re-read where a kill can recompute the stats (TB-219)
   if (run.fallen) return;
   s.tick++; s.t += dt; run.runTime += dt;
 
@@ -108,6 +108,7 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
   });
   if (run.fallen) return;
 
+  st = s.stats; // the orcs' hits and kills above may have recomputed the stats
   // archers
   const shooters: [number, number][] = [[ELF_X, H / 2], [ELF_X - 10, H / 2 - SOURCES.archerOffsetY], [ELF_X - 10, H / 2 + SOURCES.archerOffsetY]];
   // The elf: an arcing shot onto the aim circle, only while the player aims. The draw holds when ready; it never banks.
@@ -130,18 +131,21 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
     if (moonShot && st.fullMoon) { const c = st.barMax * MYTHIC_FX.moonCost; if (run.barHp - c >= st.barMax * MYTHIC_FX.moonCostFloor) run.barHp -= c; }
     // Split Shot: extra arrows land at random inside the circle (the Fang's venom arrow splits into more).
     for (let k = 1; k < st.arrows + (fang ? PATH_FX.fangSplit : 0); k++) {
-      const a = s.rng.next() * 6.28, d = s.rng.next() * st.radius * LOB.splitSpread;
+      const a = s.rng.next() * SIM_MISC.tau, d = s.rng.next() * st.radius * LOB.splitSpread;
       lob(s, ELF_X, H / 2, x + Math.cos(a) * d, y + Math.sin(a) * d, fx, ev);
     }
   }
+  // Packlord 4: companions strike faster while an orc is near the wall (Rangers and Wardens too, TB-219)
+  const haste = st.petHaste > 0 && nearestOrc(s, BAR_X, H / 2, (o) => o.x < BAR_X + SET_FX.nearWall) ? 1 + st.petHaste : 1;
+  const pet = st.petDmg;
   // Rangers and wardens keep straight volleys at the nearest orc, each on its own unit nodes.
   for (let i = 1; i <= st.archers && i < 3; i++) {
     const U = st.units[i === 1 ? 'ranger' : 'warden'];
     run.shotT[i] = (run.shotT[i] ?? 0) + dt;
-    if (run.shotT[i]! < 1 / (st.fireRate * U.rate)) continue;
+    if (run.shotT[i]! < 1 / (st.fireRate * U.rate * haste)) continue;
     const [sx, sy] = shooters[i]!;
     const tg = nearestOrc(s, sx, sy);
-    if (tg) { run.shotT[i] = 0; volley(s, sx, sy, tg.x, tg.y, SOURCES.archerDmgFrac * st.kin * U.dmg, tg, U); }
+    if (tg) { run.shotT[i] = 0; volley(s, sx, sy, tg.x, tg.y, SOURCES.archerDmgFrac * st.kin * pet * U.dmg, tg, U); }
   }
   if (st.knives) { run.knifeT += dt; if (run.knifeT >= 1 / st.knives.rate) { const tg = nearestOrc(s, ELF_X, H / 2); if (tg) {
     run.knifeT = 0; ev.push({ t: 'knife' }); const ang = Math.atan2(tg.y - H / 2, tg.x - ELF_X);
@@ -170,9 +174,6 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
     }
   }
 
-  // Packlord 4: companions strike faster while an orc is near the wall
-  const haste = st.petHaste > 0 && nearestOrc(s, BAR_X, H / 2, (o) => o.x < BAR_X + SET_FX.nearWall) ? 1 + st.petHaste : 1;
-  const pet = st.petDmg;
   if (st.wolf) {
     while (s.pack.length < st.extraWolves) s.pack.push({ ...s.wolf, y: s.wolf.y + SOURCES.wolf.reach * 2 * (s.pack.length + 1) });
     wolfStep(s, ev, s.wolf, dt, haste, st.wolf * pet);
@@ -202,6 +203,7 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
 
   // projectiles
   s.shots.forEach((a: Projectile) => {
+    st = s.stats; // a kill earlier this step may have swapped the worn set (dropLoot -> recompute)
     if (s.run.fallen) return; // the run froze mid-loop (TB-216a): nothing else resolves
     if (a.kind === 'fireball') {
       // The shaman's fireball (TB-127): the lob's parabola on its own timings; burns every vanguard in its circle, or the wall (TB-087).
@@ -225,7 +227,7 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
     if (a.kind === 'bounce') {
       // Rebound: fly at the target; on reaching it strike, then leap on from there, softer each hop.
       const tg = a.target; a.life -= dt;
-      if (!tg || !tg.live || tg.dead || a.life <= 0) { s.shots.release(a); return; }
+      if (!tg || !tg.live || tg.dead || tg.gen !== a.tgen || a.life <= 0) { s.shots.release(a); return; }
       const dx = tg.x - a.x, dy = tg.y - a.y, d = Math.hypot(dx, dy), m = ARROWS.bounce.speed * dt;
       a.vx = dx / (d || 1) * ARROWS.bounce.speed; a.vy = dy / (d || 1) * ARROWS.bounce.speed;
       if (d > tg.r + 4 + m) { a.x += dx / d * m; a.y += dy / d * m; return; }
@@ -236,7 +238,7 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
       return;
     }
     a.life -= dt;
-    if (st.homing && a.kind === 'arrow' && a.target && a.target.live && !a.target.dead) {
+    if (st.homing && a.kind === 'arrow' && a.target && a.target.live && !a.target.dead && a.target.gen === a.tgen) {
       const ang = Math.atan2(a.target.y - a.y, a.target.x - a.x), cur = Math.atan2(a.vy, a.vx);
       let d = ang - cur; d = Math.atan2(Math.sin(d), Math.cos(d));
       const na = cur + d * Math.min(1, PLAYER.homingTurn * dt); a.vx = Math.cos(na) * PLAYER.arrowSpeed; a.vy = Math.sin(na) * PLAYER.arrowSpeed;

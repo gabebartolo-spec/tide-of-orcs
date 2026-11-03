@@ -121,7 +121,7 @@ Statuses predate the lob, wall and aim changes of 1–2 Nov (TB-154, TB-164) unl
 | Tree fully bought in a run | never | met: 117 of 156 buyable ranks at most (greedy run 5) |
 
 ## Heartwood tree (M3, built TB-053; shown to the player as Grudges, TB-112)
-Bought with Heartwood, never reset. Costs in HW. The tree spends from `available = earned − spent`. The header shows `available / earned` once anything is spent. Early Dawn's skipped boss waves are not owed (`bossDone` starts at `floor(startWave / BOSS_WAVE.every)`). Standing Orders spearmen are placed free, ignoring Muster and the line cap.
+Bought with Heartwood, never reset. Costs in HW. The tree spends from `available = earned − spent`. The header shows `available / earned` once anything is spent. Early Dawn's skipped boss waves are not owed (`bossDone` starts at `floor(startWave / BOSS_WAVE.every)`). Standing Orders spearmen are placed free, ignoring Muster and the line cap. Vanguard are not saved, so a load places them again (TB-219); the vanguard pool holds `VANGUARD.poolCap` (12) units, enough for a maxed line of 7 plus both.
 
 | id | Name | Max | Cost | Effect |
 |---|---|---|---|---|
@@ -165,7 +165,7 @@ No sims run (director, 3 Nov). Every number lives in `PATH_FX` (`src/data/paths.
 No sims run (director, 3 Nov). Numbers live in `src/data/camp.ts`.
 - Cost per level (all four buildings): L1 3 Heartwood + 10 material, L2 8 + 30, L3 20 + 80. Heartwood is shared with the Heartwood tree; spent only while fallen.
 - Materials: bowyer sinew, forge orc iron, kitchen game meat, training straw & hide. Grunts, runners and brutes (not champions) drop one random material at 5 % per kill; kept across runs.
-- Effects, totals at L1 / L2 / L3: bowyer bow damage ×1.05/1.1/1.2, draw time −3/6/10 %, strike radius ×1.04/1.08/1.12; forge knife, ballista and storm damage ×1.05/1.1/1.2, Item Find +3/6/10 %, reroll cost −5/10/15 %; kitchen wall max HP ×1.05/1.1/1.2, regen +0.5/1/2 (added to Repair regen), starlight ×1.03/1.06/1.1; training vanguard HP and damage ×1.05/1.1/1.2, respawn −5/10/15 %.
+- Effects, totals at L1 / L2 / L3: bowyer bow damage ×1.05/1.1/1.2, draw time −3/6/10 %, strike radius ×1.04/1.08/1.12; forge knife, ballista and storm damage ×1.05/1.1/1.2, Item Find +3/6/10 %, reroll cost −5/10/15 %; kitchen wall max HP ×1.05/1.1/1.2, regen +0.5/1/2 % of max per second (added to Repair regen; `regenPlus` holds the fraction 0.005/0.01/0.02), starlight ×1.03/1.06/1.1; training vanguard HP and damage ×1.05/1.1/1.2, respawn −5/10/15 %.
 
 ### P-184 · Push on from the checkpoint-51 stall (2026-11-03, TB-184) · applied: set F (director 3 Nov)
 Director: keep checkpoints and the default tier; tune nodes, items and companions so the stuck player can push on. Player: `sim/out/player48.json` (every run-tree node at max except foe Fury/Swarm, 4 epics worn, `hw_dawn` 1). Soak: `npm run balance -- --load sim/out/player48.json --tiertop --hwbuy --minutes 45 --seed N --quiet [--tune …]` (`--load` is new: start as the saved player, fallen, and replant at its top tier each run, as the game defaults). Fresh: `npm run balance -- --hwbuy --minutes 40 --seed N --quiet [--tune …]`. Seeds 1–3 each.

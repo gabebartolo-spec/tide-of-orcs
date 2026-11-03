@@ -239,8 +239,8 @@ export const JUICE = {
   press: { scale: 0.9, down: 50, up: 120 },
   /** Particle burst (TB-195b: reads at 1080p, Hades-like): count, speed range (rem/s), life range (s), size range (rem), gravity (rem/s²),
    *  drag per 1/60 s; `lift` is an upward kick (rem/s) so sparks arc up then fall; `fan` the half-angle (rad) of the spray round straight
-   *  up; `glow` the halo radius × size; `flare` a bright ring at the origin (rem radius) and its life (s). Rem so 1080p and 4K match. */
-  burst: { count: 64, speedMin: 6, speedMax: 19, lifeMin: 0.5, lifeMax: 1.0, sizeMin: 0.16, sizeMax: 0.4, gravity: 34, drag: 0.93, lift: 8, fan: 1.9, glow: 3, flare: 2.4, flareLife: 0.28 },
+   *  up; `glow` the halo radius × size; `flare` a bright ring at the origin (rem radius) and its life (s); `spawn` the radius (rem) sparks scatter from so frame 1 is no blob. Rem so 1080p and 4K match. */
+  burst: { count: 64, speedMin: 6, speedMax: 19, lifeMin: 0.5, lifeMax: 1.0, sizeMin: 0.16, sizeMax: 0.4, gravity: 34, drag: 0.93, lift: 8, fan: 1.9, glow: 1.8, glowAlpha: 0.14, flare: 1.6, flareLife: 0.28, spawn: 5 },
   /** Stagger: ms between list children entering. */
   stagger: 30,
   /** Stagger: px each child rises from as it enters. */
@@ -259,9 +259,11 @@ export const HUD = {
   /** Gem sparkle: smallest starlight gain that sparkles, ms between sparkles, burst scale. */
   sparkleMin: 1, sparkleGap: 900, sparkleScale: 0.3,
   /** Wave-clear stamp: ms it slams in (from `stampFrom` scale), ms it holds, ms it fades. */
-  stampIn: 260, stampFrom: 2.4, stampHold: 1100, stampOut: 400,
+  stampIn: 260, stampFrom: 1.5, stampHold: 1100, stampOut: 400,
   /** Wall bar shake on a hit: rem amplitude per hit fraction of max HP (capped at `shakeMax`), ms. */
-  shakeK: 6, shakeMax: 0.35, shakeMs: 220,
+  shakeK: 6, shakeMax: 0.6, shakeMs: 360,
+  /** Odometer: ms each changed digit's strip rolls from its old digit to its new one (all together, no overshoot). */
+  odoRoll: 480,
 } as const;
 
 /** Tooltip plates (TB-195c): rows = most now → next lines shown; gap = rem from the cursor; in = ms spring-in; w = plate width in rem. */
@@ -277,6 +279,7 @@ export const SATCHEL_UI = { lines: 4, gap: 1.25, snap: 260 } as const;
 /** Full-screen field (TB-207): reach is the half width around the barricade that the wave bar clears. */
 export const FIELD_VIEW = { reach: 24 } as const;
 
-/** Baked burning/chilled sprite frames (TB-216d). A rimmed frame's blur depends on its drawn height, so heights snap to
- *  geometric buckets `steps` per doubling; past `cap` baked frames the whole cache is dropped and rebuilt on demand. */
-export const SPRITE_BAKE = { steps: 4, cap: 512 } as const;
+/** Baked burning/chilled sprite frames (TB-216d). A glowing frame bakes whole at its drawn device height snapped to
+ *  `quantum` px, with its sub-pixel offset snapped to 1/`sub` px, and is blitted 1:1 on whole pixels (TB-216f); `steps` is the per-doubling bucket of heightBucket(); past `cap` baked
+ *  frames the whole cache is dropped and rebuilt on demand. */
+export const SPRITE_BAKE = { steps: 4, cap: 2048, quantum: 0.5, sub: 4 } as const;

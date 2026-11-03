@@ -11,7 +11,7 @@ import { Inputs, step } from './sim/step';
 import { buy } from './sim/tree';
 import { restartBoss, summonBoss } from './sim/boss';
 import { castFireball } from './sim/combat';
-import { buyHw, repairHeartwood } from './sim/heartwood';
+import { buyHw, placeStandingOrders, repairHeartwood } from './sim/heartwood';
 import { upgradeBuilding } from './sim/camp';
 import { BuildingId } from './data/camp';
 import { HwId } from './data/heartwood';
@@ -32,7 +32,7 @@ export const clockSeed = (): number => (Date.now() % 2147483647) | 0;
 /** Build the sim from a migrated save the way every load does; a boss wave in progress starts over (TB-216b). */
 function loadState(seed: number, save: Save): SimState {
   const s = createState(seed, { ...freshRun(), ...save.run }, { ...freshMeta(), ...save.meta });
-  repairHeartwood(s.meta); restartBoss(s);
+  repairHeartwood(s.meta); restartBoss(s); placeStandingOrders(s);
   return s;
 }
 

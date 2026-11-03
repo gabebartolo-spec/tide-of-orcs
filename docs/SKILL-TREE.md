@@ -2,7 +2,7 @@
 
 Status: **Current** (v1.7, 132 nodes: 117 base, 48 of them the TB-111 per-type nodes (costs in BALANCE P-111), plus 15 path nodes (TB-193a); checked against the code 3 Nov 2026). Started from `docs/prototype.html` and since changed (Wide Volley, War Drums and the summon/Fury/Swarm nodes added; Dreaming Roots, Blood Banners and the Warboss nodes retired; see GDD §14). Mirrored exactly by `src/data/skillTree.ts` (tested: unique ids, parents exist, no cycles, coordinates in bounds, ≥ 40 px apart). Node ids are stable API: never rename; deprecate instead.
 
-Cost formula: `cost(rank, w) = round(base × growth^rank × 1.25^max(0, w − 10))` (rank = ranks already owned, w = wave at purchase; the wave factor is P-001, BALANCE.md §Economy). Costs are starlight.
+Cost formula: `cost(rank, w) = round(base × growth^rank × 1.1^max(0, w − 10))`, rounding the rank price first: `round(round(base × growth^rank) × 1.1^max(0, w − 10))` (rank = ranks already owned, w = wave at purchase; the wave factor is P-001, rate 1.25 until P-142, BALANCE.md §Economy; director 4 Nov kept the code's double rounding). Costs are starlight.
 
 Layout coordinates are for a 1400×1320 tree canvas, root at (700, 890) (TB-163). The layout draws an arcane tree: the root is the trunk base; Muster and Grey Wolf sit up the trunk; the canopy boughs are Bow (up-left), Companions (the crown) and Armoury (right), with Vanguard as the low left bough; Barricade, Spoils and Grove (the orc tiers) spread below as roots. Nodes with children are hand-placed boughs; leaf nodes cluster round their parent as foliage. Branch colours in ART-STYLE.md.
 
@@ -237,7 +237,7 @@ Enemies already conform: grunt (War Drums, Call the Horde), runner/brute/elite (
 | Shock `shock*` | `static` zap +30%/rank (5) | `stun*` Thunderclap, max 1→3: stun +0.25 s/rank, never topped up while it holds (TB-126) | `shockchance` +15%/rank (5) |
 | Rebound `bounce*` | `rebdmg` bolt +30%/rank (5) | `bounce*` ranks: hops | `rebchance` +15%/rank (5) |
 | Moonbow `moon*` | `moondmg` +20%/rank (5) | `moonreach` settles from +25% farther/rank (3) | `moonchance` +15%/rank (5) |
-| Starfall `starfall*` | `stardmg` +30%/rank (5) | `starcount` +2 arrows/rank (3) | `starchance` 10% per shot, +5%/rank (5); replaces "every 10th" |
+| Starfall `starfall*` | `stardmg` +30%/rank (5) | `starcount` +4 arrows/rank (3) | `starchance` 10% per shot, +10%/rank (5); replaces "every 10th" |
 | Knives `knives*` | `knifedmg` +30%/rank (5) | `knifefan` +1 knife per throw/rank (3) | `knifespd*` throw rate only (its damage part moves to `knifedmg`) |
 | Ballista `ballista*` | `bolt*` | `boltpin` struck orcs pinned 0.3 s/rank (3) | `windlass` reload −10%/rank (5) |
 

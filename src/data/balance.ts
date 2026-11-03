@@ -1,6 +1,8 @@
 /** All tuning constants and formulas. Mirrors docs/BALANCE.md `## Current` and docs/prototype.html. */
 
 export const FIELD = { w: 900, h: 480, barX: 150, barW: 14, elfX: 64 } as const;
+/** Sim literals that used to sit in systems code (TB-219): orc spawn margins, wobble phase span, shot flight time, hit flash. */
+export const SIM_MISC = { spawnXPad: 24, spawnYPad: 50, tau: 6.28, shotLife: 2.2, hitFlash: 0.12 } as const;
 export const WAVE_LEN = 24;
 /** Checkpoints (TB-159; every 5 since TB-172): clearing every `every`-th wave lets later runs start just past it (0 = off). */
 export const CHECKPOINT = { every: 5 };
@@ -39,6 +41,7 @@ export const BARRICADE = {
 // dmg is scaled by the same factor so damage per second matches the old 0.8 s / 0.45 s swings.
 export const VANGUARD = {
   baseCap: 2,
+  poolCap: 12,   // pool slots: max line 7 (base 2, Close Ranks 3, Pack Tactics 2) + 2 Standing Orders + headroom (TB-219)
   hpPerShield: 1.3, dmgPerDrill: 1.3, mendPerRank: 0.03,
   walkSpeed: 60, standX: 44, laneGap: 70, engageRange: 18,
   respawn: 12,   // seconds before a fallen line vanguard returns (TB-167), × 0.85 per Swift Muster rank
