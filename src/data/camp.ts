@@ -28,7 +28,7 @@ export const MAT_IDS: readonly MatId[] = ['sinew', 'iron', 'meat', 'hide'];
 export const CAMP_FX = {
   bowDmg: [1, 1.05, 1.1, 1.2], drawCut: [0, 0.03, 0.06, 0.1], radius: [1, 1.04, 1.08, 1.12],
   weaponDmg: [1, 1.05, 1.1, 1.2], findPlus: [0, 0.03, 0.06, 0.1], rerollCut: [0, 0.05, 0.1, 0.15],
-  wallHp: [1, 1.05, 1.1, 1.2], regenPlus: [0, 0.5, 1, 2], starlight: [1, 1.03, 1.06, 1.1],
+  wallHp: [1, 1.05, 1.1, 1.2], regenPlus: [0, 0.005, 0.01, 0.02], starlight: [1, 1.03, 1.06, 1.1],
   vanHp: [1, 1.05, 1.1, 1.2], vanDmg: [1, 1.05, 1.1, 1.2], respawnCut: [0, 0.05, 0.1, 0.15],
 } as const;
 
