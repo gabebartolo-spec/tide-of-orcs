@@ -10,6 +10,9 @@ import { setCounts, setTiers } from '../sim/gear';
 import type { Cue } from '../data/audio';
 import { hwRank } from '../sim/heartwood';
 import { pathTag } from './paths';
+import { ComparePlates, cmpSide, dropOk, powerDelta } from './compare';
+import { SATCHEL_UI } from '../data/presentation';
+import { calm } from './juice';
 
 const $ = (id: string): HTMLElement => document.getElementById(id)!;
 
@@ -36,6 +39,8 @@ const setBlock = (id: string, n: number, boost = 0): string => {
 export class SatchelPane {
   selected: string | null = null;
   private sig = '';
+  private cmp = new ComparePlates();
+  private drag: Item | null = null;
 
   constructor(private game: GameController, private onCue: (c: Cue) => void = () => {}) {
     // warm the icon cache so a run's first drop banner shows its picture at once (TB-192; 32 small WebPs)
@@ -43,6 +48,7 @@ export class SatchelPane {
     $('sat-title').textContent = STR.satchelTitle; $('sat-worn-k').textContent = STR.satchelWorn;
     const pick = (e: Event) => { const uid = (e.target as HTMLElement).closest<HTMLElement>('[data-uid]')?.dataset.uid; if (uid) { this.selected = uid; this.render(); } };
     $('sat-worn').onclick = pick; $('sat-grid').onclick = pick;
+    this.wireObject();
     // RARITIES minus mythic: mythics are never filtered out
     const f = $('sat-filter') as HTMLSelectElement; $('sat-filter-k').textContent = STR.satchelFilter;
     f.innerHTML = RARITIES.filter((r) => r !== 'mythic').map((r) => `<option value="${r}">${STR.filterAtLeast(STR.rarityName[r] ?? r)}</option>`).join('');
@@ -65,6 +71,44 @@ export class SatchelPane {
     };
   }
 
+  /** TB-195e: hover a satchel item for the compare plates; drag it onto its sewn pocket to wear it (snap, flash, equip cue). */
+  private wireObject(): void {
+    const grid = $('sat-grid'), worn = $('sat-worn'), find = (uid?: string) => this.loot.items.find((i) => i.uid === uid);
+    const pocket = (e: Event) => (e.target as HTMLElement).closest<HTMLElement>('[data-pocket]');
+    grid.onpointermove = (e) => {
+      const it = this.drag ? null : find((e.target as HTMLElement).closest<HTMLElement>('[data-uid]')?.dataset.uid);
+      if (!it) { this.cmp.hide(); return; }
+      const cur = find(this.loot.equipped[it.slot]);
+      this.cmp.show(it.uid + (cur?.uid ?? ''), cmpSide(it, itemName(it), affixText), cur ? cmpSide(cur, itemName(cur), affixText) : null, powerDelta(it, cur), e.clientX, e.clientY);
+    };
+    grid.onpointerleave = () => this.cmp.hide();
+    grid.ondragstart = (e) => {
+      const it = find((e.target as HTMLElement).closest<HTMLElement>('[data-uid]')?.dataset.uid);
+      if (!it || !e.dataTransfer) return;
+      this.drag = it; this.cmp.hide(); e.dataTransfer.setData('text/plain', it.uid); e.dataTransfer.effectAllowed = 'move';
+      worn.querySelector(`[data-pocket="${it.slot}"]`)?.classList.add('want');
+    };
+    grid.ondragend = () => { this.drag = null; worn.querySelectorAll('.want, .over').forEach((el) => el.classList.remove('want', 'over')); };
+    worn.ondragover = (e) => { const p = pocket(e); if (p && dropOk(this.drag?.slot, p.dataset.pocket as Slot)) { e.preventDefault(); p.classList.add('over'); } };
+    worn.ondragleave = (e) => pocket(e)?.classList.remove('over');
+    worn.ondrop = (e) => {
+      e.preventDefault();
+      const it = this.drag, p = pocket(e);
+      if (it && p && dropOk(it.slot, p.dataset.pocket as Slot)) this.dropOn(it);
+    };
+  }
+
+  /** Wear `it` as if dropped on its pocket: equip, cue, then the pocket snaps and flashes. Also the capture hook. */
+  dropOn(it: Item): void {
+    const tiers = setTiers(this.loot, this.game.state.stats.setBoost);
+    if (!this.game.equipItem(it.uid)) return;
+    this.onCue(setTiers(this.loot, this.game.state.stats.setBoost) > tiers ? 'setRise' : 'equip');
+    this.selected = it.uid; this.drag = null; this.render();
+    const el = $('sat-worn').querySelector<HTMLElement>(`[data-pocket="${it.slot}"]`);
+    if (el && !calm()) el.animate([{ transform: 'scale(1.18)' }, { transform: 'scale(0.94)' }, { transform: 'none' }], { duration: SATCHEL_UI.snap, easing: 'ease-out' });
+    if (el) { el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); }
+  }
+
   private get loot() { return this.game.state.meta.loot; }
 
   /** Cheap: re-renders only when the satchel, worn set or selection changed. Called ~6 Hz. */
@@ -80,10 +124,10 @@ export class SatchelPane {
   render(): void {
     const l = this.loot, worn = new Set(Object.values(l.equipped));
     this.sig = this.signature(); ($('sat-filter') as HTMLSelectElement).value = l.lootFilter.minRarity;
-    const cell = (slot: Slot, it?: Item) => it
-      ? `<button class="item r-${it.rarity}${it.uid === this.selected ? ' sel' : ''}" data-uid="${it.uid}" title="${itemName(it)}">${glyph(slot, it)}<span class="txt"><span class="slot">${STR.slotName[slot]}${it.locked ? STR.lockedMark : ''}${it.uid === l.heirloom ? STR.heirloomMark : ''}</span><span class="nm">${itemName(it)}</span>${pathTag(it)}</span></button>`
-      : `<div class="item empty">${glyph(slot)}<span class="txt"><span class="slot">${STR.slotName[slot]}</span></span></div>`;
-    $('sat-worn').innerHTML = SLOTS.map((s) => cell(s, l.items.find((i) => i.uid === l.equipped[s]))).join('');
+    const cell = (slot: Slot, it?: Item, w = false) => it
+      ? `<button class="item r-${it.rarity}${it.uid === this.selected ? ' sel' : ''}" data-uid="${it.uid}"${w ? ` data-pocket="${slot}"` : ' draggable="true"'}>${glyph(slot, it)}<span class="txt"><span class="slot">${STR.slotName[slot]}${it.locked ? STR.lockedMark : ''}${it.uid === l.heirloom ? STR.heirloomMark : ''}</span><span class="nm">${itemName(it)}</span>${pathTag(it)}</span></button>`
+      : `<div class="item empty"${w ? ` data-pocket="${slot}"` : ''}>${glyph(slot)}<span class="txt"><span class="slot">${STR.slotName[slot]}</span></span></div>`;
+    $('sat-worn').innerHTML = SLOTS.map((s) => cell(s, l.items.find((i) => i.uid === l.equipped[s]), true)).join('');
     const boost = this.game.state.stats.setBoost, sets = Object.entries(setCounts(l));
     $('sat-sets').innerHTML = sets.length ? `<div class="k">${STR.setsWorn}</div>${sets.map(([id, n]) => setBlock(id, n, boost)).join('')}` : '';
     const spare = l.items.filter((i) => !worn.has(i.uid));

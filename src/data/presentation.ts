@@ -132,18 +132,21 @@ export const TREE_LIGHT = {
   burstPer: 30, burstSpeed: 95, burstLife: 1.3, burstR: 3.6, burstDrag: 2.2, burstCap: 600,
 } as const;
 
-/** Encampment spots (TB-188b/c, docs/plans/elf-encampment.md §1): each building's footprint in the grove strip west of the
- *  barricade, as centre x, base y (ground line), width and height in field units. Kept to the top and bottom bands, clear of
- *  the barricade HUD (y < 64), the archers (y 150 and 330), the elf and the ballista. Click targets and art share it. */
+/** Camp scene (TB-188e, docs/plans/elf-encampment.md §1): the encampment has its own view on the Camp tab, drawn at house
+ *  scale instead of in the field's grove strip. Scene units match field units (the elf stands ~38 units tall), and the view
+ *  fits the `w` x `h` box to its canvas. `l3H` is the drawn height of every level-3 Tripo sprite (~3.5x the elf's frame: the Tripo frames include each building's ground island, so the
+ *  structure itself reads ~3x the elf), so each
+ *  building gets its own scale. `sky` is the share of the box above the horizon. The four finished buildings stand equally tall; levels 1-2 keep their render ratio. */
+export const CAMP_SCENE = { w: 840, h: 210, l3H: 135, sky: 0.25, elf: { x: 805, y: 185, r: 12 } } as const;
+/** Each building's footprint in the camp scene: centre x, base y (ground line), width and height in scene units. One row,
+ *  left to right, with the elf at the east end; widths are the level-3 sprites at `l3H` tall. Click targets, the Tripo
+ *  sprites and the level-0 placeholder all share it. */
 export const CAMP_SPOTS = {
-  bowyer: { x: 42, y: 120, w: 62, h: 54 },
-  forge: { x: 114, y: 120, w: 50, h: 56 },
-  kitchen: { x: 42, y: 466, w: 62, h: 54 },
-  training: { x: 114, y: 466, w: 52, h: 54 },
+  bowyer: { x: 70, y: 185, w: 118, h: 135 },
+  forge: { x: 210, y: 185, w: 132, h: 135 },
+  kitchen: { x: 392, y: 185, w: 196, h: 135 },
+  training: { x: 640, y: 185, w: 256, h: 135 },
 } as const;
-/** Field units per metre for the Tripo camp sprites (TB-188d): render_camp.py sizes level 1/2/3 to 1.0/1.3/1.6 m wide, so a
- *  level-3 building fills about its CAMP_SPOTS width and a level-1 hut stands about as tall as the elf. */
-export const CAMP_UNITS_PER_M = 36;
 
 /** UI motion and feedback kit (TB-195a, docs/plans/game-ui.md §3, ART-STYLE §Motion). Times in ms, sizes in CSS px. */
 export const JUICE = {
@@ -188,3 +191,6 @@ export const PLATE = { rows: 3, gap: 1.25, in: 120, w: 19 } as const;
 /** Battle report (TB-195f): ms before the first tally rolls, between tallies, each roll's length, pause before the seal;
  *  the seal drops from `stampFrom`x scale turned `stampTurn` degrees in `stampIn` ms; the board jolts `jolt` rem for `joltMs`. */
 export const REPORT = { lead: 350, gap: 380, roll: 520, stampAfter: 300, stampIn: 240, stampFrom: 2.6, stampTurn: -28, jolt: 0.375, joltMs: 220 };
+/** Satchel as an object (TB-195e): compare plates show at most `lines` affix lines each, sit `gap` rem from the cursor;
+ *  a dropped item snaps into its pocket over `snap` ms. */
+export const SATCHEL_UI = { lines: 4, gap: 1.25, snap: 260 } as const;

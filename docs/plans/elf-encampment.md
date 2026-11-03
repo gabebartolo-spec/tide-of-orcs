@@ -5,15 +5,16 @@ Director, 3 Nov: the grove props are gone (TB-187). The area behind the wall bec
 (TB-188a–c, save v13); final art and life remain.
 
 ## 1. Where it sits
-The grove is the strip west of the barricade: the elf stands mid-strip, with archers and the ballista on their spots.
-The four buildings take the free bands, as the props did, so no unit lane is covered:
+**TB-188e (director, 3 Nov):** the camp has its own scene on the **Camp** tab of the between-runs pages, at house scale.
+In the field's grove strip (143 x 480 field units, with the HUD, archers, elf and ballista to keep clear) the buildings
+could only be about 0.7x the elf's height; at house scale the four need ~700 units of width. The field no longer draws them.
 
-| Spot | Building | Why there |
-|---|---|---|
-| Top-left | Bowyer (workbench, racks of bows, bundled arrows) | Nearest the elf's draw arm; arrows feed the bow |
-| Top-right, behind the wall | Forge (anvil, chimney, ember glow) | Fire and noise are by the wall, where the fighting is |
-| Bottom-left | Kitchen (cook fire, pot, bread table, smoke) | The quiet back corner |
-| Bottom-right, behind the wall | Training area (straw dummies, sparring ring, spear rack) | The vanguard muster from here to the wall |
+The scene (`render/campScene.ts`, `CAMP_SCENE` and `CAMP_SPOTS` in `src/data/presentation.ts`) stands the four in one row
+on grass, left to right **bowyer, forge, kitchen, training yard**, with the elf at the east end for scale. Scene units equal
+field units: the elf is drawn ~38 units tall and every level-3 sprite `CAMP_SCENE.l3H` = 135 (its frame includes the ground
+island, so the structure reads ~3x the elf). Each building gets its own scale from its level-3 sprite, so the four finished
+buildings stand equally tall; levels 1-2 keep their Tripo render ratio (level 1 is ~2x the elf). The box is fitted to the
+canvas and centred; sky and grass run the full width.
 
 Each building has three looks: **level 0** (a frame or tent), **level 1** (built; level 2 adds a banner), and **level 3** (finished, with a banner,
 lights and a working animation such as forge sparks, cook smoke or a swinging dummy). The level drawn is the building's
@@ -27,8 +28,8 @@ upgrade level, so the camp grows visibly as the player invests. That is the GDD'
 | Kitchen | The wall and economy | + wall max HP %, + wall regen, + starlight % |
 | Training area | Vanguard | + vanguard HP and damage %, − respawn time |
 
-Each building's levels live beside the Heartwood tree (paid with Heartwood plus its material), so systems still read only `Stats` (CLAUDE.md rule 4). Clicking a building on
-the field opens its card with its level, costs and the next upgrade; upgrades are bought only while the run has fallen. The skill tree stays as it is.
+Each building's levels live beside the Heartwood tree (paid with Heartwood plus its material), so systems still read only `Stats` (CLAUDE.md rule 4). Clicking a building in
+the Camp scene opens its card with its level, costs and the next upgrade; upgrades are bought only while the run has fallen. The skill tree stays as it is.
 
 ## 3. Build steps (one backlog row and one PR each)
 1. **TB-188a Data and sim (done):** `src/data/camp.ts` (buildings, levels, costs, effects) → `Stats`. Save migration for the camp levels.
@@ -36,7 +37,8 @@ the field opens its card with its level, costs and the next upgrade; upgrades ar
 2. **TB-188b UI (done):** click a building → its card (upgrade, cost, effect). A "Camp" section on the Replant tab lists all four.
 3. **TB-188c Placeholder art (done):** palette-token vector drawings of each building at levels 0/1/3, so the loop plays before the final art.
 4. **TB-188d Final art (done, 470f4c3):** buildings as sprites at the game angle (GAMECAM 20), like the fence. The source is Tripo (H3.1 text to 3D, one model per building per level, 12 in all), rendered headless in Blender by `render_camp.ps1` into `sheet_camp.webp` (keys `camp.<id>.<lv>`); the vector art stays as the fallback until the sheet loads.
-5. **TB-188e Life:** idle animations (sparks, smoke, dummy hits) and upgrade moments (build dust, banner raise, sound).
+5. **TB-188e Camp scene (done):** the camp leaves the field for its own Camp tab at house scale (§1).
+6. **TB-188f Life:** idle animations (sparks, smoke, dummy hits) and upgrade moments (build dust, banner raise, sound).
 
 ## 4. Decisions (director, 3 Nov)
 1. **Currency:** Heartwood plus a farmable material per building, dropped by common orcs. Buildings

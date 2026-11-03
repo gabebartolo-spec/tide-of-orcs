@@ -48,7 +48,7 @@ export class Panel {
 
   constructor(private game: GameController, private tree: TreeRenderer) {
     // static copy
-    $('tab-grove').textContent = STR.tabGrove; $('tab-prestige').textContent = STR.tabReplant;
+    $('tab-grove').textContent = STR.tabGrove; $('tab-camp').textContent = STR.tabCamp; $('tab-prestige').textContent = STR.tabReplant;
     $('pr-title').textContent = STR.replantTitle; $('pr-body').textContent = STR.replantBody;
     $('btn-save').textContent = STR.saveNow;
     $('k-wave').textContent = STR.wave; $('k-kills').textContent = STR.slain; $('k-heart').textContent = STR.heartwood;
@@ -61,7 +61,7 @@ export class Panel {
     $('tab-settings').textContent = STR.tabSettings; $('tab-satchel').innerHTML = `${STR.tabSatchel}<span class="badge" id="sat-new" hidden></span>`;
     this.satchel = new SatchelPane(game, (c) => this.onCue(c)); $('tab-satchel').onclick = () => { this.onCue('uiPop'); this.setTab('satchel'); this.satchel.render(); this.markNew(0); };
     fitPages([$('pane-satchel'), $('pane-prestige'), $('pane-settings')]);
-    $('tab-grove').onclick = () => { this.onCue('uiPop'); this.setTab('grove'); }; $('tab-prestige').onclick = () => { this.onCue('uiPop'); this.setTab('prestige'); }; $('tab-settings').onclick = () => { this.onCue('uiPop'); this.setTab('settings'); };
+    $('tab-grove').onclick = () => { this.onCue('uiPop'); this.setTab('grove'); }; $('tab-camp').onclick = () => { this.onCue('uiPop'); this.setTab('camp'); }; $('tab-prestige').onclick = () => { this.onCue('uiPop'); this.setTab('prestige'); }; $('tab-settings').onclick = () => { this.onCue('uiPop'); this.setTab('settings'); };
     this.initSettings();
     $('dep-boss').onclick = () => { game.summonBoss(); };
     $('pr-btn').onclick = () => { if (game.canReplant() && !game.state.run.fallen) this.doReplant(); };
@@ -209,7 +209,6 @@ export class Panel {
   /** run: the field fills the screen; camp: the Grove, Satchel and Replant pages after a fall; settings: an overlay mid-run. */
   setMode(m: 'run' | 'camp' | 'settings'): void {
     if (m !== 'camp') this.setTreeFull(false);
-    if (m !== 'run') this.camp.close();
     if (document.body.dataset.mode !== m) this.onCue('uiPanel'); // TB-195g: the panel whoosh
     document.body.dataset.mode = m;
     $('camp-go').hidden = m !== 'camp'; $('camp-close').hidden = m !== 'settings';
@@ -227,9 +226,10 @@ export class Panel {
     if (on) this.tree.canvas.focus();
   }
 
-  setTab(k: 'grove' | 'satchel' | 'prestige' | 'settings'): void {
+  setTab(k: 'grove' | 'satchel' | 'camp' | 'prestige' | 'settings'): void {
+    if (k !== 'camp') this.camp.close();
     if (k !== 'grove') this.setTreeFull(false);
-    for (const t of ['grove', 'satchel', 'prestige', 'settings'] as const) { $('pane-' + t).hidden = k !== t; $('tab-' + t).setAttribute('aria-selected', String(k === t)); }
+    for (const t of ['grove', 'satchel', 'camp', 'prestige', 'settings'] as const) { $('pane-' + t).hidden = k !== t; $('tab-' + t).setAttribute('aria-selected', String(k === t)); }
   }
 
   /** Called after any settings change so main.ts can apply volume and motion. */

@@ -38,7 +38,6 @@
         <canvas id="game"></canvas>
         <div class="toast" id="toast"></div>
         <div class="lootbanners" id="loot-banners" aria-live="polite"></div>
-        <div class="bcard" id="bcard" role="dialog" hidden></div>
         <div class="fallen" id="fallen" hidden>
           <div class="report" id="fallen-board">
             <h2 id="fallen-title"></h2>
@@ -59,6 +58,7 @@
       <div class="tabs" role="tablist">
         <button role="tab" id="tab-grove" aria-selected="true"></button>
         <button role="tab" id="tab-satchel" aria-selected="false"></button>
+        <button role="tab" id="tab-camp" aria-selected="false"></button>
         <button role="tab" id="tab-prestige" aria-selected="false"></button>
         <button role="tab" id="tab-settings" aria-selected="false"></button>
       </div>
@@ -76,6 +76,9 @@
           <div class="satbar"><span class="k" id="sat-count"></span><label class="set"><span id="sat-filter-k"></span><select id="sat-filter"></select></label></div>
           <div class="items" id="sat-grid"></div>
         </div>
+      </div>
+      <div class="tab" id="pane-camp" hidden>
+        <div class="campwrap"><canvas id="campview"></canvas><div class="bcard" id="bcard" role="dialog" hidden></div></div>
       </div>
       <div class="tab" id="pane-prestige" hidden>
         <div class="prestige split three">
