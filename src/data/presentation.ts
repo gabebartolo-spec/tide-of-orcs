@@ -276,3 +276,7 @@ export const SATCHEL_UI = { lines: 4, gap: 1.25, snap: 260 } as const;
 
 /** Full-screen field (TB-207): reach is the half width around the barricade that the wave bar clears. */
 export const FIELD_VIEW = { reach: 24 } as const;
+
+/** Baked burning/chilled sprite frames (TB-216d). A rimmed frame's blur depends on its drawn height, so heights snap to
+ *  geometric buckets `steps` per doubling; past `cap` baked frames the whole cache is dropped and rebuilt on demand. */
+export const SPRITE_BAKE = { steps: 4, cap: 512 } as const;
