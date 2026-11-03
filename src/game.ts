@@ -11,7 +11,7 @@ import { Inputs, step } from './sim/step';
 import { buy } from './sim/tree';
 import { summonBoss } from './sim/boss';
 import { castFireball } from './sim/combat';
-import { buyHw } from './sim/heartwood';
+import { buyHw, repairHeartwood } from './sim/heartwood';
 import { upgradeBuilding } from './sim/camp';
 import { BuildingId } from './data/camp';
 import { HwId } from './data/heartwood';
@@ -40,6 +40,7 @@ export class GameController {
     if (save) {
       this.settings = sanitizeSettings(save.settings);
       this.state = createState(seed, { ...freshRun(), ...save.run }, { ...freshMeta(), ...save.meta });
+      repairHeartwood(this.state.meta);
     } else {
       this.state = createState(seed);
     }
@@ -103,6 +104,7 @@ export class GameController {
   importSave(str: string): void {
     const s = importSave(str);
     this.state = createState(1, { ...freshRun(), ...s.run }, { ...freshMeta(), ...s.meta });
+    repairHeartwood(this.state.meta);
     this.settings = sanitizeSettings(s.settings); this.lootLog = []; clearLoadFailed(); this.save();
   }
   /** Wipe drops the buffered loot telemetry too, so a fresh game never logs the old one's drops (TB-199). */

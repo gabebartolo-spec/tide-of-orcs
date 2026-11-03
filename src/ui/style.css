@@ -485,3 +485,13 @@ body[data-mode="camp"] :is(.hud-wallbox, .hud-wave) { display: none; }
 .plate.cmp ul { margin: 0.25rem -0.5rem 0; padding-left: 1.125rem; font-size: 0.875rem; line-height: 1.35; }
 .plate.cmp .dv { font-family: var(--display); font-size: 1.25rem; } .plate.cmp .dv.up { color: var(--grove); } .plate.cmp .dv.down { color: var(--rose); }
 :root[data-calm] #sat-worn .item.over { transform: none; transition: none; }
+
+/* HUD outside the field (TB-195i, director 3 Nov): the wall bar, starlight, wave plank, Slain/Heartwood and Settings sit in a
+   carved bar above the field instead of over it, so no HUD piece covers the plain; the field shrinks to fit under the bar. */
+:root { --hudbar: 5.25rem; }
+body:not([data-mode="camp"]) .wrap { justify-content: flex-start; }
+body:not([data-mode="camp"]) header { position: relative; top: auto; left: auto; transform: none; margin: 0 auto; height: var(--hudbar); flex: none;
+  padding: 0.75rem 1.75rem 0; align-items: center; flex-wrap: nowrap; background: var(--ink-2); border-bottom: 0.1875rem solid var(--line); box-shadow: inset 0 -0.5rem 1rem color-mix(in srgb, var(--ink) 60%, transparent); }
+body:not([data-mode="camp"]) .play, body:not([data-mode="camp"]) header { width: min(100vw, calc((100vh - 2rem - var(--hudbar)) * 15 / 8 + 2rem)); }
+@supports (height: 100dvh) { body:not([data-mode="camp"]) .play, body:not([data-mode="camp"]) header { width: min(100vw, calc((100dvh - 2rem - var(--hudbar)) * 15 / 8 + 2rem)); } }
+body:not([data-mode="camp"]) .hud { align-items: center; flex-wrap: nowrap; }
