@@ -34,7 +34,7 @@ function tuft(rng: Rng, x: number, y: number): Tuft {
 }
 
 /** Deterministic ground layout for a seed: pure data, so it is testable without a canvas. */
-export function layoutGround(seed: number = GROUND.seed): GroundLayout {
+export function layoutGround(seed: number = GROUND.seed, wild = false): GroundLayout {
   const rng = createRng(seed), L: GroundLayout = { lush: [], sunlit: [], worn: [], bare: [], tufts: [], rocks: [], flowers: [] };
   const pt = (): [number, number] => [across(rng.next()), rng.next() * H];
   for (let i = 0; i < GROUND.lush.n; i++) { const [x, y] = pt(); drift(rng, L.lush, x, y, GROUND.lush); }
@@ -60,12 +60,13 @@ export function layoutGround(seed: number = GROUND.seed): GroundLayout {
   const flower = (x: number, y: number, kind: FlowerKind, scale = 1): void => { L.flowers.push({ x: clampX(x), y: clampY(y), kind, r: span(rng, F.r) * scale, stem: span(rng, F.stem) * scale, rot: rng.next() * 1.26 }); };
   const band = H * F.edge, slot = W / Math.ceil(F.drifts / 2);
   for (let i = 0; i < F.drifts; i++) {
-    const top = i % 2 === 0, cx = slot * (Math.floor(i / 2) + 0.5 + (top ? 0 : 0.5)) + near(rng, slot * 0.2);
-    const cy = top ? band * (0.25 + rng.next() * 0.5) : H - band * (0.25 + rng.next() * 0.5), main = pick();
+    const top = i % 2 === 0, cx = slot * (Math.floor(i / 2) + 0.5 + (top ? 0 : 0.5)) + near(rng, slot * 0.45);  // a wide nudge so the drifts never fall into a visible even rhythm
+    // wild (the meadow beyond the plain, TB-207): drifts scattered over the whole tile, clear of its foot where the plain's own top drifts sit
+    const cy = wild ? band * 0.4 + rng.next() * (H - band * 2) : top ? band * (0.25 + rng.next() * 0.5) : H - band * (0.25 + rng.next() * 0.5), main = pick();
     // each drift leans on one kind with a sprinkle of others, so it reads as a wild meadow
     for (let k = count(rng, F.per); k > 0; k--) flower(cx + near(rng, F.driftW / 2), cy + near(rng, F.driftH), rng.next() < 0.7 ? main : pick());
   }
-  for (let i = 0; i < F.lane; i++) flower(across(rng.next()), band + rng.next() * (H - band * 2), pick(), 0.75);
+  for (let i = 0; i < F.lane * (wild ? 3 : 1); i++) flower(across(rng.next()), band + rng.next() * (H - band * 2), pick(), wild ? 1 : 0.75);
   L.tufts.sort((a, b) => a.y - b.y); L.rocks.sort((a, b) => a.y - b.y); L.flowers.sort((a, b) => a.y - b.y);
   return L;
 }
@@ -139,19 +140,28 @@ function flowers(g: CanvasRenderingContext2D, list: Flower[]): void {
 export class Ground {
   private off: HTMLCanvasElement | null = null;
   private layout = layoutGround();
-  private painted = -1;
+  private above = layoutGround(GROUND.seed + 1, true);
+  private painted = -1; private key = '';
 
   constructor() { loadDecor(); }
 
-  draw(g: CanvasRenderingContext2D, cw: number, ch: number): void {
-    if (cw <= 0 || ch <= 0) return;  // a hidden canvas has no size: drawImage of a 0x0 buffer throws and stops the frame loop
-    const sx = cw / W, sy = ch / H, ow = Math.ceil((W + PAD * 2) * sx), oh = Math.ceil((H + PAD * 2) * sy);
+  /** Paint the meadow over the visible world rect (x0, y0)-(x1, y1) at k device px per world unit. The field fills the
+   *  whole window (TB-207), so the view can reach past the 900x480 plain: more meadow continues above (a second seed)
+   *  and to the sides (the plain again), never a flat colour. */
+  draw(g: CanvasRenderingContext2D, k: number, x0: number, y0: number, x1: number, y1: number): void {
+    const ow = Math.ceil((x1 - x0 + PAD * 2) * k), oh = Math.ceil((y1 - y0 + PAD * 2) * k);
+    if (ow <= 0 || oh <= 0 || !(k > 0)) return;  // a hidden canvas has no size: drawImage of a 0x0 buffer throws and stops the frame loop
+    const key = `${ow}x${oh}:${x0.toFixed(1)},${y0.toFixed(1)}`;
     // decor sprites arrive after the first frames: repaint each time another one lands
-    if (!this.off || this.off.width !== ow || this.off.height !== oh || this.painted !== imgs.size) {
-      this.painted = imgs.size;
+    if (!this.off || this.key !== key || this.painted !== imgs.size) {
+      this.painted = imgs.size; this.key = key;
       this.off = this.off ?? document.createElement('canvas'); this.off.width = ow; this.off.height = oh;
-      const og = this.off.getContext('2d')!; og.setTransform(sx, 0, 0, sy, PAD * sx, PAD * sy); paint(og, this.layout);
+      const og = this.off.getContext('2d')!;
+      for (let ty = Math.floor(y0 / H) * H; ty < y1; ty += H) for (let tx = Math.floor(x0 / W) * W; tx < x1; tx += W) {
+        og.setTransform(k, 0, 0, k, (tx - x0 + PAD) * k, (ty - y0 + PAD) * k);
+        paint(og, ty < 0 ? this.above : this.layout);
+      }
     }
-    g.drawImage(this.off, -PAD, -PAD, W + PAD * 2, H + PAD * 2);
+    g.drawImage(this.off, x0 - PAD, y0 - PAD, x1 - x0 + PAD * 2, y1 - y0 + PAD * 2);
   }
 }

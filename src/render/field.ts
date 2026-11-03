@@ -1,3 +1,4 @@
+import { Treeline } from './treeline';
 import { elfLayers, stepAimMix } from './elfPose';
 import { ARROWS, BARRICADE, FIELD, LOB, SOURCES, VANGUARD, WAVE_LEN } from '../data/balance';
 import { FIREBALL, ORC_TYPES, OrcKind } from '../data/orcs';
@@ -16,7 +17,7 @@ import { orcAnimT, orcState, orcSwingT, swingClipT, vanState } from './actorStat
 import { Ground, decorImg } from './ground';
 import { Ambience } from './ambience';
 import { Interp } from './interp';
-import { GROUND, LOOT_VFX, ORC_SPRITE, SKY, VFX, dusk } from '../data/presentation';
+import { FIELD_VIEW, GROUND, LOOT_VFX, ORC_SPRITE, SKY, VFX, dusk } from '../data/presentation';
 import { SLOTS } from '../data/loot';
 import { setTiers } from '../sim/gear';
 
@@ -60,6 +61,18 @@ export class FieldRenderer {
   private sim: SimState | null = null;
   /** This frame's base transform (scale and shake offset): actors set theirs from it instead of save/translate/restore (TB-183). */
   private base = { sx: 1, sy: 1, ex: 0, ey: 0 };
+  /** The canvas fills the window (TB-207): one scale k for both axes, the 900x480 plain fitted to the width and set on
+   *  the bottom edge (or to the height and centred on wider screens); (ox, oy) is its top-left in CSS px. The rest of the
+   *  window shows more meadow. */
+  readonly view = { k: 1, ox: 0, oy: 0 };
+  private treeline = new Treeline();
+  /** Client px to plain coordinates, clamped onto the plain. */
+  toWorld(cx: number, cy: number): { x: number; y: number } {
+    const r = this.canvas.getBoundingClientRect(), v = this.view;
+    return { x: Math.min(W, Math.max(0, (cx - r.left - v.ox) / v.k)), y: Math.min(H, Math.max(0, (cy - r.top - v.oy) / v.k)) };
+  }
+  /** Visible world rect this frame. */
+  private vis: { x0: number; y0: number; x1: number; y1: number } = { x0: 0, y0: 0, x1: W, y1: H };
   /** Sprite keys per orc kind, built once so the draw loop builds no strings (TB-183). */
   private orcKeys = new Map<string, { key: string; atk: string }>();
   /** Loot moments (TB-105): drop beams, the equip glow on the bow, the set-bonus leaf ring, the mythic screen-edge shimmer and slow-motion clock. */
@@ -76,6 +89,8 @@ export class FieldRenderer {
   constructor(private canvas: HTMLCanvasElement) {
     this.g = canvas.getContext('2d')!;
     this.resize();
+    // the canvas fills the window and its box changes with the HUD mode and full screen, not only on window resize
+    if (typeof ResizeObserver !== 'undefined') new ResizeObserver(() => this.resize()).observe(canvas);
   }
 
   resize(): void {
@@ -198,38 +213,41 @@ export class FieldRenderer {
     if (this.shake > 0) this.shake = Math.max(0, this.shake - dt * 3);
     this.watchGear(s);
     this.glow.t = Math.max(0, this.glow.t - dt); this.leaves = Math.max(0, this.leaves - dt); this.edge = Math.max(0, this.edge - dt); this.slow = Math.max(0, this.slow - dt);
-    const sx = this.canvas.width / W, sy = this.canvas.height / H;
+    const cw = this.canvas.width, ch = this.canvas.height, dpr = cw / Math.max(1, this.canvas.clientWidth || cw);
+    const k = cw / ch <= W / H ? cw / W : ch / H, ox = (cw - W * k) / 2, oy = ch - H * k;
+    const vw = this.view; vw.k = k / dpr; vw.ox = ox / dpr; vw.oy = oy / dpr;
+    const sx = k, sy = k, vis = this.vis; vis.x0 = -ox / k; vis.y0 = -oy / k; vis.x1 = W + ox / k; vis.y1 = H;
     const sh = this.reducedMotion ? 0 : this.shake;
     const shx = sh ? (Math.random() - 0.5) * 6 * sh : 0, shy = sh ? (Math.random() - 0.5) * 4 * sh : 0;
-    g.setTransform(sx, 0, 0, sy, shx * sx, shy * sy);
-    const bt = this.base; bt.sx = sx; bt.sy = sy; bt.ex = shx * sx; bt.ey = shy * sy;
+    g.setTransform(sx, 0, 0, sy, ox + shx * sx, oy + shy * sy);
+    const bt = this.base; bt.sx = sx; bt.sy = sy; bt.ex = ox + shx * sx; bt.ey = oy + shy * sy;
 
-    // plain
-    this.ground.draw(g, this.canvas.width, this.canvas.height);
+    // plain (and the meadow beyond it, wherever the window reaches past the plain)
+    this.ground.draw(g, k, vis.x0, vis.y0, vis.x1, vis.y1);
     const n = dusk(this.clock);
     if (n > 0.01) { const lg = g.createRadialGradient(ELF_X, H / 2, 0, ELF_X, H / 2, SKY.lampR); lg.addColorStop(0, P.lamp); lg.addColorStop(1, P.lampClear); g.globalAlpha = n; g.fillStyle = lg; g.fillRect(ELF_X - SKY.lampR, H / 2 - SKY.lampR, SKY.lampR * 2, SKY.lampR * 2); g.globalAlpha = 1; }
 
     // barricade
     const frac = barFrac(s);
-    g.fillStyle = P.wallShade; g.fillRect(BAR_X + 4, 0, BAR_W + 4, H);
+    const top = Math.max(vis.y0, this.treeline.skirtBase(vis.y0) + 10);  // the barricade ends just below the treeline's bush skirt, with a capping rail
+    g.fillStyle = P.wallShade; g.fillRect(BAR_X + 4, top, BAR_W + 4, H - top);
     const fence = decorImg('fence');
     if (fence) {
       // stacked fence panels running into the field, top to bottom so each overlaps the one behind it
       const L = GROUND.fence, lh = L.w * fence.height / fence.width;
-      for (let i = 0, y = -lh / 2; y < H; i++, y += L.step) {
-        const alive = y / H < frac || (i * 0.618034) % 1 < frac;  // same fixed break scatter as the planks
+      for (let i = 0, y = -lh / 2 - Math.ceil(-top / L.step) * L.step; y < H; i++, y += L.step) {
+        const alive = y < 0 || y / H < frac || (i * 0.618034) % 1 < frac;  // same fixed break scatter as the planks
         g.globalAlpha = alive ? 1 : 0.3;
         g.drawImage(fence, BAR_X + BAR_W / 2 - L.w / 2 + (alive ? 0 : 5), y, L.w, lh);
       }
       g.globalAlpha = 1;
-    } else for (let y = 0; y < H; y += 18) {
+    } else for (let y = -Math.ceil(-top / 18) * 18; y < H; y += 18) {
       // each plank breaks at a fixed point (golden-ratio scatter), so damage never flickers frame to frame
-      const alive = y / H < frac || ((y / 18) * 0.618034) % 1 < frac;
+      const alive = y < 0 || y / H < frac || ((y / 18) * 0.618034) % 1 < frac;
       g.fillStyle = alive ? (y % 36 ? P.timber : P.timberDark) : P.timberSplinter;
       g.fillRect(BAR_X, y, BAR_W, 16);
       g.fillStyle = P.timberBand; g.fillRect(BAR_X + 2, y - 2, BAR_W - 4, 3);
     }
-    g.fillStyle = P.sand; g.fillRect(BAR_X - 3, 0, 3, H);
     if (s.stats.spikes) { g.fillStyle = P.cream; for (let y = 8; y < H; y += 24) { g.beginPath(); g.moveTo(BAR_X + BAR_W, y); g.lineTo(BAR_X + BAR_W + 9, y + 4); g.lineTo(BAR_X + BAR_W, y + 8); g.closePath(); g.fill(); } }
     this.hills();
 
@@ -289,15 +307,22 @@ export class FieldRenderer {
       g.restore();
     }
 
-    this.ambience.motesDraw(g, this.clock, n, this.reducedMotion);
+    this.ambience.motesDraw(g, this.clock, n, this.reducedMotion, this.vis.y0);
     this.fx.draw(g);
 
     // HUD overlays (no shake)
-    g.setTransform(sx, 0, 0, sy, 0, 0);
+    g.setTransform(sx, 0, 0, sy, ox, oy);
     // The wall bar, barricade and vanguard counts are the DOM HUD now (TB-195b, src/ui/hud.ts); the wave strip stays on the field.
-    g.fillStyle = P.dim45; g.fillRect(0, H - 5, W, 5); g.fillStyle = P.amber; g.fillRect(0, H - 5, W * (s.run.waveT / WAVE_LEN), 5);
-    if (this.flash > 0) { this.flash -= dt; g.globalAlpha = Math.max(0, this.flash / LOOT_VFX.flashLife) * this.flashA; g.fillStyle = this.flashC; g.fillRect(0, 0, W, H); g.globalAlpha = 1; }
-    if (this.edge > 0) { const M = LOOT_VFX.mythic; g.globalAlpha = (this.edge / M.edge) * (0.6 + 0.4 * Math.sin(this.clock * M.flicker)); g.strokeStyle = P.rose; g.lineWidth = M.edgeW; g.strokeRect(M.edgeW / 2, M.edgeW / 2, W - M.edgeW, H - M.edgeW); g.globalAlpha = 1; }
+    // TB-207: the strip floats inside the field (inset clear of the full-screen side crop), rounded, instead of running along its edge
+    const wx = BAR_X + BAR_W / 2 + FIELD_VIEW.reach + 12, wy = H - 15, ww = W - 40 - wx, wh = 6, wt = Math.min(1, s.run.waveT / WAVE_LEN);
+    g.fillStyle = P.ink; g.globalAlpha = 0.6; g.beginPath(); g.roundRect(wx - 2, wy - 2, ww + 4, wh + 4, wh / 2 + 2); g.fill(); g.globalAlpha = 1;
+    g.fillStyle = P.dim45; g.beginPath(); g.roundRect(wx, wy, ww, wh, wh / 2); g.fill();
+    if (wt > 0) { g.fillStyle = P.amber; g.beginPath(); g.roundRect(wx, wy, Math.max(wh, ww * wt), wh, wh / 2); g.fill(); }
+    // a cream rim and a glowing bead at the leading edge, so the strip reads as a finished gauge
+    g.strokeStyle = P.cream; g.globalAlpha = 0.35; g.lineWidth = 1; g.beginPath(); g.roundRect(wx - 1, wy - 1, ww + 2, wh + 2, wh / 2 + 1); g.stroke(); g.globalAlpha = 1;
+    if (wt > 0) { const bx = wx + Math.max(wh, ww * wt) - wh / 2; g.fillStyle = P.amber; g.globalAlpha = 0.3; g.beginPath(); g.arc(bx, wy + wh / 2, wh * 1.4, 0, 6.28); g.fill(); g.globalAlpha = 1; g.fillStyle = P.cream; g.beginPath(); g.arc(bx, wy + wh / 2, wh * 0.45, 0, 6.28); g.fill(); }
+    if (this.flash > 0) { this.flash -= dt; g.globalAlpha = Math.max(0, this.flash / LOOT_VFX.flashLife) * this.flashA; g.fillStyle = this.flashC; g.fillRect(this.vis.x0, this.vis.y0, this.vis.x1 - this.vis.x0, H - this.vis.y0); g.globalAlpha = 1; }
+    if (this.edge > 0) { const M = LOOT_VFX.mythic; g.globalAlpha = (this.edge / M.edge) * (0.6 + 0.4 * Math.sin(this.clock * M.flicker)); g.strokeStyle = P.rose; g.lineWidth = M.edgeW; g.strokeRect(this.vis.x0 + M.edgeW / 2, this.vis.y0 + M.edgeW / 2, this.vis.x1 - this.vis.x0 - M.edgeW, H - this.vis.y0 - M.edgeW); g.globalAlpha = 1; }
     this.ceremony.draw(g, dt);
   }
 
@@ -331,15 +356,21 @@ export class FieldRenderer {
     g.globalAlpha = 1;
   }
 
+
   /** Two bands of distant hills along the far edge, across grove and plain, drifting slowly (still under reduced motion). */
+
   private hills(): void {
-    const g = this.g;
+    const g = this.g, { x0, y0, x1 } = this.vis;
+    // the hills stay at the top of the window
+    g.save(); g.translate(0, y0);  // the hill bands back the treeline (src/render/treeline.ts) drawn over them
     SKY.hills.forEach((b, i) => {
       const off = this.reducedMotion ? 0 : (this.clock * b.speed) % b.w;
-      g.fillStyle = i ? P.hillNear : P.hillFar; g.beginPath(); g.moveTo(-10, b.y);
-      for (let k = 0, x = -10 - off; x <= W + b.w; k++, x += b.w / 2) g.quadraticCurveTo(x + b.w / 4, b.y + (k % 2 ? b.h * 0.6 : b.h), x + b.w / 2, b.y + b.h * 0.3);
-      g.lineTo(W + 10, b.y + b.h * 0.3); g.lineTo(W + 10, -10); g.lineTo(-10, -10); g.closePath(); g.fill();
+      g.fillStyle = i ? P.hillNear : P.hillFar; g.beginPath(); g.moveTo(x0 - 10, b.y);
+      for (let k = 0, x = x0 - 10 - off; x <= x1 + b.w; k++, x += b.w / 2) g.quadraticCurveTo(x + b.w / 4, b.y + (k % 2 ? b.h * 0.6 : b.h), x + b.w / 2, b.y + b.h * 0.3);
+      g.lineTo(x1 + 10, b.y + b.h * 0.3); g.lineTo(x1 + 10, -10); g.lineTo(x0 - 10, -10); g.closePath(); g.fill();
     });
+    g.restore();
+    this.treeline.draw(g, x0, y0, x1);
   }
 
   /** Aim circle: dotted flight arc from the elf, the strike circle, and a ring that fills as the bow draws. */

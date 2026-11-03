@@ -154,6 +154,7 @@ Orcs drop gear; six worn slots, a satchel, affixes, sets and mythic powers feed 
 - Arcane tree TB-163 (PR #143, 44216ac): the skill-tree layout draws a tree, trunk to foliage, and its links grow as nodes are bought.
 
 ### M4.12 — Director's list (3 Nov) · **built**
+- Full screen TB-207 (director 3 Nov, row 1): the carved timber frame and its ring-grain corners are gone; the field and the between-runs panel run edge to edge, the run HUD floats over the field on a soft ink gradient. The view fills any window with one scale: the plain sits on the bottom edge, more meadow continues wherever the window reaches past it, and a painted treeline (Handpainted Tree Pack, CC-BY) stacks as many rows as fit along the top. Next: camp deer from a free animated deer retargeted onto a Tripo deer (TB-208).
 - Elf encampment TB-188a–c (save v13): data and `upgradeBuilding`, building card and Replant Camp section, placeholder art. Final camp models via Tripo.
 - Specialisation paths TB-193a, TB-193c (save v14): data, sets, mythics (Fox's is the charm Foxfire Tail), path cards on the Replant tab. Path icons via Meshy.
 - Game-feel UI TB-195 (Hades-like, richer carved wood): juice kit TB-195a, HUD TB-195b, UI sounds TB-195g, carved 9-slice art in `public/ui` TB-195h; plan `docs/plans/game-ui.md`.

@@ -17,15 +17,19 @@ export class Ambience {
     }
   }
 
-  /** Drifting glow points, wrapping round the plain; brighter as dusk falls. Still when motion is reduced. */
-  motesDraw(g: CanvasRenderingContext2D, t: number, n: number, still: boolean): void {
+  /** Drifting glow points, wrapping round the plain; brighter as dusk falls. Still when motion is reduced. `y0` is the top
+   *  of the visible view (TB-207): above the plain the same drift repeats, mirrored, so the extra meadow glows too. */
+  motesDraw(g: CanvasRenderingContext2D, t: number, n: number, still: boolean, y0 = 0): void {
     const M = A.motes, base = M.day + (M.night - M.day) * n, tt = still ? 0 : t, span = W - this.x0;
     for (const m of this.motes) {
       const x = this.x0 + ((((m.x - this.x0 + m.vx * tt + Math.sin(tt * 0.5 + m.ph) * 8) % span) + span) % span);
       const y = (((m.y + m.vy * tt + Math.cos(tt * 0.7 + m.ph) * 6) % H) + H) % H;
       g.globalAlpha = base * (0.55 + 0.45 * Math.sin(tt * M.pulse + m.ph));
-      g.fillStyle = P.moteGlow; g.beginPath(); g.arc(x, y, m.r * M.halo, 0, 6.28); g.fill();
-      g.fillStyle = P.mote; g.beginPath(); g.arc(x, y, m.r, 0, 6.28); g.fill();
+      for (let band = 0; band * H > y0 - H; band--) {
+        const yy = band ? band * H + (H - y) : y; if (yy < y0) continue;
+        g.fillStyle = P.moteGlow; g.beginPath(); g.arc(x, yy, m.r * M.halo, 0, 6.28); g.fill();
+        g.fillStyle = P.mote; g.beginPath(); g.arc(x, yy, m.r, 0, 6.28); g.fill();
+      }
     }
     g.globalAlpha = 1;
   }

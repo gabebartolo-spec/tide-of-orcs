@@ -9,6 +9,16 @@ export const SKY = {
   lampR: 150,
 } as const;
 
+/** Treeline along the top of the view (TB-207): sprites from the Sketchfab Handpainted Tree Pack (rudolfs, CC-BY), rendered
+ *  in tide-assets/trees. Rows of trees stacked from the view top down to `stop` (units above the plain's top edge, at least
+ *  `minRows` rows): each row nearer than the last, so taller, brighter and wider spaced. The back rows use the hazed sprites. */
+export const TREELINE = {
+  seed: 207, span: [-700, 1600] as const,
+  first: 38, gap: 26, stop: -6, minRows: 2, crown: -4, contact: 18, haze: 0.14, skirt: { step: 18, h: [10, 36] as const, lift: 14, rows: 2, offset: 9, far: 0.35, gap: 0.6 },
+  h: [54, 92] as const, grow: 0.12, step: 22, stepGrow: 0.18, jitter: 0.45, lift: 8, bush: 0.2, bushH: [18, 28] as const,
+  kinds: ['oak_green_1', 'oak_green_2', 'pine_1', 'pine_3', 'spruce_1', 'spruce_2', 'spruce_3'] as const,
+} as const;
+
 /** 0 at midday, 1 at deepest dusk. */
 export const dusk = (t: number): number => (1 - Math.cos((2 * Math.PI * t) / SKY.dayCycle)) / 2;
 
@@ -263,3 +273,6 @@ export const REPORT = { lead: 350, gap: 380, roll: 520, stampAfter: 300, stampIn
 /** Satchel as an object (TB-195e): compare plates show at most `lines` affix lines each, sit `gap` rem from the cursor;
  *  a dropped item snaps into its pocket over `snap` ms. */
 export const SATCHEL_UI = { lines: 4, gap: 1.25, snap: 260 } as const;
+
+/** Full-screen field (TB-207): reach is the half width around the barricade that the wave bar clears. */
+export const FIELD_VIEW = { reach: 24 } as const;
