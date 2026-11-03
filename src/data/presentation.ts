@@ -3,20 +3,26 @@ import { BUILDINGS } from './camp';
 export const SKY = {
   /** Seconds for one full day-dusk-day cycle. */
   dayCycle: 600,
-  /** Hill bands, far to near: scroll speed (units/s), crest height, bump width, top of band. */
-  hills: [{ speed: 2, h: 26, w: 140, y: 0 }, { speed: 5, h: 18, w: 90, y: 14 }],
   /** Lamplight radius on the grove bank at full night. */
   lampR: 150,
 } as const;
 
-/** Treeline along the top of the view (TB-207): sprites from the Sketchfab Handpainted Tree Pack (rudolfs, CC-BY), rendered
- *  in tide-assets/trees. Rows of trees stacked from the view top down to `stop` (units above the plain's top edge, at least
- *  `minRows` rows): each row nearer than the last, so taller, brighter and wider spaced. The back rows use the hazed sprites. */
+/** Treeline along the top of the view (TB-207, TB-220): sprites from the Sketchfab Handpainted Tree Pack (rudolfs, CC-BY), rendered
+ *  in tide-assets/trees (512 px renders, shipped at 44 px per model unit so a tree is never drawn past its native pixels at 1080p DPR 2).
+ *  Rows of trees stacked from the view top down to `stop` (units above the plain's top edge, at least `minRows` rows): each row nearer
+ *  than the last, so taller, brighter and wider spaced. The back rows use the darker `_far` sprites. Every tree is drawn at its real
+ *  model height (`kinds`, in model units) times `unit`, always with one uniform scale so nothing squashes or warps. */
 export const TREELINE = {
   seed: 207, span: [-700, 1600] as const,
-  first: 38, gap: 26, stop: -6, minRows: 2, crown: -4, contact: 18, haze: 0.14, skirt: { step: 18, h: [10, 36] as const, lift: 14, rows: 2, offset: 9, far: 0.35, gap: 0.6 },
-  h: [54, 92] as const, grow: 0.12, step: 22, stepGrow: 0.18, jitter: 0.45, lift: 8, bush: 0.2, bushH: [18, 28] as const,
-  kinds: ['oak_green_1', 'oak_green_2', 'pine_1', 'pine_3', 'spruce_1', 'spruce_2', 'spruce_3'] as const,
+  first: 60, gap: 24, stop: -6, minRows: 2, contact: 18, skirt: { step: 18, h: [10, 36] as const, lift: 14, rows: 2, offset: 9, far: 0.35, gap: 0.6 },
+  /** World units per model unit, and the random size spread (x unit) of one tree. */
+  unit: 11, size: [0.88, 1.08] as const,
+  /** A short view shrinks a whole row so a typical tree (`fit` units) still shows; `over` units of a tall crown may leave the top edge. */
+  fit: 90, over: 30,
+  grow: 0.12, step: 22, stepGrow: 0.18, jitter: 0.45, lift: 8, bush: 0.2, bushH: [18, 28] as const,
+  /** Tree sprite keys and their real model heights (Handpainted Tree Pack), so the forest has a natural mix of tall and short. */
+  kinds: ['oak_green_1', 'oak_green_2', 'pine_1', 'pine_2', 'pine_3', 'spruce_2', 'spruce_3'] as const,
+  heights: { oak_green_1: 6.25, oak_green_2: 6.94, pine_1: 7.35, pine_2: 8.95, pine_3: 10.57, spruce_2: 5.31, spruce_3: 5.17 } as Readonly<Record<string, number>>,
 } as const;
 
 /** 0 at midday, 1 at deepest dusk. */

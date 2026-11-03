@@ -12,6 +12,16 @@ function pick(u: number, prev?: string): string {
   return k === prev ? T.kinds[(i + 1) % T.kinds.length]! : k;
 }
 
+/** Real height in world units of a tree sprite: its model height x `unit`, with a small size spread (u in 0..1). */
+export function treeHeight(key: string, u: number): number {
+  return (T.heights[key] ?? 0) * T.unit * (T.size[0] + u * (T.size[1] - T.size[0]));
+}
+
+/** Uniform scale for a row whose trees stand at `base`: 1 when a typical tree fits under the view top `y0`, less on a short view. */
+export function rowScale(base: number, y0: number, r: number): number {
+  return Math.min(1, (base - y0 + T.over) / (T.fit * (1 + r * T.grow)));
+}
+
 /** Row r of the treeline, laid out once from its own seed so it never changes as the window resizes. */
 function row(r: number, skirt = false): Tree[] {
   const rng = createRng(T.seed * 100 + r + (skirt ? 77 : 0)), k = skirt ? 1 : 1 + r * T.grow, out: Tree[] = [];
@@ -22,8 +32,10 @@ function row(r: number, skirt = false): Tree[] {
     out.push({
       x, flip, far: skirt && rng.next() < T.skirt.far, dy: (rng.next() - 0.5) * 2 * (skirt ? T.skirt.lift : T.lift),
       key: bush ? BUSH : pick(rng.next(), out[out.length - 1]?.key),
-      h: (skirt ? T.skirt.h[0] + rng.next() * (T.skirt.h[1] - T.skirt.h[0]) : bush ? T.bushH[0] + rng.next() * (T.bushH[1] - T.bushH[0]) : T.h[0] + rng.next() * (T.h[1] - T.h[0])) * k,
+      h: 0,
     });
+    const tr = out[out.length - 1]!, u = rng.next();
+    tr.h = (skirt ? T.skirt.h[0] + u * (T.skirt.h[1] - T.skirt.h[0]) : bush ? T.bushH[0] + u * (T.bushH[1] - T.bushH[0]) : treeHeight(tr.key, u)) * k;
   }
   return out.sort((a, b) => a.dy - b.dy);
 }
@@ -49,10 +61,8 @@ export class Treeline {
     const n = Math.max(T.minRows, Math.floor((T.stop - y0 - T.first) / T.gap) + 1);
     for (let r = 0; r < n; r++) {
       const base = y0 + T.first + r * T.gap;
-      // a short view (wide window) shrinks the trees so whole crowns still show under the top edge
-      this.drawRow(g, (this.rows[r] ??= row(r)), base, r < n - 1, x0, x1, Math.min(1, (base - y0 + T.crown) / (T.h[1] * (1 + r * T.grow))));
-      // aerial haze: each row behind the nearest sinks a little further into the hill colour
-      if (r < n - 1) { g.globalAlpha = T.haze; g.fillStyle = P.hillFar; g.fillRect(x0, y0, x1 - x0, base - y0 + T.lift); g.globalAlpha = 1; }
+      // a short view (wide window) shrinks the whole row (one uniform scale) so a typical crown still shows under the top edge
+      this.drawRow(g, (this.rows[r] ??= row(r)), base, r < n - 1, x0, x1, rowScale(base, y0, r), y0);
     }
     // a skirt of low bushes in two staggered rows hides the nearest trunks' bases where the forest meets the meadow
     const sb = this.skirtBase(y0);
@@ -67,9 +77,10 @@ export class Treeline {
     const n = Math.max(T.minRows, Math.floor((T.stop - y0 - T.first) / T.gap) + 1);
     return y0 + T.first + (n - 1) * T.gap + T.skirt.lift;
   }
-  private drawRow(g: CanvasRenderingContext2D, trees: Tree[], base: number, far: boolean, x0: number, x1: number, s = 1): void {
+  private drawRow(g: CanvasRenderingContext2D, trees: Tree[], base: number, far: boolean, x0: number, x1: number, s = 1, top = -Infinity): void {
     for (const tr0 of trees) {
-      const h = s === 1 ? tr0.h : tr0.h * s;  // scale in a local: no per-tree-per-frame object (TB-088/TB-183)
+      // scale in a local: no per-tree-per-frame object (TB-088/TB-183); a crown may leave the view top by at most `over` units
+      let h = s === 1 ? tr0.h : tr0.h * s; if (top > -Infinity) h = Math.min(h, base + tr0.dy - top + T.over);
       const im = imgs.get(far || tr0.far ? `${tr0.key}_far` : tr0.key); if (!im) continue;
       const w = (im.width / im.height) * h; if (tr0.x + w / 2 < x0 || tr0.x - w / 2 > x1) continue;
       if (tr0.flip) { g.save(); g.translate(tr0.x, 0); g.scale(-1, 1); g.drawImage(im, -w / 2, base + tr0.dy - h, w, h); g.restore(); }

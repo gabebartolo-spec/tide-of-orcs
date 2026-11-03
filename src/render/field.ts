@@ -251,7 +251,7 @@ export class FieldRenderer {
       g.fillStyle = P.timberBand; g.fillRect(BAR_X + 2, y - 2, BAR_W - 4, 3);
     }
     if (s.stats.spikes) { g.fillStyle = P.cream; for (let y = 8; y < H; y += 24) { g.beginPath(); g.moveTo(BAR_X + BAR_W, y); g.lineTo(BAR_X + BAR_W + 9, y + 4); g.lineTo(BAR_X + BAR_W, y + 8); g.closePath(); g.fill(); } }
-    this.hills();
+    this.forest();
 
     this.fx.drawGround(g);
     s.zones.forEach((z) => {
@@ -359,20 +359,10 @@ export class FieldRenderer {
   }
 
 
-  /** Two bands of distant hills along the far edge, across grove and plain, drifting slowly (still under reduced motion). */
-
-  private hills(): void {
-    const g = this.g, { x0, y0, x1 } = this.vis;
-    // the hills stay at the top of the window
-    g.save(); g.translate(0, y0);  // the hill bands back the treeline (src/render/treeline.ts) drawn over them
-    SKY.hills.forEach((b, i) => {
-      const off = this.reducedMotion ? 0 : (this.clock * b.speed) % b.w;
-      g.fillStyle = i ? P.hillNear : P.hillFar; g.beginPath(); g.moveTo(x0 - 10, b.y);
-      for (let k = 0, x = x0 - 10 - off; x <= x1 + b.w; k++, x += b.w / 2) g.quadraticCurveTo(x + b.w / 4, b.y + (k % 2 ? b.h * 0.6 : b.h), x + b.w / 2, b.y + b.h * 0.3);
-      g.lineTo(x1 + 10, b.y + b.h * 0.3); g.lineTo(x1 + 10, -10); g.lineTo(x0 - 10, -10); g.closePath(); g.fill();
-    });
-    g.restore();
-    this.treeline.draw(g, x0, y0, x1);
+  /** The forest edge along the top of the view; the old hill bands behind it are gone (TB-220). */
+  private forest(): void {
+    const { x0, y0, x1 } = this.vis;
+    this.treeline.draw(this.g, x0, y0, x1);
   }
 
   /** Aim circle: dotted flight arc from the elf, the strike circle, and a ring that fills as the bow draws. */

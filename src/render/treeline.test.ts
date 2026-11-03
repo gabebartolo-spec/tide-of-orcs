@@ -5,7 +5,8 @@ class FakeImage {
   set src(_v: string) { queueMicrotask(() => this.onload?.()); }
 }
 vi.stubGlobal('Image', FakeImage);
-const { Treeline } = await import('./treeline');
+const { Treeline, treeHeight, rowScale } = await import('./treeline');
+const { TREELINE } = await import('../data/presentation');
 
 function mockCtx() {
   const calls = { grad: 0, draw: [] as number[][] };
@@ -31,5 +32,22 @@ describe('treeline', () => {
     expect(calls.grad).toBe(1);
     expect(calls.draw.length).toBeGreaterThan(0);
     for (const a of calls.draw) expect(a[3]).toBeGreaterThan(0);
+  });
+  it('sizes each tree by its real model height, so pines stand taller than oaks and spruces', () => {
+    expect(treeHeight('pine_3', 0.5)).toBeGreaterThan(treeHeight('oak_green_1', 0.5));
+    expect(treeHeight('oak_green_1', 0.5)).toBeGreaterThan(treeHeight('spruce_3', 0.5));
+    expect(treeHeight('pine_3', 0)).toBeCloseTo(TREELINE.heights.pine_3! * TREELINE.unit * TREELINE.size[0]);
+    expect(treeHeight('nope', 0.5)).toBe(0);
+  });
+  it('row scale is 1 on a tall view and shrinks only on a short one', () => {
+    expect(rowScale(200, -300, 0)).toBe(1);
+    expect(rowScale(10, -26, 0)).toBeLessThan(1);
+    expect(rowScale(10, -26, 0)).toBeGreaterThan(0);
+  });
+  it('never caps a tree below its aspect: width scales with height (no squash)', async () => {
+    await new Promise((r) => setTimeout(r, 0));
+    const t = new Treeline(), { g, calls } = mockCtx();
+    t.draw(g, -400, -26, 1300);
+    for (const a of calls.draw) expect(a[2]! / a[3]!).toBeCloseTo(0.5);  // FakeImage is 100x200
   });
 });
