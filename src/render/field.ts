@@ -1,3 +1,4 @@
+import { elfLayers, stepAimMix } from './elfPose';
 import { ARROWS, BARRICADE, FIELD, LOB, SOURCES, VANGUARD, WAVE_LEN } from '../data/balance';
 import { FIREBALL, ORC_TYPES, OrcKind } from '../data/orcs';
 import { SimEvent } from '../sim/events';
@@ -15,7 +16,6 @@ import { Sprites } from './sprites';
 import { orcAnimT, orcState, orcSwingT, swingClipT, vanState } from './actorState';
 import { Ground, decorImg } from './ground';
 import { Ambience } from './ambience';
-import { textScale } from './textScale';
 import { Interp } from './interp';
 import { GROUND, LOOT_VFX, ORC_SPRITE, SKY, VFX, dusk } from '../data/presentation';
 import { SLOTS } from '../data/loot';
@@ -53,6 +53,8 @@ export class FieldRenderer {
   private ambience = new Ambience(BAR_X + BAR_W);
   /** Animation clock for sprite frames. */
   private clock = 0;
+  /** Elf shot loop (TB-202): idle<->draw mix (0 idle, 1 draw), clock at the last elf draw, last aimed charge, current lob cooldown. */
+  private aimMix = 0; private elfClock = 0; private lastCharge = 0; private lobCd = 1;
   /** Reused draw-order buffers and wind-up scratch (no per-frame allocation). */
   private vanBuf: Vanguard[] = [];
   private orcBuf: Orc[] = [];
@@ -233,7 +235,7 @@ export class FieldRenderer {
     if (s.stats.spikes) { g.fillStyle = P.cream; for (let y = 8; y < H; y += 24) { g.beginPath(); g.moveTo(BAR_X + BAR_W, y); g.lineTo(BAR_X + BAR_W + 9, y + 4); g.lineTo(BAR_X + BAR_W, y + 8); g.closePath(); g.fill(); } }
     this.hills();
     // encampment behind the wall (TB-188c), one cached blit per building at its level
-    this.camp.draw(g, s.meta.camp.levels, sx);
+    this.camp.draw(g, s.meta.camp.levels, sx, this.sprites);
 
     this.fx.drawGround(g);
     s.zones.forEach((z) => {
@@ -244,6 +246,7 @@ export class FieldRenderer {
 
     if (s.stats.treant) { g.fillStyle = P.treantTrunk; g.fillRect(BAR_X + 40, H / 2 + 10, 14, 34); g.fillStyle = P.treantLeaf; g.beginPath(); g.arc(BAR_X + 47, H / 2 + 2, 22, 0, 6.28); g.fill(); g.fillStyle = P.treantLeaf2; g.beginPath(); g.arc(BAR_X + 40, H / 2 - 6, 14, 0, 6.28); g.fill(); }
 
+    this.lobCd = s.stats.lobCd;
     const drawn = Math.min(1, (s.run.shotT[0] ?? 0) / s.stats.lobCd), aiming = aim !== null && aim.x > BAR_X + BAR_W && !s.run.fallen;
     this.elf(ELF_X, H / 2, false, aiming ? drawn : -1);
     this.gearFx();
@@ -296,11 +299,7 @@ export class FieldRenderer {
 
     // HUD overlays (no shake)
     g.setTransform(sx, 0, 0, sy, 0, 0);
-    g.fillStyle = P.dim; g.fillRect(12, 10, 150, 10);
-    g.fillStyle = frac > 0.5 ? P.wallBar : frac > 0.25 ? P.amber : P.rose; g.fillRect(12, 10, 150 * frac, 10);
-    g.fillStyle = P.text; const ts = textScale(); g.font = `${13 * ts}px Heartwood`; g.textAlign = 'left'; g.shadowColor = P.ink; g.shadowBlur = 4;
-    g.fillText(STR.barricadeHud(fmt(Math.max(0, s.run.barHp)), fmt(s.stats.barMax)), 12, 21 + 13 * ts); g.shadowBlur = 0;
-    if (s.stats.muster) g.fillText(STR.vanguardHud(s.vans.count, s.stats.vanCap), 12, 21 + 25 * ts);
+    // The wall bar, barricade and vanguard counts are the DOM HUD now (TB-195b, src/ui/hud.ts); the wave strip stays on the field.
     g.fillStyle = P.dim45; g.fillRect(0, H - 5, W, 5); g.fillStyle = P.amber; g.fillRect(0, H - 5, W * (s.run.waveT / WAVE_LEN), 5);
     if (this.flash > 0) { this.flash -= dt; g.globalAlpha = Math.max(0, this.flash / LOOT_VFX.flashLife) * this.flashA; g.fillStyle = this.flashC; g.fillRect(0, 0, W, H); g.globalAlpha = 1; }
     if (this.edge > 0) { const M = LOOT_VFX.mythic; g.globalAlpha = (this.edge / M.edge) * (0.6 + 0.4 * Math.sin(this.clock * M.flicker)); g.strokeStyle = P.rose; g.lineWidth = M.edgeW; g.strokeRect(M.edgeW / 2, M.edgeW / 2, W - M.edgeW, H - M.edgeW); g.globalAlpha = 1; }
@@ -489,8 +488,15 @@ export class FieldRenderer {
   private elf(x: number, y: number, dim: boolean, draw = -1): void {
     const g = this.g; g.save(); g.translate(x, y); if (dim) g.globalAlpha = 0.85;
     g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 16, 12, 4, 0, 0, 6.28); g.fill();
-    const key = dim ? 'archer' : 'elf', aiming = draw >= 0, t = aiming ? Math.min(draw, 0.999) * this.sprites.duration(key + '.attack') : this.clock;
-    this.sprites.drawActor(g, key, aiming ? 'attack' : 'walk', t, 0, 16, ACTOR_R); g.restore();
+    const key = dim ? 'archer' : 'elf', aiming = draw >= 0;
+    if (dim) { this.sprites.drawActor(g, key, 'walk', this.clock, 0, 16, ACTOR_R); g.restore(); return; }
+    this.aimMix = stepAimMix(this.aimMix, aiming, this.clock - this.elfClock, VFX.elfShot.aim); this.elfClock = this.clock;
+    if (aiming) this.lastCharge = draw;
+    const a0 = g.globalAlpha;
+    for (const l of elfLayers(this.lastCharge, this.lastCharge * this.lobCd, this.aimMix, this.sprites.duration('elf.attack'), VFX.elfShot.release)) {
+      g.globalAlpha = a0 * l.alpha; this.sprites.drawActor(g, key, l.state, l.state === 'walk' ? this.clock : l.t, 0, 16, ACTOR_R);
+    }
+    g.restore();
   }
 
   private van(s: SimState, v: Vanguard): void {

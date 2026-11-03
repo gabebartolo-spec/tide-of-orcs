@@ -1,6 +1,6 @@
 # Skill Tree — node data
 
-Status: **Current** (v1.6, 117 nodes, 48 of them the TB-111 per-type nodes (costs in BALANCE P-111), checked against the code 1 Nov 2026). Started from `docs/prototype.html` and since changed (Wide Volley, War Drums and the summon/Fury/Swarm nodes added; Dreaming Roots, Blood Banners and the Warboss nodes retired; see GDD §14). Mirrored exactly by `src/data/skillTree.ts` (tested: unique ids, parents exist, no cycles, coordinates in bounds, ≥ 40 px apart). Node ids are stable API: never rename; deprecate instead.
+Status: **Current** (v1.7, 132 nodes: 117 base, 48 of them the TB-111 per-type nodes (costs in BALANCE P-111), plus 15 path nodes (TB-193a); checked against the code 3 Nov 2026). Started from `docs/prototype.html` and since changed (Wide Volley, War Drums and the summon/Fury/Swarm nodes added; Dreaming Roots, Blood Banners and the Warboss nodes retired; see GDD §14). Mirrored exactly by `src/data/skillTree.ts` (tested: unique ids, parents exist, no cycles, coordinates in bounds, ≥ 40 px apart). Node ids are stable API: never rename; deprecate instead.
 
 Cost formula: `cost(rank, w) = round(base × growth^rank × 1.25^max(0, w − 10))` (rank = ranks already owned, w = wave at purchase; the wave factor is P-001, BALANCE.md §Economy). Costs are starlight.
 

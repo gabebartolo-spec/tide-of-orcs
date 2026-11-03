@@ -6,6 +6,7 @@ import { Panel } from './ui/panel';
 import { AudioEngine } from './audio/engine';
 import { STR } from './data/strings';
 import { campHit } from './ui/camp';
+import { setUiSound } from './data/audio';
 
 const game = new GameController();
 const fieldCanvas = document.getElementById('game') as HTMLCanvasElement;
@@ -27,6 +28,7 @@ const applyMotion = () => { field.reducedMotion = game.settings.reducedMotion ??
 applyMotion(); reduced.addEventListener('change', applyMotion);
 panel.onSettings = () => { applyVolume(); applyMotion(); };
 panel.onCue = (c) => audio.play(c);
+setUiSound((c) => audio.play(c));
 
 
 // Aiming: the bow follows the pointer while it is over the field. No clicking; the bow looses on its own.

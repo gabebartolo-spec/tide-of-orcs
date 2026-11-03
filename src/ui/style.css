@@ -213,7 +213,7 @@ body[data-mode="run"] .wrap, body[data-mode="settings"] .wrap { padding: 0; gap:
 body:not([data-mode="camp"]) .field { border-width: 1rem; border-image-width: 2rem; }
 body:not([data-mode="camp"]) .play { position: relative; width: min(100vw, calc((100vh - 2rem) * 15 / 8 + 2rem)); margin: 0 auto; }
 body:not([data-mode="camp"]) header { position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: min(100vw, calc((100vh - 2rem) * 15 / 8 + 2rem));
-  z-index: 3; box-sizing: border-box; padding: 1.625rem 2.125rem 0 12.5rem; pointer-events: none; align-items: center; }
+  z-index: 3; box-sizing: border-box; padding: 1.625rem 2.125rem 0 2.125rem; pointer-events: none; align-items: flex-start; }
 body:not([data-mode="camp"]) header > * { pointer-events: auto; }
 body:not([data-mode="camp"]) header h1 { display: none; }
 body:not([data-mode="camp"]) .rally { position: absolute; left: 2.125rem; right: 2.125rem; bottom: 1.625rem; margin: 0; z-index: 2; pointer-events: none; }
@@ -265,7 +265,7 @@ button, select, .tabs { touch-action: manipulation; }
 }
 /* Short landscape screens (phones): slimmer frames and plaques so the field and the Grove get the room. */
 @media (max-height: 540px) {
-  body:not([data-mode="camp"]) header { padding: 1.125rem 1.5rem 0 9rem; gap: 0.5rem 0.875rem; }
+  body:not([data-mode="camp"]) header { padding: 1.125rem 1.5rem 0 1.5rem; gap: 0.5rem 0.875rem; }
   body:not([data-mode="camp"]) .rally { left: 1.5rem; right: 1.5rem; bottom: 1.125rem; }
   .stat .k { font-size: 0.6875rem; } .stat .v { font-size: 1.125rem; }
   .deploy { min-width: 8rem; padding-block: 0.25rem; }
@@ -345,3 +345,97 @@ body.tree-full #pane-grove .detail .name { font-size: 1.5rem; }
 .prestige.split.three { grid-template-columns: minmax(0, 1fr) minmax(0, 1.7fr) minmax(0, 1fr); }
 .prestige.split.three .hwtree { grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); }
 @media (max-width: 860px) { .prestige.split.three { grid-template-columns: 1fr; } }
+
+/* Game HUD (TB-195b, docs/plans/game-ui.md §2, ART-STYLE §Motion): objects over the field, not a text row. A lit timber wall bar
+   that cracks, a faceted starlight gem with a rolling odometer, the wave on a hanging cloth banner with a CLEARED stamp.
+   Colours are palette tokens (the extra ones here mirror src/render/palette.ts). Numbers in data/presentation.ts HUD. */
+:root { --grove: #9fc48f; --star-gold: #ffd36b; --spark: #f4eaa6; --hud-roll: 380ms; }
+.hud { display: flex; align-items: flex-start; gap: 1.5rem; flex-wrap: wrap; margin-right: auto; }
+.hud-wallbox { display: flex; flex-direction: column; gap: 0.25rem; }
+.hud-wall { position: relative; width: 16rem; height: 2rem; --tone: var(--grove); background: image-set(url("/ui/wallbar.webp") 1x, url("/ui/wallbar@2x.webp") 2x) center / 100% 100% no-repeat;
+  filter: drop-shadow(0 0.25rem 0.375rem color-mix(in srgb, var(--ink) 80%, transparent)); }
+.hud-wall[data-crack="1"] { background-image: image-set(url("/ui/wallbar-crack1.webp") 1x, url("/ui/wallbar-crack1@2x.webp") 2x); }
+.hud-wall[data-crack="2"] { background-image: image-set(url("/ui/wallbar-crack2.webp") 1x, url("/ui/wallbar-crack2@2x.webp") 2x); }
+.hud-wall[data-crack="3"] { background-image: image-set(url("/ui/wallbar-crack3.webp") 1x, url("/ui/wallbar-crack3@2x.webp") 2x); }
+.hud-wall[data-tone="mid"] { --tone: var(--amber); } .hud-wall[data-tone="low"] { --tone: var(--rose); }
+/* the lit heartwood fill sits in the carved channel (28, 12, 28 px of the 320x40 piece) and is clipped by width, never stretched */
+.hud-wall .fill { position: absolute; left: 1.4rem; top: 0.6rem; height: 0.8rem; max-width: 13.2rem; transition: width var(--hud-roll) cubic-bezier(.34, 1.4, .64, 1);
+  background: image-set(url("/ui/wallbar-fill.webp") 1x, url("/ui/wallbar-fill@2x.webp") 2x) left center / 15.2rem 0.8rem no-repeat; box-shadow: 0 0 0.625rem color-mix(in srgb, var(--tone) 75%, transparent); }
+.hud-wall[data-tone="low"] .fill { animation: wall-throb 0.9s ease-in-out infinite alternate; }
+@keyframes wall-throb { to { box-shadow: 0 0 1.25rem var(--tone); } }
+.hud-wall .cracks { display: none; }
+.hud-wall .lbl { position: absolute; inset: 0; display: block; text-align: center; font-size: 0.875rem; line-height: 2rem; letter-spacing: .1em; color: var(--text); font-variant-numeric: tabular-nums; white-space: nowrap;
+  text-shadow: 0 0.0625rem 0.125rem var(--ink), 0 0 0.25rem var(--ink), 0 0 0.25rem var(--ink); }
+.hud-van { font-size: 0.875rem; letter-spacing: .1em; color: var(--text-dim); padding-left: 0.75rem; }
+.hud-star { display: flex; align-items: center; gap: 0.25rem; }
+/* gem piece: 100 px with 14 px of baked glow round a 72 px gem */
+.hud-gem { width: 5rem; height: 5rem; margin: -0.875rem -0.5rem -0.875rem -0.875rem; flex: none; background: image-set(url("/ui/gem.webp") 1x, url("/ui/gem@2x.webp") 2x) center / contain no-repeat; animation: gem-breathe 2.6s ease-in-out infinite alternate; }
+.hud-gem .cut { display: none; }
+@keyframes gem-breathe { to { filter: brightness(1.15); } }
+.odo { display: inline-flex; font-family: var(--display); font-size: 2rem; line-height: 1; height: 1em; overflow: hidden; color: var(--star-gold); font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 0.5rem color-mix(in srgb, var(--star-gold) 50%, transparent), 0 0.125rem 0.125rem var(--ink); }
+.odo .od { display: inline-block; height: 1em; overflow: hidden; }
+.odo .strip { display: block; white-space: pre; text-align: center; transition: transform var(--hud-roll) cubic-bezier(.34, 1.4, .64, 1); }
+.hud-wave { position: relative; display: flex; flex-direction: row; align-items: baseline; gap: 0.5rem; justify-content: center; box-sizing: border-box; min-width: 12.8rem; height: 3.6rem; padding: 0.9rem 0 0; margin-top: -0.25rem;
+  border: solid transparent; border-width: 0 2.4rem; border-image: image-set(url("/ui/banner.webp") 1x, url("/ui/banner@2x.webp") 2x) 0 48 fill / 0 2.4rem stretch;
+  filter: drop-shadow(0 0.25rem 0.375rem color-mix(in srgb, var(--ink) 80%, transparent)); }
+.hud-wave .k { font-size: 0.875rem; letter-spacing: .16em; text-transform: uppercase; color: var(--amber); }
+.hud-wave .v { font-family: var(--display); font-size: 1.5rem; line-height: 1; color: var(--text); white-space: nowrap; }
+.hud-wave .stamp { position: absolute; left: 50%; top: 58%; transform: translate(-50%, -50%) rotate(-12deg); padding: 0.125rem 0.5rem; font-family: var(--display); font-size: 1.125rem;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--grove); border: 0.1875rem double var(--grove); background: color-mix(in srgb, var(--ink) 70%, transparent); white-space: nowrap; pointer-events: none; }
+.hud .stats { margin-left: 0; align-self: center; }
+body[data-mode="camp"] :is(.hud-wallbox, .hud-wave) { display: none; }
+:root[data-calm] :is(.hud-gem, .hud-wall .fill) { animation: none; }
+:root[data-calm] :is(.odo .strip, .hud-wall .fill) { transition: none; }
+/* Specialisation paths (TB-193c): three carved cards across the top of the Replant tab. Tokens mirror PATH_TINT in palette.ts. */
+:root { --path-serpent: #86c79a; --path-serpent-light: #5dffa8; --path-fox: #e39a5c; --path-fox-light: #ff8a3d; --path-magpie: #a8bde0; --path-magpie-light: #7fb4ff; }
+[data-path="serpent"] { --pc: var(--path-serpent); --pl: var(--path-serpent-light); }
+[data-path="fox"] { --pc: var(--path-fox); --pl: var(--path-fox-light); }
+[data-path="magpie"] { --pc: var(--path-magpie); --pl: var(--path-magpie-light); }
+.paths { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 3fr) auto; gap: 0.5rem 1rem; align-items: center; padding-bottom: 0.875rem; margin-bottom: 0.5rem; background: var(--root); background-position: left bottom; }
+.paths .pathhead { display: flex; flex-direction: column; gap: 0.375rem; }
+.pathcards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.75rem; }
+.pathcard { position: relative; display: grid; grid-template-columns: 4.25rem minmax(0, 1fr); grid-template-rows: auto auto auto; column-gap: 0.75rem; align-items: center; text-align: left;
+  padding: 0.625rem 0.875rem 0.625rem 0.625rem; border-radius: 0.5rem; border: 0.0625rem solid var(--splinter); color: var(--text);
+  box-shadow: inset 0 0.0625rem 0 var(--timber-dark), inset 0 -0.125rem 0 var(--ink), inset 0.25rem 0 0 color-mix(in srgb, var(--pc) 55%, var(--bark));
+  transition: box-shadow .2s ease-out, transform .2s ease-out, border-color .2s; }
+.pathcard .sigil { grid-row: 1 / span 3; width: 4.25rem; height: 4.25rem; }
+.pathcard .name { font-family: var(--display); font-size: 1.1875rem; color: var(--pc); }
+.pathcard .desc { color: var(--text-dim); font-size: 0.875rem; line-height: 1.3; }
+.pathcard .bonus { color: var(--amber); font-size: 0.875rem; font-variant-numeric: tabular-nums; }
+.pathcard:hover:not(:disabled) { border-color: var(--pc); transform: translateY(-0.0625rem); }
+.pathcard.on { border-color: var(--pl); background: var(--grain), radial-gradient(ellipse at 15% 50%, color-mix(in srgb, var(--pl) 22%, transparent), transparent 70%), linear-gradient(160deg, var(--ink-3), var(--ink) 70%);
+  box-shadow: inset 0 0.0625rem 0 var(--timber-dark), inset 0.25rem 0 0 var(--pl), 0 0 0.75rem color-mix(in srgb, var(--pl) 55%, transparent), 0 0 1.75rem color-mix(in srgb, var(--pl) 25%, transparent); }
+.pathcard:disabled { cursor: default; opacity: 0.8; } .pathcard.on:disabled { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .pathcard { transition: none; } }
+.pathnone { align-self: center; white-space: nowrap; }
+@media (max-width: 860px) { .paths { grid-template-columns: 1fr; } .pathcards { grid-template-columns: 1fr; } }
+/* Path tags: the detail card's branch line in the path colour, and a small carved tag on path set items and mythics */
+.detail .branch[data-path] { color: var(--pc); }
+.ptag { display: inline-block; padding: 0 0.375rem; border-radius: 0.25rem; font-size: 0.875rem; line-height: 1.35; color: var(--pc); border: 0.0625rem solid color-mix(in srgb, var(--pc) 60%, transparent); background: color-mix(in srgb, var(--pc) 12%, var(--ink)); }
+.itemdetail .head .ptag { margin-left: auto; }
+
+/* TB-195c tooltip plate: the carved plate piece (9-slice 40 px = 2rem) follows the cursor over a tree node */
+.plate { position: fixed; z-index: 60; pointer-events: none; box-sizing: border-box; width: 19rem; color: var(--text);
+  border: 2rem solid transparent; border-image: image-set(url("/ui/plate.webp") 1x, url("/ui/plate@2x.webp") 2x) 40 fill / 2rem stretch;
+  filter: drop-shadow(0 0.375rem 0.75rem color-mix(in srgb, var(--ink) 85%, transparent)); }
+.plate[hidden] { display: none; }
+.plate > * { margin: 0 -0.5rem; }
+.plate > :first-child { margin-top: -0.75rem; } .plate > :last-child { margin-bottom: -0.75rem; }
+.plate > * + * { margin-top: 0.375rem; }
+.plate .ph { display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem; }
+.plate .nm { font-family: var(--display); font-size: 1.25rem; line-height: 1.1; }
+.plate .rk { font-size: 0.875rem; color: var(--text-dim); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.plate .pk { font-size: 0.875rem; letter-spacing: .14em; text-transform: uppercase; color: var(--amber); }
+.plate .pr { display: grid; grid-template-columns: 1fr auto auto auto; align-items: baseline; gap: 0.375rem; font-variant-numeric: tabular-nums; }
+.plate .pl { font-size: 0.875rem; color: var(--text-dim); }
+.plate .pn { font-family: var(--display); font-size: 1.25rem; color: var(--text-dim); }
+.plate .pa { font-size: 0.875rem; color: var(--amber); }
+.plate .px { font-family: var(--display); font-size: 1.5rem; }
+.plate .px.up { color: var(--grove); } .plate .px.down { color: var(--rose); }
+.plate .pf { font-style: italic; font-size: 0.875rem; color: var(--text-dim); line-height: 1.3; }
+.plate .pc { display: flex; justify-content: flex-end; }
+.plate .chip { display: inline-flex; align-items: center; gap: 0.25rem; font-family: var(--display); font-size: 1.125rem; color: var(--amber); }
+.plate .chip::before { content: ""; width: 1.25rem; height: 1.25rem; background: image-set(url("/ui/gem.webp") 1x, url("/ui/gem@2x.webp") 2x) center / contain no-repeat; }
+.plate .done, .plate .lock { font-size: 0.875rem; color: var(--text-dim); letter-spacing: .1em; text-transform: uppercase; }
+.detail .desc { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

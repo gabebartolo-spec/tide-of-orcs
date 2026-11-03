@@ -12,7 +12,7 @@ Let's Hunt Some Orc! is a relaxing incremental tower-defence game. A lone elf ar
 | `docs/BALANCE.md` | All formulas and pacing targets. Change numbers here, never inline |
 | `docs/ARCHITECTURE.md` | Code structure, modules, save format, loop, rendering |
 | `docs/ART-STYLE.md` | Palette tokens, shape language, typography, motion |
-| `docs/BACKLOG.md` | Epics and tasks, status, which agent owns what |
+| `docs/BACKLOG.md` | Epics and tasks, status, owner |
 | `docs/RELEASE.md` | itch.io builds per milestone (tag `m1`, `m2` … to ship) |
 | `docs/AGENT-TEAM.md` | How agent teams split work on this repo |
 | `docs/prototype.html` | The original concept: tone, look and the core loop. Frozen. Mechanics have deliberately diverged since (GDD §14), so don't port from it |
@@ -26,8 +26,8 @@ Priority when things disagree: the docs (GDD, BALANCE, SKILL-TREE, ARCHITECTURE)
 - No runtime dependencies beyond what `docs/ARCHITECTURE.md` lists. Ask before adding one.
 - Target: desktop browsers (mobile port later, once the PC web build is done). Itch.io / static hosting first; Steam (Electron) later.
 
-## External tools Gabe has
-- **Tripo** (3D model generation), **Cascadeur** (animation), **ElevenLabs** (SFX/ambient). M4 presentation uses them per `docs/ART-STYLE.md` §Asset pipeline. Agents do not call these; they consume exported sheets and audio files placed under `public/` (not created yet; the sprite and audio loaders fall back silently until files land).
+## External tools
+- **Tripo** (3D models, incl. the camp buildings), **Meshy** (item and path icons), **ElevenLabs** (SFX, UI sounds), **Cascadeur** (hand-keyed animation), **Suno** (music). Pipeline: `docs/ART-STYLE.md` §Asset pipeline. Agents may run Tripo, Meshy and ElevenLabs only with the director's written spend yes for that job. Output lives under `public/` (`sprites/`, `items/`, `ui/`, `audio/`, `audio/ui/`); the loaders fall back to vector draws or silence for any missing file.
 
 ## Commands
 
@@ -58,16 +58,17 @@ Run `npm run lint && npm run test` before every commit. Do not commit if either 
 
 - `src/sim/` is pure: no DOM, no canvas, no `Date.now()`. It takes `dt` and a seeded RNG. This is what tests and the balance simulator run.
 - `src/render/` reads sim state and draws. It never mutates sim state.
-- `src/ui/` is the DOM panel (tree, satchel, boss button, fallen overlay, prestige, settings). It dispatches intents (`buy`, `replant`, `setAim`, `clearAim`, `summonBoss`, `buyHw`, satchel intents such as `equipItem`) to `GameController` in `src/game.ts`, which is the only caller into `src/sim/`.
+- `src/ui/` is the DOM panel (HUD, tree, satchel, boss button, fallen overlay, prestige with paths and camp, settings). It dispatches intents (`buy`, `replant`, `setAim`, `clearAim`, `summonBoss`, `buyHw`, `choosePath`, `upgradeBuilding`, satchel intents such as `equipItem`) to `GameController` in `src/game.ts`, which is the only caller into `src/sim/`.
 - One file per entity type or system. Named exports. No default exports.
 - Tests live beside the code as `*.test.ts`. Every formula in `BALANCE.md` `## Current` has a test; the wave curves are pinned at waves 1, 10, 25, 50.
 - Commit messages: `area: what changed` (`sim: summon brutes (TB-080)`, `tree: moonbow homing`). Reference the backlog id (`TB-012`).
 
-## Working in this repo as an agent
+## Working in this repo
 
+- Each session is a plain Claude session that does the whole job and reports to the director (no lead, rigger or critic roles).
+- Order of work (director, 3 Nov): build all features → bug bash → performance → balance. No balance sims or tuning before then.
 - End each session by adding a few lines to `docs/log/YYYY-MM-DD.md`: what merged, what's open, what you learned.
-
 - Claim a task in `docs/BACKLOG.md` by setting its owner before starting; mark it done with the commit hash when finished.
-- Work on a branch per backlog row and open a PR (`tb-054-balance-pass`); don't push straight to `main`. Keep PRs to one backlog item. If you discover work, add a new backlog row; do not scope-creep.
-- When a task needs a balance decision, propose numbers in `docs/BALANCE.md` under `## Proposed`, with the sim output that justifies them, and leave `## Current` alone until the human approves.
+- Work on a branch per backlog row and open a PR (`tb-054-balance-pass`); don't push straight to `main`. Keep PRs to one backlog item. The repo has no auto-merge: merge your own PR by hand once CI is green; the director never merges. If you discover work, add a new backlog row; do not scope-creep.
+- When a task needs a balance decision, propose numbers in `docs/BALANCE.md` under `## Proposed`, with the sim output that justifies them, and leave `## Current` alone until the director approves.
 - Ask before: adding dependencies, changing save schema, renaming skill node ids, touching `docs/GDD.md` core-loop sections.
