@@ -27,7 +27,7 @@ export function spawnOrc(s: SimState, kind: OrcKind, y?: number, champ = false):
   o.hp = hp; o.maxhp = hp; o.spd = T.speed * waveSpeedMult(w); o.r = T.radius; o.atk = hp * BARRICADE.orcAtkFrac;
   o.loot = waveLoot(w) * T.loot * F.loot * tierLoot(s.run.tier);
   o.dead = false; o.burn = 0; o.bleed = 0; o.slow = 0; o.pin = 0; o.root = 0; o.chill = 0; o.stun = 0; o.hitT = 0; o.wob = s.rng.next() * 6.28; o.swingT = s.rng.next(); o.champ = champ;
-  o.leapt = false; o.castT = s.rng.next() * FIREBALL.every; o.drum = false;
+  o.gen++; o.leapt = false; o.castT = s.rng.next() * FIREBALL.every; o.drum = false;
   return o;
 }
 
@@ -175,12 +175,12 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
   }
 
   if (st.hawk) {
-    const hk = s.hawk, U = st.units.hawk; hk.a += dt * 1.6; run.hawkT += dt * haste * U.rate;
-    const cx = 330, cy = H / 2; hk.x = cx + Math.cos(hk.a) * 120; hk.y = cy + Math.sin(hk.a * 1.3) * 100;
+    const hk = s.hawk, U = st.units.hawk; hk.a += dt * SOURCES.hawk.orbitSpeed; run.hawkT += dt * haste * U.rate;
+    const O = SOURCES.hawk; hk.x = O.orbitX + Math.cos(hk.a) * O.orbitRx; hk.y = H / 2 + Math.sin(hk.a * O.orbitYSpeed) * O.orbitRy;
     if (run.hawkT >= SOURCES.hawk.cd) {
       run.hawkT = 0; let best: Orc | null = null, bn = -1;
       s.orcs.forEach((o) => { if (o.dead) return; let n = 0; s.orcs.forEach((p) => { if (!p.dead && dist(p.x, p.y, o.x, o.y) < SOURCES.hawk.radius) n++; }); if (n > bn) { bn = n; best = o; } });
-      if (best) { const b = best as Orc; s.orcs.forEach((p) => { if (!p.dead && dist(p.x, p.y, b.x, b.y) < SOURCES.hawk.radius) damage(s, ev, p, unitHit(s, U, st.dmg * SOURCES.hawk.mult * st.kin * pet * U.dmg)); }); ev.push({ t: 'hawkDive', x: b.x, y: b.y }); hk.x = b.x; hk.y = b.y - 30; }
+      if (best) { const b = best as Orc; s.orcs.forEach((p) => { if (!p.dead && dist(p.x, p.y, b.x, b.y) < SOURCES.hawk.radius) damage(s, ev, p, unitHit(s, U, st.dmg * SOURCES.hawk.mult * st.kin * pet * U.dmg)); }); ev.push({ t: 'hawkDive', x: b.x, y: b.y }); hk.x = b.x; hk.y = b.y - SOURCES.hawk.diveLift; }
     }
   }
 
@@ -206,7 +206,7 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
       // Flies a parabola to its landing point, strikes, then strikes again pulseGap later per Longshaft rank.
       a.t += dt; const u = Math.min(1, a.t / LOB.flight);
       a.x = a.sx + (a.tx - a.sx) * u; a.y = a.sy + (a.ty - a.sy) * u; a.h = LOB.arc * 4 * u * (1 - u);
-      if (a.t >= LOB.flight) { impact(s, ev, a, a.pierce === st.pierce); if (a.pierce-- > 0) a.t -= LOB.pulseGap; else s.shots.release(a); }
+      if (a.t >= LOB.flight) { impact(s, ev, a, a.first); a.first = false; if (a.pierce-- > 0) a.t -= LOB.pulseGap; else s.shots.release(a); }
       return;
     }
     if (a.kind === 'star') {
@@ -231,7 +231,7 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
     if (st.homing && a.kind === 'arrow' && a.target && a.target.live && !a.target.dead) {
       const ang = Math.atan2(a.target.y - a.y, a.target.x - a.x), cur = Math.atan2(a.vy, a.vx);
       let d = ang - cur; d = Math.atan2(Math.sin(d), Math.cos(d));
-      const na = cur + d * Math.min(1, 6 * dt); a.vx = Math.cos(na) * PLAYER.arrowSpeed; a.vy = Math.sin(na) * PLAYER.arrowSpeed;
+      const na = cur + d * Math.min(1, PLAYER.homingTurn * dt); a.vx = Math.cos(na) * PLAYER.arrowSpeed; a.vy = Math.sin(na) * PLAYER.arrowSpeed;
     }
     a.x += a.vx * dt; a.y += a.vy * dt;
     let spent = false;
@@ -250,13 +250,13 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
         if (a.kind === 'knife' && st.bleedAmp) o.bleed = SET_FX.bleedSecs;
         // The Last Knife: every knife that lands brings the elf's next arrow closer
         if (a.kind === 'knife' && st.knifeReturn) run.shotT[0] = (run.shotT[0] ?? 0) + MYTHIC_FX.knifeDraw * st.echo;
-        if (a.kind === 'bolt') a.target = o;
+        if (a.kind === 'bolt') { a.target = o; a.tgen = o.gen; }
         if (a.pierce-- <= 0) spent = true;
       }
     });
     if (spent || a.life <= 0 || (a.back && a.x < BAR_X) || a.x > W + 30 || a.y < -30 || a.y > H + 30) {
       // Siegebreaker 6: the last orc a bolt passed through is pinned
-      if (a.kind === 'bolt' && st.boltPin && a.target && !a.target.dead) { a.target.pin = SET_FX.pinSecs; ev.push({ t: 'pinned', x: a.target.x, y: a.target.y }); }
+      if (a.kind === 'bolt' && st.boltPin && a.target && a.target.live && a.target.gen === a.tgen && !a.target.dead) { a.target.pin = SET_FX.pinSecs; ev.push({ t: 'pinned', x: a.target.x, y: a.target.y }); }
       s.shots.release(a);
     }
   });

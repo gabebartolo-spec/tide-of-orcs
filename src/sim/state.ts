@@ -21,6 +21,8 @@ export interface Orc {
   champ: boolean;
   /** TB-087: a wolf rider has leapt its one vanguard; a shaman's seconds to its next fireball (a drummer's to its next beat); within a war drummer's beat this step. */
   leapt: boolean; castT: number; drum: boolean;
+  /** Bumped on every spawn, so a shot holding this pool slot can tell it now holds a different orc (TB-198). */
+  gen: number;
 }
 export type ProjectileKind = 'arrow' | 'knife' | 'bolt' | 'lob' | 'bounce' | 'star' | 'fireball';
 export interface Projectile {
@@ -28,6 +30,10 @@ export interface Projectile {
   /** Enchantments this shot rolled (combat FX bits), and its crit chance and crit multiplier (TB-111). */
   fx: number; crit: number; critX: number;
   target: Orc | null; hit: Set<Orc>;
+  /** The target's `gen` when it was taken (TB-198). */
+  tgen: number;
+  /** Lob only: its first strike has not landed yet (TB-198). */
+  first: boolean;
   /** The Last Knife (TB-100): this knife is flying back to the quiver, hitting everything. */
   back: boolean;
   /** Lob only: launch and landing points, time aloft, height above ground, strike radius. */
@@ -97,8 +103,8 @@ export function freshRun(): RunState {
 }
 export function freshMeta(): MetaState { return { heartwood: 0, lifetimeKills: 0, bestWave: 1, prestiges: 0, hwLevels: {}, loot: freshLoot(), tier: 1, checkpoint: 1 }; }
 
-const makeOrc = (): Orc => ({ live: false, kind: 'grunt', x: 0, y: 0, hp: 0, maxhp: 0, spd: 0, r: 0, loot: 0, atk: 0, dead: false, burn: 0, hitT: 0, wob: 0, swingT: 0, champ: false, bleed: 0, slow: 0, pin: 0, root: 0, chill: 0, stun: 0, leapt: false, castT: 0, drum: false });
-const makeShot = (): Projectile => ({ live: false, kind: 'arrow', x: 0, y: 0, vx: 0, vy: 0, dmg: 0, pierce: 0, life: 0, fx: 0, crit: 0, critX: 1, target: null, hit: new Set(), sx: 0, sy: 0, tx: 0, ty: 0, t: 0, h: 0, r: 0, back: false });
+const makeOrc = (): Orc => ({ live: false, kind: 'grunt', x: 0, y: 0, hp: 0, maxhp: 0, spd: 0, r: 0, loot: 0, atk: 0, dead: false, burn: 0, hitT: 0, wob: 0, swingT: 0, champ: false, bleed: 0, slow: 0, pin: 0, root: 0, chill: 0, stun: 0, leapt: false, castT: 0, drum: false, gen: 0 });
+const makeShot = (): Projectile => ({ live: false, kind: 'arrow', x: 0, y: 0, vx: 0, vy: 0, dmg: 0, pierce: 0, life: 0, fx: 0, crit: 0, critX: 1, target: null, tgen: 0, first: false, hit: new Set(), sx: 0, sy: 0, tx: 0, ty: 0, t: 0, h: 0, r: 0, back: false });
 const makeZone = (): Zone => ({ live: false, kind: 'cinder', x: 0, y: 0, r: 0, life: 0, used: false });
 const makeVan = (): Vanguard => ({ live: false, type: 'spear', line: false, x: 0, y: 0, tx: 0, ty: 0, mv: false, face: 1, hp: 0, maxhp: 0, swingT: 0, hitT: 0 });
 
@@ -116,10 +122,11 @@ export function createState(seed = 1, run: RunState = freshRun(), meta: MetaStat
   return s;
 }
 
-/** Re-derive stats after a purchase or prestige. Growing the wall heals the new timber. */
-export function recompute(s: SimState): void {
+/** Re-derive stats. A purchase or prestige (`heal`) grows the wall and heals the new timber;
+ *  a gear change only clamps, so swapping wall gear off and on cannot heal it (TB-198). */
+export function recompute(s: SimState, opts: { heal?: boolean } = {}): void {
   const before = s.stats.barMax;
   s.stats = applyGear(deriveStats(s.run.levels, s.meta.hwLevels), s.meta.loot);
-  if (s.stats.barMax > before) s.run.barHp += s.stats.barMax - before;
+  if (opts.heal && s.stats.barMax > before) s.run.barHp += s.stats.barMax - before;
   s.run.barHp = Math.min(s.run.barHp, s.stats.barMax);
 }

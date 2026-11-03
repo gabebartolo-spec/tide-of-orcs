@@ -11,7 +11,7 @@ export const STEP = 1 / 50;
 /** Radians per second an orc's bob phase (`wob`) advances while it acts. The sprite clock is wob / ORC_WOB seconds (TB-133). */
 export const ORC_WOB = 8;
 
-export const PLAYER = { baseDmg: 9, baseFireRate: 1.2, arrowSpeed: 520, critMult: 3, fanRad: 0.09, aimHomingRadius: 70 } as const;
+export const PLAYER = { baseDmg: 9, baseFireRate: 1.2, arrowSpeed: 520, critMult: 3, fanRad: 0.09, aimHomingRadius: 70, homingTurn: 6 } as const;
 /** The elf's arcing shot: fired only while the player aims; lands on the aim circle and hits every orc inside it. */
 export const LOB = {
   cd: 1.25,         // seconds between shots before Quick Draw (TB-154, was 2.5)
@@ -53,7 +53,7 @@ export type VanType = 'spear' | 'blade';
 export const SOURCES = {
   burnSecs: 3, burnFrac: 0.35,
   storm: { cd: 6, mult: 4, targets: 5, jump: 140, seekX: 200 },
-  hawk: { cd: 4, mult: 2.5, radius: 60 },
+  hawk: { cd: 4, mult: 2.5, radius: 60, orbitSpeed: 1.6, orbitYSpeed: 1.3, orbitX: 330, orbitRx: 120, orbitRy: 100, diveLift: 30 },
   treant: { cd: 3, mult: 3, range: 160 },
   ballista: { cd: 4, base: 40, speed: 760 },
   knives: { cd: 1.4, base: 5, speed: 640 },
