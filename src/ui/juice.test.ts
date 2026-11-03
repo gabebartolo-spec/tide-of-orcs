@@ -23,3 +23,11 @@ describe('juice math (TB-195a)', () => {
   });
   it('staggers children 30 ms apart', () => { expect(staggerDelay(0)).toBe(0); expect(staggerDelay(3)).toBe(3 * JUICE.stagger); expect(JUICE.stagger).toBe(30); });
 });
+
+import { wantsCalm } from './juice';
+describe('wantsCalm (TB-219)', () => {
+  it('the Settings choice wins, else the OS preference', () => {
+    expect(wantsCalm(true, false)).toBe(true); expect(wantsCalm(false, true)).toBe(false);
+    expect(wantsCalm(undefined, true)).toBe(true); expect(wantsCalm(undefined, false)).toBe(false);
+  });
+});

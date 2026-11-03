@@ -21,6 +21,9 @@ export function popScale(t: number, from: number = JUICE.count.popFrom): number 
   return from + (1 - from) * springEase(t);
 }
 
+/** Reduced motion on: the Settings choice when the player made one, otherwise the OS preference (TB-219). */
+export function wantsCalm(setting: boolean | null | undefined, os: boolean): boolean { return setting ?? os; }
+
 /** True when the player asked for reduced motion (main.ts sets `data-calm`). */
 export function calm(): boolean { return typeof document !== 'undefined' && document.documentElement.hasAttribute('data-calm'); }
 

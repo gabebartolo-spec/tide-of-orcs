@@ -10,11 +10,16 @@ import { campHit } from './ui/camp';
 import { CampScene } from './render/campScene';
 import { pointerAims } from './render/viewMap';
 import { setUiSound } from './data/audio';
+import { wantsCalm } from './ui/juice';
 
 const game = new GameController();
 const fieldCanvas = document.getElementById('game') as HTMLCanvasElement;
 const field = new FieldRenderer(fieldCanvas);
 const tree = new TreeRenderer(document.getElementById('tree') as HTMLCanvasElement);
+// reduced motion is applied before the Panel exists: a save that loads already fallen builds its report board at once (TB-219)
+const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+const applyMotion = () => { field.reducedMotion = wantsCalm(game.settings.reducedMotion, reduced.matches); tree.reducedMotion = field.reducedMotion; document.documentElement.toggleAttribute('data-calm', field.reducedMotion); };
+applyMotion(); reduced.addEventListener('change', applyMotion);
 const panel = new Panel(game, tree);
 const audio = new AudioEngine();
 // Mute (TB-196): M toggles sound; automated browsers (agents' screenshots) start muted.
@@ -26,9 +31,6 @@ addEventListener('keydown', (e) => { if ((e.key === 'm' || e.key === 'M') && !e.
 addEventListener('pointerdown', () => audio.unlock(), { capture: true });
 addEventListener('keydown', () => audio.unlock(), { capture: true });
 
-const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-const applyMotion = () => { field.reducedMotion = game.settings.reducedMotion ?? reduced.matches; tree.reducedMotion = field.reducedMotion; document.documentElement.toggleAttribute('data-calm', field.reducedMotion); };
-applyMotion(); reduced.addEventListener('change', applyMotion);
 panel.onSettings = () => { applyVolume(); applyMotion(); };
 panel.onCue = (c) => audio.play(c);
 setUiSound((c) => audio.play(c));
