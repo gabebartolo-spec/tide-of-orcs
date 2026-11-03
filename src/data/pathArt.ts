@@ -1,6 +1,6 @@
 /** Path sigils (TB-193d): one 128 px transparent picture per path, rendered from a Meshy medallion like the item icons
- *  (meshy_output/APPROVED.md, render_icons.py, centre_icons.py). UI shows `<img src={pathSigilSrc(id)}>` and keeps
- *  its vector sigil as the fallback when the image fails to load. */
+ *  (meshy_output/APPROVED.md, render_icons.py, centre_icons.py). render/sigil.ts draws it on the Replant cards (TB-193e) and keeps
+ *  its vector sigil as the fallback until the image loads. */
 import type { PathId } from './paths';
 
 /** Folder under public/ that holds `<path>.webp`. */
