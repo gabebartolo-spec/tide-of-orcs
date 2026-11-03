@@ -857,7 +857,31 @@ if os.environ.get("ANGDBG"):  # print per frame: wrist bend (forearm vs hand, de
         jit.append((round(max(d), 1), d.index(max(d)), b.replace("mixamorig:", "")))
     print("JIT", sorted(jit, reverse=True)[:10])
     sys.exit(0)
-n = f1 - f0 + 1
+def _pose(f):
+    sc.frame_set(f); bpy.context.view_layer.update()
+    return {pb.name: (pb.rotation_quaternion.copy(), pb.location.copy()) for pb in tgt.pose.bones}
+if os.environ.get("POSEDUMP"):  # TB-203: write this clip's frame-0 pose (basis quats + locs) for another clip to blend from/to
+    import json; json.dump({k: (list(q), list(l)) for k, (q, l) in _pose(f0).items()}, open(os.environ["POSEDUMP"], "w"))
+TAIL = 0
+if os.environ.get("IDLEPOSE"):  # TB-203: BLENDIN frames ease out of the dumped pose into the clip, TAIL extra frames ease back into it
+    import json; from mathutils import Quaternion
+    PI_ = {k: (Quaternion(q), Vector(l)) for k, (q, l) in json.load(open(os.environ["IDLEPOSE"])).items()}
+    BI, TAIL = int(os.environ.get("BLENDIN", "5")), int(os.environ.get("TAIL", "8"))
+    sm = lambda x: x * x * (3 - 2 * x)
+    keys = {f: _pose(f) for f in list(range(f0, f0 + BI)) + [f1]}
+    for f, w in [(f0 + i, sm((i + 1) / (BI + 1))) for i in range(BI)] + [(f1 + j, 1 - sm(j / TAIL)) for j in range(1, TAIL + 1)]:
+        src_ = keys[f] if f in keys else keys[f1]
+        for pb in tgt.pose.bones:
+            if pb.name not in PI_: continue
+            qa, la = PI_[pb.name]; qb, lb = src_[pb.name]
+            if qa.dot(qb) < 0: qb = -qb
+            pb.rotation_quaternion = qa.slerp(qb, w); pb.location = la.lerp(lb, w)
+            pb.keyframe_insert("rotation_quaternion", frame=f); pb.keyframe_insert("location", frame=f)
+    for o_ in bpy.data.objects:  # the arrow is loosed: hidden on the tail
+        if o_.name == "prop_arrow" or (o_.parent and o_.parent.name == "prop_arrow"):
+            for j in range(1, TAIL + 1): o_.hide_render = True; o_.keyframe_insert("hide_render", frame=f1 + j)
+    print("POSEIN blend", BI, "tail", TAIL)
+n = f1 - f0 + 1 + TAIL
 fl = [int(x) for x in os.environ["FR"].split(",")] if os.environ.get("FR") else range(n)
 for i in fl:
     sc.frame_set(f0 + i)
