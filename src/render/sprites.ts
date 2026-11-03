@@ -46,8 +46,9 @@ export function keepLoaded(atlas: Atlas, loaded: ReadonlySet<string>): Atlas | n
 
 export class Sprites {
   private atlas: Atlas | null = null;
-  /** Decoded sheets by atlas image name. */
-  private imgs = new Map<string, HTMLImageElement>();
+  /** Decoded sheets by atlas image name: ImageBitmaps where the browser has them (TB-217: a sub-rect draw from a bitmap
+   *  skips the image element's per-draw decode and upload checks, a third of the frame at 160 orcs), else the elements. */
+  private imgs = new Map<string, HTMLImageElement | ImageBitmap>();
   /** Scratch canvas for tinting one frame without touching the sheet. */
   private tmp: HTMLCanvasElement | null = null;
   /** True from load() until it settles: callers hide vector stand-ins so the old body never flashes before the sheet (TB-155). */
@@ -64,7 +65,8 @@ export class Sprites {
       const settled = await Promise.allSettled(atlas.images.map(async (name) => {
         const img = new Image(); img.src = base + 'sprites/' + name;
         await img.decode();
-        return [name, img] as const;
+        const bmp = typeof createImageBitmap === 'function' ? await createImageBitmap(img).catch(() => null) : null;
+        return [name, bmp ?? img] as const;
       }));
       // one bad sheet drops only its own anims; the rest keep their sprites (TB-216c)
       const imgs = new Map(settled.flatMap((r) => (r.status === 'fulfilled' ? [r.value] : [])));
