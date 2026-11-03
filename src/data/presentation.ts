@@ -227,17 +227,31 @@ export const CAMP_LIFE = {
   dustDy: 0.3,
 } as const;
 
-/** Camp upgrade moment (TB-188h): when a building's level rises, build dust bursts along its base and a banner is raised beside it,
- *  all within `dur` s. Dust: `n` puffs spread over the new level's image width x `spread`, starting `dy` x its height above the
- *  image base plus up to `lift`; other fields as CAMP_LIFE kinds. Banner (scene units): a standard planted on the ground at `at`
- *  (fraction of the new level's image: x from the left, y up from the base; the forge's stands clear of its fence post), its foot
- *  `sink` below that point over a ground shadow (`shadow`: rx, ry, alpha). The pole grows to `pole` over `poleT` s, the cloth
- *  (`w` x `h`) climbs it from `raise[0]` to `raise[1]` s and waves at `wave` Hz by `sway`, and the whole banner fades over the
- *  last `fade` s. */
+/** Camp upgrade moment (TB-188h): when a building's level rises, build dust bursts along its base and the camp banner unrolls from
+ *  a point on the building, all within `dur` s. Scene units and seconds. */
 export const CAMP_UPGRADE = {
-  dur: 1.1,
-  dust: { n: 44, spread: 0.85, dy: 0.1, lift: 16, life: [0.6, 1.0], vx: [-30, 30], vy: [-34, -10], grav: 12, r0: 4, r1: 13, a: 0.42 },
-  banner: { at: { bowyer: [0.9, 0.12], forge: [0.97, 0.1], kitchen: [0.9, 0.12], training: [0.9, 0.12] }, shadow: [7, 2.5, 0.35], pole: 72, poleT: 0.25, w: 32, h: 20, raise: [0.2, 0.65], wave: 2.2, sway: 2.4, fade: 0.25, sink: 2, lineW: 2.6 },
+  dur: 1.4,
+  /** Frame step cap (s), so a hidden tab coming back does not jump the effect. */
+  maxDt: 0.1,
+  /** Seed of the effect's own RNG, so every capture and test replays the same puffs. */
+  seed: 188,
+  /** Build dust: `n` soft puffs per moment along the image base (`dy` of its height up, `spread` of its width, `lift` units of
+   *  scatter up); life range (s), start velocity range (units/s), `grav` (units/s², negative = rises), `drag` per s, radius range at
+   *  birth `r0` growing by `grow` × over life, `squash` height/width, peak alpha `a` reached by `fadeIn` of life, `earth` the
+   *  share of darker earth puffs; each puff is a `tex` px radial gradient, solid out to `core` of its radius. */
+  dust: { n: 40, spread: 0.9, dy: 0.08, lift: 10, life: [0.7, 1.25], vx: [-46, 46], vy: [-55, -14], grav: -6, drag: 1.6, r0: [7, 15], grow: 2.1, tex: 64, core: 0.3, squash: 0.62, a: 0.55, fadeIn: 0.12, earth: 0.35 },
+  /** Banner: public/decor/camp/upgrade_banner.webp (cut from the forge level 3 render) hung by its rod from a point on each level's
+   *  image (`at[id][lv - 1]` = fractions of the image's width and height from its top-left), drawn `w`×`h` units. It unrolls down
+   *  over `roll` (s from the moment's start), swings `swing` rad at `wave` Hz damped by `damp` per s, and fades over the last `fade` s. */
+  banner: {
+    w: 45, h: 72, roll: [0.15, 0.6], wave: 1.1, swing: 0.07, damp: 1.2, fade: 0.3,
+    at: {
+      bowyer: [[0.78, 0.46], [0.72, 0.42], [0.5, 0.44]],
+      forge: [[0.8, 0.62], [0.8, 0.58], [0.47, 0.3]],
+      kitchen: [[0.7, 0.24], [0.68, 0.14], [0.65, 0.45]],
+      training: [[0.16, 0.16], [0.53, 0.22], [0.67, 0.08]],
+    },
+  },
 } as const;
 
 /** UI motion and feedback kit (TB-195a, docs/plans/game-ui.md §3, ART-STYLE §Motion). Times in ms, sizes in CSS px. */

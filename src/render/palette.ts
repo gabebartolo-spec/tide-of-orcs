@@ -19,6 +19,8 @@ export const P = {
   hillFar: '#5a7058', hillNear: '#4f644d', lamp: 'rgba(226,168,91,.2)', lampClear: 'rgba(226,168,91,0)',
   frost: '#bfe3ee', frostGlow: 'rgba(191,227,238,.45)', spark: '#f4eaa6', arcane: '#9b6bd6', arcaneCore: '#ece8ff',
   fire: '#f2763a', fireTint: 'rgba(242,118,58,.5)', firePatch: 'rgba(242,118,58,.28)', frostTint: 'rgba(150,215,240,.6)', frostPatch: 'rgba(191,227,238,.35)',
+  // camp upgrade build dust (TB-188h): soft puff core and its clear rim, light sand and darker earth
+  dustSand: 'rgba(214,196,150,.95)', dustSandClear: 'rgba(214,196,150,0)', dustEarth: 'rgba(150,132,100,.9)', dustEarthClear: 'rgba(150,132,100,0)',
   sparkGlow: 'rgba(244,234,166,.65)', arcaneGlow: 'rgba(155,107,214,.45)', starGold: '#ffd36b',
   /** Shaman fireball (TB-127): ember body, pale core, halo. */
   ember: '#ffb061', fireCore: '#fff1c8', fireGlow: 'rgba(242,118,58,.55)',
