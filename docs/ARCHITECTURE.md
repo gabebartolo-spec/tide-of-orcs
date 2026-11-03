@@ -61,7 +61,8 @@ tide-of-orcs/
       interp.ts         render interpolation snapshot (TB-194)
       elfPose.ts        elf shot loop crossfades (TB-202); actorState.ts walk/attack clip state per actor
       ground.ts, ambience.ts  field ground and ambient decoration
-      camp.ts           placeholder encampment building art (TB-188c)
+      camp.ts           encampment building art: Tripo sprites per-building scaled, vector fallback (TB-188c/d/e)
+      campScene.ts      Camp tab scene: buildings at house scale, elf for scale, click to scene units (TB-188e)
       sigil.ts          placeholder path sigils (TB-193c)
       textScale.ts      applyTextScale(), textScale() (TB-191)
       treeNav.ts        keyboard Tab order through the tree (TB-116)

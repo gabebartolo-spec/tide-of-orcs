@@ -3,7 +3,7 @@ import { HW_NODES } from '../data/heartwood';
 import { BOSS_SCRIPT, BOSS_WAVE } from '../data/bosses';
 import { waveLoot } from '../data/balance';
 import { EventBus } from './events';
-import { buyHw, canBuyHw, hwAvailable, hwSpendable, hwSpent } from './heartwood';
+import { buyHw, canBuyHw, hwAvailable, hwSpendable, hwSpent, repairHeartwood } from './heartwood';
 import { bossStep, bossesReady } from './boss';
 import { replant } from './prestige';
 import { createState, freshMeta, freshRun } from './state';
@@ -52,5 +52,18 @@ describe('Heartwood tree (TB-053)', () => {
     s.run.boss = { t: 59, next: BOSS_SCRIPT.length, left: 0 }; bossStep(s, ev, 0.1);
     const end = ev.drain().find((e) => e.t === 'bossEnd');
     expect(end).toMatchObject({ cleared: true }); expect(end && 'loot' in end ? end.loot : 0).toBeCloseTo(BOSS_WAVE.clearLoot * waveLoot(10) * s.stats.starMult * 2);
+  });
+});
+
+describe('repairHeartwood (TB-195i)', () => {
+  it('a save with maxed buildings and 0 earned no longer shows negative Heartwood', () => {
+    const lv = { bowyer: 3, forge: 3, kitchen: 3, training: 3 } as const;
+    const s = createState(1, freshRun(), { ...freshMeta(), heartwood: 0, camp: { levels: { ...lv }, mats: {} } });
+    expect(hwAvailable(s.meta)).toBe(-124);
+    repairHeartwood(s.meta);
+    expect(s.meta.heartwood).toBe(124); expect(hwAvailable(s.meta)).toBe(0);
+  });
+  it('leaves a consistent save alone', () => {
+    const s = createState(1, freshRun(), { ...freshMeta(), heartwood: 50 }); repairHeartwood(s.meta); expect(s.meta.heartwood).toBe(50);
   });
 });

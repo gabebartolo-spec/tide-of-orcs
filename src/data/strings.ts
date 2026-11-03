@@ -12,7 +12,7 @@ export const STR = {
   starlight: 'Starlight', wave: 'Wave', slain: 'Slain', heartwood: 'Heartwood',
   campTitle: 'Between runs', campGo: 'March again', campClose: 'Back to the field', fallenToCamp: 'To the grove',
   treeFull: 'Full screen', treeFullLabel: 'Show the whole skill tree full screen', treeClose: 'Close  ✕', treeCloseLabel: 'Close the full-screen skill tree (Esc)',
-  tabGrove: 'The Grove', tabReplant: 'Replant',
+  tabGrove: 'The Grove', tabCamp: 'Camp', tabReplant: 'Replant',
   learn: 'Learn', improve: 'Improve', locked: 'Locked', complete: 'Complete', fullyGrown: 'Fully grown',
   needs: (parent: string) => `needs ${parent}`,
   rank: (l: number, m: number) => `rank ${l} / ${m}`,

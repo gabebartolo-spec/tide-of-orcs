@@ -6,6 +6,7 @@ import { Panel } from './ui/panel';
 import { AudioEngine } from './audio/engine';
 import { STR } from './data/strings';
 import { campHit } from './ui/camp';
+import { CampScene } from './render/campScene';
 import { setUiSound } from './data/audio';
 
 const game = new GameController();
@@ -56,11 +57,10 @@ fieldCanvas.addEventListener('pointerdown', (e) => {
   setAim(e);
 });
 fieldCanvas.addEventListener('pointermove', setAim);
-// Encampment (TB-188b): a click on a building in the grove strip opens its card; a click anywhere else closes it.
-// The strip lies west of the barricade, where the bow never aims, so this never competes with aiming.
-const fieldPoint = (e: MouseEvent): [number, number] => { const r = fieldCanvas.getBoundingClientRect(); return [((e.clientX - r.left) / r.width) * FIELD.w, ((e.clientY - r.top) / r.height) * FIELD.h]; };
-fieldCanvas.addEventListener('click', (e) => { const id = campHit(...fieldPoint(e)); if (id) { panel.onCue('click'); panel.camp.show(id); } else panel.camp.close(); });
-fieldCanvas.addEventListener('pointermove', (e) => { fieldCanvas.style.cursor = e.pointerType === 'mouse' && campHit(...fieldPoint(e)) ? 'pointer' : ''; });
+// Encampment (TB-188e): the Camp tab's scene; a click on a building opens its card, a click anywhere else closes it.
+const campView = document.getElementById('campview') as HTMLCanvasElement, campScene = new CampScene(campView, field.sprites);
+campView.addEventListener('click', (e) => { const id = campHit(...campScene.toScene(e.clientX, e.clientY)); if (id) { panel.onCue('click'); panel.camp.show(id); } else panel.camp.close(); });
+campView.addEventListener('pointermove', (e) => { campView.style.cursor = e.pointerType === 'mouse' && campHit(...campScene.toScene(e.clientX, e.clientY)) ? 'pointer' : ''; });
 for (const t of ['pointerup', 'pointercancel', 'pointerleave'] as const) fieldCanvas.addEventListener(t, endAim);
 // no long-press menu or callout on the field
 fieldCanvas.addEventListener('contextmenu', (e) => e.preventDefault());
@@ -91,6 +91,7 @@ function frame(now: number): void {
   game.noteEvents(events); field.consume(events, game.state); panel.handleEvents(events); audio.consume(events);
   // the field is hidden (zero-size) on the camp pages, so skip its draw there (TB-136)
   if (!document.hidden && document.body.dataset.mode !== 'camp') field.draw(game.state, dt, game.aim);
+  if (!document.hidden && campView.offsetParent) campScene.draw(game.state.meta.camp.levels, now / 1000);
   treeWrap.classList.toggle('burning', field.ceremony.burning);
   hudT += dt; if (hudT > 0.15) { hudT = 0; panel.update(); tree.draw(game.state, game.state.t); } else if (tree.live) tree.draw(game.state, game.state.t);
   saveT += dt; if (saveT > 20) { saveT = 0; game.save(); }

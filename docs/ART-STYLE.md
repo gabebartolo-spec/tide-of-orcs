@@ -103,6 +103,7 @@ The plain reads as natural, calm grassland, not a flat board. Layout is seeded (
 - Tab tokens (TB-195d, numbers in `--tok*` on `:root`): each panel tab wears its carved token (`token-bow` tree, `token-satchel`, `token-seed` replant, `token-cog` settings) 2.4 rem above the label, dimmed until chosen; the chosen token springs forward (scale 1.3, raised 0.25 rem, amber glow) in 220 ms on easeOutBack and its pane fades in while rising 0.75 rem. They replace the active-tab sprout. Reduced motion: no spring, no rise.
 - Satchel as an object (TB-195e, numbers in `--sat-*`/`--pocket-*` on `:root` and `SATCHEL_UI`): the bag and the worn row are stitched leather (`satchel` piece, 32 px edges repeating, its leather centre scaled under the middle so no tiles show); the six worn slots are sewn pockets (`pocket` piece) in one row, icon and slot name only. Dragging gear from the bag lights its pocket amber (dashed edge, glow); dropping it there wears it, the pocket snaps (scale 1.18 to 0.94 to 1 in 260 ms) and flashes its rarity with the equip cue. Hovering a bag item shows two plates side by side, the item and what is worn in its slot, with the power difference in green or rose. Reduced motion: no snap or swell.
 - Satchel v2 (TB-195j, numbers in `--doll-*`/`--bag-pocket` on `:root`): one frame per item. Each item is a single sewn pocket; its rarity is the pocket glow (none for common); no text under icons, the name lives only in the hover plate. Worn gear is a paper doll: six pockets around an elf silhouette (`doll` piece, a mask of the game-angle elf sprite until a front-view doll exists), bow, bracer and boots left, quiver, cloak and charm right. A dragged item makes its socket pulse amber; the bag is a loose grid of pockets. Reduced motion: no pulse or lift.
+- HUD bar (TB-195i): in the run the HUD (wall bar, starlight, wave plank, Slain/Heartwood, Settings) sits in a dark carved bar (--hudbar, 5.25 rem) above the field, never over it; the field fits under it at 15:8.
 - UI sound set (TB-195g, ElevenLabs SFX v2, `public/audio/ui/*.ogg|mp3`): carved wood with a soft elven shimmer, one take each, trimmed to the first transient, -3 dBFS peak, short squared fade. click (buttons, `click` and `uiPress`), tab (tab token pop, `uiPop`), buy (`bought`), error (`denied`), equip (`equip`), panel (whoosh on run/camp/settings change, `uiPanel`), count (starlight count-up, rising only, `uiCount`, 0.25 s gap). Loaded but not yet called: hover (`uiHover`), stamp (`uiStamp`, battle report), rarity (`uiRarity`, mythic/legendary reveal), path (`uiPath`, specialisation choice). A cue's `file` field in `CUES` names its file under `public/audio/`.
 - Reduced motion: no bob, no pulse, no shake; replant becomes a 300 ms cross-fade.
 
@@ -193,10 +194,11 @@ Vector draws stay the baseline so the game is always playable without assets. Ac
 - Audio palette: wooden, breathy, watery. Wooden thuds for wall hits, a low horn on rally, a long creak-and-crash when the wall falls. Wind loop always under everything.
 
 ## Encampment placeholder (TB-188c)
-Until the TB-188d sprites land, `src/render/camp.ts` draws the four buildings as palette-token vector shapes in the grove
-strip's top and bottom bands (`CAMP_SPOTS`, clear of the HUD, the archers, the elf and the ballista). Three looks: **level 0**
+Until the TB-188d sprites load, `src/render/camp.ts` draws the four buildings as palette-token vector shapes at their
+`CAMP_SPOTS` footprints in the Camp tab's scene (TB-188e; the field no longer shows the camp). The Tripo sprites are drawn
+per building so each level 3 stands `CAMP_SCENE.l3H` (135 units, ~3x the elf's 38) tall. Three looks: **level 0**
 a canvas tent beside a bare timber frame and one hint of the trade; **level 1** built (bowyer lean-to with bow rack and arrow
 bundle, forge chimney with ember hearth and anvil, kitchen awning with bread table and pot over a cook fire, training ring with
 straw dummies and a spear rack); **level 2** the level-1 look plus a blue pennant; **level 3** adds a gold-edged pennant, a lit
 lantern and one more of each trade (sparks, smoke, a third dummy, a quiver, a fourth bow). Each look is painted once per
-field pixel scale to an offscreen canvas and blitted, so the camp costs four `drawImage` calls a frame. No motion yet (TB-188e).
+scene pixel scale to an offscreen canvas and blitted, so the camp costs four `drawImage` calls a frame. No motion yet (TB-188f).
