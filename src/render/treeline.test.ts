@@ -31,7 +31,7 @@ describe('treeline', () => {
     t.draw(g, -400, 0, 1300);
     expect(calls.grad).toBe(1);
     expect(calls.draw.length).toBeGreaterThan(0);
-    for (const a of calls.draw) expect(a[3]).toBeGreaterThan(0);
+    for (const a of calls.draw) expect(a[7]).toBeGreaterThan(0);  // drawImage(im, sx, sy, sw, sh, dx, dy, dw, dh)
   });
   it('sizes each tree by its real model height, so pines stand taller than oaks and spruces', () => {
     expect(treeHeight('pine_3', 0.5)).toBeGreaterThan(treeHeight('oak_green_1', 0.5));
@@ -48,11 +48,24 @@ describe('treeline', () => {
     expect(rowKinds(0)).not.toContain('pine_3');
     expect(rowKinds(1)).toContain('pine_3');
   });
+  it('draws trees only down to the y asked for, so an orc can stand between the rows, and the skirt waits for its own call', async () => {
+    await new Promise((r) => setTimeout(r, 0));
+    const t = new Treeline(), { g, calls } = mockCtx();
+    t.begin(g, -26);
+    t.treesUpTo(g, -26, -400, 1300, -26);  // nothing is based above the view top
+    expect(calls.draw.length).toBe(0);
+    t.treesUpTo(g, -26, -400, 1300, t.skirtEdge(-26));
+    const mid = calls.draw.length; expect(mid).toBeGreaterThan(0);
+    t.treesUpTo(g, -26, -400, 1300, Infinity); expect(calls.draw.length).toBeGreaterThan(mid);
+    const rows = calls.draw.length; t.skirtUpTo(g, -26, -400, 1300, Infinity); expect(calls.draw.length).toBeGreaterThan(rows);
+    const total = calls.draw.length; t.treesUpTo(g, -26, -400, 1300, Infinity); t.skirtUpTo(g, -26, -400, 1300, Infinity);
+    expect(calls.draw.length).toBe(total);  // a second call draws nothing twice
+  });
   it('never caps a tree below its aspect: width scales with height (no squash)', async () => {
     await new Promise((r) => setTimeout(r, 0));
     const t = new Treeline(), { g, calls } = mockCtx();
     t.draw(g, -400, -26, 1300);
     expect(calls.draw.length).toBeGreaterThan(0);
-    for (const a of calls.draw) expect(a[2]! / a[3]!).toBeCloseTo(0.5);  // FakeImage is 100x200
+    for (const a of calls.draw) { expect(a[6]! / a[7]!).toBeCloseTo(0.5); expect(a[2]! / a[3]!).toBeCloseTo(0.5); }  // FakeImage is 100x200: dest and source keep its aspect
   });
 });

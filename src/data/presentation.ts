@@ -14,13 +14,17 @@ export const SKY = {
  *  model height (`kinds`, in model units) times `unit`, always with one uniform scale so nothing squashes or warps. */
 export const TREELINE = {
   seed: 207, span: [-700, 1600] as const,
-  first: 92, gap: 22, stop: -6, minRows: 2, contact: 18, skirt: { step: 18, h: [8, 26] as const, lift: 8, rows: 2, offset: 9, far: 0.35, gap: 0.6 },
+  first: 92, gap: 22, stop: -6, minRows: 2, contact: 18, skirt: { step: 18, h: [8, 26] as const, lift: 8, rows: 2, offset: 9, far: 0.35, gap: 0.6,
+    /** Share of skirt spots that hold a young tree (one of `kinds`, `youngH` units tall) instead of a bush, and the height of the bush that hides the wall's top (x the tallest bush). */
+    young: 0.2, kinds: ['oak_green_1', 'oak_green_2', 'spruce_2', 'spruce_3'] as const, youngH: [24, 38] as const, wallBush: 1 },
+  /** Pre-scaled sprite levels stop below `mipMin` px high; the soft ground shadow is `shadowPx` wide and `shade` x the sprite width under a tree and a bush. */
+  mipMin: 24, shadowPx: 64, shade: { tree: 0.45, bush: 0.85 },
   /** World units per model unit, and the random size spread (x unit) of one tree. */
   unit: 9.5, size: [0.96, 1.04] as const,
   /** Rows hang from the view top (`first` + row x `gap` down to a base, `lift` of jitter); a row only holds kinds up to `slack` x its room, then shrinks as one. */
   slack: 1.12,
-  /** The barricade's top: it starts `up` units above the bush skirt base; no tree stands within `clear` units of the wall's centre. */
-  cap: { up: 20, clear: 16 },
+  /** The barricade's top: it starts `up` units above the bush skirt base (skirt bushes draw over its top); no tree stands within `clear` units of the wall's centre. */
+  cap: { up: 4, clear: 16 },
   grow: 0.06, step: 22, stepGrow: 0.18, jitter: 0.45, lift: 8, bush: 0.1, bushH: [18, 28] as const,
   /** Tree sprite keys and their real model heights (Handpainted Tree Pack), so the forest has a natural mix of tall and short. */
   kinds: ['oak_green_1', 'oak_green_2', 'pine_1', 'pine_2', 'pine_3', 'spruce_2', 'spruce_3'] as const,

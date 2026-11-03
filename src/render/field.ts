@@ -57,7 +57,7 @@ export class FieldRenderer {
   private aimMix = 0; private elfClock = 0; private lastCharge = 0; private lobCd = 1;
   /** Reused draw-order buffers and wind-up scratch (no per-frame allocation). */
   private vanBuf: Vanguard[] = [];
-  private orcBuf: Orc[] = [];
+  private orcBuf: Orc[] = []; private orcsIn = 0;  // orcs [0, orcsIn) were drawn inside the forest
   private wind = { dx: 0, dy: 0 };
   private sim: SimState | null = null;
   /** This frame's base transform (scale and shake offset): actors set theirs from it instead of save/translate/restore (TB-183). */
@@ -229,8 +229,10 @@ export class FieldRenderer {
     const n = dusk(this.clock);
     if (n > 0.01) { const lg = g.createRadialGradient(ELF_X, H / 2, 0, ELF_X, H / 2, SKY.lampR); lg.addColorStop(0, P.lamp); lg.addColorStop(1, P.lampClear); g.globalAlpha = n; g.fillStyle = lg; g.fillRect(ELF_X - SKY.lampR, H / 2 - SKY.lampR, SKY.lampR * 2, SKY.lampR * 2); g.globalAlpha = 1; }
 
-    // the forest edge stands behind the barricade, so the palisade is drawn over it and shows its own capped top
-    this.forest();
+    // the forest edge stands behind the barricade, so the palisade is drawn over it and shows its own capped top. Orcs still inside the
+    // forest (feet above the bush skirt) are drawn between its rows, so a walker is behind the trunks in front of it, never over them.
+    const orcs = this.orcBuf; orcs.length = 0; s.orcs.forEach((o) => { if (!o.dead) orcs.push(o); }); orcs.sort(byY);
+    this.forest(s, orcs, dt);
 
     // barricade
     const frac = barFrac(s);
@@ -280,10 +282,12 @@ export class FieldRenderer {
       g.globalAlpha = Math.min(1, pt.life / (A.patchLife * 0.4)); g.fillStyle = pt.c; g.beginPath(); g.ellipse(pt.x, pt.y, pt.r, pt.r * 0.45, 0, 0, 6.28); g.fill(); g.globalAlpha = 1;
       if (pt.fire && !this.reducedMotion && Math.random() < A.flameRate * dt) this.fx.flame(pt.x + (Math.random() - 0.5) * pt.r * 1.6, pt.y + (Math.random() - 0.5) * pt.r * 0.8 + 6, P.fire);
     }
-    const vans = this.vanBuf, orcs = this.orcBuf; vans.length = 0; orcs.length = 0;
+    const vans = this.vanBuf; vans.length = 0;
     s.vans.forEach((v) => { vans.push(v); }); vans.sort(byY); for (const v of vans) this.van(s, v);
-    s.orcs.forEach((o) => { if (!o.dead) orcs.push(o); }); orcs.sort(byY);
-    for (const o of orcs) { this.orc(s, o); if (o.burn > 0 && !this.reducedMotion && Math.random() < A.flameRate * dt) this.fx.flame(o.x + (Math.random() - 0.5) * o.r, o.y, Math.random() < 0.5 ? P.fire : P.amber); }
+    // the bush skirt stands in front of the barricade's cut top and of any orc whose feet are behind it
+    const tl = this.treeline, fv = this.vis;
+    for (let i = this.orcsIn; i < orcs.length; i++) { const o = orcs[i]!; tl.skirtUpTo(g, fv.y0, fv.x0, fv.x1, o.y); this.orcDraw(s, o, dt); }
+    tl.skirtUpTo(g, fv.y0, fv.x0, fv.x1, Infinity); tl.end(g);
 
     this.drawBeams(dt);
     s.shots.forEach((a) => { const d = this.interp.off(a); g.translate(d.dx, d.dy); this.shot(a, dt); g.translate(-d.dx, -d.dy); });
@@ -361,10 +365,20 @@ export class FieldRenderer {
   }
 
 
-  /** The forest edge along the top of the view; the old hill bands behind it are gone (TB-220). */
-  private forest(): void {
-    const { x0, y0, x1 } = this.vis;
-    this.treeline.draw(this.g, x0, y0, x1);
+  /** The forest edge along the top of the view (TB-220): the tree rows, with every orc still walking inside the forest drawn between them; the wall and the bush skirt follow. */
+  private forest(s: SimState, orcs: Orc[], dt: number): void {
+    const { x0, y0, x1 } = this.vis, tl = this.treeline, edge = tl.skirtEdge(y0), g = this.g;
+    tl.begin(g, y0);
+    let i = 0;
+    for (; i < orcs.length && orcs[i]!.y < edge; i++) { tl.treesUpTo(g, y0, x0, x1, orcs[i]!.y); this.orcDraw(s, orcs[i]!, dt); }
+    tl.treesUpTo(g, y0, x0, x1, Infinity); tl.skirtGround(g, y0, x0, x1);
+    this.orcsIn = i;
+  }
+
+  /** One orc and the flames it sheds when burning. */
+  private orcDraw(s: SimState, o: Orc, dt: number): void {
+    const A = VFX.arrows; this.orc(s, o);
+    if (o.burn > 0 && !this.reducedMotion && Math.random() < A.flameRate * dt) this.fx.flame(o.x + (Math.random() - 0.5) * o.r, o.y, Math.random() < 0.5 ? P.fire : P.amber);
   }
 
   /** Aim circle: dotted flight arc from the elf, the strike circle, and a ring that fills as the bow draws. */
