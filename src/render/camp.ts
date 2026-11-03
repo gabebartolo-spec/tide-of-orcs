@@ -1,5 +1,5 @@
 import { BUILDINGS, BuildingId } from '../data/camp';
-import { CAMP_SPOTS, CAMP_UNITS_PER_M } from '../data/presentation';
+import { CAMP_SCENE, CAMP_SPOTS } from '../data/presentation';
 import { P } from './palette';
 import type { Sprites } from './sprites';
 
@@ -7,11 +7,14 @@ import type { Sprites } from './sprites';
  *  at three looks (0: frame and tent, 1: built, 3: finished with banner and lights; level 2 is the level-1 look plus a
  *  banner). Each look is painted once to an offscreen canvas at the field's pixel scale and blitted every frame, so the
  *  camp costs four drawImage calls (CLAUDE.md rule 7). TB-188d: levels 1-3 draw the Tripo sprite `camp.<id>.<lv>`
- *  (sheet_camp.webp) at CAMP_UNITS_PER_M; the vector look stays for level 0 and whenever that sprite is missing. */
+ *  (sheet_camp.webp); the vector look stays for level 0 and whenever that sprite is missing. TB-188e: the camp left the field
+ *  for its own scene (render/campScene.ts) at house scale: each building's level-3 sprite is drawn CAMP_SCENE.l3H tall. */
 
 type Ctx = CanvasRenderingContext2D;
 /** Atlas key per building and level, built once so drawing builds no strings (TB-183). */
 const SPRITE_KEYS: Readonly<Record<string, string>> = Object.fromEntries(BUILDINGS.flatMap((b) => [1, 2, 3].map((l) => [`${b.id}${l}`, `camp.${b.id}.${l}`])));
+/** Level-3 key per building, the sprite each building's scale is set from (TB-188e). */
+const L3_KEYS: Readonly<Record<string, string>> = Object.fromEntries(BUILDINGS.map((b) => [b.id, `camp.${b.id}.3`]));
 /** Margin round each footprint in field units, for the banner and glow that reach past it. */
 const PAD = 8;
 
@@ -19,12 +22,13 @@ export class CampArt {
   private cache = new Map<string, HTMLCanvasElement>();
   private scale = 0;
 
-  /** Draw every building at its level. `g` is in field units; `px` is device pixels per field unit. */
+  /** Draw every building at its level. `g` is in scene units; `px` is device pixels per scene unit. */
   draw(g: Ctx, levels: Partial<Record<BuildingId, number>>, px: number, sprites?: Sprites): void {
     if (Math.abs(px - this.scale) > 0.01) { this.cache.clear(); this.scale = px; }
     for (const b of BUILDINGS) {
       const lv = Math.min(3, levels[b.id] ?? 0), p = CAMP_SPOTS[b.id], key = `${b.id}${lv}`;
-      if (lv > 0 && sprites?.draw(g, SPRITE_KEYS[key]!, 0, p.x, p.y, CAMP_UNITS_PER_M)) continue;
+      const h3 = sprites?.heightPerR(L3_KEYS[b.id]!) ?? 0;
+      if (lv > 0 && h3 > 0 && sprites!.draw(g, SPRITE_KEYS[key]!, 0, p.x, p.y, CAMP_SCENE.l3H / h3)) continue;
       let c = this.cache.get(key);
       if (!c) { c = this.paint(b.id, lv, p.w, p.h, px); this.cache.set(key, c); }
       g.drawImage(c, p.x - p.w / 2 - PAD, p.y - p.h - PAD, p.w + PAD * 2, p.h + PAD * 2);

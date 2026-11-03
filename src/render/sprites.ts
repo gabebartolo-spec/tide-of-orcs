@@ -89,6 +89,9 @@ export class Sprites {
     return a ? a.frames.length / a.fps : 0;
   }
 
+  /** Drawn height of `key` per unit of r (0 when it has no sprite), so a caller can size a sprite to a set height. */
+  heightPerR(key: string): number { return this.atlas?.anims[key]?.hPerR ?? 0; }
+
   /** Draw animation `key` with its feet at (x, y) for an actor of radius r. False when there is no sprite for it.
    *  `tint` washes the frame's own pixels in that colour (shading shows through); `glow` rims it in a soft halo. */
   draw(g: CanvasRenderingContext2D, key: string, t: number, x: number, y: number, r: number, flash = false, tint = '', glow = '', blur = 0): boolean {
