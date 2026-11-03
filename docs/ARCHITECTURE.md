@@ -82,7 +82,7 @@ tide-of-orcs/
       schema.ts         SaveV15 type (the current shape), CURRENT_VERSION = 15, retired-id lists, defaultSettings()
       migrate.ts        migrations[v] = (old) => new
       storage.ts        localStorage with try/catch (key `tide-of-orcs-v1`); export/import as base64 UTF-8 JSON
-      telemetry.ts      local run log for testers, own key, JSON export (TB-070); not part of the save
+      telemetry.ts      local run log (dev aid; there are no testers), own key, JSON export (TB-070); not part of the save
       fixtures/v1–v14.ts one save per old version; v2–v14 written by the last build at that version after 20 headless minutes (TB-140)
   public/               sprites/, audio/ (audio/ui/ UI sounds, TB-195g), ui/ (carved 9-slice pieces, 1x/2x WebP, TB-195h), items/, decor/; the game runs without sprites and audio; fonts are bundled from src/ui/fonts; favicon.png is the app icon at 64 px (TB-123)
   sim/run.ts            headless balance runner (node), imports src/sim + src/data

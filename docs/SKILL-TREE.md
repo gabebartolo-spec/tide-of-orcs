@@ -38,13 +38,13 @@ Layout coordinates are for a 1400×1320 tree canvas, root at (700, 890) (TB-163)
 | horde | Call the Horde | Grove | root | 5 | 160 | 2.4 | 830 | 960 | Grunts march 20% more often per rank. More orcs, more starlight. More danger. |
 | drums | War Drums | Grove | horde | 5 | 300 | 2.4 | 970 | 940 | Grunts have +30% health and drop +40% starlight per rank. |
 | glean | Gleaning | Grove | drums | 5 | 600 | 2.2 | 1031 | 931 | +8% starlight from every orc. |
-| runners | Goblin Runners | Grove | horde | 1 | 120 | — | 880 | 1060 | Small, fast orcs join the tide. |
+| runners | Goblin Runners | Grove | horde | 1 | 120 | — | 880 | 1060 | Runners march four times as often (they trickle in on their own from wave 5), each worth +150% starlight. |
 | runfury | Runner Fury | Grove | runners | 5 | 200 | 2.4 | 908 | 1115 | Runners have +30% health and drop +40% starlight per rank. |
 | runswarm | Runner Swarm | Grove | runners | 5 | 200 | 2.4 | 939 | 1042 | Runners march 20% more often per rank. |
-| brutes | Brutes | Grove | runners | 1 | 400 | — | 1000 | 1130 | Slow, hulking orcs join the tide. |
+| brutes | Brutes | Grove | runners | 1 | 400 | — | 1000 | 1130 | Brutes march four times as often (they trickle in on their own from wave 10), each worth +150% starlight. |
 | brutefury | Brute Fury | Grove | brutes | 5 | 600 | 2.4 | 1054 | 1161 | Brutes have +30% health and drop +40% starlight per rank. |
 | bruteswarm | Brute Swarm | Grove | brutes | 5 | 600 | 2.4 | 1058 | 1109 | Brutes march 20% more often per rank. |
-| elites | Blackguard | Grove | brutes | 1 | 1500 | — | 1120 | 1200 | Armoured elite orcs join the tide. |
+| elites | Blackguard | Grove | brutes | 1 | 1500 | — | 1120 | 1200 | Blackguard march four times as often (they trickle in on their own from wave 20), each worth +150% starlight. |
 | elitefury | Elite Fury | Grove | elites | 5 | 2000 | 2.4 | 1174 | 1231 | Elites have +30% health and drop +40% starlight per rank. |
 | eliteswarm | Elite Swarm | Grove | elites | 5 | 2000 | 2.4 | 1178 | 1179 | Elites march 20% more often per rank. |
 | berserkers | Berserkers | Grove | elites | 1 | 2400 | — | 1250 | 1222 | Berserkers march four times as often (they trickle in on their own from wave 25), each worth +150% starlight. |
@@ -63,12 +63,12 @@ Layout coordinates are for a 1400×1320 tree canvas, root at (700, 890) (TB-163)
 | repair | Patient Hands | Barricade | timber | 5 | 90 | 2.0 | 430 | 980 | Barricade mends 2% of its health per second per rank. |
 | spikes | Thornwall | Barricade | timber | 5 | 150 | 2.1 | 537 | 1013 | Orcs hacking at the wall take 20% of your arrow damage per second per rank. |
 | bulwark | Deep Roots | Barricade | repair | 1 | 2400 | — | 371 | 999 | Once per run, a falling barricade regrows to half health. |
-| muster | Muster | Vanguard | root | 1 | 50 | — | 700 | 730 | Rally spearmen with starlight. They hold the line until they fall. Up to 2 at once. |
+| muster | Muster | Vanguard | root | 1 | 50 | — | 700 | 730 | Two spearmen hold the line. Each one that falls returns after 12 seconds. |
 | shield | Shieldwall | Vanguard | muster | 5 | 110 | 1.9 | 560 | 760 | Vanguard +30% health per rank. |
 | drill | Spear Drill | Vanguard | muster | 5 | 130 | 1.9 | 575 | 670 | Spearmen +30% damage per rank. |
 | ranks | Close Ranks | Vanguard | shield | 3 | 400 | 2.6 | 430 | 780 | +1 vanguard may stand at once. |
 | mend | Field Mending | Vanguard | drill | 3 | 350 | 2.4 | 450 | 650 | Vanguard recover 3% health per second per rank. |
-| champion | Bladedancer | Vanguard | ranks | 1 | 2200 | — | 290 | 750 | Rally bladedancers: costlier, faster, their strikes cleave every orc in reach. |
+| champion | Bladedancer | Vanguard | ranks | 1 | 2200 | — | 290 | 750 | Half the line become bladedancers: faster, their strikes cleave every orc in reach. |
 | hunter | Hunter's Eye | Spoils | root | 1 | 120 | — | 700 | 1020 | +5% chance to strike for triple damage. |
 | scavenger | Scavenger | Spoils | hunter | 1 | 150 | — | 600 | 1120 | Salvage gives 50% more Glimmer this run. |
 | trophy | Trophy | Spoils | hunter | 1 | 200 | — | 800 | 1120 | Kills on waves 10, 20, 30… roll a second drop. |
