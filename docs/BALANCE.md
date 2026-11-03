@@ -52,7 +52,7 @@ Rangers and Wardens keep straight volleys at `fireRate = 1.2 × 1.15^draw` per s
 | Constant | Value | File |
 |---|---|---|
 | `PLAYER.fanRad` | 0.09 rad between ranger arrows | balance.ts |
-| `SOURCES.wolf` | base 6, bite every 0.5 s, speed 210 px/s, reach 22 px | balance.ts |
+| `SOURCES.wolf` | base 4 (TB-157), bite every 0.5 s, speed 210 px/s, reach 22 px | balance.ts |
 | `SOURCES.archerDmgFrac`, `archerOffsetY` | 0.7 × player dmg × kin; 90 px above/below the elf | balance.ts |
 | `SOURCES.knives.speed`, `ballista.speed` | 640, 760 px/s | balance.ts |
 | `VANGUARD.walkSpeed`, `engageRange` | 60 px/s; orcs within r + 18 px engage a vanguard | balance.ts |
@@ -121,15 +121,15 @@ Statuses predate the lob, wall and aim changes of 1–2 Nov (TB-154, TB-164) unl
 | Tree fully bought in a run | never | met: 117 of 156 buyable ranks at most (greedy run 5) |
 
 ## Heartwood tree (M3, built TB-053; shown to the player as Grudges, TB-112)
-Bought with Heartwood, never reset. Costs in HW. The tree spends from `available = earned − spent`. The header shows `available / earned` once anything is spent. Skip the Boring Bit's skipped boss waves are not owed (`bossDone` starts at `floor(startWave / BOSS_WAVE.every)`). Standby Lad lads are placed free, ignoring Muster and the line cap.
+Bought with Heartwood, never reset. Costs in HW. The tree spends from `available = earned − spent`. The header shows `available / earned` once anything is spent. Early Dawn's skipped boss waves are not owed (`bossDone` starts at `floor(startWave / BOSS_WAVE.every)`). Standing Orders spearmen are placed free, ignoring Muster and the line cap.
 
 | id | Name | Max | Cost | Effect |
 |---|---|---|---|---|
-| hw_dawn | Skip the Boring Bit | 5 | 2, 4, 8, 14, 22 | Start each run at wave +2 |
-| hw_wolf | Dog Comes Too | 1 | 3 | Start with the dog (A Dog) |
-| hw_timber | Better Fence | 3 | 4, 8, 16 | Fence base HP +25% |
-| hw_orders | Standby Lad | 2 | 5, 12 | Start each run with one lad (two at rank 2) |
-| hw_boss | Management Bonus | 3 | 6, 12, 24 | Boss wave clear bonus +50% per rank (director chose the effect 2026-10-31; numbers proposed, unplaytested) |
+| hw_dawn | Early Dawn | 5 | 2, 4, 8, 14, 22 | Start each run at wave +2 |
+| hw_wolf | Old Friend | 1 | 3 | Start with the Grey Wolf |
+| hw_timber | Stout Timber | 3 | 4, 8, 16 | Fence base HP +25% |
+| hw_orders | Standing Orders | 2 | 5, 12 | Start each run with one lad (two at rank 2) |
+| hw_boss | Warlords | 3 | 6, 12, 24 | Boss wave clear bonus +50% per rank (director chose the effect 2026-10-31; numbers proposed, unplaytested) |
 | hw_find | Far Sight | 3 | 2, 5, 12 | Item Find +15 / 35 / 60% total (TB-101, P-101) |
 | hw_fortune | Fortune's Favour | 3 | 3, 8, 20 | Luck +10 / 25 / 45% total |
 | hw_satchel | Deep Satchel | 1 | 4 | Satchel holds 80. Needs Far Sight 1 |
@@ -336,7 +336,7 @@ Branch tb-146 on TB-149, greedy, loot greedy, 180 min, seeds 1–4. "Run r" coun
 | Best wave in 180 min (none / `--hwbuy`) | 30 / 33 | 32 / 33 | 31 / 32 | 31 / 33 |
 
 What it says:
-- The first Heartwood buy comes early: Skip the Boring Bit costs 2, and the end of run 2 has 1 banked plus the fall's 1. Far Sight (2) and Dog Comes Too (3) follow within the next few falls.
+- The first Heartwood buy comes early: Early Dawn costs 2, and the end of run 2 has 1 banked plus the fall's 1. Far Sight (2) and Old Friend (3) follow within the next few falls.
 - After those, Heartwood arrives at 1 per fall until the first boss, so 18 runs (about 80 minutes) pass with roughly one purchase per two to four falls: the gap dev plan §8 #3 describes. Buying Heartwood moves the first boss 12–17 minutes earlier, not runs earlier: run 20 on every seed.
 - Every seed reaches wave 25 by run 19–20 and clears the first boss on the same run. Then six or more runs in a row fall at wave 27–28 (seed 1: runs 20–25): a plateau right after the boss.
 - The first boss is the real milestone and sits at 81–105 play minutes. TB-147 (additive stacking, price by power) is where to move it.
