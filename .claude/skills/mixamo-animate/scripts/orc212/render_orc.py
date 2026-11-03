@@ -35,6 +35,7 @@ cam.data.type = "ORTHO"; cam.data.ortho_scale = ORTHO
 t = math.radians(float(os.environ.get("GAMECAM", "20"))); r = math.radians(float(os.environ.get("CAMROT", "0")))
 cam.location = Matrix.Rotation(r, 3, "Z") @ Vector((-3.7 * math.cos(t), 0, 0.5 + 3.7 * math.sin(t))); cam.rotation_euler = Euler((math.pi / 2 - t, 0, -math.pi / 2 + r))
 cam.location.z += float(os.environ.get("CAMZ", "0"))  # 0 = apply_anim's camera, so ANCHOR y = 256 + 240.56 / ORTHO like every actor
+cam.location.y += float(os.environ.get("CAMY", "0"))  # attack (TB-212 critic fix): ANM_ATTACK_CRIT lunges ~1.1 m forward (-Y); shift the frame so the axe stays inside
 sc.render.engine = "BLENDER_EEVEE"; sc.render.film_transparent = True
 w = bpy.data.worlds.new("w"); sc.world = w; w.use_nodes = True; w.node_tree.nodes["Background"].inputs[0].default_value = (0.55, 0.6, 0.65, 1); w.node_tree.nodes["Background"].inputs[1].default_value = 0.6
 for n, e, c, rot in (("sun", 3.5, (1, 0.93, 0.8), (40, 0, 20)), ("rim", 1.5, (0.8, 0.85, 1), (-60, 0, 200))):
@@ -48,6 +49,16 @@ for i, F in enumerate(range(f0, f1 + 1)):
     sc.frame_set(F)
     if TRACK:  # death: the clip falls ~2 m backward; follow the pelvis along the ground so the body stays on its anchor
         c0 = cam.location.copy(); dv = bip.matrix_world @ bip.pose.bones["Bip001 Pelvis"].head - P0; cam.location = base + Vector((dv.x, dv.y, 0))
+    if os.environ.get("GROUND"):  # death (TB-212 critic): the clip's knock-back lifts the whole body off the ground; drop the frame so the lowest point sits on it
+        dg = bpy.context.evaluated_depsgraph_get(); lo = 1e9
+        for o in bpy.data.objects:
+            if o.type == 'MESH' and not o.name.startswith(("polySurface34", "Box001")) and not o.hide_render:  # body only: the axe haft can poke below; Box001 is a hidden helper pinned at z 0
+                e = o.evaluated_get(dg); lo = min([lo] + [(e.matrix_world @ v.co).z for v in e.data.vertices])
+        if lo > 0: cam.location.z = base.z + lo
+        print("LO", n, round(lo, 3))
+    if os.environ.get("AXEHIDE"):  # death (TB-212 critic): from this frame the clip throws the axe free and it stands through the body; drop it from the render
+        for o in bpy.data.objects:
+            if o.name.startswith("polySurface34"): o.hide_render = n >= int(os.environ["AXEHIDE"])
     sc.render.filepath = f"{OUT}/{KEY}_{n}.png"; bpy.ops.render.render(write_still=True); n += 1
 sc.frame_set(f0); cam.location = base; bpy.context.view_layer.update()
 g = world_to_camera_view(sc, cam, Vector((0, 0, 0)))

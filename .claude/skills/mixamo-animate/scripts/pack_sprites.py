@@ -22,7 +22,7 @@ def sheet_of(key):
     return SHEETS["van" if key.startswith("van.") else "elf"]
 # key: (fps, mirror, body key, body height in actor radii). Vector actors: orc ~2.4 r with feet, elf/vanguard 36 units at radius 12.
 ANIMS = {
-    "orc.grunt": (30, True, "orc.grunt", 2.4),  # TB-212: Riltariki low-poly orc, own ANM_WALK (50 frames) / ANM_ORC_LIGHT_ATTACK (50), orc212/render_orc.py ORTHO 3.0
+    "orc.grunt": (30, True, "orc.grunt", 2.4),  # TB-212: Riltariki low-poly orc, own ANM_WALK (50 frames) / ANM_ATTACK_CRIT (60), orc212/render_orc.py ORTHO 3.0
     "orc.grunt.attack": (30, True, "orc.grunt", 2.4),
     "orc.grunt.death": (30, True, "orc.grunt", 2.4),  # TB-212: Riltariki low-poly orc's own ANM_DEATH, 31 frames, played once by field.ts on a kill
     "van.spear": (30, False, "van.spear", 3.0),

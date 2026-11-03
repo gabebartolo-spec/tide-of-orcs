@@ -485,6 +485,7 @@ export class FieldRenderer {
       const over = c.t - dur - C.hold;
       if (over >= C.fade || dur <= 0) { this.corpses.splice(i, 1); continue; }
       this.at(c.x, c.y, false); if (over > 0) g.globalAlpha = 1 - over / C.fade;
+      g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, c.r * 0.9, c.r * 0.9, c.r * 0.35, 0, 0, 6.28); g.fill();  // the living orc's shadow, kept for every frame (TB-212 critic)
       this.sprites.draw(g, c.key, Math.min(c.t, dur * 0.999), 0, c.r * 0.9, c.r);
       g.globalAlpha = 1;
     }
