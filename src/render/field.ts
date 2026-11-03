@@ -39,6 +39,7 @@ export class FieldRenderer {
   private shake = 0;
   private fenceBack: HTMLCanvasElement | null = null;
   private fenceBroken: HTMLCanvasElement | null = null;
+  private fencePerk: HTMLCanvasElement | null = null;
   private storms: { pts: [number, number][]; life: number; c: string }[] = [];
   private impacts: { x: number; y: number; r: number; life: number }[] = [];
   /** Fire puffs where a fireball landed (TB-127): discs that rise, swell and cool from pale core to ember to fire as they fade. */
@@ -227,6 +228,15 @@ export class FieldRenderer {
     return (this.fenceBroken = c);
   }
 
+  /** The fence atlas lit green for a wall with repair or bulwark perks (TB-209), built once. */
+  private perkFence(fence: HTMLImageElement): HTMLCanvasElement {
+    if (this.fencePerk) return this.fencePerk;
+    const c = document.createElement('canvas'); c.width = fence.width; c.height = fence.height;
+    const x = c.getContext('2d')!; x.drawImage(fence, 0, 0);
+    x.globalCompositeOperation = 'source-atop'; x.globalAlpha = GROUND.fence.perkGlow; x.fillStyle = P.grove; x.fillRect(0, 0, c.width, c.height);
+    return (this.fencePerk = c);
+  }
+
   draw(s: SimState, dt: number, aim: { x: number; y: number } | null = null): void {
     const g = this.g; this.sim = s;
     this.fx.update(dt); this.clock += dt;
@@ -252,23 +262,26 @@ export class FieldRenderer {
 
     // barricade
     const frac = barFrac(s);
-    const top = Math.max(vis.y0, this.treeline.skirtBase(vis.y0) + 10);  // the barricade ends just below the treeline's bush skirt, with a capping rail
+    const top = Math.max(vis.y0, this.treeline.skirtBase(vis.y0) + GROUND.fence.topGap);  // the barricade ends just below the treeline's bush skirt, with a capping rail
     const fence = decorImg('fence');
     if (!fence) { g.fillStyle = P.wallShade; g.fillRect(BAR_X + 4, top, BAR_W + 4, H - top); }
     if (fence) {
       // stacked fence panels running into the field, top to bottom so each overlaps the one behind it; back rows first (TB-209)
-      const L = GROUND.fence, T = GROUND.wallTiers, tier = wallTier(s.stats), sc = T.scale[tier]!, w = L.w * sc, step = L.step * sc, lh = w * fence.height / fence.width;
-      const y0 = -lh / 2 - Math.ceil(-top / step) * step;
+      const L = GROUND.fence, T = GROUND.wallTiers, tier = wallTier(s.stats), sc = T.scale[tier]!, w = L.w * sc, step = L.step * sc;
+      const cw = fence.width / L.cols, chh = fence.height / L.rows, lh = w * chh / cw, ironSy = chh;  // atlas: one cell per stake-panel variant, rope row then iron-banded row (the front row only, from the iron tier)
+      const perk = s.stats.bulwark || s.stats.barRegen > 0;
       const rows = T.rows[tier]!, fwd = Math.max(0, -(rows - 1) * T.rowDx * sc - T.backMax * sc);  // keep grass between wall and elf
       const xAt = (r: number): number => BAR_X + BAR_W / 2 - w / 2 + r * T.rowDx * sc + fwd;
+      const hash = (n: number): number => (n * T.breakScatter * 7.31 + 0.137) % 1;  // fixed per panel, so nothing flickers
       // one clip for the whole wall: inside the healthy outline, so nothing pokes past it (open above, so stake tips stay whole)
       g.save(); g.beginPath(); g.rect(xAt(rows - 1) + T.shadowDx, -H, xAt(0) + w - xAt(rows - 1) - T.shadowDx, 3 * H); g.clip();
       for (let r = rows - 1; r >= 0; r--) {
         const x0 = xAt(r), dy = T.rowDy[r]! * step, inner = r > 0 && r < rows - 1;  // only inner rows jitter: the outline stays straight
-        g.fillStyle = P.wallShade; g.fillRect(x0 + w * (1 - T.shadowW) / 2 + T.shadowDx, top, w * T.shadowW, H - top);  // each row's own ground shadow
-        const img = r ? this.shadedFence(fence) : fence, inward = r === rows - 1 && r ? 1 : -1;  // broken panels lean toward the wall's middle
-        for (let i = 0, y = y0 + dy; y < H; i++, y += step) {
-          const seed = i + r * T.rowSeed, alive = panelAlive(y, H, frac, seed);
+        const sx0 = x0 + w * (1 - T.shadowW) / 2 + T.shadowDx, sg = g.createLinearGradient(sx0, 0, sx0 + w * T.shadowW, 0); sg.addColorStop(0, P.glowClear); sg.addColorStop(1, P.wallShade);
+        g.fillStyle = sg; g.fillRect(sx0, top, w * T.shadowW, H - top);  // each row's own ground shadow, soft at its outer edge
+        const img = r ? this.shadedFence(fence) : perk ? this.perkFence(fence) : fence, inward = r === rows - 1 && r ? 1 : -1;  // broken panels lean toward the wall's middle
+        for (let i = 0, y = (-lh / 2 - Math.ceil(-top / step) * step) + dy; y < H; i++, y += step * (1 + (hash(i * 3 + r * 11 + 5) - 0.5) * 2 * L.pitchJit)) {  // jittered pitch: no fixed repeat
+          const seed = i + r * T.rowSeed, alive = panelAlive(y, H, frac, seed), v = Math.floor(hash(seed + 2) * L.cols);
           g.globalAlpha = alive ? 1 : T.brokenAlpha;
           const jit = inner ? (((seed * T.breakScatter * 3) % 1) * 2 - 1) * T.jitter * sc : 0;
           const px = x0 + jit + (alive ? 0 : inward * T.brokenDx), py = y + (alive ? 0 : T.brokenDy * sc), im = alive ? img : this.brokenFence(fence);
@@ -281,8 +294,8 @@ export class FieldRenderer {
             for (let k = 1; k <= 5; k++) g.lineTo(-w / 2 + (w * k) / 6, cut + (k % 2 ? -1 : 1) * z * (0.6 + 0.4 * (((seed * 7 + k * 3) * T.breakScatter) % 1)));
             g.lineTo(w / 2, cut); g.lineTo(w / 2, 0); g.closePath(); g.clip();
           }
-          if ((r ? 1 : 0) ^ (i & 1)) g.scale(-1, 1);  // back rows mirrored, and every other panel flipped so bindings alternate sides
-          g.drawImage(im, -w / 2, -lh, w, lh); g.restore();
+          if ((r ? 1 : 0) ^ (i & 1)) g.scale(-1, 1);  // back rows mirrored, and every other panel flipped
+          g.drawImage(im, v * cw, !r && tier >= L.ironTier ? ironSy : 0, cw, chh, -w / 2, -lh, w, lh); g.restore();
         }
       }
       g.restore();
