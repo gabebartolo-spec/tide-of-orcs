@@ -1,4 +1,4 @@
-/** Worn gear → Stats (TB-094/098): affixes and set bonuses, summed per stat, then applied once. Pure. */
+/** Worn gear â†’ Stats (TB-094/098): affixes and set bonuses, summed per stat, then applied once. Pure. */
 import { LootMeta } from '../data/loot';
 import { AFFIXES, MYTHICS, MYTHIC_FX, SETS, StatLine } from '../data/lootTables';
 import { equippedItems } from './loot';
@@ -19,8 +19,8 @@ export function gearTotals(l: LootMeta, setBoost = 0): GearTotals {
   return t;
 }
 
-/** Stats fields gear may scale; other affix stats (hawkDmg, fireDmg…) are read by their systems in later rows. */
-const MUL_FIELDS = ['dmg', 'fireRate', 'radius', 'starMult', 'kin', 'wolf', 'ballista', 'barMax', 'barRegen', 'spikes', 'vanHp', 'vanDmg', 'vanMend', 'burn', 'chainJump', 'petDmg'] as const;
+/** Stats fields gear may scale. */
+const MUL_FIELDS = ['dmg', 'stormDmg', 'bossDmg', 'eliteDmg', 'fireRate', 'radius', 'starMult', 'kin', 'wolf', 'ballista', 'barMax', 'barRegen', 'spikes', 'vanHp', 'vanDmg', 'vanMend', 'burn', 'chainJump', 'petDmg'] as const;
 /** Integer stats take whole points only; crit is a chance. */
 const ADD_FIELDS = {
   crit: false, pierce: true, arrows: true, barRegen: false, chain: true, rebound: true, bleedAmp: false, knifeFan: true, burnSpread: true, cinder: true,
@@ -33,6 +33,16 @@ export function applyGear(st: Stats, l: LootMeta): Stats {
   for (const f of MUL_FIELDS) if (t.mul[f]) st[f] *= 1 + t.mul[f];
   if (t.mul.fireRate) st.lobCd /= 1 + t.mul.fireRate;
   for (const [f, whole] of Object.entries(ADD_FIELDS) as [keyof typeof ADD_FIELDS, boolean][]) if (t.add[f]) st[f] += whole ? Math.floor(t.add[f]) : t.add[f];
+  // affixes that scale an existing Stats line (TB-201)
+  if (t.mul.hawkDmg) st.units.hawk = { ...st.units.hawk, dmg: st.units.hawk.dmg * (1 + t.mul.hawkDmg) };
+  if (t.mul.treantDmg) st.units.treant = { ...st.units.treant, dmg: st.units.treant.dmg * (1 + t.mul.treantDmg) };
+  if (t.mul.glimmerMult) st.salvageMult *= 1 + t.mul.glimmerMult;
+  if (t.mul.critDmg) st.critMult *= 1 + t.mul.critDmg;
+  if (t.mul.burnDur) st.burnSecs *= 1 + t.mul.burnDur;
+  if (t.mul.fireDmg) st.burn *= 1 + t.mul.fireDmg;
+  if (t.mul.homingDmg) st.moonMult *= 1 + t.mul.homingDmg;
+  // Chain rolls 0.2â€“0.5 per item: summed, then rounded to whole jumps (one item at 0.5+ adds a target)
+  if (t.add.stormChain) st.chain += Math.round(t.add.stormChain);
   if (st.knives && t.mul.knifeDmg) st.knives.dmg *= 1 + t.mul.knifeDmg;
   // rate bonuses shorten a cooldown; Moonveil's only while the Moonbow is owned
   if (st.knives && t.mul.knifeRate) st.knives.rate *= 1 + t.mul.knifeRate;

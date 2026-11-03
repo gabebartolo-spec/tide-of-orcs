@@ -39,6 +39,8 @@ export interface Stats {
   // loot (TB-101): Heartwood lines and the Spoils branch. salvageMult/Plus shape Glimmer; rerollMult is read by the reroll (TB-102)
   itemFind: number; luck: number; satchelCap: number; bossDrops: number; trophy: boolean; hoard: boolean;
   salvageMult: number; salvagePlus: number; rerollMult: number; setBoost: number; echo: number;
+  /** Gear-only damage lines (TB-201), 1 = none: storm bolt damage, damage to bosses and champions, damage to elite orcs. */
+  stormDmg: number; bossDmg: number; eliteDmg: number;
 }
 
 export type Unit = 'wolf' | 'ranger' | 'warden' | 'hawk' | 'treant' | 'spear' | 'blade';
@@ -150,5 +152,6 @@ export function deriveStats(lv: Levels, hw: HwLevels = {}): Stats {
     trophy: L('trophy') > 0, hoard: L('hoard') > 0,
     salvageMult: L('scavenger') ? SPOILS_FX.scavenger : 1, salvagePlus: hw.hw_glimmer ? HW_FX.salvagePlus : 0, rerollMult: hw.hw_glimmer ? 1 - HW_FX.rerollCut : 1,
     setBoost: L('resonance') ? SPOILS_FX.resonance : 0, echo: L('echo') ? SPOILS_FX.echo : 1,
+    stormDmg: 1, bossDmg: 1, eliteDmg: 1,
   };
 }
