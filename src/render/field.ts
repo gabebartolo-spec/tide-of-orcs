@@ -99,7 +99,15 @@ export class FieldRenderer {
     this.g = canvas.getContext('2d')!;
     this.resize();
     // the canvas fills the window and its box changes with the HUD mode and full screen, not only on window resize
-    if (typeof ResizeObserver !== 'undefined') new ResizeObserver(() => this.resize()).observe(canvas);
+    if (typeof ResizeObserver !== 'undefined') new ResizeObserver(() => this.resizeSoon()).observe(canvas);
+  }
+
+  private resizeTimer = 0;
+  /** A URL-bar slide or rotation fires many size callbacks: wait until the box has held still for `QUALITY.resizeSettleMs`, then resize once (TB-218).
+   *  The canvas box is CSS-sized, so it stays stretched to the window meanwhile. */
+  resizeSoon(): void {
+    if (quality.tier !== 'phone') { this.resize(); return; }
+    clearTimeout(this.resizeTimer); this.resizeTimer = window.setTimeout(() => this.resize(), QUALITY.resizeSettleMs);
   }
 
   /** Resizing clears the canvas and reallocates its backing store, so a URL-bar animation (many equal-size callbacks) must not redo it (TB-218). */

@@ -90,8 +90,11 @@ class State {
     const phone = this.tier === 'phone', Q = QUALITY;
     const scale = !phone ? Q.desktopScale : this.pref === 'high' ? Q.phoneHigh : this.pref === 'low' ? Q.minScale : this.gov!.scale;
     const slowFloor = this.pref === 'low' || (this.gov?.floor ?? false);
-    return { tier: this.tier, scale, drawGap: !phone ? 0 : slowFloor ? Q.gapFloor : Q.gap60, cheap: phone, parts: phone ? Q.phoneParts : Q.deskParts };
+    const o = this.qObj;   // one reused record: this getter runs several times a frame, so it must not allocate (TB-218)
+    o.tier = this.tier; o.scale = scale; o.drawGap = !phone ? 0 : slowFloor ? Q.gapFloor : Q.gap60; o.cheap = phone; o.parts = phone ? Q.phoneParts : Q.deskParts;
+    return o;
   }
+  private qObj = { tier: 'desktop', scale: 1, drawGap: 0, cheap: false, parts: 0 } as unknown as { -readonly [K in keyof Quality]: Quality[K] };
   /** Feed one draw interval; true when the field should resize. */
   frame(ms: number): boolean { if (this.gov?.frame(ms)) { this.rev++; return true; } return false; }
 }

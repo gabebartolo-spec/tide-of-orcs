@@ -821,7 +821,14 @@ html, body { touch-action: pan-x pan-y; }
 @media (max-height: 540px) {
   body:not([data-mode="camp"]) header { padding-bottom: 0.5rem; padding-left: max(1.75rem, env(safe-area-inset-left)); padding-right: max(1.75rem, env(safe-area-inset-right)); }
   body:not([data-mode="camp"]) .rally { left: max(1.5rem, env(safe-area-inset-left)); right: max(1.5rem, env(safe-area-inset-right)); bottom: max(1.25rem, env(safe-area-inset-bottom)); }
-  body[data-mode="camp"] .panel { margin-inline: max(0px, env(safe-area-inset-left)) max(0px, env(safe-area-inset-right)); }
+  /* Camp and Settings keep clear of the cutout and the gesture bar by padding the page, never by shifting a full-width panel (TB-218). */
+  body[data-mode="camp"] .wrap { padding-left: max(0.5rem, env(safe-area-inset-left, 0px)); padding-right: max(0.5rem, env(safe-area-inset-right, 0px)); padding-bottom: max(0.25rem, env(safe-area-inset-bottom, 0px)); }
+  body[data-mode="camp"] header { margin-inline: calc(-1 * max(0.5rem, env(safe-area-inset-left, 0px))) calc(-1 * max(0.5rem, env(safe-area-inset-right, 0px))); padding-left: max(1.5rem, calc(env(safe-area-inset-left, 0px) + 0.5rem)); padding-right: max(1.5rem, calc(env(safe-area-inset-right, 0px) + 0.5rem)); }
+  body[data-mode="camp"] .panel { width: 100%; margin-inline: 0; }
+  body[data-mode="settings"] .panel { left: max(0.5rem, env(safe-area-inset-left, 0px)); right: max(0.5rem, env(safe-area-inset-right, 0px)); top: max(0.375rem, env(safe-area-inset-top, 0px)); bottom: max(0.375rem, env(safe-area-inset-bottom, 0px)); width: auto; max-height: none; transform: none; }
+  /* A phone held sideways has no room for the largest text sizes: cap the effective scale so no control overlaps or clips. */
+  html { font-size: calc(clamp(16px, min(100vw / 96, 100vh / 54), 80px) * min(var(--text-scale, 1), 1.15)); }
+  body:has(#fallen:not([hidden])) #dep-boss { display: none; }
   .fallen { padding-left: max(1.25rem, env(safe-area-inset-left)); padding-right: max(1.25rem, env(safe-area-inset-right)); padding-bottom: max(1.25rem, env(safe-area-inset-bottom)); }
 }
 @media (max-width: 600px) { .hud-wave { flex-shrink: 1; min-width: 0; } .hud { flex-wrap: wrap; min-width: 0; } }
@@ -888,10 +895,11 @@ button img, .item img { pointer-events: none; }
   .fallen .march { position: sticky; bottom: max(1.25rem, env(safe-area-inset-bottom)); flex: 0 0 auto; margin: 0.5rem 0 max(1.25rem, env(safe-area-inset-bottom)); height: var(--march-h); min-width: 14rem; font-size: 1.25rem; z-index: 2; }
 }
 /* Under 380 px high the board and Replant sit side by side, so the button never covers the board's last rows. */
-@media (pointer: coarse) and (max-height: 380px) and (orientation: landscape) {
+@media (pointer: coarse) and (max-height: 540px) and (orientation: landscape) {
   .fallen { flex-direction: row; justify-content: center; align-items: flex-start; gap: 1.5rem; padding-top: 4.5rem; }
   .fallen .march { align-self: flex-end; margin: 0; bottom: max(1.25rem, env(safe-area-inset-bottom)); min-width: 12rem; }
 }
+@media (pointer: coarse) and (max-height: 380px) and (orientation: landscape) { .fallen { padding-top: 4.25rem; } .fallen .report { zoom: 0.86; } }
 /* Camp and Settings on a phone held sideways: one chrome row, then the pane. */
 @media (pointer: coarse) and (max-height: 540px) and (orientation: landscape) {
   body[data-mode="camp"] .panel, body[data-mode="settings"] .panel { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: 48px minmax(0, 1fr) auto; column-gap: 0.5rem; }
@@ -926,4 +934,12 @@ button img, .item img { pointer-events: none; }
   #sat-detail .row .buy { min-height: 48px; }
   #sat-detail .affixes li { display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem; }
   #sat-detail .glyph, #sat-detail .glyph img { width: 2.5rem; height: 2.5rem; flex: 0 0 auto; }
+}
+
+/* Zoom lock without relying on the viewport meta alone (Chrome Android ignores it with "Force enable zoom"): every top-level surface pans only (TB-218). */
+header, #hud, #toast, #campview, .wrap, .play { touch-action: pan-x pan-y; }
+@media (pointer: coarse) and (max-height: 540px) and (orientation: landscape) {
+  .pathcards { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.5rem; }
+  .pathcard { column-gap: 0.5rem; grid-template-columns: 3.5rem minmax(0, 1fr); } .pathcard .sigil { width: 3.5rem; height: 3.5rem; }
+  .fallen { gap: 0.75rem; } .fallen .report { flex: 0 1 auto; min-width: 0; } .fallen .march { flex: 0 0 auto; min-width: 9rem; max-width: 40vw; }
 }

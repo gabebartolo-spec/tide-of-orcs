@@ -37,6 +37,7 @@ describe('touch aim point (TB-218 I2, I3)', () => {
   });
   it('the lift fades to 0 at the bottom edge so the whole plain is reachable', () => {
     expect(liftFor('touch', 412, R, 16)).toBe(0); expect(liftFor('touch', 370, R, 16)).toBe(28);
+    expect(aimPoint('touch', 460, 392, R, 16, false, 20).y).toBe(R.bottom);   // a thumb at the gesture-bar line reaches the field bottom (TB-218)
     expect(aimPoint('touch', 460, 412, R, 16, false).y).toBe(412);
   });
   it('the circle stays on the field and below the HUD line in phone landscape', () => {

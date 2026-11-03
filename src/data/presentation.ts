@@ -297,6 +297,6 @@ export const SPRITE_BAKE_PHONE = { cap: 2048, quantum: 2, sub: 1, maxBytes: 12 *
  *  other canvas (camp, tree, juice). Desktop: scale cap 2, no frame cap, the old 900 particles. */
 export const QUALITY = {
   weakMemGb: 2, weakCores: 2, ladder: [1.5, 1.25, 1] as readonly number[], phoneStart: 1.25, phoneHigh: 1.5, minScale: 1, desktopScale: 2,
-  fieldMp: 1.0, haloK: 0.6, shadowPx: 64, phoneParts: 300, deskParts: 900, gap60: 15, gapFloor: 30, shared: 1.5, sharedMp: 1.5,
+  fieldMp: 1.0, haloK: 0.6, shadowPx: 64, phoneParts: 300, deskParts: 900, resizeSettleMs: 250, gap60: 15, gapFloor: 30, shared: 1.5, sharedMp: 1.0,
   governor: { window: 60, every: 15, slowMs: 20, fastMs: 12, downAfter: 3, upAfter: 10 },
 } as const;

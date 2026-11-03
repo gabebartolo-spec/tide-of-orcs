@@ -11,9 +11,14 @@ export function liftFor(type: 'touch' | 'pen', y: number, r: FieldRect, remPx: n
 }
 
 /** The circle's client position: lifted, kept on the field, and (phone landscape) below the HUD line. */
-export function aimPoint(type: 'touch' | 'pen', cx: number, cy: number, r: FieldRect, remPx: number, hudClamp: boolean): { x: number; y: number } {
+export function aimPoint(type: 'touch' | 'pen', cx: number, cy: number, r: FieldRect, remPx: number, hudClamp: boolean, bottomInset = 0): { x: number; y: number } {
   const x = Math.min(r.right, Math.max(r.left, cx));
-  let y = Math.min(r.bottom, Math.max(r.top, cy - liftFor(type, cy, r, remPx)));
+  // the lift fades out by the gesture-bar line, and the last `reachPx` above that line stretch down to the field's bottom edge,
+  // so a thumb at the lowest allowed point still reaches the bottom of the plain (TB-218)
+  const usable = r.bottom - bottomInset, lr = { ...r, bottom: usable };
+  let y = Math.min(usable, Math.max(r.top, cy - liftFor(type, cy, lr, remPx)));
+  if (bottomInset > 0 && y > usable - TOUCH.reachPx) y = usable - TOUCH.reachPx + (y - (usable - TOUCH.reachPx)) * (r.bottom - (usable - TOUCH.reachPx)) / TOUCH.reachPx;
+  y = Math.min(r.bottom, y);
   if (hudClamp) y = Math.max(y, Math.min(r.bottom, r.top + TOUCH.hudBottomPx));
   return { x, y };
 }
