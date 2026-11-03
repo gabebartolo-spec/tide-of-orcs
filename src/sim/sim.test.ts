@@ -284,7 +284,7 @@ describe('boss waves (TB-081)', () => {
       for (const e of ev.drain()) if (e.t === 'bossEnd') { expect(e.cleared).toBe(true); paid = e.loot; hw = e.hw; }
     }
     expect(paid).toBeCloseTo(BOSS_WAVE.clearLoot * waveLoot(s.run.wave) * s.stats.starMult);
-    expect(hw).toBe(bossHw(s.run.wave)); expect(s.meta.heartwood).toBe(hw);
+    expect(hw).toBe(bossHw(s.run.wave)); expect(s.meta.heartwood).toBe(hw); expect(s.run.hwEarned).toBe(hw);
   });
   it('boss Heartwood: 3 per 25 waves reached, at least 3', () => {
     expect(bossHw(10)).toBe(3); expect(bossHw(25)).toBe(3); expect(bossHw(50)).toBe(6); expect(bossHw(99)).toBe(9);

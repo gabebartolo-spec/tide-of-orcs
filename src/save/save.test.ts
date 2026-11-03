@@ -80,4 +80,9 @@ describe('v8 → v9', () => {
     const s = migrate(JSON.parse(JSON.stringify({ version: 8, savedAt: 0, run: freshRun(), meta: { ...meta, loot }, settings: defaultSettings() })));
     expect(s.version).toBe(CURRENT_VERSION); expect(s.meta.loot.heirloom).toBeNull(); expect(s.meta.loot.glimmer).toBe(7);
   });
+  it('v14 saves migrate to v15 with no boss Heartwood counted this run (TB-205)', () => {
+    const { hwEarned: _h, ...run } = freshRun(); void _h;
+    const s = migrate(JSON.parse(JSON.stringify({ version: 14, savedAt: 0, run: { ...run, wave: 33 }, meta: { ...freshMeta(), heartwood: 4 }, settings: defaultSettings() })));
+    expect(s.version).toBe(CURRENT_VERSION); expect(s.run.hwEarned).toBe(0); expect(s.run.wave).toBe(33); expect(s.meta.heartwood).toBe(4);
+  });
 });

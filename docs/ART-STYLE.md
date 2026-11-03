@@ -92,7 +92,7 @@ The plain reads as natural, calm grassland, not a flat board. Layout is seeded (
 - Kill burst: 10 moss squares; crit: text "crit". Wall hit: 3 timber squares. Vanguard rallied: 8 cream squares at the wall; vanguard fell: 14 spear-blue squares.
 - Screen shake: transform jitter up to 6×4 px, decays at 3/s; grows with wall damage fraction ×4, and +0.2 on each treant stamp. HUD bars don't shake.
 - Deep Roots regrow: 40 grove-green squares bursting from the wall's centre.
-- Fallen overlay: field dims to 82% ink, title in Heartwood, summary line, big rose Heartwood number, one amber button.
+- Fallen overlay: field dims to 82% ink, title in Heartwood, summary line, big rose number for the Heartwood this run's cleared boss waves paid (0 if none; a fall pays none), one amber button.
 - Storm: jittered lilac polyline, 0.35 s fade.
 - Affordable node: amber ring, 0.5–1.0 alpha sine at 4 rad/s. Rally buttons: border turns amber on hover when affordable.
 - Replant: tree desaturates, amber particles rise, one seed falls, field fades up through a #e2a85b-tinted overlay. ≤ 4 s.

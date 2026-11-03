@@ -2,7 +2,7 @@ import { MetaState, RunState } from '../sim/state';
 import { VOLUME_MAX, VOLUME_MIN } from '../data/settings';
 import { TEXT_SCALE_MAX, TEXT_SCALE_MIN } from '../render/textScale';
 
-export const CURRENT_VERSION = 14;
+export const CURRENT_VERSION = 15;
 
 /** Node ids removed from the tree; v1 to v2 drops them from saved levels. */
 export const RETIRED_NODE_IDS = ['tide', 'current', 'flood', 'silt', 'roots'] as const;
@@ -12,7 +12,7 @@ export const RETIRED_V3 = ['banners'] as const;
 export const RETIRED_V4 = ['warboss', 'bossfury', 'bossswarm', 'bounty'] as const;
 
 export interface SaveV10 {
-  version: 14;
+  version: 15;
   savedAt: number;
   run: RunState;
   meta: MetaState;

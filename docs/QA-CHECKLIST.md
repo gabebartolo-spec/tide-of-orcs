@@ -20,7 +20,7 @@ Names below are the design names (GDD), which the UI also uses (`src/data/string
 
 ## C. Barricade and the fail state (GDD §3, design rule 1)
 - C1 Orcs reaching the wall stop and swing; the health bar drops, shakes, splinters show.
-- C2 At 0 HP the sim freezes, the fallen overlay shows wave, slain, minutes, Heartwood carried back (0 unless a boss fell) and one button.
+- C2 At 0 HP the sim freezes, the fallen overlay shows wave, slain, minutes, Heartwood earned this run from cleared boss waves (0 if none, TB-205) and one button.
 - C3 While fallen: boss summon is refused; the Grove page opens (TB-136) and the tree, Satchel, Heartwood tree and Settings work there. Tree buys are refused while the wall stands.
 - C4 Replant pays no Heartwood (TB-171: only cleared bosses pay), resets the run to the last checkpoint (every 5 waves, TB-172) at the chosen boss tier (TB-148), keeps Heartwood, Grove levels, banked starlight, lifetime slain, best wave, prestige count, settings.
 - C5 Deep Roots regrows the wall to 50% once per run.

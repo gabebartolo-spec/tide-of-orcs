@@ -226,3 +226,4 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-172 | Checkpoint every 5 waves, was 10 (director 2 Nov): `CHECKPOINT.every` 10 → 5; saved checkpoints rise on the next wave cleared, no migration | balance | — | claude | done (PR 139) |
 | TB-171 | Heartwood only from bosses (director 2 Nov): a fall or voluntary replant pays 0 (`PRESTIGE.fallGain`), rule 1 reworded; voluntary Replant no longer gated on a payout | balance | — | claude | done (PR 138) |
 | TB-204 | Docs bug bash (director 3 Nov): clean stale info and defunct direction from every doc | docs | — | claude | doing |
+| TB-205 | Bug-bash answers (director 3 Nov): fallen overlay shows Heartwood from this run's cleared boss waves (save v15 `run.hwEarned`); GDD core loop drops fall-pays/rally wording; Vanguard Cost column gone; stale measured sim numbers removed | docs/ui | 204 | claude | doing |
