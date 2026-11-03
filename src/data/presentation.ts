@@ -187,3 +187,7 @@ export const HUD = {
 
 /** Tooltip plates (TB-195c): rows = most now → next lines shown; gap = rem from the cursor; in = ms spring-in; w = plate width in rem. */
 export const PLATE = { rows: 3, gap: 1.25, in: 120, w: 19 } as const;
+
+/** Satchel as an object (TB-195e): compare plates show at most `lines` affix lines each, sit `gap` rem from the cursor;
+ *  a dropped item snaps into its pocket over `snap` ms. */
+export const SATCHEL_UI = { lines: 4, gap: 1.25, snap: 260 } as const;

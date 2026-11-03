@@ -459,3 +459,29 @@ body[data-mode="camp"] :is(.hud-wallbox, .hud-wave) { display: none; }
 @keyframes pane-rise { from { transform: translateY(var(--pane-rise)); } }
 :root[data-calm] .tabs button::before { transition: none; }
 :root[data-calm] .tab:not([hidden]) { animation: none; }
+
+/* TB-195e satchel as an object: the bag and the worn row are stitched leather (32 px slice = 1.6rem, stitches repeat),
+   worn slots are sewn pockets, dragging lights the matching pocket, hover shows two compare plates side by side. */
+:root { --sat-edge: 1.6rem; --sat-mid: 400%; --pocket-pad: 0.875rem; --pocket-foot: 1.375rem; --pocket-icon: 3.75rem; --pocket-want: 0.5rem; --pocket-over: 1.06; }
+/* edges only (round) so stitches repeat; the middle is the piece's own leather centre, scaled up once, since a filled
+   round middle tiles into visible squares */
+#sat-grid, #sat-worn { box-sizing: border-box; border: var(--sat-edge) solid transparent; padding: 0.125rem; align-self: start;
+  border-image: image-set(url("/ui/satchel.webp") 1x, url("/ui/satchel@2x.webp") 2x) 32 / var(--sat-edge) round;
+  background: image-set(url("/ui/satchel.webp") 1x, url("/ui/satchel@2x.webp") 2x) center / var(--sat-mid) var(--sat-mid) no-repeat padding-box; }
+#sat-grid .item { cursor: grab; } #sat-grid .item:active { cursor: grabbing; }
+#sat-worn .item { border-color: transparent; padding: var(--pocket-pad) var(--pocket-pad) var(--pocket-foot); background: image-set(url("/ui/pocket.webp") 1x, url("/ui/pocket@2x.webp") 2x) center / 100% 100% no-repeat; }
+#sat-worn .item:not(.empty) { box-shadow: none; filter: drop-shadow(0 0 0.375rem color-mix(in srgb, var(--rar, transparent) 60%, transparent)); }
+/* six pockets in one row, icon and slot only (the plates and detail card name the item), so the worn row stays one line */
+#sat-worn { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+#sat-worn .item .nm, #sat-worn .item .ptag { display: none; }
+#sat-worn .item .glyph { width: var(--pocket-icon); height: var(--pocket-icon); } #sat-worn .item .glyph img { width: var(--pocket-icon); height: var(--pocket-icon); }
+#sat-worn .item.empty { opacity: .8; } #sat-worn .item.empty .glyph { opacity: .45; }
+#sat-worn .item.want { outline: 0.125rem dashed var(--amber); outline-offset: -0.25rem; filter: drop-shadow(0 0 var(--pocket-want) var(--amber)); }
+#sat-worn .item.over { transform: scale(var(--pocket-over)); transition: transform 120ms ease-out; }
+.plate-pair { position: fixed; z-index: 60; pointer-events: none; display: flex; align-items: flex-start; gap: 0.5rem; }
+.plate-pair[hidden] { display: none; }
+.plate-pair .plate { position: static; width: 16rem; }
+.plate.cmp .nm { color: var(--rar, var(--cream)); }
+.plate.cmp ul { margin: 0.25rem -0.5rem 0; padding-left: 1.125rem; font-size: 0.875rem; line-height: 1.35; }
+.plate.cmp .dv { font-family: var(--display); font-size: 1.25rem; } .plate.cmp .dv.up { color: var(--grove); } .plate.cmp .dv.down { color: var(--rose); }
+:root[data-calm] #sat-worn .item.over { transform: none; transition: none; }

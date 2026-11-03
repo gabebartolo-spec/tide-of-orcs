@@ -43,6 +43,8 @@ export const STR = {
   satchelCount: (n: number, cap: number, glimmer: number) => `Satchel ${n} / ${cap} · ${glimmer} Glimmer`,
   satchelEmpty: 'Nothing carried yet. Orcs drop gear as the waves grow.', satchelPick: 'Pick an item to see it.',
   satchelVs: (worn: string, d: number) => `Against worn ${worn}: ${d >= 0 ? '+' : ''}${d} power`,
+  cmpWorn: 'Worn now', cmpHover: 'In the satchel', cmpNone: 'Nothing worn here', cmpPower: (d: number) => `${d >= 0 ? '+' : ''}${d} power`,
+  dragHint: 'Drag gear onto its pocket to wear it.',
   satchelFilter: 'Keep', filterAtLeast: (r: string) => `${r} and up`, satchelWornNow: 'Worn',
   equip: 'Wear', lock: 'Lock', unlock: 'Unlock', lockedMark: ' · locked', salvageFor: (g: number) => `Salvage +${g} Glimmer`,
   rerollFor: (g: number) => `Reroll · ${g} Glimmer`,
