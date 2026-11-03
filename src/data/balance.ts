@@ -39,6 +39,7 @@ export const BARRICADE = {
 // dmg is scaled by the same factor so damage per second matches the old 0.8 s / 0.45 s swings.
 export const VANGUARD = {
   baseCap: 2,
+  poolCap: 12,   // pool slots: max line 7 (base 2, Close Ranks 3, Pack Tactics 2) + 2 Standing Orders + headroom (TB-219)
   hpPerShield: 1.3, dmgPerDrill: 1.3, mendPerRank: 0.03,
   walkSpeed: 60, standX: 44, laneGap: 70, engageRange: 18,
   respawn: 12,   // seconds before a fallen line vanguard returns (TB-167), × 0.85 per Swift Muster rank
