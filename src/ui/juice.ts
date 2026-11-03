@@ -71,6 +71,7 @@ export class CountUp {
     if (v === this.target) return;
     const up = v > this.target, from = this.shown; this.target = v;
     flash(this.el, up);
+    if (up) uiSound('uiCount'); // throttled by CUES.uiCount.gap so a fast climb ticks, not buzzes
     if (calm()) { this.shown = v; this.el.textContent = this.format(v); return; }
     pop(this.el);
     const box = this.el.parentElement ?? this.el; // drive the roll from the parent so it does not cancel the pop

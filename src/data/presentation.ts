@@ -112,6 +112,8 @@ export const LOOT_BANNER = {
 
 /** Skill-tree lighting (TB-190b, ART-STYLE §Arcane skill tree). World px at zoom 1; rates per second. Render-only. */
 export const TREE_LIGHT = {
+  /** Path links not yet grown (TB-193c): alpha of the chosen path's still neon, of a locked path's faint line, and its dash. */
+  pathOpenA: 0.55, pathLockedA: 0.3, pathDash: [5, 5] as number[],
   /** Bloom round owned links, drawn additively into a cached layer: [extra width over the wood, alpha], widest first. */
   bloom: [[34, 0.05], [18, 0.1], [8, 0.22]] as readonly (readonly [number, number])[],
   /** Light pool under each owned node: radius and centre alpha. */

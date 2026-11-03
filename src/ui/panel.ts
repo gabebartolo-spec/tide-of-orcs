@@ -23,6 +23,9 @@ import { applyTextScale } from '../render/textScale';
 import { CampPane } from './camp';
 import { burstAt, press } from './juice';
 import { Hud } from './hud';
+import { PathPicker, pathHint } from './paths';
+import { PATHS } from '../data/paths';
+import { drawSigil } from '../render/sigil';
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string): T => document.getElementById(id) as T;
 const VAN_NAME: Record<VanType, string> = { spear: 'Spearman', blade: 'Bladedancer' };
@@ -33,6 +36,8 @@ export class Panel {
   private satchel: SatchelPane;
   /** Encampment card and Replant-tab list (TB-188b). */
   readonly camp: CampPane;
+  /** Path cards on the Replant tab (TB-193c). */
+  private paths: PathPicker;
   /** Boss tier picked for the next March (TB-148); 0 means the highest unlocked. */
   private pickTier = 0;
   /** Field HUD: starlight gem, wave banner, wall bar (TB-195b). */
@@ -51,9 +56,9 @@ export class Panel {
     $('dep-boss').querySelector('.n')!.textContent = STR.summonBoss;
 
     $('tab-settings').textContent = STR.tabSettings; $('tab-satchel').innerHTML = `${STR.tabSatchel}<span class="badge" id="sat-new" hidden></span>`;
-    this.satchel = new SatchelPane(game, (c) => this.onCue(c)); $('tab-satchel').onclick = () => { this.onCue('click'); this.setTab('satchel'); this.satchel.render(); this.markNew(0); };
+    this.satchel = new SatchelPane(game, (c) => this.onCue(c)); $('tab-satchel').onclick = () => { this.onCue('uiPop'); this.setTab('satchel'); this.satchel.render(); this.markNew(0); };
     fitPages([$('pane-satchel'), $('pane-prestige'), $('pane-settings')]);
-    $('tab-grove').onclick = () => { this.onCue('click'); this.setTab('grove'); }; $('tab-prestige').onclick = () => { this.onCue('click'); this.setTab('prestige'); }; $('tab-settings').onclick = () => { this.onCue('click'); this.setTab('settings'); };
+    $('tab-grove').onclick = () => { this.onCue('uiPop'); this.setTab('grove'); }; $('tab-prestige').onclick = () => { this.onCue('uiPop'); this.setTab('prestige'); }; $('tab-settings').onclick = () => { this.onCue('uiPop'); this.setTab('settings'); };
     this.initSettings();
     $('dep-boss').onclick = () => { game.summonBoss(); };
     $('pr-btn').onclick = () => { if (game.canReplant() && !game.state.run.fallen) this.doReplant(); };
@@ -88,7 +93,9 @@ export class Panel {
     $('hw-tree').onclick = (e) => { const id = (e.target as HTMLElement).closest('button')?.dataset.hw as HwId | undefined; if (id && game.buyHw(id)) { this.toast(STR.hwBought(HW_NODE[id].name)); this.renderHw(); } };
     $('camp-sec-title').textContent = STR.campSecTitle; $('camp-sec-body').textContent = STR.campSecBody;
     this.camp = new CampPane(game, $('bcard'), $('camp-list'), (msg) => { this.onCue('bought'); this.toast(msg); });
-    this.renderDetail(); this.renderHw(); this.camp.render(); this.setMode('run');
+    this.paths = new PathPicker($('paths'), () => game.state, (p) => game.choosePath(p),
+      (p) => { this.onCue('equip'); this.toast(p ? STR.pathChosen(PATHS[p].name) : STR.pathCleared); this.renderDetail(); }, drawSigil);
+    this.renderDetail(); this.renderHw(); this.camp.render(); this.paths.render(); this.setMode('run');
     if (game.state.run.fallen) this.showFallen();
   }
 
@@ -107,7 +114,7 @@ export class Panel {
     $('hw-body').textContent = s.run.fallen ? STR.hwBody(hwSpendable(s)) : STR.hwClosed(hwSpendable(s));
     if (!$('pane-satchel').hidden) this.satchel.update();
     for (const b of $('hw-tree').querySelectorAll<HTMLButtonElement>('button[data-hw]')) b.disabled = !canBuyHw(s, b.dataset.hw as HwId);
-    this.camp.update();
+    this.camp.update(); this.paths.update();
     const g = gain(), ok = s.run.wave >= PRESTIGE.voluntaryWave && !s.run.fallen;
     $('btn-pullback').hidden = !ok;
     $('pr-gain').textContent = '+' + g; ($('pr-btn') as HTMLButtonElement).disabled = !ok;
@@ -170,9 +177,9 @@ export class Panel {
   }
 
   renderDetail(): void {
-    const s = this.game.state, n = NODE[this.tree.selected], lvl = rankOf(s, n.id), cost = costOf(s, n), maxed = lvl >= n.max, un = unlocked(s, n);
+    const s = this.game.state, n = NODE[this.tree.selected], lvl = rankOf(s, n.id), cost = costOf(s, n), maxed = lvl >= n.max, un = unlocked(s, n), hint = pathHint(s, n);
     $('detail').innerHTML = `
-      <div class="branch" style="color:${BRANCH_COLOR[n.branch]}">${BRANCH_LABEL[n.branch]}${n.parent && !un ? ' · ' + STR.needs(NODE[n.parent].name) : ''}</div>
+      <div class="branch"${n.path ? ` data-path="${n.path}"` : ` style="color:${BRANCH_COLOR[n.branch]}"`}>${n.path ? PATHS[n.path].name : BRANCH_LABEL[n.branch]}${hint ? ' · ' + hint : n.parent && !un ? ' · ' + STR.needs(NODE[n.parent].name) : ''}</div>
       <div class="name"><span>${n.name}</span><span style="font-size:0.875rem;color:var(--cream-dim)">${n.max > 1 ? STR.rank(lvl, n.max) : lvl ? STR.learned : ''}</span></div>
       <div class="desc">${n.desc}</div>
       <div class="row"><span style="font-variant-numeric:tabular-nums;color:var(--amber)">${maxed ? STR.fullyGrown : n.base === 0 ? '' : STR.starlightCost(fmt(cost))}</span>
@@ -185,6 +192,7 @@ export class Panel {
   setMode(m: 'run' | 'camp' | 'settings'): void {
     if (m !== 'camp') this.setTreeFull(false);
     if (m !== 'run') this.camp.close();
+    if (document.body.dataset.mode !== m) this.onCue('uiPanel'); // TB-195g: the panel whoosh
     document.body.dataset.mode = m;
     $('camp-go').hidden = m !== 'camp'; $('camp-close').hidden = m !== 'settings';
     $('camp-title').textContent = m === 'settings' ? STR.tabSettings : STR.campTitle;
