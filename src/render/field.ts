@@ -37,6 +37,8 @@ export class FieldRenderer {
   private shake = 0;
   private storms: { pts: [number, number][]; life: number; c: string }[] = [];
   private impacts: { x: number; y: number; r: number; life: number }[] = [];
+  /** Fallen orcs playing their death clip (TB-212): sprite key, foot point, radius, seconds since the kill. */
+  private corpses: { key: string; x: number; y: number; r: number; t: number }[] = [];
   /** Fire puffs where a fireball landed (TB-127): discs that rise, swell and cool from pale core to ember to fire as they fade. */
   private puffs: { x: number; y: number; r: number; vy: number; life: number; max: number }[] = [];
   /** Fire and frost ground patches left by an enchanted strike (TB-089). */
@@ -107,7 +109,10 @@ export class FieldRenderer {
         case 'kill': {
           const r = ORC_TYPES[e.kind as OrcKind]?.radius ?? ACTOR_R;
           fx.burst(e.x, e.y, P.orc, VFX.kill[0], VFX.kill[1]); fx.blood(e.x, e.y, footOf(r), P.bloodOrc, B.kill, 0); fx.splat(e.x, e.y + footOf(r), r * B.killSplat, P.bloodOrc);
-          fx.text(e.x, e.y - 14, '+' + fmt(e.loot), P.amber); break;
+          fx.text(e.x, e.y - 14, '+' + fmt(e.loot), P.amber);
+          const dk = `orc.${ORC_SPRITE[e.kind] ?? e.kind}.death`;
+          if (this.sprites.duration(dk) > 0) { if (this.corpses.length >= VFX.corpse.cap) this.corpses.shift(); this.corpses.push({ key: dk, x: e.x, y: e.y, r, t: 0 }); }
+          break;
         }
         case 'hit': fx.burst(e.x, e.y, P.cream, VFX.hit[0], VFX.hit[1]); fx.blood(e.x, e.y, footOf(ACTOR_R), P.bloodOrc, B.hit, e.src === 'lob' ? 0 : 1); if (e.crit) fx.text(e.x, e.y - 22, 'crit', P.cream); break;
         case 'bleed': fx.blood(e.x, e.y, footOf(e.r), P.bloodOrc, B.hit, 1); break;
@@ -276,6 +281,7 @@ export class FieldRenderer {
       g.globalAlpha = Math.min(1, pt.life / (A.patchLife * 0.4)); g.fillStyle = pt.c; g.beginPath(); g.ellipse(pt.x, pt.y, pt.r, pt.r * 0.45, 0, 0, 6.28); g.fill(); g.globalAlpha = 1;
       if (pt.fire && !this.reducedMotion && Math.random() < A.flameRate * dt) this.fx.flame(pt.x + (Math.random() - 0.5) * pt.r * 1.6, pt.y + (Math.random() - 0.5) * pt.r * 0.8 + 6, P.fire);
     }
+    this.drawCorpses(dt);
     const vans = this.vanBuf, orcs = this.orcBuf; vans.length = 0; orcs.length = 0;
     s.vans.forEach((v) => { vans.push(v); }); vans.sort(byY); for (const v of vans) this.van(s, v);
     s.orcs.forEach((o) => { if (!o.dead) orcs.push(o); }); orcs.sort(byY);
@@ -466,9 +472,23 @@ export class FieldRenderer {
     const tint = o.burn > 0 ? P.fireTint : o.chill > 0 ? P.frostTint : '', glow = o.burn > 0 ? P.fire : o.chill > 0 ? P.frost : '';
     let k = this.orcKeys.get(o.kind);
     if (!k) { const key = `orc.${ORC_SPRITE[o.kind] ?? o.kind}`; k = { key, atk: key + '.attack' }; this.orcKeys.set(o.kind, k); }
-    const ost = orcState(s, o), ot = ost === 'attack' ? orcSwingT(o, this.sprites.duration(k.atk), VFX.strike.orc) : orcAnimT(o);
+    const ost = orcState(s, o), ot = ost === 'attack' ? orcSwingT(o, this.sprites.duration(k.atk), k.key === 'orc.grunt' ? VFX.strike.grunt : VFX.strike.orc) : orcAnimT(o);
     this.sprites.drawActor(g, k.key, ost, ot, 0, o.r * 0.9, o.r, o.hitT > 0, tint, glow, VFX.arrows.rimBlur);
     this.orcBars(o); this.at(0, 0, false);
+  }
+
+  /** Death clips (TB-212): each body plays its clip once, holds the last frame, then fades; drawn under the living orcs. */
+  private drawCorpses(dt: number): void {
+    const C = VFX.corpse, g = this.g;
+    for (let i = this.corpses.length - 1; i >= 0; i--) {
+      const c = this.corpses[i]!, dur = this.sprites.duration(c.key); c.t += dt;
+      const over = c.t - dur - C.hold;
+      if (over >= C.fade || dur <= 0) { this.corpses.splice(i, 1); continue; }
+      this.at(c.x, c.y, false); if (over > 0) g.globalAlpha = 1 - over / C.fade;
+      this.sprites.draw(g, c.key, Math.min(c.t, dur * 0.999), 0, c.r * 0.9, c.r);
+      g.globalAlpha = 1;
+    }
+    this.at(0, 0, false);
   }
 
   /** Set the transform to the frame's base translated to (x, y), mirrored when `flip`: the same matrix save/translate/scale

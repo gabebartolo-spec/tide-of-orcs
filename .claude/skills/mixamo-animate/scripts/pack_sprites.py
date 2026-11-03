@@ -11,18 +11,20 @@ from PIL import Image
 src, dst = sys.argv[1], sys.argv[2]
 RES, PX_PER_M, SHEET_W, PAD = 512, 110, 2048, 2
 # TB-194: four sheets (each <= 2 MB) since attacks are packed at 30 fps (every clip frame); was orcs + elf (TB-129)
-SHEETS = {"orcs": "sheet_orcs.webp", "orcs2": "sheet_orcs2.webp", "elf": "sheet_elf.webp", "van": "sheet_van.webp", "camp": "sheet_camp.webp", "archer": "sheet_archer.webp"}
+SHEETS = {"orcs": "sheet_orcs.webp", "orcs2": "sheet_orcs2.webp", "elf": "sheet_elf.webp", "van": "sheet_van.webp", "camp": "sheet_camp.webp", "archer": "sheet_archer.webp", "grunt": "sheet_grunt.webp"}
 ORCS2 = ("orc.runner", "orc.brute", "orc.wolfrider", "hawk")
 def sheet_of(key):
     if key.startswith("camp."): return SHEETS["camp"]
+    if key.startswith("orc.grunt"): return SHEETS["grunt"]  # TB-212: the Riltariki grunt is ~1.9 m, so ~2x the px of the Tripo orcs; 131 frames get their own sheet
     if key.startswith("archer"): return SHEETS["archer"]  # TB-203 companion archer: its own sheet (206 frames would push sheet_elf past 2 MB)
     if key.startswith(ORCS2): return SHEETS["orcs2"]
     if key.startswith("orc."): return SHEETS["orcs"]
     return SHEETS["van" if key.startswith("van.") else "elf"]
 # key: (fps, mirror, body key, body height in actor radii). Vector actors: orc ~2.4 r with feet, elf/vanguard 36 units at radius 12.
 ANIMS = {
-    "orc.grunt": (30, True, "orc.grunt", 2.4),
+    "orc.grunt": (30, True, "orc.grunt", 2.4),  # TB-212: Riltariki low-poly orc, own ANM_WALK (50 frames) / ANM_ORC_LIGHT_ATTACK (50), orc212/render_orc.py ORTHO 3.0
     "orc.grunt.attack": (30, True, "orc.grunt", 2.4),
+    "orc.grunt.death": (30, True, "orc.grunt", 2.4),  # TB-212: Riltariki low-poly orc's own ANM_DEATH, 31 frames, played once by field.ts on a kill
     "van.spear": (30, False, "van.spear", 3.0),
     "van.spear.attack": (30, False, "van.spear", 3.0),
     "van.blade": (30, False, "van.blade", 3.0),
