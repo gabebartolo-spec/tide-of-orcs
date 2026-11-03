@@ -39,6 +39,7 @@ the Camp scene opens its card with its level, costs and the next upgrade; upgrad
 4. **TB-188d Final art (done, 470f4c3):** buildings as sprites at the game angle (GAMECAM 20), like the fence. The source is Tripo (H3.1 text to 3D, one model per building per level, 12 in all), rendered headless in Blender by `render_camp.ps1` into `sheet_camp.webp` (keys `camp.<id>.<lv>`); the vector art stays as the fallback until the sheet loads.
 5. **TB-188e Camp scene (done):** the camp leaves the field for its own Camp tab at house scale (§1).
 6. **TB-188f Life (done):** idle life in the Camp scene (`render/campLife.ts`, numbers in `CAMP_LIFE`): forge smoke and sparks, kitchen chimney smoke, dust puffs in the training ring, a swaying pennant on the bowyer; one fixed 160-particle pool, drawn only while the Camp tab is shown. Upgrade moments (build dust, banner raise, sound) are TB-188h.
+7. **TB-188h Upgrade moments (review):** `render/campUpgrade.ts` (`CampUpgradeFx`, numbers in `CAMP_UPGRADE`) watches the levels the Camp scene draws; when one rises, ~34 sand puffs burst along that building's base and a grove-green swallowtail banner with a gold star is raised on a standard planted beside it (a roof-apex pole read as stuck in the forge chimney), ~1.1 s in all, then fades. The `buildingUpgraded` event plays the existing `setRise` chime (`cueFor`).
 
 ## 4. Decisions (director, 3 Nov)
 1. **Currency:** Heartwood plus a farmable material per building, dropped by common orcs. Buildings

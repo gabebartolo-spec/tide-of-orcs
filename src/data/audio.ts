@@ -123,6 +123,8 @@ export function cueFor(e: SimEvent): Cue | null {
     case 'fireballStrike': return 'fireballHit'
     case 'loot': return e.kept ? LOOT_CUE[e.rarity] ?? 'lootDrop' : null;
     case 'replant': return 'replant';
+    // TB-188h: a camp building upgrade rings the set-rise chime
+    case 'buildingUpgraded': return 'setRise';
     default: return null;
   }
 }

@@ -227,6 +227,19 @@ export const CAMP_LIFE = {
   dustDy: 0.3,
 } as const;
 
+/** Camp upgrade moment (TB-188h): when a building's level rises, build dust bursts along its base and a banner is raised beside it,
+ *  all within `dur` s. Dust: `n` puffs spread over the new level's image width x `spread`, starting `dy` x its height above the
+ *  image base plus up to `lift`; other fields as CAMP_LIFE kinds. Banner (scene units): a standard planted on the ground at `at`
+ *  (fraction of the new level's image: x from the left, y up from the base; the forge's stands clear of its fence post), its foot
+ *  `sink` below that point over a ground shadow (`shadow`: rx, ry, alpha). The pole grows to `pole` over `poleT` s, the cloth
+ *  (`w` x `h`) climbs it from `raise[0]` to `raise[1]` s and waves at `wave` Hz by `sway`, and the whole banner fades over the
+ *  last `fade` s. */
+export const CAMP_UPGRADE = {
+  dur: 1.1,
+  dust: { n: 44, spread: 0.85, dy: 0.1, lift: 16, life: [0.6, 1.0], vx: [-30, 30], vy: [-34, -10], grav: 12, r0: 4, r1: 13, a: 0.42 },
+  banner: { at: { bowyer: [0.9, 0.12], forge: [0.97, 0.1], kitchen: [0.9, 0.12], training: [0.9, 0.12] }, shadow: [7, 2.5, 0.35], pole: 72, poleT: 0.25, w: 32, h: 20, raise: [0.2, 0.65], wave: 2.2, sway: 2.4, fade: 0.25, sink: 2, lineW: 2.6 },
+} as const;
+
 /** UI motion and feedback kit (TB-195a, docs/plans/game-ui.md §3, ART-STYLE §Motion). Times in ms, sizes in CSS px. */
 export const JUICE = {
   /** Spring durations: pops, panels, screen moves. */

@@ -4,6 +4,7 @@ import { CampArt } from './camp';
 import { CampBackdrop } from './campBackdrop';
 import { CampFauna } from './campFauna';
 import { CampLife } from './campLife';
+import { CampUpgradeFx } from './campUpgrade';
 
 /** The Camp tab's scene (TB-188e, docs/plans/elf-encampment.md §1): the four encampment buildings at house scale in a meadow
  *  before a far forest. CAMP_SCENE (scene units = field units) covers the canvas, centred: a canvas of another aspect crops the
@@ -13,6 +14,8 @@ export class CampScene {
   private life = new CampLife();
   private backdrop = new CampBackdrop();
   private fauna = new CampFauna();
+  /** Upgrade moments (TB-188h): build dust and a raised banner. */
+  readonly upgradeFx = new CampUpgradeFx();
   private k = 1; private ox = 0; private oy = 0; private dpr = 1;
 
   constructor(readonly canvas: HTMLCanvasElement) {
@@ -43,5 +46,6 @@ export class CampScene {
     this.fauna.draw(g, t);
     this.art.draw(g, levels, px);
     this.life.draw(g, levels, t);
+    this.upgradeFx.draw(g, levels, t);
   }
 }

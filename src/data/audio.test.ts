@@ -5,6 +5,7 @@ import { AUDIO, BOSS_BED, CUES, MUSIC, cueFor, nextBed } from './audio';
 describe('audio cue map', () => {
   it('maps kills by orc kind', () => {
     expect(cueFor({ t: 'kill', x: 0, y: 0, loot: 1, kind: 'grunt' })).toBe('orcDeath');
+    expect(cueFor({ t: 'buildingUpgraded', id: 'forge', level: 2 })).toBe('setRise');
     expect(cueFor({ t: 'kill', x: 0, y: 0, loot: 1, kind: 'brute' })).toBe('bruteDeath');
   });
   it('chimes a kept drop by rarity and stays quiet for an auto-salvaged one (TB-106)', () => {
