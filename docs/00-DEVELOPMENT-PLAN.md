@@ -80,7 +80,7 @@ Goal: parity with the prototype, properly built.
 **Done when:** three consecutive prestige runs each feel faster than the last.
 
 ### M4 — Presentation (weeks 6–7) · **done except TB-068** (sprite sheets). Done: ElevenLabs SFX and ambient bed TB-069, sprite loader TB-060, parallax/day-dusk TB-061, audio engine TB-062, music beds TB-063 (PR #9), mobile TB-064, settings TB-065, tree polish TB-066, strings TB-067, attack and hit VFX TB-088, field ground TB-098 (tufts, rocks, worn patches).
-TB-068 status: every orc kind, the elf, both vanguard, the wolf and the hawk draw from sprites; open: the drummer's drum clip (being redone, TB-186) and the companion archer (TB-203).
+TB-068 status: every orc kind, the elf, both vanguard, the wolf, the hawk and the companion archers (TB-203) draw from sprites; open: the drummer's drum clip (being redone, TB-186).
 - Final art: Tripo models → Mixamo/Cascadeur animation → sprite sheets for orcs, elf, vanguard, companions (ART-STYLE.md §Asset pipeline); vector draws remain the fallback. Wall weathering, parallax hills, day/night tinting, natural ground (ART-STYLE §Ground).
 - Audio: ElevenLabs SFX and ambient bed, two music beds, ducking on wall fall and boss.
 - Tree layout polish: branch curves, bloom on affordable nodes, camera easing.

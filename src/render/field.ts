@@ -244,11 +244,10 @@ export class FieldRenderer {
 
     this.lobCd = s.stats.lobCd;
     const drawn = Math.min(1, (s.run.shotT[0] ?? 0) / s.stats.lobCd), aiming = aim !== null && aim.x > BAR_X + BAR_W && !s.run.fallen;
-    this.elf(ELF_X, H / 2, false, aiming ? drawn : -1);
+    this.elf(ELF_X, H / 2, aiming ? drawn : -1);
     this.gearFx();
     if (aim && aiming) this.reticle(aim.x, aim.y, s.stats.radius, drawn);
-    if (s.stats.archers >= 1) this.elf(ELF_X - 10, H / 2 - 90, true);
-    if (s.stats.archers >= 2) this.elf(ELF_X - 10, H / 2 + 90, true);
+    for (let i = 1; i <= s.stats.archers && i < 3; i++) this.archer(s, i, ELF_X - 10, H / 2 + (i === 1 ? -SOURCES.archerOffsetY : SOURCES.archerOffsetY));
     if (s.stats.ballista) { g.fillStyle = P.bark; g.fillRect(ELF_X - 10, H / 2 - 48, 30, 10); g.fillStyle = P.cream; g.fillRect(ELF_X + 10, H / 2 - 45, 22, 3); }
     if (s.stats.wolf) { this.wolf(s, s.wolf); for (let i = 0; i < s.stats.extraWolves && i < s.pack.length; i++) this.wolf(s, s.pack[i]!); }
 
@@ -481,17 +480,27 @@ export class FieldRenderer {
 
   /** `draw` is the bow's charge (0..1) while the player aims, -1 otherwise. The sprite elf plays its idle loop (`elf`) at rest
    *  and its draw clip (`elf.attack`) in step with the charge, so the string is at full draw as the lob leaves. */
-  private elf(x: number, y: number, dim: boolean, draw = -1): void {
-    const g = this.g; g.save(); g.translate(x, y); if (dim) g.globalAlpha = 0.85;
+  private elf(x: number, y: number, draw = -1): void {
+    const g = this.g; g.save(); g.translate(x, y);
     g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 16, 12, 4, 0, 0, 6.28); g.fill();
-    const key = dim ? 'archer' : 'elf', aiming = draw >= 0;
-    if (dim) { this.sprites.drawActor(g, key, 'walk', this.clock, 0, 16, ACTOR_R); g.restore(); return; }
+    const key = 'elf', aiming = draw >= 0;
     this.aimMix = stepAimMix(this.aimMix, aiming, this.clock - this.elfClock, VFX.elfShot.aim); this.elfClock = this.clock;
     if (aiming) this.lastCharge = draw;
     const a0 = g.globalAlpha;
     for (const l of elfLayers(this.lastCharge, this.lastCharge * this.lobCd, this.aimMix, this.sprites.duration('elf.attack'), VFX.elfShot.release)) {
       g.globalAlpha = a0 * l.alpha; this.sprites.drawActor(g, key, l.state, l.state === 'walk' ? this.clock : l.t, 0, 16, ACTOR_R);
     }
+    g.restore();
+  }
+
+  /** Companion archer i (TB-203): its idle loop (`archer`), and its draw clip (`archer.attack`) timed off its volley timer so the
+   *  string releases as the volley leaves. With no orc in range its timer runs past the interval and it stands at idle. */
+  private archer(s: SimState, i: number, x: number, y: number): void {
+    const g = this.g; g.save(); g.translate(x, y); g.globalAlpha = 0.85;
+    g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 16, 12, 4, 0, 0, 6.28); g.fill();
+    const U = s.stats.units[i === 1 ? 'ranger' : 'warden'], cd = 1 / (s.stats.fireRate * U.rate), shotT = s.run.shotT[i] ?? 0;
+    const dur = this.sprites.duration('archer.attack'), shooting = dur > 0 && shotT < cd;
+    this.sprites.drawActor(g, 'archer', shooting ? 'attack' : 'walk', shooting ? swingClipT(shotT, cd, dur, VFX.strike.archer) : this.clock, 0, 16, ACTOR_R);
     g.restore();
   }
 
