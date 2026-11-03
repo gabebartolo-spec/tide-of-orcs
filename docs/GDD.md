@@ -83,7 +83,7 @@ Design intent: the vanguard line is a standing defence bought through the tree (
 - Ranger and Warden always auto-target with straight volleys (a 0.09-rad fan at 520 px/s, `fireRate` = 1.2 × 1.15^Quick Draw per second); only the elf's bow is aimed. Bow nodes also carry over to their volleys: Split Shot adds arrows to the fan, Longshaft adds pierce, and Moonbow steers their arrows toward the target (6 rad/s). Each archer has its own damage, rate, crit chance and crit damage nodes (TB-111); fire on a volley arrow rolls Fire's chance.
 
 ## 7. Companions
-All companion damage scales with Kinship (×1.2/rank). Kinship also scales vanguard.
+All companion damage scales with Kinship (×1.4/rank). Kinship also scales vanguard.
 
 | Companion | Node | Behaviour |
 |---|---|---|

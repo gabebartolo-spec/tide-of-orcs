@@ -12,15 +12,15 @@ const FX: Readonly<Record<BuildingId, readonly FxKey[]>> = {
   kitchen: ['wallHp', 'regenPlus', 'starlight'], training: ['vanHp', 'vanDmg', 'respawnCut'],
 };
 const MULT = new Set<FxKey>(['bowDmg', 'radius', 'weaponDmg', 'wallHp', 'starlight', 'vanHp', 'vanDmg']);
-const FLAT = new Set<FxKey>(['regenPlus']);
-const round = (v: number): number => Math.round(v * 100) / 100;
+const PER_SEC = new Set<FxKey>(['regenPlus']);
+const round1 = (v: number): number => Math.round(v * 1000) / 10;
 
 /** A building's effect at `level` as one line ("bow damage +10%, draw time −6%, …"); empty at level 0. */
 export function campFxText(id: BuildingId, level: number): string {
   if (level <= 0) return '';
   return FX[id].map((k) => {
     const v = CAMP_FX[k][level]!;
-    return STR.campFx[k](FLAT.has(k) ? round(v) : Math.round((MULT.has(k) ? v - 1 : v) * 100));
+    return STR.campFx[k](PER_SEC.has(k) ? round1(v) : Math.round((MULT.has(k) ? v - 1 : v) * 100));
   }).join(', ');
 }
 

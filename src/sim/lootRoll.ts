@@ -15,7 +15,7 @@ export type AffixFilter = (a: AffixDef) => boolean;
 const OWNS: Record<Feature, (st: Stats) => boolean> = {
   companion: (st) => st.wolf > 0 || st.archers > 0 || st.hawk || st.treant || !!st.knives || st.storm || st.ballista > 0,
   wolf: (st) => st.wolf > 0, hawk: (st) => st.hawk, treant: (st) => st.treant, knives: (st) => !!st.knives, ballista: (st) => st.ballista > 0,
-  spikes: (st) => st.spikes > 0, vanguard: (st) => st.vanCap > 0, elites: (st) => st.foes.elite.on,
+  spikes: (st) => st.spikes > 0, vanguard: (st) => st.vanCap > 0, elites: (st) => st.foes.elite.on, regen: (st) => st.barRegen > 0, mend: (st) => st.vanMend > 0,
   fire: (st) => st.fire, storm: (st) => st.storm, moon: (st) => st.homing,
 };
 /** Gate (TB-114): an affix rolls only while the player owns the feature it scales. */
