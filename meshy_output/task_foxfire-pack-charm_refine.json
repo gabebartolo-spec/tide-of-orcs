@@ -1,0 +1,27 @@
+{
+  "id": "01a1a025-abef-77ac-a48c-d449b4999ee7",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 1851945624,
+  "prompt": "Fox charm pendant, a game item prop. A small carved fox head with two pointed ears, hung on a short cord loop. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Warm rust-orange fox red with bone-white fur tips, bone-white muzzle, rust-brown cord.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793688187109,
+  "progress": 100,
+  "started_at": 1793688187114,
+  "finished_at": 1793688215635,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a025-abef-77ac-a48c-d449b4999ee7/output/model.glb?Expires=4947264000&Signature=GpDJDqSUbEbvor1G19JdQ5Z3g1Y1qJ04DNFJV9x7-eTMMkJOVb7~iZCmdjIcwxRuPuBZGFWnhbK-erOtcDN0wFD6AEnkGgfOJbk3L5H-JAqgIuYeGABS0lENpXaSmqgn8ZU-pGOCaVetoRB2LG-Vk7Cx7Rdxi8jsZNR32yF5ieWt8wLUAo083Yx7j93aW8UMViRKmSsfhWmUH3u3UUO6cqWxM7xAkWgG5qOqC9P9DqgB04eW14O5KWrvT1-z3Hsi~M4ZKhIK8ET0B2yYUgAc2NhUZu1hM1Bkq5vK4ll68prded8~lYrZbsd60SkaPb0GV0BuFRVQ856968aDxHZcsA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a025-abef-77ac-a48c-d449b4999ee7/output/preview.png?Expires=4947264000&Signature=peyljeFIMQ7hIr590IxadLc3NWXC6Sv-MfiqUSM4cij4H2kuWPpvkrIr-5HSazk-6GWxz5RGSl3-A8br51qpZWvMO5wCZoYi6Su5X5WAKXrECd1xOE4~LWOkdv4XhLzFw3wN-dTk0ar1y2fEYZXb49r~tPqQ5cR1vw2uEcCi7BW9NzzgK05FI3t46EQmFDoWcYZ03fGgOHuihQu8dnElXF7ZK2AK7KHUqSAcgXKH~ugB3t2Vriyhbddpav-otA6L7CHv0mi31AKcg2G10uoEaMfB4XNifLnxD8tMRcd~YL4o5SmBiffMgw7XxfX-PxsawS236Ms3koA4iPFqkxBKyQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a025-abef-77ac-a48c-d449b4999ee7/output/texture_0.png?Expires=4947264000&Signature=qz~57Af3pt8tUMOqvEQySn5nnVCB3r9lhLW3NvxwN-S-i93~bSNFhvB2kqzO0LYZqMPCgNhe8wGLXPW7D3F6fLdIB9T~qWuvqwUp3Rt935tQGLScpDQms3O4PrCGEdrUlf0n~630FZ-ggPnYr-hkPvjKjJIpyrC8WW-pMsk8CqiCCqzYy1hSaEH3i1jwrP0Z2z8aP-r0nTgKmtwfgoibVnqsPjK-LW6mZ2uW32pKBDdwg5QpodspMzb7WXzCtVYhR1wh6okfn6KJd-R0FCf4xpDoLWCjN1JELnzrOLY5W~CYyko5LR-tBSfAJ9p13U9xaLxqMK60~6S73RVC3wtojw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

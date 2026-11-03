@@ -186,5 +186,117 @@
  },
  "acorn-charm-i1": {
   "texture": "Hand-painted flat colours, soft low-poly toy game prop, no outlines, no baked shadows. Scaly ochre-brown acorn cap, glossy chestnut nut, thin bronze band and ring, dark leather cord."
+ },
+ "serpents-coil-bow": {
+  "prompt": "Serpent bow, a game item prop. A recurve bow whose wooden limbs are carved as a coiled snake body with a snake head at the upper tip, a wrapped grip and a single taut string, no arrow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Deep dusty sage-green with bone-coloured scale patterns, ochre grip wrap, bone string."
+ },
+ "serpents-coil-quiver": {
+  "prompt": "Snakeskin arrow quiver, a game item prop, standing upright. A cylindrical tube of snakeskin with a snake coiled around it from bottom to rim, a strap, five fletched arrow shafts rising out of the open top, no bow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Deep dusty sage-green with bone-coloured scale patterns, rust-brown strap, pale bone arrow shafts with sage fletching."
+ },
+ "serpents-coil-bracer": {
+  "prompt": "Snakescale bracer, a game item prop, unbuckled and laid flat on the ground, outer face up, seen from above. A single tapered plate, wider at the elbow end and narrower at the wrist end, gently domed, covered in diamond snake scales with a small snake head emblem at the wide end, with two straps lying splayed out flat to either side, each ending in a small buckle. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Deep dusty sage-green with bone-coloured scale patterns, rust-brown straps, ochre buckles."
+ },
+ "serpents-coil-cloak": {
+  "prompt": "Serpent hooded cloak, a game item prop, displayed standing as if worn by an invisible figure. Cloth to the ground with a diamond snake-scale pattern, a hood shaped like a snake's head, a coiled snake clasp at the throat, no body. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Deep dusty sage-green with bone-coloured scale patterns, an ochre snake clasp, darker sage hood lining."
+ },
+ "serpents-coil-boots": {
+  "prompt": "Pair of snakeskin boots, a game item prop. Two knee-high boots of snakeskin with a small snake coiled around each ankle, pointed toes, standing side by side, no legs. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Deep dusty sage-green with bone-coloured scale patterns, rust-brown soles, ochre snake eyes."
+ },
+ "serpents-coil-charm": {
+  "prompt": "Serpent charm pendant, a game item prop. A small snake coiled into a ring biting its own tail, hung on a short cord loop. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Deep dusty sage-green with bone-coloured scale patterns, ochre eyes, rust-brown cord."
+ },
+ "foxfire-pack-bow": {
+  "prompt": "Fox bow, a game item prop. A recurve bow with a carved fox head at the upper tip and a bushy fox tail tied at the grip, a single taut string, no arrow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Warm rust-orange fox red with bone-white fur tips, ochre wood, bone string."
+ },
+ "foxfire-pack-quiver": {
+  "prompt": "Fox fur arrow quiver, a game item prop, standing upright. A cylindrical tube of fox fur with a fox-head clasp near the rim, a strap, five fletched arrow shafts rising out of the open top, no bow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Warm rust-orange fox red with bone-white fur tips, rust-brown strap, bone arrow shafts with orange fletching."
+ },
+ "foxfire-pack-bracer": {
+  "prompt": "Fox bracer, a game item prop, unbuckled and laid flat on the ground, outer face up, seen from above. A single tapered plate, wider at the elbow end and narrower at the wrist end, gently domed, with a fox head emblem embossed in its centre and a fur trim along the wide end, with two straps lying splayed out flat to either side, each ending in a small buckle. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Warm rust-orange fox red with bone-white fur tips, ochre buckles, bone fur trim."
+ },
+ "foxfire-pack-cloak": {
+  "prompt": "Fox fur hooded cloak, a game item prop, displayed standing as if worn by an invisible figure. Cloth to the ground with a hood shaped like a fox head with two pointed ears and a fur collar, no body. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Warm rust-orange fox red with bone-white fur tips, bone-white collar and hem, ochre clasp."
+ },
+ "foxfire-pack-boots": {
+  "prompt": "Pair of fox fur boots, a game item prop. Two ankle boots with thick fox fur cuffs and a small fox tail tuft at each heel, standing side by side, no legs. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Warm rust-orange fox red with bone-white fur tips, bone-white fur cuffs, rust-brown soles."
+ },
+ "foxfire-pack-charm": {
+  "prompt": "Fox charm pendant, a game item prop. A small carved fox head with two pointed ears, hung on a short cord loop. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Warm rust-orange fox red with bone-white fur tips, bone-white muzzle, rust-brown cord."
+ },
+ "magpies-hoard-bow": {
+  "prompt": "Magpie bow, a game item prop. A recurve bow with a carved magpie bird perched on the upper tip and gold coins strung at the grip, a single taut string, no arrow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Glossy black-blue magpie with bone-white patches, ochre-gold coins, dark wood, bone string."
+ },
+ "magpies-hoard-quiver": {
+  "prompt": "Magpie arrow quiver, a game item prop, standing upright. A cylindrical tube covered in layered black and white feathers with gold coins sewn on the rim, a strap, five fletched arrow shafts rising out of the open top, no bow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Glossy black-blue magpie with bone-white patches, ochre-gold coins, rust-brown strap, black-and-white fletching."
+ },
+ "magpies-hoard-bracer": {
+  "prompt": "Magpie bracer, a game item prop, unbuckled and laid flat on the ground, outer face up, seen from above. A single tapered plate, wider at the elbow end and narrower at the wrist end, gently domed, covered in overlapping black and white feathers with a large gold coin set in its centre, with two straps lying splayed out flat to either side, each ending in a small buckle. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Glossy black-blue magpie with bone-white patches, ochre-gold coin and buckles, rust-brown straps."
+ },
+ "magpies-hoard-cloak": {
+  "prompt": "Magpie feather hooded cloak, a game item prop, displayed standing as if worn by an invisible figure. Cloth to the ground with black and white feathers over the shoulders and a hood, small gold trinkets hanging from the hem, no body. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Glossy black-blue magpie with bone-white patches, ochre-gold trinkets and clasp."
+ },
+ "magpies-hoard-boots": {
+  "prompt": "Pair of magpie boots, a game item prop. Two ankle boots with black and white feather cuffs and a gold coin buckle on each, standing side by side, no legs. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Glossy black-blue magpie with bone-white patches, ochre-gold buckles, rust-brown soles."
+ },
+ "magpies-hoard-charm": {
+  "prompt": "Magpie charm pendant, a game item prop. A small carved magpie bird holding a gold ring in its beak, hung on a short cord loop. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Glossy black-blue magpie with bone-white patches, ochre-gold ring, rust-brown cord."
+ },
+ "serpent-fang": {
+  "prompt": "Mythic serpent fang bow, a game item prop. A recurve bow whose limbs are a long snake's body, the upper tip a snake head with an open mouth and two long curved white fangs, a single taut string, no arrow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Deep sage-green snake scales with ochre-gold bands, bone-white fangs, a pale green venom drop, bone string."
+ },
+ "foxfire-tail": {
+  "prompt": "Mythic foxfire tail charm, a game item prop. One large bushy fox tail curled into a crescent, its tip wreathed in flames, bound at the base with a gold ring and hung on a short cord loop. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Rust-orange fox fur with a bone-white tip wreathed in pale blue-green ghostly flame, ochre-gold ring, rust-brown cord."
+ },
+ "magpies-talon": {
+  "prompt": "Mythic magpie talon quiver, a game item prop, standing upright. A cylindrical quiver gripped by a large bird's claw with four curved talons wrapped around it, black and white feathers on the sides, a strap, five fletched arrow shafts rising out of the open top, no bow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Glossy black-blue and bone-white feathers, ochre-gold talons and rim, rust-brown strap, gold arrow tips."
+ },
+ "sigil-serpent": {
+  "prompt": "Round carved medallion emblem, a game item prop, standing upright facing forward. A flat thick disc with a raised rim, a coiled snake in relief on its face. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Dusty sage-green disc, ochre-gold snake, bone rim."
+ },
+ "sigil-fox": {
+  "prompt": "Round carved medallion emblem, a game item prop, standing upright facing forward. A flat thick disc with a raised rim, a fox head with pointed ears in relief on its face. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Rust-orange disc, bone-white fox head, ochre-gold rim."
+ },
+ "sigil-magpie": {
+  "prompt": "Round carved medallion emblem, a game item prop, standing upright facing forward. A flat thick disc with a raised rim, a magpie bird in flight in relief on its face. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Dark blue-black disc, bone-white magpie, ochre-gold rim."
+ },
+ "serpents-coil-bow-r2": {
+  "prompt": "Serpent recurve bow, a game item prop, standing upright. One wooden stave bent into a smooth D-curve from tip to tip, a wrapped grip at the middle, and a single taut straight bowstring between the two tips with clear open space between string and stave, the stave carved with snake scales and the upper tip ending in a small snake head, no arrow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Deep dusty sage-green with bone-coloured scale patterns, ochre grip wrap, bone string."
+ },
+ "magpies-hoard-bow-r2": {
+  "prompt": "Magpie recurve bow, a game item prop, standing upright. One wooden stave bent into a smooth D-curve from tip to tip, a wrapped grip at the middle, and a single taut straight bowstring between the two tips with clear open space between string and stave, black and white feathers bound at the grip and two small gold coins hanging from the grip on a cord, no arrow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Glossy black-blue magpie with bone-white patches, dark wood, ochre-gold coins, bone string."
+ },
+ "magpies-hoard-bracer-r2": {
+  "prompt": "Magpie archer's bracer, a game item prop, standing upright. A curved forearm guard shaped like an open cuff, wider at the elbow end, its outer face covered in overlapping black and white feathers with a large gold coin set in the middle, two buckled leather straps around it, no arm inside. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Glossy black-blue magpie with bone-white patches, ochre-gold coin and buckles, rust-brown straps."
+ },
+ "magpies-talon-r2": {
+  "prompt": "Mythic magpie talon quiver, a game item prop, standing upright. One wide cylindrical arrow quiver, closed at the bottom and open at the top, with a large bird's foot of four thick curved claws gripping it from below and wrapping up its sides, black and white feathers on the tube, five fletched arrow shafts rising out of the open top, no bow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Glossy black-blue and bone-white feathers, ochre-gold claws and rim, rust-brown strap, gold arrow tips."
  }
 }

@@ -1,0 +1,27 @@
+{
+  "id": "01a1a025-14d8-7754-a1ed-c0d3e41a72ed",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 2954589109,
+  "prompt": "Fox bracer, a game item prop, unbuckled and laid flat on the ground, outer face up, seen from above. A single tapered plate, wider at the elbow end and narrower at the wrist end, gently domed, with a fox head emblem embossed in its centre and a fur trim along the wide end, with two straps lying splayed out flat to either side, each ending in a small buckle. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Warm rust-orange fox red with bone-white fur tips, ochre buckles, bone fur trim.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793688148622,
+  "progress": 100,
+  "started_at": 1793688148628,
+  "finished_at": 1793688185881,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a025-14d8-7754-a1ed-c0d3e41a72ed/output/model.glb?Expires=4947264000&Signature=Gu67TvLjW~xLEI9OTdf4IzAA8KjL3U4neN5Cjk-k3-uuOe7VUgZptFDBaDHQzjCFlQuGaKeNHZomjJdiiiANe0Hcj-oitgjzJ6kndbF0hHPOHMyrv5YI8Q9m4h~Xo8QcvQdDsrtbbHdH9owZke2LT2bCct-VN7iF2MengyXbpewA-fl-9jVYgKnmLToVtKN-nnthA6vYfzsXGMYFG-jdgccUNEObDYSXU0hOXAv2JOn-AKD8knTCrPDKC8XaIoqDWxmEtsqvBr4K7hVIUTpb4AtYy1bccTP2BUamqQesx22N1XDHGXun16UBbMG8QF6-graNy3z-8cbGzL6m3~am9g__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a025-14d8-7754-a1ed-c0d3e41a72ed/output/preview.png?Expires=4947264000&Signature=dlfEG1dwaSTrcUzKAheFudlElIEeFWvAbAgGI5tmVahVw7pDWYHWz6z1eRq4sjNRhUaKk1CwZtgpJOBpYdwxTowbw0X1y19-LglQkymbhTTn-BSAFSQoEB6UaiLA1MtBbhhkpk-AwTyn9qg2gUOxmu~hSQtmjLDDkZIRRJ0Xw9q8VrT9jdU8rHVDTtQrfNW4dOW~STSEgkKt3ehDjf9osOhMO4DBdPfKxYEA8V~kES6FMMEZ4g6WLjNLbcWwG8u6cHFq4HvgtYS72ZLcth6-E0qyfnyslOnUosKQQR56GJgILT7w2R7Y8qD2BuhY6vdMZ-N8LVpV5lq9U2qjs~~R2Q__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a025-14d8-7754-a1ed-c0d3e41a72ed/output/texture_0.png?Expires=4947264000&Signature=S1FVO~uxXiVbUJiJcA6nUaSPXZLgdoJzv8XgWAeRk0cupfOQz3dMo6HHyXmnnjQZb4JBp02HEGHEMhFD9IZ5HYWMPXZtafuckWHBvUDtT9uzESSGgRBEmvoe6gdPdP-h30DxTNTy7KEY3ADqx5bnE0EO5lXyNxF4GkuR3zpuOHI5WqjiaAvrlJ4vWxd7qzbSOSXqsbDQ~CrloQ~FF0Dl7HylmpX2hWmveP0IvFhhlKeTRxC3pmiRzVmFXGfx9~fKdExNpmz0ueWKcf0TwY061kxOozE7MIKPefho~JB1SClBdZ3HhFqdVeCrQzHzKjUpUST60jh~SPNAZRdpj5Qk5w__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

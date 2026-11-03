@@ -1,0 +1,23 @@
+{
+  "id": "01a1a009-b554-70dc-9271-fcddfd982109",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 710625893,
+  "prompt": "Round carved medallion emblem, a game item prop, standing upright facing forward. A flat thick disc with a raised rim, a magpie bird in flight in relief on its face. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793686354656,
+  "progress": 100,
+  "started_at": 1793686354663,
+  "finished_at": 1793686367706,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a009-b554-70dc-9271-fcddfd982109/output/model.glb?Expires=4947264000&Signature=LcA1JZBOJRkSexXUq7kXenzg3nug19JzoRGt6buXLd2ewJUPjzEoYnp3b1wcxiOmQkTC~5Xi2AJRwu0TIYDDERT0NUUNvzqaEF93aAdJramn9uxWj5wJF1nApa2dyhHQfXj3w4VvmjSEhV3RayJ0CchrZywN52PHdcWo87~VMtxJ9QSZIzZZE~Cg65mK79Zfoz0Psf3qTJFwGT-MtuQM6cj5Odz89uktQb5mwH3FJv5dr8Ra0cus5Ve2XHg9f0HKAwd2cbix30VQuix5KHWMDR54ohmddfVGvkVZ1qsl7Bd~GND0Kf0AjfgYTC7SidXnFdw9pDBkYzHHKfcDvO-geg__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a009-b554-70dc-9271-fcddfd982109/output/preview.png?Expires=4947264000&Signature=GuAe2CB7q8KYpARCTjV2NHJjTWAZCQ5ms38t64AAT0geOKmDD4i-KdzCiJB5CcCeaycsL9odlQjMMyvGpQlFm8PCeeXCAlweE7odnMX4L23HrL6yyhWl3YZGvMwpZTiu3s4~58gHuWZWPyvWn5-yMTgFp3cBLwPudEmelE9-V20bKy24h57Ww3HqeRFQmv9zlhvUv954L5MmzuPnzLHa8Mpeie0SUWvceoSwVoSBkVWB8z7B5tIalXbEXpWf9a0ko--7x4GH2YW8lK5A3Z2kkYPXfmU2kGzjpRukVeVU0W078ofKpcKRjRou76tDXq~NUwecyOMNEDrU8gNX0mE8qg__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

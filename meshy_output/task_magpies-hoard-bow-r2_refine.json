@@ -1,0 +1,27 @@
+{
+  "id": "01a1a027-ab5b-73ff-a2e2-52b234a1cfa7",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 2732060089,
+  "prompt": "Magpie recurve bow, a game item prop, standing upright. One wooden stave bent into a smooth D-curve from tip to tip, a wrapped grip at the middle, and a single taut straight bowstring between the two tips with clear open space between string and stave, black and white feathers bound at the grip and two small gold coins hanging from the grip on a cord, no arrow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Glossy black-blue magpie with bone-white patches, dark wood, ochre-gold coins, bone string.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793688318139,
+  "progress": 100,
+  "started_at": 1793688318144,
+  "finished_at": 1793688350982,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a027-ab5b-73ff-a2e2-52b234a1cfa7/output/model.glb?Expires=4947264000&Signature=BHH4bhqfg1p3XStkv4uuXrE30eHXqXCkjU8bu1GABpE~1iKP-Ks7h9msxIkbbClfIwduQlp7u7sEYUQFl1k2s7ttKCRRWWLC1QS4Lzbpd40nKJARPc6giCjOxDgU6o~GRZ43LHwtLAXmDbcAXmbbidJSjEcj3LyhCIkfYksqeIdygo-M0~ITWbFjNf4NvY23t4py3yxPUWdjhrm2BugaGYfAhsdIUn3F7m934a1gwM5WRpCDyIlfq2vB7wC6ZATp1jxrXnqTd3UlCMoyRx7r16VK2a2aKT0yZvbJO4G8TdUuTB1Kj2wUhPdWI8CajRghosZm59NcZjkdlbDSkGkaSg__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a027-ab5b-73ff-a2e2-52b234a1cfa7/output/preview.png?Expires=4947264000&Signature=eOqVs~JEq9FEWfdi~3ZLmft27QeKhkD7dYmzRcwWvF6qQCZSmininI1c7G9RuORW6bDek-EXqOdvgcDKDiTrRcThDh1MZmXayzBi1sn~sQhqrxoAs3PThkCVXNBCGqsn0U0Gdj~aMHQAggahatij-plTOzGBc1XkkxjlKTk~fbqx5KicmIcGnyGvMIz4CitektzrVbvSok6tiU81p5aHebmj5ZLnK5bJK-1TSCQIicotaCde-SlMWlPwnfTDyoyqH6-G8-sGgfU3q2-mXrOgt9DX70G-URUCM27iSOp9QEid6yYchi5xHsPGZNimR0r1xE9wECJ0pUGghNxc7yc~KQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a027-ab5b-73ff-a2e2-52b234a1cfa7/output/texture_0.png?Expires=4947264000&Signature=i8ZlMnGmvNIi7sbf-CcpQn5Pqy8y54A78vVjjenDurn3DAtRIfCZhzrCdHQgWxlbHjyIdxw-xdPuj0GkUPL3B2-nmuGGm2-KSM2GouDO95KQl-35FtRzZNT32QnEy7JBUKgWJqLYrHiC8R40O8kF3U9R0d1B3kcBJ4xqpfS6jXV9jmDHrQjgeWKd6cbbqU-tcGUkjtoSS2i7FZXk2zkOQ6mf3FAu4P2K4hGr1jLFAX-3ZxZ8AuxlOnb78Fehh~Umk5PtB4QLfxNqGZ0Rhk9rUVMWoN0yzXfObRvNu84t~me~iz6NflmNAREkuC~Q-JppbAEjBBUc5SS8hr~ibvzU-A__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

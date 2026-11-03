@@ -1,0 +1,27 @@
+{
+  "id": "01a1a028-34c1-7756-81c5-c924450b1954",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 3196134856,
+  "prompt": "Mythic magpie talon quiver, a game item prop, standing upright. One wide cylindrical arrow quiver, closed at the bottom and open at the top, with a large bird's foot of four thick curved claws gripping it from below and wrapping up its sides, black and white feathers on the tube, five fletched arrow shafts rising out of the open top, no bow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Glossy black-blue and bone-white feathers, ochre-gold claws and rim, rust-brown strap, gold arrow tips.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793688353883,
+  "progress": 100,
+  "started_at": 1793688353889,
+  "finished_at": 1793688384374,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a028-34c1-7756-81c5-c924450b1954/output/model.glb?Expires=4947264000&Signature=jyGhmMmT~Uex6mkxFu3qDYq-eVUxjx02SNGLWqxWJQw-SanWHFSWBzhSfuS2kY4eq0IAfAp4feXwwoFjAclx3m5dddptHBmhc-9X6NA9KkKU0I~4LPejKdqJfNz01MZX~r1Gc0pxTeZB7moCEzCZt~jQueIeQyn~k-e8ZpwI50F9CkvvrGtpZX7ha8mTXdlDW7SPc22J7GOZshIsr3NwkKhOkzSqzCJECEL6IIdwohykz3gQYjGSsn7NLJNjXfW248WfodOZ~WAdV53YOnJiDqHSGtLzxN~2PPCqwD6qcDOivrqWgwoononA8oBLjGufskmt1unf59KrEb4Nu60AJg__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a028-34c1-7756-81c5-c924450b1954/output/preview.png?Expires=4947264000&Signature=OPISVmdYGObno9AH3oT0gnmPRE2~H5CH9PnFqC343RkuVfoJAX7EHSWs6GnKiiGacnf7h1FvCNoEHIPwh9av-X08WFxvA75lcOiBF4o5bBRr8vB9NtAOUnsQQu0IuiMZn7CjAgf5WWbqLojJkeVW8FwoSYCU~8ra0kuMKgqXAVYqOWvqi-QCiY8dOaAdR32i0rGCtyqL6Ry69ZPz9e4qT15b32OlHYeGFFkeuJgLRLnlgn44hT-6aauw0Hnhnt5xoZbvL0yW~HuKBzOODCkTPp6GHQTjC6EX8w491LC1uSXGIIYVZLK7~wBlt5vZMIQKbHAVL2F58QQujnercmUfTA__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a028-34c1-7756-81c5-c924450b1954/output/texture_0.png?Expires=4947264000&Signature=aWEeFBOxqkhe3g1IUCciVWc-1kZu~Kx44-tBBX716OQO-UYjLCQ2lW3wS1uQq0qjKIWJ-DXl5mnMU31oKN~1PZZu-pgauoIAhLCPujXxwSWgmqQGhjgkp16OompRoSb3aAY20I8f4ghgqk-t5koC48kcobIIOtQw9On5ewa3QEuvwGBlyBj~t4QAWL1FnlIetfLeOgV~DrgPqVbP0vgnCQFY4q0XoRAfaxgsBQMcjLmDrBP8Dzyi0gpKl6iysHP~uCLtgMT815LOxnSEx4Dl7~tGvo~64oZqQY03mx9tsBaoG60ihwoy2sInExKYB1FsLk43iu3Yza4Y6X7mYsQw8Q__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

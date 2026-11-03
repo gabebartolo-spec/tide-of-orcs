@@ -1,0 +1,27 @@
+{
+  "id": "01a1a027-b4d4-75ee-a29d-be31ba29545f",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 2051840336,
+  "prompt": "Mythic foxfire tail charm, a game item prop. One large bushy fox tail curled into a crescent, its tip wreathed in flames, bound at the base with a gold ring and hung on a short cord loop. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Rust-orange fox fur with a bone-white tip wreathed in pale blue-green ghostly flame, ochre-gold ring, rust-brown cord.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793688320766,
+  "progress": 100,
+  "started_at": 1793688320771,
+  "finished_at": 1793688351098,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a027-b4d4-75ee-a29d-be31ba29545f/output/model.glb?Expires=4947264000&Signature=WoCiR3cm1ZQX1zvwbgi~kIzhvO~tX0lMR8c82wIdtobtQLz3SaOS9Wz1yvTssz9xRyovhplzaCaR0XCnD4cNRk0T0C03xHL-9dEieKgCyufjOmI~XapW~SfdZ8NxofvjiUUhfrFsfGuHTRbxIbLlW2jI3pBpC3pbm1~XStH0DDPCrKmLipFMOjvqJ3jSj--bgRf6BLk324wjxNPN8Q8rVbWyQ6UGEjasS18w5142gvZv1LJr3E5ramQRfoldoqE-GylNYl8zDDwwEubVd36EnJZg7YmPb8fLtktoRQ4mP0HRnvdO8iwvirjsxKNdOGoq2gLyXOYzTF8lOSI6BCatMQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a027-b4d4-75ee-a29d-be31ba29545f/output/preview.png?Expires=4947264000&Signature=I3VMeDaPMFVYaSsi9X7NygHaBoNLuwh7veG6v-fdL0zdMsmaE6vGsQrACEC4B-rXurISbpvy1yzfURAA7yddUvFCsWsb20WhKCjlctV141bzTzQEWzLYJj~fh85dazaEnrsDqxPTemFMhzeLzmxaTihggh4LO6evQQdYkvBD2TkHvsK5gYIvq~73S33UAPLN8Mqc9d51DiLHdG-0EdsLVHRGjWhsLZLbXsU1eawPpXE4JUyXYp4WmkdzEFYdmgwiAMPMgAMGnhQpiRg9DGfuwdo9oSqFFK-uFmqInvXISM8I9gVTU1W7gWhM2h8VqOBEu9oFt7a7ZTiaLmtRfuX50w__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a027-b4d4-75ee-a29d-be31ba29545f/output/texture_0.png?Expires=4947264000&Signature=gxB~hSWGrItV5229cR-ME~evHSPkNrVh8i5vMTI2GgLjmMx6b2-nDYIC~b6z9bgpoSJfekFCQDaZJ07-ag7JI6eKgTnTmOrRUsHSGs8tL9cSBrQkhh93G2HsNXb3jYYIjlpZVMIf7NeTsLQFYoDe8vn9w0m2yhXzAlBjSe4unGF5XUQNu70urlCA25ksJP75VztAj1kJ8k4a2MoxUrrQ3aWu~wG5LRtbz2vCgJg5Y4PLdoHOY4GFDg6-3Ya148f-NoE~f2r1lYwQLlO52zYmInMbH-Fa1lcMugtZe7RWHdTBqO0XYh0WbFiO7MVKkX13odXyLVX5vOPDg2UZ2DjthQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

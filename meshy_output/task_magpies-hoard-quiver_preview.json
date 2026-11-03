@@ -1,0 +1,23 @@
+{
+  "id": "01a1a003-dd2a-70d0-ad49-0b6b96edf860",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 2500063459,
+  "prompt": "Magpie arrow quiver, a game item prop, standing upright. A cylindrical tube covered in layered black and white feathers with gold coins sewn on the rim, a strap, five fletched arrow shafts rising out of the open top, no bow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793685972660,
+  "progress": 100,
+  "started_at": 1793685972667,
+  "finished_at": 1793685988398,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a003-dd2a-70d0-ad49-0b6b96edf860/output/model.glb?Expires=4947264000&Signature=mb14IVdlrPWHj7JBVJZbVbY4nHKD0SYwZmbGE9pndn4I8jWajTxnTxq1iYFPca24SJQdjsdvCmRr2GvBLd6B~P~I-bCPAJhzKtkOCrR65ewoFaL1WZft7bhKfQCZbngC0MSlksx5QuQfIezCiZcc2BUO2E-lt~M-4mQD2h4N0iU1dK3l2en5kfaWqLkO5eVTAo6~LKs5ZK5SohMvS6mzXGpaLisLo~GOeE7CJB4vDEGIjOeXR0C36GJ4LCnVJkpnJnpllop~aOTVcjv-Br1rNrDwp2aYTa8JwW0I-CfQR9w60G-n04pC8DYaagSvuPEynsH-ea-aDqxadrZxw7V~Kw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a003-dd2a-70d0-ad49-0b6b96edf860/output/preview.png?Expires=4947264000&Signature=Jm1DWS-VpJXV1mP640lQA98UZrvGKblHe7f47S0p8PMI6zjq19Cqh2H3Hb~PSwkrnTR51v1hYCejUUzk-MrPrBpLaq32RHVtuvT7pKpwH0-aFdqS2A9gNqi-9M-Of7XG5KWe-NxtM4bbVFuyrBErBb6pBnDu1hP-bEKMAOKP-mKtNBQDs52rg2OrOTxFee6cxNq9Sru6C81g~hAIupuuGHkfa0DapbATJu3rWioeujhaH6O~doiCfaLh3ocm4uGwa4gJUBULKxTIu59AHxbmkbwOjq2LjYhCDUJIl4BVhXd6NaccMyBosh0NVZ2Fw83ux3GhfIeS-ZYRyo-2C8Gacg__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

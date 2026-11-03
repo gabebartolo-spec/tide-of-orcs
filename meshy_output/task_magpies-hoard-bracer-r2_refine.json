@@ -1,0 +1,27 @@
+{
+  "id": "01a1a027-f402-71b9-b1d9-93ac8c070be3",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 950859123,
+  "prompt": "Magpie archer's bracer, a game item prop, standing upright. A curved forearm guard shaped like an open cuff, wider at the elbow end, its outer face covered in overlapping black and white feathers with a large gold coin set in the middle, two buckled leather straps around it, no arm inside. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Glossy black-blue magpie with bone-white patches, ochre-gold coin and buckles, rust-brown straps.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793688336871,
+  "progress": 100,
+  "started_at": 1793688336877,
+  "finished_at": 1793688366367,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a027-f402-71b9-b1d9-93ac8c070be3/output/model.glb?Expires=4947264000&Signature=dStgdhv7m--3w33IARJ7h1ilimrDODhjIMrCoRwLeyeTonoMlkOrHefDo2mogtyG21xlK8af9c9MAKvCPT~qHOZ3azyf1qticBszJLahxh1XyYUrivYIs24hEBhYpkGoYzNc0DVQ5CgfQ4~heqPphrPcYtzWrSBGxQ1BrklnjYogLhAd4RxXqtwJGTPv~NT08n91dxPKk2Oym6ei9AtBl6qlnpgZyqAFJyUl1LTRrOqtR78271ZHdHhf4YJ90gJMIsCaiX6hyGWVGSP00UnQR0T4bBwnudDoj92iiVeeVeKO2oSB8HrJMDeX78bPWKSuMmPaKBGPMbK1V63RbXwhLQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a027-f402-71b9-b1d9-93ac8c070be3/output/preview.png?Expires=4947264000&Signature=Sp9zALFJhYDUcUY674SUA9tkLGzlVluBSJopMl9PgZkSR3fpRe5iXv1Fjw5LOLybd3NELP6Fhn~pzP4oHf3upsS3ofkiN40ZyCTazFt97LBcq8LJvx4e7wCytwg84nHfdtiDjznbg39bA-ZMuKNttSKlRfL6vWpwbr8z9hEtyRo77u1K1p0trA-svY0qGJGjzUZuA0pw1Rv8MCgKY6LS~lsysvm6bRdwswpc04~Hwa66cIK2YRE~v1OblYCtj57WkZcQoAf63WzaHFXvY4riy0m3bqyVxs8eGOV~3trOs4cRa8c4Pv7Wk7YJW59Y6owD3DdSEG~6ghd2lX1cRvuzBA__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a027-f402-71b9-b1d9-93ac8c070be3/output/texture_0.png?Expires=4947264000&Signature=TMiTv1sf3slA2FVDpBMKxLXMb1kRdZk2rKimratHwJkGjtcgHWy306QuShda8BmTAXAyHHL4NS2l8wr~HJk6qsc8ummWG-pYUz~mbqE~8HyrdZkp4sUJ1TH6gGb3t5rA7bD1IFWR2r0d-PRJXZ0Z50Nq3d6f4Bf-xTEZpe3Y9ukT550bNPuY3oeO950rVg0gq0eHst6RqcOgurPavtsZxv6l6trf3~RW50uiwYQrOtZUSD4B4OgwctvKUoEKl6LN-wQtaELJ1mpE~7QC-PRJkXMmG~~6cVbn9PWdH1fqdWJIcnPuWtXr~--jkEczrbvJpm7tG8x6F~wjCamlHmwo5A__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

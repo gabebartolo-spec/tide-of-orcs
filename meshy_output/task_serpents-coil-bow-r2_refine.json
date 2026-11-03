@@ -1,0 +1,27 @@
+{
+  "id": "01a1a026-d1c6-744c-83e8-fe894e3c357a",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 3775116172,
+  "prompt": "Serpent recurve bow, a game item prop, standing upright. One wooden stave bent into a smooth D-curve from tip to tip, a wrapped grip at the middle, and a single taut straight bowstring between the two tips with clear open space between string and stave, the stave carved with snake scales and the upper tip ending in a small snake head, no arrow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Deep dusty sage-green with bone-coloured scale patterns, ochre grip wrap, bone string.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793688262535,
+  "progress": 100,
+  "started_at": 1793688262540,
+  "finished_at": 1793688285893,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a026-d1c6-744c-83e8-fe894e3c357a/output/model.glb?Expires=4947264000&Signature=H1e5o80-wZOBApM6Vdc46hwy5nGW0Q2DIV7ptdjryoPP029oXgt8z0Q8tNU13BtrKpVw54u549cHa7eEDPxcS9JRYBFUPazXluNMyxp1lFiT3tLgFTu0zurO6n3NSuG-9uGjhffix7LCoK~OE6ZvSLGo5aYCeTMilQ2mYdmI0kq9hIrPx6iA1gg6DxxbbkXQk-DzlDMWcqE01sWAz0ZgS7EaEv14VUOabkWmlKPe0GBmNcFfGOhOYNCoVdtr8ocaU~Dyn06NMLi5o-jOd76JQHvZYyrI8f927UQ~a8M~~Uo9WsDpWXJ-6oG6lyqlnEG88ib1Y6GfZVp4HoMkRl9TzQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a026-d1c6-744c-83e8-fe894e3c357a/output/preview.png?Expires=4947264000&Signature=QkzTx6gxjcSf-bzIM1AIT6TqF2nGyyLoxVoHRn1U9QVPYX16~j2cV1s3Bl5I7Cu3dgxCZkrM5cLzuy77EGlg~6udrFe4u5M-JNk~-5eHXNS~XWDTS8KeS~BV2N7zNLePqruTnb6xEQHAKQ-BY8Nsji3sc-PNbjeaCaysscXrApvI5ui~~0JFNQuPQhcmxHb30cp-68bqn4I7DJ3BtNdw4Zi0DaQWBfj1toiNEf8rnbUkBz-suL6t4yEAwiDp58ECprxlP58YH3qV3NqIGAAITXj-M36QbGPMRjN6syz3pBLnjRWt3hT8DOTQhsyo5z7IEMAETiS4WPfoDWN17aC4AA__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a026-d1c6-744c-83e8-fe894e3c357a/output/texture_0.png?Expires=4947264000&Signature=Ywv2FuBhzYjgWHtrXM8wRovBULTYbUxnu5Fl2KICJgBi2EZhgPulo9SPWp0k~ktoIUMllmW7tMPFXKnoqXGhkv9EKYAhU0WFavTdKFaPmD9z5QFUuANq9obDntxhHnl9YTlea6~Irc4RHQsZvVT4MKyAU5oJx-aaan3eeXjO9YIHiIJqZyDDTJEVXXng3iBtgWPDydDttk9ArlSx8HmUz34qDTev5XRCTwnPgElBy7ooEdi0Qp2CsTQFdjMk1N9RwLk4YuxGUCbMNJ~tai0dwpqq84-lWxDBBVsfhdrjuqUCVUzkKhrXU9Bdh99Z0DqyUqE~TDZMWGOvx0uOuIriPg__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

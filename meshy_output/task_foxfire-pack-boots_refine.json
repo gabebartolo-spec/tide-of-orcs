@@ -1,0 +1,27 @@
+{
+  "id": "01a1a025-7c08-7622-9459-e87e402fd354",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 1709055105,
+  "prompt": "Pair of fox fur boots, a game item prop. Two ankle boots with thick fox fur cuffs and a small fox tail tuft at each heel, standing side by side, no legs. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Warm rust-orange fox red with bone-white fur tips, bone-white fur cuffs, rust-brown soles.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793688175243,
+  "progress": 100,
+  "started_at": 1793688175248,
+  "finished_at": 1793688207005,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a025-7c08-7622-9459-e87e402fd354/output/model.glb?Expires=4947264000&Signature=RaZDvNF9s7m-2wJ-MVBIev06wfohAS-gJ5lHDp1u0Lwh-TI41Y8a8ZnBao5xPp-PqemB8JMuD0YjXc~TkAmL-w71TfoDCjDZOLVk5j5sDtBo-TqfSMvir1slvncbUM27qrFsDM4rWgp7yZs3LJqgEBO3LRFEOO39EJRbaIh~KE0k3SNLET04xbZpTgw4o2nb~bF0Y1jkS8ie5cmdSRJ42wpIm2pUjPiOfWTbR7fTu7mmXPwee3zCz4M3jZTJa8H2xSKrHGoGbzLZPYZJpiT5C3OP7gyWjv-CLAuXwGnoB-VzxQd609uAWA3gu-Jhst9ZZ6SPIv0vLUZ0-~i50ae3XQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a025-7c08-7622-9459-e87e402fd354/output/preview.png?Expires=4947264000&Signature=J4i3I88jN~k4colqd0cY2wrf-nyVsNFFtVkS7oGBOp9d4PxIVN9Y3iL-GXije~zdguaCDlPt4XqOVHgOHaZ5t-oPTWbkGbcpe9XjGbdBgMDmJaMcD9Vr7lNDR9y6hhUBFUUl1DF-4eAYO5e8nLr4-8GpRcUPro4pvEoPUEmg91bB-1rA1rF5aNW8LgbUkaOW6Jji0Lo31A6og5bIOTNpkIK4YdntjPS7VwNb00woaPHpYQNDjplfhf3UNjOSZk5eOJuHK-K~miCMa56MgFIcDwgD7xpZAq2hKVFeSeuQ1rOHl~TuLqXqltPFTlGM8lcSugwPXhuWnZocNZn~-0zYcQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a025-7c08-7622-9459-e87e402fd354/output/texture_0.png?Expires=4947264000&Signature=kptCCE-44s-qNGTbxYUL9Kj-nWijC9BifmC1OXaG-iuPzGtyExCAx4majfud3c8kjICNa~iUYuB80RKJMCNkWYSdYhbMU9s-rv5nIyzf2VaxJu~uAZe7XCD9DdQJBBSlgKDpGz76qsFwAkjUQUoJBxz~yo8Jx6ucUy~MZ4~T5s9vCYQQsMqaFenBIT-tksQF97R872a2tIAGw2KAr6UjsvwS8SUThg1a2jR65FGyYe79iLrls9QOs7r6EwJ3Ej~ts7nTF6RVWDH-y8-VYBaCUZoxSTejLp-6nXnqvt7675X64FfsShQdHqLj209K3F9Nh7y~338Zg9RScYcglQJ6KQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

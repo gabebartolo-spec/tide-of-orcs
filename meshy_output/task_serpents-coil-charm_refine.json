@@ -1,0 +1,27 @@
+{
+  "id": "01a1a023-d300-77ac-81c3-79cf7e6faffa",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 1436324655,
+  "prompt": "Serpent charm pendant, a game item prop. A small snake coiled into a ring biting its own tail, hung on a short cord loop. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Deep dusty sage-green with bone-coloured scale patterns, ochre eyes, rust-brown cord.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793688066186,
+  "progress": 100,
+  "started_at": 1793688066191,
+  "finished_at": 1793688094260,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a023-d300-77ac-81c3-79cf7e6faffa/output/model.glb?Expires=4947264000&Signature=WaEcv4anLgbnCHHkmZ5UgwW69u-0UbFo0ZNZeaai-uhKoNJbelVnWuSBkBSaDh6EulAw4AOs0ZVE7kCDqVp5LQDNAf5YqA-NsHiD7BffxhD7O57wSspgYn9rfkiY9aVGhX9C1TAiBz0OcGgZ4F0iVrCtOJxMS8fn1jIf7vJmkKPPfa9s~NnHZzOBZz9j3mgvpxJfV6D35Nzv3CE0z~8cTHgVW5iIK7ZJ~Vw3Uj6Uw~sH9ChciBd~G8Nvc27-NdLgxpYC7T8kr7PYjMfVxSF43kh3I8Kz-l92U7hjMNjA617OH8lym8ojuBSUgsEdTeCM-Dt7W71PlSKaE4PvQtpyDA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a023-d300-77ac-81c3-79cf7e6faffa/output/preview.png?Expires=4947264000&Signature=atwFz2k~QwyV~7yg9LzUsU0fHamWHTt8LuTNfVF~GU4urxK~D4xFMSlVDg33q66FLgvg-qPO0pxj5jg~K7s5V161pmE5Nm7sxju3KBcxA4o-bDudVGZ-QKtX95z~NsgBXx1vAJYNbwT-WiRfbq3j~E1h-kYmsAEwtAOcO~wb~LRJTiiTDQ03BaN7hmMk3h9qzlZ-xmAwLZlQ2PUeGmrpOTNYY~BDrPOxMnV1QUT~5rYMPTrK7I1sgaWMe4U8t~jM1f9i5POMjS8x2BuN5yLJxQ3gXrZMtUTlcjpZr9cYCK4ozXvt1WzD2qvPndA7Rp5FUEzi2eeRVzVwFlDuSG85UA__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a023-d300-77ac-81c3-79cf7e6faffa/output/texture_0.png?Expires=4947264000&Signature=SvTCY6~W7Ytjqn5NqXW35CDgsbFAHF0MfrOONaXdOhoj6dk0~KBOSnLHnmOIGF~IyKmld3u9q8ROhS5F5c7mwPjlLlzfOM9laPuac4BZgjeimEpr5JQcG3PIO9yq99luydQuvj2aWDYSmsJjAZrXpfAGOXWrtJPKKXpbs2xG2VL6tZ2Fr1LSR3IscWTGt2iyRQPJHgXZIPHbn5hCPAy0Lmb9uFiaLnS33cJ2YFgl8Z1dmFyQkvTjsPT7XXNAbnqiJiU4ngYwoHtf7LXd7kYds0bdI-dQdsknELV7Vu5L5ZY5YZrv8Xt5GJRoqcSyDkkp9aAEkoMqSzpL-hMphQXIFg__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

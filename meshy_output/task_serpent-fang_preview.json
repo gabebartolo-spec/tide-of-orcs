@@ -1,0 +1,23 @@
+{
+  "id": "01a1a007-63e0-76a3-8519-8ae9cefb8df0",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 3086560437,
+  "prompt": "Mythic serpent fang bow, a game item prop. A recurve bow whose limbs are a long snake's body, the upper tip a snake head with an open mouth and two long curved white fangs, a single taut string, no arrow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793686203128,
+  "progress": 100,
+  "started_at": 1793686203134,
+  "finished_at": 1793686216429,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a007-63e0-76a3-8519-8ae9cefb8df0/output/model.glb?Expires=4947264000&Signature=WIFBiqf~JvTYp6xYxTQyCN7TT4GwJO~OEzv05Rq1Dx0-FvrQ5GeXLmMSh7ISGtJD3JahSfWZQK5keVa2sgDuxe2c7RPXIIYtVi4SFTECT9EomBbn6nPQr0bJx1t-0bOp2cr8MOcSrLXlqnFxcTVKWSV2m-3W91OeTlwK2BDxNgS2Mt~u~ZImqeWeOlXt0KOxHlhAeLDmuWTApd8pDnI8KP9RLAKjtG-lhht1canNq5SrPg8I8TzBkuCDCxkxjv~FLYDLIZPKZ-dGP7h~BUb2e~SajqZI55LRaOzGdauJB1pfX46oXHHHnyqAoOClzlLteXIL5XdqJ7BBduqxZhOBNA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a007-63e0-76a3-8519-8ae9cefb8df0/output/preview.png?Expires=4947264000&Signature=iyvrqjQCF1N5n3gtcEphVR~l3z-Qxqzddt9j44Js1qkbxpmnfKqQVhWS-NaJUF4CZOdhYPqlkzPehi-lKnWx-w0Ob5QVDI85otdvMsEoeEfXdn4hMmqjZqeB0SC9ZaHzr90OlEyw9fXd9NFxU7ptkV2Znd5igvPn3Gi7T74EY--ekEH0QmcFfOyq6wjB5JzLEDsIqPJPteVJftvJ~0ZUDURhwyzYswXjWRnzXskDqouTDSnW0ZVfxM-WlO7lx1-hGmDzXMPAzvikAjeABr~bDiGXcXby6uh-bo2P9TtoQMs7QBbWqyT8YQfFecpGpsrvcgRsN4kSD8KwlrCzwpELGw__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

@@ -1,0 +1,27 @@
+{
+  "id": "01a1a025-594e-70cf-b6a1-4f5df260d737",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 3154656216,
+  "prompt": "Fox fur hooded cloak, a game item prop, displayed standing as if worn by an invisible figure. Cloth to the ground with a hood shaped like a fox head with two pointed ears and a fur collar, no body. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Warm rust-orange fox red with bone-white fur tips, bone-white collar and hem, ochre clasp.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793688166002,
+  "progress": 100,
+  "started_at": 1793688166008,
+  "finished_at": 1793688192193,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a025-594e-70cf-b6a1-4f5df260d737/output/model.glb?Expires=4947264000&Signature=nH0hKtRUoxOPl0LNXLGjTplO0usRs6mmz6JCfBBsrRNxTiGuVYJRH~AVgo-MsKlrS9F0Gei1Cce8zcHRHNItIIKUGn6dLPPXY6fLGNffaEq-UPzQoHClrwAsHVVBgujmNw~D3kxPKbPfrbwFaVCBa5I4g7N0MyvmktU7LoX-RgEUnyEj8wru0U5pNyUHf-IAlJqQtytE-dOLTa0hsnGbG2X4cOF5BOLOj4esUYnfTr80dzNbHwZlmyVbd9UTP5tPKeyrr~Wspoc9XKWFH8Rla0TIztVzzbffNw--v4ZsYwRBuDAuLD~tP960PaNdbMEutYpVgfSKOwD5QQkmD3w4cA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a025-594e-70cf-b6a1-4f5df260d737/output/preview.png?Expires=4947264000&Signature=bVKwyUJTAL-StYdZA~QWehZjRnBIDGcs2g2JTmqsG7rsyBqzjeFAUzb2e~cOK31tA3ciTZw~f436tpGS9qPuGVpaP1Wo~iQhzsOslLGy7h4ANd6Y4uIvi6lzyWwX7pfi0xSG54BpO7ReIAjKRlZOsqL~AILelck3FjDeiJIlL096cp4VvT0i75q4zJalqB5VeeJGa8hls644K8F8z5VrF3DwXGg7LOhBO9ygLosRvolWfmiKaI16tu2ZGRK7xBbI3sZOA7DDa~vBxmjXgf0FXEi1-czmhihD1cXdr3JaPmcMjRPI2EQksGXma8s7AAiLCB5BIBOCEX24Xs33NwyuHQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a025-594e-70cf-b6a1-4f5df260d737/output/texture_0.png?Expires=4947264000&Signature=AUd00kYTFbtrR6~I0q1~HWCsbceMuFPOGL2~Xr5EEzpjsxIFhwRxoi-5TztUd1mLCDpoEtzo7fFtfcE8j6aaOxGd~KVOsxNu6hqT-7gbftzyB52aS8RTD3az5C-9-mAWIJG5gvIwJq0g3hA0BelMtSDw7BIA5zVaKlen3hIQi0jW9YrdlIzRPlbELZpUBFpLYBvVEZfWosu0DsuKPQsbWJ1iBr72BOe~WdftiixhtvVLU~eBEtdcRA1O-HhP6gKDtawY5i6RBivLkL75raIsa46W6kSrphuTsfX05Dn0q-vyQ6Z63c2RMzqLW0M3rmHkqkULsXGZrFAy3pPhCee3JA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

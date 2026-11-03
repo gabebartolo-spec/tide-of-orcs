@@ -1,0 +1,23 @@
+{
+  "id": "01a1a003-6cdc-7785-a124-57542c7d0e3b",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 1155375070,
+  "prompt": "Magpie bow, a game item prop. A recurve bow with a carved magpie bird perched on the upper tip and gold coins strung at the grip, a single taut string, no arrow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793685943181,
+  "progress": 100,
+  "started_at": 1793685943187,
+  "finished_at": 1793685957082,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a003-6cdc-7785-a124-57542c7d0e3b/output/model.glb?Expires=4947264000&Signature=USckPYYzRETyoJTVtPXKXy02qulumaSowFALz3CcAhumMUMMKLA0QozNTU3DLC~HMuzojyhzw61JL1CeolHG7A4eD2~QRDgfGp2Mj-EYKBrhJsSk7G9gbpSPnet~-23IvCNU5IkROE2S3N0JSoidv0Y6kUlJXhkJZIt-TBuUNVaWhcB4VYDIl6YyjszmqE4DaDV2k8w2gMSyLj6~Wd1ewcl0SplTx66cKHqnSCQSe3SWL0c6QiWP1OFyDvoq~T9qipCiGOQmY6OEin5r-Kx0nCTXL10tw5jsUv3i-O2lIR6TVP4F7PY0n48lgMl5xdYLBTG6ttVM8XNOwcXJ7YfDRA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a003-6cdc-7785-a124-57542c7d0e3b/output/preview.png?Expires=4947264000&Signature=YpfxyAAR~nYCKESvLlqpO5xuu-jNXX~sDpzKwle39TT-NQ56KUfEJrOLPMCM4qWfT8azcvJXrgCn7oMauEJLxWy-beSQP9NcPnOvWwaKFBXpalKi7EGUWRXFgn3cqMB0AzoxUTNPynXuKcovbeYKgTgoDEKcwYnEmTHlOtSbW7cajhYFrE6x7~6oDZnxeAjOgP2SSGxntQzswEXm3-rjgE-O82P8bVgLDnNpxcelhEejuNPUnD-eIT9KsxU8SfrFW4K0deuXkOiwkBVoCml-6BT37FrH-ZR1iGd9PEX4qDO~hndcrHtwsHSg~H4ZBt0JQLLHqns79tPi42XIMHjSUA__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

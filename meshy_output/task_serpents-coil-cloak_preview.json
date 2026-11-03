@@ -1,0 +1,23 @@
+{
+  "id": "01a19ffc-830a-77f1-b303-a02a81d5ae8b",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 2648513361,
+  "prompt": "Serpent hooded cloak, a game item prop, displayed standing as if worn by an invisible figure. Cloth to the ground with a diamond snake-scale pattern, a hood shaped like a snake's head, a coiled snake clasp at the throat, no body. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793685490308,
+  "progress": 100,
+  "started_at": 1793685490315,
+  "finished_at": 1793685507603,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19ffc-830a-77f1-b303-a02a81d5ae8b/output/model.glb?Expires=4947264000&Signature=KUs2xpIpK~dQUsdJyVdPZAY3P4zQs1Vd9XMol4l3WcaSKSaZHqqqlBm14G6Ag6diRV2rluTz2vC7u9VxdEFwAbNCLD4ECye7Dc-2UMUpqZ3~dOJYtdSqL3DrxCx7PVWX5fIgrIjrOA5M4dDtHKXLFc6MAAjeMEZf-Xhh6wyOfiX5tfDJTeyb1o6yrnyFCwkSP~BOlskoafrsnua2RbCApzXD0x4cnNia1TCsI4CgpIiWY51dgu5Td6UdoqVkCGWmLP7RMp9tKL8fNom49Npxw~6hE63rFs-28VNfRqKbfrb3DS22sJEF5JvibiixR17cDYtGTKtMO7RQbF1YU8Jm8Q__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a19ffc-830a-77f1-b303-a02a81d5ae8b/output/preview.png?Expires=4947264000&Signature=GVQ7l1QtGEyRpNkzG9yMUIil1zsIrnyVKAYTGEJcDNBt8p1PGVbWaLkdO3ZRCAvDjll2zYCA3nHIqZT6RCW8IR~Gd7tLoZC6lnoUb5Hi~17Sj889Ek~uxb-hmmMqTQ1jTwGewS4T66FiRVyZynVm-WQFtkAUr3EGJiAwGnWgE9CYikSVA-otsOUqLlvDPa4RCfSCXZNc4l-x0yDWhDVBk4tVRdPB4QSAuAbWJ9EL6mD5ggoQZKsrl2WYBzBUN4gtr5iayFCHPtuVK3-Gt7-6FvyUN4NYL-aOwPwrvwLSnI8X4exUGRQ3hBvs~2Hvc72ypObg~2S-PrvM8Y4k9GdJ2Q__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

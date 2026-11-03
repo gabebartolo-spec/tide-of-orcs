@@ -1,0 +1,23 @@
+{
+  "id": "01a1a009-08e3-74b6-86c3-3cb4427c396c",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 166318886,
+  "prompt": "Round carved medallion emblem, a game item prop, standing upright facing forward. A flat thick disc with a raised rim, a coiled snake in relief on its face. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793686310635,
+  "progress": 100,
+  "started_at": 1793686310642,
+  "finished_at": 1793686325077,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a009-08e3-74b6-86c3-3cb4427c396c/output/model.glb?Expires=4947264000&Signature=hSUvNU2iu-jmGvRyrP0zGSxtK8pKA73G6qDc4aaC9EsLzl5t92lF7YRYQMRJWDa9CpAVD7pgsBS~SRTjhwjO9y9GOk-~4OffI-Qt-HsfMuR~15YbsjVCGFhaZwj0JxE~GMiVwBDR~3ZanABHIY0BoT0j8lB1TMnu1R7lNiDxt~2hMLnxy5gOAdzy36HAGFMr1hdS63vLOscQWKHi~fcPtGw4NMdLmUXd1I7o8DFVnSTOtxDxas-EC6yxYTwIYik3nd3dQNV4m2eYUVttcU4Dz6-BWIDtWzU4Q4KPfw9cnf~VvKlEfv19uec-gy8QId0iEbY5xm7ngaycXWWqmPFH8w__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a009-08e3-74b6-86c3-3cb4427c396c/output/preview.png?Expires=4947264000&Signature=Njg~bU80PgmwnQ0TcQkdt1T-ISxF~SC0soGanIi-2Qf9ZWY3wEbxLhwxhR7Zm2PEa0N6bavitZjohOOtHcB70Z2Bjj8CkXEmZehcf9v9gozJb4GjJRmIH985LGAf8w1f3V6zrtSfZ167TDM190Wchts39-UnB7l~G4T-Qwyc9m5Lyd2K5I7LReh8VPY0ESeV2scIZIyWksW2g0WV9PjZlj498h5U7PkiRlKPVq-zzltdXiNm7NZAs2jv5JLytpKDcQCU7GSV53T7eMG8~hIr683PyHtkIK0o8yhQvrVPgaJL2AnwoXJKaxCNm~gw~q~rXlRiV9CcNHxv9gXghb0hXg__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

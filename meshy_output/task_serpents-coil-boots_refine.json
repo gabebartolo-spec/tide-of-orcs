@@ -1,0 +1,27 @@
+{
+  "id": "01a1a023-9ab5-72fe-a14a-794618d2df2d",
+  "type": "text-to-3d-refine",
+  "mode": "refine",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 804355930,
+  "prompt": "Pair of snakeskin boots, a game item prop. Two knee-high boots of snakeskin with a small snake coiled around each ankle, pointed toes, standing side by side, no legs. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Deep dusty sage-green with bone-coloured scale patterns, rust-brown soles, ochre snake eyes.",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793688051826,
+  "progress": 100,
+  "started_at": 1793688051832,
+  "finished_at": 1793688083964,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a023-9ab5-72fe-a14a-794618d2df2d/output/model.glb?Expires=4947264000&Signature=RYusVbYRTEbDt~Caxxn1tSRsKTUT5D1UZyBxQtj21fHeFLxl7fonJvqi-FRYuaRWp4hUznF5EYW3FfyZ5WIJBrwv0Nj-bFZ1ELUbTz6kMS26xRZ9P9MRtYuk96qjKikbVo5W90pJN-wH~w3bz6o7HhEq6tD8hFOa85jQacWD6iALM-O1XJQ4KpgDEEftQKyjt56WZUin-HYRqRoWqVyrCob2bAHSg7wWhz92ztjMktpqa48rsVmGtVFA8RQOoO~AJE~owMDFBX9QaOQpjmbYKJOXahIw~WdD3pRSn07lQcLT-93fMXCQv0iSaGCpj2bUqsdTDN7o7jkIz0UHu-kNjw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a023-9ab5-72fe-a14a-794618d2df2d/output/preview.png?Expires=4947264000&Signature=LqLF6jnVPBG-TN3JQQ0KuKzriqVQcogsRP0~nMH9vV-lJWNaRuVtNBSBEzMAte3swIpXFJcEkKDbgFZa19lM4AS9XIZLxo-8H11CApX~kK4Cb~2An4mTsnGCyd6vBD6w2e9lWhCjmkGE6GHS4zlT~TXprcv~MSUDNcMB1EbkXo4jDKdgZrMnPkowYpzHa1eamtH8Ahsh28DeZNVLNxqKypJaKIbVPrt4n-p4XmrBTnBebQIdee1iHtlGw9rUIUabLihDE-UoHaFmCX3HF3uvUY31vh9gVzNAlNoz5tqCPr4mq8y~-Izfz8boQQc-sN3Kk~B4Uo5LvdSLr0e-6Xew6Q__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [
+    {
+      "base_color": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a023-9ab5-72fe-a14a-794618d2df2d/output/texture_0.png?Expires=4947264000&Signature=Ltj9cXMAWyDr1yu6544v4yZIKdQqG0p-FEdABdyNdqKG5qYd4LnkqZWM4crzuMIwmZXGyc8T0UJz1wHalX5uSyxkXLHKxvHwGkeu3P6XG81g0fidFKK3kDYyOBgBNkp7-HDATvMFFh97mOlImL9I5u~PVwte-0q3IheG1LUkcOaWE-Xbx2v6~1HqTAQbX7CByLDZhXXrDa1NJAcJg3VHpLOiMPEv9m707UfggG7O71rzEiU8DhaCXdr-GiHSIFX3e2lWL4TnNe-v3Yx07isBKdR6WGRsE7pyLoTy1UCP2kss6bAD4r2Wux50rynOCiz~tE5t~Z-Uyo6dqowdi1drKA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+    }
+  ],
+  "consumed_credits": 10
+}

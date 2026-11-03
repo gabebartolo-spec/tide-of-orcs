@@ -1,0 +1,23 @@
+{
+  "id": "01a1a008-d634-7192-89f4-9e84bc0f30fc",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 179000913,
+  "prompt": "Mythic magpie talon quiver, a game item prop, standing upright. A cylindrical quiver gripped by a large bird's claw with four curved talons wrapped around it, black and white feathers on the sides, a strap, five fletched arrow shafts rising out of the open top, no bow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793686297652,
+  "progress": 100,
+  "started_at": 1793686297658,
+  "finished_at": 1793686311181,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a008-d634-7192-89f4-9e84bc0f30fc/output/model.glb?Expires=4947264000&Signature=iBcDGPlj5dUMRy-6JEIrMN9evd4UPFk4T4kGNX99hDFQLtM4pwyRuDaThZ2Kb~Rwz7L0q~1FKpMod0GXBov3chr4mWDy~f6q6ri5aP92gj-ncDwt7TR~YZyO1Cw7Fk~DO0wJXaira3mAxBdvhU0Bys2F8q779Gkyd-H2FDQrzNM6P6ZJSYUxeP-dKrr7G1jRZN3qkdt3V5Mxw7L7RVja3XLz4tXyifyHhb3lBBywxwImYqTbo42cgAZWJcosMN26GBclI19jFyRq0ShcGeSsXTn2zMcdWrKJ-6uJ19AIbAZGRMuJcmM5Bn1lXi1hIwuL6wSVuBukc7gKpgYKGLrq-g__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a008-d634-7192-89f4-9e84bc0f30fc/output/preview.png?Expires=4947264000&Signature=iNv0zumVn5kFMKBjYjAidPXsbQfOLo4iLp9v3Pi~F5uN0na4hL5dUZ03AzmkSykKW-DXRHwypsahE-WnUlqp6lMvR7-M4ezqkhFIW7FOoVGSnWQHOdpPqq89eV5o3HpcTymxUPZg0lJV8B33mvnTDB7xvLh3BQtwwb7-IpEK5P4yE9X5Fhzhi1zP1UOKmd7BIlHY7A1nHbsD2pXuIjEQ-Y1mJfaLiodACVvTRBQ2WyTDC1JjtPRp3p~~MxW8tQhvqJod2QGLSwywD6WW62tXSzv-ZEiO7cln-mEtKlHwoeOHRN8-K187Aa9zC2pVEb2B~Yo2-McaqLN5vEkLwn6HUQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}

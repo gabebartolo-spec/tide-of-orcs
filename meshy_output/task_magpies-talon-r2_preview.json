@@ -1,0 +1,23 @@
+{
+  "id": "01a1a023-98ca-7112-ae47-7eeed2559c3b",
+  "type": "text-to-3d-preview",
+  "mode": "preview",
+  "name": "",
+  "model_type": "smart-topology",
+  "seed": 210626688,
+  "prompt": "Mythic magpie talon quiver, a game item prop, standing upright. One wide cylindrical arrow quiver, closed at the bottom and open at the top, with a large bird's foot of four thick curved claws gripping it from below and wrapping up its sides, black and white feathers on the tube, five fletched arrow shafts rising out of the open top, no bow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
+  "texture_prompt": "",
+  "texture_image_url": "",
+  "status": "SUCCEEDED",
+  "created_at": 1793688051415,
+  "progress": 100,
+  "started_at": 1793688051422,
+  "finished_at": 1793688063934,
+  "task_error": null,
+  "model_urls": {
+    "glb": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a023-98ca-7112-ae47-7eeed2559c3b/output/model.glb?Expires=4947264000&Signature=h3gkYqXLPjj9ILqnVUITtxzXLsHEpLtrdE2uffs9rlFyLfeqxo7L~xQoa-i0NlamogAae~Qrs6ihYtkH66hjayWcFhLF0JjjcXDP9cmn9xCYJ7i8JmECtvtJ8S-4whbvAU8IO9D6Vv3OKzxiYTDmGGBWwIc0d2ciHOGWfHSsxw7ebW7zpoYN~Zrqtk2CWHHs2rCTVjgL-cFw5pn4-JIqrjPuNDG9OzyRc4W5XFA1Pw5i8S6A-LDWyVJZwdAKW~sFNoYA~V2atucsHO2M0Por8TW3ch7XVM1y7y2PTDNQygqNVw4ExekoWfNExd2fhhUUC6iXa~VfhEu6ddpeqjV2ng__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  },
+  "thumbnail_url": "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/tasks/01a1a023-98ca-7112-ae47-7eeed2559c3b/output/preview.png?Expires=4947264000&Signature=Mqt72AvfsK-pwDy2wCo3sGEiHXbgSjqYeoXKHtmp9p4iYLarUE1V-mgZL3aHjHGvje0DK~eUhT4TBwA~5G4H97cNYBP~3OMO32~4PnufOw6dvSIlpi8d4B8S0vJGNWrSoXj0LBFEfwcPz5PrdHP~jy~7pPGS8j~-8pN5p9cnYdUzKfUUiAQ~rxESS6NB0CQs~uHMUSA7tRFtoFtS~e-reAQi~youWPrAPlR6ZNbjJ4NHd1WBIUZ6tJFZG3nZHJlM6t41u6Sb~Biu8fmlXTfyT-Mgx~ziTc6F6CQARPekEmnF1J2l3NNE3PD9Thk6i6WiFON1WzzgSsf32PhRyWzvCQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+  "texture_urls": [],
+  "consumed_credits": 5
+}
