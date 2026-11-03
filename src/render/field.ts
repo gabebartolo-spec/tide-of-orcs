@@ -260,24 +260,32 @@ export class FieldRenderer {
       const L = GROUND.fence, T = GROUND.wallTiers, tier = wallTier(s.stats), sc = T.scale[tier]!, w = L.w * sc, step = L.step * sc, lh = w * fence.height / fence.width;
       const y0 = -lh / 2 - Math.ceil(-top / step) * step;
       const rows = T.rows[tier]!, fwd = Math.max(0, -(rows - 1) * T.rowDx * sc - T.backMax * sc);  // keep grass between wall and elf
+      const xAt = (r: number): number => BAR_X + BAR_W / 2 - w / 2 + r * T.rowDx * sc + fwd;
+      // one clip for the whole wall: inside the healthy outline, so nothing pokes past it (open above, so stake tips stay whole)
+      g.save(); g.beginPath(); g.rect(xAt(rows - 1) + T.shadowDx, -H, xAt(0) + w - xAt(rows - 1) - T.shadowDx, 3 * H); g.clip();
       for (let r = rows - 1; r >= 0; r--) {
-        const x0 = BAR_X + BAR_W / 2 - w / 2 + r * T.rowDx * sc + fwd, dy = T.rowDy[r]! * step;
+        const x0 = xAt(r), dy = T.rowDy[r]! * step, inner = r > 0 && r < rows - 1;  // only inner rows jitter: the outline stays straight
         g.fillStyle = P.wallShade; g.fillRect(x0 + w * (1 - T.shadowW) / 2 + T.shadowDx, top, w * T.shadowW, H - top);  // each row's own ground shadow
         const img = r ? this.shadedFence(fence) : fence, inward = r === rows - 1 && r ? 1 : -1;  // broken panels lean toward the wall's middle
         for (let i = 0, y = y0 + dy; y < H; i++, y += step) {
-          const alive = panelAlive(y, H, frac, i + r * T.rowSeed);
+          const seed = i + r * T.rowSeed, alive = panelAlive(y, H, frac, seed);
           g.globalAlpha = alive ? 1 : T.brokenAlpha;
-          const jit = ((((i + r * T.rowSeed) * T.breakScatter * 3) % 1) * 2 - 1) * T.jitter * sc;
+          const jit = inner ? (((seed * T.breakScatter * 3) % 1) * 2 - 1) * T.jitter * sc : 0;
           const px = x0 + jit + (alive ? 0 : inward * T.brokenDx), py = y + (alive ? 0 : T.brokenDy * sc), im = alive ? img : this.brokenFence(fence);
-          const seed = i + r * T.rowSeed;
-          if (!alive && seed % T.brokenGap === 0) continue;  // panel gone: a gap in the wall
-          const snap = alive ? 0 : T.brokenSnap, ih = im.height;
+          if (!r && !alive && i % T.brokenGap === 0) continue;  // a front panel gone: the darker back rows show through
           g.save(); g.translate(px + w / 2, py + lh);  // pivot at the panel's foot so a broken panel leans
-          if (!alive) g.rotate(inward * T.brokenTilt);
+          if (!alive) {
+            g.rotate(inward * T.brokenTilt);
+            // snapped top: an uneven zigzag break line (fixed per panel)
+            const cut = -lh * (1 - T.brokenSnap), z = T.zig * sc; g.beginPath(); g.moveTo(-w / 2, 0); g.lineTo(-w / 2, cut);
+            for (let k = 1; k <= 5; k++) g.lineTo(-w / 2 + (w * k) / 6, cut + (k % 2 ? -1 : 1) * z * (0.6 + 0.4 * (((seed * 7 + k * 3) * T.breakScatter) % 1)));
+            g.lineTo(w / 2, cut); g.lineTo(w / 2, 0); g.closePath(); g.clip();
+          }
           if ((r ? 1 : 0) ^ (i & 1)) g.scale(-1, 1);  // back rows mirrored, and every other panel flipped so bindings alternate sides
-          g.drawImage(im, 0, ih * snap, im.width, ih * (1 - snap), -w / 2, -lh * (1 - snap), w, lh * (1 - snap)); g.restore();
+          g.drawImage(im, -w / 2, -lh, w, lh); g.restore();
         }
       }
+      g.restore();
       g.globalAlpha = 1;
     } else for (let y = -Math.ceil(-top / 18) * 18; y < H; y += 18) {
       // each plank breaks at a fixed point (golden-ratio scatter), so damage never flickers frame to frame
