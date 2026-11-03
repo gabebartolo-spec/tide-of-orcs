@@ -3,6 +3,7 @@ import { GameController } from './game';
 import { SAVE_BACKUP_KEY, SAVE_KEY, clearLoadFailed, saveLoadFailed } from './save/storage';
 import { bossScript } from './data/bosses';
 import { bossStep } from './sim/boss';
+import { placeVanguard } from './sim/vanguard';
 
 const mem = new Map<string, string>();
 (globalThis as { localStorage?: unknown }).localStorage = {
@@ -47,5 +48,16 @@ describe('GameController load and reset (TB-216b)', () => {
     expect(g.events.drain()).toEqual([{ t: 'gameReset' }]); expect(g.aim).toBeNull();
     g.summonBoss(); g.setAim(5, 5); g.importSave(g.exportSave());
     expect(g.events.drain()).toEqual([{ t: 'gameReset' }]); expect(g.aim).toBeNull();
+  });
+  it('Standing Orders spearmen are back after a reload, off the line (TB-219)', () => {
+    const g = new GameController(1);
+    g.state.meta.hwLevels = { hw_orders: 2 }; g.state.run.wave = 5; g.save();
+    const h = new GameController(2);
+    let spears = 0; h.state.vans.forEach((v) => { if (v.type === 'spear' && !v.line) spears++; });
+    expect(spears).toBe(2);
+  });
+  it('the vanguard pool holds a maxed line plus Standing Orders (TB-219)', () => {
+    const g = new GameController(1);
+    for (let i = 0; i < 9; i++) expect(placeVanguard(g.state, 'spear', i >= 2)).not.toBeNull();
   });
 });

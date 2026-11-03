@@ -21,7 +21,7 @@ import { LOOT_TOAST } from '../data/lootTables';
 import { RARITIES } from '../data/loot';
 import { applyTextScale } from '../render/textScale';
 import { CampPane } from './camp';
-import { armHover, burstAt, calm, countValue, pop, press, tween } from './juice';
+import { armHover, burst, calm, countValue, pop, press, tween } from './juice';
 import { reportRows, reportTimes } from './report';
 import { uiSound } from '../data/audio';
 import { Hud } from './hud';
@@ -29,6 +29,10 @@ import { Plate, oneLine, plateRows } from './plate';
 import { PathPicker, pathHint } from './paths';
 import { PATHS } from '../data/paths';
 import { drawSigil } from '../render/sigil';
+import { P } from '../render/palette';
+
+/** Buy sparks (TB-195b): starlight gold, frost blue, grove green and lilac, so they read against the gold button. */
+const BUY_SPARKS = [P.starGold, P.frost, P.grove, P.lilac] as const;
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string): T => document.getElementById(id) as T;
 const VAN_NAME: Record<VanType, string> = { spear: 'Spearman', blade: 'Bladedancer' };
@@ -177,7 +181,7 @@ export class Panel {
     const btn = document.getElementById('buy-btn');
     if (!this.game.buy(id)) return;
     this.onCue('uiStamp'); // TB-195k: a buy stamps
-    if (btn) { press(btn); burstAt(btn); } // TB-195a: press plus a gold burst on every buy
+    if (btn) { press(btn); const b = btn.getBoundingClientRect(); burst(b.left - b.width * 1.35, b.top + b.height * 0.05, BUY_SPARKS, 0.7); } // TB-195a: press plus a burst on every buy (TB-195b: multi-hue, left of the label)
     this.renderDetail();
   }
 
