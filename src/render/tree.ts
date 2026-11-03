@@ -1,10 +1,11 @@
+import { quality, renderScale } from './quality';
 import { BRANCH_COLOR, BRANCH_LABEL, NODE, NODES, NodeId, SkillNode, TREE_VIEW } from '../data/skillTree';
-import { Camera, centreOn, clampCamera, easeToward, startCamera, panBy, toWorld, wholeCamera, zoomAt } from './camera';
+import { Camera, wholeZoom, centreOn, clampCamera, easeToward, startCamera, panBy, toWorld, wholeCamera, zoomAt } from './camera';
 import { SimState } from '../sim/state';
 import { canBuy, pathLocked, rankOf, unlocked } from '../sim/tree';
 import { DragGuard } from './dragGuard';
 import { BRANCH_LIGHT, P, PATH_TINT } from './palette';
-import { TREE_LIGHT as L } from '../data/presentation';
+import { TREE_LIGHT as L, QUALITY } from '../data/presentation';
 
 /** The UI scale: root font size over 16 px (style.css, TB-143); 1.25 at 1920×1080 since TB-191, times Settings › Text size. */
 export const uiScale = (): number => parseFloat(getComputedStyle(document.documentElement).fontSize) / 16 || 1;
@@ -34,6 +35,9 @@ const ringOf = (n: SkillNode): string => (n.path ? PATH_TINT[n.path].colour : BR
 const at = (a: number, c: number, b: number, u: number): number => (1 - u) * (1 - u) * a + 2 * (1 - u) * u * c + u * u * b;
 
 /** Skill tree canvas with pan (drag) and zoom (wheel / pinch). Camera is view state only. */
+/** A touch screen is the primary pointer (a phone), so taps need a fat hit circle and a wobble allowance. */
+const touchScreen = (): boolean => typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
+
 export class TreeRenderer {
   private g: CanvasRenderingContext2D;
   selected: NodeId = 'sharp';
@@ -66,7 +70,7 @@ export class TreeRenderer {
 
   constructor(readonly canvas: HTMLCanvasElement) {
     this.g = canvas.getContext('2d')!;
-    new ResizeObserver(() => this.resize()).observe(canvas);
+    new ResizeObserver(() => this.resizeSoon()).observe(canvas);
     this.resize();
     canvas.addEventListener('wheel', (e) => {
       e.preventDefault(); if (this.full) return; this.target = null; const [sx, sy] = this.local(e);
@@ -87,33 +91,51 @@ export class TreeRenderer {
   private onMove(e: PointerEvent): void {
     const p = this.pts.get(e.pointerId); if (!p) return;
     const dx = (e.clientX - p.x) / this.ui, dy = (e.clientY - p.y) / this.ui;
-    if (this.full) { this.drag.travel(dx, dy); p.x = e.clientX; p.y = e.clientY; return; } // fixed camera: no pan or pinch
+    if (this.full && !touchScreen()) { this.drag.travel(dx, dy); p.x = e.clientX; p.y = e.clientY; return; } // mouse: fixed camera, no pan or pinch
     if (this.pts.size === 2) {
       const [a, b] = [...this.pts.values()];
       const other = (a === p ? b : a)!;
       const d0 = Math.hypot(p.x - other.x, p.y - other.y), d1 = Math.hypot(e.clientX - other.x, e.clientY - other.y);
       const [mx, my] = this.local({ clientX: (e.clientX + other.x) / 2, clientY: (e.clientY + other.y) / 2 });
-      if (d0 > 0) { this.cam = zoomAt(this.cam, mx, my, d1 / d0, this.vw, this.vh); this.stale = true; }
+      if (d0 > 0) { this.cam = zoomAt(this.cam, mx, my, d1 / d0, this.vw, this.vh, this.floor()); this.stale = true; }
       this.drag.pinch();
     } else {
-      if (this.drag.move(dx, dy, TREE_VIEW.dragPx)) this.canvas.classList.add('dragging');
-      if (this.drag.dragged) { this.cam = panBy(this.cam, dx, dy, this.vw, this.vh); this.stale = true; }
+      if (this.drag.move(dx, dy, touchScreen() ? TREE_VIEW.touchDragPx : TREE_VIEW.dragPx)) this.canvas.classList.add('dragging');
+      if (this.drag.dragged) { this.cam = panBy(this.cam, dx, dy, this.vw, this.vh, this.floor()); this.stale = true; }
     }
     p.x = e.clientX; p.y = e.clientY;
   }
 
+  /** Lowest zoom a pinch may reach: the whole-tree zoom in the full view, else the normal clamp. */
+  /** The full-screen opening view: the whole tree for a mouse; on a touch screen a readable zoom (labels 14 px, nodes 48 px apart), pinched out to the whole tree on demand (TB-218). */
+  private fullCamera(): Camera {
+    const coarse = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
+    return coarse ? clampCamera(startCamera(this.vw, this.vh), this.vw, this.vh, wholeZoom(this.vw, this.vh)) : wholeCamera(this.vw, this.vh);
+  }
+
+  private floor(): number | undefined { return this.full ? wholeZoom(this.vw, this.vh) : undefined; }
+
   private local(e: { clientX: number; clientY: number }): [number, number] {
     const r = this.canvas.getBoundingClientRect(); return [(e.clientX - r.left) / this.ui, (e.clientY - r.top) / this.ui];
+  }
+
+  /** Reallocating a canvas clears it and costs a frame: only when the size really changed. */
+  private setStore(w: number, h: number): void { if (this.canvas.width !== w) this.canvas.width = w; if (this.canvas.height !== h) this.canvas.height = h; }
+  private resizeTimer = 0;
+  /** A URL-bar slide or rotation fires many size callbacks: on a phone wait for the box to hold still, then resize once (TB-218). */
+  private resizeSoon(): void {
+    if (quality.tier !== 'phone') { this.resize(); return; }
+    clearTimeout(this.resizeTimer); this.resizeTimer = window.setTimeout(() => this.resize(), QUALITY.resizeSettleMs);
   }
 
   resize(): void {
     const r = this.canvas.getBoundingClientRect(); if (!r.width || !r.height) return;
     // Work in 1080p layout px (CSS px ÷ the UI scale, TB-143), so legend, labels and camera framing grow with the window
     this.ui = uiScale(); const first = this.vw === 1, k = r.width / this.ui / this.vw;
-    this.vw = r.width / this.ui; this.vh = r.height / this.ui; this.dpr = (devicePixelRatio || 1) * this.ui;
-    this.canvas.width = Math.round(r.width * (devicePixelRatio || 1)); this.canvas.height = Math.round(r.height * (devicePixelRatio || 1));
+    this.vw = r.width / this.ui; this.vh = r.height / this.ui; const sc = renderScale(r.width, r.height); this.dpr = sc * this.ui;
+    this.setStore(Math.round(r.width * sc), Math.round(r.height * sc));
     // Keep the same framing when the panel resizes: scale zoom with width.
-    if (this.full) { this.cam = wholeCamera(this.vw, this.vh); this.target = null; return; }
+    if (this.full) { this.cam = this.fullCamera(); this.target = null; return; }
     this.cam = first ? startCamera(this.vw, this.vh) : clampCamera({ ...this.cam, z: this.cam.z * k }, this.vw, this.vh);
   }
 
@@ -123,9 +145,9 @@ export class TreeRenderer {
     if (on) this.saved = this.target ?? this.cam;
     this.full = on; this.target = null; this.vw = 1; // force a fresh fit on the next resize
     const r = this.canvas.getBoundingClientRect(); if (!r.width || !r.height) return;
-    this.ui = uiScale(); this.vw = r.width / this.ui; this.vh = r.height / this.ui; this.dpr = (devicePixelRatio || 1) * this.ui;
-    this.canvas.width = Math.round(r.width * (devicePixelRatio || 1)); this.canvas.height = Math.round(r.height * (devicePixelRatio || 1));
-    this.cam = on ? wholeCamera(this.vw, this.vh) : this.saved ? clampCamera(this.saved, this.vw, this.vh) : startCamera(this.vw, this.vh);
+    this.ui = uiScale(); this.vw = r.width / this.ui; this.vh = r.height / this.ui; const sc = renderScale(r.width, r.height); this.dpr = sc * this.ui;
+    this.setStore(Math.round(r.width * sc), Math.round(r.height * sc));
+    this.cam = on ? this.fullCamera() : this.saved ? clampCamera(this.saved, this.vw, this.vh) : startCamera(this.vw, this.vh);
     this.stale = true;
   }
 
@@ -135,8 +157,8 @@ export class TreeRenderer {
   /** Select a node and ease the camera to centre it (snaps under reduced motion). */
   select(id: NodeId): void {
     this.selected = id;
-    if (this.full) return; // every node is already on screen
-    const n = NODE[id], t = centreOn(this.cam, n.x, n.y, this.vw, this.vh);
+    if (this.full && this.cam.z <= wholeZoom(this.vw, this.vh) * 1.01) return; // every node is already on screen
+    const n = NODE[id], t = centreOn(this.cam, n.x, n.y, this.vw, this.vh, this.floor());
     if (this.reducedMotion) { this.cam = t; this.target = null; } else { this.target = t; this.lastDraw = performance.now(); }
   }
 
@@ -145,8 +167,11 @@ export class TreeRenderer {
     if (this.drag.dragged) return null; // not cleared here: the hover tooltip also calls this; settle() clears it after the release click (TB-219)
     const [sx, sy] = this.local({ clientX, clientY }); if (sy < TREE_VIEW.legendH) return null; // the legend strip covers what is under it
     const [x, y] = toWorld(this.cam, sx, sy);
-    for (const n of NODES) if (Math.hypot(n.x - x, n.y - y) < TREE_VIEW.hitR) return n.id;
-    return null;
+    // A finger covers about 48 CSS px: the hit circle never shrinks below touchHitPx on screen at any zoom (TB-218); the nearest node wins.
+    const r = touchScreen() ? Math.max(TREE_VIEW.hitR, TREE_VIEW.touchHitPx / (this.cam.z * this.ui)) : TREE_VIEW.hitR;
+    let best: NodeId | null = null, bd = r;
+    for (const n of NODES) { const d = Math.hypot(n.x - x, n.y - y); if (d < bd) { bd = d; best = n.id; } }
+    return best;
   }
 
   /** The arcane tree (TB-163, neon TB-190): a dim neon glow along every locked link, then bark that grows along each bought link with a lit edge,
@@ -285,6 +310,7 @@ export class TreeRenderer {
     c.fillStyle = P.ink; c.fillRect(x - 0.75, y, 1.5, 3);
   }
 
+  private legProbe = -1; private legPx = 14; private legGap = 30;
   draw(s: SimState, t: number): void {
     this.stale = false;
     if (this.target) {
@@ -312,7 +338,18 @@ export class TreeRenderer {
     }
     c.setTransform(k, 0, 0, k, 0, 0); // legend stays in screen space, on its own strip so nodes pan under it, not through it (TB-117)
     c.fillStyle = P.ink2; c.fillRect(0, 0, this.vw, TREE_VIEW.legendH); c.fillStyle = P.line; c.fillRect(0, TREE_VIEW.legendH - 1, this.vw, 1);
-    let lx = 14; c.font = '14px Heartwood'; c.textAlign = 'left';
-    for (const k of Object.keys(BRANCH_COLOR) as (keyof typeof BRANCH_COLOR)[]) { c.fillStyle = BRANCH_COLOR[k]; c.fillRect(lx, 14, 8, 8); c.fillStyle = P.textDim; const label = BRANCH_LABEL[k].toUpperCase(); c.fillText(label, lx + 12, 22); lx += c.measureText(label).width + 30; }
+    // the strip never clips: gaps tighten, then the font steps down, until every label fits the canvas width
+    const keys = Object.keys(BRANCH_COLOR) as (keyof typeof BRANCH_COLOR)[], labels = keys.map((k) => BRANCH_LABEL[k].toUpperCase());
+    c.font = '14px Heartwood'; c.textAlign = 'left';
+    const probe = c.measureText(labels[0]!).width + this.vw * 1000;   // changes with width or when the face finishes loading
+    if (probe !== this.legProbe) {
+      this.legProbe = probe; let px = 14;
+      const need = (): number => labels.reduce((a, l) => a + c.measureText(l).width + 12, 0) + 14 * 2;
+      while (px > 10 && need() + 8 * (keys.length - 1) > this.vw) { px--; c.font = `${px}px Heartwood`; }
+      this.legPx = px; this.legGap = Math.min(30, Math.max(8, (this.vw - need()) / (keys.length - 1)));
+    }
+    c.font = `${this.legPx}px Heartwood`; const gap = this.legGap;
+    let lx = 14;
+    keys.forEach((k, i) => { c.fillStyle = BRANCH_COLOR[k]; c.fillRect(lx, 14, 8, 8); c.fillStyle = P.textDim; c.fillText(labels[i]!, lx + 12, 22); lx += c.measureText(labels[i]!).width + 12 + gap; });
   }
 }

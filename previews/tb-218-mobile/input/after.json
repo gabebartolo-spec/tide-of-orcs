@@ -1,0 +1,40 @@
+{
+ "promotedAimAfterMove": true,
+ "aimAfterDownDownUpMoveUp": null,
+ "aimAfterReverseLift": null,
+ "penHoverAim": null,
+ "penContactAim": {
+  "x": 499.5145631067962,
+  "y": 205.0485436893204
+ },
+ "penAfterUpAim": null,
+ "shotsIdle5s": 0,
+ "elementAtHud": "game",
+ "aimFromHudStart": {
+  "x": 33.49514563106796,
+  "y": 104.85436893203884
+ },
+ "view": "{\"k\":0.8583333333333333,\"ox\":71.25,\"oy\":0}",
+ "aimScreenYMin": 90,
+ "aimScreenYMax": 405.3,
+ "bottomReachWorldY": 476.116504854369,
+ "midLiftPx": 56,
+ "aimEdgeLeft": null,
+ "aimEdgeLeftAfterSlide": null,
+ "aimEdgeRight": null,
+ "settingsBtn": {
+  "x": 829.875,
+  "y": 42.796875,
+  "w": 114.25,
+  "h": 49
+ },
+ "modeAfterDragOff": "run",
+ "modeAfterTap": "settings",
+ "muteSettingsBtn": "132x49",
+ "quickTapShots": "10/10",
+ "contextmenuAllowed": 0,
+ "audioState": "running",
+ "muteButtons": "[{\"w\":0,\"h\":0,\"shown\":false},{\"w\":48,\"h\":48,\"shown\":true}]",
+ "lifecycle": "{\"savesOnHidden\":1,\"simSecondsAdvancedAcrossHide\":0.42,\"maxTicksInOneFrameAfterShow\":4,\"firstDtAfterShow\":0,\"audioAfterShow\":\"running\"}",
+ "mutedSync": "{\"afterButton\":[\"true\",\"true\"],\"afterKeyM\":[\"false\",\"false\"]}"
+}
