@@ -206,19 +206,21 @@ export const CAMP_DRAW_ORDER = [...BUILDINGS].sort((a, b) => CAMP_SPOTS[a.id].y 
  *  `wind` sideways drift, size from `r0` to `r1` over life, peak alpha `a`. `cap` bounds the shared pool. TB-188k removed the
  *  smoke (it read as flat discs). Emitters are placed from CAMP_ART: forge sparks at the forge image's top point (the bowyer pennant
  *  was dropped: it floated off the building), training dust at the ring's centre (`dustDy` above the image's base). */
-/** Deer grazing behind the camp and birds over the forest (TB-188k round 3, director 3 Nov), kept in the background. Each deer
- *  draws public/decor/camp/deer_<pose>.webp (rendered at one spot by render_camp_backdrop.py, rects in CAMP_DEER_ART) shifted by
- *  (dx, dy) scene units, `flip` mirrors it. A deer grazes head down and lifts its head for `up` s every `every` s. Birds: `n`
- *  small two-stroke silhouettes drifting at `speed` units/s across the band y0..y1, wings beating at `flap` Hz, span `span`. */
+/** Elk grazing behind the camp and birds over the forest (TB-188k round 3; TB-208, director 4 Nov), kept in the background. Each
+ *  elk plays public/decor/camp/elk.webp, the "Realistic Animated Elk" model's own Stand_Eating_01 graze loop rendered at one spot
+ *  by render_camp_backdrop.py (frame grid and rect in CAMP_ELK_ART), shifted by (dx, dy) scene units, `flip` mirrors it, `phase`
+ *  (0-1) offsets its place in the loop so the herd does not move in step. Birds: `n` small two-stroke silhouettes drifting at
+ *  `speed` units/s across the band y0..y1, wings beating at `flap` Hz, span `span`. */
 export const CAMP_FAUNA = {
-  deer: [
-    { dx: -470, dy: -10, flip: false }, { dx: -440, dy: 6, flip: true }, { dx: 70, dy: -40, flip: true }, { dx: 380, dy: 0, flip: false },
+  elk: [
+    { dx: -470, dy: -10, flip: false, phase: 0 }, { dx: 70, dy: -40, flip: true, phase: 0.7 },
+    { dx: 380, dy: 0, flip: false, phase: 0.2 },
   ],
-  every: [5, 11], up: [1.5, 3.2],
   birds: { n: 5, y0: -262, y1: -228, speed: [9, 16], flap: [1.4, 2.4], span: 7, a: 0.8 },
 } as const;
-/** Deer image rects (scene units), written by post_camp.py with CAMP_ART. */
-export const CAMP_DEER_ART: Readonly<Record<'up' | 'down', CampArtRect>> = /*DEER*/{ up: { x: 576.8, y: -143.8, w: 42.8, h: 37.0, top: [614.2, -143.5] }, down: { x: 577.2, y: -130.0, w: 45.2, h: 23.2, top: [600.1, -130.0] } }/*DEND*/;
+/** Elk sheet layout (scene units for the rect; `n` frames in a grid of `cols`, played at `fps`), written by post_elk.py. */
+export interface CampSheetRect { readonly x: number; readonly y: number; readonly w: number; readonly h: number; readonly n: number; readonly cols: number; readonly fps: number }
+export const CAMP_ELK_ART: CampSheetRect = /*ELK*/{ x: 542.8, y: -187.0, w: 103.8, h: 89.2, n: 32, cols: 8, fps: 3.0 }/*EEND*/;
 
 export const CAMP_LIFE = {
   cap: 120,

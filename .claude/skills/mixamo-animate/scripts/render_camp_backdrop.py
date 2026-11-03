@@ -3,7 +3,8 @@
 # that Tripo model planted on the meadow (its ground island sunk under the field and its leftover grass faces removed), the
 # rest of the scene held out and the ground a shadow catcher, so the PNG carries the building plus its real contact shadow.
 # post_camp.py crops the PNGs, writes public/decor/camp/*.webp and prints the CAMP_ART rects for src/data/presentation.ts.
-# blender -b --factory-startup --python render_camp_backdrop.py -- <out dir>   env: PX (4), SAMPLES (96), ONLY (plate,forge3,...)
+# blender -b --factory-startup --python render_camp_backdrop.py -- <out dir>   env: PX (4), SAMPLES (96), ONLY (plate,forge3,elk,...)
+# Pass "elk" (TB-208) renders the elk's graze clip frame by frame to <out>/elk/NNN.png + elk.json; post_elk.py packs them.
 import bpy, bmesh, math, os, random, sys, json
 from mathutils import Vector, Euler
 out = sys.argv[sys.argv.index("--") + 1]; os.makedirs(out, exist_ok=True)
@@ -267,26 +268,43 @@ for bid_, n_, sz in (("bowyer", 9, (0.2, 0.5)), ("kitchen", 5, (0.15, 0.35))):
         bush(ground(bx + rng.uniform(-0.6, 0.6) * bw, bf - 110 + rng.uniform(-14, 10)), rng.uniform(*sz), rng.choice([LEAF_NEAR, LEAF_MID]))
 for sx, sy, sz in ((470, -40, 0.32), (520, -52, 0.2), (1080, -30, 0.4), (1130, -46, 0.25), (20, 20, 0.3)): bush(ground(sx, sy), sz, LEAF_MID)
 
-# ---- deer grazing behind the camp: own passes (head up / head down) so the scene can animate them -------------------
-DEER = mat("deer", (150, 104, 66), (176, 128, 84), 18.0, 0.1); DEER_W = mat("deerW", (226, 214, 190))
-def deer(p, down):
-    """A small chunky deer facing -y (screen left), in the props' blob style. Removed from ENV: drawn only in its own pass."""
-    n0 = len(ENV); k = 0.9
-    def b_(off, r, m, sc_):
-        o = blob(p + Vector(off) * k, r * k, m, 1.0, 2, 0.04); o.rotation_euler.z = 0; o.scale = sc_; return o
-    b_((0, 0, 0.17), 0.085, DEER, (0.85, 1.6, 0.75))
-    for dx, dy in ((-0.035, -0.08), (0.035, -0.08), (-0.035, 0.08), (0.035, 0.08)):
-        cyl(p + Vector((dx, dy, 0)) * k, 0.017 * k, 0.011 * k, 0.15 * k, DEER, 6)
-    b_((0, 0.15, 0.19), 0.022, DEER_W, (1, 1, 1))
-    sh = Vector((0, -0.11, 0.2)); hd = Vector((0, -0.2, 0.04)) if down else Vector((0, -0.17, 0.31))
-    for i in range(1, 4): b_(tuple(sh + (hd - sh) * (i / 4)), 0.03 - 0.003 * i, DEER, (1, 1, 1))
-    b_(tuple(hd), 0.032, DEER, (0.8, 1.4, 0.85))
-    if not down:
-        for dx in (-0.02, 0.02): cyl(p + (hd + Vector((dx, 0.01, 0.02))) * k, 0.006 * k, 0.002 * k, 0.06 * k, BARK, 5)
-    obs = ENV[n0:]; del ENV[n0:]
-    for o in obs: o.hide_render = True
-    return obs
-DEER_AT = (600, -110)
+# ---- elk grazing behind the camp (TB-208): "Realistic Animated Elk 3D Model" by WildMesh 3D (CC BY 4.0), its own
+# Stand_Eating_01 clip played exactly as authored, rendered frame by frame in its own pass so the scene can loop it.
+ELK = os.environ.get("ELK", "C:/Users/DANTE/Documents/tide-assets/sketchfab/elk/scene.gltf")
+ELK_AT = (600, -110)            # scene (x, y) of the elk's hooves
+ELK_LEN = float(os.environ.get("ELK_LEN", "66"))   # nose-to-tail length, scene units (a real elk is ~2.4 m to a ~8 m building)
+ELK_CLIP, ELK_STEP = "Stand_Eating_01", int(os.environ.get("ELK_STEP", "4"))   # the model's graze loop (256 frames at 24 fps)
+def load_elk():
+    before = set(sc.objects); bpy.ops.import_scene.gltf(filepath=ELK)
+    new = [o for o in sc.objects if o not in before]
+    for o in [o for o in new if o.name.startswith("Icosphere")]: new.remove(o); bpy.data.objects.remove(o)   # stray helper sphere
+    arm = next(o for o in new if o.type == "ARMATURE"); ad = arm.animation_data
+    for t in ad.nla_tracks: t.mute = True
+    ad.action = bpy.data.actions[ELK_CLIP]
+    if getattr(ad, "action_slot", 1) is None and len(ad.action_suitable_slots): ad.action_slot = ad.action_suitable_slots[0]
+    for mt in {s_.material for o in new if o.type == "MESH" for s_ in o.material_slots if s_.material}:
+        for nd in mt.node_tree.nodes:
+            if nd.type == "BSDF_PRINCIPLED":
+                for l in list(nd.inputs["Roughness"].links) + list(nd.inputs["Metallic"].links): mt.node_tree.links.remove(l)
+                nd.inputs["Roughness"].default_value = 1.0; nd.inputs["Metallic"].default_value = 0.0
+                if "Specular IOR Level" in nd.inputs: nd.inputs["Specular IOR Level"].default_value = 0.0
+    root = bpy.data.objects.new("elk", None); sc.collection.objects.link(root)
+    for o in new:
+        if o.parent is None: o.parent = root
+    root.rotation_euler.z = math.pi        # the model faces +y (screen right): turn it to face screen left like the old deer
+    sc.frame_set(0); bpy.context.view_layer.update()
+    ms = [o for o in new if o.type == "MESH"]
+    def pts():
+        dg = bpy.context.evaluated_depsgraph_get(); P = []
+        for o in ms:
+            e = o.evaluated_get(dg); P += [e.matrix_world @ v.co for v in e.to_mesh().vertices]; e.to_mesh_clear()
+        return P
+    P = pts(); s_ = ELK_LEN * U / (max(p.y for p in P) - min(p.y for p in P)); root.scale = (s_, s_, s_); bpy.context.view_layer.update()
+    P = pts(); g = ground(*ELK_AT)
+    root.location = Vector((g.x - (min(p.x for p in P) + max(p.x for p in P)) / 2, g.y - (min(p.y for p in P) + max(p.y for p in P)) / 2, -min(p.z for p in P)))
+    bpy.context.view_layer.update()
+    for o in new: o.hide_render = True
+    return new, ms, pts
 
 # ---- light: one warm sun, cool sky fill ----------------------------------------------------------------------------
 w = bpy.data.worlds.new("w"); sc.world = w; w.use_nodes = True; nt = w.node_tree
@@ -452,18 +470,24 @@ for bid, (x, foot, frow) in SPOTS.items():
         sc.render.filepath = os.path.join(out, n + ".png"); bpy.ops.render.render(write_still=True)
         rects[n] = [sc.render.border_min_x, sc.render.border_max_x, sc.render.border_min_y, sc.render.border_max_y]
         for o in ms: bpy.data.objects.remove(o)
-for dn, down in (("deer_up", False), ("deer_down", True)):
-    if not want(dn): continue
-    obs = deer(ground(*DEER_AT), down)
+if want("elk"):
+    obs, ms, pts = load_elk(); A = bpy.data.actions[ELK_CLIP]; f0, f1 = map(int, A.frame_range)
+    frames = list(range(f0, f1, ELK_STEP))   # f1 repeats f0: the clip loops
     for o in obs: o.hide_render = False
-    bpy.context.view_layer.update()
-    V = [w2c(sc, cam, o.matrix_world @ Vector(c)) for o in obs for c in o.bound_box]
+    for o in ENV: o.visible_shadow = False   # the plate already carries the hedge/prop shadows: catch only the elk's own
+    V = []
+    for f in frames[::4]:
+        sc.frame_set(f); bpy.context.view_layer.update(); V += [w2c(sc, cam, p) for p in pts()]
     u0, u1 = min(v.x for v in V), max(v.x for v in V); v0, v1 = min(v.y for v in V), max(v.y for v in V)
     sc.render.use_border = True; sc.render.use_crop_to_border = True
-    sc.render.border_min_x, sc.render.border_max_x = u0 - 0.006, u1 + 0.006; sc.render.border_min_y, sc.render.border_max_y = v0 - 0.008, v1 + 0.004
-    sc.render.filepath = os.path.join(out, dn + ".png"); bpy.ops.render.render(write_still=True)
-    rects[dn] = [sc.render.border_min_x, sc.render.border_max_x, sc.render.border_min_y, sc.render.border_max_y]
-    for o in obs: bpy.data.objects.remove(o)
+    sc.render.border_min_x, sc.render.border_max_x = u0 - 0.01, u1 + 0.01; sc.render.border_min_y, sc.render.border_max_y = v0 - 0.01, v1 + 0.006
+    os.makedirs(os.path.join(out, "elk"), exist_ok=True)
+    for i, f in enumerate(frames):
+        sc.frame_set(f); sc.render.filepath = os.path.join(out, "elk", "%03d.png" % i); bpy.ops.render.render(write_still=True)
+    json.dump({"rect": [sc.render.border_min_x, sc.render.border_max_x, sc.render.border_min_y, sc.render.border_max_y],
+               "n": len(frames), "fps": sc.render.fps / ELK_STEP, "res": [sc.render.resolution_x, sc.render.resolution_y],
+               "plate": [X0, X1, Y0, Y1], "px": PX}, open(os.path.join(out, "elk", "elk.json"), "w"))
+    for o in obs: o.hide_render = True
 json.dump({"rects": rects, "res": [sc.render.resolution_x, sc.render.resolution_y], "plate": [X0, X1, Y0, Y1], "px": PX},
           open(os.path.join(out, "layout.json"), "w"))
 print("DONE", rects)

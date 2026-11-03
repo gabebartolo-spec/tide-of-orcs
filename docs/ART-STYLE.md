@@ -206,3 +206,11 @@ bundle, forge chimney with ember hearth and anvil, kitchen awning with bread tab
 straw dummies and a spear rack); **level 2** the level-1 look plus a blue pennant; **level 3** adds a gold-edged pennant, a lit
 lantern and one more of each trade (sparks, smoke, a third dummy, a quiver, a fourth bow). Each look is painted once per
 scene pixel scale to an offscreen canvas and blitted, so the camp costs four `drawImage` calls a frame. No motion yet (TB-188f).
+
+## Camp elk (TB-208)
+The animals grazing behind the camp are the Sketchfab "Realistic Animated Elk" (WildMesh 3D, CC BY 4.0), never a code-drawn
+creature. `render_camp_backdrop.py` pass `elk` imports the gltf into the camp scene (same camera, sun, sky fill and shadow
+catcher as the buildings), scales it to `ELK_LEN` 66 units nose to tail, and renders the model's own `Stand_Eating_01` clip
+as authored every 8th frame (32 frames, 3 fps, loops). `post_elk.py` crops all frames to one shared rect, packs
+`public/decor/camp/elk.webp` (8 per row) and prints `CAMP_ELK_ART`. Each elk in `CAMP_FAUNA.elk` is offset, may be mirrored,
+and starts at its own `phase` so the herd does not graze in step.
