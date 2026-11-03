@@ -191,10 +191,11 @@ Vector draws stay the baseline so the game is always playable without assets. Ac
 - Audio palette: wooden, breathy, watery. Wooden thuds for wall hits, a low horn on rally, a long creak-and-crash when the wall falls. Wind loop always under everything.
 
 ## Encampment placeholder (TB-188c)
-Until the TB-188d sprites land, `src/render/camp.ts` draws the four buildings as palette-token vector shapes in the grove
-strip's top and bottom bands (`CAMP_SPOTS`, clear of the HUD, the archers, the elf and the ballista). Three looks: **level 0**
+Until the TB-188d sprites load, `src/render/camp.ts` draws the four buildings as palette-token vector shapes at their
+`CAMP_SPOTS` footprints in the Camp tab's scene (TB-188e; the field no longer shows the camp). The Tripo sprites are drawn
+per building so each level 3 stands `CAMP_SCENE.l3H` (135 units, ~3x the elf's 38) tall. Three looks: **level 0**
 a canvas tent beside a bare timber frame and one hint of the trade; **level 1** built (bowyer lean-to with bow rack and arrow
 bundle, forge chimney with ember hearth and anvil, kitchen awning with bread table and pot over a cook fire, training ring with
 straw dummies and a spear rack); **level 2** the level-1 look plus a blue pennant; **level 3** adds a gold-edged pennant, a lit
 lantern and one more of each trade (sparks, smoke, a third dummy, a quiver, a fourth bow). Each look is painted once per
-field pixel scale to an offscreen canvas and blitted, so the camp costs four `drawImage` calls a frame. No motion yet (TB-188e).
+scene pixel scale to an offscreen canvas and blitted, so the camp costs four `drawImage` calls a frame. No motion yet (TB-188f).
