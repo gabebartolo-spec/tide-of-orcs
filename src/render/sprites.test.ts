@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { frameAt, parseAtlas, Sprites } from './sprites';
+import { frameAt, heightBucket, parseAtlas, Sprites } from './sprites';
+import { SPRITE_BAKE } from '../data/presentation';
 
 const anim = { image: 'sheet_elf.webp', frames: [[0, 0, 8, 8], [8, 0, 8, 8], [16, 0, 8, 8]] as [number, number, number, number][], fps: 12, ax: 0.5, ay: 1, hPerR: 2.6 };
 
@@ -67,6 +68,18 @@ describe('sprite atlas', () => {
     sp.draw(g, 'orc.grunt', 0, 0, 0, 10, false, 'blue', 'cyan', 4);
     expect(sp.bakeCount).toBe(3);
   });
+
+  it('shares tint-only bakes across heights and bounds rimmed bakes across radii (TB-216d)', () => {
+    const sp = rig();
+    const g = { drawImage() {}, filter: 'none' } as unknown as CanvasRenderingContext2D;
+    for (let r = 4; r <= 40; r += 0.1) sp.draw(g, 'orc.grunt', 0, 0, 0, r, false, 'blue');
+    expect(sp.bakeCount).toBe(1);
+    for (let r = 4; r <= 40; r += 0.1) sp.draw(g, 'orc.grunt', 0, 0, 0, r, false, 'red', 'orange', 4);
+    expect(sp.bakeCount - 1).toBeLessThanOrEqual(Math.ceil(Math.log2(40 / 4) * SPRITE_BAKE.steps) + 2);
+    for (let i = 0; i < SPRITE_BAKE.cap * 2; i++) sp.draw(g, 'orc.grunt', 0, 0, 0, 1 + i, false, `#${i}`, 'orange', 4);
+    expect(sp.bakeSize).toBeLessThanOrEqual(SPRITE_BAKE.cap);
+    expect(heightBucket(26)).toBe(heightBucket(26.4));
+  });
 });
 
 describe('sheet load failure (TB-216c)', () => {
@@ -79,3 +92,11 @@ describe('sheet load failure (TB-216c)', () => {
     expect(keepLoaded(a, new Set())).toBeNull();
   });
 });
+function rig(): Sprites {
+  const sp = new Sprites();
+  const c = { drawImage() {}, clearRect() {}, fillRect() {}, fillStyle: '', globalCompositeOperation: '', filter: 'none' };
+  sp.makeCanvas = () => ({ width: 0, height: 0, getContext: () => c }) as unknown as HTMLCanvasElement;
+  const priv = sp as unknown as { atlas: unknown; imgs: Map<string, unknown> };
+  priv.atlas = parseAtlas({ anims: { 'orc.grunt': anim } }); priv.imgs = new Map([['sheet_elf.webp', {}]]);
+  return sp;
+}
