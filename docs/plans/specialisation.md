@@ -47,4 +47,4 @@ Each mythic gets a Meshy icon like the existing ones (public/items), and its own
 1. ~~Choice timing~~ **Decided (director, 3 Nov):** chosen before each prestige (Replant), changeable every run.
 2. ~~Exclusive drops~~ **Decided (director, 3 Nov):** path items drop only while their path is chosen.
 3. ~~Fox mythic slot~~ **Decided (director, 3 Nov): charm.**
-4. **Icon art spend:** Meshy credits for nine or more icons, yes or no.
+4. ~~Icon art spend~~ **Decided (director, 3 Nov): yes to Meshy credits** for the path icons (sigils, set items, mythics).
