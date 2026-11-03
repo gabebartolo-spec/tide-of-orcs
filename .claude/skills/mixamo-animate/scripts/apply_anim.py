@@ -548,6 +548,14 @@ if os.environ.get("QUIVER"):  # quiver on the back (Spine2) with arrows, and a n
         for fc in (o.animation_data.action.fcurves if hasattr(o.animation_data.action, "fcurves") else []):
             for k in fc.keyframe_points: k.interpolation = "CONSTANT"
     print("ARROWSUM shot-line body hits", tot[0], "bow-hand", tot[1], "per frame from", af, shots, "| shown arrow hits", sum(shown), shown)
+    if os.environ.get("HANDSMOOTH"):  # TB-203: spread the bow hand's turn over a frame window (Laplacian slerp passes on the basis quats)
+        ha_, hb_, it_ = map(int, os.environ["HANDSMOOTH"].split(",")); lh_ = tgt.pose.bones["mixamorig:LeftHand"]
+        Q_ = []
+        for f in range(f0 + ha_ - 1, f0 + hb_ + 2): sc.frame_set(f); Q_.append(lh_.rotation_quaternion.copy())
+        for _ in range(it_):
+            N_ = [Q_[0]] + [Q_[i].slerp(Q_[i - 1].slerp(Q_[i + 1], 0.5), 0.5) for i in range(1, len(Q_) - 1)] + [Q_[-1]]; Q_ = N_
+        for j, f in enumerate(range(f0 + ha_ - 1, f0 + hb_ + 2)): lh_.rotation_quaternion = Q_[j]; lh_.keyframe_insert("rotation_quaternion", frame=f)
+        print("HANDSMOOTH", ha_, hb_, it_)
     if os.environ.get("STRPROBE") or os.environ.get("STRDRAW"):  # bowstring (TB-203): STRDRAW pulls the string to the nock while the
         # arrow sits on the shot line (a real draw: tips -> nock V), STRPROBE prints per frame the string's clearance from the bow arm
         wb = bpy.data.objects["wpn_bow"]; A_ = Vector(wb["bow_ax"]).normalized(); Bk = Vector(wb["bow_back"]); Bk = (Bk - A_ * Bk.dot(A_)).normalized()
@@ -597,6 +605,8 @@ if os.environ.get("QUIVER"):  # quiver on the back (Spine2) with arrows, and a n
                     wn_ = max(0.0, min(1.0, (r1_ - dh_) / (r1_ - r0_)))
                     if wn_ <= 0: continue
                     nl = nl + Bk * (sS - nl.dot(Bk)) * (1 - wn_)
+                _dk = globals().setdefault("_dk", [0]); _dk[0] += 1; DR_ = int(os.environ.get("DRAWRAMP", "0"))  # TB-203: first DRAWRAMP pulls ramp in
+                if DR_ and _dk[0] <= DR_: nl = nl + Bk * (sS - nl.dot(Bk)) * (1 - _dk[0] / (DR_ + 1))
                 um = max(0.05, min(0.95, (nl - e0).dot(ln) / ln.length_squared)); k_ = wb.shape_key_add(name=f"draw{f}", from_mix=False)
                 # LIMBBEND (TB-203): both limbs flex toward the string by LIMBBEND x draw depth at the tips (symmetric about the grip,
                 # quadratic from the riser out), and the string ends ride the bent tips, so the bow stays one plane and one arc
@@ -937,6 +947,26 @@ if os.environ.get("IDLEPOSE"):  # TB-203: BLENDIN frames ease out of the dumped 
             sc.frame_set(f); bpy.context.view_layer.update(); lh_ = tgt.pose.bones["mixamorig:LeftHand"]
             print("TAILDBG", f - f0, "LHq", [round(x, 3) for x in lh_.rotation_quaternion], "bowq", [round(x, 3) for x in wb_.matrix_world.to_quaternion()], "par", wb_.parent and wb_.parent.name, wb_.parent_bone, bool(wb_.animation_data), [c.type for c in wb_.constraints])
 n = f1 - f0 + 1 + TAIL
+if os.environ.get("BOWDBG"):  # TB-203: per-frame bow world turn (deg) from the previous frame, and the active draw key
+    wq_ = bpy.data.objects["wpn_bow"]; pq_ = None; out_ = []
+    for f in range(f0, f0 + n):
+        sc.frame_set(f); bpy.context.view_layer.update(); q_ = wq_.matrix_world.to_quaternion()
+        out_.append(0 if pq_ is None else round(math.degrees(pq_.rotation_difference(q_).angle))); pq_ = q_
+    print("BOWDBG", out_)
+    sh_ = []; dg_ = bpy.context.evaluated_depsgraph_get()
+    for f in range(f0, f0 + n, 3):  # TB-203: bow mesh clearance (cm) from the shins (bone line, 5.5 cm leg radius)
+        sc.frame_set(f); bpy.context.view_layer.update(); em_ = wq_.evaluated_get(dg_).to_mesh(); mw_ = wq_.matrix_world; best = 9.0
+        for bn_ in ("LeftLeg", "RightLeg"):
+            pb_ = tgt.pose.bones["mixamorig:" + bn_]; A0, A1 = W @ pb_.head, W @ pb_.tail; d_ = A1 - A0
+            for v_ in list(em_.vertices)[::4]:
+                P_ = mw_ @ v_.co; t_ = max(0.0, min(1.0, (P_ - A0).dot(d_) / d_.length_squared)); best = min(best, (P_ - (A0 + d_ * t_)).length - 0.055)
+        sh_.append(round(best * 100, 1))
+    print("SHINCLR every 3rd", sh_)
+    for f in (f0 + 20, f0 + 26):
+        sc.frame_set(f); bpy.context.view_layer.update(); hd_ = W @ tgt.pose.bones["mixamorig:Head"].head
+        rh_, lh_ = W @ tgt.pose.bones["mixamorig:RightHand"].head, W @ tgt.pose.bones["mixamorig:LeftHand"].head
+        bw_ = bpy.data.objects["wpn_bow"].matrix_world.translation
+        print("ARMS", f - f0, "drawhand-head cm", round((rh_ - hd_).length * 100), "bowhand-head cm", round((lh_ - hd_).length * 100), "bow-to-lefthand cm", round((bw_ - lh_).length * 100), "bow-to-righthand cm", round((bw_ - rh_).length * 100))
 if os.environ.get("ARMCLR") and bpy.data.objects.get("wpn_bow") and os.environ.get("STRDRAW"):  # TB-203: string-to-bow-forearm clearance (cm) per frame
     wb_ = bpy.data.objects["wpn_bow"]; dg_ = bpy.context.evaluated_depsgraph_get(); out_ = []
     for f in range(f0, f0 + n):
