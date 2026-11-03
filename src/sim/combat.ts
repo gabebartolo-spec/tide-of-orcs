@@ -54,23 +54,27 @@ export function kill(s: SimState, ev: EventBus, o: Orc): void {
   if (o.kind === 'wolfrider') {
     const g = spawnOrc(s, 'grunt', o.y, o.champ);
     if (g) { g.x = o.x; if (g.champ && s.run.boss) s.run.boss.left++; }
+    // spawnOrc already counted a failed champion spawn off `left`; this rider's own kill did too, so give one back (TB-198)
+    else if (o.champ && s.run.boss) s.run.boss.left++;
   }
 }
 
 /** Roll this kill's drop (TB-094) and pick it up; re-derive stats if what is worn changed. */
 function dropLoot(s: SimState, ev: EventBus, o: Orc): void {
-  const l = s.meta.loot, st = s.stats, boss = o.kind === 'boss', worn = JSON.stringify(l.equipped);
+  const l = s.meta.loot, st = s.stats, boss = o.kind === 'boss';
+  let worn: string | null = null; // snapshot only once a drop lands (TB-198)
   const mods = { ...lootMods(l, st), bump: boss && st.hoard ? 1 : 0, has: ownedAffixes(st) };
   // Warboss Tithe: bosses drop twice; Trophy: kills on every tenth wave roll twice
   const rolls = boss ? st.bossDrops : st.trophy && s.run.wave % SPOILS_FX.trophyEvery === 0 ? 2 : 1;
   for (let i = 0; i < rolls; i++) {
     const it = rollDrop(s.lootRng, l, o.kind, s.run.wave, s.meta.prestiges, mods);
     if (!it) continue;
+    worn ??= JSON.stringify(l.equipped);
     noteDrop(s.run, it);
     pickUp(l, it, s.lootPolicy, st.satchelCap, st);
     ev.push({ t: 'loot', x: o.x, y: o.y, uid: it.uid, rarity: it.rarity, kept: l.items.includes(it) });
   }
-  if (JSON.stringify(l.equipped) !== worn) recompute(s);
+  if (worn !== null && JSON.stringify(l.equipped) !== worn) recompute(s);
 }
 
 /** Set-bonus damage taken: bleeding (Nightknife 4) and pinned (Siegebreaker 6) orcs take more from every source. */
@@ -99,7 +103,7 @@ export function shoot(s: SimState, kind: ProjectileKind, x: number, y: number, a
 export function lob(s: SimState, sx: number, sy: number, tx: number, ty: number, fx: number = FX.ALL, ev?: EventBus): void {
   const p = s.shots.alloc(); if (!p) return;
   p.kind = 'lob'; p.sx = p.x = sx; p.sy = p.y = sy; p.tx = tx; p.ty = ty; p.t = 0; p.h = 0; p.vx = p.vy = 0;
-  p.r = s.stats.radius; p.dmg = s.stats.dmg * LOB.dmgMult * (s.stats.homing && fx & FX.MOON ? s.stats.moonMult : 1); p.fx = fx; p.pierce = s.stats.pierce; p.life = Infinity; p.target = null; p.hit.clear();
+  p.r = s.stats.radius; p.dmg = s.stats.dmg * LOB.dmgMult * (s.stats.homing && fx & FX.MOON ? s.stats.moonMult : 1); p.fx = fx; p.pierce = s.stats.pierce; p.life = Infinity; p.target = null; p.first = true; p.hit.clear();
   // Starfall Cloak: some arrows fall as stars, harder and wider
   if (s.stats.starCloak && s.rng.next() < Math.min(1, MYTHIC_FX.starfallChance * s.stats.echo)) {
     p.dmg *= MYTHIC_FX.starfallMult; p.r *= MYTHIC_FX.starfallRadius; ev?.push({ t: 'starCloak', x: tx, y: ty });

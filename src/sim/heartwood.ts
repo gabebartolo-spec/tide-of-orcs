@@ -21,7 +21,7 @@ export const canBuyHw = (s: SimState, id: HwId): boolean => { const c = hwCost(s
 export function buyHw(s: SimState, ev: EventBus, id: HwId): boolean {
   if (!canBuyHw(s, id)) return false;
   s.meta.hwLevels[id] = hwRank(s.meta, id) + 1;
-  recompute(s);
+  recompute(s, { heal: true });
   ev.push({ t: 'hwBought', id });
   return true;
 }

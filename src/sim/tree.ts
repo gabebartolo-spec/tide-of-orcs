@@ -15,7 +15,7 @@ export function buy(s: SimState, ev: EventBus, id: NodeId): boolean {
   const r = rankOf(s, id);
   s.run.starlight -= costOf(s, n);
   s.run.levels[id] = r + 1;
-  recompute(s);
+  recompute(s, { heal: true });
   ev.push({ t: 'bought', id, firstRank: r === 0 });
   return true;
 }

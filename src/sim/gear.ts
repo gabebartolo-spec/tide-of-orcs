@@ -40,7 +40,7 @@ export function applyGear(st: Stats, l: LootMeta): Stats {
   if (t.mul.ballRate) st.ballCd /= 1 + t.mul.ballRate;
   if (st.homing && t.mul.moonRate) st.lobCd /= 1 + t.mul.moonRate;
   // Pale Moon: with the Moonbow owned, the draw is near-instant (each shot costs wall, in step)
-  if (st.homing && st.fullMoon) st.lobCd *= MYTHIC_FX.moonDraw / st.echo;
+  if (st.homing && st.fullMoon) st.lobCd *= MYTHIC_FX.moonDraw; // Echo never draws faster (TB-198)
   // Oakspine: a wider strike circle (its root is in combat.impact)
   if (st.stakes) st.radius *= MYTHIC_FX.oakRadius;
   return st;
