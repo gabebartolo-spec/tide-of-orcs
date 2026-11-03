@@ -324,3 +324,24 @@ body.tree-full #pane-grove .detail .name { font-size: 1.5rem; }
 .tabs button { transition: color var(--ui-in) var(--ui-ease), background-color var(--ui-in) var(--ui-ease); }
 :root[data-calm] :is(.tab, .panel, #btn-pullback, #dep-boss) { animation: none; }
 :root[data-calm] :is(.fallen, .toast, .tabs button) { transition: none; }
+
+/* Encampment (TB-188b): a building's card over the grove strip, and the Camp list on the Replant tab. Sizes in rem so the
+   Settings text scale grows them; the card caps its height and scrolls inside itself at large scales. */
+.bcard { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); z-index: 3; width: min(22rem, calc(100% - 1.5rem)); max-height: calc(100% - 1.5rem); overflow-y: auto; display: flex; flex-direction: column; gap: 0.375rem; padding: 0.75rem 0.875rem; border-radius: 0.5rem; background: var(--grain), var(--ink); border: 0.0625rem solid var(--splinter, var(--line)); box-shadow: 0 0.25rem 1rem color-mix(in srgb, var(--ink) 70%, transparent); line-height: 1.4; }
+.bcard .name, .campnode .name { font-family: var(--display); font-size: 1.25rem; }
+.bcard .name { padding-right: 2rem; }
+.bcard .desc, .campnode .desc { color: var(--text-dim); font-size: 0.9375rem; }
+.bcard .desc b, .campnode .desc b { color: var(--text); font-weight: 700; }
+.bcard .cost, .campnode .cost { color: var(--amber); font-variant-numeric: tabular-nums; font-size: 0.9375rem; }
+.bcard .buy, .campnode .buy { align-self: flex-start; }
+.bcard .x { position: absolute; top: 0.5rem; right: 0.5rem; padding: 0.125rem 0.5rem; }
+.camplist { display: flex; flex-direction: column; gap: 0.375rem; }
+.campnode .row { margin-top: 0; }
+.campnode { flex-direction: column; align-items: stretch; gap: 0.25rem; }
+.camplist .mats { display: flex; flex-wrap: wrap; gap: 0.25rem 0.875rem; font-size: 0.9375rem; color: var(--text-dim); }
+.camplist .mats .k { text-transform: uppercase; letter-spacing: .12em; font-size: 0.875rem; }
+.camplist .mats b { color: var(--text); font-variant-numeric: tabular-nums; }
+/* Replant tab with the Camp as a third column (TB-188b): Replant | Heartwood tree | Camp */
+.prestige.split.three { grid-template-columns: minmax(0, 1fr) minmax(0, 1.7fr) minmax(0, 1fr); }
+.prestige.split.three .hwtree { grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); }
+@media (max-width: 860px) { .prestige.split.three { grid-template-columns: 1fr; } }

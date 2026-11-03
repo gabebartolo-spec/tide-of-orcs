@@ -5,6 +5,7 @@ import { TreeRenderer } from './render/tree';
 import { Panel } from './ui/panel';
 import { AudioEngine } from './audio/engine';
 import { STR } from './data/strings';
+import { campHit } from './ui/camp';
 
 const game = new GameController();
 const fieldCanvas = document.getElementById('game') as HTMLCanvasElement;
@@ -53,6 +54,11 @@ fieldCanvas.addEventListener('pointerdown', (e) => {
   setAim(e);
 });
 fieldCanvas.addEventListener('pointermove', setAim);
+// Encampment (TB-188b): a click on a building in the grove strip opens its card; a click anywhere else closes it.
+// The strip lies west of the barricade, where the bow never aims, so this never competes with aiming.
+const fieldPoint = (e: MouseEvent): [number, number] => { const r = fieldCanvas.getBoundingClientRect(); return [((e.clientX - r.left) / r.width) * FIELD.w, ((e.clientY - r.top) / r.height) * FIELD.h]; };
+fieldCanvas.addEventListener('click', (e) => { const id = campHit(...fieldPoint(e)); if (id) { panel.onCue('click'); panel.camp.show(id); } else panel.camp.close(); });
+fieldCanvas.addEventListener('pointermove', (e) => { fieldCanvas.style.cursor = e.pointerType === 'mouse' && campHit(...fieldPoint(e)) ? 'pointer' : ''; });
 for (const t of ['pointerup', 'pointercancel', 'pointerleave'] as const) fieldCanvas.addEventListener(t, endAim);
 // no long-press menu or callout on the field
 fieldCanvas.addEventListener('contextmenu', (e) => e.preventDefault());

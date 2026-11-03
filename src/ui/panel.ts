@@ -20,6 +20,7 @@ import { LOOT_BANNER } from '../data/presentation';
 import { LOOT_TOAST } from '../data/lootTables';
 import { RARITIES } from '../data/loot';
 import { applyTextScale } from '../render/textScale';
+import { CampPane } from './camp';
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string): T => document.getElementById(id) as T;
 const VAN_NAME: Record<VanType, string> = { spear: 'Spearman', blade: 'Bladedancer' };
@@ -28,6 +29,8 @@ export class Panel {
   private toastTimer = 0;
   private wipeArmed = false;
   private satchel: SatchelPane;
+  /** Encampment card and Replant-tab list (TB-188b). */
+  readonly camp: CampPane;
   /** Boss tier picked for the next March (TB-148); 0 means the highest unlocked. */
   private pickTier = 0;
 
@@ -79,7 +82,9 @@ export class Panel {
     this.setTreeFull(false);
     $('hw-title').textContent = STR.hwTitle;
     $('hw-tree').onclick = (e) => { const id = (e.target as HTMLElement).closest('button')?.dataset.hw as HwId | undefined; if (id && game.buyHw(id)) { this.toast(STR.hwBought(HW_NODE[id].name)); this.renderHw(); } };
-    this.renderDetail(); this.renderHw(); this.setMode('run');
+    $('camp-sec-title').textContent = STR.campSecTitle; $('camp-sec-body').textContent = STR.campSecBody;
+    this.camp = new CampPane(game, $('bcard'), $('camp-list'), (msg) => { this.onCue('bought'); this.toast(msg); });
+    this.renderDetail(); this.renderHw(); this.camp.render(); this.setMode('run');
     if (game.state.run.fallen) this.showFallen();
   }
 
@@ -98,6 +103,7 @@ export class Panel {
     $('hw-body').textContent = s.run.fallen ? STR.hwBody(hwSpendable(s)) : STR.hwClosed(hwSpendable(s));
     if (!$('pane-satchel').hidden) this.satchel.update();
     for (const b of $('hw-tree').querySelectorAll<HTMLButtonElement>('button[data-hw]')) b.disabled = !canBuyHw(s, b.dataset.hw as HwId);
+    this.camp.update();
     const g = gain(), ok = s.run.wave >= PRESTIGE.voluntaryWave && !s.run.fallen;
     $('btn-pullback').hidden = !ok;
     $('pr-gain').textContent = '+' + g; ($('pr-btn') as HTMLButtonElement).disabled = !ok;
@@ -169,6 +175,7 @@ export class Panel {
   /** run: the field fills the screen; camp: the Grove, Satchel and Replant pages after a fall; settings: an overlay mid-run. */
   setMode(m: 'run' | 'camp' | 'settings'): void {
     if (m !== 'camp') this.setTreeFull(false);
+    if (m !== 'run') this.camp.close();
     document.body.dataset.mode = m;
     $('camp-go').hidden = m !== 'camp'; $('camp-close').hidden = m !== 'settings';
     $('camp-title').textContent = m === 'settings' ? STR.tabSettings : STR.campTitle;

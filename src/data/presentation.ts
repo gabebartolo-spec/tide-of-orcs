@@ -127,3 +127,13 @@ export const TREE_LIGHT = {
   /** Burst along the path when a node is bought: particles per link, speed (px/s), life (s), radius, drag (1/s), cap. */
   burstPer: 30, burstSpeed: 95, burstLife: 1.3, burstR: 3.6, burstDrag: 2.2, burstCap: 600,
 } as const;
+
+/** Encampment spots (TB-188b/c, docs/plans/elf-encampment.md §1): each building's footprint in the grove strip west of the
+ *  barricade, as centre x, base y (ground line), width and height in field units. Kept to the top and bottom bands, clear of
+ *  the barricade HUD (y < 64), the archers (y 150 and 330), the elf and the ballista. Click targets and art share it. */
+export const CAMP_SPOTS = {
+  bowyer: { x: 42, y: 120, w: 62, h: 54 },
+  forge: { x: 114, y: 120, w: 50, h: 56 },
+  kitchen: { x: 42, y: 466, w: 62, h: 54 },
+  training: { x: 114, y: 466, w: 52, h: 54 },
+} as const;
