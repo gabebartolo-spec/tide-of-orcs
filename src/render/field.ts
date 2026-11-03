@@ -39,7 +39,6 @@ export class FieldRenderer {
   private shake = 0;
   private fenceBack: HTMLCanvasElement | null = null;
   private fenceBroken: HTMLCanvasElement | null = null;
-  private fencePerk: HTMLCanvasElement | null = null;
   private storms: { pts: [number, number][]; life: number; c: string }[] = [];
   private impacts: { x: number; y: number; r: number; life: number }[] = [];
   /** Fire puffs where a fireball landed (TB-127): discs that rise, swell and cool from pale core to ember to fire as they fade. */
@@ -228,15 +227,6 @@ export class FieldRenderer {
     return (this.fenceBroken = c);
   }
 
-  /** The fence atlas lit green for a wall with repair or bulwark perks (TB-209), built once. */
-  private perkFence(fence: HTMLImageElement): HTMLCanvasElement {
-    if (this.fencePerk) return this.fencePerk;
-    const c = document.createElement('canvas'); c.width = fence.width; c.height = fence.height;
-    const x = c.getContext('2d')!; x.drawImage(fence, 0, 0);
-    x.globalCompositeOperation = 'source-atop'; x.globalAlpha = GROUND.fence.perkGlow; x.fillStyle = P.grove; x.fillRect(0, 0, c.width, c.height);
-    return (this.fencePerk = c);
-  }
-
   draw(s: SimState, dt: number, aim: { x: number; y: number } | null = null): void {
     const g = this.g; this.sim = s;
     this.fx.update(dt); this.clock += dt;
@@ -267,9 +257,9 @@ export class FieldRenderer {
     if (!fence) { g.fillStyle = P.wallShade; g.fillRect(BAR_X + 4, top, BAR_W + 4, H - top); }
     if (fence) {
       // stacked fence panels running into the field, top to bottom so each overlaps the one behind it; back rows first (TB-209)
-      const L = GROUND.fence, T = GROUND.wallTiers, tier = wallTier(s.stats), sc = T.scale[tier]!, w = L.w * sc, step = L.step * sc;
-      const cw = fence.width / L.cols, chh = fence.height / L.rows, lh = w * chh / cw, ironSy = chh;  // atlas: one cell per stake-panel variant, rope row then iron-banded row (the front row only, from the iron tier)
       const perk = s.stats.bulwark || s.stats.barRegen > 0;
+      const L = GROUND.fence, T = GROUND.wallTiers, tier = wallTier(s.stats), sc = T.scale[tier]!, w = L.w * sc, step = L.step * sc;
+      const cw = fence.width / L.cols, chh = fence.height / L.rows, lh = w * chh / cw, atlasRow = (tier >= L.ironTier ? 1 : 0) + (perk ? 2 : 0);  // atlas: one cell per stake-panel variant; rows: rope, iron-banded, and both again with green perk pennants (front row only)
       const rows = T.rows[tier]!, fwd = Math.max(0, -(rows - 1) * T.rowDx * sc - T.backMax * sc);  // keep grass between wall and elf
       const xAt = (r: number): number => BAR_X + BAR_W / 2 - w / 2 + r * T.rowDx * sc + fwd;
       const hash = (n: number): number => (n * T.breakScatter * 7.31 + 0.137) % 1;  // fixed per panel, so nothing flickers
@@ -278,14 +268,14 @@ export class FieldRenderer {
       for (let r = rows - 1; r >= 0; r--) {
         const x0 = xAt(r), dy = T.rowDy[r]! * step, inner = r > 0 && r < rows - 1;  // only inner rows jitter: the outline stays straight
         const sx0 = x0 + w * (1 - T.shadowW) / 2 + T.shadowDx, sg = g.createLinearGradient(sx0, 0, sx0 + w * T.shadowW, 0); sg.addColorStop(0, P.glowClear); sg.addColorStop(1, P.wallShade);
-        g.fillStyle = sg; g.fillRect(sx0, top, w * T.shadowW, H - top);  // each row's own ground shadow, soft at its outer edge
-        const img = r ? this.shadedFence(fence) : perk ? this.perkFence(fence) : fence, inward = r === rows - 1 && r ? 1 : -1;  // broken panels lean toward the wall's middle
+        if (!r) { g.fillStyle = sg; g.fillRect(sx0, top, w * T.shadowW, H - top); }  // each row's own ground shadow, soft at its outer edge
+        const img = r ? this.shadedFence(fence) : fence, inward = r === rows - 1 && r ? 1 : -1;  // broken panels lean toward the wall's middle
         for (let i = 0, y = (-lh / 2 - Math.ceil(-top / step) * step) + dy; y < H; i++, y += step * (1 + (hash(i * 3 + r * 11 + 5) - 0.5) * 2 * L.pitchJit)) {  // jittered pitch: no fixed repeat
           const seed = i + r * T.rowSeed, alive = panelAlive(y, H, frac, seed), v = Math.floor(hash(seed + 2) * L.cols);
           g.globalAlpha = alive ? 1 : T.brokenAlpha;
-          const jit = inner ? (((seed * T.breakScatter * 3) % 1) * 2 - 1) * T.jitter * sc : 0;
+          const jit = (((seed * T.breakScatter * 3) % 1) * 2 - 1) * T.jitter * sc * (inner ? 1 : L.edgeJit);
           const px = x0 + jit + (alive ? 0 : inward * T.brokenDx), py = y + (alive ? 0 : T.brokenDy * sc), im = alive ? img : this.brokenFence(fence);
-          if (!r && !alive && i % T.brokenGap === 0) continue;  // a front panel gone: the darker back rows show through
+          if (!r && !alive && i % T.brokenGap !== 0) continue;  // a front panel gone (all but one in brokenGap): the darker back rows show through
           g.save(); g.translate(px + w / 2, py + lh);  // pivot at the panel's foot so a broken panel leans
           if (!alive) {
             g.rotate(inward * T.brokenTilt);
@@ -295,7 +285,8 @@ export class FieldRenderer {
             g.lineTo(w / 2, cut); g.lineTo(w / 2, 0); g.closePath(); g.clip();
           }
           if ((r ? 1 : 0) ^ (i & 1)) g.scale(-1, 1);  // back rows mirrored, and every other panel flipped
-          g.drawImage(im, v * cw, !r && tier >= L.ironTier ? ironSy : 0, cw, chh, -w / 2, -lh, w, lh); g.restore();
+          const hs = 1 + (hash(seed + 9) - 0.5) * 2 * L.heightJit;  // each panel a little taller or shorter, and a touch off plumb
+          g.rotate((hash(seed + 4) - 0.5) * 2 * L.leanJit); g.drawImage(im, v * cw, (r ? 0 : atlasRow) * chh, cw, chh, -w / 2, -lh * hs, w, lh * hs); g.restore(); 
         }
       }
       g.restore();

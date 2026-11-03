@@ -93,7 +93,7 @@ export const GROUND = {
    *  drift, drift size; loose singles in the lane; petal radius; stem height; weight per kind. */
   flowers: { drifts: 16, per: [24, 36], driftW: 90, driftH: 22, edge: 0.22, lane: 40, r: [2.4, 3.8], stem: [3, 8], kinds: { daisy: 4, violet: 3, buttercup: 2, blossom: 1 } },
   /** Fence barricade (director 4 Nov, poly.pizza "Wooden Spike" stake row): panel draw width, vertical step between stacked panels (units). */
-  fence: { w: 30, step: 20, cols: 4, rows: 2, pitchJit: 0.35, topGap: 32, perkGlow: 0.28, ironTier: 2 },
+  fence: { w: 30, step: 20, cols: 4, rows: 4, heightJit: 0.08, leanJit: 0.035, edgeJit: 0.4, pitchJit: 0.35, topGap: 14, ironTier: 2 },
   /** Barricade tiers (TB-209, director 4 Nov): the wall looks stronger as wall-branch nodes are bought. Tier = how many `at`
    *  thresholds the wall score has reached: Stats.barMax / BARRICADE.baseHp, plus `perPerk` for each wall perk that does not
    *  raise max health (Repair regen, Bulwark). Seasoned Timber 3, 6 and 9 ranks alone reach 1.95x, 3.81x, 7.45x.
@@ -106,8 +106,8 @@ export const GROUND = {
    *  darker back rows show through; the whole wall clips to its healthy outline. Only inner rows jitter.
    *  Every other panel is flipped so the rope bindings alternate sides instead of stacking into one column; `rowSeed` offsets each row's fixed golden-ratio break scatter (`breakScatter`). */
   wallTiers: {
-    at: [1.9, 3.7, 7], perPerk: 0.5, rows: [1, 2, 2, 3], scale: [1, 1, 1.35, 1.5],
-    rowDx: -11, rowDy: [0, 0.5, 0.25], rowShade: 0.18, backMax: 18, shadowDx: -8, shadowW: 0.7, brokenAlpha: 0.9, brokenDx: 4, brokenDy: 5, brokenTilt: 0.14, brokenShade: 0.25, brokenSnap: 0.25, zig: 5, brokenGap: 2, jitter: 3, rowSeed: 7, breakScatter: 0.618034,
+    at: [1.9, 3.7, 7], perPerk: 0.5, rows: [1, 2, 2, 3], scale: [1, 1, 1.25, 1.6],
+    rowDx: -11, rowDy: [0, 0.5, 0.25], rowShade: 0.18, backMax: 18, shadowDx: -8, shadowW: 0.7, brokenAlpha: 0.9, brokenDx: 4, brokenDy: 5, brokenTilt: 0.14, brokenShade: 0.25, brokenSnap: 0.25, zig: 5, brokenGap: 3, jitter: 3, rowSeed: 7, breakScatter: 0.618034,
   },
 } as const;
 
