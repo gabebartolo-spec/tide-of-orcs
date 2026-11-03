@@ -1,16 +1,18 @@
 import { BuildingId } from '../data/camp';
 import { CAMP_SCENE } from '../data/presentation';
 import { CampArt } from './camp';
+import { CampBackdrop } from './campBackdrop';
 import { CampLife } from './campLife';
 import { P } from './palette';
 import type { Sprites } from './sprites';
 
-/** The Camp tab's scene (TB-188e, docs/plans/elf-encampment.md §1): the four encampment buildings at house scale on a plain
- *  of grass, with the elf standing beside them for scale. The CAMP_SCENE box (scene units = field units) is fitted to the
+/** The Camp tab's scene (TB-188e, docs/plans/elf-encampment.md §1): the four encampment buildings at house scale in a meadow
+ *  before a far forest, with the elf standing beside them for scale. The CAMP_SCENE box (scene units = field units) is fitted to the
  *  canvas and centred. Read-only: it draws sim state and maps clicks back to scene units for campHit. */
 export class CampScene {
   private art = new CampArt();
   private life = new CampLife();
+  private backdrop = new CampBackdrop();
   private k = 1; private ox = 0; private oy = 0; private dpr = 1;
 
   constructor(readonly canvas: HTMLCanvasElement, private sprites: Sprites) {
@@ -34,11 +36,9 @@ export class CampScene {
 
   draw(levels: Partial<Record<BuildingId, number>>, t: number): void {
     const g = this.canvas.getContext('2d')!, px = this.k * this.dpr;
-    const { h, elf } = CAMP_SCENE, cw = this.canvas.width, horizon = (this.oy + h * CAMP_SCENE.sky * this.k) * this.dpr;
-    // sky band and grass run the full canvas width, past the fitted box
-    g.setTransform(1, 0, 0, 1, 0, 0);
-    g.fillStyle = P.hillFar; g.fillRect(0, 0, cw, horizon);
-    g.fillStyle = P.plain; g.fillRect(0, horizon, cw, this.canvas.height - horizon);
+    const { elf } = CAMP_SCENE;
+    // static sky, forest, meadow, path and shadows, cached offscreen (TB-188i)
+    this.backdrop.draw(g, this.k, this.ox, this.oy, this.dpr);
     g.setTransform(px, 0, 0, px, this.ox * this.dpr, this.oy * this.dpr);
     this.art.draw(g, levels, px, this.sprites);
     this.life.draw(g, levels, t);
