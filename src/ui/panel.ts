@@ -21,7 +21,7 @@ import { LOOT_TOAST } from '../data/lootTables';
 import { RARITIES } from '../data/loot';
 import { applyTextScale } from '../render/textScale';
 import { CampPane } from './camp';
-import { armHover, burstAt, calm, countValue, pop, press, tween } from './juice';
+import { armHover, burst, calm, countValue, pop, press, tween } from './juice';
 import { reportRows, reportTimes } from './report';
 import { uiSound } from '../data/audio';
 import { Hud } from './hud';
@@ -177,7 +177,7 @@ export class Panel {
     const btn = document.getElementById('buy-btn');
     if (!this.game.buy(id)) return;
     this.onCue('uiStamp'); // TB-195k: a buy stamps
-    if (btn) { press(btn); burstAt(btn); } // TB-195a: press plus a gold burst on every buy
+    if (btn) { press(btn); const b = btn.getBoundingClientRect(); burst(b.left + b.width / 2, b.top - b.height * 0.6); } // TB-195a: press plus a gold burst on every buy
     this.renderDetail();
   }
 

@@ -262,6 +262,8 @@ export const HUD = {
   stampIn: 260, stampFrom: 2.4, stampHold: 1100, stampOut: 400,
   /** Wall bar shake on a hit: rem amplitude per hit fraction of max HP (capped at `shakeMax`), ms. */
   shakeK: 6, shakeMax: 0.6, shakeMs: 360,
+  /** Odometer: ms the changed number slides up into place (all digits together, one baseline). */
+  odoRoll: 260,
 } as const;
 
 /** Tooltip plates (TB-195c): rows = most now → next lines shown; gap = rem from the cursor; in = ms spring-in; w = plate width in rem. */

@@ -36,7 +36,10 @@ export class Odometer {
         cell.setAttribute('aria-hidden', 'true'); this.el.appendChild(cell);
       }
     }
-    digits.forEach((d, i) => { this.strips[i]!.style.transform = `translateY(${-d * 10}%)`; });
+    // TB-195b: every digit snaps to its value and the whole number slides in together, so mid-roll all digits share one baseline.
+    const changed = digits.some((d, i) => this.strips[i]!.dataset.d !== String(d));
+    digits.forEach((d, i) => { const s = this.strips[i]!; s.dataset.d = String(d); s.style.transform = `translateY(${-d * 10}%)`; });
+    if (changed && !calm()) this.el.animate([{ transform: 'translateY(0.45em)', opacity: 0.2 }, { transform: 'translateY(0)', opacity: 1 }], { duration: HUD.odoRoll, easing: 'cubic-bezier(.2, .7, .3, 1)' });
   }
 }
 
@@ -86,7 +89,7 @@ export class Hud {
     if (calm()) { st.style.transform = ''; st.style.opacity = '1'; fade(); return; }
     tween(st, HUD.stampIn, (t) => {
       const e = springEase(t, JUICE.overshoot); st.style.opacity = String(Math.min(1, t * 3));
-      st.style.transform = `translate(-50%, -50%) rotate(-6deg) scale(${HUD.stampFrom + (1 - HUD.stampFrom) * e})`;
+      st.style.transform = `translate(-50%, -50%) rotate(-3deg) scale(${HUD.stampFrom + (1 - HUD.stampFrom) * e})`;
     }, () => { pop(banner, JUICE.dur.pop, 1.08); fade(); });
   }
 }
