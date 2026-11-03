@@ -17,4 +17,5 @@ Third-party assets used in Tide of Orcs.
   (https://creativecommons.org/licenses/by/4.0/). Changed: single trees rendered to 2D sprites, plus darker hazed copies.
 - Grunt orc candidate (TB-212, comparison renders only, not in the build): "Low-poly orc" by Riltariki (https://sketchfab.com/Riltariki),
   https://sketchfab.com/3d-models/low-poly-orc-62f1637181cb4f6aa38897f5b7ab5edf, licensed CC BY 4.0
-  (https://creativecommons.org/licenses/by/4.0/). Changed: rendered to 2D sprite frames with its own walk, attack and death clips, skin recoloured green.
+  (https://creativecommons.org/licenses/by/4.0/). Changed: rendered to 2D sprite frames posed by Mixamo clips retargeted onto its rig (Sword And Shield Walk, Standing Melee
+  Attack Downward, Dying; Adobe Mixamo, royalty-free), with the fist closed from its own ANM_ATTACK_CRIT clip, skin recoloured green.

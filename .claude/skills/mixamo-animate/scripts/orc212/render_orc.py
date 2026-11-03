@@ -4,7 +4,7 @@
 # Env: ORTHO (3.0), CAMZ (0), TRACK=1 follows the pelvis on the ground plane (death), RES (512), GAMECAM (20), CAMROT (0; 90 = front), LOOP=1 drops the last frame (== first), STEP (1).
 # Writes <dir>/<key>_<i>.png and prints "ANCHOR x y" (ground under the rig origin, image px from top-left).
 import bpy, math, sys, os
-from mathutils import Vector, Euler, Matrix
+from mathutils import Vector, Euler, Matrix, Quaternion
 from bpy_extras.object_utils import world_to_camera_view
 a = sys.argv[sys.argv.index("--") + 1:]; FBX, TEX, OUT, KEY = a[:4]
 RES = int(os.environ.get("RES", "512")); ORTHO = float(os.environ.get("ORTHO", "3.0")); STEP = int(os.environ.get("STEP", "1"))
@@ -121,18 +121,44 @@ if MIX:
         gf, gF, GIN, GOUT = GRIP.rsplit(":", 3); gF, GIN, GOUT = int(gF), int(GIN), int(GOUT); o3 = set(bpy.data.objects); bpy.ops.import_scene.fbx(filepath=gf); nw = set(bpy.data.objects) - o3
         b3 = next(o for o in nw if o.name.startswith("Bip001")); a3 = next(o for o in nw if o.type == 'ARMATURE' and o.name.startswith("Armature")); fs = sc.frame_current
         sc.frame_set(gF); bpy.context.view_layer.update(); AXHOLD = (b3.matrix_world @ b3.pose.bones["Bip001 R Hand"].matrix).inverted() @ (a3.matrix_world @ a3.pose.bones["Axe_1_Dummy"].matrix)
+        FING = {pb.name: pb.matrix_basis.copy() for pb in b3.pose.bones if pb.name.startswith("Bip001 R Finger")}  # director round 4: the fingers lay flat along the haft (the reset left
+        for nm, m_ in FING.items(): bip.pose.bones[nm].matrix_basis = m_  # them at the T-pose rest); copy that frame's closed fist, which wraps the same grip
         for o in nw: bpy.data.objects.remove(o, do_unlink=True)
         _t = AXHOLD.translation.copy(); _t.z += float(os.environ.get("GRIPSLIDE", "0")); AXHOLD.translation = _t  # further down the haft, toward the butt (hand-local +z is the thumb side, where the head is)
         sc.frame_set(fs); print("GRIP carry", [round(x, 1) for x in AXREL.translation], "hold", [round(x, 1) for x in AXHOLD.translation])
     def grip(F):
         if not GRIP: return AXREL
-        sm = lambda x: (lambda c: c * c * (3 - 2 * c))(min(1, max(0, x))); u = sm((F - f0) / GIN) * sm((f1 - F) / GOUT)
+        sm = lambda x: (lambda c: c * c * (3 - 2 * c))(min(1, max(0, x))); u = (sm((F - f0) / GIN) if GIN > 0 else 1) * (sm((f1 - F) / GOUT) if GOUT > 0 else 1)
         l0, q0, s0 = AXREL.decompose(); return Matrix.LocRotScale(l0.lerp(AXHOLD.translation, u), q0, s0)
+    CA = os.environ.get("CARRY")  # TB-212 round 4 walk carry (director: the axe stood upright in front of the chest, head over the face): <elbow>,<dev> degrees.
+    CA = [math.radians(float(v)) for v in CA.split(",")] if CA else None  # Straighten the right elbow by <elbow> about its own hinge (ELBOWSHIFT), then turn the fist
+    LOUT = int(os.environ.get("LEADOUT", "0"))  # about the palm normal by <dev> (ulnar deviation) so the haft tips toward the forearm: head forward and low, like grunt walk v19.
+    AIM = os.environ.get("CARRYAIM"); AIM = Vector([float(v) for v in AIM.split(",")]).normalized() if AIM else None
+    def hoffs(w):  # LEADOUT (attack): the last LOUT frames blend from the clip's pose at f1-LOUT back to the walk's first pose, so the recovery ends in the walk carry
+        if not CA or w <= 0: return
+        lw = bip.matrix_world @ bip.pose.bones["Bip001 L Hand"].matrix; H = lambda n: bip.matrix_world @ bip.pose.bones["Bip001 R " + n].head
+        u = H("Forearm") - H("UpperArm"); f = H("Hand") - H("Forearm"); ax = u.cross(f).normalized()
+        l, q, s_ = (bip.matrix_world @ bip.pose.bones["Bip001 R Forearm"].matrix).decompose(); setw("R Forearm", rot=Quaternion(ax, -CA[0] * w) @ q, loc=l)
+        f = (H("Hand") - H("Forearm")).normalized(); hw_ = bip.matrix_world @ bip.pose.bones["Bip001 R Hand"].matrix
+        hd = (hw_.to_3x3() @ grip(sc.frame_current).to_3x3() @ Vector((0, 1, 0))).normalized(); n_ = f.cross(hd).normalized()  # dummy +Y = toward the head (probe AXL)
+        rq = Quaternion(n_, -CA[1]); 
+        if AIM: rq = hd.rotation_difference(AIM)  # CARRYAIM=x,y,z: aim the haft (fist->head) along this world direction instead, by the smallest wrist turn
+        l, q, s_ = hw_.decompose(); setw("R Hand", rot=Quaternion().slerp(rq, w) @ q, loc=l)
+        bip.pose.bones["Bip001 L Hand"].matrix = bip.matrix_world.inverted() @ lw; bpy.context.view_layer.update()
+    HW = float(os.environ.get("HOFFSW", "1"))  # walk: 1 every frame; attack: 1 at the lead-in start and the lead-out end, 0 in the clip
     def retarget(F):
+        w = HW
         if LEAD and F < f0 + LK:
             t = (F - f0) / LK; t = t * t * (3 - 2 * t); A, B = WP, pose(mixo, f0 + LK)
             for o, m in MAP: setw(o, rot=A[0][o].slerp(B[0][o], t), loc=A[1].lerp(B[1], t) if o == "Pelvis" else None)
-        else: pose(mixo, F)
+            w = 1 - t
+        elif LOUT and F > f1 - LOUT:
+            t = (F - (f1 - LOUT)) / LOUT; t = t * t * (3 - 2 * t); A, B = pose(mixo, f1 - LOUT), (WP[0], WP[1] * Vector((0, 0, 1)) + pose(mixo, f1)[1] * Vector((1, 1, 0)))
+            for o, m in MAP: setw(o, rot=A[0][o].slerp(B[0][o], t), loc=A[1].lerp(B[1], t) if o == "Pelvis" else None)
+            w = t
+        else:
+            pose(mixo, F); w = 0 if LEAD else HW
+        hoffs(w)
         axa.pose.bones["Axe_1_Dummy"].matrix = axa.matrix_world.inverted() @ (bip.matrix_world @ bip.pose.bones["Bip001 R Hand"].matrix) @ grip(F); bpy.context.view_layer.update()
     print("MIXAMO", f0, f1, "K", round(K, 3))
 FADE = os.environ.get("AXEFADE")  # death (TB-212 critic: the axe popped out between frames 2 and 3): fade it linearly over a:b instead
@@ -155,7 +181,47 @@ os.makedirs(OUT, exist_ok=True); n = 0
 TRACK = bool(os.environ.get("TRACK")); sc.frame_set(f0)
 if MIX: retarget(f0)
 bpy.context.view_layer.update(); bpy.context.view_layer.update(); P0 = bip.matrix_world @ bip.pose.bones["Bip001 Pelvis"].head; base = cam.location.copy()
-DBGF = int(os.environ.get("DBGF", "0"))  # debug: render only the first DBGF frames
+PROBE = bool(os.environ.get("PROBE"))  # TB-212 round 4: no render; per frame print the axe-vs-body hits (BVH overlap, faces owned >50% by the gripping right hand skipped) by owning bone,
+if PROBE:                                # and the axe head / butt in pelvis-relative world metres (x right, y back, z up; the orc faces -Y)
+    from mathutils.bvhtree import BVHTree
+    AXO = [o for o in bpy.data.objects if o.type == 'MESH' and o.name.startswith("polySurface34")]
+    BOD = [o for o in bpy.data.objects if o.type == 'MESH' and not o.name.startswith(("polySurface34", "Box001"))]
+    def owner(o):
+        gi = {g.index: g.name for g in o.vertex_groups}; out = []
+        for v in o.data.vertices:
+            best = max(v.groups, key=lambda g: g.weight, default=None); out.append(gi.get(best.group, "?") if best else "?")
+        return out
+    OWN = {o.name: owner(o) for o in BOD}
+    GRIPB = lambda b: b.startswith(("Bip001 R Hand", "Bip001 R Finger"))
+    AXL = None
+    def probe(n, F):
+        global AXL
+        dg = bpy.context.evaluated_depsgraph_get(); D = axa.matrix_world @ axa.pose.bones["Axe_1_Dummy"].matrix
+        av = []; af = []
+        for o in AXO:
+            e = o.evaluated_get(dg); m = e.to_mesh(); b = len(av); av += [e.matrix_world @ v.co for v in m.vertices]; af += [[b + i for i in p.vertices] for p in m.polygons]; e.to_mesh_clear()
+        if AXL is None:  # haft axis in dummy space: longest extent; head = the end whose 15% slice is widest
+            Di = D.inverted(); lv = [Di @ v for v in av]; ext = [max(v[i] for v in lv) - min(v[i] for v in lv) for i in range(3)]; L = ext.index(max(ext))
+            lo, hi = min(v[L] for v in lv), max(v[L] for v in lv); wid = lambda a, b: max(1e-9, max(max((v[(L + k) % 3] for v in lv if a <= v[L] <= b), default=0) - min((v[(L + k) % 3] for v in lv if a <= v[L] <= b), default=0) for k in (1, 2)))
+            hd = hi if wid(hi - 0.15 * (hi - lo), hi) > wid(lo, lo + 0.15 * (hi - lo)) else lo; bt = lo if hd == hi else hi
+            c = Vector(); c[L] = hd; c2 = Vector(); c2[L] = bt
+            hv = [v for v in lv if abs(v[L] - hd) < 0.2 * (hi - lo)]; hc = sum(hv, Vector()) / len(hv); AXL = (hc, c2); print("AXL long", L, "head", [round(x, 1) for x in hc], "butt", [round(x, 1) for x in c2])
+        bv = []; bf = []; bo = []
+        for o in BOD:
+            e = o.evaluated_get(dg); m = e.to_mesh(); b = len(bv); bv += [e.matrix_world @ v.co for v in m.vertices]; ow = OWN[o.name]
+            for p in m.polygons:
+                ob = [ow[i] for i in p.vertices]; mo = max(set(ob), key=ob.count)
+                if GRIPB(mo): continue
+                bf.append([b + i for i in p.vertices]); bo.append(mo)
+            e.to_mesh_clear()
+        hits = BVHTree.FromPolygons(av, af).overlap(BVHTree.FromPolygons(bv, bf)); by = {}
+        for _, j in hits: by[bo[j]] = by.get(bo[j], 0) + 1
+        P = bip.matrix_world @ bip.pose.bones["Bip001 Pelvis"].head; h = D @ AXL[0] - P; u = D @ AXL[1] - P; fi = bip.matrix_world @ bip.pose.bones["Bip001 R Hand"].head - P
+        H_ = lambda b: bip.matrix_world @ bip.pose.bones["Bip001 R " + b].head; fa = H_("Hand") - H_("Forearm"); ua = H_("Forearm") - H_("UpperArm"); hx = (D @ AXL[0]) - (D @ AXL[1])
+        print("ANG elbow %.0f haft-forearm %.0f forearm %s" % (math.degrees(ua.angle(fa)), math.degrees(fa.angle(hx)), " ".join("%.2f" % x for x in fa.normalized())))
+        print("PRB %d F%d hits %d %s head %s butt %s fist %s" % (n, F, len(hits), ",".join("%s:%d" % (k.replace("Bip001 ", ""), v) for k, v in sorted(by.items(), key=lambda kv: -kv[1])),
+              " ".join("%.2f" % x for x in h), " ".join("%.2f" % x for x in u), " ".join("%.2f" % x for x in fi)))
+DBGF = int(os.environ.get("DBGF", "0")); ONLY = {int(x) for x in os.environ.get("ONLY", "").split(",") if x}  # debug: render only these output frames  # debug: render only the first DBGF frames
 for i, F in enumerate(range(f0, f1 + 1)):
     if i % STEP or (DBGF and i >= DBGF): continue
     sc.frame_set(F)
@@ -179,6 +245,8 @@ for i, F in enumerate(range(f0, f1 + 1)):
         if lo > 0: cam.location.z = base.z + lo
         hz = (bip.matrix_world @ bip.pose.bones["Bip001 Head"].head).z - lo; pz = (bip.matrix_world @ bip.pose.bones["Bip001 Pelvis"].head).z - lo
         print("LO", n, round(lo, 3), "HEADZ", round(hz, 2), "PELZ", round(pz, 2))
+    if PROBE: probe(n, F); n += 1; continue
+    if ONLY and n not in ONLY: n += 1; continue
     sc.render.filepath = f"{OUT}/{KEY}_{n}.png"; bpy.ops.render.render(write_still=True); n += 1
 sc.frame_set(f0); cam.location = base; bpy.context.view_layer.update()
 g = world_to_camera_view(sc, cam, Vector((0, 0, 0)))

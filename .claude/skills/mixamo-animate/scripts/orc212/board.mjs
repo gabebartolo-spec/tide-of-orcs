@@ -1,6 +1,8 @@
-// node board.mjs <out.png> <newAtlas.json> <newSheet.webp> [strike frame/frames]  (TB-212 round 3: Mixamo clips on the Riltariki rig)
+// node board.mjs <out.png> <newAtlas.json> <newSheet.webp> [items JSON: [[key, frame (-1 = last, 0<f<1 = fraction), 'old'|'new', label], ...]]  (TB-212: Mixamo clips on the Riltariki rig)
+// Round 4 (director: a grass tuft sat over the corpse): each sprite slides along its row to the nearest spot whose box holds no tuft, flower or rock.
 import { spawn } from 'node:child_process'; import fs from 'node:fs'; import { tmpdir } from 'node:os'; import { join } from 'node:path';
-const [out, na, ns, st = '0.5'] = process.argv.slice(2);
+const [out, na, ns, its] = process.argv.slice(2);
+const ITEMS = its ? JSON.parse(its) : [['orc.grunt', 0, 'old', 'Current: walk'], ['orc.grunt.attack', 44 / 69, 'old', 'Current: attack (strike)'], ['orc.grunt', 0, 'new', 'Riltariki: walk'], ['orc.grunt.attack', 38, 'new', 'Riltariki: attack (strike)'], ['orc.grunt.death', -1, 'new', 'Riltariki: death end (Mixamo Dying)']];
 const atl = JSON.parse(fs.readFileSync(na, 'utf8')).anims; const pick = {}; for (const k of ['orc.grunt', 'orc.grunt.attack', 'orc.grunt.death']) pick[k] = atl[k];
 const sheet = 'data:image/webp;base64,' + fs.readFileSync(ns).toString('base64');
 const ud = fs.mkdtempSync(join(tmpdir(), 'cdp'));
@@ -16,12 +18,13 @@ await cmd('Page.navigate', { url: 'http://localhost:5644/' }); await sleep(7000)
 console.log(await ev(`(async()=>{const T=window.__tide,f=T.field,sp=f.sprites;
 const img=new Image();img.src=${JSON.stringify(sheet)};await img.decode();const A=${JSON.stringify(pick)};
 const old=sp.atlas.anims;
-// current grunt timing: strike frame 44/69; new: the same Mixamo clip after a 10-frame lead-in (strike 38/79), passed as argv[4]
-const items=[['orc.grunt',0,'old','Current: walk'],['orc.grunt.attack',44/69,'old','Current: attack (strike)'],['orc.grunt',0,'new','Riltariki: walk'],['orc.grunt.attack',${st},'new','Riltariki: attack (strike)'],['orc.grunt.death',0.999,'new','Riltariki: death end (Mixamo Dying)']];
+const items=${JSON.stringify(ITEMS)};const L=f.ground.layout,busy=[...L.tufts.map(t=>[t.x-5,t.y-Math.max(...t.blades.map(b=>b.h))-1,t.x+5,t.y+1]),...L.flowers.map(q=>[q.x-q.r*1.5,q.y-q.stem-q.r,q.x+q.r*1.5,q.y+1]),...L.rocks.map(q=>[q.x-q.r*1.2,q.y-q.r,q.x+q.r*1.2,q.y+q.r])];
 T.game.state.orcs.forEach(o=>o.dead=true);
 const od=f.draw.bind(f);f.draw=(s,dt,aim)=>{s.orcs.forEach(o=>o.dead=true);od(s,dt,null);const g=f.g,b=f.base;g.setTransform(b.sx,0,0,b.sy,b.ex,b.ey);
- const r=12,y0=300;window.__pos=[];items.forEach(([k,t,w,l],i)=>{const x=560+i*70,y=y0;
-  const a=w==='old'?old[k]:A[k];const n=a.frames.length,[fx,fy,fw,fh]=a.frames[Math.min(n-1,Math.floor(t*n))];const h=a.hPerR*r,ww=h*fw/fh;
+ const r=12,y0=300;window.__pos=[];items.forEach(([k,t,w,l],i)=>{const many=items.length>5;let x=(many?420:560)+i*(many?60:70),y=y0;
+  const a=w==='old'?old[k]:A[k];const n=a.frames.length,[fx,fy,fw,fh]=a.frames[t<0?n-1:t>0&&t<1?Math.floor(t*n):Math.min(n-1,t)];const h=a.hPerR*r,ww=h*fw/fh;
+  if(!window.__dx)window.__dx={};let dx=window.__dx[i];if(dx===undefined){dx=0;for(let d=0;d<=(many?24:40);d++){const c=[d,-d].find(e=>{const x0=x+e-ww*a.ax,x1=x0+ww,y1=y+r*1.3,y0b=y+r*0.9-h*a.ay;return !busy.some(([u0,v0,u1,v1])=>u1>x0&&u0<x1&&v1>y0b&&v0<y1);});if(c!==undefined){dx=c;break;}}window.__dx[i]=dx;}
+  x+=dx;
   // shadow under the body's footprint (the lying death body is wider than a standing orc), drawn before the sprite like field.ts
   const sx=k.endsWith('.death')?Math.max(r*0.9,ww*0.42):r*0.9,cx=k.endsWith('.death')?x-ww*a.ax+ww*0.5:x;g.fillStyle='rgba(20,20,10,0.35)';g.beginPath();g.ellipse(cx,y+r*0.9,sx,r*0.35,0,0,6.28);g.fill();
   g.drawImage(w==='old'?sp.imgs.get(a.image):img,fx,fy,fw,fh,x-ww*a.ax,y+r*0.9-h*a.ay,ww,h);window.__pos.push([b.sx*x+b.ex,b.sy*y+b.ey,l]);});};
