@@ -96,6 +96,7 @@ The plain reads as natural, calm grassland, not a flat board. Layout is seeded (
 - Affordable node: amber ring, 0.5–1.0 alpha sine at 4 rad/s. Rally buttons: border turns amber on hover when affordable.
 - Replant: tree desaturates, amber particles rise, one seed falls, field fades up through a #e2a85b-tinted overlay. ≤ 4 s.
 - UI eases (TB-194): camp pages and tabs fade in over 200 ms (`--ui-in`); the fallen overlay and toasts fade in over 200 ms and out over 150 ms (`--ui-out`), the toast also drops 6 px into place. Opacity only on pages and tabs. All off under reduced motion (`data-calm` on `<html>`, from the Motion setting).
+- UI motion and feedback kit (TB-195a, `src/ui/juice.ts`, numbers in `JUICE`, plan docs/plans/game-ui.md §3): UI moves on a spring (easeOutBack, overshoot 1.2): 120 ms pops, 220 ms panels, 400 ms screen moves. Changing numbers count up over 400 ms (ease-out, never past the target), pop 1.15 → 1 and flash `grove` green up or `rose` red down (the header starlight counter first). Buttons press to 0.9 in 50 ms and spring back in 120 ms with the `uiPress` sound; buying a tree node also bursts 26 star-gold/spark/amber squares on a full-screen canvas overlay. Lists stagger children 30 ms apart, rising 8 px. UI sounds go through `uiSound` (`src/data/audio.ts`), silent until the TB-195g files land. Reduced motion keeps colour flashes and sounds, drops scale, roll, rise and particles.
 - Reduced motion: no bob, no pulse, no shake; replant becomes a 300 ms cross-fade.
 
 ## Attack and hit VFX (TB-088)

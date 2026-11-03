@@ -48,5 +48,5 @@ Each step ends with screenshots and a short screen capture (GIF) at 1080p and 4K
 
 ## 5. Open choices for the director
 1. ~~Reference game~~ **Decided (director, 3 Nov): Hades** (painterly, glowing, light and particles everywhere).
-2. **Keep the carved-wood material** and make it richer, or move to a new material (e.g. dark leather with elven gold filigree)?
-3. **UI sounds:** generate a set with ElevenLabs (you run it, or I write the prompts list), yes or no.
+2. ~~UI material~~ **Decided (director, 3 Nov): keep the carved wood and make it richer.**
+3. ~~UI sounds~~ **Decided (director, 3 Nov): Claude generates them in ElevenLabs** (TB-195g).

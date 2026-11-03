@@ -7,7 +7,8 @@ export type Cue =
   | 'fireArrow' | 'bounce' | 'shock' | 'stun' | 'frost' | 'shatter' | 'starfall'
   | 'fireballCast' | 'fireballHit'
   | 'lootDrop' | 'lootRare' | 'lootEpic' | 'lootLegendary' | 'lootMythic' | 'equip' | 'salvage' | 'reroll' | 'setRise'
-  | 'warDrum';
+  | 'warDrum'
+  | 'uiPress' | 'uiPop';
 
 export const AMBIENT = 'ambient';
 
@@ -75,7 +76,15 @@ export const CUES: Record<Cue, { gain: number; gap: number; duck?: boolean }> = 
   setRise: { gain: 0.8, gap: 0.5, duck: true },
   // Orc war drum (ElevenLabs), on every drumBeat (TB-182)
   warDrum: { gain: 1, gap: 0.4 },
+  // UI feedback kit (TB-195a): files arrive with TB-195g (public/audio/uiPress|uiPop); until then they are skipped silently
+  uiPress: { gain: 0.45, gap: 0.03 },
+  uiPop: { gain: 0.4, gap: 0.05 },
 };
+
+/** UI sound hook (TB-195a): the kit calls `uiSound(cue)`; main.ts points it at the audio engine. Never throws, so a missing engine or file is silent. */
+let uiSink: (c: Cue) => void = () => {};
+export function setUiSound(fn: (c: Cue) => void): void { uiSink = fn; }
+export function uiSound(c: Cue): void { try { uiSink(c); } catch { /* silent until the UI sound set lands */ } }
 
 /** Drop chime per rarity; a common one is the quiet tick. */
 export const LOOT_CUE: Record<string, Cue> = { common: 'lootDrop', rare: 'lootRare', epic: 'lootEpic', legendary: 'lootLegendary', mythic: 'lootMythic' };
