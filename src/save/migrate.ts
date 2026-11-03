@@ -44,6 +44,8 @@ export const migrations: Record<number, (s: AnySave) => AnySave> = {
   11: (s) => ({ ...s, version: 12, settings: { ...(s.settings as object), textScale: 1 } }),
   /** v12 to v13: the elf encampment (TB-188a); nothing built, no materials. */
   12: (s) => ({ ...s, version: 13, meta: { ...(s.meta as object), camp: { levels: {}, mats: {} } } }),
+  /** v13 to v14: specialisation paths (TB-193a); no path chosen, nothing dropped toward Magpie's Hoard. */
+  13: (s) => ({ ...s, version: 14, run: { ...(s.run as object), path: null, hoardN: 0 } }),
 };
 
 export function migrate(raw: unknown): Save {

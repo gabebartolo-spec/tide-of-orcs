@@ -1,5 +1,6 @@
 import { CAMP_FX, CampLevels } from '../data/camp';
-import { NodeId } from '../data/skillTree';
+import { NODE, NodeId } from '../data/skillTree';
+import { PATH_FX, PathId } from '../data/paths';
 import { HW_FX, HwLevels } from '../data/heartwood';
 import { SATCHEL, SPOILS_FX } from '../data/lootTables';
 import { FOE_FX, OrcKind } from '../data/orcs';
@@ -42,6 +43,11 @@ export interface Stats {
   salvageMult: number; salvagePlus: number; rerollMult: number; setBoost: number; echo: number;
   /** Gear-only damage lines (TB-201), 1 = none: storm bolt damage, damage to bosses and champions, damage to elite orcs. */
   stormDmg: number; bossDmg: number; eliteDmg: number;
+  /** Specialisation (TB-193a): the run's chosen path (gates its drops), and its powers, 0 = off (numbers from PATH_FX).
+   *  venom: poison dps × elf damage on crits; venomMult: Toxin; venomBurst: Serpent's Coil 6; fang: the Fang mythic;
+   *  packBuff: vanguard damage per companion; foxfire: the spectral fox's bite (0 = no fox); shardP, hoardEvery: Magpie's Hoard; talon: the Talon mythic. */
+  path: PathId | null;
+  venom: number; venomMult: number; venomBurst: number; fang: number; packBuff: number; foxfire: number; shardP: number; hoardEvery: number; talon: number;
 }
 
 export type Unit = 'wolf' | 'ranger' | 'warden' | 'hawk' | 'treant' | 'spear' | 'blade';
@@ -78,8 +84,9 @@ const FOE_NODES: Partial<Record<OrcKind, [NodeId | null, NodeId, NodeId]>> = {
 /** A node line's factor at rank r (TB-147): m^r, or 1 + (m − 1) × r when STACKING.add (floored at 0.1 for shrinking lines). */
 const fx = (m: number, r: number): number => (STACKING.add ? Math.max(0.1, 1 + (m - 1) * r) : Math.pow(m, r));
 
-export function deriveStats(lv: Levels, hw: HwLevels = {}, camp: CampLevels = {}): Stats {
-  const L = (id: NodeId): number => lv[id] ?? 0;
+export function deriveStats(lv: Levels, hw: HwLevels = {}, camp: CampLevels = {}, path: PathId | null = null): Stats {
+  // a path node counts only while its path is the run's (TB-193a)
+  const L = (id: NodeId): number => { const p = NODE[id].path; return p && p !== path ? 0 : lv[id] ?? 0; };
   const kin = fx(NODE_FX.kinship, L('bond'));
   const muster = L('muster') > 0;
   // a shot type's chance per shot: 0 until owned, then chance0 + chancePerRank per Quiver rank
@@ -154,8 +161,9 @@ export function deriveStats(lv: Levels, hw: HwLevels = {}, camp: CampLevels = {}
     salvageMult: L('scavenger') ? SPOILS_FX.scavenger : 1, salvagePlus: hw.hw_glimmer ? HW_FX.salvagePlus : 0, rerollMult: hw.hw_glimmer ? 1 - HW_FX.rerollCut : 1,
     setBoost: L('resonance') ? SPOILS_FX.resonance : 0, echo: L('echo') ? SPOILS_FX.echo : 1,
     stormDmg: 1, bossDmg: 1, eliteDmg: 1,
+    path, venom: 0, venomMult: 1, venomBurst: 0, fang: 0, packBuff: 0, foxfire: 0, shardP: 0, hoardEvery: 0, talon: 0,
   };
-  return applyCamp(st, camp);
+  return applyCamp(applyPath(st, L), camp);
 }
 
 /** Encampment buildings (TB-188a): each level's totals from CAMP_FX, layered on the tree's stats. */
@@ -170,3 +178,35 @@ export function applyCamp(st: Stats, camp: CampLevels): Stats {
   st.vanHp *= CAMP_FX.vanHp[t]!; st.vanDmg *= CAMP_FX.vanDmg[t]!; st.vanRespawn *= 1 - CAMP_FX.respawnCut[t]!;
   return st;
 }
+
+/** The chosen path's starting bonus and branch nodes (TB-193a, BALANCE P-193). `L` already reads 0 for other paths' nodes. */
+export function applyPath(st: Stats, L: (id: NodeId) => number): Stats {
+  const P = PATH_FX, u = st.units;
+  if (st.path === 'serpent') st.crit += P.startCrit;
+  if (st.path === 'fox') { st.vanDmg *= 1 + P.startFox; st.petDmg *= 1 + P.startFox; }
+  if (st.path === 'magpie') st.starMult *= 1 + P.startStar;
+  // Serpent
+  st.crit += P.coilCrit * L('coil');
+  st.critMult += P.viperCritx * L('viper');
+  if (L('venom')) st.venom += P.venomDps;
+  st.venomMult *= 1 + P.toxin * L('toxin');
+  st.radius *= 1 + P.gazeRadius * L('gaze');
+  // Fox
+  const den = 1 + P.denDmg * L('foxden');
+  st.vanDmg *= den; st.petDmg *= den;
+  st.vanHp *= 1 + P.hideHp * L('foxhide');
+  st.vanRespawn *= Math.pow(1 - P.returnCut, L('foxrun'));
+  if (st.muster) st.vanCap += P.packCap * L('foxpack');
+  const r = 1 + P.cunningRate * L('cunning');
+  for (const k of ['wolf', 'ranger', 'warden', 'hawk', 'treant'] as const) u[k] = { ...u[k], rate: u[k].rate * r };
+  // Magpie
+  st.starMult *= 1 + P.magpieStar * L('magpie');
+  st.itemFind += P.glitterFind * L('glitter');
+  st.luck += P.trinketLuck * L('trinket');
+  st.rerollMult *= 1 - P.haggleCut * L('haggle');
+  st.salvageMult *= 1 + P.shinyGlimmer * L('shiny');
+  return st;
+}
+
+/** Companions in the field: the wolves, the archers, the hawk and the treant (Foxfire Pack and Foxfire Tail count them). */
+export const companions = (st: Stats): number => (st.wolf > 0 ? 1 + st.extraWolves : 0) + st.archers + (st.hawk ? 1 : 0) + (st.treant ? 1 : 0);

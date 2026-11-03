@@ -126,6 +126,32 @@ Layout coordinates are for a 1400×1320 tree canvas, root at (700, 890) (TB-163)
 | bladecritx | Whirling Edge | Vanguard | bladecrit | 5 | 4400 | 2.0 | 273 | 627 | Bladedancers crits +50% damage per rank. |
 | bladespd | Light Feet | Vanguard | champion | 3 | 2200 | 2.0 | 180 | 746 | Bladedancers move 15% faster per rank. |
 
+## Path nodes (TB-193a, P-193 placeholder, untuned)
+
+A path branch hangs off the root of its host branch. Its nodes are buyable, and count in `Stats`, only while that path is the run's (`run.path`, picked at Replant). Ranks are kept across runs like any node, so switching back restores them. Each path also gives a free starting bonus: Serpent +5% crit, Fox +10% vanguard and companion damage, Magpie +10% starlight.
+
+| id | name | branch | parent | max | base | growth | x | y | path | effect per rank |
+|---|---|---|---|---|---|---|---|---|---|---|
+| coil | Coiled Patience | Bow | root | 5 | 400 | 2.0 | 440 | 100 | serpent | +4% crit chance |
+| viper | Viper's Bite | Bow | coil | 5 | 600 | 2.0 | 360 | 60 | serpent | +0.3× crit damage |
+| venom | Venom | Bow | coil | 1 | 1500 | — | 500 | 40 | serpent | Crits poison for 3 s at 50% of arrow damage per second |
+| toxin | Toxin | Bow | venom | 5 | 1200 | 2.0 | 420 | 30 | serpent | Poison +30% |
+| gaze | Serpent's Gaze | Bow | viper | 3 | 900 | 2.2 | 280 | 60 | serpent | Strike circle +8% |
+| foxden | Den Mother | Vanguard | root | 5 | 400 | 2.0 | 80 | 450 | fox | Vanguard and companions +15% damage |
+| foxhide | Fox Hide | Vanguard | foxden | 5 | 500 | 2.0 | 80 | 530 | fox | Vanguard +20% health |
+| foxrun | Swift Return | Vanguard | foxden | 5 | 500 | 2.0 | 150 | 500 | fox | Fallen vanguard return 12% faster (compounding) |
+| foxpack | Pack Tactics | Vanguard | foxhide | 2 | 1500 | 2.6 | 80 | 610 | fox | +1 vanguard may stand at once (needs Muster) |
+| cunning | Cunning | Vanguard | foxrun | 5 | 800 | 2.0 | 150 | 580 | fox | Companions strike 10% faster |
+| magpie | Magpie's Eye | Spoils | root | 5 | 300 | 2.0 | 100 | 1100 | magpie | +10% starlight |
+| glitter | Glitter | Spoils | magpie | 5 | 500 | 2.0 | 180 | 1100 | magpie | Item Find +5% |
+| trinket | Lucky Trinket | Spoils | glitter | 3 | 800 | 2.2 | 260 | 1100 | magpie | Luck +3% |
+| haggle | Haggler | Spoils | magpie | 3 | 600 | 2.2 | 100 | 1180 | magpie | Reroll cost −10% |
+| shiny | Shiny Things | Spoils | haggle | 3 | 700 | 2.2 | 180 | 1180 | magpie | Salvage +20% Glimmer |
+
+Path sets and mythics drop only while their path is chosen (`forPath` in `lootTables.ts`): Serpent's Coil (2: +5% crit; 4: crits poison; 6: a poisoned orc that dies bursts, poisoning and striking neighbours), Foxfire Pack (2: +15% vanguard and companion damage; 4: vanguard return 30% faster; 6: vanguard +10% damage per companion), Magpie's Hoard (2: +15% starlight; 4: 10% chance per kill of a bonus shard worth 2× its starlight; 6: every fifth drop one rarity higher). Mythics: Fang of the Coiled Serpent (bow; every fifth shot is a venom arrow splitting into three), Foxfire Tail (charm; a spectral fox biting for 50% of arrow damage, +25% per companion), The Magpie's Talon (quiver; arrow kills steal double starlight and have a 2% chance of an extra drop roll).
+
+Derived `Stats` added: `path`, `venom` (poison dps × dmg on crit), `venomMult`, `venomBurst`, `fang`, `packBuff`, `foxfire` (fox bite damage), `shardP`, `hoardEvery`, `talon`.
+
 ## Deprecated ids (reserved, never reuse)
 Lists live in `src/save/schema.ts`; each migration drops the keys from `run.levels`.
 

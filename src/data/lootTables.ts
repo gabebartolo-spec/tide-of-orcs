@@ -1,5 +1,6 @@
 /** Loot tables (TB-091): rarity weights, drop constants, affixes, bases, sets, mythics. Numbers mirror BALANCE §Loot. */
 import { Rarity, Slot } from './loot';
+import { PATH_FX, PathId } from './paths';
 
 /** Rarity weights (normal / boss) and affix counts. Each weight is shifted by (1+luck)^rank and (1 + tierShift·(lootTier−1))^rank. */
 export const RARITY = {
@@ -57,7 +58,8 @@ export const BASES: readonly BaseDef[] = [
 
 export interface StatLine { stat: string; op: 'mul' | 'add'; value: number }
 /** Set bonuses at 2, 4 and 6 pieces worn. */
-export interface SetDef { id: string; name: string; bonus: Record<2 | 4 | 6, StatLine[]> }
+/** `path` (TB-193a): a path set drops only while that path is the run's chosen path. */
+export interface SetDef { id: string; name: string; bonus: Record<2 | 4 | 6, StatLine[]>; path?: PathId }
 /** Set effect numbers (TB-099, BALANCE ## Proposed P-099). Field distances are in field px (~20 px per metre). */
 export const SET_FX = {
   knifeRate: 0.25, bleedAmp: 0.3, bleedSecs: 3, fanEvery: 3, fanKnives: 5, fanRad: 0.18,
@@ -83,11 +85,18 @@ export const SETS: readonly SetDef[] = [
   { id: 'moonveil', name: 'Moonveil', bonus: { 2: [mul('moonRate', F.moonRate)], 4: [on('moonCrit')], 6: [on('moonwell')] } },
   { id: 'packlord', name: 'Packlord', bonus: { 2: [mul('petDmg', F.petDmg)], 4: [on('petHaste', F.petHaste)], 6: [on('extraWolves', F.extraWolves), on('treantRoot')] } },
   { id: 'rootwarden', name: 'Rootwarden', bonus: { 2: [mul('barMax', F.barMax)], 4: [on('barRegen', F.barRegen)], 6: [on('freeRally')] } },
+  // Path sets (TB-193a, BALANCE P-193 placeholders)
+  { id: 'serpents-coil', name: "Serpent's Coil", path: 'serpent', bonus: { 2: [on('crit', PATH_FX.setCrit)], 4: [on('venom', PATH_FX.setVenom)], 6: [on('venomBurst')] } },
+  { id: 'foxfire-pack', name: 'Foxfire Pack', path: 'fox', bonus: { 2: [mul('vanDmg', PATH_FX.setFoxDmg), mul('petDmg', PATH_FX.setFoxDmg)], 4: [mul('vanRespawn', -PATH_FX.setReturn)], 6: [on('packBuff', PATH_FX.packBuff)] } },
+  { id: 'magpies-hoard', name: "Magpie's Hoard", path: 'magpie', bonus: { 2: [mul('starMult', PATH_FX.setStar)], 4: [on('shardP', PATH_FX.shardP)], 6: [on('hoardEvery', PATH_FX.hoardEvery)] } },
 ];
+/** Sets and mythics that may drop on a run with this path: every unpathed one, plus the path's own (TB-193a). */
+export const forPath = <T extends { path?: PathId }>(xs: readonly T[], path: PathId | null | undefined): readonly T[] =>
+  xs.some((x) => x.path && x.path !== path) ? xs.filter((x) => !x.path || x.path === path) : xs;
 
 /** Mythics: one power and one cost each (powers wired in TB-100). */
 /** A mythic's power switches on a Stats field through `lines`, as set bonuses do (TB-100); its numbers live in MYTHIC_FX. */
-export interface MythicDef { id: string; name: string; slot: Slot; lines: StatLine[] }
+export interface MythicDef { id: string; name: string; slot: Slot; lines: StatLine[]; path?: PathId }
 export const MYTHICS: readonly MythicDef[] = [
   { id: 'last-knife', name: 'The Last Knife', slot: 'bow', lines: [on('knifeReturn')] },
   { id: 'heart-of-kiln', name: 'Heart of the Kiln', slot: 'quiver', lines: [on('burnRamp')] },
@@ -97,6 +106,10 @@ export const MYTHICS: readonly MythicDef[] = [
   { id: 'first-wolf', name: 'The First Wolf', slot: 'boots', lines: [on('petReturn')] },
   { id: 'heartwood-splinter', name: 'Heartwood Splinter', slot: 'charm', lines: [on('wallSplinter')] },
   { id: 'starfall-cloak', name: 'Starfall Cloak', slot: 'cloak', lines: [on('starCloak'), on('itemFind', 0.15)] },
+  // Path mythics (TB-193a): numbers in PATH_FX (BALANCE P-193)
+  { id: 'serpent-fang', name: 'Fang of the Coiled Serpent', slot: 'bow', path: 'serpent', lines: [on('fang')] },
+  { id: 'foxfire-tail', name: 'Foxfire Tail', slot: 'charm', path: 'fox', lines: [on('foxfire')] },
+  { id: 'magpies-talon', name: "The Magpie's Talon", slot: 'quiver', path: 'magpie', lines: [on('talon')] },
 ];
 
 /** Mythic power numbers (TB-100). Since TB-128 each one widens the elf's circle or quickens her draw (BALANCE P-128). */

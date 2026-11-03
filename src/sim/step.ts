@@ -3,6 +3,7 @@ import { FIREBALL, ORC_FX, ORC_KINDS, ORC_TYPES, OrcKind } from '../data/orcs';
 import { EventBus } from './events';
 import { Orc, Projectile, SimState, Wolf } from './state';
 import { MYTHIC_FX, SET_FX } from '../data/lootTables';
+import { PATH_FX } from '../data/paths';
 import { FX, bounce, damage, drawMult, rootOrc, impact, lob, nearestOrc, rollFx, shoot, starfall, takenMult, unitHit, volley } from './combat';
 import { barricadeHit, barricadeRegen } from './barricade';
 import { bossStep } from './boss';
@@ -26,7 +27,7 @@ export function spawnOrc(s: SimState, kind: OrcKind, y?: number, champ = false):
   o.kind = kind; o.x = W + 24; o.y = y ?? 50 + s.rng.next() * (H - 100);
   o.hp = hp; o.maxhp = hp; o.spd = T.speed * waveSpeedMult(w); o.r = T.radius; o.atk = hp * BARRICADE.orcAtkFrac;
   o.loot = waveLoot(w) * T.loot * F.loot * tierLoot(s.run.tier);
-  o.dead = false; o.burn = 0; o.bleed = 0; o.slow = 0; o.pin = 0; o.root = 0; o.chill = 0; o.stun = 0; o.hitT = 0; o.wob = s.rng.next() * 6.28; o.swingT = s.rng.next(); o.champ = champ;
+  o.dead = false; o.burn = 0; o.bleed = 0; o.slow = 0; o.pin = 0; o.root = 0; o.chill = 0; o.stun = 0; o.poison = 0; o.poisonDps = 0; o.hitT = 0; o.wob = s.rng.next() * 6.28; o.swingT = s.rng.next(); o.champ = champ;
   o.gen++; o.leapt = false; o.castT = s.rng.next() * FIREBALL.every; o.drum = false;
   return o;
 }
@@ -64,6 +65,8 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
     if (o.dead || run.fallen) return;
     o.wob += dt * ORC_WOB;
     if (o.burn > 0) { o.burn -= dt; o.hp -= st.dmg * SOURCES.burnFrac * st.burn * takenMult(s, o) * dt; if (o.hp <= 0) { damage(s, ev, o, 0); return; } }
+    // Venom (TB-193a): poison ticks like a burn
+    if (o.poison > 0) { o.poison -= dt; o.hp -= o.poisonDps * takenMult(s, o) * dt; if (o.hp <= 0) { damage(s, ev, o, 0); return; } }
     if (o.bleed > 0) o.bleed -= dt;
     if (o.slow > 0) o.slow -= dt;
     if (o.pin > 0) o.pin -= dt;
@@ -115,7 +118,9 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
   if (run.shotT[0] >= lobCd && inputs.aim && inputs.aim.x > BAR_X + BAR_W) {
     let { x, y } = inputs.aim;
     // Each owned enchantment rolls its chance (TB-111). A moon shot's circle settles onto the nearest orc near the aim point.
-    const fx = rollFx(s), moonShot = st.homing && (fx & FX.MOON) > 0;
+    // Fang of the Coiled Serpent: every few shots is a venom arrow that splits into three (TB-193a)
+    const fang = st.fang > 0 && ++s.fangN % PATH_FX.fangEvery === 0;
+    const fx = rollFx(s) | (fang ? FX.VENOM : 0), moonShot = st.homing && (fx & FX.MOON) > 0;
     const home = moonShot ? nearestOrc(s, x, y, (o) => dist(o.x, o.y, x, y) < st.homeR) : null;
     if (home) { x = home.x; y = home.y; }
     run.shotT[0] = 0; lob(s, ELF_X, H / 2, x, y, fx, ev); ev.push({ t: 'loose' });
@@ -123,8 +128,8 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
     if (st.starP > 0 && s.rng.next() < st.starP) starfall(s, ev);
     // Pale Moon: each moon shot costs wall, but never takes it below the floor
     if (moonShot && st.fullMoon) { const c = st.barMax * MYTHIC_FX.moonCost; if (run.barHp - c >= st.barMax * MYTHIC_FX.moonCostFloor) run.barHp -= c; }
-    // Split Shot: extra arrows land at random inside the circle.
-    for (let k = 1; k < st.arrows; k++) {
+    // Split Shot: extra arrows land at random inside the circle (the Fang's venom arrow splits into more).
+    for (let k = 1; k < st.arrows + (fang ? PATH_FX.fangSplit : 0); k++) {
       const a = s.rng.next() * 6.28, d = s.rng.next() * st.radius * LOB.splitSpread;
       lob(s, ELF_X, H / 2, x + Math.cos(a) * d, y + Math.sin(a) * d, fx, ev);
     }
@@ -170,9 +175,11 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
   const pet = st.petDmg;
   if (st.wolf) {
     while (s.pack.length < st.extraWolves) s.pack.push({ ...s.wolf, y: s.wolf.y + SOURCES.wolf.reach * 2 * (s.pack.length + 1) });
-    wolfStep(s, ev, s.wolf, dt, haste, pet);
-    for (let i = 0; i < st.extraWolves; i++) wolfStep(s, ev, s.pack[i]!, dt, haste, pet);
+    wolfStep(s, ev, s.wolf, dt, haste, st.wolf * pet);
+    for (let i = 0; i < st.extraWolves; i++) wolfStep(s, ev, s.pack[i]!, dt, haste, st.wolf * pet);
   }
+  // Foxfire Tail (TB-193a): a spectral fox hunts like the wolf, its bite grown by the companions in the field
+  if (st.foxfire) wolfStep(s, ev, s.fox, dt, haste, st.foxfire * pet);
 
   if (st.hawk) {
     const hk = s.hawk, U = st.units.hawk; hk.a += dt * SOURCES.hawk.orbitSpeed; run.hawkT += dt * haste * U.rate;
@@ -264,15 +271,15 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
   s.orcs.forEach((o) => { if (o.dead) s.orcs.release(o); });
 }
 
-/** One wolf: run to the nearest orc and bite on its cooldown. */
-function wolfStep(s: SimState, ev: EventBus, wf: Wolf, dt: number, haste: number, pet: number): void {
+/** One wolf (or the Foxfire fox): run to the nearest orc and bite for `bite` on its cooldown. */
+function wolfStep(s: SimState, ev: EventBus, wf: Wolf, dt: number, haste: number, bite: number): void {
   const tg = nearestOrc(s, wf.x, wf.y, (o) => o.x < W - 40);
   if (tg) { wf.tx = tg.x; wf.ty = tg.y; }
   const dx = wf.tx - wf.x, dy = wf.ty - wf.y, d = Math.hypot(dx, dy);
   const U = s.stats.units.wolf;
   if (d > 2) { const m = Math.min(d, SOURCES.wolf.speed * U.spd * dt); wf.x += dx / d * m; wf.y += dy / d * m; }
   wf.biteT += dt * haste * U.rate;
-  if (tg && d < SOURCES.wolf.reach && wf.biteT > SOURCES.wolf.biteCd) { wf.biteT = 0; damage(s, ev, tg, unitHit(s, U, s.stats.wolf * pet)); ev.push({ t: 'bite', x: tg.x, y: tg.y }); }
+  if (tg && d < SOURCES.wolf.reach && wf.biteT > SOURCES.wolf.biteCd) { wf.biteT = 0; damage(s, ev, tg, unitHit(s, U, bite)); ev.push({ t: 'bite', x: tg.x, y: tg.y }); }
 }
 
 /** Cinderground and Moonwells (TB-099): tick down, burn or slow the orcs inside; Moonwells mend the wall. */
