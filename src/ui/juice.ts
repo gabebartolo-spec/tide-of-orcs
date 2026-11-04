@@ -3,6 +3,7 @@
 import { JUICE } from '../data/presentation';
 import { uiSound } from '../data/audio';
 import { P } from '../render/palette';
+import { renderScale } from '../render/quality';
 
 /** easeOutBack: 0 → 1 with a slight overshoot past 1 before settling. */
 export function springEase(t: number, s: number = JUICE.overshoot): number {
@@ -20,6 +21,9 @@ export function countValue(from: number, to: number, t: number): number {
 export function popScale(t: number, from: number = JUICE.count.popFrom): number {
   return from + (1 - from) * springEase(t);
 }
+
+/** Reduced motion on: the Settings choice when the player made one, otherwise the OS preference (TB-219). */
+export function wantsCalm(setting: boolean | null | undefined, os: boolean): boolean { return setting ?? os; }
 
 /** True when the player asked for reduced motion (main.ts sets `data-calm`). */
 export function calm(): boolean { return typeof document !== 'undefined' && document.documentElement.hasAttribute('data-calm'); }
@@ -96,14 +100,16 @@ let overlay: HTMLCanvasElement | null = null;
 const sparks: Spark[] = [];
 const flares: Flare[] = [];
 let looping = false;
+let overlayScale = 1;
 
 function ensureOverlay(): CanvasRenderingContext2D | null {
   if (!overlay) {
     overlay = document.createElement('canvas'); overlay.id = 'juice-overlay';
-    Object.assign(overlay.style, { position: 'fixed', inset: '0', width: '100vw', height: '100vh', pointerEvents: 'none', zIndex: '1000' });
+    Object.assign(overlay.style, { position: 'fixed', inset: '0', width: '100%', height: '100dvh', pointerEvents: 'none', zIndex: '1000' });
     document.body.appendChild(overlay);
   }
-  const dpr = window.devicePixelRatio || 1, w = Math.round(innerWidth * dpr), h = Math.round(innerHeight * dpr);
+  // the shared backing scale (TB-218 P3); the canvas is released (0x0) whenever no spark or flare is alive (P4)
+  const dpr = overlayScale = renderScale(innerWidth, innerHeight), w = Math.round(innerWidth * dpr), h = Math.round(innerHeight * dpr);
   if (overlay.width !== w || overlay.height !== h) { overlay.width = w; overlay.height = h; }
   return overlay.getContext('2d');
 }
@@ -125,14 +131,15 @@ export function burst(x: number, y: number, colors: readonly string[] = [P.starG
   const n = Math.max(4, Math.round(B.count * scale)), k = Math.sqrt(scale);
   for (let i = 0; i < n; i++) {
     const life = r(B.lifeMin, B.lifeMax), v = sparkVelocity(Math.random(), r(B.speedMin, B.speedMax) * rem * k, B.fan, B.lift * rem * k);
-    sparks.push({ x, y, vx: v.vx, vy: v.vy, life, max: life, size: r(B.sizeMin, B.sizeMax) * rem * k, color: colors[i % colors.length]! });
+    const sa = Math.random() * Math.PI * 2, sd = Math.sqrt(Math.random()) * B.spawn * rem * k;
+    sparks.push({ x: x + Math.cos(sa) * sd, y: y + Math.sin(sa) * sd, vx: v.vx, vy: v.vy, life, max: life, size: r(B.sizeMin, B.sizeMax) * rem * k, color: colors[i % colors.length]! });
   }
   flares.push({ x, y, life: B.flareLife, r: B.flare * rem * k, color: colors[0]! });
   if (!looping) { looping = true; let last = now(); const frame = (): void => {
     const t = now(), dt = Math.min(0.05, (t - last) / 1000); last = t;
     const ctx = ensureOverlay(); if (!ctx) { looping = false; return; }
-    const dpr = window.devicePixelRatio || 1, drag = B.drag ** (dt * 60), g = B.gravity * remPx();
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, innerWidth, innerHeight); ctx.globalCompositeOperation = 'lighter';
+    const dpr = overlayScale, drag = B.drag ** (dt * 60), g = B.gravity * remPx();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, innerWidth, innerHeight); ctx.globalCompositeOperation = 'source-over';
     for (let i = flares.length - 1; i >= 0; i--) {
       const f = flares[i]!; f.life -= dt; if (f.life <= 0) { flares.splice(i, 1); continue; }
       const p = 1 - f.life / B.flareLife;
@@ -144,11 +151,11 @@ export function burst(x: number, y: number, colors: readonly string[] = [P.starG
       s.vx *= drag; s.vy = s.vy * drag + g * dt; s.x += s.vx * dt; s.y += s.vy * dt;
       const a = s.life / s.max, rad = s.size * (0.5 + 0.5 * a);
       ctx.fillStyle = s.color;
-      ctx.globalAlpha = a * 0.3; ctx.beginPath(); ctx.arc(s.x, s.y, rad * B.glow, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = a * B.glowAlpha; ctx.beginPath(); ctx.arc(s.x, s.y, rad * B.glow, 0, Math.PI * 2); ctx.fill();
       ctx.globalAlpha = a; ctx.beginPath(); ctx.arc(s.x, s.y, rad, 0, Math.PI * 2); ctx.fill();
     }
     ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
-    if (sparks.length || flares.length) requestAnimationFrame(frame); else { ctx.clearRect(0, 0, innerWidth, innerHeight); looping = false; }
+    if (sparks.length || flares.length) requestAnimationFrame(frame); else { overlay!.width = 0; overlay!.height = 0; looping = false; }
   }; requestAnimationFrame(frame); }
 }
 

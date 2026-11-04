@@ -1,7 +1,7 @@
 /** Seeded loot rolls (TB-092): drop chance, rarity with pity, item level, affixes. Pure; takes the sim RNG. */
 import { OrcKind } from '../data/orcs';
 import { Item, LootMeta, RARITIES, Rarity } from '../data/loot';
-import { AFFIXES, AFFIX_NEEDS, AffixDef, BASES, DROP, Feature, MYTHICS, RARITY, SETS, affixScale, forPath } from '../data/lootTables';
+import { AFFIXES, AFFIX_NEEDS, AffixDef, BASES, DROP, Feature, MYTHICS, RARITY, SETS, SET_CHANCE, affixScale, forPath } from '../data/lootTables';
 import { Rng } from './rng';
 import { Stats } from './stats';
 import { PathId } from '../data/paths';
@@ -15,7 +15,7 @@ export type AffixFilter = (a: AffixDef) => boolean;
 const OWNS: Record<Feature, (st: Stats) => boolean> = {
   companion: (st) => st.wolf > 0 || st.archers > 0 || st.hawk || st.treant || !!st.knives || st.storm || st.ballista > 0,
   wolf: (st) => st.wolf > 0, hawk: (st) => st.hawk, treant: (st) => st.treant, knives: (st) => !!st.knives, ballista: (st) => st.ballista > 0,
-  spikes: (st) => st.spikes > 0, vanguard: (st) => st.vanCap > 0, elites: (st) => st.foes.elite.on,
+  spikes: (st) => st.spikes > 0, vanguard: (st) => st.vanCap > 0, elites: (st) => st.foes.elite.on, regen: (st) => st.barRegen > 0, mend: (st) => st.vanMend > 0,
   fire: (st) => st.fire, storm: (st) => st.storm, moon: (st) => st.homing,
 };
 /** Gate (TB-114): an affix rolls only while the player owns the feature it scales. */
@@ -87,6 +87,6 @@ export function rollDrop(rng: Rng, loot: LootMeta, kind: OrcKind, wave: number, 
   const base = pick(rng, myth ? BASES.filter((b) => b.slot === myth.slot) : BASES);
   const item: Item = { uid: `i${loot.nextUid++}`, base: base.id, slot: base.slot, rarity, ilvl, affixes: rollAffixes(rng, RARITY.affixes[rarity], ilvl, mods.has) };
   if (myth) item.mythic = myth.id;
-  else if (rarity === 'legendary' && rng.next() < 0.5) item.set = pick(rng, forPath(SETS, mods.path)).id;
+  else if (rarity === 'legendary' && rng.next() < SET_CHANCE) item.set = pick(rng, forPath(SETS, mods.path)).id;
   return item;
 }

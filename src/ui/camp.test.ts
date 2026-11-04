@@ -24,6 +24,6 @@ describe('camp UI (TB-188b, TB-188e scene)', () => {
   it('reads effects from CAMP_FX', () => {
     expect(campFxText('bowyer', 0)).toBe('');
     expect(campFxText('bowyer', 1)).toBe('bow damage +5%, draw time −3%, strike circle +4%');
-    expect(campFxText('kitchen', 3)).toBe('barricade health +20%, barricade regen +2/s, starlight +10%');
+    expect(campFxText('kitchen', 3)).toBe('barricade health +20%, barricade regen +2%/s, starlight +10%');
   });
 });

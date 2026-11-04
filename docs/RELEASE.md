@@ -10,6 +10,12 @@ Web builds go to **https://veniceissinking.itch.io/elves-vs-orcs** (page Restric
 ## Pushing a build
 Actions → "Release to itch.io" → Run workflow → pick a channel. `.github/workflows/itch.yml` runs lint, tests, build, stamps `dist/build.json` with tag/sha/date, and pushes `dist/` with butler. The game shows the build in the footer (ui reads `build.json`). A tag push (`m0`, `m1`, shipped 30 Oct) fires the same workflow; tags stop at `m1` and later milestones are untagged.
 
+## Devlog rule (director, 4 Nov)
+Every build posted to itch, on any channel (`html5`, `html5-dev`, `mobile-test`), needs a patch-notes devlog post for that build. Do not report a push as done until the notes are written and posted.
+1. Write `docs/devlog-YYYY-MM-DD.md` (add `b`, `c` for a second post that day) in the style of the previous one: a title line, what is new for a player, balance, fixes, and for a test channel a short how-to-test checklist. The file stays uncommitted by the director's choice.
+2. Post it on the itch dashboard: `https://itch.io/dashboard/game/5261926/new-devlog` (butler has no devlog command and the itch API cannot create posts), signed in as VeniceIsSinking. Fill the title and body, tick Published, Save. The 4 Nov post is `/dashboard/post/1750213/edit`.
+3. Name the channel and the main sha in the post.
+
 ## Checklist before a build
 - `npm run lint && npm test` green on main.
 - `npm run balance -- --minutes 30` shows no stall (wave rising, purchases happening).

@@ -2,9 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-visual">
+<meta name="theme-color" content="#161d15">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="./manifest.webmanifest">
 <title>Let's Hunt Some Orc!</title>
-<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="icon" type="image/png" href="./favicon.png">
 <link rel="stylesheet" href="/src/ui/style.css">
 </head>
 <body data-mode="run">
@@ -32,6 +35,7 @@
     <button class="ghost" id="btn-pullback" hidden></button>
     <button class="ghost" id="btn-settings"></button>
   </header>
+  <button class="mute-corner" id="btn-mute-corner" aria-pressed="false" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="spk" d="M3 9v6h4l5 4V5L7 9H3z"/><path class="wave" d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none"/><path class="slash" d="M4 4l16 16" fill="none"/></svg></button>
   <div class="main">
     <div class="play">
       <div class="field">
@@ -63,10 +67,11 @@
         <button role="tab" id="tab-settings" aria-selected="false"></button>
       </div>
       <div class="tab" id="pane-grove">
-        <div class="treewrap"><canvas id="tree" tabindex="0"></canvas><button class="ghost treefull" id="tree-full" type="button"></button></div>
+        <div class="treewrap"><canvas id="tree" tabindex="0"></canvas></div>
         <div class="detail" id="detail" aria-live="polite"></div>
+        <button class="ghost treefull" id="tree-full" type="button"></button>
       </div>
-      <div class="tab" id="pane-satchel" hidden>
+      <div class="tab" id="pane-satchel" data-fit="narrow" hidden>
         <div class="prestige satchel">
           <h2 id="sat-title"></h2>
           <div class="stat"><span class="k" id="sat-worn-k"></span></div>
@@ -93,10 +98,13 @@
           <div class="col">
           <label class="set"><span id="set-vol-k"></span><input type="range" id="set-vol" min="0" max="1" step="0.05"><output id="set-vol-v"></output></label>
           <label class="set"><span id="set-motion-k"></span><select id="set-motion"><option value="sys"></option><option value="full"></option><option value="reduced"></option></select></label>
+          <label class="set"><span id="set-quality-k"></span><select id="set-quality"><option value="auto"></option><option value="high"></option><option value="low"></option></select></label>
           <label class="set"><span id="set-text-k"></span><input type="range" id="set-text" min="0.8" max="1.6" step="0.1"><output id="set-text-v"></output></label>
           <label class="set"><span id="set-num-k"></span><select id="set-num"><option value="short"></option><option value="sci"></option></select></label>
           <h2 id="set-tel-k"></h2>
           <div class="row"><button class="ghost" id="btn-telemetry"></button></div>
+          <div class="row" id="row-fs"><button class="ghost" id="btn-fs"></button></div>
+          <div class="row"><button class="ghost" id="btn-mute" aria-pressed="false"></button></div>
           </div>
           <div class="col">
           <h2 id="set-save-k"></h2>

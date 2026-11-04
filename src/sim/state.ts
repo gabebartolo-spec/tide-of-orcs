@@ -3,7 +3,7 @@ import { OrcKind } from '../data/orcs';
 import { HwLevels } from '../data/heartwood';
 import { Item, LootMeta, Rarity, freshLoot } from '../data/loot';
 import { SET_FX } from '../data/lootTables';
-import { FIELD, ORC_CAP, VanType } from '../data/balance';
+import { FIELD, ORC_CAP, VANGUARD, VanType } from '../data/balance';
 import { Levels, Stats, deriveStats } from './stats';
 import { Pool } from './pool';
 import { Rng, createRng } from './rng';
@@ -127,7 +127,7 @@ const makeVan = (): Vanguard => ({ live: false, type: 'spear', line: false, x: 0
 export function createState(seed = 1, run: RunState = freshRun(), meta: MetaState = freshMeta()): SimState {
   const s: SimState = {
     tick: 0, t: 0, rng: createRng(seed), lootRng: createRng(seed * 31 + 7), matRng: createRng(seed * 17 + 3), lootPolicy: 'player', run, meta, stats: applyGear(deriveStats(run.levels, meta.hwLevels, meta.camp.levels, run.path ?? null), meta.loot),
-    orcs: new Pool<Orc>(ORC_CAP, makeOrc), shots: new Pool<Projectile>(600, makeShot), vans: new Pool<Vanguard>(8, makeVan),
+    orcs: new Pool<Orc>(ORC_CAP, makeOrc), shots: new Pool<Projectile>(600, makeShot), vans: new Pool<Vanguard>(VANGUARD.poolCap, makeVan),
     wolf: { x: 260, y: FIELD.h / 2, tx: 260, ty: FIELD.h / 2, biteT: 0 },
     pack: [],
     hawk: { x: 300, y: 100, a: 0 },

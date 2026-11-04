@@ -2,10 +2,13 @@
 export class Pool<T extends { live: boolean }> {
   readonly items: T[];
   private free: number[] = [];
+  /** Slot of each item, so release is O(1) (was indexOf). */
+  private slot = new Map<T, number>();
   count = 0;
 
   constructor(capacity: number, make: () => T) {
     this.items = Array.from({ length: capacity }, make);
+    this.items.forEach((it, i) => this.slot.set(it, i));
     for (let i = capacity - 1; i >= 0; i--) this.free.push(i);
   }
 
@@ -22,7 +25,7 @@ export class Pool<T extends { live: boolean }> {
     if (!it.live) return;
     it.live = false;
     this.count--;
-    this.free.push(this.items.indexOf(it));
+    this.free.push(this.slot.get(it) ?? this.items.indexOf(it));
   }
 
   forEach(fn: (it: T) => void): void {

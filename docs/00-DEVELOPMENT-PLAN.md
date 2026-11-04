@@ -93,7 +93,7 @@ Six new nodes (43 → 49) giving the elf's lob distinct elemental arrows, each w
 | Node | Branch, after | Ranks | What it does |
 |---|---|---|---|
 | Rebound (`bounce`) | Bow, Longshaft | 4 | A magic bolt leaps from the strike to the nearest orc within 120, then on: 2 bounces at rank 1, +1 per rank. Each bounce deals 60% of the last. |
-| Starfall (`starfall`) | Bow, Moonbow | 1 | Every 10th lob also rains 8 arrows straight down on random orcs across the plain. |
+| Starfall (`starfall`) | Bow, Moonbow | 1 | One lob in ten (10% per shot, TB-111) also rains 12 arrows straight down on random orcs across the plain. |
 | Frost Arrows (`frost`) | Armoury, Fire Arrows | 5 | Struck orcs are chilled 3 s: march and swing slowed 20% at rank 1, +5% per rank (40% at rank 5). |
 | Shatter (`shatter`) | Armoury, Frost Arrows | 5 | A chilled orc that dies bursts, hitting orcs within 50 for 100% lob damage, ×1.4 per rank. |
 | Shock Arrows (`shock`) | Armoury, Storm Glade | 1 | Lightning jumps from the strike to 3 orcs outside the circle (within 90) for 30% damage. |

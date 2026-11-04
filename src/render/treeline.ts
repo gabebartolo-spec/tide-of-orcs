@@ -44,6 +44,8 @@ export class Treeline {
   private skirt = [row(0, true), row(1, true)];
   constructor() { load(); }
   draw(g: CanvasRenderingContext2D, x0: number, y0: number, x1: number): void {
+    // a hidden or zero-size canvas gives a NaN view: createLinearGradient would throw and end the frame loop (ground.ts guards the same way)
+    if (!Number.isFinite(x0) || !Number.isFinite(y0) || !Number.isFinite(x1)) return;
     const n = Math.max(T.minRows, Math.floor((T.stop - y0 - T.first) / T.gap) + 1);
     for (let r = 0; r < n; r++) {
       const base = y0 + T.first + r * T.gap;
@@ -67,11 +69,11 @@ export class Treeline {
   }
   private drawRow(g: CanvasRenderingContext2D, trees: Tree[], base: number, far: boolean, x0: number, x1: number, s = 1): void {
     for (const tr0 of trees) {
-      const tr = s === 1 ? tr0 : { ...tr0, h: tr0.h * s };
-      const im = imgs.get(far || tr.far ? `${tr.key}_far` : tr.key); if (!im) continue;
-      const w = (im.width / im.height) * tr.h; if (tr.x + w / 2 < x0 || tr.x - w / 2 > x1) continue;
-      if (tr.flip) { g.save(); g.translate(tr.x, 0); g.scale(-1, 1); g.drawImage(im, -w / 2, base + tr.dy - tr.h, w, tr.h); g.restore(); }
-      else g.drawImage(im, tr.x - w / 2, base + tr.dy - tr.h, w, tr.h);
+      const h = s === 1 ? tr0.h : tr0.h * s;  // scale in a local: no per-tree-per-frame object (TB-088/TB-183)
+      const im = imgs.get(far || tr0.far ? `${tr0.key}_far` : tr0.key); if (!im) continue;
+      const w = (im.width / im.height) * h; if (tr0.x + w / 2 < x0 || tr0.x - w / 2 > x1) continue;
+      if (tr0.flip) { g.save(); g.translate(tr0.x, 0); g.scale(-1, 1); g.drawImage(im, -w / 2, base + tr0.dy - h, w, h); g.restore(); }
+      else g.drawImage(im, tr0.x - w / 2, base + tr0.dy - h, w, h);
     }
   }
 }
