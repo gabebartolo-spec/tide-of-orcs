@@ -16,17 +16,19 @@ export const TREELINE = {
   seed: 207, span: [-700, 1600] as const,
   first: 118, gap: 22, stop: -6, minRows: 2, skirt: { step: 17, h: [8, 30] as const, lift: 12, rows: 2, offset: 9, far: 0.35, gap: 0.9,
     /** Share of skirt spots that hold a young tree (one of `kinds`, `youngH` units tall) instead of a bush. */
-    young: 0.5, kinds: ['oak_green_1', 'oak_green_2', 'spruce_2', 'spruce_3'] as const, youngH: [24, 38] as const },
+    young: 0.3, kinds: ['oak_green_1', 'oak_green_2', 'spruce_2', 'spruce_3'] as const, youngH: [24, 38] as const },
   /** Pre-scaled sprite levels stop below `mipMin` px high; the soft ground shadow is `shadowPx` wide and `shade` x the sprite width under a tree and a bush. */
   mipMin: 24, shadowPx: 64, shade: { tree: 0.45, bush: 0.85 },
   /** Device-exact sprite cache: most entries kept before it is rebuilt. The first `fill.rows` rows (the canopy against the view top) hold only kinds at least `fill.min` x the tallest that fits. */
-  exactCap: 700, fill: { rows: 3, min: 0.85 },
+  exactCap: 700, fill: { rows: 3, min: 0.9 },
   /** World units per model unit, and the random size spread (x unit) of one tree. */
   unit: 9.5, size: [0.96, 1.04] as const,
   /** Rows hang from the view top (`first` + row x `gap` down to a base, `lift` of jitter); a row only holds kinds up to `slack` x its room, then shrinks as one. */
   slack: 1.12,
-  /** The barricade's top: it starts `up` units above the bush skirt base (skirt bushes draw over its top); no tree stands within `clear` units of the wall's centre. */
-  cap: { up: 30, clear: 16 },
+  /** The barricade's top: it starts `up` units above the bush skirt base (skirt bushes draw over its top); the forest stands unbroken behind it. */
+  cap: { up: 30 },
+  /** Row 0 (the canopy against the HUD band): each tree is sized (x0.95..`stretch` of natural, same aspect) so its crown top lands `crown[0]`..`crown[1]` units below the band, so no bare strip shows between the HUD and the crowns. `hudGap` css px of air is kept under the HUD's lowest control. */
+  crown: [2, 9] as const, stretch: 1.2, hudGap: 6,
   grow: 0.06, step: 22, stepGrow: 0.18, jitter: 0.45, lift: 8, bush: 0.1, bushH: [18, 28] as const,
   /** Tree sprite keys and their real model heights (Handpainted Tree Pack), so the forest has a natural mix of tall and short. */
   kinds: ['oak_green_1', 'oak_green_2', 'pine_1', 'pine_2', 'pine_3', 'spruce_2', 'spruce_3'] as const,

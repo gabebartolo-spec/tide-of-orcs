@@ -45,10 +45,11 @@ export function layoutGround(seed: number = GROUND.seed, wild = false): GroundLa
     drift(rng, L.bare, x, y, { ...GROUND.worn, blobs: GROUND.worn.bare }, GROUND.worn.bareScale);
   }
   const T = GROUND.tufts;
-  for (let i = 0; i < T.clusters; i++) { const [x, y] = pt(); for (let k = count(rng, T.per); k > 0; k--) L.tufts.push(tuft(rng, x + near(rng, T.spread), y + near(rng, T.spread * 0.6))); }
-  for (let i = 0; i < T.singles; i++) { const [x, y] = pt(); L.tufts.push(tuft(rng, x, y)); }
+  // the wild meadow above the plain is forest floor behind the crowns: no tufts or pebbles (their pale stalks and grey dots read as stray flecks between the crown tips)
+  for (let i = 0; i < (wild ? 0 : T.clusters); i++) { const [x, y] = pt(); for (let k = count(rng, T.per); k > 0; k--) L.tufts.push(tuft(rng, x + near(rng, T.spread), y + near(rng, T.spread * 0.6))); }
+  for (let i = 0; i < (wild ? 0 : T.singles); i++) { const [x, y] = pt(); L.tufts.push(tuft(rng, x, y)); }
   const R = GROUND.rocks;
-  for (let i = 0; i < R.n; i++) {
+  for (let i = 0; i < (wild ? 0 : R.n); i++) {
     const w = wornAt[i % wornAt.length]!, [x, y] = i % 2 ? pt() : [w[0] + near(rng, GROUND.worn.spread), w[1] + near(rng, GROUND.worn.spread * 0.5)];
     const r = span(rng, R.r), sq = R.squash * (0.85 + rng.next() * 0.3);
     L.rocks.push({ x: clampX(x), y: clampY(y), r, squash: sq });

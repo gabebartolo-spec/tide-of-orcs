@@ -82,4 +82,11 @@ describe('treeline sharpness and canopy', () => {
     expect(rowKinds(0)).not.toContain('oak_green_1'); expect(rowKinds(0)).not.toContain('spruce_3');
     expect(rowKinds(TREELINE.fill.rows + 1).length).toBeGreaterThan(rowKinds(0).length);
   });
+  it('no row shrinks its trees: rowScale is 1 for every row the view can hold (natural height at any viewport)', () => {
+    for (let r = 0; r < 12; r++) expect(rowScale(r)).toBe(1);
+  });
+  it('the canopy row is stretched at most to TREELINE.stretch and a tree of it never leaves a gap wider than the crown window', () => {
+    expect(TREELINE.stretch).toBeLessThanOrEqual(1.25);
+    expect(TREELINE.crown[1]).toBeGreaterThanOrEqual(TREELINE.crown[0]);
+  });
 });

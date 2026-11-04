@@ -1,4 +1,3 @@
-import { FIELD } from '../data/balance';
 import { TREELINE as T } from '../data/presentation';
 import { createRng } from '../sim/rng';
 import { P } from './palette';
@@ -146,18 +145,19 @@ export class Treeline {
   private layout(n: number): void {
     if (n === this.n) return;
     this.n = n; this.spots = []; this.edges = [];
-    const wallX = FIELD.barX + FIELD.barW / 2;
     for (let r = 0; r < n; r++) {
       const trees = (this.rows[r] ??= row(r)), s = rowScale(r), baseOff = T.first + r * T.gap;
       for (const t of trees) {
-        if (t.key !== BUSH && Math.abs(t.x - wallX) < T.cap.clear) continue;  // no trunk stands on the barricade's column, so the cap rail never reads as a tree
-        this.spots.push({ x: t.x, off: baseOff + t.dy, key: r < n - 1 ? `${t.key}_far` : t.key, h: t.h * s, flip: t.flip, shadow: T.shade.tree });
+        const off = baseOff + t.dy; let h = t.h * s;
+        // the canopy row reaches up to the HUD band: stretched (same aspect, within `stretch`) so its crown top lands just under it
+        if (r === 0 && t.key !== BUSH) h = Math.min(h * T.stretch, Math.max(h * 0.95, off - (T.crown[0] + ((t.x * 0.618) % 1 + 1) % 1 * (T.crown[1] - T.crown[0]))));
+        this.spots.push({ x: t.x, off, key: r < n - 1 ? `${t.key}_far` : t.key, h, flip: t.flip, shadow: T.shade.tree });
       }
     }
     const sb = T.first + (n - 1) * T.gap + T.skirt.lift;
     this.skirt.forEach((tr, i) => {
       const base = sb - T.skirt.offset * (T.skirt.rows - 1 - i);
-      for (const t of tr) if (t.key === BUSH || Math.abs(t.x - wallX) >= T.cap.clear) this.edges.push({ x: t.x, off: base + t.dy, key: t.far ? `${t.key}_far` : t.key, h: t.h, flip: t.flip, shadow: T.shade.bush });
+      for (const t of tr) this.edges.push({ x: t.x, off: base + t.dy, key: t.far ? `${t.key}_far` : t.key, h: t.h, flip: t.flip, shadow: T.shade.bush });
     });
     this.spots.sort((a, b) => a.off - b.off); this.edges.sort((a, b) => a.off - b.off);
   }
@@ -177,6 +177,8 @@ export class Treeline {
   skirtUpTo(g: CanvasRenderingContext2D, y0: number, x0: number, x1: number, y: number): void {
     const l = this.edges; while (this.si < l.length && y0 + this.hud + l[this.si]!.off <= y) this.put(g, l[this.si++]!, y0 + this.hud, x0, x1);
   }
+  /** Highest crown top (world y) of the laid-out trees for the view at `y0`, and the band bottom it should sit under; for the capture audit. */
+  crownTop(y0: number): number { let m = Infinity; for (const s of this.spots) m = Math.min(m, y0 + this.hud + s.off - s.h); return m; }
   /** World y above which a walker is still in the forest, behind the rows. */
   skirtEdge(y0: number): number { return this.skirtBase(y0) - T.skirt.offset; }
   /** One whole frame, far to near (used where no actor needs to stand between the rows). */

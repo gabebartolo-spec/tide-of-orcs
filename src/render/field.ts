@@ -75,6 +75,7 @@ export class FieldRenderer {
    *  window shows more meadow. */
   readonly view = { k: 1, ox: 0, oy: 0 };
   private treeline = new Treeline();
+  private hudPx = 0; private hudT = 0;
   /** Client px to plain coordinates; null off the plain unless `clamp` pins it to the edge (TB-216c). */
   toWorld(cx: number, cy: number, clamp: boolean): { x: number; y: number } | null {
     const r = this.canvas.getBoundingClientRect();
@@ -263,7 +264,7 @@ export class FieldRenderer {
 
     // barricade
     const frac = barFrac(s);
-    const top = Math.max(vis.y0, this.treeline.skirtBase(vis.y0) - TREELINE.cap.up);  // the wall rises a little into the bush skirt; its stake tips are the cap, and no trunk stands on its column
+    const top = Math.max(vis.y0, this.treeline.skirtBase(vis.y0) - TREELINE.cap.up);  // the wall rises a little into the bush skirt; its stake tips are the cap,
     g.fillStyle = P.wallShade; g.fillRect(BAR_X + 4, top + GROUND.fence.shadeFrom, BAR_W + 4, H - top - GROUND.fence.shadeFrom);
     const fence = decorImg('fence');
     if (fence) {
@@ -398,10 +399,23 @@ export class FieldRenderer {
   /** The forest edge along the top of the view (TB-220): the tree rows, then every orc still walking inside the forest (whole, never cut to a head or a weapon by a trunk); the wall and the bush skirt, which still hides their feet, follow. */
   private forest(s: SimState, orcs: Orc[], dt: number): void {
     const { x0, y0, x1 } = this.vis, tl = this.treeline, edge = tl.skirtEdge(y0), g = this.g;
-    tl.begin(g, y0, (this.phone ? FIELD_VIEW.phoneHud : FIELD_VIEW.hudFrac * this.canvas.clientHeight) / this.view.k); tl.treesUpTo(g, y0, x0, x1, Infinity); tl.skirtUpTo(g, y0, x0, x1, Infinity);
+    tl.begin(g, y0, this.hudBand() / this.view.k);
+    // far to near: each orc is drawn after every tree whose base is behind its feet and before every nearer one, so crowns and trunks in front of it cover it
     let i = 0;
-    for (; i < orcs.length && orcs[i]!.y < edge; i++) this.orcDraw(s, orcs[i]!, dt);
+    for (; i < orcs.length && orcs[i]!.y < edge; i++) { tl.treesUpTo(g, y0, x0, x1, orcs[i]!.y); this.orcDraw(s, orcs[i]!, dt); }
     this.orcsIn = i;
+    tl.treesUpTo(g, y0, x0, x1, Infinity); tl.skirtUpTo(g, y0, x0, x1, Infinity);
+  }
+
+  /** CSS px from the view top kept clear of crowns: the lowest HUD control plus `hudGap` (re-measured about twice a second), else `hudFrac` of the canvas height; a fixed strip on a phone. */
+  private hudBand(): number {
+    if (this.phone) return FIELD_VIEW.phoneHud;
+    if (--this.hudT <= 0 && typeof document !== 'undefined') {
+      this.hudT = 30; let b = 0;
+      document.querySelectorAll('#hud .hud-wall, #hud .hud-wave, #hud .hud-star, #hud button, #hud .stats').forEach((e) => { const r = e.getBoundingClientRect(); if (r.width > 1) b = Math.max(b, r.bottom); });
+      this.hudPx = b > 0 ? b + TREELINE.hudGap : 0;
+    }
+    return this.hudPx || FIELD_VIEW.hudFrac * this.canvas.clientHeight;
   }
 
   /** One orc and the flames it sheds when burning. */
