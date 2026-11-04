@@ -36,6 +36,9 @@ export const P = {
   cinder: 'rgba(226,168,91,.22)', cinderEdge: 'rgba(199,111,111,.45)', moonwell: 'rgba(205,189,234,.2)', moonwellEdge: 'rgba(205,189,234,.6)',
   // mythic powers (TB-100): Oakspine's stake, Starfall's beam
   stake: '#8a6a45', starfall: 'rgba(205,189,234,.85)',
+  // sky over the treeline (TB-232): zenith, low sky, the warm haze at the horizon (also the far-row haze), the wood's shade between the back trunks, soft clouds
+  skyTop: '#9fbcc9', skyLow: '#c9d8cf', skyHaze: '#e3e2c8', woodDeep: '#2f4838',
+  cloud: 'rgba(246,242,228,.9)', cloudShade: 'rgba(196,206,200,.55)', cloudClear: 'rgba(246,242,228,0)',
   shadow: 'rgba(18,24,16,.25)', dim: 'rgba(22,29,21,.6)', dim45: 'rgba(22,29,21,.45)',
 } as const;
 
@@ -51,3 +54,9 @@ export const PATH_TINT: Readonly<Record<'serpent' | 'fox' | 'magpie', { colour: 
   fox: { colour: '#e39a5c', light: '#ff8a3d', deep: '#7a3f1e', pale: '#fbe3c4' },
   magpie: { colour: '#a8bde0', light: '#7fb4ff', deep: '#28324a', pale: '#f2f4fa' },
 };
+
+/** A `#rrggbb` palette token at alpha `a`, as an rgba() string (for gradients whose stops fade one token). */
+export function withAlpha(token: string, a: number): string {
+  const n = parseInt(token.slice(1, 7), 16);
+  return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${Math.round(Math.min(1, Math.max(0, a)) * 1000) / 1000})`;
+}

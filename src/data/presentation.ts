@@ -5,7 +5,27 @@ export const SKY = {
   dayCycle: 600,
   /** Lamplight radius on the grove bank at full night. */
   lampR: 150,
+  /** TB-232: the painted sky over the treeline. Under the HUD band an open strip of sky `open.frac` x the canvas height (at least `open.min`
+   *  CSS px, so a phone still shows real distance) is kept clear of crowns: trees that would reach into it are drawn shorter (one uniform
+   *  scale, never below `shrink` x their height). The skirt and the meadow never move; the gradient runs top -> low -> haze down to the crowns. */
+  open: { frac: 0.06, min: 20 }, shrink: 0.5,
+  /** Below the crown line the sky deepens into the wood's shade by `wood` x the canopy row's base depth; an orc is hidden until its feet clear the
+   *  bush skirt, then fades in over its first `emerge` units of meadow. */
+  wood: 0.6, emerge: 30,
+  /** The wood's shade thins to nothing over `fade` units either side of the bush skirt, so it melts into the grass with no ruled edge. */
+  fade: 22,
+  /** Soft clouds: `n` seeded puffs, each `lobes` overlapping radial blobs `r` units wide, drifting `drift` units/s, at most `alpha`. */
+  clouds: { n: 7, lobes: 4, r: [26, 52] as const, drift: 2.5, alpha: 0.75, seed: 232 },
 } as const;
+
+/** Fake depth on the meadow (TB-232). Sprites are pre-rendered from one fixed camera, so depth is faked in render only, over the rows a
+ *  player sees as meadow: from `top` (the world row just under the bush skirt; the plain above it is inside the wood) to the plain's bottom.
+ *  Row spacing runs `squeeze` tighter at the back and looser at the front (both edges stay put); actors and props scale from `far` on the back
+ *  row to `near` on the front, linear in the drawn (squeezed) row as a real ground plane would. A sky-coloured aerial haze is drawn over
+ *  every actor and tree: none at the crown line, rising over `feather` units to `hazeSky` (so no edge cuts the crown tips), easing down through the wood to `haze` on the meadow's back row and gone
+ *  `hazeTo` of the way to the front, one smooth curve with no edge.
+ *  The elf's post is spread over the meadow so its back member's feet stand `postClear` units below the bush skirt, never on it. */
+export const DEPTH = { top: 176, far: 0.62, near: 1, squeeze: 0.3, hazeSky: 0.16, haze: 0.12, hazeTo: 0.6, feather: 30, postClear: 6 } as const;
 
 /** Treeline along the top of the view (TB-207, TB-220): sprites from the Sketchfab Handpainted Tree Pack (rudolfs, CC-BY), rendered
  *  in tide-assets/trees (512 px renders, shipped at 44 px per model unit so a tree is never drawn past its native pixels at 1080p DPR 2).
@@ -25,8 +45,8 @@ export const TREELINE = {
   unit: 9.5, size: [0.96, 1.04] as const,
   /** Rows hang from the view top (`first` + row x `gap` down to a base, `lift` of jitter); a row only holds kinds up to `slack` x its room, then shrinks as one. */
   slack: 1.12,
-  /** The barricade's top: it starts `up` units above the bush skirt base (skirt bushes draw over its top); the forest stands unbroken behind it. */
-  cap: { up: 14 },
+  /** The barricade's top: its stake tips stand `up` units above the bush skirt base, in front of the bushes, never reaching into them (TB-232); the forest stands unbroken behind it. */
+  cap: { up: 2 },
   /** Row 0 (the canopy against the HUD band): each tree is sized (x0.95..`stretch` of natural, same aspect) so its crown top lands `crown[0]`..`crown[1]` units below the band, so no bare strip shows between the HUD and the crowns. `hudGap` css px of air is kept under the HUD's lowest control. */
   crown: [2, 9] as const, stretch: 1.2, hudGap: 18,
   grow: 0.06, step: 22, stepGrow: 0.18, jitter: 0.65, lift: 8, bush: 0.1, bushH: [18, 28] as const,
@@ -60,7 +80,7 @@ export const VFX = {
   /** Orc release: crescent swipe radius × r, arc half-width (rad), life; runner scale; boss slam ring × r. */
   orcSwipe: { r: 1.1, half: 0.9, life: 0.15, width: 2, widthBrute: 3.5, runner: 0.75, elite: 1.35, slam: 1.6, slamLife: 0.3 },
   /** Wall impact: timber chips per kind, cream chips, chip speed, spray angle (rad, up and back over the wall) ± spread, shake bump (brute, boss). */
-  wallHit: { chips: 3, chipsBrute: 5, chipsBoss: 8, cream: 2, speed: 60, chipAng: -2.2, chipSpread: 0.6, shakeBrute: 0.08, shakeBoss: 0.2 },
+  wallHit: { chips: 3, chipsBrute: 5, chipsBoss: 8, cream: 2, speed: 60, chipAng: -2.2, chipSpread: 0.6, capPad: 6, shakeBrute: 0.08, shakeBoss: 0.2 },
   /** Vanguard: spear draw-back (px), thrust streak life/width, blade fold (rad), slash radius/half-arc/life. */
   spear: { draw: 6, life: 0.12, width: 2.5 },
   blade: { fold: 0.5, r: 26, half: 0.8, life: 0.15, width: 2.5 },
