@@ -11,3 +11,8 @@ for i, sl in enumerate(objs):
     if (sl[1].stop <= 490 and sl[0].start > 500) or (sl[1].stop - sl[1].start < 60 and sl[0].start < 600 and sl[1].start < 400):
         a[sl][lab[sl] == i + 1] = 0
 Image.fromarray(a, 'RGBA').save(p, 'WEBP', quality=92, method=6, alpha_quality=100)
+
+# round 2: the floating brown chunk left of the pillar and the pale yellow rock with grass spikes right of the base
+a = np.array(Image.open(p).convert('RGBA'))
+a[815:995, 480:545, 3] = 0; a[895:980, 1140:1335, 3] = 0
+Image.fromarray(a, 'RGBA').save(p, 'WEBP', quality=92, method=6, alpha_quality=100)

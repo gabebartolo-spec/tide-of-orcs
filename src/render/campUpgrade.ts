@@ -180,13 +180,13 @@ export class CampUpgradeFx {
       const roll = easeOut(clamp01((e - B.roll[0]) / (B.roll[1] - B.roll[0]))) * (1 - easeIn(outp)); if (e < B.roll[0]) continue;
       const ang = Math.sin(e * B.wave * Math.PI * 2) * B.swing * Math.exp(-B.damp * e);
       const a = Math.min(clamp01((e - B.roll[0]) / B.in), 1 - clamp01((outp - 0.55) / 0.45)); if (a < 0.02) continue;
-      const sil = K.sil[m.id][m.lv - 1]!, ox = r.x + r.w * sil[0] - K.gap, oy = r.y + r.h * sil[2] - K.h;
+      const sil = K.sil[m.id][m.lv - 1]!, d: number = K.side[m.id], ox = r.x + r.w * sil[d < 0 ? 0 : 1] + d * K.gap, oy = r.y + r.h * sil[2] - K.h;
       g.save(); g.globalAlpha = a;
       if (pm) {
         const pc = pm as HTMLCanvasElement;
-        g.save(); g.translate(ox, oy); g.scale(-1, 1); g.drawImage(pc, -(K.pad + K.w / 2), 0, pc.width / K.px, pc.height / K.px); g.restore();
+        g.save(); g.translate(ox, oy); g.scale(-d, 1); g.drawImage(pc, -(K.pad + K.w / 2), 0, pc.width / K.px, pc.height / K.px); g.restore();
       }
-      g.translate(ox - K.arm / 2, oy + K.armH + K.cord); g.rotate(ang);
+      g.translate(ox + (d * K.arm) / 2, oy + K.armH + K.cord); g.rotate(ang);
       if (roll > 0.02) g.drawImage(im, 0, 0, this.bannerW, this.bannerH * roll, -B.w / 2, 0, B.w, B.h * roll);
       g.restore();
     }

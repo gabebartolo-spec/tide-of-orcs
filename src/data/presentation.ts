@@ -239,7 +239,7 @@ export const CAMP_UPGRADE = {
    *  scatter up, thinning toward the edges by `dome`; `centre` > 1 packs the puffs toward the middle); life range (s), start velocity range (units/s), `grav` (units/s², negative = rises), `drag` per s, radius range at
    *  birth `r0` (`from` × of it at the start) growing to `grow` × over life, `squash` height/width, peak alpha `a` reached by `fadeIn` of life from a `floor` share at birth (so the model swap is never bare), `earth` the
    *  share of darker earth puffs; each puff is a `tex` px radial gradient, solid out to `core` of its radius. */
-  dust: { n: 44, spread: 0.38, dy: 0.02, lift: 9, centre: 1.6, dome: 0.55, life: [0.8, 1.35], vx: [-12, 12], vy: [-44, -14], grav: -10, drag: 1.4, r0: [8, 14], from: 1, grow: 1.8, tex: 64, core: 0.3, squash: 0.8, a: 0.16, floor: 0.2, fadeIn: 0.2, earth: 0.35 },
+  dust: { n: 44, spread: 0.36, dy: 0.02, lift: 6, centre: 1.6, dome: 0.55, life: [0.8, 1.35], vx: [-12, 12], vy: [-44, -14], grav: -10, drag: 1.4, r0: [8, 14], from: 1, grow: 1.8, tex: 64, core: 0.3, squash: 0.8, a: 0.14, floor: 0.2, fadeIn: 0.2, earth: 0.2 },
   /** Banner standard: a wooden post (`post`) planted `gap` units outside the building's left silhouette edge on its ground line (`sil`), arm pointing away, with a `foot` mound,
    *  `h` units tall and `w` wide, with a crossarm `arm` long and `armH` thick, an iron brace `brace` units down the post, two iron hooks
    *  of radius `hook` under the arm and a cord `cord` long from each to the banner's rod; `px` texture px per unit, `pad` margin.
@@ -254,13 +254,15 @@ export const CAMP_UPGRADE = {
       px: 5, cloth: [0.14, 0.86], top: 0.07, tip: 0.97, notch: 0.56, lit: 0.4, trim: 0.9, inset: 1.8, trimA: 0.9,
       star: { y: 0.28, r: 0.17, tall: 1.5, pinch: 0.3 }, leaf: { y: 0.42, w: 0.17, h: 0.1 }, rod: 0.075, rodX: 0.04, knob: 0.85,
     },
-    post: { px: 4, pad: 3, h: 132, w: 6, arm: 67, armH: 5, cord: 6, brace: 17, hook: 2.1, gap: 5, foot: 2.6,
-      /** Each level image's silhouette `[left, right, bottom]` (fractions of its width and height: first and last opaque column, last opaque row, >12 px),
+    post: { px: 4, pad: 3, h: 132, w: 6, arm: 80, armH: 5, cord: 6, brace: 10, hook: 2.1, gap: 9, foot: 2.6,
+      /** Each level image's silhouette `[left, right, bottom]` (fractions of its width and height: first and last opaque column, last row that is mostly solid (alpha over 200), so a baked shadow does not count; >12 px),
        *  measured from the webps: the post stands `gap` units outside the left edge, arm pointing away, on the true ground line. */
       sil: {
-        bowyer: [[0.155, 0.832, 0.999], [0.131, 0.831, 0.873], [0.146, 0.833, 0.999]], forge: [[0.191, 0.998, 0.912], [0.155, 0.998, 0.926], [0.302, 0.842, 0.87]],
-        kitchen: [[0.144, 0.833, 0.997], [0.15, 0.855, 0.997], [0.113, 0.825, 0.991]], training: [[0.072, 0.996, 0.998], [0.019, 0.997, 0.998], [0.041, 0.983, 0.996]],
+        bowyer: [[0.155, 0.832, 0.876], [0.131, 0.831, 0.871], [0.146, 0.833, 0.895]], forge: [[0.191, 0.998, 0.912], [0.155, 0.998, 0.914], [0.302, 0.837, 0.846]],
+        kitchen: [[0.144, 0.833, 0.996], [0.15, 0.855, 0.996], [0.113, 0.825, 0.968]], training: [[0.072, 0.996, 0.996], [0.019, 0.997, 0.989], [0.041, 0.983, 0.993]],
       },
+      /** Which side of the building the post stands on: -1 left (arm pointing left), 1 right; training on the right, clear of the kitchen. */
+      side: { bowyer: -1, forge: -1, kitchen: -1, training: 1 },
     },
     w: 54, h: 73, roll: [0.15, 0.6], in: 0.12, wave: 1.1, swing: 0.07, damp: 1.2, out: [0.5, 1.0],
   },
