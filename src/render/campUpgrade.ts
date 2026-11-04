@@ -3,8 +3,8 @@ import { CAMP_ART, CAMP_UPGRADE } from '../data/presentation';
 import { P } from './palette';
 
 /** Camp upgrade moment (TB-188h): soft build dust along the base and the camp banner unrolled from a point on the building when its
- *  level rises. The banner is public/decor/camp/upgrade_banner.webp, cut from the forge level 3 render, so it is lit like the
- *  buildings. It watches the levels it is drawn with, so it needs no event plumbing and never touches sim state. The first draw
+ *  level rises. The banner is painted from palette tokens.
+ *  It watches the levels it is drawn with, so it needs no event plumbing and never touches sim state. The first draw
  *  only records the levels, so loading a save does not celebrate. Its own seeded RNG makes every replay identical. */
 
 type Ctx = CanvasRenderingContext2D;
@@ -33,29 +33,45 @@ const puff = (core: string, clear: string): HTMLCanvasElement | null => {
   g.fillStyle = gr; g.fillRect(0, 0, px, px); return c;
 };
 
-/** The banner art is cut from a render whose own banners are green, so its green (and the olive fringe of its cloth edge) is turned to
- *  the `tint` hue (gold glyph, rod and knobs keep their colour): the celebration never reads as a copy of a banner the building already shows. Falls back to the
- *  plain cut where the canvas is unreadable. */
-const recolour = (im: HTMLImageElement): CanvasImageSource => {
-  try {
-    const T = U.banner.tint, c = document.createElement('canvas'); c.width = im.width; c.height = im.height;
-    const g = c.getContext('2d'); if (!g) return im;
-    g.drawImage(im, 0, 0); const d = g.getImageData(0, 0, c.width, c.height), a = d.data;
-    for (let i = 0; i < a.length; i += 4) {
-      const r = a[i]! / 255, gg = a[i + 1]! / 255, b = a[i + 2]! / 255, mx = Math.max(r, gg, b), mn = Math.min(r, gg, b), l = (mx + mn) / 2, dl = mx - mn;
-      if (dl < T.minChroma || l > T.maxLight) continue;
-      const s = dl / (1 - Math.abs(2 * l - 1));
-      let h = mx === r ? ((gg - b) / dl + 6) % 6 : mx === gg ? (b - r) / dl + 2 : (r - gg) / dl + 4; h *= 60;
-      const px = (i / 4) % c.width / c.width, py = Math.floor(i / 4 / c.width) / c.height, G = T.glyph;
-      const inGlyph = px >= G[0] && px <= G[2] && py >= G[1] && py <= G[3], onCloth = px >= T.cloth[0] && px <= T.cloth[1];
-      if (!(h >= T.stray[0] && h <= T.stray[1]) && (h < (inGlyph || !onCloth ? T.from : T.edge) || h > T.to)) continue;
-      h = T.hue;
-      const k = (1 - Math.abs(2 * l - 1)) * s, x = k * (1 - Math.abs(((h / 60) % 2) - 1)), m = l - k / 2, q = Math.floor(h / 60) % 6;
-      const rgb = [[k, x, 0], [x, k, 0], [0, k, x], [0, x, k], [x, 0, k], [k, 0, x]][q]!;
-      a[i] = Math.round((rgb[0]! + m) * 255); a[i + 1] = Math.round((rgb[1]! + m) * 255); a[i + 2] = Math.round((rgb[2]! + m) * 255);
-    }
-    g.putImageData(d, 0, 0); return c;
-  } catch { return im; }
+/** The banner, painted once from palette tokens: a rod with knobs, a crimson cloth hung below it with a deep swallow-tail fork, a gold
+ *  trim following the edge, and a starlight star over a pair of leaves, so it shares no silhouette or glyph with the banners in the
+ *  building art. `px` texture pixels per scene unit. */
+const paintBanner = (): HTMLCanvasElement | null => {
+  if (typeof document === 'undefined') return null;
+  const B = U.banner, K = B.art, W = Math.round(B.w * K.px), H = Math.round(B.h * K.px);
+  const c = document.createElement('canvas'); c.width = W; c.height = H;
+  const g = c.getContext('2d'); if (!g) return null;
+  const x0 = W * K.cloth[0], x1 = W * K.cloth[1], xm = W / 2, y0 = H * K.top, yb = H * K.tip, yn = H * K.notch;
+  const cloth = new Path2D();
+  cloth.moveTo(x0, y0); cloth.lineTo(x1, y0); cloth.lineTo(x1, yb); cloth.lineTo(xm, yn); cloth.lineTo(x0, yb); cloth.closePath();
+  const sh = g.createLinearGradient(x0, 0, x1, 0);
+  sh.addColorStop(0, P.bannerDark); sh.addColorStop(K.lit, P.bannerCloth); sh.addColorStop(1, P.bannerDark);
+  g.fillStyle = sh; g.fill(cloth);
+  g.lineJoin = 'round'; g.strokeStyle = P.starGold; g.globalAlpha = K.trimA; g.lineWidth = K.trim * K.px;
+  const ins = K.inset * K.px, trim = new Path2D();
+  trim.moveTo(x0 + ins, y0 + ins); trim.lineTo(x1 - ins, y0 + ins); trim.lineTo(x1 - ins, yb - ins * 2.4); trim.lineTo(xm, yn - ins * 1.2);
+  trim.lineTo(x0 + ins, yb - ins * 2.4); trim.closePath(); g.stroke(trim); g.globalAlpha = 1;
+  // four-point star, long vertical arms, short horizontal ones
+  const sx = xm, sy = H * K.star.y, R = W * K.star.r, r = R * K.star.pinch;
+  g.fillStyle = P.starGold; g.beginPath();
+  for (let i = 0; i < 8; i++) {
+    const ang = (i * Math.PI) / 4 - Math.PI / 2, rr = i % 2 ? r : i % 4 === 0 ? R * K.star.tall : R;
+    g.lineTo(sx + Math.cos(ang) * rr, sy + Math.sin(ang) * rr);
+  }
+  g.closePath(); g.fill();
+  // two leaves opening upward under the star
+  const ly = H * K.leaf.y, lw = W * K.leaf.w, lh = H * K.leaf.h;
+  for (const sg of [-1, 1]) {
+    g.beginPath(); g.moveTo(xm, ly + lh);
+    g.quadraticCurveTo(xm + sg * lw * 1.1, ly + lh * 0.7, xm + sg * lw, ly);
+    g.quadraticCurveTo(xm + sg * lw * 0.15, ly + lh * 0.25, xm, ly + lh); g.fill();
+  }
+  // rod over the cloth's top edge, a knob at each end
+  const rh = H * K.rod, ky = rh / 2, kr = rh * K.knob;
+  g.fillStyle = P.bannerRod; g.beginPath(); g.roundRect(W * K.rodX, 0, W * (1 - 2 * K.rodX), rh, rh / 2); g.fill();
+  g.fillStyle = P.bannerKnob;
+  for (const kx of [W * K.rodX, W * (1 - K.rodX)]) { g.beginPath(); g.arc(kx, ky, kr, 0, Math.PI * 2); g.fill(); }
+  return c;
 };
 
 interface Moment { id: BuildingId; lv: number; t0: number }
@@ -76,9 +92,7 @@ export class CampUpgradeFx {
   private bannerW = 0; private bannerH = 0;
 
   constructor() {
-    if (typeof Image === 'undefined') return;
-    const im = new Image(); im.onload = (): void => { this.banner = recolour(im); this.bannerW = im.width; this.bannerH = im.height; };
-    im.src = `${import.meta.env.BASE_URL}decor/camp/upgrade_banner.webp`;
+    this.banner = paintBanner(); this.bannerW = this.banner?.width ?? 0; this.bannerH = this.banner?.height ?? 0;
   }
 
   private range(r: readonly [number, number]): number { return r[0] + this.rnd() * (r[1] - r[0]); }

@@ -38,6 +38,8 @@ export const P = {
   cinder: 'rgba(226,168,91,.22)', cinderEdge: 'rgba(199,111,111,.45)', moonwell: 'rgba(205,189,234,.2)', moonwellEdge: 'rgba(205,189,234,.6)',
   // mythic powers (TB-100): Oakspine's stake, Starfall's beam
   stake: '#8a6a45', starfall: 'rgba(205,189,234,.85)',
+  // camp upgrade banner (TB-188h): crimson cloth, its shade, the rod and its knobs
+  bannerCloth: '#a52b3f', bannerDark: '#5a1223', bannerRod: '#6b4a2b', bannerKnob: '#8a6a45',
   shadow: 'rgba(18,24,16,.25)', dim: 'rgba(22,29,21,.6)', dim45: 'rgba(22,29,21,.45)',
 } as const;
 
