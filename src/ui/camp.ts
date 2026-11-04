@@ -85,12 +85,38 @@ export class CampPane {
     this.card.innerHTML = `<button class="ghost x" data-close aria-label="${STR.cardClose}">✕</button>${this.block(this.open, true)}`;
   }
 
+  private tags: HTMLElement | null = null;
+  private place: ((x: number, y: number) => [number, number]) | null = null;
+  /** Tap tags (TB-218): one labelled button per building, standing on its base, so a phone shows what is tappable and levels read
+   *  without opening a card. `place` maps a scene point to CSS px in the tag layer (CampScene.toClient). */
+  mountTags(host: HTMLElement, place: (x: number, y: number) => [number, number]): void {
+    this.tags = host; this.place = place;
+    host.onclick = (e) => { const id = (e.target as HTMLElement).closest('button')?.dataset.bld as BuildingId | undefined; if (id) this.onTag?.(id); };
+    this.renderTags();
+  }
+  /** Set by main: a tapped tag opens that building's card (with the click cue). */
+  onTag: ((id: BuildingId) => void) | null = null;
+  renderTags(): void {
+    if (!this.tags) return; const m = this.game.state.meta;
+    this.tags.innerHTML = BUILDINGS.map((b) => {
+      const l = campLevel(m, b.id); return `<button class="camptag${l ? '' : ' unbuilt'}" data-bld="${b.id}" aria-label="${STR.campTagLabel(b.name, l)}">${STR.campTag(b.name, l, maxLevel(b.id))}</button>`;
+    }).join('');
+    this.layoutTags();
+  }
+  layoutTags(): void {
+    if (!this.tags || !this.place) return;
+    for (const el of this.tags.querySelectorAll<HTMLElement>('button[data-bld]')) {
+      const p = CAMP_SPOTS[el.dataset.bld as BuildingId], [x, y] = this.place(p.x, p.y);
+      el.style.left = `${x.toFixed(1)}px`; el.style.top = `${y.toFixed(1)}px`;
+    }
+  }
+
   /** Rebuilt on upgrade, replant and import; update() refreshes the buttons. */
   render(): void {
     const m = this.game.state.meta;
     // materials only (TB-195n): the buildings are upgraded from their cards on the diorama
     this.list.innerHTML = `<div class="k">${STR.campMats}</div><dl class="mats">${MAT_IDS.map((k) => `<dt>${MAT_NAMES[k]}</dt><dd>${m.camp.mats[k] ?? 0}</dd>`).join('')}</dl>`;
-    this.renderCard();
+    this.renderCard(); this.renderTags();
   }
 
   /** ~6 Hz: keep buttons in step with Heartwood, materials and the fallen state. */

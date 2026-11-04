@@ -264,8 +264,8 @@ button, select, .tabs { touch-action: manipulation; }
 @media (orientation: portrait) and (pointer: coarse) {
   .turn { display: flex; position: fixed; inset: 0; z-index: 10; align-items: center; justify-content: center; padding: 2rem;
     background: var(--ink) url("./wood/gilt.svg") center / 20rem 20rem; text-align: center; }
-  .turn p { font-family: var(--display); font-size: 1.5rem; line-height: 1.4; max-width: 16ch; margin: 0; }
-  .turn p::before { content: ""; display: block; width: 4rem; height: 4rem; margin: 0 auto 0.75rem; background: var(--amber); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48' fill='none' stroke='black' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='14' y='4' width='20' height='36' rx='4'/%3E%3Cpath d='M4 30a14 14 0 0 0 8 12M44 18a14 14 0 0 0-8-12M12 42l-2-6M12 42l6-1M36 6l2 6M36 6l-6 1'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48' fill='none' stroke='black' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='14' y='4' width='20' height='36' rx='4'/%3E%3Cpath d='M4 30a14 14 0 0 0 8 12M44 18a14 14 0 0 0-8-12M12 42l-2-6M12 42l6-1M36 6l2 6M36 6l-6 1'/%3E%3C/svg%3E") center / contain no-repeat; }
+  .turn p { font-family: var(--display); font-size: 1.5rem; line-height: 1.4; max-width: 18ch; text-wrap: balance; margin: 0; }
+  .turn p::before { content: ""; display: block; width: 4rem; height: 4rem; margin: 0 auto 0.75rem; background: var(--amber); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48' fill='none' stroke='black' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='15' y='9' width='18' height='32' rx='3.5'/%3E%3Cpath d='M20 36h8'/%3E%3Cpath d='M38 8a14 14 0 0 1 4 12M42 20l-4-3M42 20l3-4'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48' fill='none' stroke='black' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='15' y='9' width='18' height='32' rx='3.5'/%3E%3Cpath d='M20 36h8'/%3E%3Cpath d='M38 8a14 14 0 0 1 4 12M42 20l-4-3M42 20l3-4'/%3E%3C/svg%3E") center / contain no-repeat; }
 }
 /* Short landscape screens (phones): slimmer frames and plaques so the field and the Grove get the room. */
 @media (max-height: 540px) {
@@ -909,7 +909,6 @@ html, body { touch-action: pan-x pan-y; }
 /* Phone landscape HUD (TB-218): the desktop plaques total about 1360px; at 915px the stats were clipped. Narrower plaques, a smaller wall bar. */
 @media (pointer: coarse) and (max-height: 540px) {
   body:not([data-mode="camp"]) .hud { gap: 0.5rem; min-width: 0; }
-  body:not([data-mode="camp"]) .hud-wallbox { zoom: 0.65; }
   body:not([data-mode="camp"]) .hud-wall .lbl { font-size: 1.375rem; }
   body:not([data-mode="camp"]) :is(header .stat, .hud-wave) { width: 7rem; min-width: 0; padding-inline: 0.25rem; flex-shrink: 0; }
   body:not([data-mode="camp"]) .hud .stats { gap: 0.5rem; }
@@ -974,7 +973,7 @@ body:has(#fallen:not([hidden])) .mute-corner { display: none !important; } /* th
   .fallen { flex-direction: row; justify-content: center; align-items: flex-start; gap: 1.5rem; padding-top: 4.5rem; }
   .fallen .march { align-self: flex-end; margin: 0; bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px)); min-width: 12rem; }
 }
-@media (pointer: coarse) and (max-height: 380px) and (orientation: landscape) { .fallen { padding-top: 4.25rem; } .fallen .report { zoom: 0.86; } }
+@media (pointer: coarse) and (max-height: 380px) and (orientation: landscape) { .fallen { padding-top: 4.25rem; } }
 /* Camp and Settings on a phone held sideways: one chrome row, then the pane. */
 @media (pointer: coarse) and (max-height: 540px) and (orientation: landscape) {
   body[data-mode="camp"] .panel, body[data-mode="settings"] .panel { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: 48px minmax(0, 1fr) auto; column-gap: 0.5rem; }
@@ -1061,4 +1060,65 @@ header, #hud, #toast, #campview, .wrap, .play { touch-action: pan-x pan-y; }
   .fallen .report { overflow: visible; }
 }
 @media (pointer: coarse) and (max-height: 380px) and (orientation: landscape) { .fallen { padding-top: 4.75rem; } }
-@media (pointer: coarse) and (max-height: 340px) and (orientation: landscape) { .fallen { padding-top: 4.5rem; } .fallen .report { zoom: 0.72; } } /* 915x320: the board fits above the gesture bar without scrolling */
+@media (pointer: coarse) and (max-height: 340px) and (orientation: landscape) { .fallen { padding-top: 4.5rem; } }
+
+/* ---- TB-218 round 8: critic flaw pass (final overrides) ---- */
+/* Camp tap tags: one labelled 48 px plaque on each building's base, so a phone shows what is tappable; the Materials list is one compact strip. */
+.camptags { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+.camptag { position: absolute; transform: translate(-50%, -50%); pointer-events: auto; min-height: 48px; min-width: 48px; padding: 0 0.75rem; box-sizing: border-box;
+  font: 700 1rem/1 var(--body, inherit); letter-spacing: 0; white-space: nowrap; color: var(--text); background: color-mix(in srgb, var(--ink) 78%, transparent);
+  border: 0.0625rem solid var(--amber); border-radius: 0.5rem; box-shadow: 0 0.125rem 0.5rem color-mix(in srgb, var(--ink) 70%, transparent); cursor: pointer; }
+.camptag.unbuilt { border-style: dashed; color: var(--amber); }
+.camptag:focus-visible { outline: 0.125rem solid var(--amber); outline-offset: 0.125rem; }
+@media (pointer: coarse) and (max-height: 540px) and (orientation: landscape) {
+  .campwrap .camplist { top: 0.5rem; right: 0.5rem; padding: 0.375rem 0.75rem; }
+  .campwrap .camplist .k { display: none; }
+  .camplist dl.mats { display: flex; flex-wrap: nowrap; gap: 0 0.875rem; font-size: 1rem; }
+  .camplist dl.mats dt { color: var(--text-dim); } .camplist dl.mats dd { margin: 0 0 0 -0.625rem; font-weight: 700; }
+  /* run-view HUD without CSS zoom: the wall bar is sized in real units so its label is a real 14 px+ */
+  body:not([data-mode="camp"]) .hud-wall { width: 13rem; height: 1.625rem; --chan: 10.7rem; }
+  body:not([data-mode="camp"]) .hud-wall .fill { left: 1.15rem; top: 0.5rem; height: 0.65rem; background-size: 12.35rem 0.65rem; }
+  body:not([data-mode="camp"]) .hud-wall .lbl { font-size: 0.875rem; line-height: 1.625rem; padding: 0 1.5rem; -webkit-text-stroke-width: 0.1875rem; }
+  /* plates keep one width as the numbers grow */
+  body:not([data-mode="camp"]) header .stat { min-width: 8.5rem; }
+  body:not([data-mode="camp"]) .hud-wave { min-width: 7.5rem; }
+  /* fallen board: no CSS zoom. Two-column tally, centred under the HUD, the Replant plaque beside it */
+  .fallen { position: absolute; display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 1rem; overflow: hidden; padding-top: 4.5rem; padding-bottom: max(0.75rem, env(safe-area-inset-bottom)); }
+  .fallen .report { flex: 0 0 auto; width: min(30rem, calc(100% - 26rem)); padding: 0 0.75rem 0.375rem; margin: 0; gap: 0.125rem; }
+  .fallen .report h2 { margin-top: 0; padding-top: 0.25rem; font-size: 1.5rem; line-height: 1.2; }
+  .fallen .tally { grid-template-columns: 1fr 1fr; column-gap: 1rem; row-gap: 0; }
+  .fallen .tally dt { font-size: 0.875rem; } .fallen .tally dd { font-size: 1.25rem; }
+  .fallen .report p { font-size: 0.875rem; line-height: 1.25; }
+  .fallen .hwline .k { font-size: 0.875rem; } .fallen .hwline .big { font-size: 1.75rem; line-height: 1.1; }
+  .fallen .march { position: absolute; right: max(34px, env(safe-area-inset-right)); bottom: max(0.75rem, env(safe-area-inset-bottom)); margin: 0; width: 11rem; min-width: 11rem; max-width: 11rem; white-space: nowrap; height: 3.5rem; font-size: 1.375rem; text-shadow: 0 0.0625rem 0 var(--ink); filter: drop-shadow(0 0 0.75rem color-mix(in srgb, var(--amber) 55%, transparent)); }
+}
+@media (pointer: coarse) {
+  input[type=range]::-webkit-slider-thumb { width: 3rem; height: 3rem; margin-top: -1.25rem; }
+  input[type=range]::-moz-range-thumb { width: 3rem; height: 3rem; }
+  .settings textarea, #set-blob { resize: none; }
+  .tab::-webkit-scrollbar, #pane-settings::-webkit-scrollbar, #pane-prestige::-webkit-scrollbar, #sat-grid::-webkit-scrollbar, #detail::-webkit-scrollbar, #sat-detail::-webkit-scrollbar { width: 0.75rem; }
+  .tab::-webkit-scrollbar-thumb, #pane-settings::-webkit-scrollbar-thumb, #pane-prestige::-webkit-scrollbar-thumb, #sat-grid::-webkit-scrollbar-thumb, #detail::-webkit-scrollbar-thumb, #sat-detail::-webkit-scrollbar-thumb { background: var(--amber); border-radius: 0.375rem; border: 0.125rem solid var(--ink); }
+  #pane-settings, #pane-prestige { padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px)); scroll-padding-bottom: 1rem; }
+  body[data-mode="settings"] .panel { padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; }
+}
+@media (pointer: coarse) and (max-height: 540px) and (orientation: landscape) {
+  /* Satchel card: Back to bag on its own line above the item, then one even row of actions (no wrap, no 130 px gaps) */
+  #sat-detail .buy.back { margin: 0 0 0.375rem; }
+  #sat-detail .row { position: static; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 0.5rem; margin-top: 0.5rem; padding: 0; background: none; }
+  #sat-detail .row .buy { padding-inline: 0.25rem; white-space: nowrap; font-size: 1rem; }
+  #sat-detail .row .desc { align-self: center; text-align: center; }
+  #sat-detail .gl { display: none; }
+}
+/* Scroll cue: a shadow on the edge that has more content behind it, so a row is never cut with no hint (CSS-only, scrolls with the pane) */
+@media (pointer: coarse) {
+  #pane-settings, #pane-prestige, #pane-grove .detail, #sat-detail {
+    background: linear-gradient(var(--ink) 30%, transparent) top / 100% 1.5rem no-repeat local, linear-gradient(transparent, var(--ink) 70%) bottom / 100% 1.5rem no-repeat local,
+      radial-gradient(farthest-side at 50% 0, color-mix(in srgb, var(--amber) 45%, transparent), transparent) top / 100% 0.5rem no-repeat scroll,
+      radial-gradient(farthest-side at 50% 100%, color-mix(in srgb, var(--amber) 45%, transparent), transparent) bottom / 100% 0.5rem no-repeat scroll; }
+}
+/* Settings on a landscape phone: the pane scrolls (scrollbar and edge shadow show it); padding keeps the last row clear of the edge */
+@media (pointer: coarse) and (orientation: landscape) and (max-height: 540px) {
+  .prestige.settings.split { padding-bottom: calc(1.5rem + env(safe-area-inset-bottom)); }
+  .prestige.settings .danger-row { margin-top: 0.75rem; }
+  #camp-tags .camptag, .camptag { transform: translate(-50%, -30%); }
+}

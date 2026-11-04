@@ -325,7 +325,7 @@ export class TreeRenderer {
     c.globalAlpha = 1;
     const keyFocus = this.canvas.matches(':focus-visible');
     for (const n of NODES) {
-      const lvl = rankOf(s, n.id), col = ringOf(n), un = unlocked(s, n), shut = pathLocked(s, n), maxed = lvl >= n.max, r = n.id === 'root' ? 16 : 13;
+      const lvl = rankOf(s, n.id), col = ringOf(n), un = unlocked(s, n), shut = pathLocked(s, n), maxed = lvl >= n.max, r = (touchScreen() ? TREE_VIEW.nodeRTouch : TREE_VIEW.nodeR) + (n.id === 'root' ? 3 : 0);
       c.beginPath(); c.arc(n.x, n.y, r, 0, 6.28);
       c.fillStyle = maxed ? col : lvl > 0 ? P.nodeOwned : P.ink; c.fill();
       c.lineWidth = n.id === this.selected ? 3 : 2; c.strokeStyle = un ? col : shut ? PATH_TINT[n.path!].deep : P.line; c.stroke();
@@ -333,7 +333,7 @@ export class TreeRenderer {
       if (lvl > 0 && !maxed) { c.beginPath(); c.arc(n.x, n.y, r, -1.571, -1.571 + (6.283 * lvl) / n.max); c.strokeStyle = col; c.lineWidth = 4; c.stroke(); }
       if (canBuy(s, n)) { c.beginPath(); c.arc(n.x, n.y, r + 5, 0, 6.28); c.strokeStyle = P.amber; c.lineWidth = 1; c.globalAlpha = this.reducedMotion ? 0.8 : 0.5 + 0.5 * Math.sin(t * 4); c.stroke(); c.globalAlpha = 1; }
       if (keyFocus && n.id === this.selected) { c.beginPath(); c.arc(n.x, n.y, r + 9, 0, 6.28); c.strokeStyle = P.cream; c.lineWidth = 2; c.setLineDash([4, 3]); c.stroke(); c.setLineDash([]); }
-      c.fillStyle = un ? P.text : P.nodeLabelLocked; c.font = '14px Heartwood'; c.textAlign = 'center'; c.shadowColor = P.ink; c.shadowBlur = 4; c.fillText(n.name, n.x, n.y + r + 15); c.shadowBlur = 0;
+      c.fillStyle = un ? P.text : P.nodeLabelLocked; c.font = '14px Heartwood'; c.textAlign = 'center'; c.shadowColor = P.ink; c.shadowBlur = 4; c.fillText(n.name, n.x, n.y + r + 16); c.shadowBlur = 0;
       if (n.max > 1 && !shut) { c.fillStyle = maxed ? P.ink : P.text; c.font = '14px Heartwood'; c.fillText(`${lvl}/${n.max}`, n.x, n.y + 4); }
     }
     c.setTransform(k, 0, 0, k, 0, 0); // legend stays in screen space, on its own strip so nodes pan under it, not through it (TB-117)
@@ -352,6 +352,6 @@ export class TreeRenderer {
     }
     c.font = `${this.legPx}px Heartwood`; const gap = this.legGap;
     let lx = 14;
-    keys.forEach((k, i) => { c.fillStyle = BRANCH_COLOR[k]; c.fillRect(lx, 14, 8, 8); c.fillStyle = P.textDim; c.fillText(labels[i]!, lx + 12, 22); lx += c.measureText(labels[i]!).width + 12 + gap; });
+    keys.forEach((k, i) => { c.fillStyle = BRANCH_COLOR[k]; c.fillRect(lx, TREE_VIEW.legendH / 2 - 4, 8, 8); c.fillStyle = P.textDim; c.fillText(labels[i]!, lx + 12, TREE_VIEW.legendH / 2 + 5); lx += c.measureText(labels[i]!).width + 12 + gap; });
   }
 }

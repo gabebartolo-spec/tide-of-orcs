@@ -36,6 +36,8 @@ export class CampBackdrop {
     if (!plate) return cv;
     g.imageSmoothingQuality = 'high';
     g.drawImage(plate, p.x0, p.y0, p.x1 - p.x0, p.y1 - p.y0);
+    // a wide pane shows more than the plate covers: mirror the plate about its left and right edges so the meadow runs on (TB-218)
+    for (const edge of [p.x0, p.x1]) { g.save(); g.translate(2 * edge, 0); g.scale(-1, 1); g.drawImage(plate, p.x0, p.y0, p.x1 - p.x0, p.y1 - p.y0); g.restore(); }
     // foreground vignette: the bottom of the canvas darkens so the eye stays on the building row
     const sh = B.shade, y0 = ch * (1 - sh.h);
     g.setTransform(1, 0, 0, 1, 0, 0);

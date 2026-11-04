@@ -94,8 +94,8 @@ export class Panel {
     const plate = this.plate;
     tree.canvas.addEventListener('mousemove', (e) => { if (touch()) return; const id = tree.hitTest(e.clientX, e.clientY); if (id) plate.show(id + ':' + rankOf(game.state, id), this.plateHtml(id), e.clientX, e.clientY); else plate.hide(); });
     tree.canvas.addEventListener('mouseleave', () => plate.hide());
-    // Touch has no hover (TB-218): a tap on a node shows the same plate beside the finger until the next tap, drag or empty tap.
-    tree.canvas.addEventListener('click', (e) => { if (!touch()) { plate.hide(); return; } const id = tree.hitTest(e.clientX, e.clientY); if (id) plate.show(id + ':' + rankOf(game.state, id), this.plateHtml(id), e.clientX, e.clientY); });
+    // Touch has no hover and shows no plate (TB-218): the detail card beside the tree already says what a tap selected; a plate over the nav duplicated it.
+    tree.canvas.addEventListener('click', () => { if (touch()) plate.hide(); });
     tree.canvas.addEventListener('pointerdown', () => { if (touch()) plate.hide(); });
     // Keyboard (GDD §13, TB-116): Tab walks the nodes branch by branch and leaves the tree at either end; Enter or Space buys.
     const order = tabOrder();

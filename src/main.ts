@@ -94,6 +94,9 @@ addEventListener('blur', dropAllAim);
 // Encampment (TB-188e): the Camp tab's scene; a click on a building opens its card, a click anywhere else closes it.
 const campView = document.getElementById('campview') as HTMLCanvasElement, campScene = new CampScene(campView);
 campView.addEventListener('click', (e) => { const id = campHit(...campScene.toScene(e.clientX, e.clientY)); if (id) { panel.onCue('click'); panel.camp.show(id); } else panel.camp.close(); });
+panel.camp.onTag = (id) => { panel.onCue('click'); panel.camp.show(id); };
+panel.camp.mountTags(document.getElementById('camp-tags')!, (x, y) => campScene.toClient(x, y));
+campScene.onLayout = () => panel.camp.layoutTags();
 campView.addEventListener('pointermove', (e) => { campView.style.cursor = e.pointerType === 'mouse' && campHit(...campScene.toScene(e.clientX, e.clientY)) ? 'pointer' : ''; });
 // no long-press menu or callout anywhere on a touch screen, except to paste into a text box (TB-218)
 fieldCanvas.addEventListener('contextmenu', (e) => e.preventDefault());

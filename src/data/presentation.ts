@@ -150,7 +150,12 @@ export const TREE_LIGHT = {
  *  top..bottom (1194 x 672 units, 16:9), buildings 1.6x round 2 in two staggered rows (bowyer and kitchen behind, forge and
  *  training ground in front), foreground below the road under 20% of the view. The canvas covers the view (scale to the larger
  *  of width and height ratios, centred), so a wider or shorter canvas crops the middle of it. No elf. */
-export const CAMP_SCENE = { x0: 0, w: 1194, top: -330, bottom: 342 } as const;
+export const CAMP_SCENE = {
+  x0: 0, w: 1194, top: -330, bottom: 342,
+  /** Framing (TB-218): the canvas always shows the whole building row (the CAMP_SPOTS extent) with this much scene margin each side
+   *  and centres it, so the composition does not change with the pane height; the backdrop mirrors its plate past the plate edge. */
+  padX: 40, padTop: 16, padBottom: 48,
+} as const;
 /** The Camp scene's backdrop (TB-188j, TB-188k): one plate rendered in Blender in the buildings' style (render_camp_backdrop.py,
  *  same camera, sun and pixel density as the building images) to public/decor/camp_backdrop.webp. `plate` is the scene-unit
  *  rectangle the image covers; keep it and `road` in step with the constants at the top of that script. Contact shadows are

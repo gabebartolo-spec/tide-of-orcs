@@ -24,7 +24,7 @@ export function spawnOrc(s: SimState, kind: OrcKind, y?: number, champ = false):
   const o = s.orcs.alloc(); if (!o) { if (champ && s.run.boss) s.run.boss.left--; return null; }
   const T = ORC_TYPES[kind];
   const hp = waveHP(w) * T.hp * F.hp * tierHp(s.run.tier);
-  o.kind = kind; o.x = W + SIM_MISC.spawnXPad; o.y = y ?? SIM_MISC.spawnYPad + s.rng.next() * (H - 2 * SIM_MISC.spawnYPad);
+  o.kind = kind; o.x = W + SIM_MISC.spawnXPad; o.y = y ?? SIM_MISC.spawnYTop + s.rng.next() * (H - SIM_MISC.spawnYTop - SIM_MISC.spawnYPad); // top margin clears the HUD and the Settings plate on a phone (TB-218)
   o.hp = hp; o.maxhp = hp; o.spd = T.speed * waveSpeedMult(w); o.r = T.radius; o.atk = hp * BARRICADE.orcAtkFrac;
   o.loot = waveLoot(w) * T.loot * F.loot * tierLoot(s.run.tier);
   o.dead = false; o.burn = 0; o.bleed = 0; o.slow = 0; o.pin = 0; o.root = 0; o.chill = 0; o.stun = 0; o.poison = 0; o.poisonDps = 0; o.hitT = 0; o.wob = s.rng.next() * SIM_MISC.tau; o.swingT = s.rng.next(); o.champ = champ;

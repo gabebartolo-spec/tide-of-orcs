@@ -27,8 +27,8 @@ describe('tree camera', () => {
   it('cannot pan past the tree edges', () => {
     const c = zoomAt(fitCamera(VW, VH), 0, 0, 2, VW, VH);
     const far = panBy(c, -1e6, -1e6, VW, VH);
-    expect(far.x).toBeCloseTo(TREE_CANVAS.w - VW / far.z); expect(far.y).toBeCloseTo(TREE_CANVAS.h - VH / far.z);
-    const near = panBy(c, 1e6, 1e6, VW, VH); expect(near.x).toBeCloseTo(0); expect(near.y).toBeCloseTo(-TOP / near.z);
+    expect(far.x).toBeCloseTo(TREE_CANVAS.w - VW / far.z + TREE_VIEW.edgePad); expect(far.y).toBeCloseTo(TREE_CANVAS.h - VH / far.z + TREE_VIEW.edgePad);
+    const near = panBy(c, 1e6, 1e6, VW, VH); expect(near.x).toBeCloseTo(-TREE_VIEW.edgePad); expect(near.y).toBeCloseTo(-TOP / near.z);
   });
   it('never lets the top of the tree rise under the legend strip (TB-117)', () => {
     for (const k of [0.01, 1, 2, 100]) {

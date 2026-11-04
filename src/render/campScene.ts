@@ -1,10 +1,13 @@
 import { quality, renderScale } from './quality';
 import { BuildingId } from '../data/camp';
-import { CAMP_SCENE, QUALITY } from '../data/presentation';
+import { CAMP_BACKDROP, CAMP_SCENE, CAMP_SPOTS, QUALITY } from '../data/presentation';
 import { CampArt } from './camp';
 import { CampBackdrop } from './campBackdrop';
 import { CampFauna } from './campFauna';
 import { CampLife } from './campLife';
+
+/** Extent of the four buildings in scene units (from CAMP_SPOTS). */
+const ROW = Object.values(CAMP_SPOTS).reduce((a, p) => ({ x0: Math.min(a.x0, p.x - p.w / 2), x1: Math.max(a.x1, p.x + p.w / 2), y0: Math.min(a.y0, p.y - p.h), y1: Math.max(a.y1, p.y) }), { x0: 1e9, x1: -1e9, y0: 1e9, y1: -1e9 });
 
 /** The Camp tab's scene (TB-188e, docs/plans/elf-encampment.md §1): the four encampment buildings at house scale in a meadow
  *  before a far forest. CAMP_SCENE (scene units = field units) covers the canvas, centred: a canvas of another aspect crops the
@@ -33,10 +36,19 @@ export class CampScene {
     this.dpr = renderScale(r.width, r.height);   // the shared backing scale (TB-218 P3)
     const bw = Math.max(1, Math.round(r.width * this.dpr)), bh = Math.max(1, Math.round(r.height * this.dpr));
     if (this.canvas.width !== bw) this.canvas.width = bw; if (this.canvas.height !== bh) this.canvas.height = bh;   // equal size: no reallocation
-    const S = CAMP_SCENE;
-    this.k = Math.max(r.width / S.w, r.height / (S.bottom - S.top)) || 1;
-    this.ox = (r.width - S.w * this.k) / 2 - S.x0 * this.k; this.oy = (r.height - (S.bottom - S.top) * this.k) / 2 - S.top * this.k;
+    // fit the whole building row, never show more than the backdrop plate covers vertically, centre on the row
+    const S = CAMP_SCENE, B = ROW, plate = CAMP_BACKDROP.plate;
+    const kw = r.width / (B.x1 - B.x0 + 2 * S.padX), kh = r.height / (B.y1 - B.y0 + S.padTop + S.padBottom);
+    this.k = Math.max(Math.min(kw, kh), r.height / (plate.y1 - plate.y0)) || 1;
+    this.ox = r.width / 2 - ((B.x0 + B.x1) / 2) * this.k; this.oy = r.height / 2 - ((B.y0 - S.padTop + B.y1 + S.padBottom) / 2) * this.k;
+    this.onLayout?.();
   }
+
+  /** Called after every resize (the camp tap tags follow the buildings). */
+  onLayout: (() => void) | null = null;
+
+  /** A scene point to CSS px inside the canvas box. */
+  toClient(x: number, y: number): [number, number] { return [this.ox + x * this.k, this.oy + y * this.k]; }
 
   /** A client point to scene units. */
   toScene(clientX: number, clientY: number): [number, number] {
