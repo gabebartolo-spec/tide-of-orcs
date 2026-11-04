@@ -8,7 +8,7 @@ The game's own display face, drawn as pen skeletons swept by a broad nib. Docs: 
 | `glyphs.py` | Every glyph as skeleton paths, metrics, sidebearings, `KERN` pairs |
 | `build.py` | Writes `out/Heartwood-Regular.ttf` and `.woff2`, adds `kern` and a generated `tnum` |
 | `look.py` | PIL test renders (no shaping engine, so kerning is not applied; check kerning in a browser) |
-| `specimen.html` | Specimen vs Spectral in the game's real slots |
+| `specimen.html` | Heartwood-only specimen (the shipped `src/ui/fonts/heartwood-400.woff2`) in the game's real slots; no other face is loaded (TB-226) |
 
 ```
 pip install fonttools skia-pathops brotli pillow
@@ -17,4 +17,5 @@ cp tools/typeface/out/Heartwood-Regular.woff2 src/ui/fonts/heartwood-400.woff2
 ```
 
 Specimen: run `python -m http.server 8731` at the repo root and open `/tools/typeface/specimen.html`.
+Coverage and use are checked by `audit_strings.py` (string literals) and `node tools/font-audit.mjs` (every rendered screen, TB-226).
 These are dev tools only; nothing here ships or runs in the game.

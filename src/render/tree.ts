@@ -312,6 +312,8 @@ export class TreeRenderer {
 
   private legProbe = -1; private legPx = 14; private legGap = 30;
   draw(s: SimState, t: number): void {
+    // Heartwood is the only face (TB-226): never paint labels before it is loaded; stay stale so the loop draws once it is
+    if (typeof document !== 'undefined' && !document.fonts.check('14px Heartwood')) { this.stale = true; return; }
     this.stale = false;
     if (this.target) {
       const now = performance.now(), dt = Math.min(0.1, (now - this.lastDraw) / 1000); this.lastDraw = now;
@@ -339,7 +341,7 @@ export class TreeRenderer {
     c.setTransform(k, 0, 0, k, 0, 0); // legend stays in screen space, on its own strip so nodes pan under it, not through it (TB-117)
     c.fillStyle = P.ink2; c.fillRect(0, 0, this.vw, TREE_VIEW.legendH); c.fillStyle = P.line; c.fillRect(0, TREE_VIEW.legendH - 1, this.vw, 1);
     // the strip never clips: gaps tighten, then the font steps down, until every label fits the canvas width
-    const keys = Object.keys(BRANCH_COLOR) as (keyof typeof BRANCH_COLOR)[], labels = keys.map((k) => BRANCH_LABEL[k].toUpperCase());
+    const keys = Object.keys(BRANCH_COLOR) as (keyof typeof BRANCH_COLOR)[], labels = keys.map((k) => BRANCH_LABEL[k]);
     // 14 CSS px is the floor at every width and text size: the font may step down only while it stays at or above it (TB-218)
     const legMin = Math.ceil(14 / this.ui), legStart = Math.max(14, legMin);
     c.font = `${legStart}px Heartwood`; c.textAlign = 'left';

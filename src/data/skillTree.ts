@@ -193,7 +193,9 @@ export const TREE_VIEW = { startZoom: 1, focusX: 700, focusY: 890, minZoom: 0.6,
    *  how far up a trunk node's upward links run before they bend out (fraction). */
   woodBase: 1.5, woodPerNode: 1.7, growRate: 2.5, trunkRise: 0.6,
   /** Full-screen view (TB-189): share of the screen the whole tree fills. */
-  wholeMargin: 0.96 } as const;
+  wholeMargin: 0.96,
+  /** Screen px the pan may overshoot the tree edge, so a label that hangs past its node (or sits under the legend) can be panned fully into view (TB-226). */
+  edgePad: 64 } as const;
 
 export const BRANCH_COLOR: Readonly<Record<Branch, string>> = { Bow: '#cdbdea', Companions: '#e2a85b', Armoury: '#c76f6f', Grove: '#9fc48f', Barricade: '#c9a06a', Vanguard: '#8fb7c9', Spoils: '#e8d9a0' };
 /** What the player reads for each branch; the Branch values stay as code names. */
