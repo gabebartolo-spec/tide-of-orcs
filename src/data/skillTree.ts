@@ -185,8 +185,8 @@ export const TREE_CANVAS = { w: 1400, h: 1320 } as const;
 export const TREE_VIEW = { startZoom: 1, focusX: 700, focusY: 890, minZoom: 0.6, maxZoom: 5, wheelStep: 1.15, dragPx: 6, hitR: 20,
   /** Touch screens (TB-218): a tap may wobble this many layout px before it counts as a drag, and a node's hit circle is at least this many CSS px across its radius (48 px wide). */
   touchDragPx: 12, touchHitPx: 24,
-  /** Drawn node radius in layout px: desktop, then touch screens (a 36 px disc inside the 48 px hit circle, TB-218); the root is 3 px larger. */
-  nodeR: 13, nodeRTouch: 18,
+  /** Drawn node radius in layout px: desktop, then touch screens (a 48 px disc, the whole tap target, TB-218); the root is 3 px larger. */
+  nodeR: 13, nodeRTouch: 24,
   /** World px the camera may pan past each tree edge, so a label centred on an edge node (up to 55 px of text each side) stays in the pane (TB-218). */
   edgePad: 60,
   /** Label font px (layout) and the clear gap kept between a label and the pane edge when the camera is clamped (TB-218 r9). */

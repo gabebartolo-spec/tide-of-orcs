@@ -18,6 +18,30 @@ export function startCamera(vw: number, vh: number): Camera {
   return clampCamera({ x: TREE_VIEW.focusX - vw / z / 2, y: TREE_VIEW.focusY - vh / z / 2, z }, vw, vh);
 }
 
+/** A node's drawn footprint in world px: half-width (the wider of disc and label), extent above the centre (disc) and below it (disc + label). */
+export interface Foot { x: number; y: number; hw: number; up: number; down: number }
+
+/** Opening view for a touch screen: the start framing nudged (within `reach` world px) so no node disc or label straddles the pane edge or the legend strip,
+ *  which would leave a half label or a node sliced by the strip; fewest straddlers wins, then the least move from the plain start, root always whole (TB-218 r10). */
+export function startCameraFit(vw: number, vh: number, feet: Foot[], margin: number, reach = 240, step = 8): Camera {
+  const base = startCamera(vw, vh), z = base.z, rootFoot = feet.find((f) => f.x === TREE_VIEW.focusX && f.y === TREE_VIEW.focusY);
+  const lx = margin, rx = vw - margin, ty = TREE_VIEW.legendH + 4, by = vh - margin;
+  let best = base, bestScore = Infinity;
+  for (let dy = -reach; dy <= reach; dy += step) for (let dx = -reach; dx <= reach; dx += step) {
+    const c = clampCamera({ x: base.x + dx, y: base.y + dy, z }, vw, vh);
+    let bad = 0;
+    for (const f of feet) {
+      const x0 = (f.x - f.hw - c.x) * z, x1 = (f.x + f.hw - c.x) * z, y0 = (f.y - f.up - c.y) * z, y1 = (f.y + f.down - c.y) * z;
+      if (x1 <= 0 || x0 >= vw || y1 <= 0 || y0 >= vh) continue;                 // wholly off the pane: nothing to cut
+      const w = f === rootFoot ? 50 : 1;   // a node under the legend strip is lost entirely, a node on a side edge is only trimmed: the strip weighs 3
+      if (y0 < ty && y1 > 0) bad += 3 * w; else if (x0 < lx || x1 > rx || y0 < ty || y1 > by) bad += w;
+    }
+    const score = bad * 1e6 + Math.hypot(c.x - base.x, c.y - base.y) * z;
+    if (score < bestScore) { bestScore = score; best = c; }
+  }
+  return best;
+}
+
 /** Fit the tree's width to the viewport; a tree shorter than the view is centred. */
 export function fitCamera(vw: number, vh: number): Camera {
   return clampCamera({ x: 0, y: 0, z: vw / TREE_CANVAS.w }, vw, vh);

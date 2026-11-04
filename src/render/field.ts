@@ -242,7 +242,9 @@ export class FieldRenderer {
     this.watchGear(s);
     this.glow.t = Math.max(0, this.glow.t - dt); this.leaves = Math.max(0, this.leaves - dt); this.edge = Math.max(0, this.edge - dt); this.slow = Math.max(0, this.slow - dt);
     const cw = this.canvas.width, ch = this.canvas.height, dpr = cw / Math.max(1, this.canvas.clientWidth || cw);
-    const k = cw / ch <= W / H ? cw / W : ch / H, ox = (cw - W * k) / 2, oy = ch - H * k;
+    let k = cw / ch <= W / H ? cw / W : ch / H;
+    if (this.phone) k = Math.max(k, FIELD_VIEW.phoneMinK * dpr);   // a short phone screen crops the top of the plain rather than shrink the elf under 32 css px (TB-218 r10)
+    const ox = (cw - W * k) / 2, oy = ch - H * k;
     const vw = this.view; vw.k = k / dpr; vw.ox = ox / dpr; vw.oy = oy / dpr;
     const sx = k, sy = k, vis = this.vis; vis.x0 = -ox / k; vis.y0 = -oy / k; vis.x1 = W + ox / k; vis.y1 = H;
     const sh = this.reducedMotion ? 0 : this.shake;

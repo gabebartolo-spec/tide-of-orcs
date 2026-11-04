@@ -287,7 +287,7 @@ export const REPORT = { lead: 350, gap: 380, roll: 520, stampAfter: 300, stampIn
 export const SATCHEL_UI = { lines: 4, gap: 1.25, snap: 260 } as const;
 
 /** Full-screen field (TB-207): reach is the half width around the barricade that the wave bar clears. */
-export const FIELD_VIEW = { reach: 24, phoneStripLift: 28 } as const;
+export const FIELD_VIEW = { reach: 24, phoneStripLift: 28, phoneMinK: 0.86 } as const;
 /** Phone landscape (TB-218): coarse pointer on a short screen. The wave strip lifts `phoneStripLift` world px clear of the gesture bar. */
 export const PHONE_QUERY = '(pointer: coarse) and (max-height: 540px)';
 
@@ -305,6 +305,6 @@ export const SPRITE_BAKE_PHONE = { cap: 2048, quantum: 4, sub: 1, maxBytes: 11_0
  *  other canvas (camp, tree, juice). Desktop: scale cap 2, no frame cap, the old 900 particles. */
 export const QUALITY = {
   weakMemGb: 2, weakCores: 2, ladder: [1.5, 1.25, 1] as readonly number[], phoneStart: 1.25, phoneHigh: 1.5, minScale: 1, desktopScale: 2,
-  fieldMp: 1.0, haloK: 0.6, shadowPx: 64, phoneParts: 300, deskParts: 900, resizeSettleMs: 250, gap60: 15, gapFloor: 30, shared: 1.5, sharedMp: 1.0,
+  fieldMp: 1.0, haloK: 0.6, shadowPx: 64, phoneParts: 300, deskParts: 900, resizeSettleMs: 250, gap60: 15, gapFloor: 30, shared: 1.5, sharedMp: 1.0, treeScale: 2, treeMp: 1.6,
   governor: { window: 60, every: 15, slowMs: 20, fastMs: 8, downAfter: 3, upAfter: 10, upAfterMax: 80, undoWithin: 30 },
 } as const;

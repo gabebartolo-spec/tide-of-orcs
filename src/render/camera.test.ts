@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { NODES, TREE_CANVAS, TREE_VIEW } from '../data/skillTree';
-import { centreOn, clampCamera, easeToward, fitCamera, panBy, startCamera, toWorld, wholeCamera, wholeZoom, zoomAt } from './camera';
+import { centreOn, clampCamera, easeToward, fitCamera, panBy, startCameraFit, startCamera, toWorld, wholeCamera, wholeZoom, zoomAt } from './camera';
 
 const VW = 380, VH = 460, FIT = VW / TREE_CANVAS.w, TOP = TREE_VIEW.legendH;
 
@@ -63,5 +63,24 @@ describe('clampCamera floor (TB-218)', () => {
     const vw = 915, vh = 412, floor = wholeZoom(vw, vh);
     expect(clampCamera({ x: 0, y: 0, z: floor }, vw, vh, floor).z).toBeCloseTo(floor);
     expect(clampCamera({ x: 0, y: 0, z: floor / 2 }, vw, vh, floor).z).toBeCloseTo(floor);
+  });
+});
+
+describe('startCameraFit (TB-218 r10)', () => {
+  const vw = 607, vh = 292, margin = 6;
+  const feet = NODES.map((n) => ({ x: n.x, y: n.y, hw: 60, up: TREE_VIEW.nodeRTouch, down: TREE_VIEW.nodeRTouch + 20 }));
+  it('keeps the plain start zoom and never worsens the straddler count', () => {
+    const base = startCamera(vw, vh), c = startCameraFit(vw, vh, feet, margin);
+    expect(c.z).toBeCloseTo(base.z);
+    const bad = (cam: { x: number; y: number; z: number }) => feet.filter((f) => {
+      const x0 = (f.x - f.hw - cam.x) * cam.z, x1 = (f.x + f.hw - cam.x) * cam.z, y0 = (f.y - f.up - cam.y) * cam.z, y1 = (f.y + f.down - cam.y) * cam.z;
+      if (x1 <= 0 || x0 >= vw || y1 <= 0 || y0 >= vh) return false;
+      return x0 < margin || x1 > vw - margin || y0 < TREE_VIEW.legendH + 4 || y1 > vh - margin;
+    }).length;
+    expect(bad(c)).toBeLessThanOrEqual(bad(base));
+  });
+  it('moves at most `reach` world px from the plain start', () => {
+    const base = startCamera(vw, vh), c = startCameraFit(vw, vh, feet, margin, 60);
+    expect(Math.hypot(c.x - base.x, c.y - base.y)).toBeLessThanOrEqual(60 * Math.SQRT2 + 1e-6);
   });
 });

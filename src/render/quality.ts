@@ -111,6 +111,11 @@ quality.init();
 
 /** One backing scale for every canvas (field, camp, tree, juice): the device ratio, capped on the phone tier at QUALITY.shared and
  *  QUALITY.sharedMp megapixels; the desktop tier is unchanged (device ratio, no cap beyond the caller's own). */
+/** The skill tree's backing scale: it redraws only when something moves, so it keeps the full device ratio up to QUALITY.treeScale (TB-218 r10). */
+export function treeScale(cssW: number, cssH: number, dpr = window.devicePixelRatio || 1): number {
+  return quality.tier === 'phone' ? fitScale(dpr, QUALITY.treeScale, cssW, cssH, QUALITY.treeMp) : dpr;
+}
+
 export function renderScale(cssW: number, cssH: number, dpr = window.devicePixelRatio || 1): number {
   return quality.tier === 'phone' ? fitScale(dpr, QUALITY.shared, cssW, cssH, QUALITY.sharedMp) : dpr;
 }

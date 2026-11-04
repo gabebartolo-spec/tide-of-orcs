@@ -1,6 +1,6 @@
-import { quality, renderScale } from './quality';
+import { quality, treeScale } from './quality';
 import { BRANCH_COLOR, BRANCH_LABEL, NODE, NODES, NodeId, SkillNode, TREE_CANVAS, TREE_VIEW } from '../data/skillTree';
-import { Camera, setLabelPads, wholeZoom, centreOn, clampCamera, easeToward, startCamera, panBy, toWorld, wholeCamera, zoomAt } from './camera';
+import { Camera, Foot, startCameraFit, setLabelPads, wholeZoom, centreOn, clampCamera, easeToward, startCamera, panBy, toWorld, wholeCamera, zoomAt } from './camera';
 import { SimState } from '../sim/state';
 import { canBuy, pathLocked, rankOf, unlocked } from '../sim/tree';
 import { DragGuard } from './dragGuard';
@@ -74,11 +74,11 @@ export class TreeRenderer {
     this.resize();
     canvas.addEventListener('wheel', (e) => {
       e.preventDefault(); if (this.full) return; this.target = null; const [sx, sy] = this.local(e);
-      this.cam = zoomAt(this.cam, sx, sy, e.deltaY < 0 ? TREE_VIEW.wheelStep : 1 / TREE_VIEW.wheelStep, this.vw, this.vh); this.stale = true;
+      this.pristine = false; this.cam = zoomAt(this.cam, sx, sy, e.deltaY < 0 ? TREE_VIEW.wheelStep : 1 / TREE_VIEW.wheelStep, this.vw, this.vh); this.stale = true;
     }, { passive: false });
     canvas.addEventListener('pointerdown', (e) => {
       canvas.setPointerCapture(e.pointerId); this.pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
-      this.target = null;
+      this.target = null; this.pristine = false;
       if (this.pts.size === 1) this.drag.press();
     });
     canvas.addEventListener('pointermove', (e) => this.onMove(e));
@@ -86,15 +86,27 @@ export class TreeRenderer {
     canvas.addEventListener('pointerup', end); canvas.addEventListener('pointercancel', end);
     // Keyboard focus shows a ring on the selected node (TB-116), so redraw when it comes or goes.
     canvas.addEventListener('focus', () => { this.stale = true; }); canvas.addEventListener('blur', () => { this.stale = true; });
-    this.fitPads(); void Promise.all([document.fonts?.ready, document.fonts?.load(`${TREE_VIEW.labelPx}px Heartwood`)]).then(() => { this.fitPads(); this.cam = clampCamera(this.cam, this.vw, this.vh, this.floor()); this.stale = true; });
+    this.fitPads(); void Promise.all([document.fonts?.ready, document.fonts?.load(`${TREE_VIEW.labelPx}px Heartwood`)]).then(() => { this.fitPads(); this.cam = this.pristine && !this.full ? this.opening() : clampCamera(this.cam, this.vw, this.vh, this.floor()); this.stale = true; });
   }
 
   /** The camera may pan past the tree edge by exactly what the outermost label (or node disc) needs, measured in the real font (TB-218 r9). */
+  /** Measured label widths in layout px, by node id (filled by fitPads once the face is loaded). */
+  private lw = new Map<NodeId, number>();
+  /** True until the player pans, zooms or selects: the opening camera may still be re-fitted when the label face finishes loading. */
+  private pristine = true;
+  /** Opening camera: on a touch screen nudged so no label or node is cut by the pane edge or the legend strip (TB-218 r10). */
+  private opening(): Camera {
+    if (!touchScreen() || !this.lw.size) return startCamera(this.vw, this.vh);
+    const r = TREE_VIEW.nodeRTouch + 3, lab = TREE_VIEW.labelPx;
+    const feet: Foot[] = NODES.map((n) => ({ x: n.x, y: n.y, hw: Math.max(r, (this.lw.get(n.id) ?? 0) / 2), up: r, down: r + 4 + lab + 4 }));
+    return startCameraFit(this.vw, this.vh, feet, Math.ceil(TREE_VIEW.labelMargin / this.ui));
+  }
   private fitPads(): void {
     const c = this.g, f = TREE_VIEW.labelPx; c.save(); c.setTransform(1, 0, 0, 1, 0, 0); c.font = `${f}px Heartwood`;
     let l = 0, r = 0, b = 0; const m = TREE_VIEW.labelMargin, disc = TREE_VIEW.nodeRTouch + 3 + m;
     for (const n of NODES) {
-      const hw = Math.max(disc, c.measureText(n.name).width / 2 + m);
+      const w = c.measureText(n.name).width; this.lw.set(n.id, w);
+      const hw = Math.max(disc, w / 2 + m);
       l = Math.max(l, hw - n.x); r = Math.max(r, hw + n.x - TREE_CANVAS.w); b = Math.max(b, n.y + disc + f + m - TREE_CANVAS.h);
     }
     c.restore(); setLabelPads({ l: Math.max(l, m), r: Math.max(r, m), b: Math.max(b, m) });
@@ -122,7 +134,7 @@ export class TreeRenderer {
   /** The full-screen opening view: the whole tree for a mouse; on a touch screen a readable zoom (labels 14 px, nodes 48 px apart), pinched out to the whole tree on demand (TB-218). */
   private fullCamera(): Camera {
     const coarse = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
-    return coarse ? clampCamera(startCamera(this.vw, this.vh), this.vw, this.vh, wholeZoom(this.vw, this.vh)) : wholeCamera(this.vw, this.vh);
+    return coarse ? clampCamera(this.opening(), this.vw, this.vh, wholeZoom(this.vw, this.vh)) : wholeCamera(this.vw, this.vh);
   }
 
   private floor(): number | undefined { return this.full ? wholeZoom(this.vw, this.vh) : undefined; }
@@ -144,11 +156,11 @@ export class TreeRenderer {
     const r = this.canvas.getBoundingClientRect(); if (!r.width || !r.height) return;
     // Work in 1080p layout px (CSS px ÷ the UI scale, TB-143), so legend, labels and camera framing grow with the window
     this.ui = uiScale(); const first = this.vw === 1, k = r.width / this.ui / this.vw;
-    this.vw = r.width / this.ui; this.vh = r.height / this.ui; const sc = renderScale(r.width, r.height); this.dpr = sc * this.ui;
+    this.vw = r.width / this.ui; this.vh = r.height / this.ui; const sc = treeScale(r.width, r.height); this.dpr = sc * this.ui;
     this.setStore(Math.round(r.width * sc), Math.round(r.height * sc));
     // Keep the same framing when the panel resizes: scale zoom with width.
     if (this.full) { this.cam = this.fullCamera(); this.target = null; return; }
-    this.cam = first ? startCamera(this.vw, this.vh) : clampCamera({ ...this.cam, z: this.cam.z * k }, this.vw, this.vh);
+    this.cam = first ? this.opening() : clampCamera({ ...this.cam, z: this.cam.z * k }, this.vw, this.vh);
   }
 
   /** Enter or leave the full-screen view (TB-189). The caller resizes the canvas box first; this refits the camera. */
@@ -157,9 +169,9 @@ export class TreeRenderer {
     if (on) this.saved = this.target ?? this.cam;
     this.full = on; this.target = null; this.vw = 1; // force a fresh fit on the next resize
     const r = this.canvas.getBoundingClientRect(); if (!r.width || !r.height) return;
-    this.ui = uiScale(); this.vw = r.width / this.ui; this.vh = r.height / this.ui; const sc = renderScale(r.width, r.height); this.dpr = sc * this.ui;
+    this.ui = uiScale(); this.vw = r.width / this.ui; this.vh = r.height / this.ui; const sc = treeScale(r.width, r.height); this.dpr = sc * this.ui;
     this.setStore(Math.round(r.width * sc), Math.round(r.height * sc));
-    this.cam = on ? this.fullCamera() : this.saved ? clampCamera(this.saved, this.vw, this.vh) : startCamera(this.vw, this.vh);
+    this.cam = on ? this.fullCamera() : this.saved ? clampCamera(this.saved, this.vw, this.vh) : this.opening();
     this.stale = true;
   }
 
@@ -168,7 +180,7 @@ export class TreeRenderer {
 
   /** Select a node and ease the camera to centre it (snaps under reduced motion). */
   select(id: NodeId): void {
-    this.selected = id;
+    this.selected = id; this.pristine = false;
     if (this.full && this.cam.z <= wholeZoom(this.vw, this.vh) * 1.01) return; // every node is already on screen
     const n = NODE[id], t = centreOn(this.cam, n.x, n.y, this.vw, this.vh, this.floor());
     if (this.reducedMotion) { this.cam = t; this.target = null; } else { this.target = t; this.lastDraw = performance.now(); }
@@ -335,7 +347,7 @@ export class TreeRenderer {
     c.setTransform(z, 0, 0, z, -this.cam.x * z, -this.cam.y * z);
     this.wood(s, t);
     c.globalAlpha = 1;
-    const keyFocus = this.canvas.matches(':focus-visible');
+    const keyFocus = this.canvas.matches(':focus-visible'), pm = Math.ceil(TREE_VIEW.labelMargin / this.ui);
     for (const n of NODES) {
       const lvl = rankOf(s, n.id), col = ringOf(n), un = unlocked(s, n), shut = pathLocked(s, n), maxed = lvl >= n.max, r = (touchScreen() ? TREE_VIEW.nodeRTouch : TREE_VIEW.nodeR) + (n.id === 'root' ? 3 : 0);
       c.beginPath(); c.arc(n.x, n.y, r, 0, 6.28);
@@ -343,10 +355,19 @@ export class TreeRenderer {
       c.lineWidth = n.id === this.selected ? 3 : 2; c.strokeStyle = un ? col : shut ? PATH_TINT[n.path!].deep : P.line; c.stroke();
       if (shut) this.lock(n.x, n.y, PATH_TINT[n.path!].colour);
       if (lvl > 0 && !maxed) { c.beginPath(); c.arc(n.x, n.y, r, -1.571, -1.571 + (6.283 * lvl) / n.max); c.strokeStyle = col; c.lineWidth = 4; c.stroke(); }
-      if (canBuy(s, n)) { c.beginPath(); c.arc(n.x, n.y, r + 5, 0, 6.28); c.strokeStyle = P.amber; c.lineWidth = 1; c.globalAlpha = this.reducedMotion ? 0.8 : 0.5 + 0.5 * Math.sin(t * 4); c.stroke(); c.globalAlpha = 1; }
+      if (canBuy(s, n)) { c.beginPath(); c.arc(n.x, n.y, r + (touchScreen() ? 3 : 5), 0, 6.28); c.strokeStyle = P.amber; c.lineWidth = 1; c.globalAlpha = this.reducedMotion ? 0.8 : 0.5 + 0.5 * Math.sin(t * 4); c.stroke(); c.globalAlpha = 1; }
       if (keyFocus && n.id === this.selected) { c.beginPath(); c.arc(n.x, n.y, r + 9, 0, 6.28); c.strokeStyle = P.cream; c.lineWidth = 2; c.setLineDash([4, 3]); c.stroke(); c.setLineDash([]); }
-      c.fillStyle = un ? P.text : P.nodeLabelLocked; c.font = '14px Heartwood'; c.textAlign = 'center'; c.shadowColor = P.ink; c.shadowBlur = 4; c.fillText(n.name, n.x, n.y + r + 16); c.shadowBlur = 0;
-      if (n.max > 1 && !shut) { c.fillStyle = maxed ? P.ink : P.text; c.font = '14px Heartwood'; c.fillText(`${lvl}/${n.max}`, n.x, n.y + 4); }
+    }
+    // Second pass: every label and rank sits on top of every disc, so a neighbour's disc never covers half a word (TB-218 r10).
+    for (const n of NODES) {
+      const lvl = rankOf(s, n.id), un = unlocked(s, n), shut = pathLocked(s, n), maxed = lvl >= n.max, r = (touchScreen() ? TREE_VIEW.nodeRTouch : TREE_VIEW.nodeR) + (n.id === 'root' ? 3 : 0);
+      // A label (and the rank inside a disc) is drawn only when the whole of it sits inside the pane, clear of the edges and the legend strip: no half words (TB-218 r10).
+      const sx = (n.x - this.cam.x) * this.cam.z, sy = (n.y - this.cam.y) * this.cam.z, cz = this.cam.z, lwid = (this.lw.get(n.id) ?? n.name.length * 7) / 2 * cz;
+      const inX = (hw: number): boolean => sx - hw >= pm && sx + hw <= this.vw - pm;
+      if (inX(lwid) && sy + (r + 3) * cz >= TREE_VIEW.legendH + 2 && sy + (r + 20) * cz <= this.vh - pm) {
+        c.fillStyle = un ? P.text : P.nodeLabelLocked; c.font = '14px Heartwood'; c.textAlign = 'center'; c.shadowColor = P.ink; c.shadowBlur = 4; c.fillText(n.name, n.x, n.y + r + 16); c.shadowBlur = 0;
+      }
+      if (n.max > 1 && !shut && inX(r * cz) && sy - r * cz >= TREE_VIEW.legendH + 2 && sy + r * cz <= this.vh - pm) { c.fillStyle = maxed ? P.ink : P.text; c.font = '14px Heartwood'; c.textAlign = 'center'; c.fillText(`${lvl}/${n.max}`, n.x, n.y + 4); }
     }
     c.setTransform(k, 0, 0, k, 0, 0); // legend stays in screen space, on its own strip so nodes pan under it, not through it (TB-117)
     c.fillStyle = P.ink2; c.fillRect(0, 0, this.vw, TREE_VIEW.legendH); c.fillStyle = P.line; c.fillRect(0, TREE_VIEW.legendH - 1, this.vw, 1);

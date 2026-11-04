@@ -1168,3 +1168,25 @@ header, #hud, #toast, #campview, .wrap, .play { touch-action: pan-x pan-y; }
   .fallen .report { gap: 0; padding-bottom: 0.125rem; }
   .fallen .hwline .big { font-size: 1.5rem; line-height: 1.05; }
 }
+/* TB-218 round 10: spacing and centring fixes found by the critics (touch phones, landscape) */
+@media (pointer: coarse) and (max-height: 540px) and (orientation: landscape) {
+  /* Worn doll: slots at least 6 css px clear of the stitched border; grid and tab targets 8 css px apart */
+  .prestige.satchel > #sat-worn { padding: 0.75rem 0.75rem; }
+  .prestige.satchel > #sat-worn::after { inset: 0.25rem; }
+  .prestige.satchel > #sat-grid { gap: 0.5rem; padding-bottom: 0.75rem; }
+  .prestige.satchel > #sat-grid { scrollbar-width: auto; }
+  /* the march plaques: label centred in the plaque, capped so two caps plus the label never overflow the box */
+  .fallen .march, #camp-go { display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; text-align: center; padding: 0 0.25rem; }
+  .fallen .march { --march-cap: 2.25rem; width: 12rem; min-width: 12rem; max-width: 12rem; margin-bottom: max(0.75rem, env(safe-area-inset-bottom)); color: var(--ink); text-shadow: none; }
+  /* safe-area insets on every side for the tab bar and the March again plaque */
+  body > nav, #tabs { padding-top: max(0px, env(safe-area-inset-top)); padding-right: max(0px, env(safe-area-inset-right)); }
+  #camp-go { margin-top: max(0.5rem, env(safe-area-inset-top)); margin-right: max(0.5rem, env(safe-area-inset-right)); }
+  /* camp building tags: 8 css px apart */
+  .camp-tag, .camp-tags > * { margin: 0.25rem; }
+  /* portrait prompt keeps clear of the notch and the home bar */
+  .rotate { padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left)); }
+}
+@media (pointer: coarse) and (max-height: 340px) and (orientation: landscape) {
+  .prestige.satchel > #sat-worn { padding: 0.6875rem 0.6875rem; }
+  .fallen .march { --march-cap: 2rem; }
+}
