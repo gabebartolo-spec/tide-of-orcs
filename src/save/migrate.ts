@@ -48,6 +48,26 @@ export const migrations: Record<number, (s: AnySave) => AnySave> = {
   13: (s) => ({ ...s, version: 14, run: { ...(s.run as object), path: null, hoardN: 0 } }),
   /** v14 to v15: Heartwood from bosses cleared this run, for the fallen overlay (TB-205); an old run counts from 0. */
   14: (s) => ({ ...s, version: 15, run: { ...(s.run as object), hwEarned: 0 } }),
+  /** v15 to v16: the dagger slot (TB-225, "a knife cannot be a bow"). A saved Last Knife (worn, in the satchel, or the run's best find) leaves the bow slot for dagger, on the dagger base of the same tier. */
+  15: (s) => {
+    const BOW_TO_DAGGER: Record<string, string> = { 'ashwood-bow': 'bone-knife', 'yew-longbow': 'flint-dagger', hornbow: 'bronze-dirk', 'ironbark-recurve': 'silver-stiletto' };
+    type It = { uid?: string; slot?: string; base?: string; mythic?: string };
+    const fix = (it: It): It => it && it.mythic === 'last-knife' && it.slot === 'bow' ? { ...it, slot: 'dagger', base: BOW_TO_DAGGER[it.base ?? ''] ?? 'bone-knife' } : it;
+    const meta = { ...(s.meta as { loot?: { items?: It[]; equipped?: Record<string, string> } }) };
+    if (meta.loot) {
+      const loot = { ...meta.loot }, moved = new Set<string>();
+      if (Array.isArray(loot.items)) loot.items = loot.items.map((it) => { const n = fix(it); if (n !== it && n.uid) moved.add(n.uid); return n; });
+      if (loot.equipped) {
+        const eq = { ...loot.equipped };
+        if (eq.bow && moved.has(eq.bow)) { if (!eq.dagger) eq.dagger = eq.bow; delete eq.bow; }
+        loot.equipped = eq;
+      }
+      meta.loot = loot;
+    }
+    const run = { ...(s.run as { best?: It }) };
+    if (run.best) run.best = fix(run.best);
+    return { ...s, version: 16, meta, run };
+  },
 };
 
 export function migrate(raw: unknown): Save {

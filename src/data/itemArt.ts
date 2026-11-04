@@ -1,7 +1,7 @@
 /** Item icons (TB-104): one 128 px transparent picture per item id, rendered from the approved Meshy model
  * (meshy_output/APPROVED.md, render_icons.py). A mythic uses its own icon; a path set piece (TB-193d) its set's
  * icon for that slot (`<set>-<slot>`); any other set piece its base's. */
-import { SLOTS, type Item } from './loot';
+import { SET_SLOTS, type Item } from './loot';
 
 /** Folder under public/ that holds `<id>.webp`. */
 export const ITEM_ICON_DIR = 'items';
@@ -17,7 +17,7 @@ export const ITEM_ICON_IDS: ReadonlySet<string> = new Set([
   'last-knife', 'heart-of-kiln', 'thunders-memory', 'oakspine',
   'pale-moon', 'first-wolf', 'heartwood-splinter', 'starfall-cloak',
   // Path sets and mythics (TB-193d)
-  ...['serpents-coil', 'foxfire-pack', 'magpies-hoard'].flatMap((s) => SLOTS.map((slot) => `${s}-${slot}`)),
+  ...['serpents-coil', 'foxfire-pack', 'magpies-hoard'].flatMap((s) => SET_SLOTS.map((slot) => `${s}-${slot}`)),
   'serpent-fang', 'foxfire-tail', 'magpies-talon',
 ]);
 
