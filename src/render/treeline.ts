@@ -1,4 +1,4 @@
-import { TREELINE as T } from '../data/presentation';
+import { SKY, TREELINE as T } from '../data/presentation';
 import { createRng } from '../sim/rng';
 import { P } from './palette';
 
@@ -139,20 +139,25 @@ export class Treeline {
   private hud = 0;
   /** Sprites painted after the frame's first forest orc (must stay 0: an orc is never covered by a tree or bush). */
   private orcMark = false; occluders = 0;
-  private n = -1; private ri = 0; private si = 0; private px = 1; private q: ImageSmoothingQuality = 'low';
+  private n = -1; private sky = 0; private ri = 0; private si = 0; private px = 1; private q: ImageSmoothingQuality = 'low';
   constructor() { load(); }
   /** Rows that fit between the view top at `y0` and the plain. */
-  private count(y0: number): number { return Math.max(T.minRows, Math.floor((T.stop - y0 - this.hud - T.first) / T.gap) + 1); }
+  private count(y0: number, hud: number): number { return Math.max(T.minRows, Math.floor((T.stop - y0 - hud - T.first) / T.gap) + 1); }
+  /** Rows laid out this frame. */
+  private rowsN: number = T.minRows;
   /** Lay out the trees and the bush skirt, as offsets from the view top, whenever the row count changes. Sorted by base, near last. */
-  private layout(n: number): void {
-    if (n === this.n) return;
-    this.n = n; this.spots = []; this.edges = [];
+  private layout(n: number, sky: number): void {
+    if (n === this.n && sky === this.sky) return;
+    this.n = n; this.sky = sky; this.spots = []; this.edges = [];
     for (let r = 0; r < n; r++) {
       const trees = (this.rows[r] ??= row(r)), s = rowScale(r), baseOff = T.first + r * T.gap;
       for (const t of trees) {
         const off = baseOff + t.dy; let h = t.h * s;
         // the canopy row reaches up to the HUD band: stretched (same aspect, within `stretch`) so its crown top lands just under it
-        if (r === 0 && t.key !== BUSH) h = Math.min(h * T.stretch, Math.max(h * 0.95, off - (T.crown[0] + ((t.x * 0.618) % 1 + 1) % 1 * (T.crown[1] - T.crown[0]))));
+        const crown = sky + T.crown[0] + ((t.x * 0.618) % 1 + 1) % 1 * (T.crown[1] - T.crown[0]);
+        if (r === 0 && t.key !== BUSH) h = Math.min(h * T.stretch, Math.max(h * 0.95, off - crown));
+        // the open sky under the HUD (TB-232): a crown that would reach into it is drawn shorter, one uniform scale, at most down to `shrink`
+        if (off - h < crown) h = Math.max(h * SKY.shrink, off - crown);
         this.spots.push({ x: t.x, off, key: r < n - 1 ? `${t.key}_far` : t.key, h, flip: t.flip, shadow: T.shade.tree });
       }
     }
@@ -164,8 +169,9 @@ export class Treeline {
     this.spots.sort((a, b) => a.off - b.off); this.edges.sort((a, b) => a.off - b.off);
   }
   /** Start a frame: remember the device scale (the mip level depends on it) and rewind both depth lists. */
-  begin(g: CanvasRenderingContext2D, y0: number, hud = 0): void {
-    this.hud = hud; this.orcMark = false; this.occluders = 0; this.layout(this.count(y0)); this.ri = 0; this.si = 0;
+  begin(g: CanvasRenderingContext2D, y0: number, hud = 0, sky = 0): void {
+    // `sky` units of open sky under the HUD band are kept clear of crowns (TB-232): the rows and the skirt base, and so the meadow, never move
+    this.hud = hud; this.rowsN = this.count(y0, hud); this.orcMark = false; this.occluders = 0; this.layout(this.rowsN, Math.round(sky)); this.ri = 0; this.si = 0;
     this.q = g.imageSmoothingQuality; g.imageSmoothingQuality = 'high';  // the field's default is 'low': the sprites are always scaled, never 1:1
     const m = (g as { getTransform?: () => DOMMatrix }).getTransform?.(); const px = m ? Math.hypot(m.a, m.b) || 1 : 1; if (px !== this.px) exact.clear(); this.px = px;
   }
@@ -181,6 +187,8 @@ export class Treeline {
   skirtUpTo(g: CanvasRenderingContext2D, y0: number, x0: number, x1: number, y: number): void {
     const l = this.edges; while (this.si < l.length && y0 + this.hud + l[this.si]!.off <= y) this.put(g, l[this.si++]!, y0 + this.hud, x0, x1);
   }
+  /** World y of the HUD band's foot, where the open sky begins. */
+  top(y0: number): number { return y0 + this.hud; }
   /** Highest crown top (world y) of the laid-out trees for the view at `y0`, and the band bottom it should sit under; for the capture audit. */
   crownTop(y0: number): number { let m = Infinity; for (const s of this.spots) m = Math.min(m, y0 + this.hud + s.off - s.h); return m; }
   /** World y above which a walker is still in the forest, behind the rows. */
@@ -192,7 +200,7 @@ export class Treeline {
     this.begin(g, y0, hud); this.treesUpTo(g, y0, x0, x1, Infinity); this.skirtUpTo(g, y0, x0, x1, Infinity); this.end(g);
   }
   /** Baseline of the bush skirt: the barricade starts just above it so the bushes cover its cut top. */
-  skirtBase(y0: number): number { return y0 + this.hud + T.first + (this.count(y0) - 1) * T.gap + T.skirt.lift; }
+  skirtBase(y0: number): number { return y0 + this.hud + T.first + (this.rowsN - 1) * T.gap + T.skirt.lift; }
   private put(g: CanvasRenderingContext2D, s: Spot, y0: number, x0: number, x1: number): void {
     const im = imgs.get(s.key); if (!im) return;
     if (this.orcMark) this.occluders++;
