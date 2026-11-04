@@ -12,7 +12,7 @@ export const STR = {
   fallenHW: 'Heartwood carried back', pulledTitle: 'You leave the wall standing', pullBack: 'Replant', fallenBtn: 'Replant the grove',
   starlight: 'Starlight', wave: 'Wave', slain: 'Slain', heartwood: 'Heartwood',
   campTitle: 'Between runs', campGo: 'March again', campClose: 'Back to the field', fallenToCamp: 'To the grove',
-  treeFull: 'Full screen', treeFullLabel: 'Show the whole skill tree full screen', treeClose: 'Close  ✕', treeCloseLabel: 'Close the full-screen skill tree (Esc)',
+  treeFull: 'Full screen', treeFullLabel: 'Show the whole skill tree full screen', treeClose: 'Close  ×', treeCloseLabel: 'Close the full-screen skill tree (Esc)',
   tabGrove: 'The Grove', tabCamp: 'Camp', tabReplant: 'Replant',
   learn: 'Learn', improve: 'Improve', locked: 'Locked', complete: 'Complete', fullyGrown: 'Fully grown',
   needs: (parent: string) => `needs ${parent}`,
@@ -102,6 +102,7 @@ export const STR = {
 
   starlightCost: (n: string) => `${n} starlight`,
   barricadeHud: (hp: string, max: string) => `BARRICADE ${hp} / ${max}`,
+  barricadeShort: (hp: string, max: string) => `${hp} / ${max}`,
   vanguardHud: (n: number, cap: number) => `VANGUARD ${n} / ${cap}`,
   replantGainK: 'Heartwood on replant', replantBtn: 'Replant',
   hwTitle: 'Heartwood tree',

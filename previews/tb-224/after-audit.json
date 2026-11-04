@@ -1,0 +1,110 @@
+{
+ "915x412": {
+  "fonts": {
+   "hud-wall-n|Heartwood|16px": "150 / 150",
+   "strip|Heartwood|20px": "0\n1\n2\n3\n4\n5\n6\n",
+   "k-wave|Heartwood|14px": "Wave",
+   "st-wave|Heartwood|18px": "1",
+   "k-kills|Heartwood|14px": "Slain",
+   "st-kills|Heartwood|18px": "0",
+   "btn-settings|Heartwood|0px": "Settings"
+  },
+  "check": true,
+  "hud": {
+   "header": [
+    0,
+    0,
+    915,
+    28
+   ],
+   "hud": [
+    34,
+    4,
+    515,
+    28
+   ],
+   "settings": [
+    863,
+    0,
+    911,
+    48
+   ],
+   "mute": [
+    34,
+    352,
+    82,
+    400
+   ]
+  }
+ },
+ "915x360": {
+  "fonts": {
+   "hud-wall-n|Heartwood|16px": "150 / 150",
+   "strip|Heartwood|20px": "0\n1\n2\n3\n4\n5\n6\n",
+   "k-wave|Heartwood|14px": "Wave",
+   "st-wave|Heartwood|18px": "1",
+   "k-kills|Heartwood|14px": "Slain",
+   "st-kills|Heartwood|18px": "0",
+   "btn-settings|Heartwood|0px": "Settings"
+  },
+  "check": true,
+  "hud": {
+   "header": [
+    0,
+    0,
+    915,
+    28
+   ],
+   "hud": [
+    34,
+    4,
+    515,
+    28
+   ],
+   "settings": [
+    863,
+    0,
+    911,
+    48
+   ],
+   "mute": [
+    34,
+    300,
+    82,
+    348
+   ]
+  }
+ },
+ "412x915": {
+  "fonts": {
+   "turn-msg|Heartwood|24px": "Turn your phon"
+  },
+  "check": true,
+  "hud": {
+   "header": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "hud": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "settings": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "mute": [
+    0,
+    0,
+    0,
+    0
+   ]
+  }
+ }
+}

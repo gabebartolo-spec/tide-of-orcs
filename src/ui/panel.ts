@@ -77,7 +77,7 @@ export class Panel {
     // After a fall the field gives way to the Grove page (TB-136): the tree and satchel are spent between runs
     $('fallen-btn').onclick = () => { this.onCue('click'); this.setMode('camp'); this.setTab('grove'); };
     $('camp-go').onclick = () => { if (game.state.run.fallen) this.doReplant(); };
-    $('tier-down').textContent = '‹'; $('tier-up').textContent = '›'; $('tier-down').setAttribute('aria-label', STR.tierDown); $('tier-up').setAttribute('aria-label', STR.tierUp);
+    $('tier-down').textContent = '<'; $('tier-up').textContent = '>'; $('tier-down').setAttribute('aria-label', STR.tierDown); $('tier-up').setAttribute('aria-label', STR.tierUp);
     $('tier-down').onclick = () => this.stepTier(-1); $('tier-up').onclick = () => this.stepTier(1);
     $('btn-pullback').textContent = STR.pullBack;
     $('btn-pullback').onclick = () => { this.onCue('click'); this.game.pullBack(); };
@@ -127,7 +127,7 @@ export class Panel {
   /** Called ~6 Hz. */
   update(): void {
     const s = this.game.state;
-    this.hud.starlight(s.run.starlight); this.hud.wall(s.run.barHp, s.stats.barMax, STR.barricadeHud(fmt(Math.max(0, s.run.barHp)), fmt(s.stats.barMax))); $('hud-van').hidden = !s.stats.muster; if (s.stats.muster) $('hud-van').textContent = STR.vanguardHud(s.vans.count, s.stats.vanCap); $('st-wave').textContent = s.run.tier > 1 ? STR.waveTide(s.run.wave, STR.tideName(s.run.tier)) : String(s.run.wave); $('st-kills').textContent = fmt(s.meta.lifetimeKills); $('st-heart').textContent = STR.heartAvail(hwSpendable(s));
+    this.hud.starlight(s.run.starlight); this.hud.wall(s.run.barHp, s.stats.barMax, STR.barricadeHud(fmt(Math.max(0, s.run.barHp)), fmt(s.stats.barMax)), STR.barricadeShort(fmt(Math.max(0, s.run.barHp)), fmt(s.stats.barMax))); $('hud-van').hidden = !s.stats.muster; if (s.stats.muster) $('hud-van').textContent = STR.vanguardHud(s.vans.count, s.stats.vanCap); $('st-wave').textContent = s.run.tier > 1 ? STR.waveTide(s.run.wave, STR.tideName(s.run.tier)) : String(s.run.wave); $('st-kills').textContent = fmt(s.meta.lifetimeKills); $('st-heart').textContent = STR.heartAvail(hwSpendable(s));
     if (!$('pane-satchel').hidden) this.satchel.update();
     for (const b of $('hw-tree').querySelectorAll<HTMLButtonElement>('button[data-hw]')) b.disabled = !canBuyHw(s, b.dataset.hw as HwId);
     this.camp.update(); this.paths.update();

@@ -992,3 +992,55 @@ header, #hud, #toast, #campview, .wrap, .play { touch-action: pan-x pan-y; }
 }
 @media (pointer: coarse) and (max-height: 380px) and (orientation: landscape) { .fallen { padding-top: 4.75rem; } }
 @media (pointer: coarse) and (max-height: 340px) and (orientation: landscape) { .fallen { padding-top: 4.5rem; } .fallen .report { zoom: 0.72; } } /* 915x320: the board fits above the gesture bar without scrolling */
+
+/* ---- TB-224: Heartwood everywhere in the run, and the slim phone HUD ---- */
+/* The run view (HUD, toast, boss button, loot banners, fallen board) is all Heartwood: the system-UI --body stack above is for the
+   between-runs panel only (flagged in docs/ART-STYLE.md). */
+body[data-mode="run"] { --body: var(--display); }
+.hud-wall-n { display: none; }
+/* Phone landscape: one slim rail hugging the top edge. No scrim and no continuous bar, so the canopy shows between the carved chips;
+   the rail is 1.5 rem of chips on a 0.25 rem inset (24 px of 412). Wall bar + count, starlight, Wave, Slain and a round Settings
+   gear; the Heartwood pill is off the run HUD (it is spendable only between runs, Replant shows it). PC layout is untouched. */
+@media (pointer: coarse) and (max-height: 540px) and (orientation: landscape) {
+  body:not([data-mode="camp"]) header { padding: max(0.25rem, env(safe-area-inset-top, 0px)) max(34px, env(safe-area-inset-right)) 0 max(34px, env(safe-area-inset-left));
+    background: none; gap: 0; flex-wrap: nowrap; align-items: flex-start; }
+  body:not([data-mode="camp"]) header h1 { display: none; }
+  body:not([data-mode="camp"]) .hud { --hud-gold: #ffd98a; --s: 0.6; gap: 0.625rem; align-items: center; flex-wrap: nowrap; height: 1.5rem; margin: 0; }
+  body:not([data-mode="camp"]) .hud-wallbox { zoom: 1; flex-direction: row; align-items: center; gap: 0.375rem; }
+  body:not([data-mode="camp"]) .hud-wall { width: calc(20rem * var(--s)); height: calc(2.5rem * var(--s)); --chan: calc(16.5rem * var(--s)); margin: 0; flex: none; }
+  body:not([data-mode="camp"]) .hud-wall .fill { left: calc(1.75rem * var(--s)); top: calc(0.75rem * var(--s)); height: calc(1rem * var(--s)); background-size: calc(19rem * var(--s)) calc(1rem * var(--s)); }
+  body:not([data-mode="camp"]) .hud-wall .lbl { display: none; }
+  body:not([data-mode="camp"]) .hud-wall-n { display: block; font-size: 1rem; line-height: 1; color: var(--text); white-space: nowrap; font-variant-numeric: tabular-nums;
+    text-shadow: 0 0.0625rem 0.125rem var(--ink), 0 0 0.25rem var(--ink); }
+  body:not([data-mode="camp"]) .hud-van { padding: 0; font-size: 0.875rem; }
+  body:not([data-mode="camp"]) .hud-star { gap: 0.125rem; }
+  body:not([data-mode="camp"]) .hud-gem { width: 1.75rem; height: 1.75rem; margin: -0.125rem -0.125rem -0.125rem -0.25rem; }
+  body:not([data-mode="camp"]) .odo { font-size: 1.25rem; min-width: 3ch; }
+  /* carved chips: bark planks with two nail heads, a timber lip and a hard ink drop */
+  body:not([data-mode="camp"]) .hud :is(.stat, .hud-wave) { width: auto; min-width: 0; height: 1.5rem; margin: 0; padding: 0 0.875rem; gap: 0.375rem; align-items: center; justify-content: center; flex: none;
+    border: 0.0625rem solid color-mix(in srgb, var(--timber) 60%, var(--ink)); border-image: none; border-radius: 0.3125rem; filter: none;
+    background: radial-gradient(circle at 0.375rem 50%, var(--timber) 0 0.0625rem, transparent 0.125rem), radial-gradient(circle at calc(100% - 0.375rem) 50%, var(--timber) 0 0.0625rem, transparent 0.125rem),
+      linear-gradient(var(--bark), var(--splinter));
+    box-shadow: inset 0 0.0625rem 0 color-mix(in srgb, var(--timber) 55%, transparent), 0 0.125rem 0 color-mix(in srgb, var(--ink) 75%, transparent); }
+  body:not([data-mode="camp"]) .hud :is(.stat .k, .hud-wave .k) { font-size: 0.875rem; font-weight: 400; letter-spacing: .02em; color: var(--hud-gold); line-height: 1; }
+  body:not([data-mode="camp"]) .hud :is(.stat .v, .hud-wave .v) { font-size: 1.125rem; font-weight: 400; line-height: 1; color: var(--text); }
+  body:not([data-mode="camp"]) .hud .stats { gap: 0.625rem; margin: 0; align-self: center; }
+  body:not([data-mode="camp"]) .hud .stats .stat:has(.heart) { display: none; }
+  body:not([data-mode="camp"]) .hud-wave .stamp { top: 50%; font-size: 0.75rem; line-height: 1rem; padding: 0 0.375rem; border-width: 0.0625rem; letter-spacing: .04em; }
+  /* Settings: a 48 px touch box in the top-right corner holding a 28 px carved gear; text stays for screen readers */
+  body[data-mode="run"] #btn-settings { position: fixed; top: 0; right: max(0.25rem, env(safe-area-inset-right, 0px)); margin: 0; width: max(44px, 3rem); height: max(44px, 3rem); min-width: 44px; min-height: 44px; padding: 0;
+    border: 0; background: none; box-shadow: none; font-size: 0; color: transparent; text-shadow: none; z-index: 5; }
+  body[data-mode="run"] #btn-settings::before { content: ""; position: absolute; left: 50%; top: max(0.125rem, env(safe-area-inset-top, 0px)); width: 1.75rem; height: 1.75rem; margin-left: -0.875rem; border-radius: 50%;
+    border: 0.0625rem solid color-mix(in srgb, var(--timber) 60%, var(--ink)); background: linear-gradient(var(--bark), var(--splinter));
+    box-shadow: inset 0 0.0625rem 0 color-mix(in srgb, var(--timber) 55%, transparent), 0 0.125rem 0 color-mix(in srgb, var(--ink) 75%, transparent); }
+  body[data-mode="run"] #btn-settings::after { content: ""; position: absolute; left: 50%; top: calc(max(0.125rem, env(safe-area-inset-top, 0px)) + 0.3125rem); width: 1.125rem; height: 1.125rem; margin-left: -0.5625rem;
+    background: var(--text); -webkit-mask: url("/ui/glyph-cog.svg") center / contain no-repeat; mask: url("/ui/glyph-cog.svg") center / contain no-repeat; }
+  /* Replant (pull back) is a carved chip like its neighbours; a transparent ::before pads the tap area to 44 px */
+  body[data-mode="run"] #btn-pullback { position: relative; height: 1.5rem; min-height: 0; margin: 0 0 0 0.625rem; padding: 0 0.875rem; font-size: 0.875rem; line-height: 1; align-self: flex-start; flex: none;
+    border: 0.0625rem solid color-mix(in srgb, var(--timber) 60%, var(--ink)); border-image: none; border-radius: 0.3125rem; filter: none; color: var(--hud-gold, var(--text));
+    background: linear-gradient(var(--bark), var(--splinter));
+    box-shadow: inset 0 0.0625rem 0 color-mix(in srgb, var(--timber) 55%, transparent), 0 0.125rem 0 color-mix(in srgb, var(--ink) 75%, transparent); }
+  body[data-mode="run"] #btn-pullback::before { content: ""; position: absolute; inset: -0.625rem -0.25rem; }
+  /* the fallen board only has to clear the slim rail now */
+  .fallen { padding-top: 2.75rem; }
+}

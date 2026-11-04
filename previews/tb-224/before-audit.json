@@ -1,0 +1,114 @@
+{
+ "915x412": {
+  "fonts": {
+   "hud-wall-t|\"Segoe UI\", system-ui, -apple-system, \"Helvetica Neue\", sans-serif|22px": "BARRICADE 150 ",
+   "strip|Heartwood|32px": "0\n1\n2\n3\n4\n5\n6\n",
+   "k-wave|\"Segoe UI\", system-ui, -apple-system, \"Helvetica Neue\", sans-serif|18px": "Wave",
+   "st-wave|Heartwood|28px": "1",
+   "k-kills|\"Segoe UI\", system-ui, -apple-system, \"Helvetica Neue\", sans-serif|14px": "Slain",
+   "st-kills|Heartwood|22px": "0",
+   "k-heart|\"Segoe UI\", system-ui, -apple-system, \"Helvetica Neue\", sans-serif|14px": "Heartwood",
+   "st-heart|Heartwood|22px": "0",
+   "btn-settings|\"Segoe UI\", system-ui, -apple-system, \"Helvetica Neue\", sans-serif|16px": "Settings"
+  },
+  "check": true,
+  "hud": {
+   "header": [
+    0,
+    0,
+    915,
+    78
+   ],
+   "hud": [
+    34,
+    16,
+    695,
+    70
+   ],
+   "settings": [
+    765,
+    18,
+    881,
+    67
+   ],
+   "mute": [
+    34,
+    352,
+    82,
+    400
+   ]
+  }
+ },
+ "915x360": {
+  "fonts": {
+   "hud-wall-t|\"Segoe UI\", system-ui, -apple-system, \"Helvetica Neue\", sans-serif|22px": "BARRICADE 150 ",
+   "strip|Heartwood|32px": "0\n1\n2\n3\n4\n5\n6\n",
+   "k-wave|\"Segoe UI\", system-ui, -apple-system, \"Helvetica Neue\", sans-serif|18px": "Wave",
+   "st-wave|Heartwood|28px": "1",
+   "k-kills|\"Segoe UI\", system-ui, -apple-system, \"Helvetica Neue\", sans-serif|14px": "Slain",
+   "st-kills|Heartwood|22px": "0",
+   "k-heart|\"Segoe UI\", system-ui, -apple-system, \"Helvetica Neue\", sans-serif|14px": "Heartwood",
+   "st-heart|Heartwood|22px": "0",
+   "btn-settings|\"Segoe UI\", system-ui, -apple-system, \"Helvetica Neue\", sans-serif|16px": "Settings"
+  },
+  "check": true,
+  "hud": {
+   "header": [
+    0,
+    0,
+    915,
+    78
+   ],
+   "hud": [
+    34,
+    16,
+    695,
+    70
+   ],
+   "settings": [
+    765,
+    18,
+    881,
+    67
+   ],
+   "mute": [
+    34,
+    300,
+    82,
+    348
+   ]
+  }
+ },
+ "412x915": {
+  "fonts": {
+   "turn-msg|Heartwood|24px": "Turn your phon"
+  },
+  "check": true,
+  "hud": {
+   "header": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "hud": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "settings": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "mute": [
+    0,
+    0,
+    0,
+    0
+   ]
+  }
+ }
+}

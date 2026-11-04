@@ -1,0 +1,123 @@
+{
+ "915x412": {
+  "fonts": {
+   "hud-wall-n|Heartwood|16px": "30 / 150",
+   "strip|Heartwood|20px": "0\n1\n2\n3\n4\n5\n6\n",
+   "oc|Heartwood|20px": "M",
+   "k-wave|Heartwood|14px": "Wave",
+   "st-wave|Heartwood|18px": "128",
+   "k-kills|Heartwood|14px": "Slain",
+   "st-kills|Heartwood|18px": "98.8K",
+   "btn-pullback|Heartwood|14px": "Replant",
+   "btn-settings|Heartwood|0px": "Settings",
+   "n|Heartwood|16px": "Summon the bos",
+   "c|Heartwood|14px": "5 waiting · 60"
+  },
+  "check": true,
+  "hud": {
+   "header": [
+    0,
+    0,
+    915,
+    28
+   ],
+   "hud": [
+    34,
+    4,
+    568,
+    28
+   ],
+   "settings": [
+    863,
+    0,
+    911,
+    48
+   ],
+   "mute": [
+    34,
+    352,
+    82,
+    400
+   ]
+  }
+ },
+ "915x360": {
+  "fonts": {
+   "hud-wall-n|Heartwood|16px": "0 / 150",
+   "strip|Heartwood|20px": "0\n1\n2\n3\n4\n5\n6\n",
+   "oc|Heartwood|20px": "M",
+   "k-wave|Heartwood|14px": "Wave",
+   "st-wave|Heartwood|18px": "128",
+   "hud-stamp|Heartwood|12px": "Cleared",
+   "k-kills|Heartwood|14px": "Slain",
+   "st-kills|Heartwood|18px": "98.8K",
+   "btn-settings|Heartwood|0px": "Settings",
+   "fallen-title|Heartwood|24px": "The barricade ",
+   "DT|Heartwood|16px": "Best wave",
+   "DD|Heartwood|20px": "0",
+   "fallen-loot|Heartwood|14px": "No items found",
+   "fallen-hw-k|Heartwood|17px": "Heartwood carr",
+   "fallen-hw|Heartwood|28px": "+0",
+   "fallen-btn|Heartwood|20px": "To the grove"
+  },
+  "check": true,
+  "hud": {
+   "header": [
+    0,
+    0,
+    915,
+    28
+   ],
+   "hud": [
+    34,
+    4,
+    561,
+    28
+   ],
+   "settings": [
+    863,
+    0,
+    911,
+    48
+   ],
+   "mute": [
+    0,
+    0,
+    0,
+    0
+   ]
+  }
+ },
+ "412x915": {
+  "fonts": {
+   "turn-msg|Heartwood|24px": "Turn your phon"
+  },
+  "check": true,
+  "hud": {
+   "header": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "hud": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "settings": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "mute": [
+    0,
+    0,
+    0,
+    0
+   ]
+  }
+ }
+}

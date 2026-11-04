@@ -70,11 +70,12 @@ export class Hud {
   }
 
   /** Wall bar: lit fill by fraction, tone band, cracks; a drop in HP shakes it. */
-  wall(hp: number, max: number, label: string): void {
+  wall(hp: number, max: number, label: string, short = label): void {
     const frac = Math.max(0, Math.min(1, hp / Math.max(1, max))), bar = $('hud-wall');
     $('hud-wall-fill').style.setProperty('--frac', String(frac));
     bar.dataset.tone = wallTone(frac); bar.dataset.crack = String(crackStage(frac));
     $('hud-wall-t').textContent = label;
+    $('hud-wall-n').textContent = short;
     if (this.lastHp !== null && hp < this.lastHp) this.shake((this.lastHp - hp) / Math.max(1, max));
     this.lastHp = hp;
   }

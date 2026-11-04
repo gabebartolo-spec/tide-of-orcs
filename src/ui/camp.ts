@@ -82,7 +82,7 @@ export class CampPane {
 
   renderCard(): void {
     if (!this.open) return;
-    this.card.innerHTML = `<button class="ghost x" data-close aria-label="${STR.cardClose}">✕</button>${this.block(this.open, true)}`;
+    this.card.innerHTML = `<button class="ghost x" data-close aria-label="${STR.cardClose}">×</button>${this.block(this.open, true)}`;
   }
 
   /** Rebuilt on upgrade, replant and import; update() refreshes the buttons. */
