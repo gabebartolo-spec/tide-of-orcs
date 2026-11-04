@@ -106,7 +106,7 @@ export const GROUND = {
    *  darker back rows show through; the whole wall clips to its healthy outline. Only inner rows jitter.
    *  Where `mirror[tier]` is set every other panel is flipped so bindings alternate sides (off for the TB-227 stone and palisade art, where flipping turns the courses into chevrons); `rowSeed` offsets each row's fixed golden-ratio break scatter (`breakScatter`). */
   wallTiers: {
-    at: [1.9, 3.7, 7], perPerk: 0.5, rows: [1, 2, 2, 2], scale: [1, 1, 1.25, 1.6],
+    at: [1.9, 3.7, 7], perPerk: 0.5, rows: [1, 1, 1, 1], scale: [1, 1.3, 1.7, 2.2],
     /** TB-227: the atlas drawn at each tier (weak palisade, medium stone, strong castle with mithril veins) and whether that tier flips every other panel (stone courses must not herringbone). */
     atlas: ['fence_weak', 'fence_medium', 'fence_medium', 'fence_strong'], mirror: [false, false, false, false], calm: [1, 1, 1, 0.2],
     rowDx: -11, rowDy: [0, 0.5, 0.25], rowShade: 0.18, backMax: 18, shadowDx: -8, shadowW: 0.7, brokenAlpha: 0.9, brokenDx: 4, brokenDy: 5, brokenTilt: 0.14, brokenShade: 0.25, brokenSnap: 0.25, zig: 5, brokenGap: 3, jitter: 3, rowSeed: 7, breakScatter: 0.618034,
