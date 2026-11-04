@@ -17,7 +17,7 @@ import { orcAnimT, orcState, orcSwingT, swingClipT, vanState } from './actorStat
 import { Ground, decorImg } from './ground';
 import { Ambience } from './ambience';
 import { Interp } from './interp';
-import { corpseX, standoffX } from './standoff';
+import { corpseX, drawnHitX, standoffX } from './standoff';
 import { FIELD_VIEW, GROUND, LOOT_VFX, ORC_DEATH, ORC_SPRITE, SKY, VFX, dusk } from '../data/presentation';
 import { SLOTS } from '../data/loot';
 import { setTiers } from '../sim/gear';
@@ -140,7 +140,7 @@ export class FieldRenderer {
           if (dead) this.corpses.push({ key: dk, kind: e.kind, x: cx, y: e.y, r, born: this.clock, splat: false });
           break;
         }
-        case 'hit': fx.burst(e.x, e.y, P.cream, VFX.hit[0], VFX.hit[1]); fx.blood(e.x, e.y, footOf(ACTOR_R), P.bloodOrc, B.hit, e.src === 'lob' ? 0 : 1); if (e.crit) fx.text(e.x, e.y - 22, 'crit', P.cream); break;
+        case 'hit': { const hx = drawnHitX(s.orcs.items, e.x, e.y); fx.burst(hx, e.y, P.cream, VFX.hit[0], VFX.hit[1]); fx.blood(hx, e.y, footOf(ACTOR_R), P.bloodOrc, B.hit, e.src === 'lob' ? 0 : 1); if (e.crit) fx.text(hx, e.y - 22, 'crit', P.cream); break; }
         case 'bleed': fx.blood(e.x, e.y, footOf(e.r), P.bloodOrc, B.hit, 1); break;
         case 'bite': fx.burst(e.x, e.y, P.cream, VFX.bite[0], VFX.bite[1]); fx.blood(e.x, e.y, footOf(ACTOR_R), P.bloodOrc, B.hit, 0); break;
         case 'hawkDive': fx.burst(e.x, e.y, P.cream, VFX.hawk[0], VFX.hawk[1]); fx.blood(e.x, e.y, footOf(ACTOR_R), P.bloodOrc, B.kill, 0); break;

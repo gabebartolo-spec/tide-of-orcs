@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { corpseX, standoffX } from './standoff';
+import { corpseX, drawnHitX, standoffX } from './standoff';
 import { FIELD } from '../data/balance';
 import { ORC_STANDOFF } from '../data/presentation';
 
@@ -27,5 +27,15 @@ describe('corpseX (TB-214)', () => {
   it('leaves other kinds and corpses already clear of the wall alone', () => {
     expect(corpseX('grunt', 180, 12, 1)).toBe(180);
     expect(corpseX('boss', 420, r, 1)).toBe(420);
+  });
+});
+
+describe('drawnHitX (TB-214)', () => {
+  const r = 24, stop = FIELD.barX + FIELD.barW + r, boss = { live: true, kind: 'boss', x: stop, y: 200, r };
+  it('moves a hit on the parked boss to his drawn body', () => { expect(drawnHitX([boss], stop, 200)).toBeCloseTo(standoffX('boss', stop, r)); });
+  it('keeps hits on other orcs, dead slots and empty ground at their x', () => {
+    expect(drawnHitX([{ ...boss, kind: 'grunt' }], stop, 200)).toBe(stop);
+    expect(drawnHitX([{ ...boss, live: false }], stop, 200)).toBe(stop);
+    expect(drawnHitX([boss], stop, 90)).toBe(stop);
   });
 });

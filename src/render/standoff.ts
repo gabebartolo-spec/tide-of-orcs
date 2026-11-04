@@ -22,3 +22,10 @@ export function corpseX(kind: string, x: number, r: number, k: number): number {
   const u = Math.min(1, Math.max(0, k));
   return x + need * u * u * (3 - 2 * u);
 }
+
+/** Drawn x for a VFX event at sim (x, y) (TB-214): a hit on a stand-off kind lands on the body as drawn, not at the sim x up to gap radii
+ *  behind it. `orcs` = live orcs of the sim; the one standing exactly at (x, y) with an ORC_STANDOFF kind decides, anything else keeps x. */
+export function drawnHitX(orcs: ReadonlyArray<{ live: boolean; kind: string; x: number; y: number; r: number }>, x: number, y: number): number {
+  for (const o of orcs) if (o.live && o.x === x && o.y === y && ORC_STANDOFF[o.kind]) return standoffX(o.kind, x, o.r);
+  return x;
+}
