@@ -745,6 +745,7 @@ body[data-mode="camp"] .campbar { justify-content: flex-end; }
 /* Settings: label | control | value on a 2-column page, 1rem gaps */
 .settings .col { gap: 1rem; }
 .settings .set { display: grid; grid-template-columns: 8rem minmax(0, 1fr) 3.5rem; align-items: center; gap: 1rem; }
+.settings .set > span:first-child { white-space: normal; line-height: 1.2; } /* TB-233: a long label wraps in its 8rem column, never clipped */
 .settings .set select { grid-column: 2; justify-self: start; min-width: 12rem; }
 .settings output { color: var(--text); font-variant-numeric: tabular-nums; }
 select, .set select { -webkit-appearance: none; appearance: none; color: var(--text); border: 0.0625rem solid var(--timber-dark); border-radius: 0.375rem; padding: 0.375rem 2rem 0.375rem 0.75rem; font-size: 1rem;
