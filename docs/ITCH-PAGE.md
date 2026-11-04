@@ -26,7 +26,7 @@ The store page for **https://veniceissinking.itch.io/elves-vs-orcs**. This file 
 > - A branching skill tree of bow, companions, armoury, barricade, vanguard and spoils nodes
 > - Three specialisation paths (Serpent, Fox, Magpie), each with its own nodes, set and mythic
 > - An elf encampment behind the wall to build up between runs
-> - Loot drops for six gear slots, from Common to Mythic
+> - Loot drops for seven gear slots, from Common to Mythic
 > - Heartwood prestige tree, spent only between runs
 > - Saves in your browser; export and import from Settings
 >

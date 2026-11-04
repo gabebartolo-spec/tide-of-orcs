@@ -1,4 +1,4 @@
-/** Satchel tab (TB-095): the six worn slots, the satchel grid, and the selected item compared with what is worn. */
+/** Satchel tab (TB-095): the seven worn slots, the satchel grid, and the selected item compared with what is worn. */
 import { Item, RARITIES, Rarity, SLOTS, Slot } from '../data/loot';
 import { AFFIXES, BASES, MYTHICS, SETS } from '../data/lootTables';
 import { STR } from '../data/strings';
