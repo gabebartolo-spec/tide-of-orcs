@@ -1,0 +1,242 @@
+{
+ "1920x1080d1_w1": {
+  "hudBottom": 96,
+  "waveText": "Wave 1",
+  "stampHidden": true,
+  "wave": {
+   "y0": 24,
+   "y1": 96,
+   "x0": 659,
+   "x1": 979
+  },
+  "bar": "BARRICADE 150 / 150"
+ },
+ "1920x1080d1_w10": {
+  "hudBottom": 96,
+  "waveText": "Wave 10",
+  "stampHidden": true,
+  "wave": {
+   "y0": 24,
+   "y1": 96,
+   "x0": 659,
+   "x1": 979
+  },
+  "bar": "BARRICADE 150 / 150"
+ },
+ "1920x1080d1_w25": {
+  "hudBottom": 96,
+  "waveText": "Wave 25",
+  "stampHidden": true,
+  "wave": {
+   "y0": 24,
+   "y1": 96,
+   "x0": 539,
+   "x1": 799
+  },
+  "bar": "BARRICADE 150 / 150"
+ },
+ "1920x1080d1_w50": {
+  "hudBottom": 96,
+  "waveText": "Wave 50",
+  "stampHidden": true,
+  "wave": {
+   "y0": 24,
+   "y1": 96,
+   "x0": 539,
+   "x1": 799
+  },
+  "bar": "BARRICADE 150 / 150"
+ },
+ "1920x1080d2_w1": {
+  "hudBottom": 96,
+  "waveText": "Wave 1",
+  "stampHidden": false,
+  "wave": {
+   "y0": 24,
+   "y1": 96,
+   "x0": 659,
+   "x1": 979
+  },
+  "bar": "BARRICADE 150 / 150"
+ },
+ "1920x1080d2_w10": {
+  "hudBottom": 96,
+  "waveText": "Wave 10",
+  "stampHidden": true,
+  "wave": {
+   "y0": 24,
+   "y1": 96,
+   "x0": 659,
+   "x1": 979
+  },
+  "bar": "BARRICADE 150 / 150"
+ },
+ "1920x1080d2_w25": {
+  "hudBottom": 96,
+  "waveText": "Wave 25",
+  "stampHidden": true,
+  "wave": {
+   "y0": 24,
+   "y1": 96,
+   "x0": 539,
+   "x1": 799
+  },
+  "bar": "BARRICADE 150 / 150"
+ },
+ "1920x1080d2_w50": {
+  "hudBottom": 96,
+  "waveText": "Wave 50",
+  "stampHidden": true,
+  "wave": {
+   "y0": 24,
+   "y1": 96,
+   "x0": 539,
+   "x1": 799
+  },
+  "bar": "BARRICADE 150 / 150"
+ },
+ "1920x1080d3_w1": {
+  "hudBottom": 96,
+  "waveText": "Wave 1",
+  "stampHidden": true,
+  "wave": {
+   "y0": 24,
+   "y1": 96,
+   "x0": 659,
+   "x1": 979
+  },
+  "bar": "BARRICADE 150 / 150"
+ },
+ "1920x1080d3_w10": {
+  "hudBottom": 96,
+  "waveText": "Wave 10",
+  "stampHidden": false,
+  "wave": {
+   "y0": 24,
+   "y1": 96,
+   "x0": 659,
+   "x1": 979
+  },
+  "bar": "BARRICADE 150 / 150"
+ },
+ "1920x1080d3_w25": {
+  "hudBottom": 96,
+  "waveText": "Wave 25",
+  "stampHidden": true,
+  "wave": {
+   "y0": 24,
+   "y1": 96,
+   "x0": 539,
+   "x1": 799
+  },
+  "bar": "BARRICADE 150 / 150"
+ },
+ "1920x1080d3_w50": {
+  "hudBottom": 96,
+  "waveText": "Wave 50",
+  "stampHidden": true,
+  "wave": {
+   "y0": 24,
+   "y1": 96,
+   "x0": 539,
+   "x1": 799
+  },
+  "bar": "BARRICADE 150 / 150"
+ },
+ "1280x720d1_w1": {
+  "hudBottom": 77,
+  "waveText": "Wave 1",
+  "stampHidden": true,
+  "wave": {
+   "y0": 19,
+   "y1": 77,
+   "x0": 383,
+   "x1": 567
+  },
+  "bar": "BARRICADE 150 / 150"
+ },
+ "1280x720d1_w10": {
+  "hudBottom": 77,
+  "waveText": "Wave 10",
+  "stampHidden": true,
+  "wave": {
+   "y0": 19,
+   "y1": 77,
+   "x0": 383,
+   "x1": 567
+  },
+  "bar": "BARRICADE 150 / 150"
+ },
+ "1280x720d1_w25": {
+  "hudBottom": 77,
+  "waveText": "Wave 25",
+  "stampHidden": false,
+  "wave": {
+   "y0": 19,
+   "y1": 77,
+   "x0": 383,
+   "x1": 567
+  },
+  "bar": "BARRICADE 150 / 150"
+ },
+ "1280x720d1_w50": {
+  "hudBottom": 77,
+  "waveText": "Wave 50",
+  "stampHidden": true,
+  "wave": {
+   "y0": 19,
+   "y1": 77,
+   "x0": 383,
+   "x1": 567
+  },
+  "bar": "BARRICADE 150 / 150"
+ },
+ "1280x720d2_w1": {
+  "hudBottom": 77,
+  "waveText": "Wave 1",
+  "stampHidden": true,
+  "wave": {
+   "y0": 19,
+   "y1": 77,
+   "x0": 383,
+   "x1": 567
+  },
+  "bar": "BARRICADE 150 / 150"
+ },
+ "1280x720d2_w10": {
+  "hudBottom": 77,
+  "waveText": "Wave 10",
+  "stampHidden": true,
+  "wave": {
+   "y0": 19,
+   "y1": 77,
+   "x0": 383,
+   "x1": 567
+  },
+  "bar": "BARRICADE 112 / 150"
+ },
+ "1280x720d2_w25": {
+  "hudBottom": 77,
+  "waveText": "Wave 25",
+  "stampHidden": true,
+  "wave": {
+   "y0": 19,
+   "y1": 77,
+   "x0": 383,
+   "x1": 567
+  },
+  "bar": "BARRICADE 150 / 150"
+ },
+ "1280x720d2_w50": {
+  "hudBottom": 77,
+  "waveText": "Wave 50",
+  "stampHidden": true,
+  "wave": {
+   "y0": 19,
+   "y1": 77,
+   "x0": 383,
+   "x1": 567
+  },
+  "bar": "BARRICADE 112 / 150"
+ }
+}

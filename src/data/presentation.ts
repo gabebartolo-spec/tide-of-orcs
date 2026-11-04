@@ -3,20 +3,36 @@ import { BUILDINGS } from './camp';
 export const SKY = {
   /** Seconds for one full day-dusk-day cycle. */
   dayCycle: 600,
-  /** Hill bands, far to near: scroll speed (units/s), crest height, bump width, top of band. */
-  hills: [{ speed: 2, h: 26, w: 140, y: 0 }, { speed: 5, h: 18, w: 90, y: 14 }],
   /** Lamplight radius on the grove bank at full night. */
   lampR: 150,
 } as const;
 
-/** Treeline along the top of the view (TB-207): sprites from the Sketchfab Handpainted Tree Pack (rudolfs, CC-BY), rendered
- *  in tide-assets/trees. Rows of trees stacked from the view top down to `stop` (units above the plain's top edge, at least
- *  `minRows` rows): each row nearer than the last, so taller, brighter and wider spaced. The back rows use the hazed sprites. */
+/** Treeline along the top of the view (TB-207, TB-220): sprites from the Sketchfab Handpainted Tree Pack (rudolfs, CC-BY), rendered
+ *  in tide-assets/trees (512 px renders, shipped at 44 px per model unit so a tree is never drawn past its native pixels at 1080p DPR 2).
+ *  Rows of trees stacked from the view top down to `stop` (units above the plain's top edge, at least `minRows` rows): each row nearer
+ *  than the last, so taller, brighter and wider spaced. The back rows use the darker `_far` sprites. Every tree is drawn at its real
+ *  model height (`kinds`, in model units) times `unit`, always with one uniform scale so nothing squashes or warps. */
 export const TREELINE = {
   seed: 207, span: [-700, 1600] as const,
-  first: 38, gap: 26, stop: -6, minRows: 2, crown: -4, contact: 18, haze: 0.14, skirt: { step: 18, h: [10, 36] as const, lift: 14, rows: 2, offset: 9, far: 0.35, gap: 0.6 },
-  h: [54, 92] as const, grow: 0.12, step: 22, stepGrow: 0.18, jitter: 0.45, lift: 8, bush: 0.2, bushH: [18, 28] as const,
-  kinds: ['oak_green_1', 'oak_green_2', 'pine_1', 'pine_3', 'spruce_1', 'spruce_2', 'spruce_3'] as const,
+  first: 118, gap: 22, stop: -6, minRows: 2, skirt: { step: 17, h: [8, 30] as const, lift: 12, rows: 2, offset: 9, far: 0.35, gap: 0.9,
+    /** Share of skirt spots that hold a young tree (one of `kinds`, `youngH` units tall) instead of a bush. */
+    young: 0.3, kinds: ['oak_green_1', 'oak_green_2', 'spruce_2', 'spruce_3'] as const, youngH: [24, 38] as const },
+  /** Pre-scaled sprite levels stop below `mipMin` px high; the soft ground shadow is `shadowPx` wide and `shade` x the sprite width under a tree and a bush. */
+  mipMin: 24, shadowPx: 64, shade: { tree: 0.45, bush: 0.85 },
+  /** Device-exact sprite cache: most entries kept before it is rebuilt. The first `fill.rows` rows (the canopy against the view top) hold only kinds at least `fill.min` x the tallest that fits. */
+  exactCap: 700, fill: { rows: 3, min: 0.9 },
+  /** World units per model unit, and the random size spread (x unit) of one tree. */
+  unit: 9.5, size: [0.96, 1.04] as const,
+  /** Rows hang from the view top (`first` + row x `gap` down to a base, `lift` of jitter); a row only holds kinds up to `slack` x its room, then shrinks as one. */
+  slack: 1.12,
+  /** The barricade's top: it starts `up` units above the bush skirt base (skirt bushes draw over its top); the forest stands unbroken behind it. */
+  cap: { up: 14 },
+  /** Row 0 (the canopy against the HUD band): each tree is sized (x0.95..`stretch` of natural, same aspect) so its crown top lands `crown[0]`..`crown[1]` units below the band, so no bare strip shows between the HUD and the crowns. `hudGap` css px of air is kept under the HUD's lowest control. */
+  crown: [2, 9] as const, stretch: 1.2, hudGap: 18,
+  grow: 0.06, step: 22, stepGrow: 0.18, jitter: 0.65, lift: 8, bush: 0.1, bushH: [18, 28] as const,
+  /** Tree sprite keys and their real model heights (Handpainted Tree Pack), so the forest has a natural mix of tall and short. */
+  kinds: ['oak_green_1', 'oak_green_2', 'pine_1', 'pine_2', 'pine_3', 'spruce_2', 'spruce_3'] as const,
+  heights: { oak_green_1: 6.25, oak_green_2: 6.94, pine_1: 7.35, pine_2: 8.95, pine_3: 10.57, spruce_2: 5.31, spruce_3: 5.17 } as Readonly<Record<string, number>>,
 } as const;
 
 /** 0 at midday, 1 at deepest dusk. */
@@ -89,11 +105,11 @@ export const GROUND = {
   rocks: { n: 18, r: [2.6, 5.5], squash: 0.62, pebbles: [0, 3], pebbleR: [1, 1.8] },
   /** Sunlit pale-green drifts that vary the greens (TB-166): count, blobs, radius, squash, scatter. */
   sunlit: { n: 8, blobs: [4, 7], r: [16, 30], squash: 0.45, spread: 38 },
-  /** Vector meadow flowers (TB-166): drifts along the top/bottom borders (edge = band depth as a fraction of H), flowers per
+  /** Vector meadow flowers (TB-166): drifts along the bottom border (edge = band depth as a fraction of H) and just below the forest at the top (`topY`, plain units: the forest covers the plain above it), flowers per
    *  drift, drift size; loose singles in the lane; petal radius; stem height; weight per kind. */
-  flowers: { drifts: 16, per: [24, 36], driftW: 90, driftH: 22, edge: 0.22, lane: 40, r: [2.4, 3.8], stem: [3, 8], kinds: { daisy: 4, violet: 3, buttercup: 2, blossom: 1 } },
+  flowers: { drifts: 16, per: [24, 36], driftW: 90, driftH: 22, edge: 0.22, topY: [150, 185] as const, lane: 40, r: [2.4, 3.8], stem: [3, 8], kinds: { daisy: 4, violet: 3, buttercup: 2, blossom: 1 } },
   /** Fence barricade (director 2 Nov, Sketchfab "the fence"): panel draw width, vertical step between stacked panels (units). */
-  fence: { w: 30, step: 22 },
+  fence: { w: 30, step: 22, shadeFrom: 30 },
 } as const;
 
 /** Loot moments (TB-105, plan §11). Lives in seconds, sizes in field units.
@@ -286,7 +302,8 @@ export const REPORT = { lead: 350, gap: 380, roll: 520, stampAfter: 300, stampIn
 export const SATCHEL_UI = { lines: 4, gap: 1.25, snap: 260 } as const;
 
 /** Full-screen field (TB-207): reach is the half width around the barricade that the wave bar clears. */
-export const FIELD_VIEW = { reach: 24, phoneStripLift: 28 } as const;
+/** `hudFrac` x the canvas height (`phoneHud` CSS px on a phone) is the band from the view top kept clear of tree crowns: the top plaques, wall bar and buttons sit there (TB-220; they end at 8.9% of the height at 1080p, 10.7% at 720p). */
+export const FIELD_VIEW = { reach: 24, phoneStripLift: 28, hudFrac: 0.11, phoneHud: 56 } as const;
 /** Phone landscape (TB-218): coarse pointer on a short screen. The wave strip lifts `phoneStripLift` world px clear of the gesture bar. */
 export const PHONE_QUERY = '(pointer: coarse) and (max-height: 540px)';
 

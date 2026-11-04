@@ -800,8 +800,8 @@ body:not([data-mode="camp"]) .play { position: fixed; inset: 0; width: 100vw; ma
 body:not([data-mode="camp"]) .field { position: absolute; inset: 0; width: 100%; height: 100%; aspect-ratio: auto; display: flex; align-items: flex-end; justify-content: center; overflow: hidden;
   background: #3d4d3b; }
 body:not([data-mode="camp"]) .field canvas { flex: none; width: 100%; height: 100%; aspect-ratio: auto; }
-body:not([data-mode="camp"]) header { position: fixed; inset: 0 0 auto 0; width: 100vw; height: auto; margin: 0; transform: none; z-index: 3; padding: 1rem 1.75rem 4.5rem;
-  border: 0; box-shadow: none; pointer-events: none; background: linear-gradient(color-mix(in srgb, var(--ink) 88%, transparent), color-mix(in srgb, var(--ink) 66%, transparent) 30%, color-mix(in srgb, var(--ink) 22%, transparent) 62%, color-mix(in srgb, var(--ink) 6%, transparent) 85%, transparent); }
+body:not([data-mode="camp"]) header { position: fixed; inset: 0 0 auto 0; width: 100vw; height: auto; margin: 0; transform: none; z-index: 3; padding: 1rem 1.75rem 1rem;
+  border: 0; box-shadow: none; pointer-events: none; background: none; }
 body:not([data-mode="camp"]) header .stat .k { font-size: 1.125rem; color: var(--text); }
 body:not([data-mode="camp"]) header .stat .v { font-size: 1.625rem; }
 body:not([data-mode="camp"]) .hud-wave .k { font-size: 1.125rem; font-weight: 700; color: #ffd98a; text-shadow: 0 0.0625rem 0.125rem #2a1a0a, 0 0 0.25rem #2a1a0a; }
@@ -890,6 +890,32 @@ body:not([data-mode="camp"]) :is(header .stat, .hud-wave) { width: 16rem; min-wi
 /* TB-195b r9: reserve the odometer width so the plaques to its right do not shift as the count grows */
 .odo { min-width: 4.4ch; justify-content: flex-start; }
 
+/* TB-220: narrow windows (1280x720 and the like) keep a 16 px rem, so the carved HUD (wall 20rem, three 16rem plaques) ran past the right edge and pushed Settings
+   off screen. Below 1640 px the plaques, wall bar and gaps tighten (type stays at full size); below 1320 px once more (the Replant pull-back button joins the row on a fallen or paused run). */
+@media (max-width: 1640px) {
+  body:not([data-mode="camp"]) header { padding-inline: 1.25rem; }
+  body:not([data-mode="camp"]) .hud { gap: 0.75rem; }
+  body:not([data-mode="camp"]) .hud .stats { gap: 0.5rem; }
+  body:not([data-mode="camp"]) :is(header .stat, .hud-wave) { width: 13rem; min-width: 13rem; border-width: 0 2rem; border-image-width: 0 2rem; }
+  body:not([data-mode="camp"]) .hud-wall { width: 16rem; --chan: 13.2rem; }
+  body:not([data-mode="camp"]) .hud-wall .fill { left: 1.4rem; background-size: 15.2rem 1rem; }
+  body:not([data-mode="camp"]) .hud-wall .lbl { padding: 0 1.8rem; }
+}
+@media (max-width: 1320px) {
+  body:not([data-mode="camp"]) :is(header .stat, .hud-wave) { width: 11.5rem; min-width: 11.5rem; border-width: 0 1.6rem; border-image-width: 0 1.6rem; }
+  body:not([data-mode="camp"]) .hud-wall { width: 13rem; --chan: 10.7rem; }
+  body:not([data-mode="camp"]) .hud-wall .fill { left: 1.1rem; background-size: 12.3rem 1rem; }
+}
+/* TB-220: wide windows (rem 20 px at 1920) only overflow when the Replant pull-back button joins the row, so the same tightening applies just then. */
+@media (min-width: 1641px) {
+  body:not([data-mode="camp"]) header:has(#btn-pullback:not([hidden])) { padding-inline: 1.25rem; }
+  body:not([data-mode="camp"]) header:has(#btn-pullback:not([hidden])) .hud { gap: 0.75rem; }
+  body:not([data-mode="camp"]) header:has(#btn-pullback:not([hidden])) .hud .stats { gap: 0.5rem; }
+  body:not([data-mode="camp"]) header:has(#btn-pullback:not([hidden])) :is(.stat, .hud-wave) { width: 13rem; min-width: 13rem; border-width: 0 2rem; border-image-width: 0 2rem; }
+  body:not([data-mode="camp"]) header:has(#btn-pullback:not([hidden])) .hud-wall { width: 16rem; --chan: 13.2rem; }
+  body:not([data-mode="camp"]) header:has(#btn-pullback:not([hidden])) .hud-wall .fill { left: 1.4rem; background-size: 15.2rem 1rem; }
+  body:not([data-mode="camp"]) header:has(#btn-pullback:not([hidden])) .hud-wall .lbl { padding: 0 1.8rem; }
+}
 /* Mobile layout foundation (TB-218, Pixel 8 landscape 915x412): zoom lock, safe-area insets, short HUD. */
 html, body { touch-action: pan-x pan-y; }
 #game { touch-action: none; }

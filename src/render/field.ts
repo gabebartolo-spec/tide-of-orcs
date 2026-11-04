@@ -18,7 +18,7 @@ import { orcClipT, orcState, swingClipT, vanState } from './actorState';
 import { Ground, decorImg } from './ground';
 import { Ambience } from './ambience';
 import { Interp } from './interp';
-import { FIELD_VIEW, PHONE_QUERY, QUALITY, GROUND, LOOT_VFX, ORC_SPRITE, SKY, VFX, dusk } from '../data/presentation';
+import { FIELD_VIEW, PHONE_QUERY, QUALITY, GROUND, LOOT_VFX, ORC_SPRITE, SKY, TREELINE, VFX, dusk } from '../data/presentation';
 import { SLOTS } from '../data/loot';
 import { quality, fitScale } from './quality';
 import { setTiers } from '../sim/gear';
@@ -65,7 +65,7 @@ export class FieldRenderer {
   private aimMix = 0; private elfClock = 0; private lastCharge = 0; private lobCd = 1;
   /** Reused draw-order buffers and wind-up scratch (no per-frame allocation). */
   private vanBuf: Vanguard[] = [];
-  private orcBuf: Orc[] = [];
+  private orcBuf: Orc[] = []; private orcsIn = 0;  // orcs [0, orcsIn) were drawn inside the forest
   private wind = { dx: 0, dy: 0 };
   private sim: SimState | null = null;
   /** This frame's base transform (scale and shake offset): actors set theirs from it instead of save/translate/restore (TB-183). */
@@ -75,6 +75,7 @@ export class FieldRenderer {
    *  window shows more meadow. */
   readonly view = { k: 1, ox: 0, oy: 0 };
   private treeline = new Treeline();
+  private hudPx = 0; private hudT = 0;
   /** Client px to plain coordinates; null off the plain unless `clamp` pins it to the edge (TB-216c). */
   toWorld(cx: number, cy: number, clamp: boolean): { x: number; y: number } | null {
     const r = this.canvas.getBoundingClientRect();
@@ -255,21 +256,28 @@ export class FieldRenderer {
     const n = dusk(this.clock);
     if (n > 0.01) { const lg = g.createRadialGradient(ELF_X, H / 2, 0, ELF_X, H / 2, SKY.lampR); lg.addColorStop(0, P.lamp); lg.addColorStop(1, P.lampClear); g.globalAlpha = n; g.fillStyle = lg; g.fillRect(ELF_X - SKY.lampR, H / 2 - SKY.lampR, SKY.lampR * 2, SKY.lampR * 2); g.globalAlpha = 1; }
 
+    // the forest edge stands behind the barricade, so the palisade is drawn over it and shows its own capped top. Orcs still inside the
+    // forest (feet above the bush skirt) are drawn between its rows, so a walker is behind the trunks in front of it, never over them.
+    const orcs = this.orcBuf; orcs.length = 0; for (const o of s.orcs.items) if (o.live && !o.dead) orcs.push(o);
+    sortByY(orcs);
+    this.forest(s, orcs, dt);
+
     // barricade
     const frac = barFrac(s);
-    const top = Math.max(vis.y0, this.treeline.skirtBase(vis.y0) + 10);  // the barricade ends just below the treeline's bush skirt, with a capping rail
-    g.fillStyle = P.wallShade; g.fillRect(BAR_X + 4, top, BAR_W + 4, H - top);
+    const top = Math.max(vis.y0, this.treeline.skirtBase(vis.y0) - TREELINE.cap.up);  // the wall rises a little into the bush skirt; its stake tips are the cap,
+    g.fillStyle = P.wallShade; g.fillRect(BAR_X + 4, top + GROUND.fence.shadeFrom, BAR_W + 4, H - top - GROUND.fence.shadeFrom);
     const fence = decorImg('fence');
     if (fence) {
       // stacked fence panels running into the field, top to bottom so each overlaps the one behind it
       const L = GROUND.fence, lh = L.w * fence.height / fence.width;
-      for (let i = 0, y = -lh / 2 - Math.ceil(-top / L.step) * L.step; y < H; i++, y += L.step) {
+      // the top panel stands whole with its own pointed stakes as the wall's cap (TB-220): its top edge is `top`, nothing clips it or hides it
+      for (let i = 0, y = top; y < H; i++, y += L.step) {
         const alive = y < 0 || y / H < frac || (i * 0.618034) % 1 < frac;  // same fixed break scatter as the planks
         g.globalAlpha = alive ? 1 : 0.3;
         g.drawImage(fence, BAR_X + BAR_W / 2 - L.w / 2 + (alive ? 0 : 5), y, L.w, lh);
       }
       g.globalAlpha = 1;
-    } else for (let y = -Math.ceil(-top / 18) * 18; y < H; y += 18) {
+    } else for (let y = top - ((top % 18) + 18) % 18; y < H; y += 18) {
       // each plank breaks at a fixed point (golden-ratio scatter), so damage never flickers frame to frame
       const alive = y < 0 || y / H < frac || ((y / 18) * 0.618034) % 1 < frac;
       g.fillStyle = alive ? (y % 36 ? P.timber : P.timberDark) : P.timberSplinter;
@@ -277,7 +285,6 @@ export class FieldRenderer {
       g.fillStyle = P.timberBand; g.fillRect(BAR_X + 2, y - 2, BAR_W - 4, 3);
     }
     if (s.stats.spikes) { g.fillStyle = P.cream; for (let y = 8; y < H; y += 24) { g.beginPath(); g.moveTo(BAR_X + BAR_W, y); g.lineTo(BAR_X + BAR_W + 9, y + 4); g.lineTo(BAR_X + BAR_W, y + 8); g.closePath(); g.fill(); } }
-    this.hills();
 
     this.fx.drawGround(g);
     s.zones.forEach((z) => {
@@ -304,12 +311,12 @@ export class FieldRenderer {
       g.globalAlpha = Math.min(1, pt.life / (A.patchLife * 0.4)); g.fillStyle = pt.c; g.beginPath(); g.ellipse(pt.x, pt.y, pt.r, pt.r * 0.45, 0, 0, 6.28); g.fill(); g.globalAlpha = 1;
       if (pt.fire && !this.reducedMotion && Math.random() < A.flameRate * dt) this.fx.flame(pt.x + (Math.random() - 0.5) * pt.r * 1.6, pt.y + (Math.random() - 0.5) * pt.r * 0.8 + 6, P.fire);
     }
-    const vans = this.vanBuf, orcs = this.orcBuf; vans.length = 0; orcs.length = 0;
+    const vans = this.vanBuf; vans.length = 0;
     for (const v of s.vans.items) if (v.live) vans.push(v);
     sortByY(vans); for (const v of vans) this.van(s, v);
-    for (const o of s.orcs.items) if (o.live && !o.dead) orcs.push(o);
-    sortByY(orcs);
-    for (const o of orcs) { this.orc(s, o); if (o.burn > 0 && !this.reducedMotion && Math.random() < A.flameRate * dt) this.fx.flame(o.x + (Math.random() - 0.5) * o.r, o.y, Math.random() < 0.5 ? P.fire : P.amber); }
+    // the bush skirt is already down (behind every orc), so no walker's feet or legs are ever hidden
+    for (let i = this.orcsIn; i < orcs.length; i++) this.orcDraw(s, orcs[i]!, dt);
+    this.treeline.end(g);
 
     this.drawBeams(dt);
     s.shots.forEach((a) => { const d = this.interp.off(a); g.translate(d.dx, d.dy); this.shot(a, dt); g.translate(-d.dx, -d.dy); });
@@ -339,7 +346,7 @@ export class FieldRenderer {
       g.restore();
     }
 
-    this.ambience.motesDraw(g, this.clock, n, this.reducedMotion, this.vis.y0);
+    this.ambience.motesDraw(g, this.clock, n, this.reducedMotion, Math.max(this.vis.y0, this.treeline.skirtBase(this.vis.y0)));  // the meadow only: no glow points over the trees
     this.fx.draw(g);
 
     // HUD overlays (no shake)
@@ -389,20 +396,32 @@ export class FieldRenderer {
   }
 
 
-  /** Two bands of distant hills along the far edge, across grove and plain, drifting slowly (still under reduced motion). */
+  /** The forest edge along the top of the view (TB-220): the tree rows and the bush skirt first, then every orc still walking inside the forest, so each one is drawn whole and in front (never cut to an ear, an axe or a leg by a crown); the wall follows. */
+  private forest(s: SimState, orcs: Orc[], dt: number): void {
+    const { x0, y0, x1 } = this.vis, tl = this.treeline, edge = tl.skirtEdge(y0), g = this.g;
+    tl.begin(g, y0, this.hudBand() / this.view.k);
+    tl.treesUpTo(g, y0, x0, x1, Infinity); tl.skirtUpTo(g, y0, x0, x1, Infinity);
+    tl.orcsStart();
+    let i = 0;
+    for (; i < orcs.length && orcs[i]!.y < edge; i++) this.orcDraw(s, orcs[i]!, dt);
+    this.orcsIn = i;
+  }
 
-  private hills(): void {
-    const g = this.g, { x0, y0, x1 } = this.vis;
-    // the hills stay at the top of the window
-    g.save(); g.translate(0, y0);  // the hill bands back the treeline (src/render/treeline.ts) drawn over them
-    SKY.hills.forEach((b, i) => {
-      const off = this.reducedMotion ? 0 : (this.clock * b.speed) % b.w;
-      g.fillStyle = i ? P.hillNear : P.hillFar; g.beginPath(); g.moveTo(x0 - 10, b.y);
-      for (let k = 0, x = x0 - 10 - off; x <= x1 + b.w; k++, x += b.w / 2) g.quadraticCurveTo(x + b.w / 4, b.y + (k % 2 ? b.h * 0.6 : b.h), x + b.w / 2, b.y + b.h * 0.3);
-      g.lineTo(x1 + 10, b.y + b.h * 0.3); g.lineTo(x1 + 10, -10); g.lineTo(x0 - 10, -10); g.closePath(); g.fill();
-    });
-    g.restore();
-    this.treeline.draw(g, x0, y0, x1);
+  /** CSS px from the view top kept clear of crowns: the lowest HUD control plus `hudGap` (re-measured about twice a second), else `hudFrac` of the canvas height; a fixed strip on a phone. */
+  private hudBand(): number {
+    if (this.phone) return FIELD_VIEW.phoneHud;
+    if (--this.hudT <= 0 && typeof document !== 'undefined') {
+      this.hudT = 30; let b = 0;
+      document.querySelectorAll('#hud .hud-wallbox, #hud .hud-wall, #hud .hud-wave, #hud .hud-star, #hud button, #hud .stats').forEach((e) => { const r = e.getBoundingClientRect(); if (r.width > 1) b = Math.max(b, r.bottom); });
+      this.hudPx = b > 0 ? b + TREELINE.hudGap : 0;
+    }
+    return this.hudPx || FIELD_VIEW.hudFrac * this.canvas.clientHeight;
+  }
+
+  /** One orc and the flames it sheds when burning. */
+  private orcDraw(s: SimState, o: Orc, dt: number): void {
+    const A = VFX.arrows; this.orc(s, o);
+    if (o.burn > 0 && !this.reducedMotion && Math.random() < A.flameRate * dt) this.fx.flame(o.x + (Math.random() - 0.5) * o.r, o.y, Math.random() < 0.5 ? P.fire : P.amber);
   }
 
   /** Aim circle: dotted flight arc from the elf, the strike circle, and a ring that fills as the bow draws. */

@@ -45,10 +45,11 @@ export function layoutGround(seed: number = GROUND.seed, wild = false): GroundLa
     drift(rng, L.bare, x, y, { ...GROUND.worn, blobs: GROUND.worn.bare }, GROUND.worn.bareScale);
   }
   const T = GROUND.tufts;
-  for (let i = 0; i < T.clusters; i++) { const [x, y] = pt(); for (let k = count(rng, T.per); k > 0; k--) L.tufts.push(tuft(rng, x + near(rng, T.spread), y + near(rng, T.spread * 0.6))); }
-  for (let i = 0; i < T.singles; i++) { const [x, y] = pt(); L.tufts.push(tuft(rng, x, y)); }
+  // the wild meadow above the plain is forest floor behind the crowns: no tufts or pebbles (their pale stalks and grey dots read as stray flecks between the crown tips)
+  for (let i = 0; i < (wild ? 0 : T.clusters); i++) { const [x, y] = pt(); for (let k = count(rng, T.per); k > 0; k--) L.tufts.push(tuft(rng, x + near(rng, T.spread), y + near(rng, T.spread * 0.6))); }
+  for (let i = 0; i < (wild ? 0 : T.singles); i++) { const [x, y] = pt(); L.tufts.push(tuft(rng, x, y)); }
   const R = GROUND.rocks;
-  for (let i = 0; i < R.n; i++) {
+  for (let i = 0; i < (wild ? 0 : R.n); i++) {
     const w = wornAt[i % wornAt.length]!, [x, y] = i % 2 ? pt() : [w[0] + near(rng, GROUND.worn.spread), w[1] + near(rng, GROUND.worn.spread * 0.5)];
     const r = span(rng, R.r), sq = R.squash * (0.85 + rng.next() * 0.3);
     L.rocks.push({ x: clampX(x), y: clampY(y), r, squash: sq });
@@ -59,14 +60,15 @@ export function layoutGround(seed: number = GROUND.seed, wild = false): GroundLa
   const pick = (): FlowerKind => { let r = rng.next() * total; for (const [k, w] of kinds) if ((r -= w) < 0) return k; return kinds[0]![0]; };
   const flower = (x: number, y: number, kind: FlowerKind, scale = 1): void => { L.flowers.push({ x: clampX(x), y: clampY(y), kind, r: span(rng, F.r) * scale, stem: span(rng, F.stem) * scale, rot: rng.next() * 1.26 }); };
   const band = H * F.edge, slot = W / Math.ceil(F.drifts / 2);
-  for (let i = 0; i < F.drifts; i++) {
+  for (let i = 0; i < (wild ? 0 : F.drifts); i++) {  // the wild meadow above the plain is forest floor: no flowers (they showed through the trees as stray flecks)
     const top = i % 2 === 0, cx = slot * (Math.floor(i / 2) + 0.5 + (top ? 0 : 0.5)) + near(rng, slot * 0.45);  // a wide nudge so the drifts never fall into a visible even rhythm
-    // wild (the meadow beyond the plain, TB-207): drifts scattered over the whole tile, clear of its foot where the plain's own top drifts sit
-    const cy = wild ? band * 0.4 + rng.next() * (H - band * 2) : top ? band * (0.25 + rng.next() * 0.5) : H - band * (0.25 + rng.next() * 0.5), main = pick();
+    const cy = top ? F.topY[0] + rng.next() * (F.topY[1] - F.topY[0]) : H - band * (0.25 + rng.next() * 0.5), main = pick();
     // each drift leans on one kind with a sprinkle of others, so it reads as a wild meadow
     for (let k = count(rng, F.per); k > 0; k--) flower(cx + near(rng, F.driftW / 2), cy + near(rng, F.driftH), rng.next() < 0.7 ? main : pick());
   }
-  for (let i = 0; i < F.lane * (wild ? 3 : 1); i++) flower(across(rng.next()), band + rng.next() * (H - band * 2), pick(), wild ? 1 : 0.75);
+  for (let i = 0; i < (wild ? 0 : F.lane); i++) flower(across(rng.next()), band + rng.next() * (H - band * 2), pick(), 0.75);
+  // the forest covers the plain above `topY`: a tuft or pebble there only shows as a stray fleck between the crown tips
+  L.tufts = L.tufts.filter((t) => t.y >= F.topY[0]); L.rocks = L.rocks.filter((r) => r.y >= F.topY[0]);
   L.tufts.sort((a, b) => a.y - b.y); L.rocks.sort((a, b) => a.y - b.y); L.flowers.sort((a, b) => a.y - b.y);
   return L;
 }
