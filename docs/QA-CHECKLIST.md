@@ -7,8 +7,10 @@ Names below are the design names (GDD), which the UI also uses (`src/data/string
 ## A. Start and aim (GDD §2, §6, §12)
 - A1 Wipe save, reload: wave 1, 0 starlight, only grunts march, Sharpened Tips is selected in the tree.
 - A2 Pointer over the plain: a strike circle follows it; the bow lobs an arc into it on its cadence; orcs in the circle take damage.
-- A3 Pointer off the field (or over the wall side): the elf holds fire. Companions and vanguard keep fighting.
+- A3 Mouse pointer off the field (or over the wall side): the elf holds fire. Companions and vanguard keep fighting. (A coarse pointer with Auto fire on does not hold fire: see A6.)
 - A4 Clicking the field does nothing extra (no click-to-shoot, no tap bonus).
+- A6 Touch (TB-223): Auto fire is on by default; with no finger the elf lobs at the densest cluster on the bow's cadence; a finger on a different orc wins; lifting hands it back. The HUD Auto plank and Settings > Auto fire toggle both flip it (tap, aria-pressed, `tide.autofire`); off = holds fire with no finger. Top and bottom spawn rows are both reachable (`node tools/mobile-reach.mjs`, modes top, finger, manual, autotap).
+- A7 Phone landscape HUD (TB-223): at 762x343 the top-left holds the wall bar over starlight, the top-right Wave over Heartwood plus the Auto and Settings planks, the middle of the canopy is clear (>= 45% of the width), every label is Heartwood at 16 px or more, nothing overlaps at wave 148 / 1.23B kills / 123456 Heartwood / 987654321 starlight.
 - A5 The first Sharpened Tips rank is affordable within 30 s of aiming.
 
 ## B. Tree (GDD §11, SKILL-TREE)

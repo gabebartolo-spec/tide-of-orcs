@@ -4,7 +4,7 @@ export const FIELD = { w: 900, h: 480, barX: 150, barW: 14, elfX: 64 } as const;
 /** Sim literals that used to sit in systems code (TB-219): orc spawn margins, wobble phase span, shot flight time, hit flash. */
 /** Touch Auto fire (TB-223): the reticle's pick is refreshed every this many sim ticks (the shot itself picks fresh). */
 export const AUTO_FIRE = { reticleEvery: 6 } as const;
-export const SIM_MISC = { spawnXPad: 24, spawnYPad: 50, tau: 6.28, shotLife: 2.2, hitFlash: 0.12 } as const;
+export const SIM_MISC = { spawnXPad: 24, spawnYPad: 80, tau: 6.28, shotLife: 2.2, hitFlash: 0.12 } as const;
 export const WAVE_LEN = 24;
 /** Checkpoints (TB-159; every 5 since TB-172): clearing every `every`-th wave lets later runs start just past it (0 = off). */
 export const CHECKPOINT = { every: 5 };

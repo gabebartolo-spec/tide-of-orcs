@@ -102,6 +102,8 @@ export const STR = {
 
   starlightCost: (n: string) => `${n} starlight`,
   barricadeHud: (hp: string, max: string) => `BARRICADE ${hp} / ${max}`,
+  /** Phone HUD wall label: the numbers alone, so the glyphs stay legible at 16 px ("BARRICADE" misread at 13 px, TB-223). */
+  barricadeShort: (hp: string, max: string) => `${hp} / ${max}`,
   vanguardHud: (n: number, cap: number) => `VANGUARD ${n} / ${cap}`,
   replantGainK: 'Heartwood on replant', replantBtn: 'Replant',
   hwTitle: 'Heartwood tree',

@@ -1065,41 +1065,57 @@ header, #hud, #toast, #campview, .wrap, .play { touch-action: pan-x pan-y; }
 @media (pointer: coarse) and (max-height: 380px) and (orientation: landscape) { .fallen { padding-top: 4.75rem; } }
 @media (pointer: coarse) and (max-height: 340px) and (orientation: landscape) { .fallen { padding-top: 4.5rem; } .fallen .report { zoom: 0.72; } } /* 915x320: the board fits above the gesture bar without scrolling */
 
-/* Phone landscape HUD (TB-223, director 4 Nov: ugly, too big, hides the canopy, Settings hidden). One slim row of Heartwood text pills
-   on the canopy, no scrim and no banner plaques: about 2 rem of the height instead of 4.5. The wall bar is the carved bar at 0.55 scale with
-   its label inside; Wave carries the wave progress as an underline (the canvas strip would cover the lowest orc row). Auto and Settings are
-   48 px targets (a 36 px visible disc inside a transparent 6 px ring) at the right edge, clear of the notch by the safe-area insets. */
+/* Phone landscape HUD (TB-223 round 3, director 4 Nov: ugly, too big, hides the canopy). The canopy strip is the treeline art at the top
+   of the screen, so the HUD lives in its two corners and leaves the middle clear: left, the carved wall bar (numbers only, 16 px) with the
+   starlight gem and count under it; right, Wave over Heartwood as stroked Heartwood text with no backing, then Auto and Settings as carved bark planks (44 px
+   hit boxes). Slain is not shown on a phone (it is in the fallen report). The strip stays under 2.75 rem so the top orc row (spawn pad,
+   data/balance.ts) is clear of every hit box. All colours are palette tokens. Text is 16 px or more. */
 #btn-auto-hud { display: none; }
 @media (pointer: coarse) and (max-height: 540px) {
   html body:not([data-mode="camp"]) header { position: fixed; inset: 0 0 auto 0; width: 100vw; height: auto; margin: 0; border: 0; box-shadow: none; background: none;
-    padding: max(0.25rem, env(safe-area-inset-top, 0px)) max(0.5rem, env(safe-area-inset-right, 0px)) 0 max(0.5rem, env(safe-area-inset-left, 0px));
-    align-items: center; flex-wrap: nowrap; gap: 0.125rem; }
-  html body:not([data-mode="camp"]) .hud { flex: 1 1 auto; min-width: 0; margin: 0; gap: 0.375rem; align-items: center; flex-wrap: nowrap; }
-  html body:not([data-mode="camp"]) .hud .stats { gap: 0.375rem; flex-wrap: nowrap; }
-  html body:not([data-mode="camp"]) .hud-wallbox { zoom: 0.55; flex-direction: row; align-items: center; gap: 0.5rem; margin: 0; }
+    padding: max(0.125rem, env(safe-area-inset-top, 0px)) max(0.5rem, env(safe-area-inset-right, 0px)) 0 max(0.5rem, env(safe-area-inset-left, 0px));
+    align-items: flex-start; flex-wrap: nowrap; gap: 0.375rem; }
+  /* the hud is a grid: wall over starlight | (clear) | wave over heartwood; .stats dissolves so its two stats can sit in the grid */
+  html body:not([data-mode="camp"]) .hud { display: grid; flex: 1 1 auto; min-width: 0; margin: 0; gap: 0 0.5rem; align-items: center; justify-content: stretch;
+    grid-template-columns: auto minmax(0, 1fr) auto; grid-template-rows: 1.375rem 1.375rem; height: 2.75rem; }
+  html body:not([data-mode="camp"]) .hud .stats { display: contents; }
+  html body:not([data-mode="camp"]) .hud-wallbox { grid-column: 1; grid-row: 1; align-self: center; zoom: 0.5; flex-direction: row; align-items: center; gap: 0.5rem; margin: 0; }
   html body:not([data-mode="camp"]) .hud-wall { margin: 0; }
-  html body:not([data-mode="camp"]) .hud-wall .lbl { inset: auto; left: 50%; top: 50%; transform: translate(-50%, -50%); padding: 0; background: none; border-radius: 0;
-    font-size: 1.5rem; line-height: 1; letter-spacing: .02em; font-weight: 400; color: #fff4dc; -webkit-text-stroke: 0.3125rem #1a0f05; paint-order: stroke fill; text-shadow: none; }
-  html body:not([data-mode="camp"]) .hud-van { padding: 0; font-size: 1.5rem; }
-  html body:not([data-mode="camp"]) .hud-gem { width: 2.25rem; height: 2.25rem; margin: 0 -0.125rem 0 0; }
-  html body:not([data-mode="camp"]) .hud-star { gap: 0.125rem; }
-  html body:not([data-mode="camp"]) .odo { font-size: 1.375rem; }
-  html body:not([data-mode="camp"]) :is(header .stat, .hud-wave) { position: relative; display: flex; align-items: center; justify-content: center; gap: 0.375rem; box-sizing: border-box;
-    width: auto; min-width: 0; height: 1.875rem; margin: 0; padding: 0 0.625rem; border: 0; border-image: none; border-radius: 0.9375rem; flex: none; filter: none;
-    background: color-mix(in srgb, var(--ink) 58%, transparent); box-shadow: inset 0 0 0 0.0625rem color-mix(in srgb, var(--cream) 22%, transparent); text-shadow: 0 0.0625rem 0.0625rem var(--ink); }
-  html body:not([data-mode="camp"]) :is(header .stat .k, .hud-wave .k) { font-size: 0.8125rem; font-weight: 400; letter-spacing: .02em; color: #ffd98a; }
-  html body:not([data-mode="camp"]) :is(header .stat .v, .hud-wave .v) { font-size: 1.25rem; font-weight: 400; line-height: 1; color: #fff4dc; }
-  html body:not([data-mode="camp"]) .hud-wave::after { content: ""; position: absolute; left: 0.625rem; right: 0.625rem; bottom: 0.125rem; height: 0.1875rem; border-radius: 0.125rem;
-    background: linear-gradient(90deg, var(--amber) calc(var(--wave-t, 0) * 100%), color-mix(in srgb, var(--cream) 22%, transparent) 0); }
-  html body:not([data-mode="camp"]) .hud-wave .stamp { font-size: 0.9375rem; padding: 0 0.375rem; border-width: 0.125rem; }
-  /* Auto and Settings: a 48 px hit box, a 36 px visible pill or disc inside it */
-  html body:not([data-mode="camp"]) :is(#btn-auto-hud, #btn-settings) { display: none; position: relative; flex: none; box-sizing: border-box; min-width: 3rem; width: auto; height: 3rem; min-height: 3rem; margin: 0;
-    padding: 0 0.5rem; border: 0.375rem solid transparent; border-image: none; clip-path: none; border-radius: 1.5rem; background: color-mix(in srgb, var(--ink) 62%, transparent) padding-box;
-    box-shadow: inset 0 0 0 0.0625rem color-mix(in srgb, var(--cream) 28%, transparent); filter: none; text-shadow: 0 0.0625rem 0.0625rem var(--ink); font-size: 0.9375rem; line-height: 1; color: var(--text-dim); }
-  html body[data-mode="run"] :is(#btn-auto-hud, #btn-settings) { display: block; }
-  html body[data-mode="run"] #btn-auto-hud[aria-pressed="true"] { color: var(--grove); box-shadow: inset 0 0 0 0.125rem var(--grove); }
-  html body[data-mode="run"] #btn-settings { width: 3rem; padding: 0; font-size: 0; }
-  html body[data-mode="run"] #btn-settings::before { content: ""; position: absolute; inset: 0.4375rem; background: var(--text);
+  html body:not([data-mode="camp"]) .hud-wall .lbl { inset: auto; left: 50%; top: 50%; transform: translate(-50%, -50%); padding: 0; background: none; border-radius: 0; white-space: nowrap;
+    font-size: 0; line-height: 1; letter-spacing: .02em; font-weight: 400; color: var(--text); -webkit-text-stroke: 0.375rem var(--ink); paint-order: stroke fill; text-shadow: none; }
+  html body:not([data-mode="camp"]) .hud-wall .lbl::after { content: attr(data-short); font-size: 2rem; }   /* 2rem at zoom .5 = 16 px: "150 / 150" */
+  html body:not([data-mode="camp"]) .hud-van { padding: 0; font-size: 2rem; }
+  html body:not([data-mode="camp"]) .hud-star { grid-column: 1; grid-row: 2; align-self: center; justify-self: start; gap: 0.125rem; }
+  html body:not([data-mode="camp"]) .hud-gem { width: 1.375rem; height: 1.375rem; margin: 0; }
+  html body:not([data-mode="camp"]) .odo { font-size: 1.25rem; }
+  /* Wave and Heartwood: bare stroked text (no pill) so the trees show through; the stroke carries the contrast */
+  html body:not([data-mode="camp"]) :is(.hud .stat, .hud-wave) { position: relative; grid-column: 3; display: flex; align-items: baseline; justify-content: flex-end; gap: 0.375rem; box-sizing: border-box;
+    width: auto; min-width: 0; height: auto; margin: 0; padding: 0; border: 0; border-image: none; border-radius: 0; flex: none; filter: none; background: none; box-shadow: none;
+    -webkit-text-stroke: 0.25rem var(--ink); paint-order: stroke fill; text-shadow: none; line-height: 1; }
+  html body:not([data-mode="camp"]) .hud-wave { grid-row: 1; }
+  html body:not([data-mode="camp"]) .hud .stat:first-child { display: none; }
+  html body:not([data-mode="camp"]) .hud .stat:last-child { grid-row: 2; }
+  html body:not([data-mode="camp"]) :is(.hud .stat .k, .hud-wave .k) { font-size: 1rem; font-weight: 400; letter-spacing: .02em; color: var(--amber); }
+  html body:not([data-mode="camp"]) :is(.hud .stat .v, .hud-wave .v) { font-size: 1.25rem; font-weight: 400; line-height: 1; color: var(--text); }
+  html body:not([data-mode="camp"]) .hud .stat .v.heart { color: color-mix(in srgb, var(--rose) 45%, var(--text)); }
+  html body:not([data-mode="camp"]) .hud-wave::after { content: ""; position: absolute; left: 0; right: 0; bottom: -0.1875rem; height: 0.125rem; border-radius: 0.0625rem;
+    background: linear-gradient(90deg, var(--amber) calc(var(--wave-t, 0) * 100%), color-mix(in srgb, var(--cream) 30%, transparent) 0); }
+  html body:not([data-mode="camp"]) .hud-wave .stamp { font-size: 1rem; padding: 0 0.375rem; border-width: 0.125rem; }
+  /* Auto and Settings: carved bark planks, a 44 px hit box (a 36 px plank inside a 4 px transparent ring) */
+  html body:not([data-mode="camp"]) :is(#btn-auto-hud, #btn-settings) { display: none; position: relative; flex: none; box-sizing: border-box; min-width: 2.75rem; width: auto; height: 2.75rem; min-height: 2.75rem; margin: 0;
+    padding: 0 0.5rem; border: 0.25rem solid transparent; border-image: none; clip-path: none; border-radius: 0.5rem; background: var(--grain), linear-gradient(var(--bark), var(--splinter)); background-clip: padding-box;
+    box-shadow: inset 0 0.0625rem 0 var(--timber), inset 0 -0.125rem 0 var(--splinter), 0 0.0625rem 0.125rem var(--ink); filter: none; text-shadow: 0 0.0625rem 0.0625rem var(--ink); font-size: 1rem; line-height: 1; color: var(--text-dim); }
+  html body[data-mode="run"] :is(#btn-auto-hud, #btn-settings) { display: block; margin-left: 0; }
+  html body[data-mode="run"] #btn-auto-hud { min-width: 3.5rem; }
+  html body[data-mode="run"] #btn-auto-hud[aria-pressed="true"] { color: var(--grove); box-shadow: inset 0 0 0 0.125rem var(--grove), 0 0.0625rem 0.125rem var(--ink); }
+  html body[data-mode="run"] #btn-auto-hud[aria-pressed="false"] { opacity: 0.8; text-decoration: line-through; text-decoration-thickness: 0.125rem; }
+  html body[data-mode="run"] #btn-settings { width: 2.75rem; min-width: 2.75rem; padding: 0; font-size: 0; }
+  html body[data-mode="run"] #btn-settings::before { content: ""; position: absolute; inset: 0.375rem; background: var(--text);
     -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='6'/%3E%3Ccircle cx='12' cy='12' r='2'/%3E%3Cpath d='M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1'/%3E%3C/svg%3E") center / contain no-repeat;
     mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='6'/%3E%3Ccircle cx='12' cy='12' r='2'/%3E%3Cpath d='M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1'/%3E%3C/svg%3E") center / contain no-repeat; }
+}
+/* Phone mute: a carved bark plank like Auto and Settings, not a stock square on the meadow (TB-223) */
+@media (pointer: coarse) and (max-height: 540px) {
+  body[data-mode="run"] .mute-corner { border: 0; border-radius: 0.5rem; background: var(--grain), linear-gradient(var(--bark), var(--splinter));
+    box-shadow: inset 0 0 0 0.0625rem var(--timber), 0 0.0625rem 0.125rem var(--ink); color: var(--text); }
 }
