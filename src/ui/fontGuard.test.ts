@@ -100,6 +100,10 @@ function literals(src: string): string[] {
 describe('Heartwood glyph coverage (TB-226)', () => {
   const cmap = woff2Cmap(readFileSync(join(ROOT, 'src/ui/fonts/heartwood-400.woff2')));
   it('reads a sane cmap', () => { expect(cmap.has(65)).toBe(true); expect(cmap.has(0xb7)).toBe(true); expect(cmap.size).toBeGreaterThan(90); });
+  it('covers all printable ASCII (a pasted save or typed text never falls back)', () => {
+    const miss: string[] = []; for (let c = 32; c <= 126; c++) if (!cmap.has(c)) miss.push(String.fromCharCode(c));
+    expect(miss).toEqual([]);
+  });
   it('covers every non-ASCII character in any source string', () => {
     const miss: string[] = [];
     files.filter((p) => /\.(ts|html)$/.test(p)).forEach((p) => {

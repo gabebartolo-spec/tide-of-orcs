@@ -302,7 +302,8 @@ G["Z"] = dict(s=[
 # --- figures (lining, slightly shorter than caps) ------------------------------
 F = FIG
 G["0"] = dict(s=bowl_o(36, 380, F + 10, -10), sb=(32, 32))
-G["1"] = dict(s=[S(f"M 40 {F - 150} C 100 {F - 110} 160 {F - 60} 200 {F + 4} L 200 0", tin=50, **SOFT)], sb=(20, 60))
+G["1"] = dict(s=[S(f"M 40 {F - 150} C 100 {F - 110} 160 {F - 60} 200 {F + 4} L 200 0", tin=50, **SOFT),
+                S("M 80 6 L 320 10", w=0.6, tin=30, tout=30, pmin=0.06)], sb=(20, 30))   # foot bar: 1 never reads as l or I
 G["2"] = dict(s=[
     S(f"M 50 {F - 140} C 70 {F - 40} 140 {F + 6} 220 {F + 6} C 310 {F + 6} 370 {F - 60} 370 {F - 160} "
       "C 370 300 230 180 50 6", tin=40, tout=0),
@@ -399,6 +400,21 @@ G["→"] = dict(s=[S("M 30 250 L 430 260", w=0.6, tin=40, tout=0, pmin=0.06),
                  S("M 300 380 C 350 320 400 280 440 260 C 400 240 350 200 300 140", tin=40, tout=40, pmin=0.06, w=0.8)], sb=(30, 30))
 G["<"] = dict(s=[S("M 330 440 L 40 260 L 330 80", tin=40, tout=40, pmin=0.06, w=0.8)], sb=(35, 35))
 G[">"] = dict(s=[S("M 40 440 L 330 260 L 40 80", tin=40, tout=40, pmin=0.06, w=0.8)], sb=(35, 35))
+
+# Printable ASCII completion (TB-226): the ten shapes that were missing, so a pasted save string or typed text never falls back to another face.
+G["\\"] = dict(s=[S(f"M 20 {C + 40} L 330 -140", tin=40, tout=40, pmin=0.06)], sb=(10, 10))
+G["|"] = dict(s=[S(f"M 70 {C + 60} L 66 -200", tin=40, tout=40, pmin=0.06)], sb=(45, 45))
+G["_"] = dict(s=[S("M 20 -90 L 420 -84", w=0.85, tin=40, tout=40, pmin=0.06)], sb=(10, 10))
+G["^"] = dict(s=[S(f"M 40 430 L 170 {C - 30} L 300 430", tin=40, tout=40, pmin=0.06, w=0.8)], sb=(35, 35))
+G["`"] = dict(s=[S(f"M 30 {C + 20} L 140 {C - 130}", tin=30, tout=60, pmin=0.06, w=0.8)], sb=(40, 40))
+G["~"] = dict(s=[S("M 30 220 C 70 310 130 320 190 260 C 250 200 310 200 360 300", tin=40, tout=40, pmin=0.06, w=0.8)], sb=(35, 35))
+G["{"] = dict(s=[S(f"M 200 {C + 40} C 120 {C + 40} 110 {C} 110 600 L 110 340 C 110 290 80 260 40 250 C 80 240 110 210 110 160 "
+                   "L 110 -80 C 110 -150 130 -180 200 -180", tin=30, tout=30, pmin=0.06, w=0.8)], sb=(30, 20))
+G["}"] = dict(s=[S(f"M 40 {C + 40} C 120 {C + 40} 130 {C} 130 600 L 130 340 C 130 290 160 260 200 250 C 160 240 130 210 130 160 "
+                   "L 130 -80 C 130 -150 110 -180 40 -180", tin=30, tout=30, pmin=0.06, w=0.8)], sb=(20, 30))
+G["$"] = dict(s=[s_curve(40, 380, C - 40), S(f"M 210 {C + 90} L 206 -90", w=0.6, tin=40, tout=40, pmin=0.06)], sb=(32, 32))
+G["@"] = dict(s=bowl_o(20, 520, C, -110) + bowl_o(190, 360, 380, 90) +
+              [S("M 360 400 L 358 120 C 358 90 400 100 440 150 C 480 200 500 270 480 360", tin=30, tout=60, pmin=0.06, w=0.8)], sb=(30, 30))
 
 GLYPHS = G
 

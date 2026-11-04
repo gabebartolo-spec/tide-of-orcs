@@ -1,4 +1,4 @@
-// TB-226 Heartwood-only proof. Start `npx vite --port 5261` IN THIS WORKTREE, then:
+// TB-226 Heartwood-only proof. Start `npx vite --port 5261 --strictPort` IN THIS WORKTREE (without --strictPort vite silently moves to another port), then:
 //   TIDE_URL=http://localhost:5261/ node tools/font-audit.mjs [debug port] [outDir]
 // First it checks the server really serves THIS worktree (the woff2 bytes and the --body token must match the local files), so a stale
 // server from another worktree can never give a verdict.
@@ -137,8 +137,8 @@ for (const [key, W, Hh, mobile, dpr] of VIEWS) {
   await ev(`localStorage.setItem('tide.fullscreen','off'); 1`);
   if (key.endsWith('portrait')) { await screen(key, '01-rotate-prompt', null, 300); continue; }
   await ev(H(`game.state.run.starlight = 5000; game.setAim(560, 300); panel.setMode('run'); panel.update(); return 1;`)); await sleep(4500);
-  await screen(key, '01-run-hud', null, 300);
   await ev(H(`game.state.stats.barMax = 1e6; game.state.run.barHp = 1e6; game.state.run.fallen = false; document.getElementById('fallen').hidden = true; return 1;`));   // hold the wall so the capture is the fight, not the fallen board
+  await screen(key, '01-run-hud', null, 300);
   await screen(key, '01b-boss-ready', H(`game.state.run.wave = 100; panel.update(); return 1;`), 500);
   await screen(key, '01c-boss-fight', `document.getElementById('dep-boss').click(); 1`, 2500);
   await ev(H(`panel.toast('The wall holds. Hold the line.'); return 1;`)); await ev(LOOT);
@@ -154,7 +154,7 @@ for (const [key, W, Hh, mobile, dpr] of VIEWS) {
   await screen(key, '05-satchel', H(`panel.setTab('satchel'); return 1;`), 800);
   await screen(key, '06-satchel-picked', `document.querySelector('#sat-grid .item')?.click(); 1`, 700);
   await screen(key, '07-camp', H(`panel.setTab('camp'); return 1;`), 900);
-  await screen(key, '07b-camp-card', H(`const id = document.querySelector('#camp-list button[data-camp]')?.dataset.camp; if (id) panel.camp.show(id); return id || 'none';`), 700);
+  await screen(key, '07b-camp-card', H(`panel.camp.show('bowyer'); return !document.getElementById('bcard').hidden;`), 700);
   await ev(H(`panel.camp.close(); return 1;`));
   await screen(key, '08-prestige', H(`panel.setTab('prestige'); return 1;`), 800);
   await screen(key, '09-settings-tab', H(`panel.setTab('settings'); document.getElementById('btn-export').click(); return 1;`), 600);

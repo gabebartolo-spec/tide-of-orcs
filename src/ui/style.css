@@ -1123,3 +1123,15 @@ header, #hud, #toast, #campview, .wrap, .play { touch-action: pan-x pan-y; }
   html body .hud-wall-n { font-size: 1.0625rem; }
   html body .tabs .badge { font-size: 0.875rem; }
 }
+
+/* TB-226 follow-up: Heartwood sets wider than the old face, so the banner plaques keep their numerals clear of the nails at 1280, the boss plaque
+   reads on its wood, a 1 never reads as an l in the transfer box, and the fallen board stays centred on a phone. */
+@media (min-width: 861px) and (max-width: 1500px) and (pointer: fine) {
+  body:not([data-mode="camp"]) :is(header .stat, .hud-wave) { gap: 0.375rem; padding-inline: 0.25rem; flex-shrink: 0; min-width: 9.5rem; }
+  body:not([data-mode="camp"]) :is(header .stat .k, .hud-wave .k) { font-size: 0.9375rem; letter-spacing: 0; }
+  body:not([data-mode="camp"]) :is(header .stat .v, .hud-wave .v) { font-size: 1.5rem; }
+}
+#dep-boss:disabled { opacity: .85; }
+#dep-boss .n { color: #fff4dc; text-shadow: 0 0.0625rem 0.125rem #2a1a0a, 0 0 0.125rem #2a1a0a; }
+#dep-boss .c { color: #ffd98a; font-size: 0.9375rem; text-shadow: 0 0.0625rem 0.125rem #2a1a0a, 0 0 0.125rem #2a1a0a; }
+.settings textarea { letter-spacing: 0.06em; }

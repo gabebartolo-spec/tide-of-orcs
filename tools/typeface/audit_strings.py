@@ -5,6 +5,7 @@ miss={}
 for p in glob.glob('src/**/*.ts',recursive=True)+['index.html']:
     if p.endswith('.test.ts'): continue
     s=open(p,encoding='utf8').read()
+    s=re.sub(r'/\*[\s\S]*?\*/','',s); s=re.sub(r'(?m)(^|\s)//.*$','',s)   # comments are never shown
     for m in re.finditer(r"""(["'`])((?:\.|(?!\1).)*)\1""",s):
         for ch in m.group(2):
             if ord(ch)>126 or (ord(ch)<32 and ch not in '\n\t'):
