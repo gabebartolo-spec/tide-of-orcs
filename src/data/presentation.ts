@@ -104,9 +104,11 @@ export const GROUND = {
    *  keeps clear grass. Each panel sits up to `jitter` left or right (fixed scatter) so row seams never run as one straight line. A broken panel
    *  draws `brokenShade` darker at `brokenAlpha`, `brokenDx` inward (never widening the wall) sunk `brokenDy` and tilted `brokenTilt` rad, its top `brokenSnap` snapped off along a zigzag (±`zig`). Every `brokenGap`-th broken front panel is gone, so the
    *  darker back rows show through; the whole wall clips to its healthy outline. Only inner rows jitter.
-   *  Every other panel is flipped so the rope bindings alternate sides instead of stacking into one column; `rowSeed` offsets each row's fixed golden-ratio break scatter (`breakScatter`). */
+   *  Where `mirror[tier]` is set every other panel is flipped so bindings alternate sides (off for the TB-227 stone and palisade art, where flipping turns the courses into chevrons); `rowSeed` offsets each row's fixed golden-ratio break scatter (`breakScatter`). */
   wallTiers: {
-    at: [1.9, 3.7, 7], perPerk: 0.5, rows: [1, 2, 2, 3], scale: [1, 1, 1.25, 1.6],
+    at: [1.9, 3.7, 7], perPerk: 0.5, rows: [1, 2, 2, 2], scale: [1, 1, 1.25, 1.6],
+    /** TB-227: the atlas drawn at each tier (weak palisade, medium stone, strong castle with mithril veins) and whether that tier flips every other panel (stone courses must not herringbone). */
+    atlas: ['fence_weak', 'fence_medium', 'fence_medium', 'fence_strong'], mirror: [false, false, false, false], calm: [1, 1, 1, 0.2],
     rowDx: -11, rowDy: [0, 0.5, 0.25], rowShade: 0.18, backMax: 18, shadowDx: -8, shadowW: 0.7, brokenAlpha: 0.9, brokenDx: 4, brokenDy: 5, brokenTilt: 0.14, brokenShade: 0.25, brokenSnap: 0.25, zig: 5, brokenGap: 3, jitter: 3, rowSeed: 7, breakScatter: 0.618034,
   },
 } as const;

@@ -16,3 +16,7 @@ export const wallTier = (st: Pick<Stats, 'barMax' | 'barRegen' | 'bulwark'>): nu
  *  every layer agrees on which panels are broken. Panels above the field top always stand. */
 export const panelAlive = (y: number, h: number, frac: number, seed: number): boolean =>
   y < 0 || y / h < frac || (seed * GROUND.wallTiers.breakScatter) % 1 < frac;
+
+/** Whether a panel is drawn flipped (TB-227): back rows and every other panel, but only on tiers whose art allows it (GROUND.wallTiers.mirror). */
+export const panelMirrored = (tier: number, row: number, i: number): boolean =>
+  !!GROUND.wallTiers.mirror[tier] && ((row ? 1 : 0) ^ (i & 1)) === 1;

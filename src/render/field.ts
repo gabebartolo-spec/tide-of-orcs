@@ -21,7 +21,7 @@ import { Interp } from './interp';
 import { FIELD_VIEW, GROUND, LOOT_VFX, ORC_SPRITE, SKY, VFX, dusk } from '../data/presentation';
 import { SLOTS } from '../data/loot';
 import { setTiers } from '../sim/gear';
-import { panelAlive, wallTier } from './wallTier';
+import { panelAlive, panelMirrored, wallTier } from './wallTier';
 
 const IMPACT_LIFE = VFX.impactLife;
 /** Foot offset below an actor's centre, where its blood lands. */
@@ -37,8 +37,8 @@ export class FieldRenderer {
   private g: CanvasRenderingContext2D;
   private fx = new Particles();
   private shake = 0;
-  private fenceBack: HTMLCanvasElement | null = null;
-  private fenceBroken: HTMLCanvasElement | null = null;
+  private fenceBack = new Map<HTMLImageElement, HTMLCanvasElement>();
+  private fenceBroken = new Map<HTMLImageElement, HTMLCanvasElement>();
   private storms: { pts: [number, number][]; life: number; c: string }[] = [];
   private impacts: { x: number; y: number; r: number; life: number }[] = [];
   /** Fire puffs where a fireball landed (TB-127): discs that rise, swell and cool from pale core to ember to fire as they fade. */
@@ -211,20 +211,20 @@ export class FieldRenderer {
 
   /** The fence panel shaded for the back rows (TB-209), baked once. */
   private shadedFence(fence: HTMLImageElement): HTMLCanvasElement {
-    if (this.fenceBack) return this.fenceBack;
+    const hit = this.fenceBack.get(fence); if (hit) return hit;
     const c = document.createElement('canvas'); c.width = fence.width; c.height = fence.height;
     const x = c.getContext('2d')!; x.drawImage(fence, 0, 0);
     x.globalCompositeOperation = 'source-atop'; x.globalAlpha = GROUND.wallTiers.rowShade; x.fillStyle = P.ink; x.fillRect(0, 0, c.width, c.height);
-    return (this.fenceBack = c);
+    this.fenceBack.set(fence, c); return c;
   }
 
   /** The fence panel darkened for a broken panel (TB-209), built once. */
   private brokenFence(fence: HTMLImageElement): HTMLCanvasElement {
-    if (this.fenceBroken) return this.fenceBroken;
+    const hit = this.fenceBroken.get(fence); if (hit) return hit;
     const c = document.createElement('canvas'); c.width = fence.width; c.height = fence.height;
     const x = c.getContext('2d')!; x.drawImage(fence, 0, 0);
     x.globalCompositeOperation = 'source-atop'; x.globalAlpha = GROUND.wallTiers.brokenShade; x.fillStyle = P.ink; x.fillRect(0, 0, c.width, c.height);
-    return (this.fenceBroken = c);
+    this.fenceBroken.set(fence, c); return c;
   }
 
   draw(s: SimState, dt: number, aim: { x: number; y: number } | null = null): void {
@@ -253,14 +253,14 @@ export class FieldRenderer {
     // barricade
     const frac = barFrac(s);
     const top = Math.max(vis.y0, this.treeline.skirtBase(vis.y0) + GROUND.fence.topGap);  // the barricade ends just below the treeline's bush skirt, with a capping rail
-    const fence = decorImg('fence');
+    const fence = decorImg(GROUND.wallTiers.atlas[wallTier(s.stats)]!);
     if (!fence) { g.fillStyle = P.wallShade; g.fillRect(BAR_X + 4, top, BAR_W + 4, H - top); }
     if (fence) {
       // stacked fence panels running into the field, top to bottom so each overlaps the one behind it; back rows first (TB-209)
       const perk = s.stats.bulwark || s.stats.barRegen > 0;
       const L = GROUND.fence, T = GROUND.wallTiers, tier = wallTier(s.stats), sc = T.scale[tier]!, w = L.w * sc, step = L.step * sc;
       const cw = fence.width / L.cols, chh = fence.height / L.rows, lh = w * chh / cw, atlasRow = (tier >= L.ironTier ? 1 : 0) + (perk ? 2 : 0);  // atlas: one cell per stake-panel variant; rows: rope, iron-banded, and both again with green perk pennants (front row only)
-      const rows = T.rows[tier]!, fwd = Math.max(0, -(rows - 1) * T.rowDx * sc - T.backMax * sc);  // keep grass between wall and elf
+      const calm = T.calm[tier]!, rows = T.rows[tier]!, fwd = Math.max(0, -(rows - 1) * T.rowDx * sc - T.backMax * sc);  // keep grass between wall and elf
       const xAt = (r: number): number => BAR_X + BAR_W / 2 - w / 2 + r * T.rowDx * sc + fwd;
       const hash = (n: number): number => (n * T.breakScatter * 7.31 + 0.137) % 1;  // fixed per panel, so nothing flickers
       // one clip for the whole wall: inside the healthy outline, so nothing pokes past it (open above, so stake tips stay whole)
@@ -270,10 +270,10 @@ export class FieldRenderer {
         const sx0 = x0 + w * (1 - T.shadowW) / 2 + T.shadowDx, sg = g.createLinearGradient(sx0, 0, sx0 + w * T.shadowW, 0); sg.addColorStop(0, P.glowClear); sg.addColorStop(1, P.wallShade);
         if (!r) { g.fillStyle = sg; g.fillRect(sx0, top, w * T.shadowW, H - top); }  // each row's own ground shadow, soft at its outer edge
         const img = r ? this.shadedFence(fence) : fence, inward = r === rows - 1 && r ? 1 : -1;  // broken panels lean toward the wall's middle
-        for (let i = 0, y = (-lh / 2 - Math.ceil(-top / step) * step) + dy; y < H; i++, y += step * (1 + (hash(i * 3 + r * 11 + 5) - 0.5) * 2 * L.pitchJit)) {  // jittered pitch: no fixed repeat
+        for (let i = 0, y = (-lh / 2 - Math.ceil(-top / step) * step) + dy; y < H; i++, y += step * (1 + (hash(i * 3 + r * 11 + 5) - 0.5) * 2 * L.pitchJit * calm)) {  // jittered pitch: no fixed repeat
           const seed = i + r * T.rowSeed, alive = panelAlive(y, H, frac, seed), v = Math.floor(hash(seed + 2) * L.cols);
           g.globalAlpha = alive ? 1 : T.brokenAlpha;
-          const jit = (((seed * T.breakScatter * 3) % 1) * 2 - 1) * T.jitter * sc * (inner ? 1 : L.edgeJit);
+          const jit = (((seed * T.breakScatter * 3) % 1) * 2 - 1) * T.jitter * calm * sc * (inner ? 1 : L.edgeJit);
           const px = x0 + jit + (alive ? 0 : inward * T.brokenDx), py = y + (alive ? 0 : T.brokenDy * sc), im = alive ? img : this.brokenFence(fence);
           if (!r && !alive && i % T.brokenGap !== 0) continue;  // a front panel gone (all but one in brokenGap): the darker back rows show through
           g.save(); g.translate(px + w / 2, py + lh);  // pivot at the panel's foot so a broken panel leans
@@ -284,9 +284,9 @@ export class FieldRenderer {
             for (let k = 1; k <= 5; k++) g.lineTo(-w / 2 + (w * k) / 6, cut + (k % 2 ? -1 : 1) * z * (0.6 + 0.4 * (((seed * 7 + k * 3) * T.breakScatter) % 1)));
             g.lineTo(w / 2, cut); g.lineTo(w / 2, 0); g.closePath(); g.clip();
           }
-          if ((r ? 1 : 0) ^ (i & 1)) g.scale(-1, 1);  // back rows mirrored, and every other panel flipped
-          const hs = 1 + (hash(seed + 9) - 0.5) * 2 * L.heightJit;  // each panel a little taller or shorter, and a touch off plumb
-          g.rotate((hash(seed + 4) - 0.5) * 2 * L.leanJit); g.drawImage(im, v * cw, (r ? 0 : atlasRow) * chh, cw, chh, -w / 2, -lh * hs, w, lh * hs); g.restore(); 
+          if (panelMirrored(tier, r, i)) g.scale(-1, 1);  // back rows mirrored, and every other panel flipped (only on tiers whose art allows it)
+          const hs = 1 + (hash(seed + 9) - 0.5) * 2 * L.heightJit * calm;  // each panel a little taller or shorter, and a touch off plumb
+          g.rotate((hash(seed + 4) - 0.5) * 2 * L.leanJit * calm); g.drawImage(im, v * cw, (r ? 0 : atlasRow) * chh, cw, chh, -w / 2, -lh * hs, w, lh * hs); g.restore(); 
         }
       }
       g.restore();

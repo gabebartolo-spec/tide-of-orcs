@@ -9,9 +9,12 @@ Third-party assets used in Tide of Orcs.
 - Companion hawk (sprite `hawk`; TB-068): "Red-tailed Hawk - in Flight" by Oregon State University | Ecampus (osuecampus),
   https://sketchfab.com/3d-models/red-tailed-hawk-in-flight-4abcab5af9044a939fb5a55bff9e5000, licensed CC BY 4.0
   (https://creativecommons.org/licenses/by/4.0/). Changed: rendered to 2D sprite frames.
-- Field decor (TB-162), licensed CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) except the barricade. Changed: rendered to
+- Field decor (TB-162), licensed CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Changed: rendered to
   2D sprites in `public/decor`.
-  - Barricade (`fence`): "Wooden Spike" by J-Toastie, https://poly.pizza/m/84acA3fAS1, licensed CC BY 3.0 (https://creativecommons.org/licenses/by/3.0/). Changed: a row of copies rendered to a 2D sprite.
+  - Barricade tiers (`fence_weak`, `fence_medium`, `fence_strong`; TB-227), licensed CC BY 4.0. Changed: rendered to 2D sprites; the castle wall also given procedural mithril veins.
+    - Weak: "Palisade Wall Low Poly" by RE^ARCH Studio, https://sketchfab.com/3d-models/palisade-wall-low-poly
+    - Medium: "Stylized Modular Stonewalls" by @blue.blender.print, https://sketchfab.com/3d-models/stylized-modular-stonewalls
+    - Strong: "Tower and Castle Walls" by LucasPresoto, https://sketchfab.com/3d-models/tower-and-castle-walls
 - Treeline (`tree_*` in `public/decor`; TB-207): "Handpainted Tree Pack" by rudolfs,
   https://sketchfab.com/3d-models/handpainted-tree-pack-d246b8b4439d44c6adc854ebc5ffc5ba, licensed CC BY 4.0
   (https://creativecommons.org/licenses/by/4.0/). Changed: single trees rendered to 2D sprites, plus darker hazed copies.

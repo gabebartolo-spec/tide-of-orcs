@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { panelAlive, wallScore, wallTier } from './wallTier';
+import { panelAlive, panelMirrored, wallScore, wallTier } from './wallTier';
 import { BARRICADE } from '../data/balance';
 import { GROUND } from '../data/presentation';
 
@@ -23,5 +23,13 @@ describe('wallTier (TB-209)', () => {
   it('panelAlive: intact wall keeps every panel, a fallen one only those above the field', () => {
     for (let i = 0; i < 40; i++) { expect(panelAlive(i * 22, 600, 1, i)).toBe(true); expect(panelAlive(i * 22 + 1, 600, 0, i)).toBe(false); }
     expect(panelAlive(-5, 600, 0, 3)).toBe(true);
+  });
+});
+
+describe('wall art (TB-227)', () => {
+  it('has one atlas and one mirror flag per tier, and no tier mirrors stone courses', () => {
+    const n = GROUND.wallTiers.rows.length;
+    expect(GROUND.wallTiers.atlas).toHaveLength(n); expect(GROUND.wallTiers.mirror).toHaveLength(n);
+    for (let t = 0; t < n; t++) for (let r = 0; r < 3; r++) for (let i = 0; i < 6; i++) expect(panelMirrored(t, r, i)).toBe(false);
   });
 });
