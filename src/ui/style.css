@@ -548,10 +548,81 @@ body[data-mode="camp"] :is(.hud-wallbox, .hud-wave) { display: none; }
 :root[data-calm] #sat-worn .item.want { animation: none; filter: drop-shadow(0 0 0.75rem var(--amber)); }
 :root[data-calm] :is(#sat-grid, #sat-worn) .item { transition: none; }
 @media (hover: hover) and (pointer: fine) { :root[data-calm] :is(#sat-grid, #sat-worn) .item:hover { transform: none; } }
-/* The picked item's card sits under the bag (right), not under the doll, so the page keeps its scale with an item picked. */
+/* TB-206c: the satchel page. Landscape PC (>= 861 px): two bands. Top: the doll in a frame cut to its own width, the picked
+   item's card (rows 1-2, so it starts level with the Worn label) and the worn Sets list. Below them the bag's own bar (count,
+   Keep filter), then the bag across the full width, --bag-cols pockets a row, so a full 40-item bag is two rows and never
+   scrolls (an 80-item Deep Satchel is four rows and the page fit scales). Set tiers are full-opacity text: met amber, unmet
+   parchment. Every size is a --card-* / --setl-* / --bag-* token, scoped to the satchel (not the page root). */
+.prestige.satchel { --bag-cols: 20; --bag-gap: 0.5rem; --card-icon: 4rem; --card-img: 3.75rem; --card-gap: 1.25rem; --card-row-gap: 0.5rem;
+  --card-btn-h: 2.25rem; --card-btn-pad: 0.25rem 1.25rem; --reroll-pad: 0.125rem 0.75rem; --setl-gap: 0.375rem; --setl-hang: 1.35em;
+  --setl-fs: 1rem; --setl-lh: 1.3; --card-fr: 1.25fr; --card-min-h: 18rem;
+  --narrow-doll-pocket: 4.5rem; --narrow-doll-w: 6rem; --narrow-pocket: 4rem; --narrow-gap: 0.5rem; --narrow-pill-fs: 1rem; --narrow-btn-pad: 0.25rem 0.75rem; }
+/* One markup for every layout: the card's name and its rarity line sit in .title. Off the PC grid the title dissolves and the
+   rarity line wraps under the head (the pre-TB-206 order: icon, name, path tag, then the line), so phones keep their layout. */
+.itemdetail .head { flex-wrap: wrap; row-gap: 0; } .itemdetail .title { display: contents; }
+.itemdetail .head .ptag { order: 1; } .itemdetail .head .title > .desc { order: 2; flex: 0 0 100%; }
+.itemdetail :is(.affixes li, .name) { text-wrap: balance; }
+.itemdetail .desc, .set :is(.k, .tier) { text-wrap: pretty; }
+#sat-detail, #sat-detail .desc { min-width: 0; max-width: 100%; overflow-wrap: break-word; }
+/* one icon frame for every rarity (the rarity shows in the colour), stat rows flush with the rest of the card */
+#sat-detail .glyph.big { border: 0.125rem solid var(--rar, var(--line)); border-radius: 0.375rem; box-shadow: none;
+  background: image-set(url("/ui/pocket.webp") 1x, url("/ui/pocket@2x.webp") 2x) center / 100% 100% no-repeat; }
+/* thin pale/dark art (bows, cloaks) must read on the pocket tan and on the selected glow: a hairline ink halo plus a cream one */
+#sat-grid .item .glyph img, #sat-worn .item .glyph img, #sat-detail .glyph.big img { filter: drop-shadow(0 0 0.0625rem var(--ink)) drop-shadow(0 0 0.0625rem var(--ink)) drop-shadow(0 0 0.1875rem color-mix(in srgb, var(--cream) 85%, transparent)); }
+#sat-detail .name.r-mythic { color: color-mix(in srgb, var(--rose) 55%, var(--cream)); }
+#sat-detail .affixes { padding-left: 0; }
+.nw { white-space: nowrap; }
 @media (min-width: 861px) and (orientation: landscape) {
-  .prestige.satchel > .stat { grid-row: 2; } .prestige.satchel > #sat-worn { grid-row: 3 / span 2; } .prestige.satchel > #sat-sets { grid-row: 5; }
-  .prestige.satchel > #sat-grid { grid-row: 2 / span 2; } .prestige.satchel > #sat-detail { grid-column: 2; grid-row: 4 / span 2; }
+  .prestige.satchel { --doll-pocket: 5.5rem; --doll-w: 12rem; --bag-pocket: 4rem;
+    grid-template-columns: max-content minmax(0, var(--card-fr)) minmax(0, 1fr); grid-template-rows: auto auto auto auto;
+    column-gap: var(--card-gap); row-gap: calc(0.5 * var(--card-gap)); }
+  .prestige.satchel > * { grid-column: auto; grid-row: auto; margin: 0; }
+  .prestige.satchel > .stat { grid-area: 1 / 1; }
+  .prestige.satchel > #sat-worn { grid-area: 2 / 1; align-self: start; width: max-content; }
+  .prestige.satchel > #sat-detail { grid-area: 1 / 2 / 3 / 3; align-self: start; min-height: var(--card-min-h); }
+  .prestige.satchel > #sat-sets { grid-area: 1 / 3 / 3 / 4; align-self: start; }
+  .prestige.satchel > .satbar { grid-area: 3 / 1 / 4 / 4; }
+  .prestige.satchel > #sat-grid { grid-area: 4 / 1 / 5 / 4; align-self: start; justify-self: stretch; min-height: 0;
+    grid-template-columns: repeat(var(--bag-cols), var(--bag-pocket)); grid-auto-rows: var(--bag-pocket); gap: var(--bag-gap); justify-content: space-evenly; }
+  .itemdetail .title { display: block; min-width: 0; }
+  .itemdetail .glyph.big { width: var(--card-icon); height: var(--card-icon); } .itemdetail .glyph.big img { width: var(--card-img); height: var(--card-img); }
+  .itemdetail .affixes { margin: var(--card-row-gap) 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(max-content, 1fr)); column-gap: var(--card-gap); row-gap: var(--card-row-gap); }
+  .itemdetail .affixes:not(:has(.buy)) { grid-template-columns: repeat(2, max-content); }
+  /* worn items: the text and its Reroll pill are two columns shared by every line (subgrid), so the pills line up */
+  .itemdetail .affixes:has(.buy) { grid-template-columns: max-content max-content; justify-content: start; }
+  .itemdetail .affixes:has(.buy) li { display: grid; grid-template-columns: subgrid; grid-column: 1 / -1; align-items: center; column-gap: var(--card-gap); }
+  .itemdetail .affixes li { display: flex; flex-wrap: wrap; align-items: center; gap: var(--setl-gap); }
+  .itemdetail .affixes .buy { padding: var(--reroll-pad); min-height: 0; justify-self: start; }
+  .itemdetail .row { margin-top: calc(2 * var(--card-row-gap)); justify-content: flex-start; gap: calc(2 * var(--setl-gap)); }
+  .itemdetail .row .buy { min-height: var(--card-btn-h); padding: var(--card-btn-pad); }
+  .sets .set, .itemdetail .set { display: block; margin: var(--setl-gap) 0 0; }
+  .sets .set .k, .itemdetail .set .k { color: var(--cream); }
+  .set .tier { color: var(--cream-dim); opacity: 1; font-size: var(--setl-fs); line-height: var(--setl-lh); padding-left: var(--setl-hang); text-indent: calc(-1 * var(--setl-hang)); }
+  .set .tier.on { color: var(--amber); }
+}
+/* 720p keeps its 16 px root (html clamp), so the pockets are sized for that height instead of the page shrinking */
+@media (min-width: 861px) and (orientation: landscape) and (max-height: 800px) {
+  .prestige.satchel { --doll-pocket: 4.25rem; --doll-w: 8.5rem; --bag-pocket: 3.125rem; --bag-gap: 0.25rem; --pocket-icon: 3rem; --card-icon: 3rem; --card-img: 2.75rem;
+    --setl-gap: 0.25rem; --setl-lh: 1.2; --card-row-gap: 0.375rem; --card-btn-h: 2rem; --card-gap: 1rem; --sat-edge: 1.125rem; --card-fr: 1.35fr; --card-min-h: 16rem; }
+  .itemdetail :is(.desc, .affixes li) { line-height: 1.2; } #sat-worn { row-gap: var(--setl-gap); }
+}
+/* Narrow portrait window (< 861 px wide, e.g. a small browser window; a touch phone held upright shows the turn-sideways
+   card instead): one column that scrolls (data-fit="narrow", fit.ts never scales it), a smaller doll, and the bag a multi-column grid
+   of --narrow-pocket pockets that fills the width. */
+@media (max-width: 860px) and (orientation: portrait) {
+  .prestige.satchel { --doll-pocket: var(--narrow-doll-pocket); --doll-w: var(--narrow-doll-w); --pocket-icon: 3rem; --bag-pocket: var(--narrow-pocket); --bag-gap: var(--narrow-gap); }
+  .prestige.satchel > #sat-grid { align-self: stretch; grid-template-columns: repeat(auto-fill, var(--bag-pocket)); grid-auto-rows: var(--bag-pocket); gap: var(--bag-gap); justify-content: space-evenly; min-height: 0; }
+  .prestige.satchel > #sat-worn { width: auto; align-self: stretch; }
+  .itemdetail .affixes:has(.buy) { display: grid; grid-template-columns: minmax(0, 1fr) max-content; column-gap: var(--narrow-gap); row-gap: var(--card-row-gap); }
+  .itemdetail .affixes .buy { padding: var(--reroll-pad); min-height: 0; font-size: var(--narrow-pill-fs); }
+  .itemdetail .row { justify-content: flex-start; gap: var(--narrow-gap); } .itemdetail .row .buy { padding: var(--narrow-btn-pad); }
+  #sat-detail:not(:has(.head)) { display: none; }
+  .itemdetail .affixes { list-style: none; }
+  .itemdetail .affixes:has(.buy) li { display: grid; grid-template-columns: subgrid; grid-column: 1 / -1; align-items: center; }
+  .sets .set, .itemdetail .set { display: block; margin: var(--setl-gap) 0 0; }
+  .sets .set .k, .itemdetail .set .k { color: var(--cream); }
+  .set .tier { color: var(--cream-dim); opacity: 1; font-size: var(--setl-fs); line-height: var(--setl-lh); padding-left: var(--setl-hang); text-indent: calc(-1 * var(--setl-hang)); }
+  .set .tier.on { color: var(--amber); }
 }
 /* HUD outside the field (TB-195i, director 3 Nov): the wall bar, starlight, wave plank, Slain/Heartwood and Settings sit in a
    carved bar above the field instead of over it, so no HUD piece covers the plain; the field shrinks to fit under the bar. */
@@ -666,8 +737,7 @@ body[data-mode="camp"] .campbar { justify-content: flex-end; }
 #sat-grid .item::after, #sat-worn .item::after { content: ""; position: absolute; inset: 0.25rem; pointer-events: none; padding: 0.125rem; border-radius: 0.25rem;
   background: repeating-linear-gradient(-45deg, color-mix(in srgb, var(--ink) 85%, transparent) 0 0.125rem, transparent 0.125rem 0.4375rem);
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); }
-#sat-grid > .desc { opacity: .7; }
-#sat-grid > .desc { grid-column: 1 / -1; grid-row: 1 / span 2; place-self: center; color: var(--text-dim); font-size: 1.125rem; }
+#sat-grid > .desc { grid-column: 1 / -1; grid-row: 1 / span 2; place-self: center; color: var(--cream); background: color-mix(in srgb, var(--ink) 88%, transparent); padding: 0.25rem 1rem; border-radius: 0.375rem; font-weight: 700; font-size: 1.125rem; opacity: 1; }
 #sat-grid { min-height: calc(var(--bag-pocket) * 2 + 2.75rem); }
 .satbar .set select { font-size: 1rem; }
 /* Settings: label | control | value on a 2-column page, 1rem gaps */
