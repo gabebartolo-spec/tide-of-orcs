@@ -1,0 +1,604 @@
+{
+ "915x412": {
+  "run": {
+   "smallCount": 0,
+   "small": [],
+   "textCount": 0,
+   "text": []
+  },
+  "settingsOverlay": {
+   "smallCount": 0,
+   "small": [],
+   "textCount": 0,
+   "text": [],
+   "panel": {
+    "top": 6,
+    "bottom": 406,
+    "left": 34,
+    "right": 881,
+    "h": 400,
+    "sh": 400,
+    "ch": 400
+   },
+   "pane": {
+    "top": 54,
+    "bottom": 406,
+    "left": 34,
+    "right": 881,
+    "h": 352,
+    "sh": 508,
+    "ch": 352
+   }
+  },
+  "grove": {
+   "smallCount": 0,
+   "small": [],
+   "textCount": 0,
+   "text": [],
+   "pane": {
+    "top": 48,
+    "bottom": 408,
+    "left": 34,
+    "right": 881,
+    "h": 360,
+    "sh": 360,
+    "ch": 360
+   },
+   "tree": {
+    "top": 48,
+    "bottom": 408,
+    "left": 34,
+    "right": 641,
+    "h": 360,
+    "sh": 360,
+    "ch": 360
+   },
+   "detail": {
+    "top": 48,
+    "bottom": 408,
+    "left": 641,
+    "right": 881,
+    "h": 360,
+    "sh": 360,
+    "ch": 360
+   },
+   "buy": {
+    "top": 137,
+    "bottom": 185,
+    "left": 789,
+    "right": 871,
+    "h": 48,
+    "sh": 48,
+    "ch": 48
+   },
+   "tabs": {
+    "top": 0,
+    "bottom": 48,
+    "left": 34,
+    "right": 724,
+    "h": 48,
+    "sh": 48,
+    "ch": 48
+   },
+   "bar": {
+    "top": 0,
+    "bottom": 48,
+    "left": 732,
+    "right": 881,
+    "h": 48,
+    "sh": 48,
+    "ch": 48
+   }
+  },
+  "satchel": {
+   "smallCount": 0,
+   "small": [],
+   "textCount": 0,
+   "text": [],
+   "pane": {
+    "top": 48,
+    "bottom": 408,
+    "left": 34,
+    "right": 881,
+    "h": 360,
+    "sh": 360,
+    "ch": 360
+   },
+   "detail": {
+    "top": 52,
+    "bottom": 404,
+    "left": 419,
+    "right": 867,
+    "h": 352,
+    "sh": 352,
+    "ch": 352
+   },
+   "grid": {
+    "top": 0,
+    "bottom": 0,
+    "left": 0,
+    "right": 0,
+    "h": 0,
+    "sh": 0,
+    "ch": 0
+   },
+   "acts": [
+    {
+     "a": "close",
+     "top": 144,
+     "bottom": 192,
+     "h": 48
+    },
+    {
+     "a": "equip",
+     "top": 144,
+     "bottom": 192,
+     "h": 48
+    },
+    {
+     "a": "lock",
+     "top": 144,
+     "bottom": 192,
+     "h": 48
+    },
+    {
+     "a": "salvage",
+     "top": 200,
+     "bottom": 248,
+     "h": 48
+    }
+   ]
+  },
+  "camp": {
+   "smallCount": 0,
+   "small": [],
+   "textCount": 0,
+   "text": [],
+   "pane": {
+    "top": 48,
+    "bottom": 408,
+    "left": 34,
+    "right": 881,
+    "h": 360,
+    "sh": 360,
+    "ch": 360
+   }
+  },
+  "replant": {
+   "smallCount": 0,
+   "small": [],
+   "textCount": 0,
+   "text": [],
+   "pane": {
+    "top": 48,
+    "bottom": 408,
+    "left": 34,
+    "right": 881,
+    "h": 360,
+    "sh": 578,
+    "ch": 360
+   },
+   "choose": [
+    82,
+    82,
+    82
+   ]
+  },
+  "settings": {
+   "smallCount": 0,
+   "small": [],
+   "textCount": 0,
+   "text": [],
+   "pane": {
+    "top": 48,
+    "bottom": 408,
+    "left": 34,
+    "right": 881,
+    "h": 360,
+    "sh": 508,
+    "ch": 360
+   },
+   "vol": {
+    "top": 56,
+    "bottom": 104,
+    "left": 194,
+    "right": 376,
+    "h": 48,
+    "sh": 48,
+    "ch": 48
+   }
+  },
+  "treeTaps": {
+   "zoom1": {
+    "ok": 20,
+    "of": 20,
+    "fails": []
+   },
+   "zoom3": {
+    "ok": 20,
+    "of": 20,
+    "fails": []
+   }
+  },
+  "fallen": {
+   "smallCount": 0,
+   "small": [],
+   "board": {
+    "top": 72,
+    "bottom": 377,
+    "left": 83,
+    "right": 595,
+    "h": 305,
+    "sh": 225,
+    "ch": 225
+   },
+   "btn": {
+    "top": 344,
+    "bottom": 400,
+    "left": 607,
+    "right": 832,
+    "h": 56,
+    "sh": 56,
+    "ch": 56
+   },
+   "overlay": {
+    "top": 0,
+    "bottom": 412,
+    "left": 0,
+    "right": 915,
+    "h": 412,
+    "sh": 412,
+    "ch": 412
+   },
+   "hud": {
+    "top": 16,
+    "bottom": 70,
+    "left": 34,
+    "right": 696,
+    "h": 54,
+    "sh": 54,
+    "ch": 54
+   },
+   "h2": {
+    "top": 104,
+    "bottom": 133,
+    "left": 131,
+    "right": 547,
+    "h": 29,
+    "sh": 29,
+    "ch": 29
+   },
+   "hdr": {
+    "top": 0,
+    "bottom": 78,
+    "left": 0,
+    "right": 915,
+    "h": 78,
+    "sh": 78,
+    "ch": 78
+   }
+  },
+  "replantSwipe": {
+   "scrollTop": 218,
+   "scrollable": true,
+   "pane": {
+    "top": 48,
+    "bottom": 408,
+    "left": 34,
+    "right": 881,
+    "h": 360,
+    "sh": 578,
+    "ch": 360
+   }
+  },
+  "settings16": {
+   "overflowY": "auto",
+   "sh": 508,
+   "ch": 360,
+   "panelOv": "visible",
+   "resetBottom": 293,
+   "vh": 412
+  }
+ },
+ "915x360": {
+  "run": {
+   "smallCount": 0,
+   "small": [],
+   "textCount": 0,
+   "text": []
+  },
+  "settingsOverlay": {
+   "smallCount": 0,
+   "small": [],
+   "textCount": 0,
+   "text": [],
+   "panel": {
+    "top": 6,
+    "bottom": 354,
+    "left": 34,
+    "right": 881,
+    "h": 348,
+    "sh": 348,
+    "ch": 348
+   },
+   "pane": {
+    "top": 54,
+    "bottom": 354,
+    "left": 34,
+    "right": 881,
+    "h": 300,
+    "sh": 508,
+    "ch": 300
+   }
+  },
+  "grove": {
+   "smallCount": 0,
+   "small": [],
+   "textCount": 0,
+   "text": [],
+   "pane": {
+    "top": 48,
+    "bottom": 356,
+    "left": 34,
+    "right": 881,
+    "h": 308,
+    "sh": 308,
+    "ch": 308
+   },
+   "tree": {
+    "top": 48,
+    "bottom": 356,
+    "left": 34,
+    "right": 641,
+    "h": 308,
+    "sh": 308,
+    "ch": 308
+   },
+   "detail": {
+    "top": 48,
+    "bottom": 356,
+    "left": 641,
+    "right": 881,
+    "h": 308,
+    "sh": 308,
+    "ch": 308
+   },
+   "buy": {
+    "top": 137,
+    "bottom": 185,
+    "left": 789,
+    "right": 871,
+    "h": 48,
+    "sh": 48,
+    "ch": 48
+   },
+   "tabs": {
+    "top": 0,
+    "bottom": 48,
+    "left": 34,
+    "right": 724,
+    "h": 48,
+    "sh": 48,
+    "ch": 48
+   },
+   "bar": {
+    "top": 0,
+    "bottom": 48,
+    "left": 732,
+    "right": 881,
+    "h": 48,
+    "sh": 48,
+    "ch": 48
+   }
+  },
+  "satchel": {
+   "smallCount": 0,
+   "small": [],
+   "textCount": 0,
+   "text": [],
+   "pane": {
+    "top": 48,
+    "bottom": 356,
+    "left": 34,
+    "right": 881,
+    "h": 308,
+    "sh": 308,
+    "ch": 308
+   },
+   "detail": {
+    "top": 52,
+    "bottom": 352,
+    "left": 419,
+    "right": 867,
+    "h": 300,
+    "sh": 300,
+    "ch": 300
+   },
+   "grid": {
+    "top": 0,
+    "bottom": 0,
+    "left": 0,
+    "right": 0,
+    "h": 0,
+    "sh": 0,
+    "ch": 0
+   },
+   "acts": [
+    {
+     "a": "close",
+     "top": 144,
+     "bottom": 192,
+     "h": 48
+    },
+    {
+     "a": "equip",
+     "top": 144,
+     "bottom": 192,
+     "h": 48
+    },
+    {
+     "a": "lock",
+     "top": 144,
+     "bottom": 192,
+     "h": 48
+    },
+    {
+     "a": "salvage",
+     "top": 200,
+     "bottom": 248,
+     "h": 48
+    }
+   ]
+  },
+  "camp": {
+   "smallCount": 0,
+   "small": [],
+   "textCount": 0,
+   "text": [],
+   "pane": {
+    "top": 48,
+    "bottom": 356,
+    "left": 34,
+    "right": 881,
+    "h": 308,
+    "sh": 308,
+    "ch": 308
+   }
+  },
+  "replant": {
+   "smallCount": 0,
+   "small": [],
+   "textCount": 0,
+   "text": [],
+   "pane": {
+    "top": 48,
+    "bottom": 356,
+    "left": 34,
+    "right": 881,
+    "h": 308,
+    "sh": 578,
+    "ch": 308
+   },
+   "choose": [
+    82,
+    82,
+    82
+   ]
+  },
+  "settings": {
+   "smallCount": 0,
+   "small": [],
+   "textCount": 0,
+   "text": [],
+   "pane": {
+    "top": 48,
+    "bottom": 356,
+    "left": 34,
+    "right": 881,
+    "h": 308,
+    "sh": 508,
+    "ch": 308
+   },
+   "vol": {
+    "top": 56,
+    "bottom": 104,
+    "left": 194,
+    "right": 376,
+    "h": 48,
+    "sh": 48,
+    "ch": 48
+   }
+  },
+  "treeTaps": {
+   "zoom1": {
+    "ok": 20,
+    "of": 20,
+    "fails": []
+   },
+   "zoom3": {
+    "ok": 20,
+    "of": 20,
+    "fails": []
+   }
+  },
+  "fallen": {
+   "smallCount": 0,
+   "small": [],
+   "board": {
+    "top": 76,
+    "bottom": 336,
+    "left": 119,
+    "right": 559,
+    "h": 260,
+    "sh": 223,
+    "ch": 223
+   },
+   "btn": {
+    "top": 292,
+    "bottom": 348,
+    "left": 571,
+    "right": 796,
+    "h": 56,
+    "sh": 56,
+    "ch": 56
+   },
+   "overlay": {
+    "top": 0,
+    "bottom": 360,
+    "left": 0,
+    "right": 915,
+    "h": 360,
+    "sh": 360,
+    "ch": 360
+   },
+   "hud": {
+    "top": 16,
+    "bottom": 70,
+    "left": 34,
+    "right": 696,
+    "h": 54,
+    "sh": 54,
+    "ch": 54
+   },
+   "h2": {
+    "top": 103,
+    "bottom": 128,
+    "left": 160,
+    "right": 518,
+    "h": 25,
+    "sh": 29,
+    "ch": 29
+   },
+   "hdr": {
+    "top": 0,
+    "bottom": 78,
+    "left": 0,
+    "right": 915,
+    "h": 78,
+    "sh": 78,
+    "ch": 78
+   }
+  },
+  "replantSwipe": {
+   "scrollTop": 270,
+   "scrollable": true,
+   "pane": {
+    "top": 48,
+    "bottom": 356,
+    "left": 34,
+    "right": 881,
+    "h": 308,
+    "sh": 578,
+    "ch": 308
+   }
+  },
+  "settings16": {
+   "overflowY": "auto",
+   "sh": 508,
+   "ch": 308,
+   "panelOv": "visible",
+   "resetBottom": 293,
+   "vh": 360
+  }
+ }
+}
