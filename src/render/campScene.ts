@@ -1,5 +1,6 @@
+import { quality, renderScale } from './quality';
 import { BuildingId } from '../data/camp';
-import { CAMP_SCENE } from '../data/presentation';
+import { CAMP_SCENE, QUALITY } from '../data/presentation';
 import { CampArt } from './camp';
 import { CampBackdrop } from './campBackdrop';
 import { CampFauna } from './campFauna';
@@ -16,14 +17,22 @@ export class CampScene {
   private k = 1; private ox = 0; private oy = 0; private dpr = 1;
 
   constructor(readonly canvas: HTMLCanvasElement) {
-    new ResizeObserver(() => this.resize()).observe(canvas);
+    new ResizeObserver(() => this.resizeSoon()).observe(canvas);
     this.resize();
+  }
+
+  private resizeTimer = 0;
+  /** A URL-bar slide or rotation fires many size callbacks: on a phone wait for the box to hold still, then resize once (TB-218). */
+  private resizeSoon(): void {
+    if (quality.tier !== 'phone') { this.resize(); return; }
+    clearTimeout(this.resizeTimer); this.resizeTimer = window.setTimeout(() => this.resize(), QUALITY.resizeSettleMs);
   }
 
   resize(): void {
     const r = this.canvas.getBoundingClientRect();
-    this.dpr = devicePixelRatio || 1;
-    this.canvas.width = Math.max(1, Math.round(r.width * this.dpr)); this.canvas.height = Math.max(1, Math.round(r.height * this.dpr));
+    this.dpr = renderScale(r.width, r.height);   // the shared backing scale (TB-218 P3)
+    const bw = Math.max(1, Math.round(r.width * this.dpr)), bh = Math.max(1, Math.round(r.height * this.dpr));
+    if (this.canvas.width !== bw) this.canvas.width = bw; if (this.canvas.height !== bh) this.canvas.height = bh;   // equal size: no reallocation
     const S = CAMP_SCENE;
     this.k = Math.max(r.width / S.w, r.height / (S.bottom - S.top)) || 1;
     this.ox = (r.width - S.w * this.k) / 2 - S.x0 * this.k; this.oy = (r.height - (S.bottom - S.top) * this.k) / 2 - S.top * this.k;

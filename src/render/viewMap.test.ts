@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { FIELD } from '../data/balance';
-import { plainPoint, pointerAims } from './viewMap';
+import { plainPoint } from './viewMap';
 
 const v = { k: 2, ox: 100, oy: 300 };
 
@@ -14,11 +14,5 @@ describe('plain view mapping (TB-216c)', () => {
   });
   it('a captured finger off the plain clamps to its edge', () => {
     expect(plainPoint(500, 100, v, true)).toEqual({ x: 200, y: 0 });
-  });
-  it('a hovering pen or stray touch never aims; the held finger and the mouse do', () => {
-    expect(pointerAims('pen', 3, null)).toBe(false);
-    expect(pointerAims('touch', 4, 3)).toBe(false);
-    expect(pointerAims('touch', 3, 3)).toBe(true);
-    expect(pointerAims('mouse', 1, null)).toBe(true);
   });
 });

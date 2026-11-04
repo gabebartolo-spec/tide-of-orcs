@@ -154,13 +154,16 @@ export class Ground {
     // decor sprites arrive after the first frames: repaint each time another one lands
     if (!this.off || this.key !== key || this.painted !== imgs.size) {
       this.painted = imgs.size; this.key = key;
-      this.off = this.off ?? document.createElement('canvas'); this.off.width = ow; this.off.height = oh;
-      const og = this.off.getContext('2d')!;
+      this.off = this.off ?? document.createElement('canvas');
+      // the buffer only grows (in 128 px steps) or drops when far too big, so a one-pixel URL-bar step never reallocates it (TB-218)
+      const cw = Math.ceil(ow / 128) * 128, ch = Math.ceil(oh / 128) * 128;
+      if (this.off.width < ow || this.off.height < oh || this.off.width > cw + 256 || this.off.height > ch + 256) { this.off.width = cw; this.off.height = ch; }
+      const og = this.off.getContext('2d')!; og.setTransform(1, 0, 0, 1, 0, 0); og.clearRect(0, 0, this.off.width, this.off.height);
       for (let ty = Math.floor(y0 / H) * H; ty < y1; ty += H) for (let tx = Math.floor(x0 / W) * W; tx < x1; tx += W) {
         og.setTransform(k, 0, 0, k, (tx - x0 + PAD) * k, (ty - y0 + PAD) * k);
         paint(og, ty < 0 ? this.above : this.layout);
       }
     }
-    g.drawImage(this.off, x0 - PAD, y0 - PAD, x1 - x0 + PAD * 2, y1 - y0 + PAD * 2);
+    g.drawImage(this.off, 0, 0, ow, oh, x0 - PAD, y0 - PAD, x1 - x0 + PAD * 2, y1 - y0 + PAD * 2);
   }
 }

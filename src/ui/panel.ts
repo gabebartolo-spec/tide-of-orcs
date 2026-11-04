@@ -5,6 +5,7 @@ import { BRANCH_COLOR, BRANCH_LABEL, NODE } from '../data/skillTree';
 import { STR } from '../data/strings';
 import type { Cue } from '../data/audio';
 import { GameController } from '../game';
+import { quality, storedPref, type QualityPref } from '../render/quality';
 import { TreeRenderer } from '../render/tree';
 import { stepNode, tabOrder } from '../render/treeNav';
 import { canBuy, costOf, rankOf, unlocked } from '../sim/tree';
@@ -20,6 +21,7 @@ import { LOOT_BANNER, REPORT } from '../data/presentation';
 import { LOOT_TOAST } from '../data/lootTables';
 import { RARITIES } from '../data/loot';
 import { applyTextScale } from '../render/textScale';
+import { initFullscreenButton } from './fullscreen';
 import { CampPane } from './camp';
 import { armHover, burst, calm, countValue, pop, press, tween } from './juice';
 import { reportRows, reportTimes } from './report';
@@ -36,12 +38,15 @@ import { P } from '../render/palette';
 const BUY_SPARKS = [P.starGold, P.frost, P.grove, P.lilac] as const;
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string): T => document.getElementById(id) as T;
+/** The primary pointer is a finger (a phone): no hover, so the tree tooltip opens on a tap (TB-218). */
+const touch = (): boolean => typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
 const VAN_NAME: Record<VanType, string> = { spear: 'Spearman', blade: 'Bladedancer' };
 
 export class Panel {
   private toastTimer = 0;
   private wipeArmed = false;
   private satchel: SatchelPane;
+  private plate = new Plate();
   /** Encampment card and Replant-tab list (TB-188b). */
   readonly camp: CampPane;
   /** Path cards on the Replant tab (TB-193c). */
@@ -86,10 +91,12 @@ export class Panel {
       tree.select(id); this.renderDetail();
     });
     // Tooltip plate (TB-195c): hovering a node shows what its next rank changes, beside the cursor
-    const plate = new Plate();
-    tree.canvas.addEventListener('mousemove', (e) => { const id = tree.hitTest(e.clientX, e.clientY); if (id) plate.show(id + ':' + rankOf(game.state, id), this.plateHtml(id), e.clientX, e.clientY); else plate.hide(); });
+    const plate = this.plate;
+    tree.canvas.addEventListener('mousemove', (e) => { if (touch()) return; const id = tree.hitTest(e.clientX, e.clientY); if (id) plate.show(id + ':' + rankOf(game.state, id), this.plateHtml(id), e.clientX, e.clientY); else plate.hide(); });
     tree.canvas.addEventListener('mouseleave', () => plate.hide());
-    tree.canvas.addEventListener('click', () => plate.hide());
+    // Touch has no hover (TB-218): a tap on a node shows the same plate beside the finger until the next tap, drag or empty tap.
+    tree.canvas.addEventListener('click', (e) => { if (!touch()) { plate.hide(); return; } const id = tree.hitTest(e.clientX, e.clientY); if (id) plate.show(id + ':' + rankOf(game.state, id), this.plateHtml(id), e.clientX, e.clientY); });
+    tree.canvas.addEventListener('pointerdown', () => { if (touch()) plate.hide(); });
     // Keyboard (GDD §13, TB-116): Tab walks the nodes branch by branch and leaves the tree at either end; Enter or Space buys.
     const order = tabOrder();
     tree.canvas.addEventListener('keydown', (e) => {
@@ -210,6 +217,7 @@ export class Panel {
 
   /** run: the field fills the screen; camp: the Grove, Satchel and Replant pages after a fall; settings: an overlay mid-run. */
   setMode(m: 'run' | 'camp' | 'settings'): void {
+    this.plate.hide(); // a tapped tree tooltip never outlives its page
     if (m !== 'camp') this.setTreeFull(false);
     if (document.body.dataset.mode !== m) this.onCue('uiPanel'); // TB-195g: the panel whoosh
     document.body.dataset.mode = m;
@@ -230,6 +238,7 @@ export class Panel {
 
   private tab: Tab = 'grove';
   setTab(k: Tab): void {
+    this.plate.hide();
     this.tab = k; $('camp-title').textContent = tabTitle(k); $('camp-go').textContent = k === 'prestige' ? STR.replantBtn : STR.campGo; document.body.dataset.tab = k;
     if (k !== 'camp') this.camp.close();
     if (k !== 'grove') this.setTreeFull(false);
@@ -244,6 +253,9 @@ export class Panel {
   private initSettings(): void {
     $('set-vol-k').textContent = STR.setVolume; $('set-motion-k').textContent = STR.setMotion; $('set-num-k').textContent = STR.setNumbers; $('set-text-k').textContent = STR.setText;
     const mo = $<HTMLSelectElement>('set-motion').options; mo[0]!.text = STR.motionSystem; mo[1]!.text = STR.motionFull; mo[2]!.text = STR.motionReduced;
+    const qo = $<HTMLSelectElement>('set-quality').options; qo[0]!.text = STR.qualAuto; qo[1]!.text = STR.qualHigh; qo[2]!.text = STR.qualLow; $('set-quality-k').textContent = STR.setQuality;
+    $<HTMLSelectElement>('set-quality').value = storedPref();
+    $<HTMLSelectElement>('set-quality').onchange = (e) => { quality.setPref((e.target as HTMLSelectElement).value as QualityPref); window.dispatchEvent(new Event('resize')); };
     const no = $<HTMLSelectElement>('set-num').options; no[0]!.text = STR.numShort; no[1]!.text = STR.numSci;
     $('set-save-k').textContent = STR.setSave;
     $('btn-export').textContent = STR.exportBtn; $('btn-import').textContent = STR.importBtn;
@@ -255,6 +267,7 @@ export class Panel {
     $<HTMLInputElement>('set-text').oninput = (e) => { this.game.settings.textScale = Number((e.target as HTMLInputElement).value); this.settingsApplied(); };
     $<HTMLInputElement>('set-text').onchange = () => this.game.save();
     $<HTMLSelectElement>('set-num').onchange = (e) => { this.game.settings.numberFormat = (e.target as HTMLSelectElement).value as NumberFormat; this.settingsChanged(); };
+    initFullscreenButton($('btn-fs'), STR.fsEnter, STR.fsExit);
     $('btn-export').onclick = () => {
       const blob = this.game.exportSave(), box = $<HTMLTextAreaElement>('set-blob'); box.value = blob; box.select();
       navigator.clipboard?.writeText(blob).then(() => this.toast(STR.exported), () => {});
