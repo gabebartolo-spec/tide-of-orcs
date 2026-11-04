@@ -53,6 +53,9 @@ const syncAuto = (): void => {
   autoBtn.textContent = label; autoHud.textContent = STR.autoHud; autoHud.setAttribute('aria-label', label);
 };
 game.autoFire = storedAuto(); syncAuto();
+// Phone spawn band (TB-223): orcs keep clear of the HUD strip and the bottom dock on a coarse, short (landscape phone) screen only.
+const phoneMq = matchMedia('(pointer: coarse) and (max-height: 540px)');
+game.phoneBand = phoneMq.matches; phoneMq.addEventListener('change', () => { game.phoneBand = phoneMq.matches; });
 for (const b of [autoBtn, autoHud]) b.addEventListener('click', () => { game.autoFire = !game.autoFire; try { localStorage.setItem(AUTO_FIRE_KEY, game.autoFire ? '1' : '0'); } catch { /* storage blocked: lasts this page only */ } syncAuto(); });
 // Browsers block audio until the first gesture; a touch counts on release (pointerup, touchend) as well as on press.
 for (const t of ['pointerdown', 'pointerup', 'touchend', 'keydown'] as const) addEventListener(t, () => audio.unlock(), { capture: true });

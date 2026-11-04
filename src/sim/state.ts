@@ -110,6 +110,8 @@ export interface SimState {
   vanRespawn: number[];
   /** Run-only path state, not saved (TB-193a): the Foxfire Tail's fox, and shots toward the Fang's next venom arrow. */
   fox: Wolf; fangN: number;
+  /** Run-only, never saved: the phone spawn band (PHONE_SPAWN) when the controller is on a coarse short screen; unset on desktop. */
+  phoneBand?: boolean;
   /** Run-only mythic state, not saved (TB-100): starlight toward the next Starfall and its cooldown. */
 }
 

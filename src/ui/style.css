@@ -944,7 +944,7 @@ body:has(#fallen:not([hidden])) .mute-corner { display: none !important; } /* th
    board fits a 412 px screen; the camp is one 48 px chrome row (tabs left, Close or March right) so the panes keep the height.
    All gated by the coarse pointer (and the short landscape screen), so the desktop mouse view is unchanged. */
 @media (pointer: coarse) {
-  .buy, .ghost, .deploy, .tabs button, #camp-go, .fallen .march, .set select, #sat-filter, .pathcard, .treefull, #btn-mute, #btn-auto, #btn-fs,
+  .buy, .ghost, .deploy, .tabs button, #camp-go, .fallen .march, .set select, #sat-filter, .pathcard, .treefull, #btn-mute, #btn-auto, #btn-auto-hud, #btn-pullback, #btn-fs,
   .panel .buy, .panel .ghost, .panel .set select, body .treefull, body .set select { min-height: 48px; min-width: 48px; }
   .settings textarea { min-height: 48px; }
   #sat-grid .item, #sat-worn .item { min-height: 48px; min-width: 48px; }
@@ -1067,14 +1067,14 @@ header, #hud, #toast, #campview, .wrap, .play { touch-action: pan-x pan-y; }
 
 /* Phone landscape HUD (TB-223 round 3, director 4 Nov: ugly, too big, hides the canopy). The canopy strip is the treeline art at the top
    of the screen, so the HUD lives in its two corners and leaves the middle clear: left, the carved wall bar (numbers only, 16 px) with the
-   starlight gem and count under it; right, Wave over Heartwood as stroked Heartwood text with no backing, then Auto and Settings as carved bark planks (44 px
-   hit boxes). Slain is not shown on a phone (it is in the fallen report). The strip stays under 2.75 rem so the top orc row (spawn pad,
-   data/balance.ts) is clear of every hit box. All colours are palette tokens. Text is 16 px or more. */
+   starlight gem and count under it; right, Wave over Heartwood as stroked Heartwood text with no backing, then Auto and Settings as carved bark planks (48 px
+   hit boxes, a 40 px plank inside a 4 px transparent ring). Slain is not shown on a phone (it is in the fallen report). The strip is 3.125 rem (50 px) so the phone spawn band (PHONE_SPAWN,
+   data/balance.ts) puts the top orc row's feet 25 px below every hit box. All colours are palette tokens. Text is 16 px or more. */
 #btn-auto-hud { display: none; }
 @media (pointer: coarse) and (max-height: 540px) {
   html body:not([data-mode="camp"]) header { position: fixed; inset: 0 0 auto 0; width: 100vw; height: auto; margin: 0; border: 0; box-shadow: none; background: none;
     padding: max(0.125rem, env(safe-area-inset-top, 0px)) max(0.5rem, env(safe-area-inset-right, 0px)) 0 max(0.5rem, env(safe-area-inset-left, 0px));
-    align-items: flex-start; flex-wrap: nowrap; gap: 0.375rem; }
+    align-items: flex-start; flex-wrap: nowrap; gap: 0.25rem; }
   /* the hud is a grid: wall over starlight | (clear) | wave over heartwood; .stats dissolves so its two stats can sit in the grid */
   html body:not([data-mode="camp"]) .hud { display: grid; flex: 1 1 auto; min-width: 0; margin: 0; gap: 0 0.5rem; align-items: center; justify-content: stretch;
     grid-template-columns: auto minmax(0, 1fr) auto; grid-template-rows: 1.375rem 1.375rem; height: 2.75rem; }
@@ -1101,15 +1101,17 @@ header, #hud, #toast, #campview, .wrap, .play { touch-action: pan-x pan-y; }
   html body:not([data-mode="camp"]) .hud-wave::after { content: ""; position: absolute; left: 0; right: 0; bottom: -0.1875rem; height: 0.125rem; border-radius: 0.0625rem;
     background: linear-gradient(90deg, var(--amber) calc(var(--wave-t, 0) * 100%), color-mix(in srgb, var(--cream) 30%, transparent) 0); }
   html body:not([data-mode="camp"]) .hud-wave .stamp { font-size: 1rem; padding: 0 0.375rem; border-width: 0.125rem; }
-  /* Auto and Settings: carved bark planks, a 44 px hit box (a 36 px plank inside a 4 px transparent ring) */
-  html body:not([data-mode="camp"]) :is(#btn-auto-hud, #btn-settings) { display: none; position: relative; flex: none; box-sizing: border-box; min-width: 2.75rem; width: auto; height: 2.75rem; min-height: 2.75rem; margin: 0;
+  /* Auto and Settings: carved bark planks, a 48 px hit box (a 40 px plank inside a 4 px transparent ring) */
+  html body:not([data-mode="camp"]) :is(#btn-auto-hud, #btn-settings) { display: none; position: relative; flex: none; box-sizing: border-box; min-width: 3rem; width: auto; height: 3rem; min-height: 3rem; margin: 0;
     padding: 0 0.5rem; border: 0.25rem solid transparent; border-image: none; clip-path: none; border-radius: 0.5rem; background: var(--grain), linear-gradient(var(--bark), var(--splinter)); background-clip: padding-box;
-    box-shadow: inset 0 0.0625rem 0 var(--timber), inset 0 -0.125rem 0 var(--splinter), 0 0.0625rem 0.125rem var(--ink); filter: none; text-shadow: 0 0.0625rem 0.0625rem var(--ink); font-size: 1rem; line-height: 1; color: var(--text-dim); }
+    box-shadow: inset 0 0.0625rem 0 var(--timber), inset 0 -0.125rem 0 var(--splinter); filter: drop-shadow(0 0.0625rem 0.0625rem var(--ink)); text-shadow: 0 0.0625rem 0.0625rem var(--ink); font-size: 1rem; line-height: 1; color: var(--text); }
   html body[data-mode="run"] :is(#btn-auto-hud, #btn-settings) { display: block; margin-left: 0; }
-  html body[data-mode="run"] #btn-auto-hud { min-width: 3.5rem; }
-  html body[data-mode="run"] #btn-auto-hud[aria-pressed="true"] { color: var(--grove); box-shadow: inset 0 0 0 0.125rem var(--grove), 0 0.0625rem 0.125rem var(--ink); }
-  html body[data-mode="run"] #btn-auto-hud[aria-pressed="false"] { opacity: 0.8; text-decoration: line-through; text-decoration-thickness: 0.125rem; }
-  html body[data-mode="run"] #btn-settings { width: 2.75rem; min-width: 2.75rem; padding: 0; font-size: 0; }
+  html body[data-mode="run"] #btn-auto-hud { min-width: 3.25rem; }
+  /* Auto on/off at a glance: the same cream label (no fade, no strike), a lit green ring and a filled pip when on, an unlit plank and a hollow pip when off */
+  html body[data-mode="run"] #btn-auto-hud::after { content: ""; position: absolute; top: 0.25rem; right: 0.25rem; box-sizing: border-box; width: 0.5rem; height: 0.5rem; border-radius: 50%; border: 0.125rem solid var(--text); }
+  html body[data-mode="run"] #btn-auto-hud[aria-pressed="true"] { box-shadow: inset 0 0 0 0.125rem var(--grove); }
+  html body[data-mode="run"] #btn-auto-hud[aria-pressed="true"]::after { background: var(--grove); border-color: var(--grove); }
+  html body[data-mode="run"] #btn-settings { width: 3rem; min-width: 3rem; padding: 0; font-size: 0; }
   html body[data-mode="run"] #btn-settings::before { content: ""; position: absolute; inset: 0.375rem; background: var(--text);
     -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='6'/%3E%3Ccircle cx='12' cy='12' r='2'/%3E%3Cpath d='M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1'/%3E%3C/svg%3E") center / contain no-repeat;
     mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='6'/%3E%3Ccircle cx='12' cy='12' r='2'/%3E%3Cpath d='M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1'/%3E%3C/svg%3E") center / contain no-repeat; }
@@ -1118,4 +1120,35 @@ header, #hud, #toast, #campview, .wrap, .play { touch-action: pan-x pan-y; }
 @media (pointer: coarse) and (max-height: 540px) {
   body[data-mode="run"] .mute-corner { border: 0; border-radius: 0.5rem; background: var(--grain), linear-gradient(var(--bark), var(--splinter));
     box-shadow: inset 0 0 0 0.0625rem var(--timber), 0 0.0625rem 0.125rem var(--ink); color: var(--text); }
+}
+
+/* ---- TB-223 round 4: phone dock, Settings, stamp (final overrides; coarse short screens only) ----
+   The bottom dock (Mute, Replant, Summon the boss wave) is one row of 48 px hit boxes whose top is 291 px at 762x343, below the lowest orc row's
+   feet (~280 px, PHONE_SPAWN), so a finger can aim every row and nothing covers the plain. Replant left the top strip: Wave, Heartwood, Auto and
+   Settings are all that is up there, so the canopy stays clear. No scrim: the dock planks are opaque bark, the field behind them is untouched. */
+@media (pointer: coarse) and (max-height: 540px) {
+  :root { --gut: max(0.5rem, env(safe-area-inset-left, 0px)); --dock-b: calc(0.25rem + env(safe-area-inset-bottom, 0px)); }
+  html body[data-mode="run"] .mute-corner { left: var(--gut); bottom: var(--dock-b); }
+  html body:not([data-mode="camp"]) .rally { position: fixed; left: calc(var(--gut) + 3.5rem); right: auto; bottom: var(--dock-b); top: auto; padding: 0; background: none; z-index: 4; }
+  body:has(#btn-pullback:not([hidden])) .rally { left: calc(var(--gut) + 3.5rem + 6rem); }
+  body:has(#fallen:not([hidden])) .rally, body:not([data-mode="run"]) .rally { display: none; }
+  /* Replant: a bark plank in the dock (visible 40 px inside a 4 px transparent ring = 48 px hit box) */
+  html body[data-mode="run"] #btn-pullback:not([hidden]), html body[data-mode="run"] #dep-boss:not([hidden]) { position: fixed; box-sizing: border-box; display: flex; z-index: 4; margin: 0; height: 3rem; min-height: 3rem;
+    border: 0.25rem solid transparent; border-image: none; clip-path: none; border-radius: 0.5rem; background: var(--grain), linear-gradient(var(--bark), var(--splinter)); background-clip: padding-box; filter: drop-shadow(0 0.0625rem 0.0625rem var(--ink));
+    box-shadow: inset 0 0.0625rem 0 var(--timber), inset 0 -0.125rem 0 var(--splinter); text-shadow: 0 0.0625rem 0.0625rem var(--ink); color: var(--text); font-size: 1rem; line-height: 1; }
+  html body[data-mode="run"] #btn-pullback:not([hidden]) { left: calc(var(--gut) + 3.5rem); bottom: var(--dock-b); width: 5.5rem; min-width: 5.5rem; padding: 0; align-items: center; justify-content: center; }
+  html body[data-mode="run"] #dep-boss:not([hidden]) { position: static; align-items: flex-start; justify-content: center; gap: 0.125rem; min-width: 0; padding: 0 0.75rem; }
+  html body[data-mode="run"] #dep-boss:not([hidden]):not(:disabled) { box-shadow: inset 0 0 0 0.125rem var(--amber); }
+  html body[data-mode="run"] #dep-boss:disabled { opacity: 1; color: var(--text-dim); }
+  html body[data-mode="run"] #dep-boss .c { font-size: 1rem; }
+  html body[data-mode="run"] #dep-boss .n { font-weight: 400; }
+  /* Settings view: the run HUD is hidden (no clipped fragments behind the panel) and the pane scrollbar wears the palette */
+  body[data-mode="settings"] header .hud, body[data-mode="settings"] #btn-auto-hud, body[data-mode="settings"] .mute-corner { display: none; }
+  body[data-mode="settings"] .panel, #pane-settings { scrollbar-width: thin; scrollbar-color: var(--timber) var(--ink-2); }
+  body[data-mode="settings"] .panel::-webkit-scrollbar, #pane-settings::-webkit-scrollbar { width: 0.5rem; }
+  body[data-mode="settings"] .panel::-webkit-scrollbar-thumb, #pane-settings::-webkit-scrollbar-thumb { background: var(--timber); border-radius: 0.25rem; }
+  body[data-mode="settings"] .panel::-webkit-scrollbar-track, #pane-settings::-webkit-scrollbar-track { background: var(--ink-2); }
+  /* CLEARED stamp: sits left of Wave in the empty middle of the strip (never over the number, never above the screen top) */
+  html body:not([data-mode="camp"]) .hud-wave .stamp { left: -2.875rem; top: 50%; line-height: 1.25rem; white-space: nowrap; }
+  html body:not([data-mode="camp"]) .hud-wave:has(.stamp:not([hidden])) > :not(.stamp) { opacity: 1; visibility: visible; }
 }

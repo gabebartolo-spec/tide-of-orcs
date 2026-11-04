@@ -48,6 +48,8 @@ export class GameController {
   private latch: { x: number; y: number } | null = null;
   /** Touch Auto fire (TB-223): the elf picks the strike point herself while no finger aims. Set from the stored choice by main.ts. */
   autoFire = false;
+  /** Phone spawn band (TB-223): set by main.ts from the coarse short-screen query; carried onto whichever state is live. */
+  phoneBand = false;
   /** Where Auto fire will strike next, refreshed a few times a second for the reticle; the sim picks its own point at the shot. */
   private autoPoint: { x: number; y: number } | null = null;
   private autoTick = 0;
@@ -63,6 +65,7 @@ export class GameController {
   }
 
   tick(dt: number): void {
+    this.state.phoneBand = this.phoneBand;
     const fallen = this.state.run.fallen, auto = this.autoFire && !fallen;
     const inputs: Inputs = { aim: fallen ? null : this.aim ?? this.latch, auto };
     if (auto && !inputs.aim && this.autoTick++ % AUTO_FIRE.reticleEvery === 0) this.autoPoint = autoTarget(this.state);
