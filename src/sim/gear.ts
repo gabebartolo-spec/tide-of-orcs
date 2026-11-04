@@ -35,10 +35,16 @@ export function applyGear(st: Stats, l: LootMeta): Stats {
   const t = gearTotals(l, st.setBoost);
   for (const f of MUL_FIELDS) if (t.mul[f]) st[f] *= 1 + t.mul[f];
   if (t.mul.fireRate) st.lobCd /= 1 + t.mul.fireRate;
-  for (const [f, whole] of Object.entries(ADD_FIELDS) as [keyof typeof ADD_FIELDS, boolean][]) if (t.add[f]) st[f] += whole ? Math.floor(t.add[f]) : t.add[f];
+  for (const [f, whole] of Object.entries(ADD_FIELDS) as [keyof typeof ADD_FIELDS, boolean][]) if (t.add[f]) st[f] += whole ? Math.round(t.add[f]) : t.add[f];
   // affixes that scale an existing Stats line (TB-201)
   if (t.mul.hawkDmg) st.units.hawk = { ...st.units.hawk, dmg: st.units.hawk.dmg * (1 + t.mul.hawkDmg) };
   if (t.mul.treantDmg) st.units.treant = { ...st.units.treant, dmg: st.units.treant.dmg * (1 + t.mul.treantDmg) };
+  // Kinship gear: deriveStats baked the tree's Kinship into these lines, so the affix scales them too (the live readers use st.kin)
+  if (t.mul.kin) {
+    const k = 1 + t.mul.kin;
+    st.wolf *= k; st.ballista *= k; st.vanDmg *= k;
+    if (st.knives) st.knives = { ...st.knives, dmg: st.knives.dmg * k };
+  }
   if (t.mul.glimmerMult) st.salvageMult *= 1 + t.mul.glimmerMult;
   if (t.mul.critDmg) st.critMult *= 1 + t.mul.critDmg;
   if (t.mul.burnDur) st.burnSecs *= 1 + t.mul.burnDur;

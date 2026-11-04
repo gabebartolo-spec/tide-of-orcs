@@ -38,5 +38,11 @@ export function startRun(s: SimState): void {
   s.run.bossDone = Math.floor(s.run.wave / BOSS_WAVE.every);
   if (hwRank(m, 'hw_wolf')) s.run.levels.wolf = 1;
   recompute(s); s.run.barHp = s.stats.barMax;
-  for (let i = 0; i < hwRank(m, 'hw_orders'); i++) placeVanguard(s, 'spear');
+  placeStandingOrders(s);
+}
+
+/** Standing Orders spearmen (free, off the line). Vanguard are not saved, so a load calls this too (TB-219). */
+export function placeStandingOrders(s: SimState): void {
+  if (s.run.fallen) return;
+  for (let i = 0; i < hwRank(s.meta, 'hw_orders'); i++) placeVanguard(s, 'spear');
 }

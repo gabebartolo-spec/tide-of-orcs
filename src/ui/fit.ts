@@ -7,7 +7,7 @@
  * A pane marked `data-fit="scroll"` (Replant, TB-193f layout C) is never scaled: its cards stay full size and it scrolls.
  * A pane marked `data-fit="narrow"` (Satchel, TB-206c) is never scaled in a narrow portrait window (NARROW_QUERY), where it scrolls.
  */
-const PHONE_MIN = 0.8;
+const PHONE_MIN = 1;
 /** Smallest scale the PC page bisects down to, and the bisection steps (0.6 / 2^7 ≈ 0.005 precision). */
 const FIT_MIN = 0.4, FIT_STEPS = 7;
 /** The narrow portrait window the Satchel scrolls in instead of scaling (matches the style.css narrow block). */

@@ -27,7 +27,7 @@ export interface AffixDef { id: string; stat: string; op: 'mul' | 'add'; min: nu
 const A = (id: string, stat: string, op: 'mul' | 'add', min: number, max: number, arrow?: ArrowType): AffixDef => (arrow ? { id, stat, op, min, max, arrow } : { id, stat, op, min, max });
 export const AFFIXES: readonly AffixDef[] = [
   A('might', 'dmg', 'mul', 0.04, 0.1), A('haste', 'fireRate', 'mul', 0.03, 0.08), A('reach', 'radius', 'mul', 0.03, 0.07),
-  A('keen', 'crit', 'add', 0.01, 0.03), A('pierce', 'pierce', 'add', 0.2, 0.5), A('volley', 'arrows', 'add', 0.1, 0.25),
+  A('keen', 'crit', 'add', 0.01, 0.03), A('pierce', 'pierce', 'add', 0.4, 0.9), A('volley', 'arrows', 'add', 0.3, 0.7),
   A('greed', 'starMult', 'mul', 0.03, 0.08), A('kinship', 'kin', 'mul', 0.04, 0.1), A('packbond', 'wolf', 'mul', 0.05, 0.12),
   A('talons', 'hawkDmg', 'mul', 0.06, 0.14), A('roots', 'treantDmg', 'mul', 0.06, 0.14), A('blades', 'knifeDmg', 'mul', 0.05, 0.12),
   A('ballistae', 'ballista', 'mul', 0.05, 0.12), A('timber', 'barMax', 'mul', 0.04, 0.1), A('sap', 'barRegen', 'mul', 0.05, 0.12),
@@ -35,14 +35,14 @@ export const AFFIXES: readonly AffixDef[] = [
   A('mending', 'vanMend', 'mul', 0.05, 0.12), A('find', 'itemFind', 'add', 0.03, 0.08), A('luck', 'luck', 'add', 0.02, 0.05),
   A('gleam', 'glimmerMult', 'mul', 0.05, 0.12), A('bossbane', 'bossDmg', 'mul', 0.06, 0.15), A('elitebane', 'eliteDmg', 'mul', 0.05, 0.12),
   A('emberhead', 'fireDmg', 'mul', 0.08, 0.18, 'fire'), A('kindling', 'burnDur', 'mul', 0.08, 0.18, 'fire'),
-  A('thunderhead', 'stormDmg', 'mul', 0.08, 0.18, 'storm'), A('chain', 'stormChain', 'add', 0.2, 0.5, 'storm'),
+  A('thunderhead', 'stormDmg', 'mul', 0.08, 0.18, 'storm'), A('chain', 'stormChain', 'add', 0.4, 0.9, 'storm'),
   A('moonhead', 'homingDmg', 'mul', 0.08, 0.18, 'moon'), A('paleglow', 'critDmg', 'mul', 0.08, 0.18, 'moon'),
 ];
 /** Features an affix scales (TB-114): it rolls only while the player owns that feature. Arrow-typed affixes need their arrow; affixes not listed always roll. */
-export type Feature = 'companion' | 'wolf' | 'hawk' | 'treant' | 'knives' | 'ballista' | 'spikes' | 'vanguard' | 'elites' | ArrowType;
+export type Feature = 'companion' | 'wolf' | 'hawk' | 'treant' | 'knives' | 'ballista' | 'spikes' | 'vanguard' | 'elites' | 'regen' | 'mend' | ArrowType;
 export const AFFIX_NEEDS: Readonly<Record<string, Feature>> = {
   kinship: 'companion', packbond: 'wolf', talons: 'hawk', roots: 'treant', blades: 'knives', ballistae: 'ballista',
-  thorns: 'spikes', banner: 'vanguard', mail: 'vanguard', mending: 'vanguard', elitebane: 'elites',
+  thorns: 'spikes', banner: 'vanguard', mail: 'vanguard', mending: 'mend', sap: 'regen', elitebane: 'elites',
 };
 
 export interface BaseDef { id: string; slot: Slot; name: string }
@@ -61,6 +61,8 @@ export interface StatLine { stat: string; op: 'mul' | 'add'; value: number }
 /** `path` (TB-193a): a path set drops only while that path is the run's chosen path. */
 export interface SetDef { id: string; name: string; bonus: Record<2 | 4 | 6, StatLine[]>; path?: PathId }
 /** Set effect numbers (TB-099, BALANCE ## Proposed P-099). Field distances are in field px (~20 px per metre). */
+/** Chance a legendary drop rolls as a set piece (TB-219; was inline in lootRoll). */
+export const SET_CHANCE = 0.5;
 export const SET_FX = {
   knifeRate: 0.25, bleedAmp: 0.3, bleedSecs: 3, fanEvery: 3, fanKnives: 5, fanRad: 0.18,
   burn: 0.3, burnSpread: 2, spreadReach: 90, cinderSecs: 4, slow: 0.25,

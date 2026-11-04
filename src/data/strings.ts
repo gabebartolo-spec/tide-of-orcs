@@ -40,7 +40,7 @@ export const STR = {
   turnSideways: 'Turn your phone sideways to hold the wall.',
   tabSatchel: 'Satchel', satchelTitle: 'Satchel', satchelWorn: 'Worn',
   satchelCount: (n: number, cap: number, glimmer: number) => `Satchel ${n} / ${cap} · ${glimmer} Glimmer`,
-  satchelEmpty: 'Empty', satchelPick: '',
+  satchelEmpty: 'Empty', satchelPick: '', satchelBack: 'Back to bag',
   satchelVs: (worn: string, d: number) => `Against worn <span class="nw">${worn}</span>: ${d >= 0 ? '+' : ''}${d}\u00a0power`,
   cmpWorn: 'Worn now', cmpHover: 'In the satchel', cmpNone: 'Nothing worn here', cmpPower: (d: number) => `${d >= 0 ? '+' : ''}${d} power`,
   satchelFilter: 'Keep', filterAtLeast: (r: string) => `${r} and up`, satchelWornNow: 'Worn',
@@ -92,7 +92,8 @@ export const STR = {
     bossDmg: 'damage to bosses', eliteDmg: 'damage to elites', fireDmg: 'fire arrow damage', burnDur: 'burn time',
     stormDmg: 'storm arrow damage', stormChain: 'storm chains', homingDmg: 'moon arrow damage', critDmg: 'crit damage',
   } as Record<string, string>,
-  setVolume: 'Volume', setMotion: 'Motion', setNumbers: 'Numbers', setText: 'Text size',
+  setVolume: 'Volume', setMotion: 'Motion', setNumbers: 'Numbers', setText: 'Text size', fsEnter: 'Fullscreen', fsExit: 'Exit fullscreen', soundOn: 'Sound on', soundOff: 'Sound off',
+  setQuality: 'Graphics (reload to apply fully)', qualAuto: 'Auto', qualHigh: 'High', qualLow: 'Low',
   motionSystem: 'Follow system', motionFull: 'Full', motionReduced: 'Reduced',
   numShort: 'Short (1.25M)', numSci: 'Scientific (1.25e6)',
   setTel: 'Playtest data', telBtn: 'Download run log', telNone: 'No finished runs yet', telSaved: (n: number) => `Saved ${n} run${n === 1 ? '' : 's'}`,
@@ -118,7 +119,7 @@ export const STR = {
   campFx: {
     bowDmg: (v: number) => `bow damage +${v}%`, drawCut: (v: number) => `draw time −${v}%`, radius: (v: number) => `strike circle +${v}%`,
     weaponDmg: (v: number) => `knives, ballista and storm +${v}%`, findPlus: (v: number) => `Item Find +${v}%`, rerollCut: (v: number) => `rerolls −${v}%`,
-    wallHp: (v: number) => `barricade health +${v}%`, regenPlus: (v: number) => `barricade regen +${v}/s`, starlight: (v: number) => `starlight +${v}%`,
+    wallHp: (v: number) => `barricade health +${v}%`, regenPlus: (v: number) => `barricade regen +${v}%/s`, starlight: (v: number) => `starlight +${v}%`,
     vanHp: (v: number) => `vanguard health +${v}%`, vanDmg: (v: number) => `vanguard damage +${v}%`, respawnCut: (v: number) => `vanguard respawn −${v}%`,
   },
   // Specialisation paths (TB-193c)

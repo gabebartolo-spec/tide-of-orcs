@@ -2,6 +2,7 @@
  *  Every pool is preallocated at construction and recycled in place (TB-088): no allocation per frame. */
 import { VFX } from '../data/presentation';
 import { textScale } from './textScale';
+import { quality } from './quality';
 
 /** Flames off a burning orc, per the prototype: ~15 sparks/s rising 40 px/s, 0.4 s life. */
 export const FLAME = { rate: 15, rise: 40, drift: 20, life: 0.4, size: 2, lift: 6 } as const;
@@ -20,7 +21,11 @@ export class Particles {
   private strokes = fill<Stroke>(VFX.cap.strokes, () => ({ kind: 0, x: 0, y: 0, x2: 0, y2: 0, r: 0, a0: 0, a1: 0, c: '', c2: '', w: 0, life: 0, max: 1 }));
   private splats = fill<Splat>(VFX.cap.splats, () => ({ x: 0, y: 0, rx: 0, life: 0, c: '' }));
   private texts = fill<Txt>(VFX.cap.texts, () => ({ x: 0, y: 0, s: '', c: '', life: 0 }));
+  /** Live particle cap: the phone tier plays fewer (QUALITY.phoneParts); the pool itself stays at VFX.cap.parts. */
+  private get limit(): number { return Math.min(this.parts.length, quality.q.parts); }
   private np = 0; private ns = 0; private nt = 0;
+  /** Floating-text font, rebuilt only when the text scale changes so drawing builds no string (TB-218). */
+  private fontScale = 0; private font = "";
   /** Splats are a ring: when full, the oldest is overwritten. */
   private splatHead = 0;
 
@@ -30,7 +35,7 @@ export class Particles {
   /** Squares from (x, y): all round, or within ±spread of angle `ang` when spread > 0. */
   burst(x: number, y: number, c: string, n: number, sp: number, ang = 0, spread = 0): void {
     const B = VFX.burst;
-    for (let i = 0; i < n && this.np < this.parts.length; i++) {
+    for (let i = 0; i < n && this.np < this.limit; i++) {
       const p = this.parts[this.np++]!, a = spread > 0 ? ang + (Math.random() * 2 - 1) * spread : Math.random() * 6.28, v = sp * (0.3 + Math.random());
       p.x = x; p.y = y; p.vx = Math.cos(a) * v; p.vy = Math.sin(a) * v; p.life = B.life + Math.random() * B.lifeJitter; p.c = c; p.r = B.size + Math.random() * B.sizeJitter; p.ground = 0; p.g = 0; p.splat = 0;
     }
@@ -39,7 +44,7 @@ export class Particles {
   /** Blood: n droplets thrown up and out from (x, y), biased away from the blow (dir +1 right, -1 left, 0 either), landing near y + foot. */
   blood(x: number, y: number, foot: number, c: string, n: number, dir: number): void {
     const b = VFX.blood;
-    for (let i = 0; i < n && this.np < this.parts.length; i++) {
+    for (let i = 0; i < n && this.np < this.limit; i++) {
       const p = this.parts[this.np++]!, v = b.speed * (0.4 + Math.random());
       const side = dir === 0 ? (Math.random() < 0.5 ? -1 : 1) : dir;
       p.x = x; p.y = y; p.vx = side * v * (0.3 + Math.random() * 0.7); p.vy = -b.lift * (0.4 + Math.random());
@@ -55,7 +60,7 @@ export class Particles {
 
   /** One rising spark; call at FLAME.rate per second per burning orc. */
   flame(x: number, y: number, c: string): void {
-    if (this.np >= this.parts.length) return;
+    if (this.np >= this.limit) return;
     const p = this.parts[this.np++]!;
     p.x = x; p.y = y - FLAME.lift; p.vx = (Math.random() - 0.5) * FLAME.drift; p.vy = -FLAME.rise; p.life = FLAME.life; p.c = c; p.r = FLAME.size; p.ground = 0; p.g = 0; p.splat = 0;
   }
@@ -117,7 +122,8 @@ export class Particles {
       g.stroke();
     }
     for (let i = 0; i < this.np; i++) { const p = this.parts[i]!; g.globalAlpha = Math.max(0, Math.min(1, p.life)); g.fillStyle = p.c; g.fillRect(p.x, p.y, p.r, p.r); }
-    g.globalAlpha = 1; g.font = `${15 * textScale()}px Heartwood`; g.textAlign = 'center';
+    g.globalAlpha = 1; const ts = textScale(); if (ts !== this.fontScale) { this.fontScale = ts; this.font = `${15 * ts}px Heartwood`; }
+    g.font = this.font; g.textAlign = 'center';
     for (let i = 0; i < this.nt; i++) { const t = this.texts[i]!; g.globalAlpha = Math.min(1, t.life * 1.5); g.fillStyle = t.c; g.fillText(t.s, t.x, t.y); }
     g.globalAlpha = 1;
   }

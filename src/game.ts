@@ -11,7 +11,7 @@ import { Inputs, step } from './sim/step';
 import { buy } from './sim/tree';
 import { restartBoss, summonBoss } from './sim/boss';
 import { castFireball } from './sim/combat';
-import { buyHw, repairHeartwood } from './sim/heartwood';
+import { buyHw, placeStandingOrders, repairHeartwood } from './sim/heartwood';
 import { upgradeBuilding } from './sim/camp';
 import { BuildingId } from './data/camp';
 import { HwId } from './data/heartwood';
@@ -32,7 +32,7 @@ export const clockSeed = (): number => (Date.now() % 2147483647) | 0;
 /** Build the sim from a migrated save the way every load does; a boss wave in progress starts over (TB-216b). */
 function loadState(seed: number, save: Save): SimState {
   const s = createState(seed, { ...freshRun(), ...save.run }, { ...freshMeta(), ...save.meta });
-  repairHeartwood(s.meta); restartBoss(s);
+  repairHeartwood(s.meta); restartBoss(s); placeStandingOrders(s);
   return s;
 }
 
@@ -42,6 +42,8 @@ export class GameController {
   settings = sanitizeSettings(null);
   /** Current pointer aim on the field in logical coordinates, or null. Set by the UI every frame it changes. */
   aim: { x: number; y: number } | null = null;
+  /** A press-and-release that fits between two frames still counts as aiming for one sim tick (TB-218 I3); no hold-fire timer. */
+  private latch: { x: number; y: number } | null = null;
   /** Loot telemetry (TB-107) waits here and is written with each save, not per drop. */
   private lootLog: LootRecord[] = [];
 
@@ -54,12 +56,16 @@ export class GameController {
   }
 
   tick(dt: number): void {
-    const inputs: Inputs = { aim: this.state.run.fallen ? null : this.aim };
+    const inputs: Inputs = { aim: this.state.run.fallen ? null : this.aim ?? this.latch };
+    this.latch = null;
     step(this.state, dt, inputs, this.events);
   }
 
-  setAim(x: number, y: number): void { this.aim = { x, y }; }
+  setAim(x: number, y: number): void { this.aim = this.latch = { x, y }; }
+  /** The finger lifted: aim ends, but a press no tick has seen yet is still honoured once. */
   clearAim(): void { this.aim = null; }
+  /** Aim ends at once, with no latch: a cancelled touch, a blurred window, a hidden page. */
+  dropAim(): void { this.aim = this.latch = null; }
   buy(id: NodeId): boolean { return buy(this.state, this.events, id); }
   /** Tooltip plate preview (TB-195c): the stats now and with one more rank of id. Read-only. */
   previewNode(id: NodeId): { now: Stats; next: Stats } {
@@ -116,5 +122,5 @@ export class GameController {
   /** Wipe drops the buffered loot telemetry too, so a fresh game never logs the old one's drops (TB-199). */
   wipe(): void { clearSave(); this.lootLog = []; this.state = createState(clockSeed()); this.reset(); }
   /** The old game's queued events and aim go with it; field and audio hear gameReset (TB-216b). */
-  private reset(): void { this.events.drain(); this.aim = null; this.events.push({ t: 'gameReset' }); }
+  private reset(): void { this.events.drain(); this.aim = this.latch = null; this.events.push({ t: 'gameReset' }); }
 }
