@@ -26,10 +26,10 @@ export const TREELINE = {
   /** Rows hang from the view top (`first` + row x `gap` down to a base, `lift` of jitter); a row only holds kinds up to `slack` x its room, then shrinks as one. */
   slack: 1.12,
   /** The barricade's top: it starts `up` units above the bush skirt base (skirt bushes draw over its top); the forest stands unbroken behind it. */
-  cap: { up: 30 },
+  cap: { up: 14 },
   /** Row 0 (the canopy against the HUD band): each tree is sized (x0.95..`stretch` of natural, same aspect) so its crown top lands `crown[0]`..`crown[1]` units below the band, so no bare strip shows between the HUD and the crowns. `hudGap` css px of air is kept under the HUD's lowest control. */
-  crown: [2, 9] as const, stretch: 1.2, hudGap: 6,
-  grow: 0.06, step: 22, stepGrow: 0.18, jitter: 0.45, lift: 8, bush: 0.1, bushH: [18, 28] as const,
+  crown: [2, 9] as const, stretch: 1.2, hudGap: 18,
+  grow: 0.06, step: 22, stepGrow: 0.18, jitter: 0.65, lift: 8, bush: 0.1, bushH: [18, 28] as const,
   /** Tree sprite keys and their real model heights (Handpainted Tree Pack), so the forest has a natural mix of tall and short. */
   kinds: ['oak_green_1', 'oak_green_2', 'pine_1', 'pine_2', 'pine_3', 'spruce_2', 'spruce_3'] as const,
   heights: { oak_green_1: 6.25, oak_green_2: 6.94, pine_1: 7.35, pine_2: 8.95, pine_3: 10.57, spruce_2: 5.31, spruce_3: 5.17 } as Readonly<Record<string, number>>,

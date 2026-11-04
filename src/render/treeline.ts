@@ -137,6 +137,8 @@ export class Treeline {
   private spots: Spot[] = []; private edges: Spot[] = [];
   /** Height (world units) of the HUD band kept clear above the crowns; everything hangs from `y0 + hud`, not the view top. */
   private hud = 0;
+  /** Sprites painted after the frame's first forest orc (must stay 0: an orc is never covered by a tree or bush). */
+  private orcMark = false; occluders = 0;
   private n = -1; private ri = 0; private si = 0; private px = 1; private q: ImageSmoothingQuality = 'low';
   constructor() { load(); }
   /** Rows that fit between the view top at `y0` and the plain. */
@@ -163,10 +165,12 @@ export class Treeline {
   }
   /** Start a frame: remember the device scale (the mip level depends on it) and rewind both depth lists. */
   begin(g: CanvasRenderingContext2D, y0: number, hud = 0): void {
-    this.hud = hud; this.layout(this.count(y0)); this.ri = 0; this.si = 0;
+    this.hud = hud; this.orcMark = false; this.occluders = 0; this.layout(this.count(y0)); this.ri = 0; this.si = 0;
     this.q = g.imageSmoothingQuality; g.imageSmoothingQuality = 'high';  // the field's default is 'low': the sprites are always scaled, never 1:1
     const m = (g as { getTransform?: () => DOMMatrix }).getTransform?.(); const px = m ? Math.hypot(m.a, m.b) || 1 : 1; if (px !== this.px) exact.clear(); this.px = px;
   }
+  /** Called once the trees and bushes are down and the forest orcs are about to be drawn. */
+  orcsStart(): void { this.orcMark = true; }
   /** End of the frame's forest: put the smoothing back the way the rest of the field expects it. */
   end(g: CanvasRenderingContext2D): void { g.imageSmoothingQuality = this.q; }
   /** Draw every tree whose base is at or above world `y`, skipping what is already drawn. `Infinity` finishes the rows. */
@@ -191,6 +195,7 @@ export class Treeline {
   skirtBase(y0: number): number { return y0 + this.hud + T.first + (this.count(y0) - 1) * T.gap + T.skirt.lift; }
   private put(g: CanvasRenderingContext2D, s: Spot, y0: number, x0: number, x1: number): void {
     const im = imgs.get(s.key); if (!im) return;
+    if (this.orcMark) this.occluders++;
     const w = (im.width / im.height) * s.h; if (s.x + w / 2 < x0 || s.x - w / 2 > x1) return;
     const by = y0 + s.off, sh = shadowSprite();
     if (sh) { const sw = Math.min(w, s.h * 1.2) * s.shadow; g.drawImage(sh, s.x - sw / 2, by - sw * 0.25, sw, sw * 0.5); }

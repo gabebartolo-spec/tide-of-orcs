@@ -11,13 +11,13 @@ mkdirSync(outDir, { recursive: true });
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const SIZES = [[1920, 1080, 1], [1920, 1080, 2], [1920, 1080, 3], [1280, 720, 1], [1280, 720, 2]], WAVES = [1, 10, 25, 50];
 const AUDIT = (w) => `(() => { const q = (s) => document.querySelector(s); const st = q('#hud-stamp'), fb = q('#fallen'), t = window.__tide, f = t.field;
-  let bottom = 0; for (const e of q('#hud').querySelectorAll('.hud-wall, .hud-wave, .hud-star, button, .stats')) { const r = e.getBoundingClientRect(); if (r.width > 1) bottom = Math.max(bottom, r.bottom); }
+  let bottom = 0; for (const e of q('#hud').querySelectorAll('.hud-wallbox, .hud-wall, .hud-wave, .hud-star, button, .stats')) { const r = e.getBoundingClientRect(); if (r.width > 1) bottom = Math.max(bottom, r.bottom); }
   const s = t.game.state, v = f.view, vis = f.vis, tl = f.treeline, css = (wy) => (wy - vis.y0) * v.k;
   const top = css(tl.crownTop(vis.y0)); let inForest = 0;
   for (const o of s.orcs.items) { if (o.live && !o.dead && o.y < tl.skirtEdge(vis.y0)) inForest++; }
   return { waveText: q('#st-wave').textContent.trim(), want: ${w}, stampHidden: st.hidden, fallenHidden: fb.hidden, barHp: Math.round(s.run.barHp), barMax: Math.round(s.stats.barMax), hudBottom: Math.round(bottom), barText: q('#hud-wall-t').textContent.trim(),
-    crownTop: Math.round(top * 10) / 10, gapUnderHud: Math.round((top - bottom) * 10) / 10, orcsInForest: inForest, dpr: devicePixelRatio, inner: [innerWidth, innerHeight] }; })()`;
-const good = (a, W, H, dpr) => a.waveText === String(a.want) && a.stampHidden && a.fallenHidden && a.barHp === a.barMax && a.barText.includes(`${a.barMax} / ${a.barMax}`) && a.dpr === dpr && a.inner[0] === W && a.inner[1] === H;
+    crownTop: Math.round(top * 10) / 10, gapUnderHud: Math.round((top - bottom) * 10) / 10, orcsInForest: inForest, occluders: tl.occluders, orcsDrawn: f.orcsIn, dpr: devicePixelRatio, inner: [innerWidth, innerHeight] }; })()`;
+const good = (a, W, H, dpr) => a.waveText === String(a.want) && a.occluders === 0 && a.gapUnderHud >= 14 && a.stampHidden && a.fallenHidden && a.barHp === a.barMax && a.barText.includes(`${a.barMax} / ${a.barMax}`) && a.dpr === dpr && a.inner[0] === W && a.inner[1] === H;
 
 async function session(port, W, H, dpr, out) {
   const chrome = spawn('C:/Program Files/Google/Chrome/Application/chrome.exe', [`--remote-debugging-port=${port}`, `--user-data-dir=${tmpdir()}/tide-tl-${port}-${Date.now()}`,
