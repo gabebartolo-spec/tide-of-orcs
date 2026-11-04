@@ -15,7 +15,7 @@ Parallel sessions build against these; change them only inside the PR that needs
 - `GameController` intents in `src/game.ts` (ARCHITECTURE.md §UI).
 - Node ids in SKILL-TREE.md and Heartwood ids in BALANCE.md §Heartwood tree (renaming one needs the director).
 
-Save fixtures live in `src/save/fixtures/` (v1–v14; current schema v15). There is no shared midgame fixture; build one with `createState()` plus `levels` in the test, or load a saved player such as `sim/out/player48.json` through the dev handle (QA-CHECKLIST run 5).
+Save fixtures live in `src/save/fixtures/` (v1–v15; current schema v16). There is no shared midgame fixture; build one with `createState()` plus `levels` in the test, or load a saved player such as `sim/out/player48.json` through the dev handle (QA-CHECKLIST run 5).
 
 ## Session protocol
 1. Read `CLAUDE.md`, the docs for the area, and the project handoff file. Claim the row in `BACKLOG.md` (owner, status `doing`).
