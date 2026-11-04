@@ -538,10 +538,12 @@ body[data-mode="camp"] :is(.hud-wallbox, .hud-wave) { display: none; }
 #sat-grid { grid-template-columns: repeat(auto-fill, var(--bag-pocket)); grid-auto-rows: var(--bag-pocket); gap: 0.5rem; justify-content: center; }
 #sat-grid .item .glyph, #sat-grid .item .glyph img { width: calc(var(--bag-pocket) * 0.66); height: calc(var(--bag-pocket) * 0.66); }
 #sat-worn { position: relative; grid-template-columns: var(--doll-pocket) var(--doll-w) var(--doll-pocket); grid-template-rows: repeat(3, var(--doll-pocket)); gap: 0.75rem 0.5rem; justify-content: center; }
-#sat-worn::before { content: ""; grid-column: 2; grid-row: 1 / span 3; align-self: stretch; background: var(--line); opacity: .75;
+#sat-worn::before { content: ""; grid-column: 2; grid-row: 1 / span 2; align-self: stretch; background: var(--line); opacity: .75;
   -webkit-mask: image-set(url("/ui/doll.webp") 1x, url("/ui/doll@2x.webp") 2x) center / contain no-repeat; mask: image-set(url("/ui/doll.webp") 1x, url("/ui/doll@2x.webp") 2x) center / contain no-repeat; }
 #sat-worn > .item:nth-child(1) { grid-area: 1 / 1; } #sat-worn > .item:nth-child(2) { grid-area: 1 / 3; } #sat-worn > .item:nth-child(3) { grid-area: 2 / 1; }
 #sat-worn > .item:nth-child(4) { grid-area: 2 / 3; } #sat-worn > .item:nth-child(5) { grid-area: 3 / 1; } #sat-worn > .item:nth-child(6) { grid-area: 3 / 3; }
+/* TB-225: the dagger hangs at the belt, centred under the doll between boots and charm */
+#sat-worn > .item:nth-child(7) { grid-area: 3 / 2; justify-self: center; width: var(--doll-pocket); }
 #sat-worn .item .glyph, #sat-worn .item .glyph img { width: calc(var(--doll-pocket) * 0.66); height: calc(var(--doll-pocket) * 0.66); }
 #sat-worn .item.want { outline: 0; animation: pocket-want 0.9s ease-in-out infinite; }
 @keyframes pocket-want { 0%, 100% { filter: drop-shadow(0 0 0.25rem var(--amber)); } 50% { filter: drop-shadow(0 0 1.25rem var(--amber)); } }

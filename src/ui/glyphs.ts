@@ -9,6 +9,7 @@ const GLYPH: Record<Slot, string> = {
   bracer: '<path d="M6 7h12l1 2v6l-1 2H6l-1-2V9z" fill="currentColor" opacity=".35"/><path d="M6 7h12l1 2v6l-1 2H6l-1-2V9z" fill="none" stroke-width="1.6"/><path d="M9 7v10m6-10v10" stroke-width="1.2"/>',
   cloak: '<circle cx="12" cy="6" r="3" fill="none" stroke-width="1.6"/><path d="M9 8L5 20h14L15 8" fill="currentColor" opacity=".35"/><path d="M9 8L5 20h14L15 8" fill="none" stroke-width="1.6"/>',
   boots: '<path d="M8 4h5v9l5 2v4H7z" fill="currentColor" opacity=".35"/><path d="M8 4h5v9l5 2v4H7z" fill="none" stroke-width="1.6"/><path d="M7 17h11" stroke-width="1.2"/>',
+  dagger: '<path d="M12 2l3 9-3 3-3-3z" fill="currentColor" opacity=".35"/><path d="M12 2l3 9-3 3-3-3z" fill="none" stroke-width="1.6"/><path d="M7 14h10M12 14v8" fill="none" stroke-width="2"/>',
   charm: '<path d="M6 3l6 7 6-7" fill="none" stroke-width="1.2"/><path d="M12 10l5 5-5 6-5-6z" fill="currentColor" opacity=".35"/><path d="M12 10l5 5-5 6-5-6z" fill="none" stroke-width="1.6"/>',
 };
 

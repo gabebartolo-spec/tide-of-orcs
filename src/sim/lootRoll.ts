@@ -84,9 +84,13 @@ export function rollDrop(rng: Rng, loot: LootMeta, kind: OrcKind, wave: number, 
   }
   const ilvl = itemLevel(wave, prestiges);
   const myth = rarity === 'mythic' ? pick(rng, forPath(MYTHICS, mods.path)) : null;
-  const base = pick(rng, myth ? BASES.filter((b) => b.slot === myth.slot) : BASES);
+  let base = pick(rng, myth ? BASES.filter((b) => b.slot === myth.slot) : BASES);
   const item: Item = { uid: `i${loot.nextUid++}`, base: base.id, slot: base.slot, rarity, ilvl, affixes: rollAffixes(rng, RARITY.affixes[rarity], ilvl, mods.has) };
   if (myth) item.mythic = myth.id;
-  else if (rarity === 'legendary' && rng.next() < SET_CHANCE) item.set = pick(rng, forPath(SETS, mods.path)).id;
+  else if (rarity === 'legendary' && rng.next() < SET_CHANCE) {
+    item.set = pick(rng, forPath(SETS, mods.path)).id;
+    // sets are six pieces over the six original slots (TB-225): a set piece never lands in the dagger slot
+    if (base.slot === 'dagger') { base = pick(rng, BASES.filter((b) => b.slot !== 'dagger')); item.base = base.id; item.slot = base.slot; }
+  }
   return item;
 }

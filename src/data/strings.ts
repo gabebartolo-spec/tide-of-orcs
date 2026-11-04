@@ -82,7 +82,7 @@ export const STR = {
     'magpies-talon': 'Arrow kills steal double starlight and sometimes an extra drop.',
   } as Record<string, string>,
   thunder: 'Thunder!',
-  slotName: { bow: 'Bow', quiver: 'Quiver', bracer: 'Bracer', cloak: 'Cloak', boots: 'Boots', charm: 'Charm' } as Record<string, string>,
+  slotName: { bow: 'Bow', quiver: 'Quiver', bracer: 'Bracer', cloak: 'Cloak', boots: 'Boots', charm: 'Charm', dagger: 'Dagger' } as Record<string, string>,
   rarityName: { common: 'Common', rare: 'Rare', epic: 'Epic', legendary: 'Legendary', mythic: 'Mythic' } as Record<string, string>,
   statName: {
     dmg: 'arrow damage', fireRate: 'fire rate', radius: 'radius', crit: 'crit chance', pierce: 'pierce', arrows: 'arrows',

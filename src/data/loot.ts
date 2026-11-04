@@ -1,6 +1,9 @@
 /** Loot item shapes (TB-090). Pools, sets and mythics land in TB-091; rolls in TB-092. */
-export type Slot = 'bow' | 'quiver' | 'bracer' | 'cloak' | 'boots' | 'charm';
-export const SLOTS: readonly Slot[] = ['bow', 'quiver', 'bracer', 'cloak', 'boots', 'charm'];
+export type Slot = 'bow' | 'quiver' | 'bracer' | 'cloak' | 'boots' | 'charm' | 'dagger';
+/** Worn order: the six original pockets, then the dagger (TB-225, a knife is not a bow). Sets stay six pieces: they never roll on the dagger. */
+export const SLOTS: readonly Slot[] = ['bow', 'quiver', 'bracer', 'cloak', 'boots', 'charm', 'dagger'];
+/** The six slots a set piece can fill (TB-225: never the dagger). */
+export const SET_SLOTS: readonly Slot[] = SLOTS.filter((s) => s !== 'dagger');
 export type Rarity = 'common' | 'rare' | 'epic' | 'legendary' | 'mythic';
 export const RARITIES: readonly Rarity[] = ['common', 'rare', 'epic', 'legendary', 'mythic'];
 

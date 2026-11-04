@@ -54,6 +54,7 @@ export const BASES: readonly BaseDef[] = [
   ...B('cloak', 'Moss Cloak', 'Wool Cloak', 'Feather Cloak', 'Dusk Cloak'),
   ...B('boots', 'Soft Boots', 'Root Boots', 'Ranger Boots', 'Windstep Boots'),
   ...B('charm', 'Acorn Charm', 'Bone Charm', 'Amber Charm', 'Star Charm'),
+  ...B('dagger', 'Bone Knife', 'Flint Dagger', 'Bronze Dirk', 'Silver Stiletto'),
 ];
 
 export interface StatLine { stat: string; op: 'mul' | 'add'; value: number }
@@ -98,10 +99,10 @@ export const forPath = <T extends { path?: PathId }>(xs: readonly T[], path: Pat
 
 /** Mythics: one power and one cost each (powers wired in TB-100). */
 /** A mythic's power switches on a Stats field through `lines`, as set bonuses do (TB-100); its numbers live in MYTHIC_FX. */
-/** `kind`: what the item is when that is not the slot's usual gear (The Last Knife is a knife worn in the bow socket); shown on its card. */
+/** `kind`: what the item is when that is not the slot's usual gear (unused since TB-225 gave The Last Knife its own dagger slot); shown on its card. */
 export interface MythicDef { id: string; name: string; slot: Slot; lines: StatLine[]; path?: PathId; kind?: string }
 export const MYTHICS: readonly MythicDef[] = [
-  { id: 'last-knife', name: 'The Last Knife', slot: 'bow', kind: 'Knife', lines: [on('knifeReturn')] },
+  { id: 'last-knife', name: 'The Last Knife', slot: 'dagger', lines: [on('knifeReturn')] },
   { id: 'heart-of-kiln', name: 'Heart of the Kiln', slot: 'quiver', lines: [on('burnRamp')] },
   { id: 'thunders-memory', name: "Thunder's Memory", slot: 'bracer', lines: [on('stormStore')] },
   { id: 'oakspine', name: 'Oakspine', slot: 'bow', lines: [on('stakes')] },
