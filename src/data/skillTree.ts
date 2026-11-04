@@ -189,10 +189,12 @@ export const TREE_VIEW = { startZoom: 1, focusX: 700, focusY: 890, minZoom: 0.6,
   nodeR: 13, nodeRTouch: 18,
   /** World px the camera may pan past each tree edge, so a label centred on an edge node (up to 55 px of text each side) stays in the pane (TB-218). */
   edgePad: 60,
+  /** Label font px (layout) and the clear gap kept between a label and the pane edge when the camera is clamped (TB-218 r9). */
+  labelPx: 14, labelMargin: 6,
   /** Branch line bow as a fraction of its length; camera ease rate toward the selected node (1/s). */
   bow: 0.12, easeRate: 8,
-  /** Screen px kept for the branch legend at the top of the view; the tree pans below it (TB-117). 48 so the strip reads as a full row on a phone (TB-218). */
-  legendH: 48,
+  /** Screen px kept for the branch legend at the top of the view; the tree pans below it (TB-117). 32: one 14 px row of chips with a little air, so a 320 px high phone keeps its tree (TB-218 r9). */
+  legendH: 32,
   /** Arcane tree (TB-163): wood width = woodBase + woodPerNode × √(nodes it carries); growth rate of a newly bought link (1/s);
    *  how far up a trunk node's upward links run before they bend out (fraction). */
   woodBase: 1.5, woodPerNode: 1.7, growRate: 2.5, trunkRise: 0.6,

@@ -1,5 +1,5 @@
 import { BUILDING, BUILDINGS, BuildingId, CAMP_FX, MAT_IDS, MAT_NAMES } from '../data/camp';
-import { CAMP_DRAW_ORDER, CAMP_SPOTS } from '../data/presentation';
+import { CAMP_DRAW_ORDER, CAMP_SPOTS, CAMP_TAG } from '../data/presentation';
 import { STR } from '../data/strings';
 import type { GameController } from '../game';
 import { campCost, campLevel, canUpgrade } from '../sim/camp';
@@ -103,11 +103,14 @@ export class CampPane {
     }).join('');
     this.layoutTags();
   }
+  /** Each plaque hangs from its building's base (never over the sprite) and is kept whole inside the layer: clamped to every edge (TB-218 r9). */
   layoutTags(): void {
     if (!this.tags || !this.place) return;
+    const W = this.tags.clientWidth, H = this.tags.clientHeight, gap = CAMP_TAG.edge;
     for (const el of this.tags.querySelectorAll<HTMLElement>('button[data-bld]')) {
-      const p = CAMP_SPOTS[el.dataset.bld as BuildingId], [x, y] = this.place(p.x, p.y);
-      el.style.left = `${x.toFixed(1)}px`; el.style.top = `${y.toFixed(1)}px`;
+      const p = CAMP_SPOTS[el.dataset.bld as BuildingId], [x, y] = this.place(p.x, p.y), w = el.offsetWidth, h = el.offsetHeight;
+      const l = W ? Math.min(Math.max(x - w / 2, gap), Math.max(gap, W - w - gap)) : x - w / 2, t = H ? Math.min(Math.max(y - CAMP_TAG.lap, gap), Math.max(gap, H - h - gap)) : y - CAMP_TAG.lap;
+      el.style.left = `${l.toFixed(1)}px`; el.style.top = `${t.toFixed(1)}px`;
     }
   }
 

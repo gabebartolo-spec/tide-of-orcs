@@ -3,6 +3,13 @@ import { TREE_CANVAS, TREE_VIEW } from '../data/skillTree';
 
 export interface Camera { x: number; y: number; z: number }
 
+/** World px the camera may pan past each tree edge so the outermost labels stay whole in the pane. TREE_VIEW.edgePad until the renderer
+ *  measures the real labels (setLabelPads), so the pure camera and its tests need no canvas. */
+export interface LabelPads { l: number; r: number; b: number }
+let pads: LabelPads = { l: TREE_VIEW.edgePad, r: TREE_VIEW.edgePad, b: TREE_VIEW.edgePad };
+export const setLabelPads = (p: LabelPads): void => { pads = p; };
+export const labelPads = (): LabelPads => pads;
+
 export const toWorld = (c: Camera, sx: number, sy: number): [number, number] => [c.x + sx / c.z, c.y + sy / c.z];
 
 /** Opening view: at least TREE_VIEW.startZoom world px per screen px, centred on the root, so labels stay readable in a narrow panel. */
@@ -32,9 +39,9 @@ export function clampCamera(c: Camera, vw: number, vh: number, floor?: number): 
   const z = Math.min(fit * TREE_VIEW.maxZoom, Math.max(floor ?? fit * TREE_VIEW.minZoom, c.z));
   const top = TREE_VIEW.legendH / z, ax = (vw / z - TREE_CANVAS.w), ay = (vh / z - top - TREE_CANVAS.h);
   // When the tree is smaller than the view on an axis, centre it (vertically, in the space below the legend); otherwise allow panning to each edge plus the label pad.
-  const pad = TREE_VIEW.edgePad; // pan a little past the tree so the labels on the outermost nodes are not cut by the pane edge (TB-218)
-  const x = ax >= 0 ? -ax / 2 : Math.min(-ax + pad, Math.max(-pad, c.x));
-  const y = ay >= 0 ? -top - ay / 2 : Math.min(TREE_CANVAS.h - vh / z + pad, Math.max(-top, c.y));
+  // pan a little past the tree so the labels on the outermost nodes are not cut by the pane edge (TB-218)
+  const x = ax >= 0 ? -ax / 2 : Math.min(-ax + pads.r, Math.max(-pads.l, c.x));
+  const y = ay >= 0 ? -top - ay / 2 : Math.min(TREE_CANVAS.h - vh / z + pads.b, Math.max(-top, c.y));
   return { x, y, z };
 }
 

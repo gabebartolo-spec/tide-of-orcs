@@ -206,6 +206,9 @@ export const CAMP_SPOTS = Object.fromEntries(Object.entries(CAMP_ART).map(([id, 
 })) as Readonly<Record<keyof typeof CAMP_ART, { readonly x: number; readonly y: number; readonly w: number; readonly h: number }>>;
 
 /** Buildings back row first, so the front row overlaps it (TB-188k round 3). */
+/** Camp tap plaques (TB-218 r9): px kept clear of every edge of the scene layer, and how far the plaque's top overlaps the building's base line. */
+export const CAMP_TAG = { edge: 4, lap: 10 } as const;
+
 export const CAMP_DRAW_ORDER = [...BUILDINGS].sort((a, b) => CAMP_SPOTS[a.id].y - CAMP_SPOTS[b.id].y);
 
 /** Camp idle life (TB-188f, TB-188k): ambient motion in the Camp scene, scene units and seconds. Particle kinds: `rate` per second

@@ -1,6 +1,6 @@
 import { quality, renderScale } from './quality';
-import { BRANCH_COLOR, BRANCH_LABEL, NODE, NODES, NodeId, SkillNode, TREE_VIEW } from '../data/skillTree';
-import { Camera, wholeZoom, centreOn, clampCamera, easeToward, startCamera, panBy, toWorld, wholeCamera, zoomAt } from './camera';
+import { BRANCH_COLOR, BRANCH_LABEL, NODE, NODES, NodeId, SkillNode, TREE_CANVAS, TREE_VIEW } from '../data/skillTree';
+import { Camera, setLabelPads, wholeZoom, centreOn, clampCamera, easeToward, startCamera, panBy, toWorld, wholeCamera, zoomAt } from './camera';
 import { SimState } from '../sim/state';
 import { canBuy, pathLocked, rankOf, unlocked } from '../sim/tree';
 import { DragGuard } from './dragGuard';
@@ -86,6 +86,18 @@ export class TreeRenderer {
     canvas.addEventListener('pointerup', end); canvas.addEventListener('pointercancel', end);
     // Keyboard focus shows a ring on the selected node (TB-116), so redraw when it comes or goes.
     canvas.addEventListener('focus', () => { this.stale = true; }); canvas.addEventListener('blur', () => { this.stale = true; });
+    this.fitPads(); void Promise.all([document.fonts?.ready, document.fonts?.load(`${TREE_VIEW.labelPx}px Heartwood`)]).then(() => { this.fitPads(); this.cam = clampCamera(this.cam, this.vw, this.vh, this.floor()); this.stale = true; });
+  }
+
+  /** The camera may pan past the tree edge by exactly what the outermost label (or node disc) needs, measured in the real font (TB-218 r9). */
+  private fitPads(): void {
+    const c = this.g, f = TREE_VIEW.labelPx; c.save(); c.setTransform(1, 0, 0, 1, 0, 0); c.font = `${f}px Heartwood`;
+    let l = 0, r = 0, b = 0; const m = TREE_VIEW.labelMargin, disc = TREE_VIEW.nodeRTouch + 3 + m;
+    for (const n of NODES) {
+      const hw = Math.max(disc, c.measureText(n.name).width / 2 + m);
+      l = Math.max(l, hw - n.x); r = Math.max(r, hw + n.x - TREE_CANVAS.w); b = Math.max(b, n.y + disc + f + m - TREE_CANVAS.h);
+    }
+    c.restore(); setLabelPads({ l: Math.max(l, m), r: Math.max(r, m), b: Math.max(b, m) });
   }
 
   private onMove(e: PointerEvent): void {
