@@ -298,5 +298,9 @@
  "magpies-talon-r2": {
   "prompt": "Mythic magpie talon quiver, a game item prop, standing upright. One wide cylindrical arrow quiver, closed at the bottom and open at the top, with a large bird's foot of four thick curved claws gripping it from below and wrapping up its sides, black and white feathers on the tube, five fletched arrow shafts rising out of the open top, no bow. Soft low-poly toy-board look, flat shading, no outlines, clean simple silhouette, a single object, no extra parts.",
   "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Glossy black-blue and bone-white feathers, ochre-gold claws and rim, rust-brown strap, gold arrow tips."
+ },
+ "ironbark-recurve": {
+  "prompt": "Chunky ironbark recurve bow, a game item prop.",
+  "texture": "Hand-painted flat colours, soft low-poly toy-board game prop, no outlines, no baked shadows. Dark rust-brown ironbark with grain, dusty sage leaf wraps, ochre bands, rust-red leather grip, bone tips and string."
  }
 }

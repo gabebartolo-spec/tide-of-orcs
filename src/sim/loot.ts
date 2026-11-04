@@ -58,10 +58,12 @@ export function pickUp(l: LootMeta, it: Item, policy: EquipPolicy, cap: number =
   const cur = l.items.find((x) => x.uid === l.equipped[it.slot]);
   if (policy === 'player' && it.rarity !== 'mythic' && !it.set && RARITIES.indexOf(it.rarity) < RARITIES.indexOf(l.lootFilter.minRarity)) { l.items.pop(); l.glimmer += salvageGlimmer(it, fx); return; }
   const better = !cur || (policy !== 'player' && itemScore(it) > itemScore(cur));
-  if (better) l.equipped[it.slot] = it.uid;
+  if (better) { if (cur && l.heirloom === cur.uid) l.heirloom = null; l.equipped[it.slot] = it.uid; }
   const loser = better ? cur : it;
   if (policy === 'greedy' && loser && !loser.set && !loser.mythic) salvage(l, loser.uid, fx);
-  while (l.items.length > cap) {
+  const worn = (): number => l.items.filter((x) => Object.values(l.equipped).includes(x.uid)).length;
+  // the cap counts the satchel's spare items only, as the counter shows; worn pieces are extra (TB-219)
+  while (l.items.length - worn() > cap) {
     const spare = l.items.filter((x) => !Object.values(l.equipped).includes(x.uid) && !x.locked && x.uid !== l.heirloom && !x.set && !x.mythic).sort((a, b) => itemScore(a) - itemScore(b))[0];
     if (!spare || !salvage(l, spare.uid, fx)) break;
   }
@@ -71,6 +73,7 @@ export function pickUp(l: LootMeta, it: Item, policy: EquipPolicy, cap: number =
 export function equip(l: LootMeta, uid: string): boolean {
   const it = l.items.find((x) => x.uid === uid);
   if (!it || l.equipped[it.slot] === uid) return false;
+  if (l.heirloom && l.equipped[it.slot] === l.heirloom) l.heirloom = null; // taking it off ends the naming
   l.equipped[it.slot] = uid;
   return true;
 }
@@ -92,7 +95,7 @@ export function toggleHeirloom(l: LootMeta, uid: string): boolean {
 /** Each Replant the heirloom gains item levels past the cap; its affixes grow with affixScale. */
 export function growHeirloom(l: LootMeta, levels: number): void {
   const it = l.items.find((x) => x.uid === l.heirloom);
-  if (!it || levels <= 0) return;
+  if (!it || levels <= 0 || !Object.values(l.equipped).includes(it.uid)) return;
   const k = affixScale(it.ilvl + levels) / affixScale(it.ilvl);
   it.ilvl += levels;
   for (const a of it.affixes) a.value = Math.round(a.value * k * 1e4) / 1e4;

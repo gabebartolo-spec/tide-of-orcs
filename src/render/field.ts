@@ -12,19 +12,28 @@ import { Particles } from './particles';
 import { fmt } from '../ui/format';
 import { STR } from '../data/strings';
 import { Ceremony } from './ceremony';
+import { plainPoint } from './viewMap';
 import { Sprites } from './sprites';
-import { orcAnimT, orcState, orcSwingT, swingClipT, vanState } from './actorState';
+import { orcClipT, orcState, swingClipT, vanState } from './actorState';
 import { Ground, decorImg } from './ground';
 import { Ambience } from './ambience';
 import { Interp } from './interp';
-import { FIELD_VIEW, GROUND, LOOT_VFX, ORC_SPRITE, SKY, VFX, dusk } from '../data/presentation';
+import { FIELD_VIEW, PHONE_QUERY, QUALITY, GROUND, LOOT_VFX, ORC_SPRITE, SKY, VFX, dusk } from '../data/presentation';
 import { SLOTS } from '../data/loot';
+import { quality, fitScale } from './quality';
 import { setTiers } from '../sim/gear';
 
 const IMPACT_LIFE = VFX.impactLife;
 /** Foot offset below an actor's centre, where its blood lands. */
 const footOf = (r: number): number => r * 0.9;
-const byY = (a: { y: number }, b: { y: number }): number => a.y - b.y;
+/** In-place insertion sort by y (TB-218 P7): the draw order barely changes frame to frame, so this is near O(n) and allocates nothing. */
+function sortByY(a: { y: number }[]): void {
+  for (let i = 1; i < a.length; i++) {
+    const v = a[i]!; let j = i - 1;
+    while (j >= 0 && a[j]!.y > v.y) { a[j + 1] = a[j]!; j--; }
+    a[j + 1] = v;
+  }
+}
 /** Radius the elf and vanguard sprites are sized against (their vector bodies span ~12 units). */
 const ACTOR_R = 12;
 /** Drop beam and equip glow colour per rarity. */
@@ -66,10 +75,10 @@ export class FieldRenderer {
    *  window shows more meadow. */
   readonly view = { k: 1, ox: 0, oy: 0 };
   private treeline = new Treeline();
-  /** Client px to plain coordinates, clamped onto the plain. */
-  toWorld(cx: number, cy: number): { x: number; y: number } {
-    const r = this.canvas.getBoundingClientRect(), v = this.view;
-    return { x: Math.min(W, Math.max(0, (cx - r.left - v.ox) / v.k)), y: Math.min(H, Math.max(0, (cy - r.top - v.oy) / v.k)) };
+  /** Client px to plain coordinates; null off the plain unless `clamp` pins it to the edge (TB-216c). */
+  toWorld(cx: number, cy: number, clamp: boolean): { x: number; y: number } | null {
+    const r = this.canvas.getBoundingClientRect();
+    return plainPoint(cx - r.left, cy - r.top, this.view, clamp);
   }
   /** Visible world rect this frame. */
   private vis: { x0: number; y0: number; x1: number; y1: number } = { x0: 0, y0: 0, x1: W, y1: H };
@@ -90,14 +99,32 @@ export class FieldRenderer {
     this.g = canvas.getContext('2d')!;
     this.resize();
     // the canvas fills the window and its box changes with the HUD mode and full screen, not only on window resize
-    if (typeof ResizeObserver !== 'undefined') new ResizeObserver(() => this.resize()).observe(canvas);
+    if (typeof ResizeObserver !== 'undefined') new ResizeObserver(() => this.resizeSoon()).observe(canvas);
   }
 
-  resize(): void {
-    const dpr = Math.min(2, window.devicePixelRatio || 1);
-    const r = this.canvas.getBoundingClientRect();
-    this.canvas.width = Math.round(r.width * dpr); this.canvas.height = Math.round(r.height * dpr);
+  private resizeTimer = 0;
+  /** A URL-bar slide or rotation fires many size callbacks: wait until the box has held still for `QUALITY.resizeSettleMs`, then resize once (TB-218).
+   *  The canvas box is CSS-sized, so it stays stretched to the window meanwhile. */
+  resizeSoon(): void {
+    if (quality.tier !== 'phone') { this.resize(); return; }
+    clearTimeout(this.resizeTimer); this.resizeTimer = window.setTimeout(() => this.resize(), QUALITY.resizeSettleMs);
   }
+
+  /** Resizing clears the canvas and reallocates its backing store, so a URL-bar animation (many equal-size callbacks) must not redo it (TB-218). */
+  resize(): void {
+    const r = this.canvas.getBoundingClientRect();
+    // phone tier: the governor's scale, held under QUALITY.fieldMp megapixels; desktop keeps the device ratio capped at 2 (TB-218 P2)
+    const dpr = quality.tier === 'phone' ? fitScale(window.devicePixelRatio || 1, quality.q.scale, r.width, r.height, QUALITY.fieldMp) : Math.min(QUALITY.desktopScale, window.devicePixelRatio || 1);
+    const w = Math.round(r.width * dpr), h = Math.round(r.height * dpr);
+    this.phone = typeof matchMedia === 'function' && matchMedia(PHONE_QUERY).matches;
+    if (w === this.canvas.width && h === this.canvas.height) return;
+    this.canvas.width = w; this.canvas.height = h; this.resizes++;
+    this.sprites.clearBakes();   // bakes are in device px: a new scale needs new ones
+  }
+  /** Phone landscape layout (coarse pointer, short screen). */
+  phone = false;
+  /** Backing-store reallocations, for the resize regression check. */
+  resizes = 0;
 
   /** Turn sim events into particles, strokes, blood, text and shake. */
   consume(events: SimEvent[], s: SimState): void {
@@ -143,6 +170,7 @@ export class FieldRenderer {
         case 'vanguardHit': fx.blood(e.x, e.y, footOf(ACTOR_R) + 4, P.bloodElf, B.vanHit, -1); break;
         case 'vanguardFell': fx.burst(e.x, e.y, P.spear, VFX.vanFell[0], VFX.vanFell[1]); fx.blood(e.x, e.y, footOf(ACTOR_R) + 4, P.bloodElf, B.vanFell, 0); fx.splat(e.x, e.y + 16, B.vanSplat, P.bloodElf); break;
         case 'replant': this.ceremony.start(this.reducedMotion); break;
+        case 'gameReset': this.ceremony.skip(); this.slow = 0; this.edge = 0; this.flash = 0; this.beams.length = 0; break;
         case 'loot': this.lootDrop(e.x, e.y, e.rarity); break;
         default: break;
       }
@@ -277,20 +305,24 @@ export class FieldRenderer {
       if (pt.fire && !this.reducedMotion && Math.random() < A.flameRate * dt) this.fx.flame(pt.x + (Math.random() - 0.5) * pt.r * 1.6, pt.y + (Math.random() - 0.5) * pt.r * 0.8 + 6, P.fire);
     }
     const vans = this.vanBuf, orcs = this.orcBuf; vans.length = 0; orcs.length = 0;
-    s.vans.forEach((v) => { vans.push(v); }); vans.sort(byY); for (const v of vans) this.van(s, v);
-    s.orcs.forEach((o) => { if (!o.dead) orcs.push(o); }); orcs.sort(byY);
+    for (const v of s.vans.items) if (v.live) vans.push(v);
+    sortByY(vans); for (const v of vans) this.van(s, v);
+    for (const o of s.orcs.items) if (o.live && !o.dead) orcs.push(o);
+    sortByY(orcs);
     for (const o of orcs) { this.orc(s, o); if (o.burn > 0 && !this.reducedMotion && Math.random() < A.flameRate * dt) this.fx.flame(o.x + (Math.random() - 0.5) * o.r, o.y, Math.random() < 0.5 ? P.fire : P.amber); }
 
     this.drawBeams(dt);
     s.shots.forEach((a) => { const d = this.interp.off(a); g.translate(d.dx, d.dy); this.shot(a, dt); g.translate(-d.dx, -d.dy); });
     if (this.puffs.length) {
-      g.shadowColor = P.fireGlow; g.shadowBlur = VFX.fireball.glow;  // set and cleared by hand: restore() with a shadow set is dear (TB-183)
+      const blur = !quality.q.cheap;   // phone tier: no shadowBlur pass (TB-218 P2)
+      if (blur) { g.shadowColor = P.fireGlow; g.shadowBlur = VFX.fireball.glow; }  // set and cleared by hand: restore() with a shadow set is dear (TB-183)
       for (const pf of this.puffs) { const k = pf.life / pf.max, r = pf.r * (1.4 - 0.5 * k); g.globalAlpha = Math.min(1, k * 1.5); g.fillStyle = k > 0.66 ? P.fireCore : k > 0.33 ? P.ember : P.fire; g.beginPath(); g.arc(pf.x, pf.y, r, 0, 6.28); g.fill(); }
-      g.shadowBlur = 0; g.shadowColor = P.noShadow; g.globalAlpha = 1;
+      if (blur) { g.shadowBlur = 0; g.shadowColor = P.noShadow; }
+      g.globalAlpha = 1;
     }
     for (const im of this.impacts) { const k = im.life / IMPACT_LIFE; g.globalAlpha = k; g.strokeStyle = P.cream; g.lineWidth = 2; g.beginPath(); g.arc(im.x, im.y, im.r * (1.15 - 0.15 * k), 0, 6.28); g.stroke(); g.globalAlpha = 1; }
     for (const sm of this.storms) {
-      if (sm.c === P.lilac) { g.globalAlpha = sm.life / 0.35; g.strokeStyle = sm.c; g.lineWidth = 2; g.beginPath(); sm.pts.forEach((p, i) => (i ? g.lineTo(p[0] + (Math.random() - 0.5) * 6, p[1] + (Math.random() - 0.5) * 6) : g.moveTo(p[0], p[1]))); g.stroke(); g.globalAlpha = 1; continue; }
+      if (sm.c === P.lilac) { g.globalAlpha = sm.life / VFX.stormLife; g.strokeStyle = sm.c; g.lineWidth = 2; g.beginPath(); sm.pts.forEach((p, i) => (i ? g.lineTo(p[0] + (Math.random() - 0.5) * 6, p[1] + (Math.random() - 0.5) * 6) : g.moveTo(p[0], p[1]))); g.stroke(); g.globalAlpha = 1; continue; }
       // Shock: a thick jagged bolt with a glow, re-jagged every frame.
       g.beginPath();
       for (let i = 0; i < sm.pts.length; i++) {
@@ -314,7 +346,7 @@ export class FieldRenderer {
     g.setTransform(sx, 0, 0, sy, ox, oy);
     // The wall bar, barricade and vanguard counts are the DOM HUD now (TB-195b, src/ui/hud.ts); the wave strip stays on the field.
     // TB-207: the strip floats inside the field (inset clear of the full-screen side crop), rounded, instead of running along its edge
-    const wx = BAR_X + BAR_W / 2 + FIELD_VIEW.reach + 12, wy = H - 15, ww = W - 40 - wx, wh = 6, wt = Math.min(1, s.run.waveT / WAVE_LEN);
+    const wx = BAR_X + BAR_W / 2 + FIELD_VIEW.reach + 12, wy = H - 15 - (this.phone ? FIELD_VIEW.phoneStripLift : 0), ww = W - 40 - wx, wh = 6, wt = Math.min(1, s.run.waveT / WAVE_LEN);
     g.fillStyle = P.ink; g.globalAlpha = 0.6; g.beginPath(); g.roundRect(wx - 2, wy - 2, ww + 4, wh + 4, wh / 2 + 2); g.fill(); g.globalAlpha = 1;
     g.fillStyle = P.dim45; g.beginPath(); g.roundRect(wx, wy, ww, wh, wh / 2); g.fill();
     if (wt > 0) { g.fillStyle = P.amber; g.beginPath(); g.roundRect(wx, wy, Math.max(wh, ww * wt), wh, wh / 2); g.fill(); }
@@ -323,7 +355,7 @@ export class FieldRenderer {
     if (wt > 0) { const bx = wx + Math.max(wh, ww * wt) - wh / 2; g.fillStyle = P.amber; g.globalAlpha = 0.3; g.beginPath(); g.arc(bx, wy + wh / 2, wh * 1.4, 0, 6.28); g.fill(); g.globalAlpha = 1; g.fillStyle = P.cream; g.beginPath(); g.arc(bx, wy + wh / 2, wh * 0.45, 0, 6.28); g.fill(); }
     if (this.flash > 0) { this.flash -= dt; g.globalAlpha = Math.max(0, this.flash / LOOT_VFX.flashLife) * this.flashA; g.fillStyle = this.flashC; g.fillRect(this.vis.x0, this.vis.y0, this.vis.x1 - this.vis.x0, H - this.vis.y0); g.globalAlpha = 1; }
     if (this.edge > 0) { const M = LOOT_VFX.mythic; g.globalAlpha = (this.edge / M.edge) * (0.6 + 0.4 * Math.sin(this.clock * M.flicker)); g.strokeStyle = P.rose; g.lineWidth = M.edgeW; g.strokeRect(this.vis.x0 + M.edgeW / 2, this.vis.y0 + M.edgeW / 2, this.vis.x1 - this.vis.x0 - M.edgeW, H - this.vis.y0 - M.edgeW); g.globalAlpha = 1; }
-    this.ceremony.draw(g, dt);
+    this.ceremony.draw(g, dt, this.vis.x0, this.vis.y0, this.vis.x1, H);
   }
 
   /** Light columns over drops, fading over their life; a lit ground ellipse under legendary and mythic; motes spiralling up an epic beam. */
@@ -418,7 +450,10 @@ export class FieldRenderer {
       g.globalAlpha = 1;
       if (Math.random() < F.embers * dt) this.fx.flame(a.x + (Math.random() - 0.5) * F.r, ay, Math.random() < 0.5 ? P.fire : P.ember);
     }
-    g.shadowColor = P.fireGlow; g.shadowBlur = F.glow; g.fillStyle = P.fire; g.beginPath(); g.arc(a.x, ay, F.r, 0, 6.28); g.fill(); g.shadowBlur = 0; g.shadowColor = P.noShadow;
+    if (quality.q.cheap) {   // phone tier: a plain halo disc instead of a shadowBlur pass
+      g.fillStyle = P.fireGlow; g.beginPath(); g.arc(a.x, ay, F.r + F.glow * QUALITY.haloK, 0, 6.28); g.fill();
+      g.fillStyle = P.fire; g.beginPath(); g.arc(a.x, ay, F.r, 0, 6.28); g.fill();
+    } else { g.shadowColor = P.fireGlow; g.shadowBlur = F.glow; g.fillStyle = P.fire; g.beginPath(); g.arc(a.x, ay, F.r, 0, 6.28); g.fill(); g.shadowBlur = 0; g.shadowColor = P.noShadow; }
     g.fillStyle = P.ember; g.beginPath(); g.arc(a.x, ay, F.r * 0.65, 0, 6.28); g.fill();
     g.fillStyle = P.fireCore; g.beginPath(); g.arc(a.x - F.r * 0.1, ay - F.r * 0.1, F.r * 0.35, 0, 6.28); g.fill();
   }
@@ -460,15 +495,28 @@ export class FieldRenderer {
   }
 
   private orc(s: SimState, o: Orc): void {
-    const g = this.g, wind = this.windUp(o), d = this.interp.off(o); this.at(o.x + d.dx + wind.dx, o.y + d.dy, false);
-    g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, o.r * 0.9, o.r * 0.9, o.r * 0.35, 0, 0, 6.28); g.fill();
+    // Orcs draw at their world position under the frame's base transform: no per-orc setTransform (TB-218 P7), which dominated a 160-orc frame.
+    const g = this.g, wind = this.windUp(o), d = this.interp.off(o), x = o.x + d.dx + wind.dx, y = o.y + d.dy;
+    if (quality.q.cheap) { const sh = this.shadowBlit(); g.drawImage(sh, x - o.r * 0.9, y + o.r * 0.55, o.r * 1.8, o.r * 0.7); }   // phone tier: one prebaked blit
+    else { g.fillStyle = P.shadow; g.beginPath(); g.ellipse(x, y + o.r * 0.9, o.r * 0.9, o.r * 0.35, 0, 0, 6.28); g.fill(); }
     // Burning or chilled: the orc's own body takes the colour and a soft rim of it, so shading still reads (TB-089).
     const tint = o.burn > 0 ? P.fireTint : o.chill > 0 ? P.frostTint : '', glow = o.burn > 0 ? P.fire : o.chill > 0 ? P.frost : '';
     let k = this.orcKeys.get(o.kind);
     if (!k) { const key = `orc.${ORC_SPRITE[o.kind] ?? o.kind}`; k = { key, atk: key + '.attack' }; this.orcKeys.set(o.kind, k); }
-    const ost = orcState(s, o), ot = ost === 'attack' ? orcSwingT(o, this.sprites.duration(k.atk), VFX.strike.orc) : orcAnimT(o);
-    this.sprites.drawActor(g, k.key, ost, ot, 0, o.r * 0.9, o.r, o.hitT > 0, tint, glow, VFX.arrows.rimBlur);
-    this.orcBars(o); this.at(0, 0, false);
+    const ost = orcState(s, o), ot = orcClipT(o, ost, this.sprites.duration(k.atk), VFX.strike.orc);
+    this.sprites.drawActor(g, k.key, ost, ot, x, y + o.r * 0.9, o.r, o.hitT > 0, tint, glow, VFX.arrows.rimBlur);
+    this.orcBars(o, x, y);
+  }
+
+  /** The orc's ground shadow as a small canvas (ellipse in P.shadow), built once; a blit is cheaper than a path fill (TB-218 P2). */
+  private shadowCanvas: HTMLCanvasElement | null = null;
+  private shadowBlit(): HTMLCanvasElement {
+    if (!this.shadowCanvas) {
+      const c = document.createElement('canvas'), n = QUALITY.shadowPx; c.width = n; c.height = Math.round(n * 0.35 / 0.9 / 2) * 2 || 1;
+      const cg = c.getContext('2d')!; cg.fillStyle = P.shadow; cg.beginPath(); cg.ellipse(n / 2, c.height / 2, n / 2, c.height / 2, 0, 0, 6.28); cg.fill();
+      this.shadowCanvas = c;
+    }
+    return this.shadowCanvas;
   }
 
   /** Set the transform to the frame's base translated to (x, y), mirrored when `flip`: the same matrix save/translate/scale
@@ -500,13 +548,17 @@ export class FieldRenderer {
   }
 
   /** Thunderclap sparks, set-bonus marks (bleed, pin, root) and health bar. */
-  private orcBars(o: Orc): void {
+  private orcBars(o: Orc, x: number, y: number): void {
     const g = this.g;
-    if (o.stun > 0) { const A = VFX.arrows, sp = this.reducedMotion ? 0 : this.clock * A.stunSpin; g.fillStyle = P.spark; for (let i = 0; i < 3; i++) { const t = sp + i * 2.09; g.fillRect(Math.cos(t) * A.stunOrbit * 1.6 - 1.5, -o.r - 6 + Math.sin(t) * A.stunOrbit * 0.5 - 1.5, 3, 3); } }
-    if (o.bleed > 0) { g.fillStyle = P.rose; g.beginPath(); g.arc(o.r * 0.5, -o.r * 0.2, 2.5, 0, 6.28); g.fill(); }
-    if (o.root > 0) { g.strokeStyle = P.sage; g.lineWidth = 2; g.beginPath(); g.ellipse(0, o.r * 0.9, o.r, o.r * 0.35, 0, 0, 6.28); g.stroke(); }
-    if (o.pin > 0) { g.strokeStyle = P.cream; g.lineWidth = 3; g.beginPath(); g.moveTo(-o.r * 0.6, -o.r); g.lineTo(o.r * 0.3, o.r * 1.1); g.stroke(); }
-    if (o.hp < o.maxhp) { g.fillStyle = P.dim; g.fillRect(-o.r, -o.r - 8, o.r * 2, 3); g.fillStyle = P.rose; g.fillRect(-o.r, -o.r - 8, o.r * 2 * Math.max(0, o.hp / o.maxhp), 3); }
+    if (o.stun > 0 || o.bleed > 0 || o.root > 0 || o.pin > 0) {   // rare marks draw in the orc's local frame
+      this.at(x, y, false);
+      if (o.stun > 0) { const A = VFX.arrows, sp = this.reducedMotion ? 0 : this.clock * A.stunSpin; g.fillStyle = P.spark; for (let i = 0; i < 3; i++) { const t = sp + i * 2.09; g.fillRect(Math.cos(t) * A.stunOrbit * 1.6 - 1.5, -o.r - 6 + Math.sin(t) * A.stunOrbit * 0.5 - 1.5, 3, 3); } }
+      if (o.bleed > 0) { g.fillStyle = P.rose; g.beginPath(); g.arc(o.r * 0.5, -o.r * 0.2, 2.5, 0, 6.28); g.fill(); }
+      if (o.root > 0) { g.strokeStyle = P.sage; g.lineWidth = 2; g.beginPath(); g.ellipse(0, o.r * 0.9, o.r, o.r * 0.35, 0, 0, 6.28); g.stroke(); }
+      if (o.pin > 0) { g.strokeStyle = P.cream; g.lineWidth = 3; g.beginPath(); g.moveTo(-o.r * 0.6, -o.r); g.lineTo(o.r * 0.3, o.r * 1.1); g.stroke(); }
+      this.at(0, 0, false);
+    }
+    if (o.hp < o.maxhp) { g.fillStyle = P.dim; g.fillRect(x - o.r, y - o.r - 8, o.r * 2, 3); g.fillStyle = P.rose; g.fillRect(x - o.r, y - o.r - 8, o.r * 2 * Math.max(0, o.hp / o.maxhp), 3); }
   }
 
   /** `draw` is the bow's charge (0..1) while the player aims, -1 otherwise. The sprite elf plays its idle loop (`elf`) at rest
@@ -535,11 +587,19 @@ export class FieldRenderer {
     g.restore();
   }
 
+  /** `van.<type>` and its attack key, built once per type so drawing builds no strings (TB-218). */
+  private vanKeys = new Map<string, { key: string; atk: string }>();
+  private vanKey(type: string): { key: string; atk: string } {
+    let k = this.vanKeys.get(type);
+    if (!k) { const key = `van.${type}`; k = { key, atk: key + '.attack' }; this.vanKeys.set(type, k); }
+    return k;
+  }
+
   private van(s: SimState, v: Vanguard): void {
     const g = this.g, T = VANGUARD[v.type]; const i = this.interp.off(v); this.at(v.x + i.dx, v.y + i.dy, v.face < 0);
     g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 16, 12, 4, 0, 0, 6.28); g.fill();
-    const vst = vanState(s, v), vt = vst === 'attack' ? swingClipT(v.swingT, T.cd, this.sprites.duration(`van.${v.type}.attack`), VFX.strike[v.type]) : this.clock;
-    this.sprites.drawActor(g, `van.${v.type}`, vst, vt, 0, 16, ACTOR_R, v.hitT > 0);
+    const vk = this.vanKey(v.type), vst = vanState(s, v), vt = vst === 'attack' ? swingClipT(v.swingT, T.cd, this.sprites.duration(vk.atk), VFX.strike[v.type]) : this.clock;
+    this.sprites.drawActor(g, vk.key, vst, vt, 0, 16, ACTOR_R, v.hitT > 0);
     this.vanBar(v); this.at(0, 0, false);
   }
 

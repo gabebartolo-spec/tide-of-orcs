@@ -1,0 +1,10 @@
+plain
+{"scenario":"plain","throttle":"4","vw":"915","vh":"412","canvas":[1144,515],"mp":0.59,"live":160,"tier":null,"fps":98.9,"frameMs":{"med":8.3,"p95":25},"drawMs":{"med":4.3,"p95":6.2},"bakeBytes":0,"bakeCount":0,"drawsPerSec":54.3,"rafPerSec":99.2,"ticksPer10s":502,"scale":1.25}
+burn
+{"scenario":"burn","throttle":"4","vw":"915","vh":"412","canvas":[1144,515],"mp":0.59,"live":160,"tier":null,"fps":112,"frameMs":{"med":8.3,"p95":16.6},"drawMs":{"med":4.7,"p95":9},"bakeBytes":10342456,"bakeCount":535,"drawsPerSec":59.2,"rafPerSec":112.2,"ticksPer10s":502,"scale":1.25}
+chill
+{"scenario":"chill","throttle":"4","vw":"915","vh":"412","canvas":[1144,515],"mp":0.59,"live":160,"tier":null,"fps":119.5,"frameMs":{"med":8.3,"p95":8.4},"drawMs":{"med":4.6,"p95":5.9},"bakeBytes":10342456,"bakeCount":535,"drawsPerSec":60,"rafPerSec":119.8,"ticksPer10s":502,"scale":1.25}
+flash
+{"scenario":"flash","throttle":"4","vw":"915","vh":"412","canvas":[1144,515],"mp":0.59,"live":160,"tier":null,"fps":117.8,"frameMs":{"med":8.3,"p95":8.4},"drawMs":{"med":3.6,"p95":5.1},"bakeBytes":0,"bakeCount":0,"drawsPerSec":59.8,"rafPerSec":118,"ticksPer10s":500,"scale":1.25}
+hitburn
+{"scenario":"hitburn","throttle":"4","vw":"915","vh":"412","canvas":[1144,515],"mp":0.59,"live":160,"tier":null,"fps":113.3,"frameMs":{"med":8.3,"p95":16.6},"drawMs":{"med":5.6,"p95":8.3},"bakeBytes":10342456,"bakeCount":535,"drawsPerSec":58.8,"rafPerSec":113.5,"ticksPer10s":500,"scale":1.25}

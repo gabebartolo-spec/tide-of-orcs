@@ -21,6 +21,11 @@ export function readSave(): Save | null {
     return null;
   }
 }
+/** The stored save parsed and migrated but could not be loaded (TB-216b): same as a failed read, back it up and block writes. */
+export function markLoadFailed(): void {
+  loadFailed = true;
+  try { const raw = localStorage.getItem(SAVE_KEY); if (raw) localStorage.setItem(SAVE_BACKUP_KEY, raw); } catch { /* writes are blocked */ }
+}
 export function writeSave(s: Save): boolean {
   if (loadFailed) return false;
   try { localStorage.setItem(SAVE_KEY, JSON.stringify(s)); return true; } catch { return false; }

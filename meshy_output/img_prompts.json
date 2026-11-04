@@ -78,5 +78,9 @@
  "foxfire-pack-charm-i1": {
   "base": "foxfire-pack-charm",
   "image": "Concept art of a single fantasy fox charm pendant, a game item, shown alone in three-quarter view and centred on a plain pale grey background. It is a small carved fox head with two pointed ears and a white muzzle, hanging from a thin soft cord tied in a loop above it. No arm, no hand, no stand, no other objects. Stylised low-poly toy-miniature look, flat matte colours, soft even lighting, no outlines, no text."
+ },
+ "ironbark-recurve-i1": {
+  "base": "ironbark-recurve",
+  "image": "Concept art of a single fantasy elven recurve bow, a game item, shown upright in side view, centred on a plain pale grey background. A thick, chunky stave of dark ironbark wood with clearly visible width, bold double-curved recurve limbs ending in small bone-coloured tips, a wide grip wrapped in rust-red leather with an ochre band, and a taut bowstring tied to both tips. One bow only, a bold clear silhouette. No arrow, no hand, no quiver, no other objects. Stylised low-poly toy-miniature look, flat matte colours, soft even lighting, no outlines, no text. Palette: dusty sage, rust, ochre and bone."
  }
 }

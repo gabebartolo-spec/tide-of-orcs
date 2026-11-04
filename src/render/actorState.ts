@@ -37,3 +37,8 @@ export function swingClipT(swingT: number, cd: number, dur: number, strike: numb
 
 /** Orc attack clip time from its swing timer; the strike sits at `strike` of the clip. */
 export const orcSwingT = (o: Orc, dur: number, strike: number): number => swingClipT(o.swingT, BARRICADE.orcSwing, dur, strike);
+
+/** Clock for an orc's current clip. A halted war drummer drums on a loop (`orc.drummer.attack`, TB-186): it halts out of
+ *  reach, so its swing timer never runs and a swing-timed clip would freeze. Other attacks play once per swing. */
+export const orcClipT = (o: Orc, st: ActorState, dur: number, strike: number): number =>
+  st === 'attack' && o.kind !== 'drummer' ? orcSwingT(o, dur, strike) : orcAnimT(o);

@@ -1,4 +1,4 @@
-import { CAMP_ELK_ART, CAMP_ELK_FOOT, CAMP_ELK_R_ART, CAMP_FAUNA } from '../data/presentation';
+import { CAMP_ELK_ART, CAMP_ELK_FOOT, CAMP_ELK_R_ART, CAMP_FAUNA, CAMP_SCENE } from '../data/presentation';
 import { img } from './camp';
 import { P } from './palette';
 
@@ -14,7 +14,7 @@ const rnd = (r: readonly [number, number]): number => r[0] + Math.random() * (r[
 export class CampFauna {
   private last = -1;
   private birds = Array.from({ length: F.birds.n }, () => ({
-    x: Math.random() * 1200, y: rnd([F.birds.y0, F.birds.y1]), v: rnd(F.birds.speed), f: rnd(F.birds.flap), ph: Math.random() * 6.28,
+    x: CAMP_SCENE.x0 + Math.random() * CAMP_SCENE.w, y: rnd([F.birds.y0, F.birds.y1]), v: rnd(F.birds.speed), f: rnd(F.birds.flap), ph: Math.random() * 6.28,
   }));
 
   /** Advance to time `t` (s) and draw. `g` is in scene units. */
@@ -32,7 +32,7 @@ export class CampFauna {
     const b = F.birds;
     g.strokeStyle = P.ink2; g.lineWidth = 0.9; g.lineCap = 'round'; g.globalAlpha = b.a;
     for (const o of this.birds) {
-      o.x += o.v * dt; if (o.x > 1260) { o.x = -60; o.y = rnd([b.y0, b.y1]); }
+      o.x += o.v * dt; if (o.x > CAMP_SCENE.x0 + CAMP_SCENE.w + b.margin) { o.x = CAMP_SCENE.x0 - b.margin; o.y = rnd([b.y0, b.y1]); }
       const w = Math.sin(t * o.f * 6.28 + o.ph) * b.span * 0.45, y = o.y + Math.sin(t * 0.3 + o.ph) * 3;
       g.beginPath(); g.moveTo(o.x - b.span, y - w); g.quadraticCurveTo(o.x - b.span * 0.4, y - Math.abs(w) * 0.3 - 1, o.x, y);
       g.quadraticCurveTo(o.x + b.span * 0.4, y - Math.abs(w) * 0.3 - 1, o.x + b.span, y - w); g.stroke();

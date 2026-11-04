@@ -8,6 +8,7 @@ export const barFrac = (s: SimState): number => Math.max(0, s.run.barHp / s.stat
 
 export function barricadeHit(s: SimState, ev: EventBus, amount: number, y: number): void {
   const run = s.run;
+  if (run.fallen) return; // a fallen wall takes no more hits: one fall per run (TB-216a)
   run.barHp -= Math.min(amount, BARRICADE.maxHitFrac * s.stats.barMax);
   ev.push({ t: 'barricadeHit', y, amount, frac: barFrac(s) });
   // Rootwarden 6: once per run, a wall below a quarter opens a window of free rallies

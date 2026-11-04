@@ -20,6 +20,13 @@ export function summonBoss(s: SimState, ev: EventBus): boolean {
   return true;
 }
 
+/** A boss wave restored from a save (TB-216b): the field is not saved, so champions already marched are gone and would keep
+ *  `left` from ever reaching 0. The challenge starts over from its first mini-wave instead; its charge was already spent. */
+export function restartBoss(s: SimState): void {
+  if (!s.run.boss) return;
+  s.run.boss = { t: 0, next: 0, left: bossScript(s.run.tier).reduce((n, m) => n + m.ys.length, 0) };
+}
+
 /** Advance the running boss wave: march due mini-waves; end it when every orc is slain (cleared) or time runs out. */
 export function bossStep(s: SimState, ev: EventBus, dt: number): void {
   const b = s.run.boss; if (!b) return;

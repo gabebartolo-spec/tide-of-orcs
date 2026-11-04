@@ -52,7 +52,7 @@ Rangers and Wardens keep straight volleys at `fireRate = 1.2 × 1.15^draw` per s
 | Constant | Value | File |
 |---|---|---|
 | `PLAYER.fanRad` | 0.09 rad between ranger arrows | balance.ts |
-| `SOURCES.wolf` | base 6, bite every 0.5 s, speed 210 px/s, reach 22 px | balance.ts |
+| `SOURCES.wolf` | base 4 (TB-157), bite every 0.5 s, speed 210 px/s, reach 22 px | balance.ts |
 | `SOURCES.archerDmgFrac`, `archerOffsetY` | 0.7 × player dmg × kin; 90 px above/below the elf | balance.ts |
 | `SOURCES.knives.speed`, `ballista.speed` | 640, 760 px/s | balance.ts |
 | `VANGUARD.walkSpeed`, `engageRange` | 60 px/s; orcs within r + 18 px engage a vanguard | balance.ts |
@@ -88,15 +88,18 @@ cap = 2 + ranks        mend = 0.03 × mend × maxhp per second
 |---|---|---|---|
 | 1 | 12 | 50 | 36 |
 | 10 | 36 | 205 | 108 |
-| 25 | 226 | 6,209 | 677 |
+| 25 | 226 | 2,789 | 677 |
 
 ### Economy
 - Provoke is per kind now (TB-080, see Fury/Swarm above). Blood Banners retired.
-- Node price at purchase: `cost = round(base × growth^rank × 1.1^max(0, w − 10))` (wave-scaled since P-001; ×1 to wave 10, ×4.18 at 25, ×45.3 at 50; rate 1.25 until P-142).
+- Node price at purchase: `cost = round(round(base × growth^rank) × 1.1^max(0, w − 10))` (the rank price is rounded first, then the wave-scaled price; director 4 Nov kept the code) (wave-scaled since P-001; ×1 to wave 10, ×4.18 at 25, ×45.3 at 50; rate 1.25 until P-142).
 - `starMult = 1.08^glean` (Gleaning sits under War Drums, 5 ranks; P-142). Heartwood gives no passive bonus (P-142): it is only spent on the Heartwood tree.
 
 ### Prestige
 - Forced on barricade fall; voluntary from wave 12. A fall or voluntary replant pays `PRESTIGE.fallGain` = 0 HW (TB-171, director 2 Nov). All Heartwood drops from cleared boss waves: `bossHw(w) = 3 × max(1, floor(w / 25))` (P-142; the Heartwood Splinter halving retired with TB-128).
+
+### Gear slot odds (TB-225)
+Seven worn slots (`SLOTS`): bow, quiver, bracer, cloak, boots, charm, dagger. A non-mythic drop picks one of 28 bases uniformly (`BASES`, four per slot), so each slot is 4/28 = 1/7 (about 14.3%) of drops, down from 1/6 (16.7%) for the six original slots; the dagger (Bone Knife, Flint Dagger, Bronze Dirk, Silver Stiletto) takes that 1/7. A mythic picks a base in its own slot, so The Last Knife is always a dagger. Sets stay six pieces: a legendary set roll that lands on a dagger base is re-picked among the other 24 bases (`rollDrop`), so a set piece never occupies the dagger slot and set odds per slot are unchanged in shape. No rarity weight, affix range or pity number changed.
 
 ### Gear affix wiring (TB-201)
 Worn affixes are summed per stat across items (`gearTotals`), then applied once in `applyGear`. Roll ranges are in `AFFIXES` (lootTables.ts), unchanged. The eleven lines below were rolled but read by nothing before TB-201:
@@ -121,15 +124,15 @@ Statuses predate the lob, wall and aim changes of 1–2 Nov (TB-154, TB-164) unl
 | Tree fully bought in a run | never | met: 117 of 156 buyable ranks at most (greedy run 5) |
 
 ## Heartwood tree (M3, built TB-053; shown to the player as Grudges, TB-112)
-Bought with Heartwood, never reset. Costs in HW. The tree spends from `available = earned − spent`. The header shows `available / earned` once anything is spent. Skip the Boring Bit's skipped boss waves are not owed (`bossDone` starts at `floor(startWave / BOSS_WAVE.every)`). Standby Lad lads are placed free, ignoring Muster and the line cap.
+Bought with Heartwood, never reset. Costs in HW. The tree spends from `available = earned − spent`. The header shows `available / earned` once anything is spent. Early Dawn's skipped boss waves are not owed (`bossDone` starts at `floor(startWave / BOSS_WAVE.every)`). Standing Orders spearmen are placed free, ignoring Muster and the line cap. Vanguard are not saved, so a load places them again (TB-219); the vanguard pool holds `VANGUARD.poolCap` (12) units, enough for a maxed line of 7 plus both.
 
 | id | Name | Max | Cost | Effect |
 |---|---|---|---|---|
-| hw_dawn | Skip the Boring Bit | 5 | 2, 4, 8, 14, 22 | Start each run at wave +2 |
-| hw_wolf | Dog Comes Too | 1 | 3 | Start with the dog (A Dog) |
-| hw_timber | Better Fence | 3 | 4, 8, 16 | Fence base HP +25% |
-| hw_orders | Standby Lad | 2 | 5, 12 | Start each run with one lad (two at rank 2) |
-| hw_boss | Management Bonus | 3 | 6, 12, 24 | Boss wave clear bonus +50% per rank (director chose the effect 2026-10-31; numbers proposed, unplaytested) |
+| hw_dawn | Early Dawn | 5 | 2, 4, 8, 14, 22 | Start each run at wave +2 |
+| hw_wolf | Old Friend | 1 | 3 | Start with the Grey Wolf |
+| hw_timber | Stout Timber | 3 | 4, 8, 16 | Fence base HP +25% |
+| hw_orders | Standing Orders | 2 | 5, 12 | Start each run with one lad (two at rank 2) |
+| hw_boss | Warlords | 3 | 6, 12, 24 | Boss wave clear bonus +50% per rank (director chose the effect 2026-10-31; numbers proposed, unplaytested) |
 | hw_find | Far Sight | 3 | 2, 5, 12 | Item Find +15 / 35 / 60% total (TB-101, P-101) |
 | hw_fortune | Fortune's Favour | 3 | 3, 8, 20 | Luck +10 / 25 / 45% total |
 | hw_satchel | Deep Satchel | 1 | 4 | Satchel holds 80. Needs Far Sight 1 |
@@ -165,7 +168,7 @@ No sims run (director, 3 Nov). Every number lives in `PATH_FX` (`src/data/paths.
 No sims run (director, 3 Nov). Numbers live in `src/data/camp.ts`.
 - Cost per level (all four buildings): L1 3 Heartwood + 10 material, L2 8 + 30, L3 20 + 80. Heartwood is shared with the Heartwood tree; spent only while fallen.
 - Materials: bowyer sinew, forge orc iron, kitchen game meat, training straw & hide. Grunts, runners and brutes (not champions) drop one random material at 5 % per kill; kept across runs.
-- Effects, totals at L1 / L2 / L3: bowyer bow damage ×1.05/1.1/1.2, draw time −3/6/10 %, strike radius ×1.04/1.08/1.12; forge knife, ballista and storm damage ×1.05/1.1/1.2, Item Find +3/6/10 %, reroll cost −5/10/15 %; kitchen wall max HP ×1.05/1.1/1.2, regen +0.5/1/2 (added to Repair regen), starlight ×1.03/1.06/1.1; training vanguard HP and damage ×1.05/1.1/1.2, respawn −5/10/15 %.
+- Effects, totals at L1 / L2 / L3: bowyer bow damage ×1.05/1.1/1.2, draw time −3/6/10 %, strike radius ×1.04/1.08/1.12; forge knife, ballista and storm damage ×1.05/1.1/1.2, Item Find +3/6/10 %, reroll cost −5/10/15 %; kitchen wall max HP ×1.05/1.1/1.2, regen +0.5/1/2 % of max per second (added to Repair regen; `regenPlus` holds the fraction 0.005/0.01/0.02), starlight ×1.03/1.06/1.1; training vanguard HP and damage ×1.05/1.1/1.2, respawn −5/10/15 %.
 
 ### P-184 · Push on from the checkpoint-51 stall (2026-11-03, TB-184) · applied: set F (director 3 Nov)
 Director: keep checkpoints and the default tier; tune nodes, items and companions so the stuck player can push on. Player: `sim/out/player48.json` (every run-tree node at max except foe Fury/Swarm, 4 epics worn, `hw_dawn` 1). Soak: `npm run balance -- --load sim/out/player48.json --tiertop --hwbuy --minutes 45 --seed N --quiet [--tune …]` (`--load` is new: start as the saved player, fallen, and replant at its top tier each run, as the game defaults). Fresh: `npm run balance -- --hwbuy --minutes 40 --seed N --quiet [--tune …]`. Seeds 1–3 each.
@@ -336,7 +339,7 @@ Branch tb-146 on TB-149, greedy, loot greedy, 180 min, seeds 1–4. "Run r" coun
 | Best wave in 180 min (none / `--hwbuy`) | 30 / 33 | 32 / 33 | 31 / 32 | 31 / 33 |
 
 What it says:
-- The first Heartwood buy comes early: Skip the Boring Bit costs 2, and the end of run 2 has 1 banked plus the fall's 1. Far Sight (2) and Dog Comes Too (3) follow within the next few falls.
+- The first Heartwood buy comes early: Early Dawn costs 2, and the end of run 2 has 1 banked plus the fall's 1. Far Sight (2) and Old Friend (3) follow within the next few falls.
 - After those, Heartwood arrives at 1 per fall until the first boss, so 18 runs (about 80 minutes) pass with roughly one purchase per two to four falls: the gap dev plan §8 #3 describes. Buying Heartwood moves the first boss 12–17 minutes earlier, not runs earlier: run 20 on every seed.
 - Every seed reaches wave 25 by run 19–20 and clears the first boss on the same run. Then six or more runs in a row fall at wave 27–28 (seed 1: runs 20–25): a plateau right after the boss.
 - The first boss is the real milestone and sits at 81–105 play minutes. TB-147 (additive stacking, price by power) is where to move it.

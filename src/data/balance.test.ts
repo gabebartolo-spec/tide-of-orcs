@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { PRESTIGE, costWave, nodeCost, vanBaseHp, vanCost, waveHP, waveInterval, waveLoot } from './balance';
-import { BARRICADE, LOB, PLAYER } from './balance';
+import { BARRICADE, LOB, PLAYER, VANGUARD, waveSpeedMult } from './balance';
 
 // Reference table from docs/BALANCE.md. Change the doc first, then these.
 describe('wave formulas', () => {
@@ -48,5 +48,30 @@ describe('barricade and vanguard', () => {
   it('bladedancer is pricier and lighter', () => {
     expect(vanCost('blade', 10)).toBeGreaterThan(vanCost('spear', 10));
     expect(vanBaseHp('blade', 10)).toBeLessThan(vanBaseHp('spear', 10));
+  });
+});
+
+// BALANCE.md ## Current formulas that had no pin (TB-216e).
+describe('BALANCE.md formula pins (TB-216e)', () => {
+  it.each([[0, 1], [10, 1.08], [25, 1.2], [50, 1.4]])('orc speed multiplier at wave %i is %f', (w, m) => {
+    expect(waveSpeedMult(w)).toBeCloseTo(m, 6);
+  });
+  it.each([[0, 150], [3, 293], [5, 458], [10, 1397]])('barMax at timber %i is %i', (t, hp) => {
+    expect(Math.round(BARRICADE.baseHp * Math.pow(BARRICADE.timberMult, t))).toBe(hp);
+  });
+  it.each([
+    [1, 12, 50, 36],
+    [10, 36, 205, 108],
+    [25, 226, 2789, 677],
+  ])('vanguard at wave %i: spear cost %i, spear hp %i, blade cost %i', (w, sc, sh, bc) => {
+    // The doc table rounds loot(w) first, so costs carry up to 0.4% rounding.
+    expect(Math.abs(vanCost('spear', w) / sc - 1)).toBeLessThan(0.004);
+    expect(Math.abs(vanBaseHp('spear', w) / sh - 1)).toBeLessThan(0.004);
+    expect(Math.abs(vanCost('blade', w) / bc - 1)).toBeLessThan(0.004);
+  });
+  it('vanguard cap is 2 + ranks', () => { expect(VANGUARD.baseCap).toBe(2); });
+  it('a wave-50 grunt hit on a bare wall is capped at 0.25 × barMax', () => {
+    const atk = BARRICADE.orcAtkFrac * waveHP(50), barMax = BARRICADE.baseHp;
+    expect(Math.min(BARRICADE.wallMult * atk, BARRICADE.maxHitFrac * barMax)).toBeCloseTo(37.5, 6);
   });
 });

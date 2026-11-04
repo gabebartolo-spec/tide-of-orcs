@@ -56,7 +56,9 @@ export type SimEvent =
   | { t: 'hwBought'; id: string }
   | { t: 'matDrop'; mat: string; x: number; y: number }
   | { t: 'buildingUpgraded'; id: string; level: number }
-  | { t: 'replant'; heartwood: number; forced: boolean };
+  | { t: 'replant'; heartwood: number; forced: boolean }
+  /** Wipe or import swapped the whole game (TB-216b): field and audio drop the old game's transient state. */
+  | { t: 'gameReset' };
 
 export class EventBus {
   private buf: SimEvent[] = [];

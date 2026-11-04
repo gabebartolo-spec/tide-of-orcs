@@ -157,6 +157,8 @@ export const CAMP_SCENE = { x0: 0, w: 1194, top: -330, bottom: 342 } as const;
  *  baked into each building image. `shade`: the bottom `h` share of the canvas darkens to alpha `a` (foreground vignette). */
 export const CAMP_BACKDROP = {
   src: 'decor/camp_backdrop.webp',
+  /** Phone tier (TB-218 P6): 1920x1125 plate (8.6 MB decoded instead of 61 MB). */
+  srcPhone: 'decor/camp_backdrop_half.webp',
   plate: { x0: -40, x1: 1240, y0: -370, y1: 380 },
   road: { y: 232, half: 13 },
   shade: { h: 0.36, a: 1 },
@@ -217,7 +219,7 @@ export const CAMP_FAUNA = {
     { dx: -105, dy: -6, right: false, s: 1.0, phase: 0 }, { dx: -5, dy: -6, right: true, s: 0.92, phase: 0.55 },
     { dx: 285, dy: -12, right: false, s: 1.08, phase: 0.3 },
   ],
-  birds: { n: 5, y0: -262, y1: -228, speed: [9, 16], flap: [1.4, 2.4], span: 7, a: 0.8 },
+  birds: { n: 5, y0: -262, y1: -228, speed: [9, 16], flap: [1.4, 2.4], span: 7, a: 0.8, margin: 60 },
 } as const;
 /** Elk sheet layout (scene units for the rect; `n` frames in a grid of `cols`, played at `fps`), written by post_elk.py, which also
  *  trims each elk to one contact shadow under its hooves (the long antler streaks and a second hind-leg smear read as stray marks). */
@@ -246,8 +248,8 @@ export const JUICE = {
   press: { scale: 0.9, down: 50, up: 120 },
   /** Particle burst (TB-195b: reads at 1080p, Hades-like): count, speed range (rem/s), life range (s), size range (rem), gravity (rem/s²),
    *  drag per 1/60 s; `lift` is an upward kick (rem/s) so sparks arc up then fall; `fan` the half-angle (rad) of the spray round straight
-   *  up; `glow` the halo radius × size; `flare` a bright ring at the origin (rem radius) and its life (s). Rem so 1080p and 4K match. */
-  burst: { count: 64, speedMin: 6, speedMax: 19, lifeMin: 0.5, lifeMax: 1.0, sizeMin: 0.16, sizeMax: 0.4, gravity: 34, drag: 0.93, lift: 8, fan: 1.9, glow: 3, flare: 2.4, flareLife: 0.28 },
+   *  up; `glow` the halo radius × size; `flare` a bright ring at the origin (rem radius) and its life (s); `spawn` the radius (rem) sparks scatter from so frame 1 is no blob. Rem so 1080p and 4K match. */
+  burst: { count: 64, speedMin: 6, speedMax: 19, lifeMin: 0.5, lifeMax: 1.0, sizeMin: 0.16, sizeMax: 0.4, gravity: 34, drag: 0.93, lift: 8, fan: 1.9, glow: 1.8, glowAlpha: 0.14, flare: 1.6, flareLife: 0.28, spawn: 5 },
   /** Stagger: ms between list children entering. */
   stagger: 30,
   /** Stagger: px each child rises from as it enters. */
@@ -266,9 +268,11 @@ export const HUD = {
   /** Gem sparkle: smallest starlight gain that sparkles, ms between sparkles, burst scale. */
   sparkleMin: 1, sparkleGap: 900, sparkleScale: 0.3,
   /** Wave-clear stamp: ms it slams in (from `stampFrom` scale), ms it holds, ms it fades. */
-  stampIn: 260, stampFrom: 2.4, stampHold: 1100, stampOut: 400,
+  stampIn: 260, stampFrom: 1.5, stampHold: 1100, stampOut: 400,
   /** Wall bar shake on a hit: rem amplitude per hit fraction of max HP (capped at `shakeMax`), ms. */
-  shakeK: 6, shakeMax: 0.35, shakeMs: 220,
+  shakeK: 6, shakeMax: 0.6, shakeMs: 360,
+  /** Odometer: ms each changed digit's strip rolls from its old digit to its new one (all together, no overshoot). */
+  odoRoll: 480,
 } as const;
 
 /** Tooltip plates (TB-195c): rows = most now → next lines shown; gap = rem from the cursor; in = ms spring-in; w = plate width in rem. */
@@ -282,4 +286,24 @@ export const REPORT = { lead: 350, gap: 380, roll: 520, stampAfter: 300, stampIn
 export const SATCHEL_UI = { lines: 4, gap: 1.25, snap: 260 } as const;
 
 /** Full-screen field (TB-207): reach is the half width around the barricade that the wave bar clears. */
-export const FIELD_VIEW = { reach: 24 } as const;
+export const FIELD_VIEW = { reach: 24, phoneStripLift: 28 } as const;
+/** Phone landscape (TB-218): coarse pointer on a short screen. The wave strip lifts `phoneStripLift` world px clear of the gesture bar. */
+export const PHONE_QUERY = '(pointer: coarse) and (max-height: 540px)';
+
+/** Baked burning/chilled sprite frames (TB-216d). A glowing frame bakes whole at its drawn device height snapped to
+ *  `quantum` px, with its sub-pixel offset snapped to 1/`sub` px, and is blitted 1:1 on whole pixels (TB-216f); `steps` is the per-doubling bucket of heightBucket(); past `cap` baked
+ *  frames the whole cache is dropped and rebuilt on demand. */
+export const SPRITE_BAKE = { steps: 4, cap: 2048, quantum: 0.5, sub: 4 } as const;
+/** Phone-tier bakes (TB-218 P1): the rim bake snaps its height to a coarser `quantum` and its offset to whole device px (`sub` 1),
+ *  flash bakes too (no live brightness filter), and the cache is held under `maxBytes` of pixels (dropped whole past it). */
+export const SPRITE_BAKE_PHONE = { cap: 2048, quantum: 4, sub: 1, maxBytes: 11_000_000 } as const;
+
+/** Render quality (TB-218 P2, P3). Phone tier: weak or touch device. `ladder` is the field backing scale the governor steps along
+ *  (slow = mean draw interval over `slowMs` across a `window`-frame stretch for `downAfter` s; fast = mean draw cost under `fastMs` for `upAfter` s, doubling to `upAfterMax` when a step up is undone within `undoWithin` s); `gap60` and
+ *  `gapFloor` are the minimum ms between draws (60 Hz on a 120 Hz screen, then the 30 fps floor). `shared` and `sharedMp` cap every
+ *  other canvas (camp, tree, juice). Desktop: scale cap 2, no frame cap, the old 900 particles. */
+export const QUALITY = {
+  weakMemGb: 2, weakCores: 2, ladder: [1.5, 1.25, 1] as readonly number[], phoneStart: 1.25, phoneHigh: 1.5, minScale: 1, desktopScale: 2,
+  fieldMp: 1.0, haloK: 0.6, shadowPx: 64, phoneParts: 300, deskParts: 900, resizeSettleMs: 250, gap60: 15, gapFloor: 30, shared: 1.5, sharedMp: 1.0,
+  governor: { window: 60, every: 15, slowMs: 20, fastMs: 8, downAfter: 3, upAfter: 10, upAfterMax: 80, undoWithin: 30 },
+} as const;

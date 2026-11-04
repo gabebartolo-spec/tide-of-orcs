@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { frameAt, parseAtlas, Sprites } from './sprites';
+import { frameAt, heightBucket, parseAtlas, Sprites } from './sprites';
+import { SPRITE_BAKE } from '../data/presentation';
 
 const anim = { image: 'sheet_elf.webp', frames: [[0, 0, 8, 8], [8, 0, 8, 8], [16, 0, 8, 8]] as [number, number, number, number][], fps: 12, ax: 0.5, ay: 1, hPerR: 2.6 };
 
@@ -45,4 +46,74 @@ describe('sprite atlas', () => {
       expect(sp.loading).toBe(false);
     } finally { globalThis.fetch = real; }
   });
+
+  it('bakes a burning or chilled frame once and redraws it with no per-actor filter (TB-216d)', () => {
+    const sp = new Sprites();
+    const filters: string[] = [];
+    const ctx = () => {
+      const o = { draws: 0, drawImage() { o.draws++; }, clearRect() {}, fillRect() {}, fillStyle: '', globalCompositeOperation: '' } as Record<string, unknown> & { draws: number };
+      let f = 'none';
+      Object.defineProperty(o, 'filter', { get: () => f, set: (v: string) => { f = v; filters.push(v); } });
+      return o;
+    };
+    sp.makeCanvas = () => { const c = ctx(); return { width: 0, height: 0, getContext: () => c } as unknown as HTMLCanvasElement; };
+    const priv = sp as unknown as { atlas: unknown; imgs: Map<string, unknown> };
+    priv.atlas = parseAtlas({ anims: { 'orc.grunt': anim } }); priv.imgs = new Map([['sheet_elf.webp', {}]]);
+    const g = ctx() as unknown as CanvasRenderingContext2D & { draws: number };
+    for (let i = 0; i < 160; i++) expect(sp.draw(g, 'orc.grunt', 0, i, 0, 10, false, 'red', 'orange', 4)).toBe(true);
+    expect(sp.bakeCount).toBe(1)
+    expect(g.draws).toBe(160)
+    expect(filters.filter((f) => f.startsWith('drop-shadow')).length).toBe(1);
+    sp.draw(g, 'orc.grunt', 1.5 / 12, 0, 0, 10, false, 'red', 'orange', 4);
+    sp.draw(g, 'orc.grunt', 0, 0, 0, 10, false, 'blue', 'cyan', 4);
+    expect(sp.bakeCount).toBe(3);
+  });
+
+  it('shares tint-only bakes across heights and bounds rimmed bakes across radii (TB-216d)', () => {
+    const sp = rig();
+    const g = { drawImage() {}, filter: 'none' } as unknown as CanvasRenderingContext2D;
+    for (let r = 4; r <= 40; r += 0.1) sp.draw(g, 'orc.grunt', 0, 0, 0, r, false, 'blue');
+    expect(sp.bakeCount).toBe(1);
+    for (let r = 4; r <= 40; r += 0.1) sp.draw(g, 'orc.grunt', 0, 0, 0, r, false, 'red', 'orange', 4);
+    const hpr = sp.heightPerR('orc.grunt');
+    expect(sp.bakeCount - 1).toBeLessThanOrEqual((Math.ceil(hpr * (40 - 4) / SPRITE_BAKE.quantum) + 2) * (SPRITE_BAKE.sub + 1) ** 2);
+    for (let i = 0; i < SPRITE_BAKE.cap * 2; i++) sp.draw(g, 'orc.grunt', 0, 0, 0, 1 + i, false, `#${i}`, 'orange', 4);
+    expect(sp.bakeSize).toBeLessThanOrEqual(SPRITE_BAKE.cap);
+    expect(heightBucket(26)).toBe(heightBucket(26.4));
+  });
 });
+
+describe('glow bake scale (TB-216f)', () => {
+  it('bakes at the drawn device height with the blur in screen px, whatever the transform', () => {
+    const sp = new Sprites(), made: { width: number; height: number }[] = [], filters: string[] = [];
+    const c = { drawImage() {}, clearRect() {}, fillRect() {}, fillStyle: '', globalCompositeOperation: '', set filter(v: string) { filters.push(v); } };
+    sp.makeCanvas = () => { const o = { width: 0, height: 0, getContext: () => c }; made.push(o); return o as unknown as HTMLCanvasElement; };
+    const priv = sp as unknown as { atlas: unknown; imgs: Map<string, unknown> };
+    priv.atlas = parseAtlas({ anims: { 'orc.grunt': anim } }); priv.imgs = new Map([['sheet_elf.webp', {}]]);
+    const h = sp.heightPerR('orc.grunt') * 10;
+    const g = { drawImage() {}, filter: 'none', getTransform: () => ({ a: 2, b: 0 }) } as unknown as CanvasRenderingContext2D;
+    sp.draw(g, 'orc.grunt', 0, 0, 0, 10, false, '', 'cyan', 4);
+    const pad = Math.ceil(4 * 2) + 1;
+    expect(made[0]!.height - 2 * pad).toBe(Math.ceil(Math.round(h * 2 / SPRITE_BAKE.quantum) * SPRITE_BAKE.quantum));
+    expect(filters).toContain('drop-shadow(0 0 4px cyan)');
+  });
+});
+
+describe('sheet load failure (TB-216c)', () => {
+  it('one failed sheet drops only its own anims', async () => {
+    const { keepLoaded } = await import('./sprites');
+    const a = parseAtlas({ anims: { 'orc.grunt': { ...anim, image: 'sheet_orcs.webp' }, 'elf.walk': anim } })!;
+    const k = keepLoaded(a, new Set(['sheet_elf.webp']))!;
+    expect(Object.keys(k.anims)).toEqual(['elf.walk']);
+    expect(k.images).toEqual(['sheet_elf.webp']);
+    expect(keepLoaded(a, new Set())).toBeNull();
+  });
+});
+function rig(): Sprites {
+  const sp = new Sprites();
+  const c = { drawImage() {}, clearRect() {}, fillRect() {}, fillStyle: '', globalCompositeOperation: '', filter: 'none' };
+  sp.makeCanvas = () => ({ width: 0, height: 0, getContext: () => c }) as unknown as HTMLCanvasElement;
+  const priv = sp as unknown as { atlas: unknown; imgs: Map<string, unknown> };
+  priv.atlas = parseAtlas({ anims: { 'orc.grunt': anim } }); priv.imgs = new Map([['sheet_elf.webp', {}]]);
+  return sp;
+}

@@ -9,9 +9,9 @@ import { PathId } from './data/paths';
 import { SimState, createState, freshMeta, freshRun, recompute } from './sim/state';
 import { Inputs, step } from './sim/step';
 import { buy } from './sim/tree';
-import { summonBoss } from './sim/boss';
+import { restartBoss, summonBoss } from './sim/boss';
 import { castFireball } from './sim/combat';
-import { buyHw, repairHeartwood } from './sim/heartwood';
+import { buyHw, placeStandingOrders, repairHeartwood } from './sim/heartwood';
 import { upgradeBuilding } from './sim/camp';
 import { BuildingId } from './data/camp';
 import { HwId } from './data/heartwood';
@@ -19,12 +19,22 @@ import { equip, reroll, salvage, setFilter, toggleHeirloom, toggleLock } from '.
 import { ownedAffixes } from './sim/lootRoll';
 import { Rarity } from './data/loot';
 import { Save, CURRENT_VERSION, sanitizeSettings } from './save/schema';
-import { clearLoadFailed, clearSave, exportSave, importSave, readSave, writeSave } from './save/storage';
+import { clearLoadFailed, clearSave, markLoadFailed, exportSave, importSave, readSave, writeSave } from './save/storage';
 import { LootKind, LootRecord, appendLoot, appendTelemetry, lootRecord, lootStart, readLoot, readTelemetry, runRecord, telemetryJson } from './save/telemetry';
 import { applyGear, setTiers } from './sim/gear';
 import { Stats, deriveStats } from './sim/stats';
 import { SimEvent } from './sim/events';
 import { gain } from './sim/prestige';
+
+/** A fresh RNG seed from the clock: boot, import and wipe all use it, so no two games share a roll sequence (TB-216b). */
+export const clockSeed = (): number => (Date.now() % 2147483647) | 0;
+
+/** Build the sim from a migrated save the way every load does; a boss wave in progress starts over (TB-216b). */
+function loadState(seed: number, save: Save): SimState {
+  const s = createState(seed, { ...freshRun(), ...save.run }, { ...freshMeta(), ...save.meta });
+  repairHeartwood(s.meta); restartBoss(s); placeStandingOrders(s);
+  return s;
+}
 
 export class GameController {
   state: SimState;
@@ -32,27 +42,30 @@ export class GameController {
   settings = sanitizeSettings(null);
   /** Current pointer aim on the field in logical coordinates, or null. Set by the UI every frame it changes. */
   aim: { x: number; y: number } | null = null;
+  /** A press-and-release that fits between two frames still counts as aiming for one sim tick (TB-218 I3); no hold-fire timer. */
+  private latch: { x: number; y: number } | null = null;
   /** Loot telemetry (TB-107) waits here and is written with each save, not per drop. */
   private lootLog: LootRecord[] = [];
 
-  constructor(seed = (Date.now() % 2147483647) | 0) {
+  constructor(seed = clockSeed()) {
     const save = readSave();
-    if (save) {
-      this.settings = sanitizeSettings(save.settings);
-      this.state = createState(seed, { ...freshRun(), ...save.run }, { ...freshMeta(), ...save.meta });
-      repairHeartwood(this.state.meta);
-    } else {
-      this.state = createState(seed);
-    }
+    let state: SimState | null = null;
+    // a save that migrates but has the wrong shape fails like an unreadable one: backed up, writes blocked (TB-199, TB-216b)
+    if (save) try { state = loadState(seed, save); this.settings = sanitizeSettings(save.settings); } catch { markLoadFailed(); }
+    this.state = state ?? createState(seed);
   }
 
   tick(dt: number): void {
-    const inputs: Inputs = { aim: this.state.run.fallen ? null : this.aim };
+    const inputs: Inputs = { aim: this.state.run.fallen ? null : this.aim ?? this.latch };
+    this.latch = null;
     step(this.state, dt, inputs, this.events);
   }
 
-  setAim(x: number, y: number): void { this.aim = { x, y }; }
+  setAim(x: number, y: number): void { this.aim = this.latch = { x, y }; }
+  /** The finger lifted: aim ends, but a press no tick has seen yet is still honoured once. */
   clearAim(): void { this.aim = null; }
+  /** Aim ends at once, with no latch: a cancelled touch, a blurred window, a hidden page. */
+  dropAim(): void { this.aim = this.latch = null; }
   buy(id: NodeId): boolean { return buy(this.state, this.events, id); }
   /** Tooltip plate preview (TB-195c): the stats now and with one more rank of id. Read-only. */
   previewNode(id: NodeId): { now: Stats; next: Stats } {
@@ -103,10 +116,11 @@ export class GameController {
   exportSave(): string { return exportSave(this.toSave()); }
   importSave(str: string): void {
     const s = importSave(str);
-    this.state = createState(1, { ...freshRun(), ...s.run }, { ...freshMeta(), ...s.meta });
-    repairHeartwood(this.state.meta);
+    this.state = loadState(clockSeed(), s); this.reset();
     this.settings = sanitizeSettings(s.settings); this.lootLog = []; clearLoadFailed(); this.save();
   }
   /** Wipe drops the buffered loot telemetry too, so a fresh game never logs the old one's drops (TB-199). */
-  wipe(): void { clearSave(); this.lootLog = []; this.state = createState(1); }
+  wipe(): void { clearSave(); this.lootLog = []; this.state = createState(clockSeed()); this.reset(); }
+  /** The old game's queued events and aim go with it; field and audio hear gameReset (TB-216b). */
+  private reset(): void { this.events.drain(); this.aim = this.latch = null; this.events.push({ t: 'gameReset' }); }
 }

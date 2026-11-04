@@ -5,6 +5,7 @@ import { BRANCH_COLOR, BRANCH_LABEL, NODE } from '../data/skillTree';
 import { STR } from '../data/strings';
 import type { Cue } from '../data/audio';
 import { GameController } from '../game';
+import { quality, storedPref, type QualityPref } from '../render/quality';
 import { TreeRenderer } from '../render/tree';
 import { stepNode, tabOrder } from '../render/treeNav';
 import { canBuy, costOf, rankOf, unlocked } from '../sim/tree';
@@ -19,9 +20,10 @@ import { glyph } from './glyphs';
 import { LOOT_BANNER, REPORT } from '../data/presentation';
 import { LOOT_TOAST } from '../data/lootTables';
 import { RARITIES } from '../data/loot';
-import { applyTextScale } from '../render/textScale';
+import { applyTextScale, textScale, textScaleMax } from '../render/textScale';
+import { initFullscreenButton } from './fullscreen';
 import { CampPane } from './camp';
-import { armHover, burstAt, calm, countValue, pop, press, tween } from './juice';
+import { armHover, burst, calm, countValue, pop, press, tween } from './juice';
 import { reportRows, reportTimes } from './report';
 import { uiSound } from '../data/audio';
 import { Hud } from './hud';
@@ -29,14 +31,22 @@ import { Plate, oneLine, plateRows } from './plate';
 import { PathPicker, pathHint } from './paths';
 import { PATHS } from '../data/paths';
 import { drawSigil } from '../render/sigil';
+import { TimerBag } from './timerBag';
+import { P } from '../render/palette';
+
+/** Buy sparks (TB-195b): starlight gold, frost blue, grove green and lilac, so they read against the gold button. */
+const BUY_SPARKS = [P.starGold, P.frost, P.grove, P.lilac] as const;
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string): T => document.getElementById(id) as T;
+/** The primary pointer is a finger (a phone): no hover, so the tree tooltip opens on a tap (TB-218). */
+const touch = (): boolean => typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
 const VAN_NAME: Record<VanType, string> = { spear: 'Spearman', blade: 'Bladedancer' };
 
 export class Panel {
   private toastTimer = 0;
   private wipeArmed = false;
   private satchel: SatchelPane;
+  private plate = new Plate();
   /** Encampment card and Replant-tab list (TB-188b). */
   readonly camp: CampPane;
   /** Path cards on the Replant tab (TB-193c). */
@@ -81,10 +91,12 @@ export class Panel {
       tree.select(id); this.renderDetail();
     });
     // Tooltip plate (TB-195c): hovering a node shows what its next rank changes, beside the cursor
-    const plate = new Plate();
-    tree.canvas.addEventListener('mousemove', (e) => { const id = tree.hitTest(e.clientX, e.clientY); if (id) plate.show(id + ':' + rankOf(game.state, id), this.plateHtml(id), e.clientX, e.clientY); else plate.hide(); });
+    const plate = this.plate;
+    tree.canvas.addEventListener('mousemove', (e) => { if (touch()) return; const id = tree.hitTest(e.clientX, e.clientY); if (id) plate.show(id + ':' + rankOf(game.state, id), this.plateHtml(id), e.clientX, e.clientY); else plate.hide(); });
     tree.canvas.addEventListener('mouseleave', () => plate.hide());
-    tree.canvas.addEventListener('click', () => plate.hide());
+    // Touch has no hover (TB-218): a tap on a node shows the same plate beside the finger until the next tap, drag or empty tap.
+    tree.canvas.addEventListener('click', (e) => { if (!touch()) { plate.hide(); return; } const id = tree.hitTest(e.clientX, e.clientY); if (id) plate.show(id + ':' + rankOf(game.state, id), this.plateHtml(id), e.clientX, e.clientY); });
+    tree.canvas.addEventListener('pointerdown', () => { if (touch()) plate.hide(); });
     // Keyboard (GDD §13, TB-116): Tab walks the nodes branch by branch and leaves the tree at either end; Enter or Space buys.
     const order = tabOrder();
     tree.canvas.addEventListener('keydown', (e) => {
@@ -177,7 +189,7 @@ export class Panel {
     const btn = document.getElementById('buy-btn');
     if (!this.game.buy(id)) return;
     this.onCue('uiStamp'); // TB-195k: a buy stamps
-    if (btn) { press(btn); burstAt(btn); } // TB-195a: press plus a gold burst on every buy
+    if (btn) { press(btn); const b = btn.getBoundingClientRect(); burst(b.left - b.width * 1.35, b.top + b.height * 0.05, BUY_SPARKS, 0.7); } // TB-195a: press plus a burst on every buy (TB-195b: multi-hue, left of the label)
     this.renderDetail();
   }
 
@@ -205,6 +217,7 @@ export class Panel {
 
   /** run: the field fills the screen; camp: the Grove, Satchel and Replant pages after a fall; settings: an overlay mid-run. */
   setMode(m: 'run' | 'camp' | 'settings'): void {
+    this.plate.hide(); // a tapped tree tooltip never outlives its page
     if (m !== 'camp') this.setTreeFull(false);
     if (document.body.dataset.mode !== m) this.onCue('uiPanel'); // TB-195g: the panel whoosh
     document.body.dataset.mode = m;
@@ -225,6 +238,7 @@ export class Panel {
 
   private tab: Tab = 'grove';
   setTab(k: Tab): void {
+    this.plate.hide();
     this.tab = k; $('camp-title').textContent = tabTitle(k); $('camp-go').textContent = k === 'prestige' ? STR.replantBtn : STR.campGo; document.body.dataset.tab = k;
     if (k !== 'camp') this.camp.close();
     if (k !== 'grove') this.setTreeFull(false);
@@ -239,6 +253,9 @@ export class Panel {
   private initSettings(): void {
     $('set-vol-k').textContent = STR.setVolume; $('set-motion-k').textContent = STR.setMotion; $('set-num-k').textContent = STR.setNumbers; $('set-text-k').textContent = STR.setText;
     const mo = $<HTMLSelectElement>('set-motion').options; mo[0]!.text = STR.motionSystem; mo[1]!.text = STR.motionFull; mo[2]!.text = STR.motionReduced;
+    const qo = $<HTMLSelectElement>('set-quality').options; qo[0]!.text = STR.qualAuto; qo[1]!.text = STR.qualHigh; qo[2]!.text = STR.qualLow; $('set-quality-k').textContent = STR.setQuality;
+    $<HTMLSelectElement>('set-quality').value = storedPref();
+    $<HTMLSelectElement>('set-quality').onchange = (e) => { quality.setPref((e.target as HTMLSelectElement).value as QualityPref); window.dispatchEvent(new Event('resize')); };
     const no = $<HTMLSelectElement>('set-num').options; no[0]!.text = STR.numShort; no[1]!.text = STR.numSci;
     $('set-save-k').textContent = STR.setSave;
     $('btn-export').textContent = STR.exportBtn; $('btn-import').textContent = STR.importBtn;
@@ -250,6 +267,7 @@ export class Panel {
     $<HTMLInputElement>('set-text').oninput = (e) => { this.game.settings.textScale = Number((e.target as HTMLInputElement).value); this.settingsApplied(); };
     $<HTMLInputElement>('set-text').onchange = () => this.game.save();
     $<HTMLSelectElement>('set-num').onchange = (e) => { this.game.settings.numberFormat = (e.target as HTMLSelectElement).value as NumberFormat; this.settingsChanged(); };
+    initFullscreenButton($('btn-fs'), STR.fsEnter, STR.fsExit);
     $('btn-export').onclick = () => {
       const blob = this.game.exportSave(), box = $<HTMLTextAreaElement>('set-blob'); box.value = blob; box.select();
       navigator.clipboard?.writeText(blob).then(() => this.toast(STR.exported), () => {});
@@ -270,8 +288,8 @@ export class Panel {
     $<HTMLInputElement>('set-vol').value = String(set.volume); $('set-vol-v').textContent = `${Math.round(set.volume * 100)}%`;
     $<HTMLSelectElement>('set-motion').value = set.reducedMotion === null ? 'sys' : set.reducedMotion ? 'reduced' : 'full';
     $<HTMLSelectElement>('set-num').value = set.numberFormat;
-    $<HTMLInputElement>('set-text').value = String(set.textScale); $('set-text-v').textContent = `${Math.round(set.textScale * 100)}%`;
-    applyTextScale(set.textScale);
+    applyTextScale(set.textScale);   // clamps to what this screen can show
+    const ts = $<HTMLInputElement>('set-text'); ts.max = String(textScaleMax()); ts.value = String(textScale()); $('set-text-v').textContent = `${Math.round(textScale() * 100)}%`;
     setNumberFormat(set.numberFormat);
   }
 
@@ -281,16 +299,16 @@ export class Panel {
   private importArmed = false;
   private importTimer = 0;
   private wipeTimer = 0;
-  private reportTimers: number[] = [];
-  /** After an import or wipe the old satchel pick and new-loot badge belong to the old game (TB-199). */
-  private resetSatchelView(): void { this.satchel.selected = null; this.markNew(0); }
+  private reportTimers = new TimerBag();
+  /** After an import or wipe the old satchel pick, new-loot badge (TB-199) and tide pick (TB-216b) belong to the old game. */
+  private resetSatchelView(): void { this.satchel.selected = null; this.markNew(0); this.pickTier = 0; }
   private importSave(): void {
     const btn = $('btn-import'), str = $<HTMLTextAreaElement>('set-blob').value;
     if (!str.trim()) return;
     if (!this.importArmed) { this.importArmed = true; btn.textContent = STR.importConfirm; clearTimeout(this.importTimer); this.importTimer = window.setTimeout(() => { this.importArmed = false; btn.textContent = STR.importBtn; }, CONFIRM_ARM_MS); return; }
     clearTimeout(this.importTimer); this.importArmed = false; btn.textContent = STR.importBtn;
     try { this.game.importSave(str); } catch { this.toast(STR.importBad); return; }
-    $('fallen').hidden = true; this.tree.selected = 'sharp'; this.resetSatchelView(); this.renderHw(); this.syncSettings(); this.onSettings(); this.renderDetail();
+    this.reportTimers.clear(); $('fallen').hidden = true; this.tree.selected = 'sharp'; this.resetSatchelView(); this.renderHw(); this.syncSettings(); this.onSettings(); this.renderDetail();
     // a fallen import stays in camp (the run is frozen); a standing one returns to the field so the ticking run is seen
     this.setMode(this.game.state.run.fallen ? 'camp' : 'run');
     if (this.game.state.run.fallen) this.showFallen();
@@ -310,28 +328,27 @@ export class Panel {
       k.textContent = row.label; v.textContent = calm() ? fmt(row.value) : '0'; d.append(k, v); list.appendChild(d); return v; });
     const hw = $('fallen-hw'), seal = $('fallen-seal'), board = $('fallen-board');
     hw.textContent = '+' + (calm() ? fmt(r.hwEarned) : '0'); seal.classList.toggle('on', calm());
-    for (const t of this.reportTimers) clearTimeout(t);
-    this.reportTimers = [];
+    this.reportTimers.clear();
     if (!calm()) {
       const roll = (el: HTMLElement, to: number, pre: string): void => { uiSound('uiCount'); tween(el, REPORT.roll, (t) => { el.textContent = pre + fmt(Math.round(countValue(0, to, t))); }, () => { el.textContent = pre + fmt(to); pop(el); }); };
-      rows.forEach((row, i) => this.reportTimers.push(window.setTimeout(() => roll(cells[i]!, row.value, ''), when.rows[i])));
-      this.reportTimers.push(window.setTimeout(() => roll(hw, r.hwEarned, '+'), when.hw));
-      this.reportTimers.push(window.setTimeout(() => {
+      rows.forEach((row, i) => this.reportTimers.add(() => roll(cells[i]!, row.value, ''), when.rows[i]!));
+      this.reportTimers.add(() => roll(hw, r.hwEarned, '+'), when.hw);
+      this.reportTimers.add(() => {
         seal.classList.add('on'); uiSound('uiStamp');
         tween(seal, REPORT.stampIn, (t) => { const k = 1 - t * t; seal.style.transform = t >= 1 ? '' : `scale(${1 + (REPORT.stampFrom - 1) * k}) rotate(${REPORT.stampTurn * k}deg)`; seal.style.opacity = String(Math.min(1, t * 3)); },
           () => tween(board, REPORT.joltMs, (t) => { board.style.transform = t >= 1 ? '' : `translateY(${Math.sin(t * Math.PI * 3) * (1 - t) * REPORT.jolt}rem)`; }));
-      }, when.stamp));
+      }, when.stamp);
     }
     $('fallen').hidden = false;
   }
   private doReplant(): void {
-    const hw = this.game.replant(this.tier()); $('fallen').hidden = true; this.tree.selected = 'sharp'; this.renderDetail(); this.renderHw(); this.setMode('run');
+    this.reportTimers.clear(); const hw = this.game.replant(this.tier()); $('fallen').hidden = true; this.tree.selected = 'sharp'; this.renderDetail(); this.renderHw(); this.setMode('run');
     this.toast(STR.replanted(hw));
   }
   private wipe(): void {
     const btn = $('btn-reset');
     if (!this.wipeArmed) { this.wipeArmed = true; btn.textContent = STR.wipeConfirm; clearTimeout(this.wipeTimer); this.wipeTimer = window.setTimeout(() => { this.wipeArmed = false; btn.textContent = STR.wipe; }, CONFIRM_ARM_MS); return; }
-    clearTimeout(this.wipeTimer); this.game.wipe(); this.resetSatchelView(); this.wipeArmed = false; btn.textContent = STR.wipe; $('fallen').hidden = true; this.setMode('run'); this.tree.selected = 'sharp'; this.renderDetail(); this.renderHw(); this.toast(STR.freshDawn);
+    clearTimeout(this.wipeTimer); this.reportTimers.clear(); this.game.wipe(); this.resetSatchelView(); this.wipeArmed = false; btn.textContent = STR.wipe; $('fallen').hidden = true; this.setMode('run'); this.tree.selected = 'sharp'; this.renderDetail(); this.renderHw(); this.toast(STR.freshDawn);
   }
 
   toast(msg: string): void {

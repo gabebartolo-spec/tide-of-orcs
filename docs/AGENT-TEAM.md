@@ -3,7 +3,7 @@
 How parallel Claude Code sessions share this repo without tripping over each other.
 
 ## No roles
-There is no lead, sim, render, ui, balance, rigger or critic agent (director, 29 Oct 2026). Each session is a plain Claude session that does its whole task itself and reports straight to the director. No agent judges art; images, captures and clips go to the director. The director never merges.
+There is no lead, sim, render, ui, balance, rigger or critic agent (director, 29 Oct 2026). Each session is a plain Claude session that does its whole task itself and reports straight to the director. Art QA (director, 3 Nov): before any UI or art capture reaches the director, the session spawns independent critic agents and fixes every flaw they find until clean; then every image, capture and clip goes to the director, who is the final judge. The director never merges.
 
 ## Order of work (director, 3 Nov 2026)
 Build all features → bug bash → performance → balance. No balance tuning or balance sims until the earlier stages are done.
@@ -15,7 +15,7 @@ Parallel sessions build against these; change them only inside the PR that needs
 - `GameController` intents in `src/game.ts` (ARCHITECTURE.md §UI).
 - Node ids in SKILL-TREE.md and Heartwood ids in BALANCE.md §Heartwood tree (renaming one needs the director).
 
-Save fixtures live in `src/save/fixtures/` (v1–v10). There is no shared midgame fixture; build one with `createState()` plus `levels` in the test, or load a saved player such as `sim/out/player48.json` through the dev handle (QA-CHECKLIST run 5).
+Save fixtures live in `src/save/fixtures/` (v1–v15; current schema v16). There is no shared midgame fixture; build one with `createState()` plus `levels` in the test, or load a saved player such as `sim/out/player48.json` through the dev handle (QA-CHECKLIST run 5).
 
 ## Session protocol
 1. Read `CLAUDE.md`, the docs for the area, and the project handoff file. Claim the row in `BACKLOG.md` (owner, status `doing`).
