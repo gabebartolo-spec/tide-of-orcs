@@ -67,6 +67,8 @@ export function layoutGround(seed: number = GROUND.seed, wild = false): GroundLa
     for (let k = count(rng, F.per); k > 0; k--) flower(cx + near(rng, F.driftW / 2), cy + near(rng, F.driftH), rng.next() < 0.7 ? main : pick());
   }
   for (let i = 0; i < (wild ? 0 : F.lane); i++) flower(across(rng.next()), band + rng.next() * (H - band * 2), pick(), 0.75);
+  // the forest covers the plain above `topY`: a tuft or pebble there only shows as a stray fleck between the crown tips
+  L.tufts = L.tufts.filter((t) => t.y >= F.topY[0]); L.rocks = L.rocks.filter((r) => r.y >= F.topY[0]);
   L.tufts.sort((a, b) => a.y - b.y); L.rocks.sort((a, b) => a.y - b.y); L.flowers.sort((a, b) => a.y - b.y);
   return L;
 }

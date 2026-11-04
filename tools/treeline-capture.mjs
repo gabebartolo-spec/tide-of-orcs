@@ -15,9 +15,9 @@ const AUDIT = (w) => `(() => { const q = (s) => document.querySelector(s); const
   const s = t.game.state, v = f.view, vis = f.vis, tl = f.treeline, css = (wy) => (wy - vis.y0) * v.k;
   const top = css(tl.crownTop(vis.y0)); let inForest = 0;
   for (const o of s.orcs.items) { if (o.live && !o.dead && o.y < tl.skirtEdge(vis.y0)) inForest++; }
-  return { waveText: q('#st-wave').textContent.trim(), want: ${w}, stampHidden: st.hidden, fallenHidden: fb.hidden, barHp: Math.round(s.run.barHp), barMax: Math.round(s.stats.barMax), hudBottom: Math.round(bottom),
+  return { waveText: q('#st-wave').textContent.trim(), want: ${w}, stampHidden: st.hidden, fallenHidden: fb.hidden, barHp: Math.round(s.run.barHp), barMax: Math.round(s.stats.barMax), hudBottom: Math.round(bottom), barText: q('#hud-wall-t').textContent.trim(),
     crownTop: Math.round(top * 10) / 10, gapUnderHud: Math.round((top - bottom) * 10) / 10, orcsInForest: inForest, dpr: devicePixelRatio, inner: [innerWidth, innerHeight] }; })()`;
-const good = (a, W, H, dpr) => a.waveText === String(a.want) && a.stampHidden && a.fallenHidden && a.barHp === a.barMax && a.dpr === dpr && a.inner[0] === W && a.inner[1] === H;
+const good = (a, W, H, dpr) => a.waveText === String(a.want) && a.stampHidden && a.fallenHidden && a.barHp === a.barMax && a.barText.includes(`${a.barMax} / ${a.barMax}`) && a.dpr === dpr && a.inner[0] === W && a.inner[1] === H;
 
 async function session(port, W, H, dpr, out) {
   const chrome = spawn('C:/Program Files/Google/Chrome/Application/chrome.exe', [`--remote-debugging-port=${port}`, `--user-data-dir=${tmpdir()}/tide-tl-${port}-${Date.now()}`,
@@ -36,7 +36,7 @@ async function session(port, W, H, dpr, out) {
     };
     await cdp('Page.enable'); await load();
     for (const w of WAVES) {
-      let a, ok = false;
+      let a, ok = false, shot;
       for (let tryN = 0; tryN < 4 && !ok; tryN++) {
         if (tryN >= 2) await load();
         // pin the wave, full wall HP, not fallen; keep the fallen overlay and any CLEARED stamp closed
@@ -44,12 +44,14 @@ async function session(port, W, H, dpr, out) {
           const st = document.getElementById('hud-stamp'); st.hidden = true; document.getElementById('hud-wave').classList.remove('stamp-ending'); }; pin(); window.__pin = setInterval(pin, 16); })()`);
         for (let i = 0; i < 30; i++) { await sleep(400); a = await ev(AUDIT(w)); if (good(a, W, H, dpr)) break; }
         await sleep(2500); a = await ev(AUDIT(w)); ok = good(a, W, H, dpr);
+        // the shot itself is checked too: the HUD must still read as pinned right after the screenshot is taken
+        if (ok) { shot = await cdp('Page.captureScreenshot', { format: 'png' }); a = await ev(AUDIT(w)); ok = good(a, W, H, dpr); }
         if (!ok) console.log('retry', `${W}x${H}d${dpr}_w${w}`, JSON.stringify(a));
       }
       const k = `${W}x${H}d${dpr}_w${w}`;
       if (!ok) { console.error('FAILED', k, JSON.stringify(a)); throw new Error(`capture ${k} failed its checks`); }
       out[k] = a;
-      const r = await cdp('Page.captureScreenshot', { format: 'png' }); writeFileSync(`${outDir}/${tag}_${W}d${dpr}_w${w}.png`, Buffer.from(r.result.data, 'base64'));
+      writeFileSync(`${outDir}/${tag}_${W}d${dpr}_w${w}.png`, Buffer.from(shot.result.data, 'base64'));
       console.log(k, JSON.stringify(a));
     }
   } finally { chrome.kill(); }
