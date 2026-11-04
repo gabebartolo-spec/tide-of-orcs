@@ -27,7 +27,7 @@ def gname(ch):
 def build(only=None):
     importlib.reload(glyphs)
     order = [".notdef", "space"]
-    cmap = {32: "space"}
+    cmap = {32: "space", 160: "space"}   # no-break space is the same blank (strings use it between a number and its unit)
     glyf, hmtx = {}, {}
     tab = []
 

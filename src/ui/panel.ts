@@ -120,7 +120,7 @@ export class Panel {
   renderHw(): void {
     const s = this.game.state, m = s.meta;
     $('hw-tree').innerHTML = HW_NODES.map((n) => { const r = hwRank(m, n.id), c = hwCost(m, n.id); return `
-      <div class="hwnode"><div><div class="name" title="${n.desc}">${n.name} <span class="rk">${STR.hwRank(r, n.costs.length)}</span></div><div class="desc" title="${n.stat}">${hwUnlocked(m, n.id) ? n.stat : STR.hwNeeds((n.req ?? []).map(([r, k]) => `${HW_NODE[r].name} ${k}`).join(', '))}</div></div>
+      <div class="hwnode"><div><div class="name">${n.name} <span class="rk">${STR.hwRank(r, n.costs.length)}</span></div><div class="desc">${hwUnlocked(m, n.id) ? n.stat : STR.hwNeeds((n.req ?? []).map(([r, k]) => `${HW_NODE[r].name} ${k}`).join(', '))}</div></div>
       <button class="buy" data-hw="${n.id}" ${canBuyHw(s, n.id) ? '' : 'disabled'}>${c === null ? STR.complete : STR.hwCost(c)}</button></div>`; }).join('');
   }
 
@@ -208,7 +208,7 @@ export class Panel {
     $('detail').innerHTML = `
       <div class="branch"${n.path ? ` data-path="${n.path}"` : ` style="color:${BRANCH_COLOR[n.branch]}"`}>${n.path ? PATHS[n.path].name : BRANCH_LABEL[n.branch]}${hint ? ' · ' + hint : n.parent && !un ? ' · ' + STR.needs(NODE[n.parent].name) : ''}</div>
       <div class="name"><span>${n.name}</span><span style="font-size:0.875rem;color:var(--cream-dim)">${n.max > 1 ? STR.rank(lvl, n.max) : lvl ? STR.learned : ''}</span></div>
-      <div class="desc" title="${n.desc}">${oneLine(n.desc)}</div>
+      <div class="desc">${oneLine(n.desc)}</div>
       <div class="row"><span style="font-variant-numeric:tabular-nums;color:var(--amber)">${maxed ? STR.fullyGrown : n.base === 0 ? '' : STR.starlightCost(fmt(cost))}</span>
       <button class="buy" id="buy-btn" ${canBuy(s, n) ? '' : 'disabled'}>${maxed ? STR.complete : !un ? STR.locked : lvl ? STR.improve : STR.learn}</button></div>`;
     $('buy-btn').onclick = () => this.buy(n.id);

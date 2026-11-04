@@ -101,7 +101,7 @@ export const STR = {
   exported: 'Save copied', importConfirm: 'Import replaces this grove. Press again', imported: 'Save imported', importBad: 'That save could not be read',
 
   starlightCost: (n: string) => `${n} starlight`,
-  barricadeHud: (hp: string, max: string) => `BARRICADE ${hp} / ${max}`,
+  barricadeHud: (hp: string, max: string) => `Barricade ${hp} / ${max}`,
   barricadeShort: (hp: string, max: string) => `${hp} / ${max}`,
   vanguardHud: (n: number, cap: number) => `VANGUARD ${n} / ${cap}`,
   replantGainK: 'Heartwood on replant', replantBtn: 'Replant',

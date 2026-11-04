@@ -8,7 +8,7 @@ The game's own display face, drawn as pen skeletons swept by a broad nib. Docs: 
 | `glyphs.py` | Every glyph as skeleton paths, metrics, sidebearings, `KERN` pairs |
 | `build.py` | Writes `out/Heartwood-Regular.ttf` and `.woff2`, adds `kern` and a generated `tnum` |
 | `look.py` | PIL test renders (no shaping engine, so kerning is not applied; check kerning in a browser) |
-| `specimen.html` | Specimen vs Spectral in the game's real slots |
+| `specimen.html` | Heartwood-only specimen (the shipped `src/ui/fonts/heartwood-400.woff2`) in the game's real slots; no other face is loaded (TB-226) |
 
 ```
 pip install fonttools skia-pathops brotli pillow

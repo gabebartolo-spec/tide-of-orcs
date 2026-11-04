@@ -1,22 +1,24 @@
 {
- "when": "2026-11-04T04:47:33.794Z",
+ "when": "2026-11-04T05:50:58.261Z",
  "fails": [],
  "screens": {
   "1920x1080": {
    "00-boot": {
-    "charsSeen": "01HSWadegilnorstvw",
-    "elements": 255,
+    "charsSeen": "/0123456789BHSWacdegilnorstvw",
+    "elements": 257,
     "wrongFamily": [],
     "fontsCheck": true,
     "missingGlyphs": [],
     "canvasMissingGlyphs": [],
     "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
     "offscreen": [],
     "pseudo": [],
     "canvas": {
      "fonts": {
       "14px Heartwood": 663,
-      "15px Heartwood": 5
+      "15px Heartwood": 21
      },
      "draws": 709,
      "unloadedDraws": 0,
@@ -25,19 +27,67 @@
     "ok": true
    },
    "01-run-hud": {
-    "charsSeen": "./0123456789ABCDEHIKRSWadegilnorstvw",
+    "charsSeen": "./0123456789BHKSWacdegilnorstvw",
     "elements": 264,
     "wrongFamily": [],
     "fontsCheck": true,
     "missingGlyphs": [],
     "canvasMissingGlyphs": [],
     "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
     "offscreen": [],
     "pseudo": [],
     "canvas": {
      "fonts": {
       "14px Heartwood": 1105,
-      "15px Heartwood": 340
+      "15px Heartwood": 566
+     },
+     "draws": 1177,
+     "unloadedDraws": 0,
+     "badFonts": []
+    },
+    "ok": true
+   },
+   "01b-boss-ready": {
+    "charsSeen": "./0123456789BHKMRSWabcdeghilmnoprstuvw·",
+    "elements": 264,
+    "wrongFamily": [],
+    "fontsCheck": true,
+    "missingGlyphs": [],
+    "canvasMissingGlyphs": [],
+    "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
+    "offscreen": [],
+    "pseudo": [],
+    "canvas": {
+     "fonts": {
+      "14px Heartwood": 1105,
+      "15px Heartwood": 665
+     },
+     "draws": 1177,
+     "unloadedDraws": 0,
+     "badFonts": []
+    },
+    "ok": true
+   },
+   "01c-boss-fight": {
+    "charsSeen": "./0123456789BHKMRSWacdefgilnoprstvw·",
+    "elements": 264,
+    "wrongFamily": [],
+    "fontsCheck": true,
+    "missingGlyphs": [],
+    "canvasMissingGlyphs": [],
+    "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
+    "offscreen": [],
+    "pseudo": [],
+    "canvas": {
+     "fonts": {
+      "14px Heartwood": 1105,
+      "15px Heartwood": 899
      },
      "draws": 1177,
      "unloadedDraws": 0,
@@ -46,19 +96,21 @@
     "ok": true
    },
    "02-toast-loot": {
-    "charsSeen": "./0123456789ABCDEHIKRSTWabdefghilmnorstuvw",
+    "charsSeen": "./0123456789BCHKMRSTWacdefghilmnoprstuvw·",
     "elements": 270,
     "wrongFamily": [],
     "fontsCheck": true,
     "missingGlyphs": [],
     "canvasMissingGlyphs": [],
     "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
     "offscreen": [],
     "pseudo": [],
     "canvas": {
      "fonts": {
       "14px Heartwood": 1105,
-      "15px Heartwood": 383
+      "15px Heartwood": 1033
      },
      "draws": 1177,
      "unloadedDraws": 0,
@@ -67,19 +119,21 @@
     "ok": true
    },
    "03-fallen": {
-    "charsSeen": "+./0123456789ABCDEHIKMNORSTWabcdefghiklmnorstuvw",
+    "charsSeen": "+./0123456789BHKMNOSTWabcdefghiklmnorstuvw·",
     "elements": 279,
     "wrongFamily": [],
     "fontsCheck": true,
     "missingGlyphs": [],
     "canvasMissingGlyphs": [],
     "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
     "offscreen": [],
     "pseudo": [],
     "canvas": {
      "fonts": {
       "14px Heartwood": 1105,
-      "15px Heartwood": 502
+      "15px Heartwood": 1265
      },
      "draws": 1177,
      "unloadedDraws": 0,
@@ -95,14 +149,62 @@
     "missingGlyphs": [],
     "canvasMissingGlyphs": [],
     "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
     "offscreen": [],
     "pseudo": [],
     "canvas": {
      "fonts": {
-      "14px Heartwood": 3315,
-      "15px Heartwood": 531
+      "14px Heartwood": 14365,
+      "15px Heartwood": 1347
      },
-     "draws": 3531,
+     "draws": 15231,
+     "unloadedDraws": 0,
+     "badFonts": []
+    },
+    "ok": true
+   },
+   "04b-tree-plate": {
+    "charsSeen": "!',.0123456789ACFGHKLMORSTWabcdefghiklmnoprstuvwy",
+    "elements": 284,
+    "wrongFamily": [],
+    "fontsCheck": true,
+    "missingGlyphs": [],
+    "canvasMissingGlyphs": [],
+    "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
+    "offscreen": [],
+    "pseudo": [],
+    "canvas": {
+     "fonts": {
+      "14px Heartwood": 40222,
+      "15px Heartwood": 1347
+     },
+     "draws": 42609,
+     "unloadedDraws": 0,
+     "badFonts": []
+    },
+    "ok": true
+   },
+   "04c-tree-whole": {
+    "charsSeen": "!',.0123456789ACFGHKLMORSTWabcdefghiklmnoprstuvwy",
+    "elements": 284,
+    "wrongFamily": [],
+    "fontsCheck": true,
+    "missingGlyphs": [],
+    "canvasMissingGlyphs": [],
+    "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
+    "offscreen": [],
+    "pseudo": [],
+    "canvas": {
+     "fonts": {
+      "14px Heartwood": 70057,
+      "15px Heartwood": 1347
+     },
+     "draws": 74199,
      "unloadedDraws": 0,
      "badFonts": []
     },
@@ -110,41 +212,45 @@
    },
    "05-satchel": {
     "charsSeen": "!'./0123456789CEGHKLMORSTWacdeghilmnoprstuvwy·",
-    "elements": 418,
+    "elements": 477,
     "wrongFamily": [],
     "fontsCheck": true,
     "missingGlyphs": [],
     "canvasMissingGlyphs": [],
     "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
     "offscreen": [],
     "pseudo": [],
     "canvas": {
      "fonts": {
-      "14px Heartwood": 13260,
-      "15px Heartwood": 531
+      "14px Heartwood": 83538,
+      "15px Heartwood": 1347
      },
-     "draws": 14061,
+     "draws": 88473,
      "unloadedDraws": 0,
      "badFonts": []
     },
     "ok": true
    },
    "06-satchel-picked": {
-    "charsSeen": "!%'+./0123456789BCEGHKLMORSTWacdefghiklmnoprstuvwy·",
-    "elements": 432,
+    "charsSeen": "!%'+./0123456789CEGHKLMOQRSTWabcdeghiklmnoprstuvwy·",
+    "elements": 489,
     "wrongFamily": [],
     "fontsCheck": true,
     "missingGlyphs": [],
     "canvasMissingGlyphs": [],
     "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
     "offscreen": [],
     "pseudo": [],
     "canvas": {
      "fonts": {
-      "14px Heartwood": 13260,
-      "15px Heartwood": 531
+      "14px Heartwood": 83538,
+      "15px Heartwood": 1347
      },
-     "draws": 14061,
+     "draws": 88473,
      "unloadedDraws": 0,
      "badFonts": []
     },
@@ -152,20 +258,45 @@
    },
    "07-camp": {
     "charsSeen": "!&'.0123456789CGHIKLMORSTacdeghilmnoprstuvw",
-    "elements": 432,
+    "elements": 489,
     "wrongFamily": [],
     "fontsCheck": true,
     "missingGlyphs": [],
     "canvasMissingGlyphs": [],
     "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
     "offscreen": [],
     "pseudo": [],
     "canvas": {
      "fonts": {
-      "14px Heartwood": 13481,
-      "15px Heartwood": 531
+      "14px Heartwood": 83759,
+      "15px Heartwood": 1347
      },
-     "draws": 14295,
+     "draws": 88707,
+     "unloadedDraws": 0,
+     "badFonts": []
+    },
+    "ok": true
+   },
+   "07b-camp-card": {
+    "charsSeen": "!&'.0123456789CGHIKLMORSTacdeghilmnoprstuvw",
+    "elements": 489,
+    "wrongFamily": [],
+    "fontsCheck": true,
+    "missingGlyphs": [],
+    "canvasMissingGlyphs": [],
+    "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
+    "offscreen": [],
+    "pseudo": [],
+    "canvas": {
+     "fonts": {
+      "14px Heartwood": 83759,
+      "15px Heartwood": 1347
+     },
+     "draws": 88707,
      "unloadedDraws": 0,
      "badFonts": []
     },
@@ -173,62 +304,114 @@
    },
    "08-prestige": {
     "charsSeen": "!%'+,./0123456789CDEFGHIKLMNOPRSTWabcdefghiklmnoprstuvwxy",
-    "elements": 432,
+    "elements": 489,
     "wrongFamily": [],
     "fontsCheck": true,
     "missingGlyphs": [],
     "canvasMissingGlyphs": [],
     "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
     "offscreen": [],
     "pseudo": [],
     "canvas": {
      "fonts": {
-      "14px Heartwood": 13702,
-      "15px Heartwood": 531
+      "14px Heartwood": 83980,
+      "15px Heartwood": 1347
      },
-     "draws": 14529,
+     "draws": 88941,
      "unloadedDraws": 0,
      "badFonts": []
     },
     "ok": true
    },
    "09-settings-tab": {
-    "charsSeen": "!%'().0123456789ACDEFGHIKLMNOPRSTVWabcdefghilmnoprstuvwxyz",
-    "elements": 432,
+    "charsSeen": "!%'().0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnoprstuvwxyz",
+    "elements": 489,
     "wrongFamily": [],
     "fontsCheck": true,
     "missingGlyphs": [],
     "canvasMissingGlyphs": [],
     "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
     "offscreen": [],
     "pseudo": [],
     "canvas": {
      "fonts": {
-      "14px Heartwood": 13923,
-      "15px Heartwood": 531
+      "14px Heartwood": 84201,
+      "15px Heartwood": 1347
      },
-     "draws": 14763,
+     "draws": 89175,
+     "unloadedDraws": 0,
+     "badFonts": []
+    },
+    "ok": true
+   },
+   "09b-settings-sci": {
+    "charsSeen": "!%'().0123456789ABCDEFGHIJLMNOPQRSTUVWXYZabcdefghijklmnoprstuvwxyz",
+    "elements": 491,
+    "wrongFamily": [],
+    "fontsCheck": true,
+    "missingGlyphs": [],
+    "canvasMissingGlyphs": [],
+    "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
+    "offscreen": [],
+    "pseudo": [],
+    "canvas": {
+     "fonts": {
+      "14px Heartwood": 84201,
+      "15px Heartwood": 1347
+     },
+     "draws": 89175,
      "unloadedDraws": 0,
      "badFonts": []
     },
     "ok": true
    },
    "10-settings-overlay": {
-    "charsSeen": "%()./0123456789ABCDEFGHIKLMNPRSTVWabcdefghiklmnoprstuvwxyz",
-    "elements": 432,
+    "charsSeen": "%()+./0123456789ABCDEFGHIJLMNOPQRSTUVWXYZabcdefghijklmnoprstuvwxyz·",
+    "elements": 491,
     "wrongFamily": [],
     "fontsCheck": true,
     "missingGlyphs": [],
     "canvasMissingGlyphs": [],
     "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
     "offscreen": [],
     "pseudo": [],
     "canvas": {
      "fonts": {
-      "14px Heartwood": 15028,
-      "15px Heartwood": 549
+      "14px Heartwood": 85306,
+      "15px Heartwood": 1391
      },
-     "draws": 15933,
+     "draws": 90345,
+     "unloadedDraws": 0,
+     "badFonts": []
+    },
+    "ok": true
+   },
+   "11-run-sci": {
+    "charsSeen": "+./0123456789BHMNOSTWabcdefghiklmnorstuvw·",
+    "elements": 493,
+    "wrongFamily": [],
+    "fontsCheck": true,
+    "missingGlyphs": [],
+    "canvasMissingGlyphs": [],
+    "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
+    "offscreen": [],
+    "pseudo": [],
+    "canvas": {
+     "fonts": {
+      "14px Heartwood": 85748,
+      "15px Heartwood": 1487
+     },
+     "draws": 90813,
      "unloadedDraws": 0,
      "badFonts": []
     },
@@ -237,19 +420,21 @@
   },
   "1280x720": {
    "00-boot": {
-    "charsSeen": "./0123456789ABCDEHIKRSWadegilnorstvw",
-    "elements": 263,
+    "charsSeen": "+./0123456789BHMNOSTWabcdefghiklmnorstuvw·",
+    "elements": 278,
     "wrongFamily": [],
     "fontsCheck": true,
     "missingGlyphs": [],
     "canvasMissingGlyphs": [],
     "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
     "offscreen": [],
     "pseudo": [],
     "canvas": {
      "fonts": {
       "14px Heartwood": 663,
-      "15px Heartwood": 12
+      "15px Heartwood": 23
      },
      "draws": 709,
      "unloadedDraws": 0,
@@ -258,19 +443,67 @@
     "ok": true
    },
    "01-run-hud": {
-    "charsSeen": "./0123456789ABCDEHIKRSWadegilnorstvw",
-    "elements": 263,
+    "charsSeen": "+./0123456789BHKMNOSTWabcdefghiklmnorstuvw·",
+    "elements": 278,
     "wrongFamily": [],
     "fontsCheck": true,
     "missingGlyphs": [],
     "canvasMissingGlyphs": [],
     "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
     "offscreen": [],
     "pseudo": [],
     "canvas": {
      "fonts": {
       "14px Heartwood": 1105,
-      "15px Heartwood": 499
+      "15px Heartwood": 568
+     },
+     "draws": 1177,
+     "unloadedDraws": 0,
+     "badFonts": []
+    },
+    "ok": true
+   },
+   "01b-boss-ready": {
+    "charsSeen": "./0123456789BHKMRSWacdefgilnoprstvw·",
+    "elements": 278,
+    "wrongFamily": [],
+    "fontsCheck": true,
+    "missingGlyphs": [],
+    "canvasMissingGlyphs": [],
+    "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
+    "offscreen": [],
+    "pseudo": [],
+    "canvas": {
+     "fonts": {
+      "14px Heartwood": 1105,
+      "15px Heartwood": 635
+     },
+     "draws": 1177,
+     "unloadedDraws": 0,
+     "badFonts": []
+    },
+    "ok": true
+   },
+   "01c-boss-fight": {
+    "charsSeen": "./0123456789BHKMRSWacdefgilnoprstvw·",
+    "elements": 278,
+    "wrongFamily": [],
+    "fontsCheck": true,
+    "missingGlyphs": [],
+    "canvasMissingGlyphs": [],
+    "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
+    "offscreen": [],
+    "pseudo": [],
+    "canvas": {
+     "fonts": {
+      "14px Heartwood": 1105,
+      "15px Heartwood": 868
      },
      "draws": 1177,
      "unloadedDraws": 0,
@@ -279,19 +512,21 @@
     "ok": true
    },
    "02-toast-loot": {
-    "charsSeen": "./0123456789ABCDEFHIKRSTWadefghiklmnorstuvw",
-    "elements": 269,
+    "charsSeen": "./0123456789BCHKMRSTWacdefghilmnoprstuvw·",
+    "elements": 284,
     "wrongFamily": [],
     "fontsCheck": true,
     "missingGlyphs": [],
     "canvasMissingGlyphs": [],
     "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
     "offscreen": [],
     "pseudo": [],
     "canvas": {
      "fonts": {
       "14px Heartwood": 1105,
-      "15px Heartwood": 571
+      "15px Heartwood": 1020
      },
      "draws": 1177,
      "unloadedDraws": 0,
@@ -300,19 +535,21 @@
     "ok": true
    },
    "03-fallen": {
-    "charsSeen": "+./0123456789ABCDEHIKMNORSTWabcdefghiklmnorstuvw",
+    "charsSeen": "+./0123456789BHKMNOSTWabcdefghiklmnorstuvw·",
     "elements": 278,
     "wrongFamily": [],
     "fontsCheck": true,
     "missingGlyphs": [],
     "canvasMissingGlyphs": [],
     "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
     "offscreen": [],
     "pseudo": [],
     "canvas": {
      "fonts": {
       "14px Heartwood": 1105,
-      "15px Heartwood": 723
+      "15px Heartwood": 1286
      },
      "draws": 1177,
      "unloadedDraws": 0,
@@ -328,75 +565,14 @@
     "missingGlyphs": [],
     "canvasMissingGlyphs": [],
     "clipped": [],
-    "offscreen": [],
-    "pseudo": [],
-    "canvas": {
-     "fonts": {
-      "14px Heartwood": 13923,
-      "15px Heartwood": 760
-     },
-     "draws": 14756,
-     "unloadedDraws": 0,
-     "badFonts": []
-    },
-    "ok": true
-   },
-   "05-satchel": {
-    "charsSeen": "!'./0123456789CEGHKLMORSTWacdeghilmnoprstuvwy·",
-    "elements": 519,
-    "wrongFamily": [],
-    "fontsCheck": true,
-    "missingGlyphs": [],
-    "canvasMissingGlyphs": [],
-    "clipped": [],
-    "offscreen": [],
-    "pseudo": [],
-    "canvas": {
-     "fonts": {
-      "14px Heartwood": 21658,
-      "15px Heartwood": 760
-     },
-     "draws": 22946,
-     "unloadedDraws": 0,
-     "badFonts": []
-    },
-    "ok": true
-   },
-   "06-satchel-picked": {
-    "charsSeen": "!%'+./0123456789BCEGHKLMORSTWacdefghiklmnoprstuvwy·",
-    "elements": 533,
-    "wrongFamily": [],
-    "fontsCheck": true,
-    "missingGlyphs": [],
-    "canvasMissingGlyphs": [],
-    "clipped": [],
-    "offscreen": [],
-    "pseudo": [],
-    "canvas": {
-     "fonts": {
-      "14px Heartwood": 21658,
-      "15px Heartwood": 760
-     },
-     "draws": 22946,
-     "unloadedDraws": 0,
-     "badFonts": []
-    },
-    "ok": true
-   },
-   "07-camp": {
-    "charsSeen": "!&'.0123456789CGHIKLMORSTacdeghilmnoprstuvw",
-    "elements": 533,
-    "wrongFamily": [],
-    "fontsCheck": true,
-    "missingGlyphs": [],
-    "canvasMissingGlyphs": [],
-    "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
     "offscreen": [],
     "pseudo": [],
     "canvas": {
      "fonts": {
       "14px Heartwood": 21879,
-      "15px Heartwood": 760
+      "15px Heartwood": 1381
      },
      "draws": 23180,
      "unloadedDraws": 0,
@@ -404,64 +580,254 @@
     },
     "ok": true
    },
-   "08-prestige": {
-    "charsSeen": "!%'+,./0123456789CDEFGHIKLMNOPRSTWabcdefghiklmnoprstuvwxy",
-    "elements": 533,
+   "04b-tree-plate": {
+    "charsSeen": "!',.0123456789ACFGHKLMORSTWabcdefghiklmnoprstuvwy",
+    "elements": 283,
     "wrongFamily": [],
     "fontsCheck": true,
     "missingGlyphs": [],
     "canvasMissingGlyphs": [],
     "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
     "offscreen": [],
     "pseudo": [],
     "canvas": {
      "fonts": {
-      "14px Heartwood": 22100,
-      "15px Heartwood": 760
+      "14px Heartwood": 75361,
+      "15px Heartwood": 1381
      },
-     "draws": 23414,
+     "draws": 79808,
+     "unloadedDraws": 0,
+     "badFonts": []
+    },
+    "ok": true
+   },
+   "04c-tree-whole": {
+    "charsSeen": "!',.0123456789ACFGHKLMORSTWabcdefghiklmnoprstuvwy",
+    "elements": 283,
+    "wrongFamily": [],
+    "fontsCheck": true,
+    "missingGlyphs": [],
+    "canvasMissingGlyphs": [],
+    "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
+    "offscreen": [],
+    "pseudo": [],
+    "canvas": {
+     "fonts": {
+      "14px Heartwood": 113373,
+      "15px Heartwood": 1381
+     },
+     "draws": 120056,
+     "unloadedDraws": 0,
+     "badFonts": []
+    },
+    "ok": true
+   },
+   "05-satchel": {
+    "charsSeen": "!'./0123456789CEGHKLMORSTWacdeghilmnoprstuvwy·",
+    "elements": 590,
+    "wrongFamily": [],
+    "fontsCheck": true,
+    "missingGlyphs": [],
+    "canvasMissingGlyphs": [],
+    "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
+    "offscreen": [],
+    "pseudo": [],
+    "canvas": {
+     "fonts": {
+      "14px Heartwood": 129506,
+      "15px Heartwood": 1381
+     },
+     "draws": 137138,
+     "unloadedDraws": 0,
+     "badFonts": []
+    },
+    "ok": true
+   },
+   "06-satchel-picked": {
+    "charsSeen": "!%'+./0123456789CEGHKLMOQRSTWabcdeghiklmnoprstuvwy·",
+    "elements": 602,
+    "wrongFamily": [],
+    "fontsCheck": true,
+    "missingGlyphs": [],
+    "canvasMissingGlyphs": [],
+    "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
+    "offscreen": [],
+    "pseudo": [],
+    "canvas": {
+     "fonts": {
+      "14px Heartwood": 129506,
+      "15px Heartwood": 1381
+     },
+     "draws": 137138,
+     "unloadedDraws": 0,
+     "badFonts": []
+    },
+    "ok": true
+   },
+   "07-camp": {
+    "charsSeen": "!&'.0123456789CGHIKLMORSTacdeghilmnoprstuvw",
+    "elements": 602,
+    "wrongFamily": [],
+    "fontsCheck": true,
+    "missingGlyphs": [],
+    "canvasMissingGlyphs": [],
+    "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
+    "offscreen": [],
+    "pseudo": [],
+    "canvas": {
+     "fonts": {
+      "14px Heartwood": 129727,
+      "15px Heartwood": 1381
+     },
+     "draws": 137372,
+     "unloadedDraws": 0,
+     "badFonts": []
+    },
+    "ok": true
+   },
+   "07b-camp-card": {
+    "charsSeen": "!&'.0123456789CGHIKLMORSTacdeghilmnoprstuvw",
+    "elements": 602,
+    "wrongFamily": [],
+    "fontsCheck": true,
+    "missingGlyphs": [],
+    "canvasMissingGlyphs": [],
+    "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
+    "offscreen": [],
+    "pseudo": [],
+    "canvas": {
+     "fonts": {
+      "14px Heartwood": 129727,
+      "15px Heartwood": 1381
+     },
+     "draws": 137372,
+     "unloadedDraws": 0,
+     "badFonts": []
+    },
+    "ok": true
+   },
+   "08-prestige": {
+    "charsSeen": "!%'+,./0123456789CDEFGHIKLMNOPRSTWabcdefghiklmnoprstuvwxy",
+    "elements": 602,
+    "wrongFamily": [],
+    "fontsCheck": true,
+    "missingGlyphs": [],
+    "canvasMissingGlyphs": [],
+    "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
+    "offscreen": [],
+    "pseudo": [],
+    "canvas": {
+     "fonts": {
+      "14px Heartwood": 129948,
+      "15px Heartwood": 1381
+     },
+     "draws": 137606,
      "unloadedDraws": 0,
      "badFonts": []
     },
     "ok": true
    },
    "09-settings-tab": {
-    "charsSeen": "!%'().0123456789ACDEFGHIKLMNOPRSTVWabcdefghilmnoprstuvwxyz",
-    "elements": 533,
+    "charsSeen": "!%'().0123456789=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnoprstuvwxyz",
+    "elements": 602,
     "wrongFamily": [],
     "fontsCheck": true,
     "missingGlyphs": [],
     "canvasMissingGlyphs": [],
     "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
     "offscreen": [],
     "pseudo": [],
     "canvas": {
      "fonts": {
-      "14px Heartwood": 22321,
-      "15px Heartwood": 760
+      "14px Heartwood": 130169,
+      "15px Heartwood": 1381
      },
-     "draws": 23648,
+     "draws": 137840,
+     "unloadedDraws": 0,
+     "badFonts": []
+    },
+    "ok": true
+   },
+   "09b-settings-sci": {
+    "charsSeen": "!%'().0123456789=ABCDEFGHIJLMNOPQRSTUVWXYZabcdefghijklmnoprstuvwxyz",
+    "elements": 604,
+    "wrongFamily": [],
+    "fontsCheck": true,
+    "missingGlyphs": [],
+    "canvasMissingGlyphs": [],
+    "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
+    "offscreen": [],
+    "pseudo": [],
+    "canvas": {
+     "fonts": {
+      "14px Heartwood": 130169,
+      "15px Heartwood": 1381
+     },
+     "draws": 137840,
      "unloadedDraws": 0,
      "badFonts": []
     },
     "ok": true
    },
    "10-settings-overlay": {
-    "charsSeen": "%()./0123456789ABCDEFGHIKLMNPRSTVWabcdefghiklmnoprstuvwxyz",
-    "elements": 533,
+    "charsSeen": "%()+./0123456789=ABCDEFGHIJLMNOPQRSTUVWXYZabcdefghijklmnoprstuvwxyz·",
+    "elements": 604,
     "wrongFamily": [],
     "fontsCheck": true,
     "missingGlyphs": [],
     "canvasMissingGlyphs": [],
     "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
     "offscreen": [],
     "pseudo": [],
     "canvas": {
      "fonts": {
-      "14px Heartwood": 23426,
-      "15px Heartwood": 792
+      "14px Heartwood": 131274,
+      "15px Heartwood": 1427
      },
-     "draws": 24818,
+     "draws": 139010,
+     "unloadedDraws": 0,
+     "badFonts": []
+    },
+    "ok": true
+   },
+   "11-run-sci": {
+    "charsSeen": "+./0123456789BHMNOSTWabcdefghiklmnorstuvw·",
+    "elements": 607,
+    "wrongFamily": [],
+    "fontsCheck": true,
+    "missingGlyphs": [],
+    "canvasMissingGlyphs": [],
+    "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
+    "offscreen": [],
+    "pseudo": [],
+    "canvas": {
+     "fonts": {
+      "14px Heartwood": 131716,
+      "15px Heartwood": 1522
+     },
+     "draws": 139478,
      "unloadedDraws": 0,
      "badFonts": []
     },
@@ -470,19 +836,21 @@
   },
   "915x412": {
    "00-boot": {
-    "charsSeen": "01SWaegilnstv",
-    "elements": 255,
+    "charsSeen": "+/01BHMNOSTWabcdefghiklmnorstuvw",
+    "elements": 270,
     "wrongFamily": [],
     "fontsCheck": true,
     "missingGlyphs": [],
     "canvasMissingGlyphs": [],
     "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
     "offscreen": [],
     "pseudo": [],
     "canvas": {
      "fonts": {
       "14px Heartwood": 663,
-      "15px Heartwood": 8
+      "15px Heartwood": 6
      },
      "draws": 709,
      "unloadedDraws": 0,
@@ -491,19 +859,67 @@
     "ok": true
    },
    "01-run-hud": {
-    "charsSeen": "./0123456789KSWaegilnstv",
-    "elements": 263,
+    "charsSeen": "+./0123456789BHKMNOSTWabcdefghiklmnorstuvw",
+    "elements": 278,
     "wrongFamily": [],
     "fontsCheck": true,
     "missingGlyphs": [],
     "canvasMissingGlyphs": [],
     "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
     "offscreen": [],
     "pseudo": [],
     "canvas": {
      "fonts": {
       "14px Heartwood": 1105,
-      "15px Heartwood": 511
+      "15px Heartwood": 567
+     },
+     "draws": 1177,
+     "unloadedDraws": 0,
+     "badFonts": []
+    },
+    "ok": true
+   },
+   "01b-boss-ready": {
+    "charsSeen": "./0123456789BKMRSWaefgilnopstvw·",
+    "elements": 278,
+    "wrongFamily": [],
+    "fontsCheck": true,
+    "missingGlyphs": [],
+    "canvasMissingGlyphs": [],
+    "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
+    "offscreen": [],
+    "pseudo": [],
+    "canvas": {
+     "fonts": {
+      "14px Heartwood": 1105,
+      "15px Heartwood": 626
+     },
+     "draws": 1177,
+     "unloadedDraws": 0,
+     "badFonts": []
+    },
+    "ok": true
+   },
+   "01c-boss-fight": {
+    "charsSeen": "./0123456789BKMRSWaefgilnopstvw·",
+    "elements": 278,
+    "wrongFamily": [],
+    "fontsCheck": true,
+    "missingGlyphs": [],
+    "canvasMissingGlyphs": [],
+    "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
+    "offscreen": [],
+    "pseudo": [],
+    "canvas": {
+     "fonts": {
+      "14px Heartwood": 1105,
+      "15px Heartwood": 838
      },
      "draws": 1177,
      "unloadedDraws": 0,
@@ -512,19 +928,21 @@
     "ok": true
    },
    "02-toast-loot": {
-    "charsSeen": "./0123456789BHKQRSTWacdefghilnorstuvw",
-    "elements": 269,
+    "charsSeen": "./0123456789BCHKMRSTWadefghilmnopstuvw·",
+    "elements": 284,
     "wrongFamily": [],
     "fontsCheck": true,
     "missingGlyphs": [],
     "canvasMissingGlyphs": [],
     "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
     "offscreen": [],
     "pseudo": [],
     "canvas": {
      "fonts": {
       "14px Heartwood": 1105,
-      "15px Heartwood": 594
+      "15px Heartwood": 951
      },
      "draws": 1177,
      "unloadedDraws": 0,
@@ -540,12 +958,14 @@
     "missingGlyphs": [],
     "canvasMissingGlyphs": [],
     "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
     "offscreen": [],
     "pseudo": [],
     "canvas": {
      "fonts": {
       "14px Heartwood": 1105,
-      "15px Heartwood": 774
+      "15px Heartwood": 1204
      },
      "draws": 1177,
      "unloadedDraws": 0,
@@ -554,63 +974,115 @@
     "ok": true
    },
    "04-tree": {
-    "charsSeen": "%+./0125BCFGLMRSTacdeghiklmnoprstuvw",
+    "charsSeen": "%+./01257BCFGKLMRSTacdeghiklmnoprstuvw",
     "elements": 278,
     "wrongFamily": [],
     "fontsCheck": true,
     "missingGlyphs": [],
     "canvasMissingGlyphs": [],
     "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
     "offscreen": [],
     "pseudo": [],
     "canvas": {
      "fonts": {
-      "14px Heartwood": 13702,
-      "15px Heartwood": 827
+      "14px Heartwood": 20995,
+      "15px Heartwood": 1280
      },
-     "draws": 14522,
+     "draws": 22244,
+     "unloadedDraws": 0,
+     "badFonts": []
+    },
+    "ok": true
+   },
+   "04b-tree-plate": {
+    "charsSeen": ",.ACFGMRSTWabcdefghiklmnoprstuvwy",
+    "elements": 283,
+    "wrongFamily": [],
+    "fontsCheck": true,
+    "missingGlyphs": [],
+    "canvasMissingGlyphs": [],
+    "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
+    "offscreen": [],
+    "pseudo": [],
+    "canvas": {
+     "fonts": {
+      "14px Heartwood": 45305,
+      "15px Heartwood": 1280
+     },
+     "draws": 47984,
+     "unloadedDraws": 0,
+     "badFonts": []
+    },
+    "ok": true
+   },
+   "04c-tree-whole": {
+    "charsSeen": ",.ACFGMRSTWabcdefghiklmnoprstuvwy",
+    "elements": 283,
+    "wrongFamily": [],
+    "fontsCheck": true,
+    "missingGlyphs": [],
+    "canvasMissingGlyphs": [],
+    "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
+    "offscreen": [],
+    "pseudo": [],
+    "canvas": {
+     "fonts": {
+      "14px Heartwood": 70278,
+      "15px Heartwood": 1280
+     },
+     "draws": 74426,
      "unloadedDraws": 0,
      "badFonts": []
     },
     "ok": true
    },
    "05-satchel": {
-    "charsSeen": "/0145CEGKLMRSTWacdeghilmnoprstuvy·",
-    "elements": 633,
+    "charsSeen": "/0246CEGKLMRSTWacdeghilmnoprstuvy·",
+    "elements": 704,
     "wrongFamily": [],
     "fontsCheck": true,
     "missingGlyphs": [],
     "canvasMissingGlyphs": [],
     "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
     "offscreen": [],
     "pseudo": [],
     "canvas": {
      "fonts": {
-      "14px Heartwood": 17680,
-      "15px Heartwood": 827
+      "14px Heartwood": 81991,
+      "15px Heartwood": 1280
      },
-     "draws": 18734,
+     "draws": 86828,
      "unloadedDraws": 0,
      "badFonts": []
     },
     "ok": true
    },
    "06-satchel-picked": {
-    "charsSeen": "%+.0123469BCEGLMRSTWabcdefghiklmnoprstuv·",
-    "elements": 647,
+    "charsSeen": "%+.01349BCGHLMQRSTWabcdeghiklmnoprstuv·",
+    "elements": 716,
     "wrongFamily": [],
     "fontsCheck": true,
     "missingGlyphs": [],
     "canvasMissingGlyphs": [],
     "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
     "offscreen": [],
     "pseudo": [],
     "canvas": {
      "fonts": {
-      "14px Heartwood": 17680,
-      "15px Heartwood": 827
+      "14px Heartwood": 81991,
+      "15px Heartwood": 1280
      },
-     "draws": 18734,
+     "draws": 86828,
      "unloadedDraws": 0,
      "badFonts": []
     },
@@ -618,20 +1090,45 @@
    },
    "07-camp": {
     "charsSeen": "&0CGHIMORSTacdeghilmnoprstvw",
-    "elements": 647,
+    "elements": 716,
     "wrongFamily": [],
     "fontsCheck": true,
     "missingGlyphs": [],
     "canvasMissingGlyphs": [],
     "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
     "offscreen": [],
     "pseudo": [],
     "canvas": {
      "fonts": {
-      "14px Heartwood": 17901,
-      "15px Heartwood": 827
+      "14px Heartwood": 82212,
+      "15px Heartwood": 1280
      },
-     "draws": 18968,
+     "draws": 87062,
+     "unloadedDraws": 0,
+     "badFonts": []
+    },
+    "ok": true
+   },
+   "07b-camp-card": {
+    "charsSeen": "&0CGHIMORSTacdeghilmnoprstvw",
+    "elements": 716,
+    "wrongFamily": [],
+    "fontsCheck": true,
+    "missingGlyphs": [],
+    "canvasMissingGlyphs": [],
+    "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
+    "offscreen": [],
+    "pseudo": [],
+    "canvas": {
+     "fonts": {
+      "14px Heartwood": 82212,
+      "15px Heartwood": 1280
+     },
+     "draws": 87062,
      "unloadedDraws": 0,
      "badFonts": []
     },
@@ -639,62 +1136,114 @@
    },
    "08-prestige": {
     "charsSeen": "%'+,/0123456CDEFGHILMNOPRSTWabcdefghiklmnoprstuvwxy",
-    "elements": 647,
+    "elements": 716,
     "wrongFamily": [],
     "fontsCheck": true,
     "missingGlyphs": [],
     "canvasMissingGlyphs": [],
     "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
     "offscreen": [],
     "pseudo": [],
     "canvas": {
      "fonts": {
-      "14px Heartwood": 18122,
-      "15px Heartwood": 827
+      "14px Heartwood": 82433,
+      "15px Heartwood": 1280
      },
-     "draws": 19202,
+     "draws": 87296,
      "unloadedDraws": 0,
      "badFonts": []
     },
     "ok": true
    },
    "09-settings-tab": {
-    "charsSeen": "%().012567ACDEFGHILMNPRSTVWabcdefghilmnoprstuvwxyz",
-    "elements": 647,
+    "charsSeen": "%().012345679=ABCDEFGHIJLMNOPQRSTUVWXYZabcdefghijklmnoprstuvwxyz",
+    "elements": 716,
     "wrongFamily": [],
     "fontsCheck": true,
     "missingGlyphs": [],
     "canvasMissingGlyphs": [],
     "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
     "offscreen": [],
     "pseudo": [],
     "canvas": {
      "fonts": {
-      "14px Heartwood": 18343,
-      "15px Heartwood": 827
+      "14px Heartwood": 82654,
+      "15px Heartwood": 1280
      },
-     "draws": 19436,
+     "draws": 87530,
+     "unloadedDraws": 0,
+     "badFonts": []
+    },
+    "ok": true
+   },
+   "09b-settings-sci": {
+    "charsSeen": "%().012345679=ABCDEFGHIJLMNOPQRSTUVWXYZabcdefghijklmnoprstuvwxyz",
+    "elements": 718,
+    "wrongFamily": [],
+    "fontsCheck": true,
+    "missingGlyphs": [],
+    "canvasMissingGlyphs": [],
+    "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
+    "offscreen": [],
+    "pseudo": [],
+    "canvas": {
+     "fonts": {
+      "14px Heartwood": 82654,
+      "15px Heartwood": 1280
+     },
+     "draws": 87530,
      "unloadedDraws": 0,
      "badFonts": []
     },
     "ok": true
    },
    "10-settings-overlay": {
-    "charsSeen": "%()./0123456789ABDEFGHIKLMNPRSTVWabcdefghiklmnoprstuvwxyz",
-    "elements": 647,
+    "charsSeen": "%()+./0123456789=ABCDEFGHIJLMNOPQRSTUVWXYZabcdefghijklmnoprstuvwxyz",
+    "elements": 718,
     "wrongFamily": [],
     "fontsCheck": true,
     "missingGlyphs": [],
     "canvasMissingGlyphs": [],
     "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
     "offscreen": [],
     "pseudo": [],
     "canvas": {
      "fonts": {
-      "14px Heartwood": 19448,
-      "15px Heartwood": 866
+      "14px Heartwood": 83759,
+      "15px Heartwood": 1337
      },
-     "draws": 20606,
+     "draws": 88700,
+     "unloadedDraws": 0,
+     "badFonts": []
+    },
+    "ok": true
+   },
+   "11-run-sci": {
+    "charsSeen": "+./0123456789BHMNOSTWabcdefghiklmnorstuvw",
+    "elements": 721,
+    "wrongFamily": [],
+    "fontsCheck": true,
+    "missingGlyphs": [],
+    "canvasMissingGlyphs": [],
+    "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
+    "offscreen": [],
+    "pseudo": [],
+    "canvas": {
+     "fonts": {
+      "14px Heartwood": 84201,
+      "15px Heartwood": 1427
+     },
+     "draws": 89168,
      "unloadedDraws": 0,
      "badFonts": []
     },
@@ -710,6 +1259,8 @@
     "missingGlyphs": [],
     "canvasMissingGlyphs": [],
     "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
     "offscreen": [],
     "pseudo": [],
     "canvas": {
@@ -730,6 +1281,8 @@
     "missingGlyphs": [],
     "canvasMissingGlyphs": [],
     "clipped": [],
+    "spill": [],
+    "canvasClipped": [],
     "offscreen": [],
     "pseudo": [],
     "canvas": {
