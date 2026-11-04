@@ -17,4 +17,5 @@ cp tools/typeface/out/Heartwood-Regular.woff2 src/ui/fonts/heartwood-400.woff2
 ```
 
 Specimen: run `python -m http.server 8731` at the repo root and open `/tools/typeface/specimen.html`.
+Coverage and use are checked by `audit_strings.py` (string literals) and `node tools/font-audit.mjs` (every rendered screen, TB-226).
 These are dev tools only; nothing here ships or runs in the game.

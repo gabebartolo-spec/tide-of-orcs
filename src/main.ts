@@ -161,5 +161,7 @@ function frame(now: number): void {
   saveT += dt; if (saveT > 20) { saveT = 0; game.save(); }
   requestAnimationFrame(frame);
 }
-requestAnimationFrame(frame);
+// Heartwood is the only face (TB-226): canvas text never loads a font by itself, so the first frame waits for the face (3 s cap if the file is lost).
+const heartwood = Promise.race([document.fonts.load('16px Heartwood').then(() => document.fonts.ready), new Promise<void>((r) => setTimeout(r, 3000))]).catch(() => undefined);
+void heartwood.then(() => { resync = true; requestAnimationFrame(frame); });
 bindSaveTriggers(window, document, () => game.save());

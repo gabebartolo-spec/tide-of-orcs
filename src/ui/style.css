@@ -2,7 +2,7 @@
 /* Layout: battlefield canvas on the left with a rally bar beneath it, a tabbed grove panel (skill tree / replant) on the right; stacks on phones. */
 /* Fonts ship with the game so the desktop build works offline (TB-118). Heartwood, the game's own face (tools/typeface, TB-135), is the only
    font: DOM and canvas alike, no fallback faces (TB-137). One weight, no italic. */
-@font-face { font-family: "Heartwood"; font-style: normal; font-weight: 400; font-display: swap; src: url("./fonts/heartwood-400.woff2") format("woff2"); }
+@font-face { font-family: "Heartwood"; font-style: normal; font-weight: 400; font-display: block; src: url("./fonts/heartwood-400.woff2") format("woff2"); }
 :root {
   /* Tokens mirror src/render/palette.ts and docs/ART-STYLE.md */
   --ink: #161d15; --ink-2: #1f281d; --ink-3: #2a3527; --line: #3b4a37;
@@ -29,6 +29,8 @@ body { font-synthesis: none; margin: 0; background: var(--ink); color: var(--tex
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
 button { font: inherit; color: inherit; cursor: pointer; }
+/* Every form control, its popup list and the output reads in Heartwood too (TB-226): browsers default these to the system UI face */
+button, input, select, option, optgroup, textarea, output { font-family: var(--body); }
 .wrap { display: flex; flex-direction: column; min-height: 100%; padding-block: 0.625rem 1rem;
   padding-left: max(1rem, env(safe-area-inset-left, 0rem)); padding-right: max(1rem, env(safe-area-inset-right, 0rem)); gap: 0.75rem; }
 header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.625rem 1.375rem; }
@@ -664,8 +666,7 @@ body:not([data-mode="run"]) header #btn-settings { display: none; }
 /* Between-runs polish (TB-195n, director's 13-point list, 3 Nov). Labels are sentence case at 1rem or more (Heartwood's capital E
    reads as C when small); the display face is for headings. One button system: primary gold plank (.buy), secondary wood
    (.ghost), destructive rose (.danger), set apart. Path cards and the satchel share one leather; stitches are dark angled dashes. */
-/* body text in the system's UI face (Segoe UI on Windows): Heartwood is kept for headings of 1.2rem (24 px at 1080p) and up */
-:root { --body: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", sans-serif; }
+/* TB-226 (director, 4 Nov): Heartwood is the only face, headings and body alike; the old system-UI --body stack is gone. */
 .stat .k, .tabs button, .detail .branch, .item .slot, .satbar, .hud-wave .k, .plate .pk, .plate .done, .plate .lock, .lootbanner .rar, .camplist .k,
 .hud-van, .hud-wall .lbl { text-transform: none; letter-spacing: .02em; }
 .stat .k, .tabs button, .detail .branch, .satbar, .hwnode .desc, .bcard .desc, .bcard .cost, .auto, .ghost, .camplist { font-size: 1rem; }
@@ -1064,9 +1065,7 @@ header, #hud, #toast, #campview, .wrap, .play { touch-action: pan-x pan-y; }
 @media (pointer: coarse) and (max-height: 340px) and (orientation: landscape) { .fallen { padding-top: 4.5rem; } .fallen .report { zoom: 0.72; } } /* 915x320: the board fits above the gesture bar without scrolling */
 
 /* ---- TB-224: Heartwood everywhere in the run, and the slim phone HUD ---- */
-/* The run view (HUD, toast, boss button, loot banners, fallen board) is all Heartwood: the system-UI --body stack above is for the
-   between-runs panel only (flagged in docs/ART-STYLE.md). */
-body[data-mode="run"] { --body: var(--display); }
+/* The run view (HUD, toast, boss button, loot banners, fallen board) is all Heartwood, as is every other screen (TB-226). */
 .hud-wall-n { display: none; }
 /* Phone landscape: one slim rail hugging the top edge. No scrim and no continuous bar, so the canopy shows between the carved chips;
    the rail is 1.5 rem of chips on a 0.25 rem inset (24 px of 412). Wall bar + count, starlight, Wave, Slain and a round Settings

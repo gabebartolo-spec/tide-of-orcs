@@ -312,6 +312,8 @@ export class TreeRenderer {
 
   private legProbe = -1; private legPx = 14; private legGap = 30;
   draw(s: SimState, t: number): void {
+    // Heartwood is the only face (TB-226): never paint labels before it is loaded; stay stale so the loop draws once it is
+    if (typeof document !== 'undefined' && !document.fonts.check('14px Heartwood')) { this.stale = true; return; }
     this.stale = false;
     if (this.target) {
       const now = performance.now(), dt = Math.min(0.1, (now - this.lastDraw) / 1000); this.lastDraw = now;
