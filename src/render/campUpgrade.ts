@@ -74,6 +74,32 @@ const paintBanner = (): HTMLCanvasElement | null => {
   return c;
 };
 
+/** The standard's post, painted once: an upright with a crossarm, an iron brace, two bracket straps and two hooks with cords, so the
+ *  banner reads as hung from something planted in the ground. Post top-left is the canvas origin. */
+const paintPost = (): HTMLCanvasElement | null => {
+  if (typeof document === 'undefined') return null;
+  const K = U.banner.post, B = U.banner, s = K.px;
+  const W = Math.ceil(K.pad * 2 + K.w + K.arm) * s, H = Math.ceil(K.h + 2) * s;
+  const c = document.createElement('canvas'); c.width = W; c.height = H;
+  const g = c.getContext('2d'); if (!g) return null;
+  const px = K.pad * s, w = K.w * s, ah = K.armH * s, arm = K.arm * s;
+  g.lineCap = 'round';
+  g.fillStyle = P.bannerRod; g.beginPath(); g.roundRect(px, 0, w, K.h * s, w * 0.3); g.fill();
+  g.beginPath(); g.roundRect(px - s * 1.5, 0, arm + s * 1.5, ah, ah / 2); g.fill();
+  g.fillStyle = P.bannerKnob; g.beginPath(); g.arc(px + arm, ah / 2, ah * 0.6, 0, Math.PI * 2); g.fill();
+  g.strokeStyle = P.bannerIron; g.lineWidth = s * 1.4;
+  g.beginPath(); g.moveTo(px + w / 2, ah + K.brace * s); g.lineTo(px + w / 2 + K.brace * s, ah); g.stroke();
+  g.fillStyle = P.bannerIron;
+  for (const y of [ah * 0.1, ah + s * 3]) g.fillRect(px - s * 0.6, y, w + s * 1.2, s * 1.6);
+  const cx = px + w / 2 + arm / 2, half = B.w * (0.5 - B.art.rodX) * s;
+  g.lineWidth = s * 0.6;
+  for (const hx of [cx - half, cx + half]) {
+    g.beginPath(); g.arc(hx, ah + K.hook * s, K.hook * s, 0, Math.PI * 2); g.stroke();
+    g.beginPath(); g.moveTo(hx, ah + K.hook * s * 2); g.lineTo(hx, (K.armH + K.cord) * s); g.stroke();
+  }
+  return c;
+};
+
 interface Moment { id: BuildingId; lv: number; t0: number }
 
 export class CampUpgradeFx {
@@ -90,9 +116,10 @@ export class CampUpgradeFx {
   private puffs: (HTMLCanvasElement | null)[] | null = null;
   private banner: CanvasImageSource | null = null;
   private bannerW = 0; private bannerH = 0;
+  private post: CanvasImageSource | null = null;
 
   constructor() {
-    this.banner = paintBanner(); this.bannerW = this.banner?.width ?? 0; this.bannerH = this.banner?.height ?? 0;
+    this.banner = paintBanner(); this.post = paintPost(); this.bannerW = this.banner?.width ?? 0; this.bannerH = this.banner?.height ?? 0;
   }
 
   private range(r: readonly [number, number]): number { return r[0] + this.rnd() * (r[1] - r[0]); }
@@ -144,13 +171,16 @@ export class CampUpgradeFx {
     const B = U.banner, im = this.banner;
     this.moments = this.moments.filter((m) => t - m.t0 < U.dur);
     if (!im) return;
+    const K = B.post, pm = this.post;
     for (const m of this.moments) {
-      const e = t - m.t0, r = CAMP_ART[m.id][m.lv - 1]!, at = B.at[m.id][m.lv - 1]!;
+      const e = t - m.t0, r = CAMP_ART[m.id][m.lv - 1]!;
       const roll = easeOut(clamp01((e - B.roll[0]) / (B.roll[1] - B.roll[0]))); if (roll <= 0) continue;
       const ang = Math.sin(e * B.wave * Math.PI * 2) * B.swing * Math.exp(-B.damp * e);
       const a = Math.min(clamp01((e - B.roll[0]) / B.in), 1 - easeIn(clamp01((e - B.out[0]) / (B.out[1] - B.out[0])))); if (a < 0.02) continue;
+      const ox = r.x + r.w * K.edge - K.pad, oy = r.y + r.h * K.ground - K.h;
       g.save(); g.globalAlpha = a;
-      g.translate(r.x + r.w * at[0], r.y + r.h * at[1]); g.rotate(ang);
+      if (pm) g.drawImage(pm, ox, oy, (pm as HTMLCanvasElement).width / K.px, (pm as HTMLCanvasElement).height / K.px);
+      g.translate(ox + K.pad + K.w / 2 + K.arm / 2, oy + K.armH + K.cord); g.rotate(ang);
       g.drawImage(im, 0, 0, this.bannerW, this.bannerH * roll, -B.w / 2, 0, B.w, B.h * roll);
       g.restore();
     }

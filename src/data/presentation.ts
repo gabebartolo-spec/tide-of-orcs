@@ -212,7 +212,7 @@ export const CAMP_DRAW_ORDER = [...BUILDINGS].sort((a, b) => CAMP_SPOTS[a.id].y 
  *  small two-stroke silhouettes drifting at `speed` units/s across the band y0..y1, wings beating at `flap` Hz, span `span`. */
 export const CAMP_FAUNA = {
   deer: [
-    { dx: -470, dy: -10, flip: false }, { dx: -440, dy: 6, flip: true }, { dx: 70, dy: -40, flip: true }, { dx: 380, dy: 0, flip: false },
+    { dx: -490, dy: -122, flip: false }, { dx: -450, dy: -108, flip: true }, { dx: 70, dy: -40, flip: true }, { dx: 380, dy: 0, flip: false },
   ],
   every: [5, 11], up: [1.5, 3.2],
   birds: { n: 5, y0: -262, y1: -228, speed: [9, 16], flap: [1.4, 2.4], span: 7, a: 0.8, margin: 60 },
@@ -239,26 +239,23 @@ export const CAMP_UPGRADE = {
    *  scatter up, thinning toward the edges by `dome`; `centre` > 1 packs the puffs toward the middle); life range (s), start velocity range (units/s), `grav` (units/s², negative = rises), `drag` per s, radius range at
    *  birth `r0` (`from` × of it at the start) growing to `grow` × over life, `squash` height/width, peak alpha `a` reached by `fadeIn` of life from a `floor` share at birth (so the model swap is never bare), `earth` the
    *  share of darker earth puffs; each puff is a `tex` px radial gradient, solid out to `core` of its radius. */
-  dust: { n: 72, spread: 0.5, dy: 0.06, lift: 30, centre: 1.6, dome: 0.55, life: [0.8, 1.35], vx: [-12, 12], vy: [-44, -14], grav: -10, drag: 1.4, r0: [12, 22], from: 1, grow: 1.9, tex: 64, core: 0.3, squash: 0.86, a: 0.3, floor: 0.2, fadeIn: 0.2, earth: 0.35 },
-  /** Banner: painted once from palette tokens (`art`), hung by its rod from a point on each level's image (`at[id][lv - 1]` =
-   *  fractions of the image's width and height from its top-left), drawn `w`x`h` units. It unrolls down over `roll` (s from the
-   *  moment's start), swings `swing` rad at `wave` Hz damped by `damp` per s, fades in over `in` s and out (eased) between the `out`
-   *  times. `art`: `px` texture px per unit; all other numbers are fractions of the banner's width (x) or height (y): `cloth` x range,
+  dust: { n: 44, spread: 0.46, dy: 0.05, lift: 14, centre: 1.6, dome: 0.55, life: [0.8, 1.35], vx: [-12, 12], vy: [-44, -14], grav: -10, drag: 1.4, r0: [8, 14], from: 1, grow: 1.8, tex: 64, core: 0.3, squash: 0.8, a: 0.2, floor: 0.2, fadeIn: 0.2, earth: 0.35 },
+  /** Banner standard: a wooden post (`post`) planted `edge` of the image's width in from its left edge and `ground` of its height down,
+   *  `h` units tall and `w` wide, with a crossarm `arm` long and `armH` thick, an iron brace `brace` units down the post, two iron hooks
+   *  of radius `hook` under the arm and a cord `cord` long from each to the banner's rod; `px` texture px per unit, `pad` margin.
+   *  The banner is the same `w`x`h` units on every building. It unrolls down over `roll` (s from the moment's start), swings `swing` rad
+   *  at `wave` Hz damped by `damp` per s, fades in over `in` s and out (eased) between the `out` times; post and banner fade together.
+   *  `art`: `px` texture px per unit; all other numbers are fractions of the banner's width (x) or height (y): `cloth` x range,
    *  `top` of the cloth, side `tip` and fork `notch` rows, `lit` the highlight column, gold trim width `trim` units at `inset` units
    *  in and alpha `trimA`, star centre `y`, arm radius `r`, `tall` stretch of the vertical arms, `pinch` inner radius, leaf pair top `y`,
    *  half-width `w` and height `h`, rod height `rod` and end inset `rodX`, knob radius `knob` of the rod height. */
   banner: {
     art: {
-      px: 5, cloth: [0.14, 0.86], top: 0.07, tip: 0.97, notch: 0.74, lit: 0.4, trim: 0.7, inset: 1.6, trimA: 0.85,
-      star: { y: 0.3, r: 0.17, tall: 1.5, pinch: 0.3 }, leaf: { y: 0.46, w: 0.17, h: 0.13 }, rod: 0.075, rodX: 0.04, knob: 0.85,
+      px: 5, cloth: [0.14, 0.86], top: 0.07, tip: 0.97, notch: 0.56, lit: 0.4, trim: 0.9, inset: 1.8, trimA: 0.9,
+      star: { y: 0.28, r: 0.17, tall: 1.5, pinch: 0.3 }, leaf: { y: 0.42, w: 0.17, h: 0.1 }, rod: 0.075, rodX: 0.04, knob: 0.85,
     },
-    w: 45, h: 61, roll: [0.15, 0.6], in: 0.12, wave: 1.1, swing: 0.07, damp: 1.2, out: [0.5, 1.0],
-    at: {
-      bowyer: [[0.74, 0.40], [0.58, 0.42], [0.5, 0.44]],
-      forge: [[0.8, 0.62], [0.5, 0.3], [0.5, 0.36]],
-      kitchen: [[0.7, 0.24], [0.58, 0.14], [0.59, 0.32]],
-      training: [[0.16, 0.16], [0.63, 0.47], [0.55, 0.15]],
-    },
+    post: { px: 4, pad: 3, h: 132, w: 6, arm: 67, armH: 5, cord: 6, brace: 17, hook: 2.1, edge: 0.04, ground: 0.95 },
+    w: 54, h: 73, roll: [0.15, 0.6], in: 0.12, wave: 1.1, swing: 0.07, damp: 1.2, out: [0.5, 1.0],
   },
 } as const;
 
