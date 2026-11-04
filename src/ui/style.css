@@ -732,7 +732,7 @@ body[data-mode="camp"] .campbar { justify-content: flex-end; }
 #sat-grid .item::after, #sat-worn .item::after { content: ""; position: absolute; inset: 0.25rem; pointer-events: none; padding: 0.125rem; border-radius: 0.25rem;
   background: repeating-linear-gradient(-45deg, color-mix(in srgb, var(--ink) 85%, transparent) 0 0.125rem, transparent 0.125rem 0.4375rem);
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); }
-#sat-grid > .desc { grid-column: 1 / -1; grid-row: 1 / span 2; place-self: center; color: var(--ink); font-weight: 700; font-size: 1.125rem; opacity: 1; }
+#sat-grid > .desc { grid-column: 1 / -1; grid-row: 1 / span 2; place-self: center; color: var(--cream); background: color-mix(in srgb, var(--ink) 88%, transparent); padding: 0.25rem 1rem; border-radius: 0.375rem; font-weight: 700; font-size: 1.125rem; opacity: 1; }
 #sat-grid { min-height: calc(var(--bag-pocket) * 2 + 2.75rem); }
 .satbar .set select { font-size: 1rem; }
 /* Settings: label | control | value on a 2-column page, 1rem gaps */
