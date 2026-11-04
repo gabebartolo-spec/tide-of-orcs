@@ -60,7 +60,8 @@ insetProbe.style.cssText = 'position:fixed;visibility:hidden;pointer-events:none
 document.body.appendChild(insetProbe);
 const insets = (): Insets => { const c = getComputedStyle(insetProbe); return { left: parseFloat(c.paddingLeft) || 0, right: parseFloat(c.paddingRight) || 0, bottom: parseFloat(c.paddingBottom) || 0 }; };
 const aimAt = (type: 'touch' | 'pen', cx: number, cy: number): void => {
-  const p = aimPoint(type, cx, cy, fieldCanvas.getBoundingClientRect(), remPx(), insets().bottom);
+  const fr = fieldCanvas.getBoundingClientRect(), hud = document.getElementById('hud')?.getBoundingClientRect();
+  const p = aimPoint(type, cx, cy, fr, remPx(), insets().bottom, hud && hud.height > 0 ? hud.bottom - fr.top : 0);   // never behind the HUD plates or the gesture bar
   const w = field.toWorld(p.x, p.y, true);   // a captured finger can slide off the canvas: keep the circle on the plain
   if (w) game.setAim(w.x, w.y); else game.dropAim();
 };

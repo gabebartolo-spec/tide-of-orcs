@@ -36,14 +36,18 @@ describe('touch aim point (TB-218 I2, I3)', () => {
   it('mid-screen lift is 56 px for a finger, 24 px for a pen', () => {
     expect(liftFor('touch', 250, R, 16)).toBe(56); expect(liftFor('touch', 328, R, 16)).toBe(56); expect(liftFor('pen', 250, R, 16)).toBe(24);
   });
-  it('the lift fades to 0 at the bottom edge so the whole plain is reachable', () => {
+  it('the lift fades to 0 at the gesture-bar line, so the lowest visible row is reachable', () => {
     expect(liftFor('touch', 412, R, 16)).toBe(0); expect(liftFor('touch', 370, R, 16)).toBe(28);
-    expect(aimPoint('touch', 460, 392, R, 16, 20).y).toBe(R.bottom);   // a thumb at the gesture-bar line reaches the field's bottom edge (TB-218)
-    expect(aimPoint('touch', 460, 412, R, 16, 20).y).toBe(R.bottom);
+    expect(aimPoint('touch', 460, 392, R, 16, 20).y).toBe(392);   // a thumb at the line puts the circle on the last row above the inset
+    expect(aimPoint('touch', 460, 412, R, 16, 20).y).toBe(392);   // never inside the bottom inset
     expect(aimPoint('touch', 460, 412, R, 16).y).toBe(412);
   });
-  it('the circle reaches the top of the plain (the HUD is pointer-transparent) and stays on the field', () => {
-    expect(aimPoint('touch', 460, 20, R, 16).y).toBe(0); expect(aimPoint('touch', 460, 5, R, 16).y).toBe(0);
+  it('mid-screen the circle is a full 56 px above the finger', () => {
+    expect(300 - aimPoint('touch', 460, 300, R, 16, 20, 60).y).toBe(56);
+  });
+  it('the circle never sits behind the HUD plates and stays on the field', () => {
+    expect(aimPoint('touch', 460, 20, R, 16, 20, 60).y).toBe(60); expect(aimPoint('touch', 460, 100, R, 16, 20, 60).y).toBe(60);
+    expect(aimPoint('touch', 460, 20, R, 16).y).toBe(0);
     expect(aimPoint('touch', 2000, 200, R, 16).x).toBe(915);
   });
   it('a press in the outer 24 px or the bottom inset starts no aim', () => {
