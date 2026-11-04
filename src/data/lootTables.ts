@@ -99,8 +99,7 @@ export const forPath = <T extends { path?: PathId }>(xs: readonly T[], path: Pat
 
 /** Mythics: one power and one cost each (powers wired in TB-100). */
 /** A mythic's power switches on a Stats field through `lines`, as set bonuses do (TB-100); its numbers live in MYTHIC_FX. */
-/** `kind`: what the item is when that is not the slot's usual gear (unused since TB-225 gave The Last Knife its own dagger slot); shown on its card. */
-export interface MythicDef { id: string; name: string; slot: Slot; lines: StatLine[]; path?: PathId; kind?: string }
+export interface MythicDef { id: string; name: string; slot: Slot; lines: StatLine[]; path?: PathId }
 export const MYTHICS: readonly MythicDef[] = [
   { id: 'last-knife', name: 'The Last Knife', slot: 'dagger', lines: [on('knifeReturn')] },
   { id: 'heart-of-kiln', name: 'Heart of the Kiln', slot: 'quiver', lines: [on('burnRamp')] },

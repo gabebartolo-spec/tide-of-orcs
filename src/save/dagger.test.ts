@@ -5,6 +5,11 @@ import { createRng } from '../sim/rng';
 import { rollDrop } from '../sim/lootRoll';
 import { STR } from '../data/strings';
 import { createState, freshMeta, freshRun } from '../sim/state';
+import { itemIconId } from '../data/itemArt';
+import { glyph } from '../ui/glyphs';
+import { v7 } from './fixtures/v7';
+import { v14 } from './fixtures/v14';
+import { v15 as v15Fixture } from './fixtures/v15';
 import { migrate } from './migrate';
 import { CURRENT_VERSION, defaultSettings } from './schema';
 
@@ -52,5 +57,58 @@ describe('dagger slot (TB-225)', () => {
     }
     for (const s of SLOTS) expect(got[s] ?? 0, s).toBeGreaterThan(100);
     expect(STR.slotName.dagger).toBe('Dagger');
+  });
+  it('maps each bow tier to its dagger tier, and an unknown base falls back to the Bone Knife', () => {
+    const want: Record<string, string> = { 'ashwood-bow': 'bone-knife', 'yew-longbow': 'flint-dagger', hornbow: 'bronze-dirk', 'ironbark-recurve': 'silver-stiletto', 'no-such-bow': 'bone-knife' };
+    for (const [from, to] of Object.entries(want)) {
+      const s = migrate(v15({ ...freshLoot(), items: [{ ...knife, base: from }], equipped: { bow: 'i3' } }));
+      const k = s.meta.loot.items[0]!;
+      expect(k.base, from).toBe(to); expect(BASES.find((b) => b.id === k.base)!.slot).toBe('dagger');
+    }
+  });
+  it('leaves other shapes alone: a dagger-slot knife, a bow mythic, a non-knife', () => {
+    const oak = { uid: 'i4', base: 'yew-longbow', slot: 'bow', rarity: 'mythic', ilvl: 5, affixes: [], mythic: 'oakspine' };
+    const done = { ...knife, uid: 'i5', slot: 'dagger', base: 'flint-dagger' };
+    const s = migrate(v15({ ...freshLoot(), items: [oak, done], equipped: { bow: 'i4', dagger: 'i5' } }));
+    expect(s.meta.loot.items).toEqual([oak, done]); expect(s.meta.loot.equipped).toEqual({ bow: 'i4', dagger: 'i5' });
+  });
+  it('a knife worn in the bow socket never displaces a dagger already worn; the bow socket empties', () => {
+    const other = { ...knife, uid: 'i6', slot: 'dagger', base: 'flint-dagger', mythic: undefined, rarity: 'rare' };
+    const s = migrate(v15({ ...freshLoot(), items: [knife, other], equipped: { bow: 'i3', dagger: 'i6' } }));
+    expect(s.meta.loot.equipped).toEqual({ dagger: 'i6' });
+    expect(s.meta.loot.items.find((i) => i.uid === 'i3')!.slot).toBe('dagger');
+  });
+  it('survives a null item, a missing loot, a missing equipped map and a missing run best', () => {
+    const s = migrate(v15({ ...freshLoot(), items: [null, knife], equipped: { bow: 'i3' } }));
+    expect(s.meta.loot.items[0]).toBeNull(); expect(s.meta.loot.items[1]!.slot).toBe('dagger'); expect(s.meta.loot.equipped).toEqual({ dagger: 'i3' });
+    const noLoot = { version: 15, savedAt: 1, run: freshRun(), meta: {}, settings: defaultSettings() };
+    expect(migrate(noLoot).version).toBe(CURRENT_VERSION);
+    const { equipped: _drop, ...bare } = freshLoot(); void _drop;
+    expect(migrate(v15({ ...bare, items: [knife] })).meta.loot.items[0]!.slot).toBe('dagger');
+    expect(migrate({ version: 15, savedAt: 1, run: { ...freshRun(), best: undefined }, meta: freshMeta(), settings: defaultSettings() }).version).toBe(CURRENT_VERSION);
+  });
+  it('a migrated knife keeps its own art (icon by mythic id), its dagger base resolves, and the glyph frame draws it', () => {
+    const k = migrate(v15({ ...freshLoot(), items: [knife], equipped: { bow: 'i3' } })).meta.loot.items[0]!;
+    expect(itemIconId(k)).toBe('last-knife');
+    expect(glyph('dagger', k)).toContain('items/last-knife.webp');
+    expect(BASES.find((b) => b.id === k.base)!.slot).toBe(k.slot);
+    // a dagger base with no icon file draws the vector knife, never a missing image
+    const { mythic: _m, ...plain } = k; void _m;
+    expect(glyph('dagger', { ...plain, rarity: 'rare' })).toContain('<svg');
+  });
+  it('a Last Knife in an old save (v7, v14, v15 fixtures) rides the whole chain, loads as GameController does, and still gives its knife effect', () => {
+    for (const fixture of [v7, v14, v15Fixture]) {
+      const raw = JSON.parse(JSON.stringify(fixture)) as { meta: { loot: { items: object[]; equipped: Record<string, string> } } };
+      raw.meta.loot.items.push({ ...knife, uid: 'kx' }); raw.meta.loot.equipped.bow = 'kx';
+      const s = migrate(raw);
+      expect(s.version).toBe(CURRENT_VERSION);
+      expect(s.meta.loot.equipped.dagger).toBe('kx'); expect(s.meta.loot.equipped.bow).toBeUndefined();
+      const sim = createState(7, { ...freshRun(), ...s.run }, { ...freshMeta(), ...s.meta });
+      expect(sim.stats.knifeReturn).toBe(1);
+    }
+  });
+  it('the v15 fixture keeps its knife in the dagger slot after migration', () => {
+    const s = migrate(JSON.parse(JSON.stringify(v15Fixture)));
+    expect(s.meta.loot.equipped.dagger).toBe('knife15'); expect(s.meta.loot.equipped.bow).toBeUndefined();
   });
 });
