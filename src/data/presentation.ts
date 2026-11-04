@@ -208,19 +208,26 @@ export const CAMP_DRAW_ORDER = [...BUILDINGS].sort((a, b) => CAMP_SPOTS[a.id].y 
  *  `wind` sideways drift, size from `r0` to `r1` over life, peak alpha `a`. `cap` bounds the shared pool. TB-188k removed the
  *  smoke (it read as flat discs). Emitters are placed from CAMP_ART: forge sparks at the forge image's top point (the bowyer pennant
  *  was dropped: it floated off the building), training dust at the ring's centre (`dustDy` above the image's base). */
-/** Deer grazing behind the camp and birds over the forest (TB-188k round 3, director 3 Nov), kept in the background. Each deer
- *  draws public/decor/camp/deer_<pose>.webp (rendered at one spot by render_camp_backdrop.py, rects in CAMP_DEER_ART) shifted by
- *  (dx, dy) scene units, `flip` mirrors it. A deer grazes head down and lifts its head for `up` s every `every` s. Birds: `n`
- *  small two-stroke silhouettes drifting at `speed` units/s across the band y0..y1, wings beating at `flap` Hz, span `span`. */
+/** Elk grazing behind the camp and birds over the forest (TB-188k round 3; TB-208, director 4 Nov), kept in the background. Each
+ *  elk plays the "Realistic Animated Elk" model's own Stand_Eating_01 graze loop rendered at one spot by render_camp_backdrop.py:
+ *  public/decor/camp/elk.webp facing left (CAMP_ELK_ART), or elk_r.webp, a true right-facing pass whose shadow still falls with
+ *  the camp sun (`right: true`, CAMP_ELK_R_ART). Each is shifted by (dx, dy) scene units, scaled by `s` about its hooves
+ *  (CAMP_ELK_FOOT; the herd varies within ±8%), and starts at `phase` (0-1) of the loop so the herd does not move in step.
+ *  Birds: `n` small two-stroke silhouettes drifting at `speed` units/s across the band y0..y1, wings beating at `flap` Hz, span `span`. */
 export const CAMP_FAUNA = {
-  deer: [
-    { dx: -470, dy: -10, flip: false }, { dx: -440, dy: 6, flip: true }, { dx: 70, dy: -40, flip: true }, { dx: 380, dy: 0, flip: false },
+  elk: [
+    { dx: -105, dy: -6, right: false, s: 1.0, phase: 0 }, { dx: -5, dy: -6, right: true, s: 0.92, phase: 0.55 },
+    { dx: 285, dy: -12, right: false, s: 1.08, phase: 0.3 },
   ],
-  every: [5, 11], up: [1.5, 3.2],
   birds: { n: 5, y0: -262, y1: -228, speed: [9, 16], flap: [1.4, 2.4], span: 7, a: 0.8, margin: 60 },
 } as const;
-/** Deer image rects (scene units), written by post_camp.py with CAMP_ART. */
-export const CAMP_DEER_ART: Readonly<Record<'up' | 'down', CampArtRect>> = /*DEER*/{ up: { x: 576.8, y: -143.8, w: 42.8, h: 37.0, top: [614.2, -143.5] }, down: { x: 577.2, y: -130.0, w: 45.2, h: 23.2, top: [600.1, -130.0] } }/*DEND*/;
+/** Elk sheet layout (scene units for the rect; `n` frames in a grid of `cols`, played at `fps`), written by post_elk.py, which also
+ *  trims each elk to one contact shadow under its hooves (the long antler streaks and a second hind-leg smear read as stray marks). */
+export interface CampSheetRect { readonly x: number; readonly y: number; readonly w: number; readonly h: number; readonly n: number; readonly cols: number; readonly fps: number }
+export const CAMP_ELK_ART: CampSheetRect = /*ELK*/{ x: 567.7, y: -161.0, w: 57.3, h: 56.0, n: 64, cols: 8, fps: 6.0 }/*EEND*/;
+export const CAMP_ELK_R_ART: CampSheetRect = /*ELKR*/{ x: 570.7, y: -161.0, w: 62.0, h: 56.3, n: 64, cols: 8, fps: 6.0 }/*EREND*/;
+/** Scene point under the rendered elk's hooves (render_camp_backdrop.py ELK_AT): the anchor each elk scales about. */
+export const CAMP_ELK_FOOT = { x: 600, y: -110 } as const;
 
 export const CAMP_LIFE = {
   cap: 120,

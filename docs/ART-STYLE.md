@@ -210,3 +210,18 @@ bundle, forge chimney with ember hearth and anvil, kitchen awning with bread tab
 straw dummies and a spear rack); **level 2** the level-1 look plus a blue pennant; **level 3** adds a gold-edged pennant, a lit
 lantern and one more of each trade (sparks, smoke, a third dummy, a quiver, a fourth bow). Each look is painted once per
 scene pixel scale to an offscreen canvas and blitted, so the camp costs four `drawImage` calls a frame. No motion yet (TB-188f).
+
+## Camp elk (TB-208)
+The animals grazing behind the camp are the Sketchfab "Realistic Animated Elk" (WildMesh 3D, CC BY 4.0), never a code-drawn
+creature. `render_camp_backdrop.py` pass `elk` imports the gltf into the camp scene (same camera, sun, sky fill and shadow
+catcher as the buildings), scales it to `ELK_LEN` 45 units nose to tail (shoulder about 0.75 of a villager's height; 66 read 1.4x too big), renders at `PX` 3 (204x185 px cells, sheet 0.47 MB), and renders the model's own `Stand_Eating_01` clip
+as authored every 4th frame (`ELK_STEP` 4: 64 frames, 6 fps, loops; every 8th frame snapped the head down in one step).
+The render border keeps 0.04 of the frame clear left and below so the shadow, which falls lower left like the buildings', is
+never cut. The pass also renders `bg.png`, the empty plate: `post_elk.py` divides the shadow catcher's veil out of each frame
+against it (a' = (a - bg) / (1 - bg), the faint occlusion halo ramped to zero), refuses frames whose kept pixels touch the
+border, crops all frames to one shared rect, packs `public/decor/camp/elk.webp` (8 per row) and prints `CAMP_ELK_ART`. Each
+elk in `CAMP_FAUNA.elk` is offset, scaled by `s` about its hooves (`CAMP_ELK_FOOT`, herd within ±8%) and starts at its own
+`phase` so the herd does not graze in step. Never mirror a sheet in canvas: that flips the baked shadow against the camp sun. A
+right-facing elk uses `elk_r.webp` (`CAMP_ELK_R_ART`, `right: true`), rendered with `ELK_FACE=right` and packed with
+`NAME=elk_r post_elk.py`: the model turned to face right under the same sun, so its shadow still falls lower left. Elk stand at least one elk length clear of every building and of the
+Materials panel, and all graze on the open meadow in one band (dy -22 to -40), never in the treeline grass.
