@@ -30,10 +30,13 @@ export const affixText = (a: Item['affixes'][number]): string => {
   return `${v} ${STR.statName[d.stat] ?? d.stat}`;
 };
 
+/** No widows: the last three words (and a number with its noun) never wrap apart. */
+const glue = (t: string): string => t.replace(/(\d%?) (?=[a-z])/gi, '$1\u00a0').replace(/(\S+) (\S+) (\S+)$/, '$1\u00a0$2\u00a0$3');
+
 /** A set's name, pieces worn, and its three bonus lines; the earned ones are lit (TB-099), Set Resonance counting one more (TB-101). */
 const setBlock = (id: string, n: number, boost = 0): string => {
   const name = SETS.find((x) => x.id === id)?.name ?? id, fx = STR.setFx[id] ?? ['', '', ''];
-  return `<div class="set"><div class="k">${STR.setProgress(name, n)}</div>${([2, 4, 6] as const).map((t, i) => `<div class="tier${n > 0 && n + boost >= t ? ' on' : ''}">${t} · ${fx[i]}</div>`).join('')}</div>`;
+  return `<div class="set"><div class="k">${STR.setProgress(name, n)}</div>${([2, 4, 6] as const).map((t, i) => `<div class="tier${n > 0 && n + boost >= t ? ' on' : ''}">${t} · ${glue(fx[i] ?? '')}</div>`).join('')}</div>`;
 };
 
 /** A finger selects with a tap and wears with the Wear button; a long-press must not start a drag ghost (TB-218). */
@@ -152,9 +155,9 @@ export class SatchelPane {
     const cost = rerollCost(it, this.game.state.stats.rerollMult), poor = l.glimmer < cost;
     const lines = it.affixes.map((a, i) => `<li>${affixText(a)}${worn ? ` <button class="buy" data-act="reroll" data-i="${i}"${poor ? ' disabled' : ''}>${STR.rerollFor(cost)}</button>` : ''}</li>`).join('');
     const cmp = cur && cur.uid !== it.uid ? `<div class="desc">${STR.satchelVs(itemName(cur), Math.round((itemScore(it) - itemScore(cur)) * 100))}</div>` : '';
-    $('sat-detail').innerHTML = `<div class="head">${glyph(it.slot, it, true)}<div class="name r-${it.rarity}">${itemName(it)}</div>${pathTag(it)}</div>
-      <div class="desc">${STR.rarityName[it.rarity]} · ${STR.slotName[it.slot]} · ${STR.itemLevel(it.ilvl)}</div>
-      <ul class="affixes">${lines}</ul>${it.set ? setBlock(it.set, setCounts(l)[it.set] ?? 0, this.game.state.stats.setBoost) : ''}${myth ? `<div class="desc">${STR.mythicLine(STR.mythicPower[myth.id] ?? '')}</div>` : ''}${cmp}
+    $('sat-detail').innerHTML = `<div class="head">${glyph(it.slot, it, true)}<div class="title"><div class="name r-${it.rarity}">${itemName(it)}</div>
+      <div class="desc">${STR.rarityName[it.rarity]} · ${myth?.kind ? STR.kindInSlot(myth.kind, `${STR.slotName[it.slot]}`) : STR.slotName[it.slot]} · ${STR.itemLevel(it.ilvl)}</div></div>${pathTag(it)}</div>
+      <ul class="affixes">${lines}</ul>${it.set && !setCounts(l)[it.set] ? setBlock(it.set, 0, this.game.state.stats.setBoost) : ''}${myth ? `<div class="desc">${glue(STR.mythicLine(STR.mythicPower[myth.id] ?? ''))}</div>` : ''}${cmp}
       <div class="row"><button class="buy back" data-act="close">${STR.satchelBack}</button>${worn ? `<span class="desc">${STR.satchelWornNow}</span>` : `<button class="buy" data-act="equip">${STR.equip}</button>`}
       <button class="buy" data-act="lock">${it.locked ? STR.unlock : STR.lock}</button>
       ${hwRank(this.game.state.meta, 'hw_heirloom') && (worn || l.heirloom === it.uid) ? `<button class="buy" data-act="heirloom">${l.heirloom === it.uid ? STR.unheirloom : STR.heirloom}</button>` : ''}
