@@ -143,7 +143,10 @@ if MIX:
         hd = (hw_.to_3x3() @ grip(sc.frame_current).to_3x3() @ Vector((0, 1, 0))).normalized(); n_ = f.cross(hd).normalized()  # dummy +Y = toward the head (probe AXL)
         rq = Quaternion(n_, -CA[1]); 
         if AIM: rq = hd.rotation_difference(AIM)  # CARRYAIM=x,y,z: aim the haft (fist->head) along this world direction instead, by the smallest wrist turn
-        l, q, s_ = hw_.decompose(); setw("R Hand", rot=Quaternion().slerp(rq, w) @ q, loc=l)
+        l, q, s_ = hw_.decompose()
+        if AIM and os.environ.get("DIP") and 0 < w < 1:  # TB-212 round 5: DIP=<k> sags the haft aim by k*sin(pi*w) metres-per-metre mid-blend so the recovery drops the head instead of holding the haft level forward (a thrust)
+            tg = hd.lerp(AIM, w) + Vector((-float(os.environ.get("DIPX", "0")) * math.sin(math.pi * w), 0, -float(os.environ["DIP"]) * math.sin(math.pi * w))); rq = hd.rotation_difference(tg.normalized()); setw("R Hand", rot=rq @ q, loc=l)
+        else: setw("R Hand", rot=Quaternion().slerp(rq, w) @ q, loc=l)
         bip.pose.bones["Bip001 L Hand"].matrix = bip.matrix_world.inverted() @ lw; bpy.context.view_layer.update()
     HW = float(os.environ.get("HOFFSW", "1"))  # walk: 1 every frame; attack: 1 at the lead-in start and the lead-out end, 0 in the clip
     def retarget(F):
@@ -153,7 +156,7 @@ if MIX:
             for o, m in MAP: setw(o, rot=A[0][o].slerp(B[0][o], t), loc=A[1].lerp(B[1], t) if o == "Pelvis" else None)
             w = 1 - t
         elif LOUT and F > f1 - LOUT:
-            t = (F - (f1 - LOUT)) / LOUT; t = t * t * (3 - 2 * t); A, B = pose(mixo, f1 - LOUT), (WP[0], WP[1] * Vector((0, 0, 1)) + pose(mixo, f1)[1] * Vector((1, 1, 0)))
+            t = (F - (f1 - LOUT)) / LOUT; t = (1 - (1 - t) ** float(os.environ["LOUTPOW"])) if os.environ.get("LOUTPOW") else t * t * (3 - 2 * t); A, B = pose(mixo, f1 - LOUT), (WP[0], WP[1] * Vector((0, 0, 1)) + pose(mixo, f1)[1] * Vector((1, 1, 0)))
             for o, m in MAP: setw(o, rot=A[0][o].slerp(B[0][o], t), loc=A[1].lerp(B[1], t) if o == "Pelvis" else None)
             w = t
         else:
