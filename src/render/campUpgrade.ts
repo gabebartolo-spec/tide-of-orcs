@@ -43,7 +43,7 @@ const recolour = (im: HTMLImageElement): CanvasImageSource => {
     g.drawImage(im, 0, 0); const d = g.getImageData(0, 0, c.width, c.height), a = d.data;
     for (let i = 0; i < a.length; i += 4) {
       const r = a[i]! / 255, gg = a[i + 1]! / 255, b = a[i + 2]! / 255, mx = Math.max(r, gg, b), mn = Math.min(r, gg, b), l = (mx + mn) / 2, dl = mx - mn;
-      if (dl < T.minChroma) continue;
+      if (dl < T.minChroma || l > T.maxLight) continue;
       const s = dl / (1 - Math.abs(2 * l - 1));
       let h = mx === r ? ((gg - b) / dl + 6) % 6 : mx === gg ? (b - r) / dl + 2 : (r - gg) / dl + 4; h *= 60;
       const px = (i / 4) % c.width / c.width, py = Math.floor(i / 4 / c.width) / c.height, G = T.glyph;
@@ -95,8 +95,8 @@ export class CampUpgradeFx {
       this.alive[i] = 1; this.age[i] = 0; this.life[i] = this.range(d.life); this.r0[i] = this.range(d.r0);
       this.kind[i] = this.rnd() < d.earth ? 1 : 0;
       // one stratum of the base per pair, its mirror on the other side, so the cloud is whole and level on both sides
-      const u = ((k >> 1) + this.rnd()) / (d.n >> 1), off = u * r.w * d.spread * 0.5, sgn = k & 1 ? -1 : 1;
-      this.x[i] = cx + sgn * off; this.y[i] = base - this.rnd() * d.lift;
+      const u = (((k >> 1) + this.rnd()) / (d.n >> 1)) ** d.centre, off = u * r.w * d.spread * 0.5, sgn = k & 1 ? -1 : 1;
+      this.x[i] = cx + sgn * off; this.y[i] = base - this.rnd() * d.lift * (1 - d.dome * u);
       this.vx[i] = sgn * Math.abs(this.range(d.vx)) * (0.4 + u); this.vy[i] = this.range(d.vy);
     }
   }
