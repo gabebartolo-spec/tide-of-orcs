@@ -18,7 +18,7 @@ import { orcClipT, orcState, swingClipT, vanState } from './actorState';
 import { Ground, decorImg } from './ground';
 import { Ambience } from './ambience';
 import { Interp } from './interp';
-import { FIELD_VIEW, PHONE_QUERY, QUALITY, GROUND, LOOT_VFX, ORC_SPRITE, SKY, VFX, dusk } from '../data/presentation';
+import { AIM_CROSS, FIELD_VIEW, PHONE_QUERY, QUALITY, GROUND, LOOT_VFX, ORC_SPRITE, SKY, VFX, dusk } from '../data/presentation';
 import { SLOTS } from '../data/loot';
 import { quality, fitScale } from './quality';
 import { setTiers } from '../sim/gear';
@@ -87,6 +87,7 @@ export class FieldRenderer {
   /** Loot moments (TB-105): drop beams, the equip glow on the bow, the set-bonus leaf ring, the mythic screen-edge shimmer and slow-motion clock. */
   private beams: { x: number; y: number; life: number; max: number; c: string; ground: boolean; spiral: boolean; k: number }[] = [];
   /** Legendary/mythic field flash (TB-192): seconds left, peak alpha, colour. */
+  private cross: { x: number; y: number } | null = null;
   private flash = 0; private flashA = 0; private flashC: string = P.cream;
   private glow = { t: 0, c: P.cream as string };
   private leaves = 0; private edge = 0; private slow = 0; private tiers = -1;
@@ -293,6 +294,7 @@ export class FieldRenderer {
     this.elf(ELF_X, H / 2, aiming ? drawn : -1);
     this.gearFx();
     if (aim && aiming) this.reticle(aim.x, aim.y, s.stats.radius, drawn);
+    this.cross = aim && aiming ? aim : null;
     for (let i = 1; i <= s.stats.archers && i < 3; i++) this.archer(s, i, ELF_X - 10, H / 2 + (i === 1 ? -SOURCES.archerOffsetY : SOURCES.archerOffsetY));
     if (s.stats.ballista) { g.fillStyle = P.bark; g.fillRect(ELF_X - 10, H / 2 - 48, 30, 10); g.fillStyle = P.cream; g.fillRect(ELF_X + 10, H / 2 - 45, 22, 3); }
     if (s.stats.wolf) { this.wolf(s, s.wolf); for (let i = 0; i < s.stats.extraWolves && i < s.pack.length; i++) this.wolf(s, s.pack[i]!); }
@@ -342,17 +344,22 @@ export class FieldRenderer {
     this.ambience.motesDraw(g, this.clock, n, this.reducedMotion, this.vis.y0);
     this.fx.draw(g);
 
+    if (this.cross) this.crosshair(this.cross.x, this.cross.y);
+
     // HUD overlays (no shake)
     g.setTransform(sx, 0, 0, sy, ox, oy);
     // The wall bar, barricade and vanguard counts are the DOM HUD now (TB-195b, src/ui/hud.ts); the wave strip stays on the field.
     // TB-207: the strip floats inside the field (inset clear of the full-screen side crop), rounded, instead of running along its edge
-    const wx = BAR_X + BAR_W / 2 + FIELD_VIEW.reach + 12, wy = H - 15 - (this.phone ? FIELD_VIEW.phoneStripLift : 0), ww = W - 40 - wx, wh = 6, wt = Math.min(1, s.run.waveT / WAVE_LEN);
-    g.fillStyle = P.ink; g.globalAlpha = 0.6; g.beginPath(); g.roundRect(wx - 2, wy - 2, ww + 4, wh + 4, wh / 2 + 2); g.fill(); g.globalAlpha = 1;
-    g.fillStyle = P.dim45; g.beginPath(); g.roundRect(wx, wy, ww, wh, wh / 2); g.fill();
-    if (wt > 0) { g.fillStyle = P.amber; g.beginPath(); g.roundRect(wx, wy, Math.max(wh, ww * wt), wh, wh / 2); g.fill(); }
-    // a cream rim and a glowing bead at the leading edge, so the strip reads as a finished gauge
-    g.strokeStyle = P.cream; g.globalAlpha = 0.35; g.lineWidth = 1; g.beginPath(); g.roundRect(wx - 1, wy - 1, ww + 2, wh + 2, wh / 2 + 1); g.stroke(); g.globalAlpha = 1;
-    if (wt > 0) { const bx = wx + Math.max(wh, ww * wt) - wh / 2; g.fillStyle = P.amber; g.globalAlpha = 0.3; g.beginPath(); g.arc(bx, wy + wh / 2, wh * 1.4, 0, 6.28); g.fill(); g.globalAlpha = 1; g.fillStyle = P.cream; g.beginPath(); g.arc(bx, wy + wh / 2, wh * 0.45, 0, 6.28); g.fill(); }
+    // On a phone the wave progress is the DOM wave plaque's underline (style.css), so nothing covers the lowest orc row.
+    if (!this.phone) {
+      const wx = BAR_X + BAR_W / 2 + FIELD_VIEW.reach + 12, wy = H - 15, ww = W - 40 - wx, wh = 6, wt = Math.min(1, s.run.waveT / WAVE_LEN);
+      g.fillStyle = P.ink; g.globalAlpha = 0.6; g.beginPath(); g.roundRect(wx - 2, wy - 2, ww + 4, wh + 4, wh / 2 + 2); g.fill(); g.globalAlpha = 1;
+      g.fillStyle = P.dim45; g.beginPath(); g.roundRect(wx, wy, ww, wh, wh / 2); g.fill();
+      if (wt > 0) { g.fillStyle = P.amber; g.beginPath(); g.roundRect(wx, wy, Math.max(wh, ww * wt), wh, wh / 2); g.fill(); }
+      // a cream rim and a glowing bead at the leading edge, so the strip reads as a finished gauge
+      g.strokeStyle = P.cream; g.globalAlpha = 0.35; g.lineWidth = 1; g.beginPath(); g.roundRect(wx - 1, wy - 1, ww + 2, wh + 2, wh / 2 + 1); g.stroke(); g.globalAlpha = 1;
+      if (wt > 0) { const bx = wx + Math.max(wh, ww * wt) - wh / 2; g.fillStyle = P.amber; g.globalAlpha = 0.3; g.beginPath(); g.arc(bx, wy + wh / 2, wh * 1.4, 0, 6.28); g.fill(); g.globalAlpha = 1; g.fillStyle = P.cream; g.beginPath(); g.arc(bx, wy + wh / 2, wh * 0.45, 0, 6.28); g.fill(); }
+    }
     if (this.flash > 0) { this.flash -= dt; g.globalAlpha = Math.max(0, this.flash / LOOT_VFX.flashLife) * this.flashA; g.fillStyle = this.flashC; g.fillRect(this.vis.x0, this.vis.y0, this.vis.x1 - this.vis.x0, H - this.vis.y0); g.globalAlpha = 1; }
     if (this.edge > 0) { const M = LOOT_VFX.mythic; g.globalAlpha = (this.edge / M.edge) * (0.6 + 0.4 * Math.sin(this.clock * M.flicker)); g.strokeStyle = P.rose; g.lineWidth = M.edgeW; g.strokeRect(this.vis.x0 + M.edgeW / 2, this.vis.y0 + M.edgeW / 2, this.vis.x1 - this.vis.x0 - M.edgeW, H - this.vis.y0 - M.edgeW); g.globalAlpha = 1; }
     this.ceremony.draw(g, dt, this.vis.x0, this.vis.y0, this.vis.x1, H);
@@ -414,8 +421,14 @@ export class FieldRenderer {
     g.fillStyle = P.aimFill; g.beginPath(); g.arc(x, y, r, 0, 6.28); g.fill();
     g.strokeStyle = P.aimLine; g.lineWidth = 1.5; g.beginPath(); g.arc(x, y, r, 0, 6.28); g.stroke();
     g.strokeStyle = P.cream; g.beginPath(); g.arc(x, y, r, -Math.PI / 2, -Math.PI / 2 + ready * 6.28); g.stroke();
-    // a crosshair at the exact strike point (TB-223): the faint circle alone is easy to lose under a fingertip's glare
-    g.lineWidth = 2; g.beginPath(); g.moveTo(x - 7, y); g.lineTo(x + 7, y); g.moveTo(x, y - 7); g.lineTo(x, y + 7); g.stroke();
+  }
+
+  /** A crosshair at the exact strike point (TB-223), drawn after the actors so an orc standing on the point never hides it: an ink halo
+   *  under a cream stroke, readable on grass and on a pale orc alike. */
+  private crosshair(x: number, y: number): void {
+    const g = this.g, C = AIM_CROSS;
+    g.lineCap = 'round'; g.beginPath(); g.moveTo(x - C.arm, y); g.lineTo(x + C.arm, y); g.moveTo(x, y - C.arm); g.lineTo(x, y + C.arm);
+    g.strokeStyle = P.ink; g.lineWidth = C.halo; g.stroke(); g.strokeStyle = P.cream; g.lineWidth = C.w; g.stroke(); g.lineCap = 'butt';
   }
 
   /** An arcing arrow: shadow on the ground, shaft in the air pointing along its flight. */

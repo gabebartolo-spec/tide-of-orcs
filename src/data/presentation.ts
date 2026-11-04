@@ -279,8 +279,10 @@ export const REPORT = { lead: 350, gap: 380, roll: 520, stampAfter: 300, stampIn
 export const SATCHEL_UI = { lines: 4, gap: 1.25, snap: 260 } as const;
 
 /** Full-screen field (TB-207): reach is the half width around the barricade that the wave bar clears. */
-export const FIELD_VIEW = { reach: 24, phoneStripLift: 28 } as const;
-/** Phone landscape (TB-218): coarse pointer on a short screen. The wave strip lifts `phoneStripLift` world px clear of the gesture bar. */
+export const FIELD_VIEW = { reach: 24 } as const;
+/** The strike-point crosshair (TB-223), field units: arm length from the centre, cream stroke width, ink halo width. */
+export const AIM_CROSS = { arm: 9, w: 2.5, halo: 5.5 } as const;
+/** Phone landscape (TB-218): coarse pointer on a short screen. The canvas wave strip is replaced by the wave plaque's underline. */
 export const PHONE_QUERY = '(pointer: coarse) and (max-height: 540px)';
 
 /** Baked burning/chilled sprite frames (TB-216d). A glowing frame bakes whole at its drawn device height snapped to

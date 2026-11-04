@@ -46,9 +46,14 @@ addEventListener('keydown', (e) => { if ((e.key === 'm' || e.key === 'M') && !e.
 const coarsePtr = matchMedia('(pointer: coarse)');
 const storedAuto = (): boolean => { try { const v = localStorage.getItem(AUTO_FIRE_KEY); return v === null ? coarsePtr.matches : v === '1'; } catch { return coarsePtr.matches; } };
 const autoBtn = document.getElementById('btn-auto') as HTMLElement;
-const syncAuto = (): void => { autoBtn.setAttribute('aria-pressed', String(game.autoFire)); autoBtn.textContent = game.autoFire ? STR.autoOn : STR.autoOff; };
+const autoHud = document.getElementById('btn-auto-hud') as HTMLElement;   // the run-view toggle on a phone (style.css), beside Settings
+const syncAuto = (): void => {
+  const label = game.autoFire ? STR.autoOn : STR.autoOff;
+  for (const b of [autoBtn, autoHud]) b.setAttribute('aria-pressed', String(game.autoFire));
+  autoBtn.textContent = label; autoHud.textContent = STR.autoHud; autoHud.setAttribute('aria-label', label);
+};
 game.autoFire = storedAuto(); syncAuto();
-autoBtn.addEventListener('click', () => { game.autoFire = !game.autoFire; try { localStorage.setItem(AUTO_FIRE_KEY, game.autoFire ? '1' : '0'); } catch { /* storage blocked: lasts this page only */ } syncAuto(); });
+for (const b of [autoBtn, autoHud]) b.addEventListener('click', () => { game.autoFire = !game.autoFire; try { localStorage.setItem(AUTO_FIRE_KEY, game.autoFire ? '1' : '0'); } catch { /* storage blocked: lasts this page only */ } syncAuto(); });
 // Browsers block audio until the first gesture; a touch counts on release (pointerup, touchend) as well as on press.
 for (const t of ['pointerdown', 'pointerup', 'touchend', 'keydown'] as const) addEventListener(t, () => audio.unlock(), { capture: true });
 (window.requestIdleCallback ?? ((f: () => void) => setTimeout(f, 1500)))(() => audio.prepare());

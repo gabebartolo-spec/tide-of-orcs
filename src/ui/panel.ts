@@ -1,5 +1,5 @@
 import { tabTitle, type Tab } from './tabTitle';
-import { PRESTIGE, VanType } from '../data/balance';
+import { PRESTIGE, VanType, WAVE_LEN } from '../data/balance';
 import { CONFIRM_ARM_MS } from '../data/settings';
 import { BRANCH_COLOR, BRANCH_LABEL, NODE } from '../data/skillTree';
 import { STR } from '../data/strings';
@@ -63,7 +63,7 @@ export class Panel {
     $('k-wave').textContent = STR.wave; $('k-kills').textContent = STR.slain; $('k-heart').textContent = STR.heartwood;
     $('btn-reset').textContent = STR.wipe;
     $('fallen-title').textContent = STR.fallenTitle; $('fallen-hw-k').textContent = STR.fallenHW; $('fallen-btn').textContent = STR.fallenToCamp;
-    $('camp-title').textContent = STR.campTitle; $('camp-go').textContent = STR.campGo; $('camp-close').textContent = STR.campClose; $('btn-settings').textContent = STR.tabSettings;
+    $('camp-title').textContent = STR.campTitle; $('camp-go').textContent = STR.campGo; $('camp-close').textContent = STR.campClose; $('btn-settings').textContent = STR.tabSettings; $('btn-settings').setAttribute('aria-label', STR.tabSettings);
     $('dep-boss').querySelector('.n')!.textContent = STR.summonBoss;
 
     $('tab-settings').textContent = STR.tabSettings; $('tab-satchel').innerHTML = `${STR.tabSatchel}<span class="badge" id="sat-new" hidden></span>`;
@@ -127,7 +127,7 @@ export class Panel {
   /** Called ~6 Hz. */
   update(): void {
     const s = this.game.state;
-    this.hud.starlight(s.run.starlight); this.hud.wall(s.run.barHp, s.stats.barMax, STR.barricadeHud(fmt(Math.max(0, s.run.barHp)), fmt(s.stats.barMax))); $('hud-van').hidden = !s.stats.muster; if (s.stats.muster) $('hud-van').textContent = STR.vanguardHud(s.vans.count, s.stats.vanCap); $('st-wave').textContent = s.run.tier > 1 ? STR.waveTide(s.run.wave, STR.tideName(s.run.tier)) : String(s.run.wave); $('st-kills').textContent = fmt(s.meta.lifetimeKills); $('st-heart').textContent = STR.heartAvail(hwSpendable(s));
+    this.hud.starlight(s.run.starlight); this.hud.wall(s.run.barHp, s.stats.barMax, STR.barricadeHud(fmt(Math.max(0, s.run.barHp)), fmt(s.stats.barMax))); $('hud-wave').style.setProperty('--wave-t', String(Math.min(1, s.run.waveT / WAVE_LEN))); $('hud-van').hidden = !s.stats.muster; if (s.stats.muster) $('hud-van').textContent = STR.vanguardHud(s.vans.count, s.stats.vanCap); $('st-wave').textContent = s.run.tier > 1 ? STR.waveTide(s.run.wave, STR.tideName(s.run.tier)) : String(s.run.wave); $('st-kills').textContent = fmt(s.meta.lifetimeKills); $('st-heart').textContent = STR.heartAvail(hwSpendable(s));
     if (!$('pane-satchel').hidden) this.satchel.update();
     for (const b of $('hw-tree').querySelectorAll<HTMLButtonElement>('button[data-hw]')) b.disabled = !canBuyHw(s, b.dataset.hw as HwId);
     this.camp.update(); this.paths.update();

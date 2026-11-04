@@ -30,6 +30,18 @@ describe('Auto fire target (TB-223)', () => {
     const s = fresh(); orcAt(s, 700, 100); orcAt(s, 300, 420); orcAt(s, 300, 60);
     expect(autoTarget(s)).toEqual({ x: 300, y: 420 });
   });
+  it('counts an orc by centre distance within radius plus its own radius, like the strike', () => {
+    const s = fresh(); const r = s.stats.radius;
+    // the middle orc catches both flanks at r + 10 - 1 apart; each flank reaches only the middle one
+    orcAt(s, 520, 430); orcAt(s, 520 + r + 9, 430); orcAt(s, 520 - r - 9, 430);
+    expect(autoTarget(s)).toEqual({ x: 520, y: 430 });
+  });
+  it('never picks an orc at the wall, where the elf does not loose', () => {
+    const s = fresh(); orcAt(s, FIELD.barX + FIELD.barW, 200);
+    expect(autoTarget(s)).toBeNull();
+    orcAt(s, 400, 100);
+    expect(autoTarget(s)).toEqual({ x: 400, y: 100 });
+  });
   it('is pure: the same state gives the same pick', () => {
     const s = fresh(); orcAt(s, 400, 410); orcAt(s, 500, 200);
     expect(autoTarget(s)).toEqual(autoTarget(s)); expect(autoTarget(s)).toEqual({ x: 400, y: 410 });
