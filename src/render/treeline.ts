@@ -46,7 +46,7 @@ function row(r: number, skirt = false): Tree[] {
   const step = skirt ? T.skirt.step : T.step * (1 + r * T.stepGrow);
   const jit = skirt ? T.skirt.gap : T.jitter;
   for (let x = T.span[0] + rng.next() * step; x < T.span[1]; x += step * (1 + (rng.next() - 0.5) * 2 * jit)) {
-    const bush = skirt || rng.next() < T.bush, flip = rng.next() < 0.5;
+    const roll = rng.next(), bush = skirt || (r >= T.fill.rows && roll < T.bush), flip = rng.next() < 0.5;
     // the skirt is mostly bushes with the odd young tree among them, so the same bush never repeats at a steady beat
     const young = skirt && rng.next() < T.skirt.young;
     out.push({
@@ -136,10 +136,12 @@ export class Treeline {
   private rows: Tree[][] = [];
   private skirt = [row(0, true), row(1, true)];
   private spots: Spot[] = []; private edges: Spot[] = [];
+  /** Height (world units) of the HUD band kept clear above the crowns; everything hangs from `y0 + hud`, not the view top. */
+  private hud = 0;
   private n = -1; private ri = 0; private si = 0; private px = 1; private q: ImageSmoothingQuality = 'low';
   constructor() { load(); }
   /** Rows that fit between the view top at `y0` and the plain. */
-  private count(y0: number): number { return Math.max(T.minRows, Math.floor((T.stop - y0 - T.first) / T.gap) + 1); }
+  private count(y0: number): number { return Math.max(T.minRows, Math.floor((T.stop - y0 - this.hud - T.first) / T.gap) + 1); }
   /** Lay out the trees and the bush skirt, as offsets from the view top, whenever the row count changes. Sorted by base, near last. */
   private layout(n: number): void {
     if (n === this.n) return;
@@ -156,14 +158,12 @@ export class Treeline {
     this.skirt.forEach((tr, i) => {
       const base = sb - T.skirt.offset * (T.skirt.rows - 1 - i);
       for (const t of tr) if (t.key === BUSH || Math.abs(t.x - wallX) >= T.cap.clear) this.edges.push({ x: t.x, off: base + t.dy, key: t.far ? `${t.key}_far` : t.key, h: t.h, flip: t.flip, shadow: T.shade.bush });
-      // one tall bush on the barricade's column in each skirt row hides the cut top of the wall
-      this.edges.push({ x: wallX + (i ? 7 : -7), off: base, key: BUSH, h: T.skirt.h[1] * T.skirt.wallBush, flip: i === 1, shadow: T.shade.bush });
     });
     this.spots.sort((a, b) => a.off - b.off); this.edges.sort((a, b) => a.off - b.off);
   }
   /** Start a frame: remember the device scale (the mip level depends on it) and rewind both depth lists. */
-  begin(g: CanvasRenderingContext2D, y0: number): void {
-    this.layout(this.count(y0)); this.ri = 0; this.si = 0;
+  begin(g: CanvasRenderingContext2D, y0: number, hud = 0): void {
+    this.hud = hud; this.layout(this.count(y0)); this.ri = 0; this.si = 0;
     this.q = g.imageSmoothingQuality; g.imageSmoothingQuality = 'high';  // the field's default is 'low': the sprites are always scaled, never 1:1
     const m = (g as { getTransform?: () => DOMMatrix }).getTransform?.(); const px = m ? Math.hypot(m.a, m.b) || 1 : 1; if (px !== this.px) exact.clear(); this.px = px;
   }
@@ -171,22 +171,22 @@ export class Treeline {
   end(g: CanvasRenderingContext2D): void { g.imageSmoothingQuality = this.q; }
   /** Draw every tree whose base is at or above world `y`, skipping what is already drawn. `Infinity` finishes the rows. */
   treesUpTo(g: CanvasRenderingContext2D, y0: number, x0: number, x1: number, y: number): void {
-    const l = this.spots; while (this.ri < l.length && y0 + l[this.ri]!.off <= y) this.put(g, l[this.ri++]!, y0, x0, x1);
+    const l = this.spots; while (this.ri < l.length && y0 + this.hud + l[this.ri]!.off <= y) this.put(g, l[this.ri++]!, y0 + this.hud, x0, x1);
   }
   /** Same for the bush skirt, which stands in front of the barricade's top and of any orc still behind it. */
   skirtUpTo(g: CanvasRenderingContext2D, y0: number, x0: number, x1: number, y: number): void {
-    const l = this.edges; while (this.si < l.length && y0 + l[this.si]!.off <= y) this.put(g, l[this.si++]!, y0, x0, x1);
+    const l = this.edges; while (this.si < l.length && y0 + this.hud + l[this.si]!.off <= y) this.put(g, l[this.si++]!, y0 + this.hud, x0, x1);
   }
   /** World y above which a walker is still in the forest, behind the rows. */
   skirtEdge(y0: number): number { return this.skirtBase(y0) - T.skirt.offset; }
   /** One whole frame, far to near (used where no actor needs to stand between the rows). */
-  draw(g: CanvasRenderingContext2D, x0: number, y0: number, x1: number): void {
+  draw(g: CanvasRenderingContext2D, x0: number, y0: number, x1: number, hud = 0): void {
     // a hidden or zero-size canvas gives a NaN view: createLinearGradient would throw and end the frame loop (ground.ts guards the same way)
     if (!Number.isFinite(x0) || !Number.isFinite(y0) || !Number.isFinite(x1)) return;
-    this.begin(g, y0); this.treesUpTo(g, y0, x0, x1, Infinity); this.skirtUpTo(g, y0, x0, x1, Infinity); this.end(g);
+    this.begin(g, y0, hud); this.treesUpTo(g, y0, x0, x1, Infinity); this.skirtUpTo(g, y0, x0, x1, Infinity); this.end(g);
   }
   /** Baseline of the bush skirt: the barricade starts just above it so the bushes cover its cut top. */
-  skirtBase(y0: number): number { return y0 + T.first + (this.count(y0) - 1) * T.gap + T.skirt.lift; }
+  skirtBase(y0: number): number { return y0 + this.hud + T.first + (this.count(y0) - 1) * T.gap + T.skirt.lift; }
   private put(g: CanvasRenderingContext2D, s: Spot, y0: number, x0: number, x1: number): void {
     const im = imgs.get(s.key); if (!im) return;
     const w = (im.width / im.height) * s.h; if (s.x + w / 2 < x0 || s.x - w / 2 > x1) return;

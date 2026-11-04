@@ -14,19 +14,19 @@ export const SKY = {
  *  model height (`kinds`, in model units) times `unit`, always with one uniform scale so nothing squashes or warps. */
 export const TREELINE = {
   seed: 207, span: [-700, 1600] as const,
-  first: 118, gap: 22, stop: -6, minRows: 2, skirt: { step: 17, h: [8, 30] as const, lift: 12, rows: 2, offset: 9, far: 0.35, gap: 0.8,
-    /** Share of skirt spots that hold a young tree (one of `kinds`, `youngH` units tall) instead of a bush, and the height of the bush that hides the wall's top (x the tallest bush). */
-    young: 0.3, kinds: ['oak_green_1', 'oak_green_2', 'spruce_2', 'spruce_3'] as const, youngH: [24, 38] as const, wallBush: 0.8 },
+  first: 118, gap: 22, stop: -6, minRows: 2, skirt: { step: 17, h: [8, 30] as const, lift: 12, rows: 2, offset: 9, far: 0.35, gap: 0.9,
+    /** Share of skirt spots that hold a young tree (one of `kinds`, `youngH` units tall) instead of a bush. */
+    young: 0.5, kinds: ['oak_green_1', 'oak_green_2', 'spruce_2', 'spruce_3'] as const, youngH: [24, 38] as const },
   /** Pre-scaled sprite levels stop below `mipMin` px high; the soft ground shadow is `shadowPx` wide and `shade` x the sprite width under a tree and a bush. */
   mipMin: 24, shadowPx: 64, shade: { tree: 0.45, bush: 0.85 },
   /** Device-exact sprite cache: most entries kept before it is rebuilt. The first `fill.rows` rows (the canopy against the view top) hold only kinds at least `fill.min` x the tallest that fits. */
-  exactCap: 700, fill: { rows: 2, min: 0.68 },
+  exactCap: 700, fill: { rows: 3, min: 0.85 },
   /** World units per model unit, and the random size spread (x unit) of one tree. */
   unit: 9.5, size: [0.96, 1.04] as const,
   /** Rows hang from the view top (`first` + row x `gap` down to a base, `lift` of jitter); a row only holds kinds up to `slack` x its room, then shrinks as one. */
   slack: 1.12,
   /** The barricade's top: it starts `up` units above the bush skirt base (skirt bushes draw over its top); no tree stands within `clear` units of the wall's centre. */
-  cap: { up: 4, clear: 16 },
+  cap: { up: 30, clear: 16 },
   grow: 0.06, step: 22, stepGrow: 0.18, jitter: 0.45, lift: 8, bush: 0.1, bushH: [18, 28] as const,
   /** Tree sprite keys and their real model heights (Handpainted Tree Pack), so the forest has a natural mix of tall and short. */
   kinds: ['oak_green_1', 'oak_green_2', 'pine_1', 'pine_2', 'pine_3', 'spruce_2', 'spruce_3'] as const,
@@ -107,7 +107,7 @@ export const GROUND = {
    *  drift, drift size; loose singles in the lane; petal radius; stem height; weight per kind. */
   flowers: { drifts: 16, per: [24, 36], driftW: 90, driftH: 22, edge: 0.22, topY: [150, 185] as const, lane: 40, r: [2.4, 3.8], stem: [3, 8], kinds: { daisy: 4, violet: 3, buttercup: 2, blossom: 1 } },
   /** Fence barricade (director 2 Nov, Sketchfab "the fence"): panel draw width, vertical step between stacked panels (units). */
-  fence: { w: 30, step: 22 },
+  fence: { w: 30, step: 22, shadeFrom: 30 },
 } as const;
 
 /** Loot moments (TB-105, plan §11). Lives in seconds, sizes in field units.
@@ -293,7 +293,8 @@ export const REPORT = { lead: 350, gap: 380, roll: 520, stampAfter: 300, stampIn
 export const SATCHEL_UI = { lines: 4, gap: 1.25, snap: 260 } as const;
 
 /** Full-screen field (TB-207): reach is the half width around the barricade that the wave bar clears. */
-export const FIELD_VIEW = { reach: 24, phoneStripLift: 28 } as const;
+/** `hudFrac` x the canvas height (`phoneHud` CSS px on a phone) is the band from the view top kept clear of tree crowns: the top plaques, wall bar and buttons sit there (TB-220; they end at 8.9% of the height at 1080p, 10.7% at 720p). */
+export const FIELD_VIEW = { reach: 24, phoneStripLift: 28, hudFrac: 0.11, phoneHud: 56 } as const;
 /** Phone landscape (TB-218): coarse pointer on a short screen. The wave strip lifts `phoneStripLift` world px clear of the gesture bar. */
 export const PHONE_QUERY = '(pointer: coarse) and (max-height: 540px)';
 

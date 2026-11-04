@@ -264,19 +264,19 @@ export class FieldRenderer {
     // barricade
     const frac = barFrac(s);
     const top = Math.max(vis.y0, this.treeline.skirtBase(vis.y0) - TREELINE.cap.up);  // the wall rises a little into the bush skirt; its stake tips are the cap, and no trunk stands on its column
-    g.fillStyle = P.wallShade; g.fillRect(BAR_X + 4, top, BAR_W + 4, H - top);
+    g.fillStyle = P.wallShade; g.fillRect(BAR_X + 4, top + GROUND.fence.shadeFrom, BAR_W + 4, H - top - GROUND.fence.shadeFrom);
     const fence = decorImg('fence');
     if (fence) {
       // stacked fence panels running into the field, top to bottom so each overlaps the one behind it
       const L = GROUND.fence, lh = L.w * fence.height / fence.width;
-      g.save(); g.beginPath(); g.rect(BAR_X - L.w, top, BAR_W + L.w * 2, H - top); g.clip();  // the top panel is taller than its step: cut it at the wall's top so no stake pokes up through the trees
-      for (let i = 0, y = -lh / 2 - Math.ceil(-top / L.step) * L.step; y < H; i++, y += L.step) {
+      // the top panel stands whole with its own pointed stakes as the wall's cap (TB-220): its top edge is `top`, nothing clips it or hides it
+      for (let i = 0, y = top; y < H; i++, y += L.step) {
         const alive = y < 0 || y / H < frac || (i * 0.618034) % 1 < frac;  // same fixed break scatter as the planks
         g.globalAlpha = alive ? 1 : 0.3;
         g.drawImage(fence, BAR_X + BAR_W / 2 - L.w / 2 + (alive ? 0 : 5), y, L.w, lh);
       }
-      g.globalAlpha = 1; g.restore();
-    } else for (let y = -Math.ceil(-top / 18) * 18; y < H; y += 18) {
+      g.globalAlpha = 1;
+    } else for (let y = top - ((top % 18) + 18) % 18; y < H; y += 18) {
       // each plank breaks at a fixed point (golden-ratio scatter), so damage never flickers frame to frame
       const alive = y < 0 || y / H < frac || ((y / 18) * 0.618034) % 1 < frac;
       g.fillStyle = alive ? (y % 36 ? P.timber : P.timberDark) : P.timberSplinter;
@@ -313,10 +313,9 @@ export class FieldRenderer {
     const vans = this.vanBuf; vans.length = 0;
     for (const v of s.vans.items) if (v.live) vans.push(v);
     sortByY(vans); for (const v of vans) this.van(s, v);
-    // the bush skirt stands in front of the barricade's cut top and of any orc whose feet are behind it
-    const tl = this.treeline, fv = this.vis;
-    for (let i = this.orcsIn; i < orcs.length; i++) { const o = orcs[i]!; tl.skirtUpTo(g, fv.y0, fv.x0, fv.x1, o.y); this.orcDraw(s, o, dt); }
-    tl.skirtUpTo(g, fv.y0, fv.x0, fv.x1, Infinity); tl.end(g);
+    // the bush skirt is already down (behind every orc), so no walker's feet or legs are ever hidden
+    for (let i = this.orcsIn; i < orcs.length; i++) this.orcDraw(s, orcs[i]!, dt);
+    this.treeline.end(g);
 
     this.drawBeams(dt);
     s.shots.forEach((a) => { const d = this.interp.off(a); g.translate(d.dx, d.dy); this.shot(a, dt); g.translate(-d.dx, -d.dy); });
@@ -346,7 +345,7 @@ export class FieldRenderer {
       g.restore();
     }
 
-    this.ambience.motesDraw(g, this.clock, n, this.reducedMotion, this.vis.y0);
+    this.ambience.motesDraw(g, this.clock, n, this.reducedMotion, Math.max(this.vis.y0, this.treeline.skirtBase(this.vis.y0)));  // the meadow only: no glow points over the trees
     this.fx.draw(g);
 
     // HUD overlays (no shake)
@@ -399,7 +398,7 @@ export class FieldRenderer {
   /** The forest edge along the top of the view (TB-220): the tree rows, then every orc still walking inside the forest (whole, never cut to a head or a weapon by a trunk); the wall and the bush skirt, which still hides their feet, follow. */
   private forest(s: SimState, orcs: Orc[], dt: number): void {
     const { x0, y0, x1 } = this.vis, tl = this.treeline, edge = tl.skirtEdge(y0), g = this.g;
-    tl.begin(g, y0); tl.treesUpTo(g, y0, x0, x1, Infinity);
+    tl.begin(g, y0, (this.phone ? FIELD_VIEW.phoneHud : FIELD_VIEW.hudFrac * this.canvas.clientHeight) / this.view.k); tl.treesUpTo(g, y0, x0, x1, Infinity); tl.skirtUpTo(g, y0, x0, x1, Infinity);
     let i = 0;
     for (; i < orcs.length && orcs[i]!.y < edge; i++) this.orcDraw(s, orcs[i]!, dt);
     this.orcsIn = i;
