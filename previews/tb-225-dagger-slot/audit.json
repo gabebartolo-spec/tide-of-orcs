@@ -1,0 +1,237 @@
+{
+ "1920x1080": {
+  "emptyDagger": {
+   "empty": true,
+   "uid": null,
+   "placeholderGlyph": true,
+   "opacity": "1"
+  },
+  "emptyAudit": {
+   "k": 1,
+   "overflowPx": 0,
+   "scrollable": false,
+   "hScroll": false,
+   "minFont": 20,
+   "minFontEl": "k"
+  },
+  "worn": "knife",
+  "detail": "The Last Knife\nMythic · Dagger · item level 31\n+12.0% knife damage\nReroll · 2 Glimmer\n+5.0% item find\nReroll · 2 Glimmer\nPower: Every knife that lands brings your next arrow a quarter of a second closer.\nWorn\nLock\nSalvage +16 Glimmer",
+  "wornAudit": {
+   "k": 1,
+   "overflowPx": 0,
+   "scrollable": false,
+   "hScroll": false,
+   "minFont": 20,
+   "minFontEl": "k"
+  },
+  "compareHoverAt": {
+   "x": 914,
+   "y": 886
+  },
+  "doll": {
+   "boxW": 240,
+   "afterBoxH": 235,
+   "beforeBoxH": 360,
+   "afterDrawn": [
+    240,
+    205
+   ],
+   "beforeDrawn": [
+    240,
+    205
+   ],
+   "dagger": [
+    110,
+    110
+   ]
+  }
+ },
+ "1280x720": {
+  "emptyDagger": {
+   "empty": true,
+   "uid": null,
+   "placeholderGlyph": true,
+   "opacity": "1"
+  },
+  "emptyAudit": {
+   "k": 1,
+   "overflowPx": 0,
+   "scrollable": false,
+   "hScroll": false,
+   "minFont": 16,
+   "minFontEl": "k"
+  },
+  "worn": "knife",
+  "detail": "The Last Knife\nMythic · Dagger · item level 31\n+12.0% knife damage\nReroll · 2 Glimmer\n+5.0% item find\nReroll · 2 Glimmer\nPower: Every knife that lands brings your next arrow a quarter of a second closer.\nWorn\nLock\nSalvage +16 Glimmer",
+  "wornAudit": {
+   "k": 1,
+   "overflowPx": 0,
+   "scrollable": false,
+   "hScroll": false,
+   "minFont": 16,
+   "minFontEl": "k"
+  },
+  "compareHoverAt": {
+   "x": 610,
+   "y": 607
+  },
+  "doll": {
+   "boxW": 136,
+   "afterBoxH": 140,
+   "beforeBoxH": 212,
+   "afterDrawn": [
+    136,
+    116
+   ],
+   "beforeDrawn": [
+    136,
+    116
+   ],
+   "dagger": [
+    68,
+    68
+   ]
+  }
+ },
+ "1024x600": {
+  "emptyDagger": {
+   "empty": true,
+   "uid": null,
+   "placeholderGlyph": true,
+   "opacity": "1"
+  },
+  "emptyAudit": {
+   "k": 0.827,
+   "overflowPx": 0,
+   "scrollable": false,
+   "hScroll": false,
+   "minFont": 13.2,
+   "minFontEl": "k"
+  },
+  "worn": "knife",
+  "detail": "The Last Knife\nMythic · Dagger · item level 31\n+12.0% knife damage\nReroll · 2 Glimmer\n+5.0% item find\nReroll · 2 Glimmer\nPower: Every knife that lands brings your next arrow a quarter of a second closer.\nWorn\nLock\nSalvage +16 Glimmer",
+  "wornAudit": {
+   "k": 0.827,
+   "overflowPx": 0,
+   "scrollable": false,
+   "hScroll": false,
+   "minFont": 13.2,
+   "minFontEl": "k"
+  },
+  "compareHoverAt": {
+   "x": 488,
+   "y": 540
+  },
+  "doll": {
+   "boxW": 136,
+   "afterBoxH": 140,
+   "beforeBoxH": 212,
+   "afterDrawn": [
+    136,
+    116
+   ],
+   "beforeDrawn": [
+    136,
+    116
+   ],
+   "dagger": [
+    56,
+    56
+   ]
+  }
+ },
+ "390x844": {
+  "emptyDagger": {
+   "empty": true,
+   "uid": null,
+   "placeholderGlyph": true,
+   "opacity": "1"
+  },
+  "emptyAudit": {
+   "k": 1,
+   "overflowPx": 244.95,
+   "scrollable": true,
+   "hScroll": false,
+   "minFont": 16,
+   "minFontEl": "k"
+  },
+  "worn": "knife",
+  "detail": "The Last Knife\nMythic · Dagger · item level 31\n+12.0% knife damage\nReroll · 2 Glimmer\n+5.0% item find\nReroll · 2 Glimmer\nPower: Every knife that lands brings your next arrow a quarter of a second closer.\nWorn\nLock\nSalvage +16 Glimmer",
+  "wornAudit": {
+   "k": 1,
+   "overflowPx": 550.89,
+   "scrollable": true,
+   "hScroll": false,
+   "minFont": 16,
+   "minFontEl": "k"
+  },
+  "compareHoverAt": {
+   "x": 148,
+   "y": 786
+  },
+  "doll": {
+   "boxW": 96,
+   "afterBoxH": 156,
+   "beforeBoxH": 240,
+   "afterDrawn": [
+    96,
+    82
+   ],
+   "beforeDrawn": [
+    96,
+    82
+   ],
+   "dagger": [
+    72,
+    72
+   ]
+  }
+ },
+ "844x390": {
+  "emptyDagger": {
+   "empty": true,
+   "uid": null,
+   "placeholderGlyph": true,
+   "opacity": "1"
+  },
+  "emptyAudit": {
+   "k": 1,
+   "overflowPx": 0,
+   "scrollable": false,
+   "hScroll": false,
+   "minFont": 16,
+   "minFontEl": "k"
+  },
+  "worn": "knife",
+  "detail": "The Last Knife\nMythic · Dagger · item level 31\n+12.0% knife damage\nReroll · 2 Glimmer\n+5.0% item find\nReroll · 2 Glimmer\nPower: Every knife that lands brings your next arrow a quarter of a second closer.\nBack to bag\nWorn\nLock\nSalvage +16 Glimmer",
+  "wornAudit": {
+   "k": 1,
+   "overflowPx": 0,
+   "scrollable": false,
+   "hScroll": false,
+   "minFont": 14,
+   "minFontEl": "LI"
+  },
+  "compareHoverAt": {
+   "x": 736,
+   "y": 222
+  },
+  "doll": {
+   "boxW": 96,
+   "afterBoxH": 118,
+   "beforeBoxH": 180,
+   "afterDrawn": [
+    96,
+    82
+   ],
+   "beforeDrawn": [
+    96,
+    82
+   ],
+   "dagger": [
+    56,
+    56
+   ]
+  }
+ }
+}

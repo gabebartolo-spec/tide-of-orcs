@@ -14,6 +14,7 @@ import { choosePath, replant } from './prestige';
 import { buy, unlocked } from './tree';
 import { migrate } from '../save/migrate';
 import { createRng } from './rng';
+import { CURRENT_VERSION } from '../save/schema';
 
 /** A run on `path`, wearing n pieces of `set` (or one `mythic`), with the given Grove levels. */
 const on = (path: PathId | null, o: { levels?: Levels; set?: string; n?: number; mythic?: string } = {}): SimState => {
@@ -160,6 +161,6 @@ describe('paths: choosing and replanting (TB-193a)', () => {
   });
   it('v13 saves migrate to v14 with no path', () => {
     const m = migrate({ version: 13, savedAt: 0, run: { ...freshRun(), path: undefined, hoardN: undefined }, meta: freshMeta(), settings: {} }) as { version: number; run: { path: unknown; hoardN: unknown } };
-    expect(m.version).toBe(15); expect(m.run.path).toBeNull(); expect(m.run.hoardN).toBe(0);
+    expect(m.version).toBe(CURRENT_VERSION); expect(m.run.path).toBeNull(); expect(m.run.hoardN).toBe(0);
   });
 });

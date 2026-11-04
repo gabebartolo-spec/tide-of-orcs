@@ -8,8 +8,8 @@ describe('loot tables (TB-091)', () => {
     expect(AFFIXES.filter((a) => a.arrow)).toHaveLength(6);
     for (const a of AFFIXES) expect(a.min).toBeLessThan(a.max);
   });
-  it('has 24 bases, four per slot, unique ids', () => {
-    expect(BASES).toHaveLength(24); expect(new Set(BASES.map((b) => b.id)).size).toBe(24);
+  it('has 28 bases, four per slot (seven slots), unique ids', () => {
+    expect(BASES).toHaveLength(28); expect(new Set(BASES.map((b) => b.id)).size).toBe(28);
     for (const s of SLOTS) expect(BASES.filter((b) => b.slot === s)).toHaveLength(4);
   });
   it('has 7 sets with rising bonuses and 8 mythics', () => {

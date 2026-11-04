@@ -66,7 +66,7 @@ export const STR = {
     'foxfire-pack': ['+15% vanguard and companion damage', 'Fallen vanguard return 30% faster', 'Vanguard deal +10% damage per companion in the field'],
     'magpies-hoard': ['+15% starlight', 'Kills may drop a bonus starlight shard', 'Every fifth drop is one rarity higher'],
   } as Record<string, [string, string, string]>,
-  itemLevel: (n: number) => `item level ${n}`, mythicLine: (power: string) => `Power: ${power}`, kindInSlot: (kind: string, slot: string) => `${kind} (${slot} slot)`,
+  itemLevel: (n: number) => `item level ${n}`, mythicLine: (power: string) => `Power: ${power}`,
   /** Mythic powers as the player reads them (TB-100); numbers match MYTHIC_FX. */
   mythicPower: {
     'last-knife': 'Every knife that lands brings your next arrow a quarter of a second closer.',
@@ -82,7 +82,7 @@ export const STR = {
     'magpies-talon': 'Arrow kills steal double starlight and sometimes an extra drop.',
   } as Record<string, string>,
   thunder: 'Thunder!',
-  slotName: { bow: 'Bow', quiver: 'Quiver', bracer: 'Bracer', cloak: 'Cloak', boots: 'Boots', charm: 'Charm' } as Record<string, string>,
+  slotName: { bow: 'Bow', quiver: 'Quiver', bracer: 'Bracer', cloak: 'Cloak', boots: 'Boots', charm: 'Charm', dagger: 'Dagger' } as Record<string, string>,
   rarityName: { common: 'Common', rare: 'Rare', epic: 'Epic', legendary: 'Legendary', mythic: 'Mythic' } as Record<string, string>,
   statName: {
     dmg: 'arrow damage', fireRate: 'fire rate', radius: 'radius', crit: 'crit chance', pierce: 'pierce', arrows: 'arrows',
