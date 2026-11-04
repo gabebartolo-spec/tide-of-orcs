@@ -23,6 +23,11 @@ $jobs = @(
       ARMSET = "Left:18.6,-15.6"; ELBOWSET = "Left:37"; ARMTWIST = "Left:17.1,22.7" } },
   @{ key = "van.spear.attack"; m = "$a\elf_spearman\spearman_2h_g0.08.blend"; c = "$mx\Bayonet Stab AS100.fbx"; ortho = "2.6"; fr = (& $all 99); env = @{  # attack_spearman.ps1 (v1)
       RMATCH = "RightShoulder,RightArm,RightForeArm,RightHand,LeftShoulder,LeftArm,LeftForeArm,LeftHand"; INPLACE = "1"; ALIGN = "Left:-0.607,-0.5,0.618;Right:0.012,-0.004,1.0"; GRIP2 = "1" } },
+  @{ key = "orc.boss"; m = "$a\fantasy_orc\fo_thin.blend"; c = "$mx\Orc Walk.fbx"; ortho = "1.6"; fr = (0..35 -join ","); env = @{  # TB-229 walk v3 (director 5 Nov): berserker walk minus GRIP2
+      RMATCH = "LeftShoulder,LeftArm,LeftForeArm,LeftHand,RightShoulder,RightArm,RightForeArm,RightHand"; INPLACE = "1"
+      WOFFS = "mixamorig:RightHand:1,0,0,60;mixamorig:RightHand:0,1,0,20" } },
+  @{ key = "orc.boss.attack"; m = "$a\fantasy_orc\fo_thin.blend"; c = "$mx\Standing Melee Attack Downward AS100.fbx"; ortho = "3.2"; fr = (& $all 69); env = @{  # TB-229 attack v1 (director 5 Nov), no WOFFS; ortho 3.2 (1.8 clips the overhead club)
+      RMATCH = "LeftShoulder,LeftArm,LeftForeArm,LeftHand,RightShoulder,RightArm,RightForeArm,RightHand"; INPLACE = "1" } },
   @{ key = "orc.berserker"; m = "$a\berserker\berserker_split.blend"; c = "$mx\Orc Walk.fbx"; ortho = "2.0"; fr = (0..35 -join ","); env = @{  # walk_berserker.ps1 (v1)
       RMATCH = "LeftShoulder,LeftArm,LeftForeArm,LeftHand,RightShoulder,RightArm,RightForeArm,RightHand"; INPLACE = "1"; GRIP2 = "1"
       WOFFS = "mixamorig:LeftHand:0,0,1,90;mixamorig:RightHand:0,0,1,-90;mixamorig:LeftHand:1,0,0,-20;mixamorig:RightHand:1,0,0,-20" } },

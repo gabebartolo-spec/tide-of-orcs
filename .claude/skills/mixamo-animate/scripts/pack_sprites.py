@@ -11,11 +11,12 @@ from PIL import Image
 src, dst = sys.argv[1], sys.argv[2]
 RES, PX_PER_M, SHEET_W, PAD = 512, 110, 2048, 2
 # TB-194: four sheets (each <= 2 MB) since attacks are packed at 30 fps (every clip frame); was orcs + elf (TB-129)
-SHEETS = {"orcs": "sheet_orcs.webp", "orcs2": "sheet_orcs2.webp", "elf": "sheet_elf.webp", "van": "sheet_van.webp", "camp": "sheet_camp.webp", "archer": "sheet_archer.webp"}
+SHEETS = {"orcs": "sheet_orcs.webp", "orcs2": "sheet_orcs2.webp", "elf": "sheet_elf.webp", "van": "sheet_van.webp", "camp": "sheet_camp.webp", "boss": "sheet_boss.webp", "archer": "sheet_archer.webp"}
 ORCS2 = ("orc.runner", "orc.brute", "orc.wolfrider", "hawk")
 def sheet_of(key):
     if key.startswith("camp."): return SHEETS["camp"]
     if key.startswith("archer"): return SHEETS["archer"]  # TB-203 companion archer: its own sheet (206 frames would push sheet_elf past 2 MB)
+    if key.startswith("orc.boss"): return SHEETS["boss"]  # TB-229 fantasy orc boss: its own sheet (105 big frames)
     if key.startswith(ORCS2): return SHEETS["orcs2"]
     if key.startswith("orc."): return SHEETS["orcs"]
     return SHEETS["van" if key.startswith("van.") else "elf"]
@@ -37,6 +38,8 @@ ANIMS = {
     "orc.runner.attack": (30, True, "orc.runner", 2.4),
     "orc.brute": (30, True, "orc.brute", 2.4),  # radius 16 (orcs.ts) already makes it bigger than a grunt
     "orc.brute.attack": (30, True, "orc.brute", 2.4),
+    "orc.boss": (30, True, "orc.boss", 2.4),  # TB-229 fantasy orc walk v3, radius 24
+    "orc.boss.attack": (30, True, "orc.boss", 2.4),  # TB-229 Standing Melee Attack Downward, all 69 frames
     "elf": (30, False, "elf", 3.0),  # idle loop, every clip frame (TB-144)
     "elf.attack": (30, False, "elf", 3.0),  # all 32 frames; field.ts scrubs it with the bow charge
     "archer": (30, False, "archer", 3.0),  # TB-203 companion idle v7, 162 frames (5% slower resample of the elf idle)
