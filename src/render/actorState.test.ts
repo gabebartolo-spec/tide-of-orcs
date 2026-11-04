@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { FIELD, VANGUARD } from '../data/balance';
 import { createState } from '../sim/state';
-import { orcAnimT, orcState, vanState } from './actorState';
+import { orcAnimT, orcClipT, orcState, orcSwingT, vanState } from './actorState';
 import { noInputs, step } from '../sim/step';
 import { EventBus } from '../sim/events';
 import { STEP } from '../data/balance';
@@ -57,5 +57,18 @@ describe('orc sprite clock (TB-133)', () => {
     const s = createState(1), ev = new EventBus(), o = orcAt(s, 600, 200); o.spd = 40; o.wob = 0;
     for (let i = 0; i < 1 / STEP; i++) step(s, STEP, noInputs, ev);
     expect(orcAnimT(o)).toBeCloseTo(1, 5);
+  });
+});
+
+describe('halted drummer drums on a loop (TB-186)', () => {
+  it('plays orc.drummer.attack on the wob clock, not the frozen swing timer', () => {
+    const s = createState(1), o = orcAt(s, FIELD.barX + FIELD.barW + 100, 200); o.kind = 'drummer'; o.wob = 1.3; o.swingT = 0;
+    expect(orcState(s, o)).toBe('attack');
+    expect(orcClipT(o, 'attack', 1.1, 0.5)).toBeCloseTo(orcAnimT(o), 6);
+    o.wob += 0.4; expect(orcClipT(o, 'attack', 1.1, 0.5)).toBeCloseTo(orcAnimT(o), 6);
+  });
+  it('other orcs still play their attack once per swing', () => {
+    const s = createState(1), o = orcAt(s, 600, 200); o.swingT = 0.2;
+    expect(orcClipT(o, 'attack', 2, 0.5)).toBeCloseTo(orcSwingT(o, 2, 0.5), 6);
   });
 });
