@@ -18,3 +18,5 @@ Third-party assets used in Tide of Orcs.
 - Camp elk (`public/decor/camp/elk.webp` and its right-facing render `public/decor/camp/elk_r.webp`; TB-208): "Realistic Animated Elk 3D Model" by WildMesh 3D,
   https://sketchfab.com/3d-models/realistic-animated-elk-3d-model-787834f9caa2474d9f1814b807c072d7, licensed CC BY 4.0
   (https://creativecommons.org/licenses/by/4.0/). Changed: its graze clip rendered to 2D sprite frames.
+- The Last Knife item icon (`public/items/last-knife.webp`; TB-231): "Sunfang kukri" from Free Game Assets (Painterly Fantasy),
+  https://www.freegameassets.com/painterly-fantasy-3d-models/sunfang-kukri, CC0 1.0 (no attribution required). Changed: rendered to a 2D icon.
