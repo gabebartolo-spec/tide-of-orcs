@@ -30,7 +30,7 @@ The single-file prototype (`docs/prototype.html`) proves the loop. The plan belo
 - Elf encampment behind the wall (TB-188): bowyer, forge, kitchen, training area, three levels each, upgraded with Heartwood and materials while fallen (`src/data/camp.ts`).
 - Companions: wolf, ranger, warden, hawk, treant.
 - Weapons: knives, fire arrows, storm, ballista, moonbow, and the arrow arsenal (M4.5).
-- Loot: six gear slots, five rarities up to mythic, sets and Glimmer rerolls (M4.6).
+- Loot: six gear slots (a seventh, the dagger, joined at TB-225), five rarities up to mythic, sets and Glimmer rerolls (M4.6).
 - Prestige (Replant), forced and voluntary, with Heartwood (paid only by cleared boss waves) and an 11-node Heartwood tree (`src/data/heartwood.ts`, BALANCE.md §Heartwood tree); checkpoints every 5 waves (TB-172).
 - Autosave, save import/export (no offline progress).
 - Settings: audio volume, reduced motion, number format, text size.
@@ -104,7 +104,7 @@ Spend: director gave a written yes with no cap on ElevenLabs credits for these S
 **Done when:** all six nodes buy and work in game, VFX and SFX play, tests cover each effect, the numbers are simmed. *(Met.)*
 
 ### M4.6 — Loot (TB-090–107) · **done**, all merged 31 Oct–1 Nov; mythic numbers retuned in TB-128 (M4.10)
-Orcs drop gear; six worn slots, a satchel, affixes, sets and mythic powers feed `Stats`. Save v9.
+Orcs drop gear; six worn slots (seven since TB-225), a satchel, affixes, sets and mythic powers feed `Stats`. Save v9.
 - L0 data and rolls TB-090–093 (PR #12). L1 drops and satchel TB-094–096 (PRs #13, #14, #16). L2 glyph icons TB-097 (PR #18).
 - L3 set engine TB-099 (PR #21) and mythic powers TB-100 (PR #22); save v8 keeps once-per-run gear state TB-110 (PR #23).
 - L4 Spoils branch and Heartwood loot lines TB-101 (PR #25, save v9). L5 Glimmer reroll TB-102 (PR #29). L6 loot line in the run summary TB-103 (PR #30). L8 loot VFX TB-105 (PR #34). L9 loot telemetry TB-107 (PR #36).

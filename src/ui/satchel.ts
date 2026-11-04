@@ -1,4 +1,4 @@
-/** Satchel tab (TB-095): the six worn slots, the satchel grid, and the selected item compared with what is worn. */
+/** Satchel tab (TB-095): the seven worn slots, the satchel grid, and the selected item compared with what is worn. */
 import { Item, RARITIES, Rarity, SLOTS, Slot } from '../data/loot';
 import { AFFIXES, BASES, MYTHICS, SETS } from '../data/lootTables';
 import { STR } from '../data/strings';
@@ -156,7 +156,7 @@ export class SatchelPane {
     const lines = it.affixes.map((a, i) => `<li>${affixText(a)}${worn ? ` <button class="buy" data-act="reroll" data-i="${i}"${poor ? ' disabled' : ''}>${STR.rerollFor(cost)}</button>` : ''}</li>`).join('');
     const cmp = cur && cur.uid !== it.uid ? `<div class="desc">${STR.satchelVs(itemName(cur), Math.round((itemScore(it) - itemScore(cur)) * 100))}</div>` : '';
     $('sat-detail').innerHTML = `<div class="head">${glyph(it.slot, it, true)}<div class="title"><div class="name r-${it.rarity}">${itemName(it)}</div>
-      <div class="desc">${STR.rarityName[it.rarity]} · ${myth?.kind ? STR.kindInSlot(myth.kind, `${STR.slotName[it.slot]}`) : STR.slotName[it.slot]} · ${STR.itemLevel(it.ilvl)}</div></div>${pathTag(it)}</div>
+      <div class="desc">${STR.rarityName[it.rarity]} · ${STR.slotName[it.slot]} · ${STR.itemLevel(it.ilvl)}</div></div>${pathTag(it)}</div>
       <ul class="affixes">${lines}</ul>${it.set && !setCounts(l)[it.set] ? setBlock(it.set, 0, this.game.state.stats.setBoost) : ''}${myth ? `<div class="desc">${glue(STR.mythicLine(STR.mythicPower[myth.id] ?? ''))}</div>` : ''}${cmp}
       <div class="row"><button class="buy back" data-act="close">${STR.satchelBack}</button>${worn ? `<span class="desc">${STR.satchelWornNow}</span>` : `<button class="buy" data-act="equip">${STR.equip}</button>`}
       <button class="buy" data-act="lock">${it.locked ? STR.unlock : STR.lock}</button>
