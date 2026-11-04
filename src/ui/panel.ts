@@ -109,7 +109,7 @@ export class Panel {
     this.setTreeFull(false);
     $('hw-title').textContent = STR.hwTitle;
     $('hw-tree').onclick = (e) => { const id = (e.target as HTMLElement).closest('button')?.dataset.hw as HwId | undefined; if (id && game.buyHw(id)) { this.toast(STR.hwBought(HW_NODE[id].name)); this.renderHw(); } };
-    this.camp = new CampPane(game, $('bcard'), $('camp-list'), (msg) => { this.onCue('bought'); this.toast(msg); });
+    this.camp = new CampPane(game, $('bcard'), $('camp-list'), (msg) => { this.onCue('bought'); this.onCue('uiStamp'); this.toast(msg); });
     this.paths = new PathPicker($('paths'), () => game.state, (p) => game.choosePath(p),
       (p) => { this.onCue(p ? 'uiPath' : 'click'); this.toast(p ? STR.pathChosen(PATHS[p].name) : STR.pathCleared); this.renderDetail(); }, drawSigil);
     this.renderDetail(); this.renderHw(); this.camp.render(); this.paths.render(); this.setMode('run');

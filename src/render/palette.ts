@@ -31,6 +31,8 @@ export const P = {
   treeWood: '#5c4630', treeWoodLit: '#9a7650', treeGlow: 'rgba(205,189,234,.22)',
   // skill-tree light (TB-190b): white-hot core and pulse heads, the still line of a locked link, the clear end of a glow gradient
   lightHot: '#fff8ec', linkDim: 'rgba(205,189,234,.26)', glowClear: 'rgba(0,0,0,0)',
+  // camp upgrade dust (TB-188h): the clear rim of a sand puff, sand at zero alpha so the falloff never greys
+  dustClear: 'rgba(201,183,138,0)',
   wallShade: 'rgba(18,24,16,.3)', burnGlow: 'rgba(226,168,91,.5)',
   // set-bonus ground (TB-099): Cinderground and Moonwells
   cinder: 'rgba(226,168,91,.22)', cinderEdge: 'rgba(199,111,111,.45)', moonwell: 'rgba(205,189,234,.2)', moonwellEdge: 'rgba(205,189,234,.6)',

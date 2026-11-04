@@ -266,10 +266,15 @@ export const CAMP_ELK_R_ART: CampSheetRect = /*ELKR*/{ x: 570.7, y: -161.0, w: 6
 export const CAMP_ELK_FOOT = { x: 600, y: -110 } as const;
 
 export const CAMP_LIFE = {
-  cap: 120,
+  cap: 160,
   sparks: { rate: 3.5, life: [0.45, 0.85], vx: [-7, 7], vy: [-30, -17], grav: 30, wind: 0, r0: 0.9, r1: 0.5, a: 1 },
   dust: { every: [1.6, 2.6], burst: 6, life: [0.5, 0.8], vx: [-11, 11], vy: [-8, -3], grav: 14, wind: 0, r0: 1.4, r1: 3.2, a: 0.55 },
   dustDy: 0.3,
+  /** Upgrade moment (TB-188h): a burst of `n` build-dust puffs along the new image's base, and a pennant that climbs
+   *  over `raise` s on a pole planted in the meadow at (`px`, `py`) of the new image's rect (pole `pole` units tall, flag `flag`
+   *  units), flutters for `hold` s, then fades over `fade` s. Dust puffs are soft (radial falloff), not flat discs. */
+  build: { n: 40, life: [0.8, 1.4], vx: [-30, 30], vy: [-20, -5], grav: 8, wind: 0, r0: 4, r1: 11, a: 0.45 },
+  moment: { raise: 0.9, hold: 2.2, fade: 0.6, px: 0.93, py: 0.86, pole: 70, flag: 20, flutter: 5 },
 } as const;
 
 /** UI motion and feedback kit (TB-195a, docs/plans/game-ui.md §3, ART-STYLE §Motion). Times in ms, sizes in CSS px. */

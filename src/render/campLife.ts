@@ -8,8 +8,8 @@ import { P } from './palette';
  *  so it stops with the tab. Reads levels; never touches sim state. */
 
 type Ctx = CanvasRenderingContext2D;
-type Kind = 'sparks' | 'dust';
-const KINDS: readonly Kind[] = ['sparks', 'dust'];
+type Kind = 'sparks' | 'dust' | 'build';
+const KINDS: readonly Kind[] = ['sparks', 'dust', 'build'];
 /** A long pause (tab hidden, window in the background) restarts the clock instead of replaying the gap. */
 const MAX_DT = 0.1;
 
@@ -24,11 +24,21 @@ export class CampLife {
   /** Spawn accumulator (sparks) or countdown to the next burst (dust), per building and emitter. */
   private acc = new Map<number, number>();
   private last = -1;
+  /** Levels seen on the last draw, and the start time of each building's upgrade moment (TB-188h). */
+  private seen = new Map<BuildingId, number>();
+  private moments = new Map<BuildingId, number>();
 
   /** Advance to time `t` (s) and draw. `g` is in scene units. */
   draw(g: Ctx, levels: Partial<Record<BuildingId, number>>, t: number): void {
+    // an upgrade made while the scene was drawing plays its moment; one made while it was hidden just syncs
+    const live = this.last >= 0 && t - this.last <= MAX_DT;
     const dt = this.last < 0 ? 0 : Math.min(MAX_DT, Math.max(0, t - this.last));
     this.last = t;
+    for (const b of BUILDINGS) {
+      const lv = Math.min(3, levels[b.id] ?? 0), was = this.seen.get(b.id);
+      this.seen.set(b.id, lv);
+      if (live && was !== undefined && lv > was) this.upgraded(b.id, lv, t);
+    }
     for (let bi = 0; bi < BUILDINGS.length; bi++) {
       const b = BUILDINGS[bi]!, lv = Math.min(3, levels[b.id] ?? 0);
       if (lv <= 0) continue;
@@ -38,6 +48,37 @@ export class CampLife {
     }
     this.step(dt);
     this.paint(g);
+    this.banners(g, levels, t);
+  }
+
+  /** Start an upgrade moment: build dust along the new image's base. */
+  private upgraded(id: BuildingId, lv: number, t: number): void {
+    const r = CAMP_ART[id][lv - 1]!;
+    for (let i = 0; i < CAMP_LIFE.build.n; i++) this.spawn('build', r.x + r.w * (0.15 + 0.7 * Math.random()), r.y + r.h * (1 - 0.08 * Math.random()));
+    this.moments.set(id, t);
+  }
+
+  /** The pennant climbing its pole at the building's top point, fluttering, then fading. */
+  private banners(g: Ctx, levels: Partial<Record<BuildingId, number>>, t: number): void {
+    const M = CAMP_LIFE.moment;
+    for (const [id, t0] of this.moments) {
+      const e = t - t0, end = M.raise + M.hold + M.fade;
+      if (e >= end) { this.moments.delete(id); continue; }
+      const lv = Math.min(3, levels[id] ?? 0); if (lv <= 0) continue;
+      const r = CAMP_ART[id][lv - 1]!, x = r.x + r.w * M.px, base = r.y + r.h * M.py, top = base - M.pole;
+      const up = Math.min(1, e / M.raise), ease = 1 - (1 - up) ** 3;
+      g.globalAlpha = e > M.raise + M.hold ? 1 - (e - M.raise - M.hold) / M.fade : 1;
+      g.strokeStyle = P.bark; g.lineWidth = 1.6; g.lineCap = 'round';
+      g.beginPath(); g.moveTo(x, base); g.lineTo(x, top); g.stroke();
+      const fy = base - M.flag * 0.8 - (base - top - M.flag * 0.8) * ease, f = M.flag, wv = Math.sin(e * M.flutter) * f * 0.12;
+      g.fillStyle = P.elfCloak; g.beginPath();
+      g.moveTo(x, fy); g.lineTo(x + f, fy + f * 0.2 + wv); g.lineTo(x + f * 0.72, fy + f * 0.4); g.lineTo(x + f, fy + f * 0.62 + wv); g.lineTo(x, fy + f * 0.8);
+      g.closePath(); g.fill();
+      g.strokeStyle = P.starGold; g.lineWidth = 0.8; g.beginPath();
+      g.moveTo(x + f, fy + f * 0.2 + wv); g.lineTo(x + f * 0.72, fy + f * 0.4); g.lineTo(x + f, fy + f * 0.62 + wv); g.stroke();
+      g.fillStyle = P.starGold; g.beginPath(); g.arc(x, top, 1.6, 0, Math.PI * 2); g.fill();
+    }
+    g.globalAlpha = 1;
   }
 
   private emit(key: number, k: Kind, x: number, y: number, dt: number): void {
@@ -46,7 +87,7 @@ export class CampLife {
       a -= dt;
       if (a <= 0) { for (let i = 0; i < CAMP_LIFE.dust.burst; i++) this.spawn(k, x, y); a = rnd(CAMP_LIFE.dust.every); }
     } else {
-      a += dt * CAMP_LIFE[k].rate;
+      a += dt * CAMP_LIFE.sparks.rate;
       while (a >= 1) { this.spawn(k, x, y); a -= 1; }
     }
     this.acc.set(key, a);
@@ -78,7 +119,12 @@ export class CampLife {
       const k = KINDS[this.kind[i]!]!, c = CAMP_LIFE[k], f = this.age[i]! / this.life[i]!;
       const r = c.r0 + (c.r1 - c.r0) * f;
       g.globalAlpha = c.a * (1 - f);
-      g.fillStyle = k === 'dust' ? P.sand : i % 2 ? P.spark : P.ember;
+      if (k === 'build') {
+        // a soft puff: full colour at the centre falling to clear at the rim
+        const gr = g.createRadialGradient(this.x[i]!, this.y[i]!, 0, this.x[i]!, this.y[i]!, r);
+        gr.addColorStop(0, P.sand); gr.addColorStop(1, P.dustClear);
+        g.fillStyle = gr;
+      } else g.fillStyle = k === 'dust' ? P.sand : i % 2 ? P.spark : P.ember;
       g.beginPath(); g.arc(this.x[i]!, this.y[i]!, r, 0, Math.PI * 2); g.fill();
     }
     g.globalAlpha = 1;
