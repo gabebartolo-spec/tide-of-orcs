@@ -1,0 +1,50 @@
+{
+ "1920x1080": {
+  "bag": {
+   "k": 1,
+   "overflow": 0,
+   "scrollable": false,
+   "minFont": 20,
+   "minFontEl": "k"
+  },
+  "picked": {
+   "k": 1,
+   "overflow": 0,
+   "scrollable": false,
+   "minFont": 20,
+   "minFontEl": "k"
+  }
+ },
+ "1280x720": {
+  "bag": {
+   "k": 1,
+   "overflow": 0,
+   "scrollable": false,
+   "minFont": 16,
+   "minFontEl": "k"
+  },
+  "picked": {
+   "k": 1,
+   "overflow": 0,
+   "scrollable": false,
+   "minFont": 16,
+   "minFontEl": "k"
+  }
+ },
+ "390x844": {
+  "bag": {
+   "k": 1,
+   "overflow": 1181,
+   "scrollable": true,
+   "minFont": 16,
+   "minFontEl": "k"
+  },
+  "picked": {
+   "k": 1,
+   "overflow": 1395,
+   "scrollable": true,
+   "minFont": 16,
+   "minFontEl": "k"
+  }
+ }
+}
