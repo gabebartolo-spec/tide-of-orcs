@@ -73,7 +73,7 @@ tide-of-orcs/
       hud.ts            game HUD: starlight gem, wave banner, cracking wall bar (TB-195b)
       juice.ts          UI motion kit: tweens, count-ups, buy burst (TB-195a)
       camp.ts           encampment page (TB-188b); paths.ts path cards (TB-193c); satchel.ts SatchelPane; glyphs.ts slot SVGs
-      fit.ts            camp pages fit one screen (TB-153): scales a tab's content down when it still overflows after layout
+      fit.ts            camp pages fit one screen (TB-153): scales a tab's content down when it still overflows after layout; `data-fit` modes `scroll`/`narrow` (narrow never scales a window under 861 px wide in portrait, TB-206c)
       format.ts         number formatting (short / scientific)
       style.css         the stylesheet (tokens mirror render/palette.ts)
     audio/
