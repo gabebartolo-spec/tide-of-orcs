@@ -1,16 +1,16 @@
 """Tone the neon lime ground patches baked into the camp building webps down to the meadow green (TB-188h).
-A pixel is neon when green leads red by 40 and blue by 80 and green is above 150; its colour is pulled to MOSS by FACTOR / ADD.
+A pixel is neon when green leads red by 15 and blue by 60 and green is above 130; its colour is pulled to MOSS by FACTOR / ADD.
 Usage: python tone_camp_lime.py public/decor/camp [names...]"""
 import sys, glob, os
 import numpy as np
 from PIL import Image
 
-FACTOR = np.array([0.72, 0.78, 1.0]); ADD = np.array([0, 0, 40])
+FACTOR = np.array([0.62, 0.76, 1.0]); ADD = np.array([0, 0, 12])
 
 def tone(path):
     im = Image.open(path).convert('RGBA'); a = np.array(im)
     c = a[..., :3].astype(float)
-    m = (a[..., 3] > 0) & (c[..., 1] > c[..., 0] + 40) & (c[..., 1] > c[..., 2] + 80) & (c[..., 1] > 150)
+    m = (a[..., 3] > 0) & (c[..., 1] > c[..., 0] + 15) & (c[..., 1] > c[..., 2] + 60) & (c[..., 1] > 130)
     c[m] = np.clip(c[m] * FACTOR + ADD, 0, 255); a[..., :3] = c.astype(np.uint8)
     Image.fromarray(a, 'RGBA').save(path, 'WEBP', quality=92, method=6, alpha_quality=100)
     print(os.path.basename(path), int(m.sum()))

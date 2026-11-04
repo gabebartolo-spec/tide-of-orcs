@@ -239,12 +239,12 @@ export const CAMP_UPGRADE = {
    *  scatter up, thinning toward the edges by `dome`; `centre` > 1 packs the puffs toward the middle); life range (s), start velocity range (units/s), `grav` (units/s², negative = rises), `drag` per s, radius range at
    *  birth `r0` (`from` × of it at the start) growing to `grow` × over life, `squash` height/width, peak alpha `a` reached by `fadeIn` of life from a `floor` share at birth (so the model swap is never bare), `earth` the
    *  share of darker earth puffs; each puff is a `tex` px radial gradient, solid out to `core` of its radius. */
-  dust: { n: 44, spread: 0.46, dy: 0.05, lift: 14, centre: 1.6, dome: 0.55, life: [0.8, 1.35], vx: [-12, 12], vy: [-44, -14], grav: -10, drag: 1.4, r0: [8, 14], from: 1, grow: 1.8, tex: 64, core: 0.3, squash: 0.8, a: 0.2, floor: 0.2, fadeIn: 0.2, earth: 0.35 },
-  /** Banner standard: a wooden post (`post`) planted `edge` of the image's width in from its left edge and `ground` of its height down,
+  dust: { n: 44, spread: 0.38, dy: 0.02, lift: 9, centre: 1.6, dome: 0.55, life: [0.8, 1.35], vx: [-12, 12], vy: [-44, -14], grav: -10, drag: 1.4, r0: [8, 14], from: 1, grow: 1.8, tex: 64, core: 0.3, squash: 0.8, a: 0.16, floor: 0.2, fadeIn: 0.2, earth: 0.35 },
+  /** Banner standard: a wooden post (`post`) planted `gap` units outside the building's left silhouette edge on its ground line (`sil`), arm pointing away, with a `foot` mound,
    *  `h` units tall and `w` wide, with a crossarm `arm` long and `armH` thick, an iron brace `brace` units down the post, two iron hooks
    *  of radius `hook` under the arm and a cord `cord` long from each to the banner's rod; `px` texture px per unit, `pad` margin.
    *  The banner is the same `w`x`h` units on every building. It unrolls down over `roll` (s from the moment's start), swings `swing` rad
-   *  at `wave` Hz damped by `damp` per s, fades in over `in` s and out (eased) between the `out` times; post and banner fade together.
+   *  at `wave` Hz damped by `damp` per s, retracts (rolls back up) and fades out (eased) between the `out` times, so it never smears translucent over props; post and banner fade together.
    *  `art`: `px` texture px per unit; all other numbers are fractions of the banner's width (x) or height (y): `cloth` x range,
    *  `top` of the cloth, side `tip` and fork `notch` rows, `lit` the highlight column, gold trim width `trim` units at `inset` units
    *  in and alpha `trimA`, star centre `y`, arm radius `r`, `tall` stretch of the vertical arms, `pinch` inner radius, leaf pair top `y`,
@@ -254,7 +254,14 @@ export const CAMP_UPGRADE = {
       px: 5, cloth: [0.14, 0.86], top: 0.07, tip: 0.97, notch: 0.56, lit: 0.4, trim: 0.9, inset: 1.8, trimA: 0.9,
       star: { y: 0.28, r: 0.17, tall: 1.5, pinch: 0.3 }, leaf: { y: 0.42, w: 0.17, h: 0.1 }, rod: 0.075, rodX: 0.04, knob: 0.85,
     },
-    post: { px: 4, pad: 3, h: 132, w: 6, arm: 67, armH: 5, cord: 6, brace: 17, hook: 2.1, edge: 0.04, ground: 0.95 },
+    post: { px: 4, pad: 3, h: 132, w: 6, arm: 67, armH: 5, cord: 6, brace: 17, hook: 2.1, gap: 5, foot: 2.6,
+      /** Each level image's silhouette `[left, right, bottom]` (fractions of its width and height: first and last opaque column, last opaque row, >12 px),
+       *  measured from the webps: the post stands `gap` units outside the left edge, arm pointing away, on the true ground line. */
+      sil: {
+        bowyer: [[0.155, 0.832, 0.999], [0.131, 0.831, 0.873], [0.146, 0.833, 0.999]], forge: [[0.191, 0.998, 0.912], [0.155, 0.998, 0.926], [0.302, 0.842, 0.87]],
+        kitchen: [[0.144, 0.833, 0.997], [0.15, 0.855, 0.997], [0.113, 0.825, 0.991]], training: [[0.072, 0.996, 0.998], [0.019, 0.997, 0.998], [0.041, 0.983, 0.996]],
+      },
+    },
     w: 54, h: 73, roll: [0.15, 0.6], in: 0.12, wave: 1.1, swing: 0.07, damp: 1.2, out: [0.5, 1.0],
   },
 } as const;
