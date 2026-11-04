@@ -587,11 +587,19 @@ export class FieldRenderer {
     g.restore();
   }
 
+  /** `van.<type>` and its attack key, built once per type so drawing builds no strings (TB-218). */
+  private vanKeys = new Map<string, { key: string; atk: string }>();
+  private vanKey(type: string): { key: string; atk: string } {
+    let k = this.vanKeys.get(type);
+    if (!k) { const key = `van.${type}`; k = { key, atk: key + '.attack' }; this.vanKeys.set(type, k); }
+    return k;
+  }
+
   private van(s: SimState, v: Vanguard): void {
     const g = this.g, T = VANGUARD[v.type]; const i = this.interp.off(v); this.at(v.x + i.dx, v.y + i.dy, v.face < 0);
     g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 16, 12, 4, 0, 0, 6.28); g.fill();
-    const vst = vanState(s, v), vt = vst === 'attack' ? swingClipT(v.swingT, T.cd, this.sprites.duration(`van.${v.type}.attack`), VFX.strike[v.type]) : this.clock;
-    this.sprites.drawActor(g, `van.${v.type}`, vst, vt, 0, 16, ACTOR_R, v.hitT > 0);
+    const vk = this.vanKey(v.type), vst = vanState(s, v), vt = vst === 'attack' ? swingClipT(v.swingT, T.cd, this.sprites.duration(vk.atk), VFX.strike[v.type]) : this.clock;
+    this.sprites.drawActor(g, vk.key, vst, vt, 0, 16, ACTOR_R, v.hitT > 0);
     this.vanBar(v); this.at(0, 0, false);
   }
 

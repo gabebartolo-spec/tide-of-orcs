@@ -10,14 +10,15 @@ export function liftFor(type: 'touch' | 'pen', y: number, r: FieldRect, remPx: n
   return full * Math.min(1, Math.max(0, (r.bottom - y) / fade));
 }
 
-/** The circle's client position. The finger's travel from the field top to the gesture-bar line is stretched over the whole field, so a
- *  thumb that stays out of the bottom inset still reaches the very bottom of the plain, and the lift fades to nothing there. The top is
- *  reachable too: the HUD plates are pointer-transparent, so a finger over them aims. */
-export function aimPoint(type: 'touch' | 'pen', cx: number, cy: number, r: FieldRect, remPx: number, bottomInset = 0): { x: number; y: number } {
+/** The circle's client position, always on the visible plain: below the HUD plates (`topInset` px under the field top) and above the
+ *  gesture-bar inset (`bottomInset`). The circle sits a full lift above the fingertip, the lift fading to nothing over the last
+ *  `liftFadeRem` above the inset line, so a thumb held just clear of the gesture bar still reaches the plain's lowest visible row, and a
+ *  finger anywhere else keeps the whole lift (a thumb never covers the circle). A finger over the HUD aims at the top of the plain. */
+export function aimPoint(type: 'touch' | 'pen', cx: number, cy: number, r: FieldRect, remPx: number, bottomInset = 0, topInset = 0): { x: number; y: number } {
   const x = Math.min(r.right, Math.max(r.left, cx));
-  const span = r.bottom - r.top, usable = Math.max(1, span - bottomInset);
-  const my = Math.min(r.bottom, r.top + Math.max(0, cy - r.top) * (span / usable));
-  const y = Math.min(r.bottom, Math.max(r.top, my - liftFor(type, my, r, remPx)));
+  const floor = r.bottom - bottomInset, ceil = Math.min(floor, r.top + Math.max(0, topInset));
+  const fy = Math.min(floor, cy);
+  const y = Math.min(floor, Math.max(ceil, fy - liftFor(type, fy, { ...r, bottom: floor }, remPx)));
   return { x, y };
 }
 

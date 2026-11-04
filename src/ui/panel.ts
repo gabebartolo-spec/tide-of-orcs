@@ -20,7 +20,7 @@ import { glyph } from './glyphs';
 import { LOOT_BANNER, REPORT } from '../data/presentation';
 import { LOOT_TOAST } from '../data/lootTables';
 import { RARITIES } from '../data/loot';
-import { applyTextScale } from '../render/textScale';
+import { applyTextScale, textScale, textScaleMax } from '../render/textScale';
 import { initFullscreenButton } from './fullscreen';
 import { CampPane } from './camp';
 import { armHover, burst, calm, countValue, pop, press, tween } from './juice';
@@ -288,8 +288,8 @@ export class Panel {
     $<HTMLInputElement>('set-vol').value = String(set.volume); $('set-vol-v').textContent = `${Math.round(set.volume * 100)}%`;
     $<HTMLSelectElement>('set-motion').value = set.reducedMotion === null ? 'sys' : set.reducedMotion ? 'reduced' : 'full';
     $<HTMLSelectElement>('set-num').value = set.numberFormat;
-    $<HTMLInputElement>('set-text').value = String(set.textScale); $('set-text-v').textContent = `${Math.round(set.textScale * 100)}%`;
-    applyTextScale(set.textScale);
+    applyTextScale(set.textScale);   // clamps to what this screen can show
+    const ts = $<HTMLInputElement>('set-text'); ts.max = String(textScaleMax()); ts.value = String(textScale()); $('set-text-v').textContent = `${Math.round(textScale() * 100)}%`;
     setNumberFormat(set.numberFormat);
   }
 

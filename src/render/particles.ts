@@ -24,6 +24,8 @@ export class Particles {
   /** Live particle cap: the phone tier plays fewer (QUALITY.phoneParts); the pool itself stays at VFX.cap.parts. */
   private get limit(): number { return Math.min(this.parts.length, quality.q.parts); }
   private np = 0; private ns = 0; private nt = 0;
+  /** Floating-text font, rebuilt only when the text scale changes so drawing builds no string (TB-218). */
+  private fontScale = 0; private font = "";
   /** Splats are a ring: when full, the oldest is overwritten. */
   private splatHead = 0;
 
@@ -120,7 +122,8 @@ export class Particles {
       g.stroke();
     }
     for (let i = 0; i < this.np; i++) { const p = this.parts[i]!; g.globalAlpha = Math.max(0, Math.min(1, p.life)); g.fillStyle = p.c; g.fillRect(p.x, p.y, p.r, p.r); }
-    g.globalAlpha = 1; g.font = `${15 * textScale()}px Heartwood`; g.textAlign = 'center';
+    g.globalAlpha = 1; const ts = textScale(); if (ts !== this.fontScale) { this.fontScale = ts; this.font = `${15 * ts}px Heartwood`; }
+    g.font = this.font; g.textAlign = 'center';
     for (let i = 0; i < this.nt; i++) { const t = this.texts[i]!; g.globalAlpha = Math.min(1, t.life * 1.5); g.fillStyle = t.c; g.fillText(t.s, t.x, t.y); }
     g.globalAlpha = 1;
   }

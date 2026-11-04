@@ -157,7 +157,7 @@ export const CAMP_SCENE = { x0: 0, w: 1194, top: -330, bottom: 342 } as const;
  *  baked into each building image. `shade`: the bottom `h` share of the canvas darkens to alpha `a` (foreground vignette). */
 export const CAMP_BACKDROP = {
   src: 'decor/camp_backdrop.webp',
-  /** Phone tier (TB-218 P6): half-size plate, 2560x1500 (15 MB decoded instead of 61 MB). */
+  /** Phone tier (TB-218 P6): 1920x1125 plate (8.6 MB decoded instead of 61 MB). */
   srcPhone: 'decor/camp_backdrop_half.webp',
   plate: { x0: -40, x1: 1240, y0: -370, y1: 380 },
   road: { y: 232, half: 13 },
@@ -289,7 +289,7 @@ export const PHONE_QUERY = '(pointer: coarse) and (max-height: 540px)';
 export const SPRITE_BAKE = { steps: 4, cap: 2048, quantum: 0.5, sub: 4 } as const;
 /** Phone-tier bakes (TB-218 P1): the rim bake snaps its height to a coarser `quantum` and its offset to whole device px (`sub` 1),
  *  flash bakes too (no live brightness filter), and the cache is held under `maxBytes` of pixels (dropped whole past it). */
-export const SPRITE_BAKE_PHONE = { cap: 2048, quantum: 2, sub: 1, maxBytes: 12 * 1024 * 1024 } as const;
+export const SPRITE_BAKE_PHONE = { cap: 2048, quantum: 4, sub: 1, maxBytes: 11_000_000 } as const;
 
 /** Render quality (TB-218 P2, P3). Phone tier: weak or touch device. `ladder` is the field backing scale the governor steps along
  *  (slow = mean draw interval over `slowMs` across a `window`-frame stretch for `downAfter` s; fast = mean draw cost under `fastMs` for `upAfter` s, doubling to `upAfterMax` when a step up is undone within `undoWithin` s); `gap60` and

@@ -19,7 +19,7 @@ const R = (s) => `(() => { const e = document.querySelector(${JSON.stringify(s)}
 const out = {};
 const EDGES = `(() => { const bad = []; for (const e of document.querySelectorAll('button, select, input, .item, [role=tab]')) { const r = e.getBoundingClientRect(); if (r.width < 1 || r.height < 1 || e.offsetParent === null) continue; const l = r.left, rr = innerWidth - r.right; if (l < 33.5 || rr < 33.5) bad.push({ n: (e.id || e.className || e.tagName).toString().slice(0, 24), l: Math.round(l), r: Math.round(rr) }); } return bad; })()`;
 const GRID = `(() => { const g = document.getElementById('sat-grid'), gr = g.getBoundingClientRect(); const its = [...g.querySelectorAll('.item')]; const full = its.filter((i) => { const r = i.getBoundingClientRect(); return r.top >= gr.top - 0.5 && r.bottom <= gr.bottom + 0.5 && r.left >= gr.left && r.right <= gr.right; }); const f = document.getElementById('sat-filter'); const c = document.createElement('canvas').getContext('2d'); const cs = getComputedStyle(f); c.font = cs.font; const tw = c.measureText(f.selectedOptions[0].text).width; const fw = f.getBoundingClientRect().width; const d = document.getElementById('sat-detail').getBoundingClientRect(); return { gridH: Math.round(gr.height), items: its.length, fullyVisible: full.length, filter: { w: Math.round(fw), textW: Math.round(tw), label: f.selectedOptions[0].text, fits: tw + parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight) + 8 <= fw }, detail: { t: Math.round(d.top), b: Math.round(d.bottom), h: Math.round(d.height) } }; })()`;
-for (const [W, H] of [[915, 412], [915, 360]]) {
+for (const [W, H] of [[915, 412], [915, 360], [915, 320]]) {
   await cdp('Emulation.setDeviceMetricsOverride', { width: W, height: H, deviceScaleFactor: 2.625, mobile: true, screenWidth: W, screenHeight: H });
   await cdp('Emulation.setSafeAreaInsetsOverride', { insets: { left: 34, bottom: 20 } });
   await cdp('Page.navigate', { url: process.env.TIDE_URL ?? 'http://127.0.0.1:5271/' }); await sleep(3500);
@@ -30,6 +30,7 @@ for (const [W, H] of [[915, 412], [915, 360]]) {
   await sleep(400);
   o.hud = await ev(`[...document.querySelectorAll('header .stat, .hud-wave')].map((p) => { const pr = p.getBoundingClientRect(); const kids = [...p.children].filter((c) => !c.hidden && getComputedStyle(c).display !== 'none' && !c.classList.contains('stamp')); const l = Math.min(...kids.map((c) => c.getBoundingClientRect().left)), r = Math.max(...kids.map((c) => c.getBoundingClientRect().right)); return { id: p.id || p.className, plate: [Math.round(pr.left), Math.round(pr.right)], text: [Math.round(l), Math.round(r)], ok: l >= pr.left && r <= pr.right }; })`);
   o.header = { hud: await ev(R('#hud')), header: await ev(R('header')), hudRight: await ev(`Math.round(Math.max(...[...document.querySelectorAll('#hud > *, #hud .stats > *')].map((e) => e.getBoundingClientRect().right)))`), settings: await ev(R('#btn-settings')) };
+  o.mute = await ev(R('#btn-mute-corner')); o.muteInset0 = null;
   await shot(`${k}-run`);
   await ev(`window.__tide.panel.setMode('camp')`); await sleep(500);
   for (const tab of ['grove', 'satchel', 'camp', 'prestige', 'settings']) { await ev(`window.__tide.panel.setTab('${tab}')`); await sleep(600); o['edge_' + tab] = await ev(EDGES); }
