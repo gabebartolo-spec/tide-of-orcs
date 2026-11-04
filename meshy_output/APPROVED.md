@@ -9,7 +9,7 @@ approval is quoted from docs/log. Icons rendered from these files: icons/<stem>.
 | ashwood-bow (bow) | ashwood-bow-i1_i23d.glb | 1 Nov, "replace these too" |
 | yew-longbow (bow) | yew-longbow-i2_i23d.glb | 1 Nov, "replace" |
 | hornbow (bow) | hornbow_refine.glb | 1 Nov, "yes all are approved" |
-| ironbark-recurve (bow) | bow_refine.glb | 1 Nov, "Approve, quiver (5)" |
+| ironbark-recurve (bow) | ironbark-recurve-i1_i23d.glb | 4 Nov, "replace the art" (TB-221; image route 9 + 15 cr; was bow_refine.glb) |
 | hide-quiver (quiver) | hide-quiver_refine.glb | 1 Nov, "yes all are approved" |
 | birch-quiver (quiver) | birch-quiver-r2_refine.glb | 1 Nov, "yes all are approved" |
 | woven-quiver (quiver) | woven-quiver_refine.glb | 1 Nov, "yes all are approved" |
@@ -42,3 +42,7 @@ approval is quoted from docs/log. Icons rendered from these files: icons/<stem>.
 Route that worked for open shells (bracers): Text-to-Image reference (gpt-image-2, 9 cr) -> Image-to-3D smart
 topology 3,000 tris textured 2K (15 cr), `run_img.sh image|i23d <id>-i1`. Text-to-3D (preview 5 + refine 10)
 for solid props.
+
+TB-221 (4 Nov): the seven bow icons, Dusk Cloak and The Last Knife read thin or dark at pocket size, so they are
+finished with `icon_rim.py` (cream rim over an ink line, palette tokens `cream` and `ink`; the cloak and the new
+ironbark also get a gamma lift) after `render_icons.py` at 512 px. Only Ironbark Recurve got a new model.
