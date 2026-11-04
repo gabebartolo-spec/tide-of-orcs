@@ -13,6 +13,7 @@ import { v11 } from './fixtures/v11';
 import { v12 } from './fixtures/v12';
 import { v13 } from './fixtures/v13';
 import { v14 } from './fixtures/v14';
+import { v15 } from './fixtures/v15';
 import { migrate } from './migrate';
 import { CURRENT_VERSION, Save, defaultSettings } from './schema';
 import { exportSave, importSave } from './storage';
@@ -21,7 +22,7 @@ import { SimState, createState, freshMeta, freshRun } from '../sim/state';
 import { step } from '../sim/step';
 
 /** Every save version a shipped build ever wrote (TB-140). v2–v10 were played and saved by the build of their day. */
-const OLD: Record<string, object> = { v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14 };
+const OLD: Record<string, object> = { v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15 };
 
 /** Load a migrated save the way GameController does (src/game.ts): fresh defaults under the saved fields. */
 const load = (save: Save): SimState => createState(7, { ...freshRun(), ...save.run }, { ...freshMeta(), ...save.meta });

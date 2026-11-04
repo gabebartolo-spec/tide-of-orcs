@@ -98,6 +98,9 @@ cap = 2 + ranks        mend = 0.03 × mend × maxhp per second
 ### Prestige
 - Forced on barricade fall; voluntary from wave 12. A fall or voluntary replant pays `PRESTIGE.fallGain` = 0 HW (TB-171, director 2 Nov). All Heartwood drops from cleared boss waves: `bossHw(w) = 3 × max(1, floor(w / 25))` (P-142; the Heartwood Splinter halving retired with TB-128).
 
+### Gear slot odds (TB-225)
+Seven worn slots (`SLOTS`): bow, quiver, bracer, cloak, boots, charm, dagger. A non-mythic drop picks one of 28 bases uniformly (`BASES`, four per slot), so each slot is 4/28 = 1/7 (about 14.3%) of drops, down from 1/6 (16.7%) for the six original slots; the dagger (Bone Knife, Flint Dagger, Bronze Dirk, Silver Stiletto) takes that 1/7. A mythic picks a base in its own slot, so The Last Knife is always a dagger. Sets stay six pieces: a legendary set roll that lands on a dagger base is re-picked among the other 24 bases (`rollDrop`), so a set piece never occupies the dagger slot and set odds per slot are unchanged in shape. No rarity weight, affix range or pity number changed.
+
 ### Gear affix wiring (TB-201)
 Worn affixes are summed per stat across items (`gearTotals`), then applied once in `applyGear`. Roll ranges are in `AFFIXES` (lootTables.ts), unchanged. The eleven lines below were rolled but read by nothing before TB-201:
 - Talons `hawkDmg`, Roots `treantDmg`: that unit's damage × (1 + sum).

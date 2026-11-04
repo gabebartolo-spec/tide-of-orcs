@@ -14,7 +14,7 @@ import { STR } from '../data/strings';
 import { Ceremony } from './ceremony';
 import { plainPoint } from './viewMap';
 import { Sprites } from './sprites';
-import { orcAnimT, orcState, orcSwingT, swingClipT, vanState } from './actorState';
+import { orcClipT, orcState, swingClipT, vanState } from './actorState';
 import { Ground, decorImg } from './ground';
 import { Ambience } from './ambience';
 import { Interp } from './interp';
@@ -503,7 +503,7 @@ export class FieldRenderer {
     const tint = o.burn > 0 ? P.fireTint : o.chill > 0 ? P.frostTint : '', glow = o.burn > 0 ? P.fire : o.chill > 0 ? P.frost : '';
     let k = this.orcKeys.get(o.kind);
     if (!k) { const key = `orc.${ORC_SPRITE[o.kind] ?? o.kind}`; k = { key, atk: key + '.attack' }; this.orcKeys.set(o.kind, k); }
-    const ost = orcState(s, o), ot = ost === 'attack' ? orcSwingT(o, this.sprites.duration(k.atk), VFX.strike.orc) : orcAnimT(o);
+    const ost = orcState(s, o), ot = orcClipT(o, ost, this.sprites.duration(k.atk), VFX.strike.orc);
     this.sprites.drawActor(g, k.key, ost, ot, x, y + o.r * 0.9, o.r, o.hitT > 0, tint, glow, VFX.arrows.rimBlur);
     this.orcBars(o, x, y);
   }

@@ -1,0 +1,16 @@
+{
+  "id": "01a1a4ba-b1c5-7440-8952-5694bc59d322",
+  "type": "text-to-image",
+  "ai_model": "gpt-image-2",
+  "prompt": "Concept art of a single fantasy elven recurve bow, a game item, shown upright in side view, centred on a plain pale grey background. A thick, chunky stave of dark ironbark wood with clearly visible width, bold double-curved recurve limbs ending in small bone-coloured tips, a wide grip wrapped in rust-red leather with an ochre band, and a taut bowstring tied to both tips. One bow only, a bold clear silhouette. No arrow, no hand, no quiver, no other objects. Stylised low-poly toy-miniature look, flat matte colours, soft even lighting, no outlines, no text. Palette: dusty sage, rust, ochre and bone.",
+  "status": "SUCCEEDED",
+  "progress": 100,
+  "created_at": 1793765061074,
+  "started_at": 1793765061084,
+  "finished_at": 1793765090716,
+  "expires_at": 1794024290716,
+  "image_urls": [
+    "https://assets.meshy.ai/4f051b66-1394-40fd-876d-a4b2e7a9ee81/uploads/image_01a1a4ba-b1c5-7440-8952-5694bc59d322_0.png?Expires=1794024290&Signature=oOrUfQf1vpQCaxj0WwHruAg3dwV0xMzK~AYLiw2Bz9EHa~6Zo6qAI~cpeOoYWQoCtQ7T~fvbTMry6NXyCexgValJ4Rl1VVTBZxo9hpCB6Cbs2iR2X1GhOXxySpUq5fgYypA4kQrc1iJDuvjZjCEz27rtl5Xf3qEDroV5CV53WIrQ5Hk~zgeDA~LnaBfXyPy~YXa3Xciil7WXU4pgb8UCxG9LU7xibAEjbVzFUeaVRhotDzR~7-MOM68~NYWGCQoRX6kcmdg9hUk~2sXnvpfJhw4iWnRQ7TljtDvAfEd7s~QAisGpP4EArAMZ2Niaa5tCnavRKqeB3qgSb0ypXHlyHA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "consumed_credits": 9
+}

@@ -2,13 +2,14 @@ import { describe, expect, it } from 'vitest';
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { BASES, MYTHICS, SETS } from './lootTables';
-import { SLOTS } from './loot';
+import { SET_SLOTS } from './loot';
 import { ITEM_ICON_DIR, ITEM_ICON_IDS, itemIconId } from './itemArt';
 
 describe('item icons (TB-104)', () => {
   it('every base and mythic has an icon id and a file on disk', () => {
-    for (const id of [...BASES.map((b) => b.id), ...MYTHICS.map((m) => m.id),
-      ...SETS.filter((x) => x.path).flatMap((x) => SLOTS.map((slot) => `${x.id}-${slot}`))]) {
+    // dagger bases have no art yet and keep the vector dagger glyph (TB-225); The Last Knife keeps its own icon
+    for (const id of [...BASES.filter((b) => b.slot !== 'dagger').map((b) => b.id), ...MYTHICS.map((m) => m.id),
+      ...SETS.filter((x) => x.path).flatMap((x) => SET_SLOTS.map((slot) => `${x.id}-${slot}`))]) {
       expect(ITEM_ICON_IDS.has(id), id).toBe(true);
       expect(existsSync(resolve(__dirname, '../../public', ITEM_ICON_DIR, `${id}.webp`)), id).toBe(true);
     }
