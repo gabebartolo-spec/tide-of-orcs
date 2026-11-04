@@ -30,7 +30,7 @@ ANIMS = {
     "orc.berserker": (30, True, "orc.berserker", 2.4),
     "orc.berserker.attack": (30, True, "orc.berserker", 2.4),
     "orc.drummer": (30, True, "orc.drummer", 2.4),  # walk v2
-    "orc.drummer.attack": (30, True, "orc.drummer", 2.4),  # TB-186 halted drumming, drum v5 recipe: Playing Drums AS100 loop 18-51 (34 frames), looped by field.ts
+    "orc.drummer.attack": (30, True, "orc.drummer", 2.4),  # TB-186 halted drumming v7: drum_simple.py two-stick loop, 24 frames, looped by field.ts
     "orc.shaman": (30, True, "orc.shaman", 2.4),
     "orc.shaman.attack": (30, True, "orc.shaman", 2.4),
     "orc.runner": (30, True, "orc.runner", 2.4),
