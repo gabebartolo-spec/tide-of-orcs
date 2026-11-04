@@ -41,7 +41,7 @@ export const STR = {
   tabSatchel: 'Satchel', satchelTitle: 'Satchel', satchelWorn: 'Worn',
   satchelCount: (n: number, cap: number, glimmer: number) => `Satchel ${n} / ${cap} · ${glimmer} Glimmer`,
   satchelEmpty: 'Empty', satchelPick: '',
-  satchelVs: (worn: string, d: number) => `Against worn <span class="nw">${worn}</span>: ${d >= 0 ? '+' : ''}${d} power`,
+  satchelVs: (worn: string, d: number) => `Against worn <span class="nw">${worn}</span>: ${d >= 0 ? '+' : ''}${d} power`,
   cmpWorn: 'Worn now', cmpHover: 'In the satchel', cmpNone: 'Nothing worn here', cmpPower: (d: number) => `${d >= 0 ? '+' : ''}${d} power`,
   satchelFilter: 'Keep', filterAtLeast: (r: string) => `${r} and up`, satchelWornNow: 'Worn',
   equip: 'Wear', lock: 'Lock', unlock: 'Unlock', lockedMark: ' · locked', salvageFor: (g: number) => `Salvage +${g} Glimmer`,
