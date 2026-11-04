@@ -1,0 +1,4 @@
+Body Mechanics Rigs by vinchau
+https://blendswap.com/blend/19110
+License: CC0 (2026-11-05)
+NOTE: file contains an auto-run rig script; open with scripts disabled until read.
