@@ -59,8 +59,8 @@ export const TREELINE = {
 export const dusk = (t: number): number => (1 - Math.cos((2 * Math.PI * t) / SKY.dayCycle)) / 2;
 
 /** Orc kinds with no sheet of their own draw another kind's approved sprite (director 3 Nov, TB-068): the sheet scales by the orc's
- *  radius, so the boss (r 24) reads half again as big as a brute (r 16). Kinds not listed draw `orc.<kind>`. */
-export const ORC_SPRITE: Readonly<Partial<Record<string, string>>> = { elite: 'berserker', boss: 'brute' };
+ *  radius. Kinds not listed draw `orc.<kind>`; the boss has its own fantasy-orc sheet (TB-229). */
+export const ORC_SPRITE: Readonly<Partial<Record<string, string>>> = { elite: 'berserker' };
 
 /** Render interpolation (TB-194): actors draw between their last two sim steps; a move longer than `snap` field units in one step (a pooled slot reused, a leap) snaps instead of sliding. */
 export const INTERP = { snap: 40 };
