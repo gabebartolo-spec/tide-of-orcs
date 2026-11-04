@@ -9,10 +9,12 @@ import { barricadeHit, barricadeRegen } from './barricade';
 import { bossStep } from './boss';
 import { BOSS_WAVE, tierHp, tierLoot } from '../data/bosses';
 import { engagedVanguard, hurtVanguard, vanguardStep } from './vanguard';
+import { autoTarget } from './autoAim';
 import { fireballLands, shamanCast } from './shaman';
 
-/** Player aim: the pointer's position on the field, or null when the player is not aiming. The elf only shoots while aimed. */
-export interface Inputs { aim: { x: number; y: number } | null }
+/** Player aim: the pointer's position on the field, or null when the player is not aiming. The elf only shoots while aimed,
+ *  unless `auto` (touch Auto fire, TB-223) lets her pick the strike point herself; a manual aim always wins over it. */
+export interface Inputs { aim: { x: number; y: number } | null; auto?: boolean }
 export const noInputs: Inputs = { aim: null };
 
 const H = FIELD.h, W = FIELD.w, BAR_X = FIELD.barX, BAR_W = FIELD.barW, ELF_X = FIELD.elfX;
@@ -116,8 +118,9 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
   if (run.thunder > 0) run.thunder = Math.max(0, run.thunder - dt);
   const lobCd = st.lobCd * drawMult(s);
   run.shotT[0] = Math.min(lobCd, (run.shotT[0] ?? 0) + dt);
-  if (run.shotT[0] >= lobCd && inputs.aim && inputs.aim.x > BAR_X + BAR_W) {
-    let { x, y } = inputs.aim;
+  const aim = run.shotT[0] >= lobCd ? inputs.aim ?? (inputs.auto ? autoTarget(s) : null) : null;
+  if (aim && aim.x > BAR_X + BAR_W) {
+    let { x, y } = aim;
     // Each owned enchantment rolls its chance (TB-111). A moon shot's circle settles onto the nearest orc near the aim point.
     // Fang of the Coiled Serpent: every few shots is a venom arrow that splits into three (TB-193a)
     const fang = st.fang > 0 && ++s.fangN % PATH_FX.fangEvery === 0;

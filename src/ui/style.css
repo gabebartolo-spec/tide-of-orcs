@@ -867,12 +867,13 @@ body:has(#fallen:not([hidden])) .mute-corner { display: none !important; } /* th
 .mute-corner[aria-pressed="true"] .slash { display: block; }
 .mute-corner[aria-pressed="true"] .wave { display: none; }
 #btn-mute[aria-pressed="true"] { border-color: var(--rose); }
+#btn-auto[aria-pressed="true"] { border-color: var(--grove); }
 
 /* Phone UI touch pass (TB-218 slice U). Every control a finger can reach is at least 48 CSS px; panes scroll under touch; the fallen
    board fits a 412 px screen; the camp is one 48 px chrome row (tabs left, Close or March right) so the panes keep the height.
    All gated by the coarse pointer (and the short landscape screen), so the desktop mouse view is unchanged. */
 @media (pointer: coarse) {
-  .buy, .ghost, .deploy, .tabs button, #camp-go, .fallen .march, .set select, #sat-filter, .pathcard, .treefull, #btn-mute, #btn-fs,
+  .buy, .ghost, .deploy, .tabs button, #camp-go, .fallen .march, .set select, #sat-filter, .pathcard, .treefull, #btn-mute, #btn-auto, #btn-fs,
   .panel .buy, .panel .ghost, .panel .set select, body .treefull, body .set select { min-height: 48px; min-width: 48px; }
   .settings textarea { min-height: 48px; }
   #sat-grid .item, #sat-worn .item { min-height: 48px; min-width: 48px; }

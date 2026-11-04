@@ -4,10 +4,11 @@ import { TOUCH } from '../data/touch';
 export interface FieldRect { left: number; top: number; right: number; bottom: number }
 export interface Insets { left: number; right: number; bottom: number }
 
-/** The lift above the contact: full lift, fading to 0 over the last `liftFadeRem` above the field's bottom edge. */
+/** The lift above the contact: full lift, fading to 0 over `liftFadeRem`, reaching 0 `reachRem` above the field's bottom edge (TB-223),
+ *  so the circle meets the finger before the finger runs into the gesture-nav band. */
 export function liftFor(type: 'touch' | 'pen', y: number, r: FieldRect, remPx: number): number {
   const full = (type === 'pen' ? TOUCH.penLiftRem : TOUCH.liftRem) * remPx, fade = TOUCH.liftFadeRem * remPx;
-  return full * Math.min(1, Math.max(0, (r.bottom - y) / fade));
+  return full * Math.min(1, Math.max(0, (r.bottom - TOUCH.reachRem * remPx - y) / fade));
 }
 
 /** The circle's client position, always on the visible plain: below the HUD plates (`topInset` px under the field top) and above the
@@ -18,7 +19,7 @@ export function aimPoint(type: 'touch' | 'pen', cx: number, cy: number, r: Field
   const x = Math.min(r.right, Math.max(r.left, cx));
   const floor = r.bottom - bottomInset, ceil = Math.min(floor, r.top + Math.max(0, topInset));
   const fy = Math.min(floor, cy);
-  const y = Math.min(floor, Math.max(ceil, fy - liftFor(type, fy, { ...r, bottom: floor }, remPx)));
+  const y = Math.min(floor, Math.max(ceil, fy - liftFor(type, fy, { ...r, bottom: floor }, remPx)));   // lift is 0 from reachRem above the floor down
   return { x, y };
 }
 

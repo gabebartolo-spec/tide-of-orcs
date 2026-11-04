@@ -414,6 +414,8 @@ export class FieldRenderer {
     g.fillStyle = P.aimFill; g.beginPath(); g.arc(x, y, r, 0, 6.28); g.fill();
     g.strokeStyle = P.aimLine; g.lineWidth = 1.5; g.beginPath(); g.arc(x, y, r, 0, 6.28); g.stroke();
     g.strokeStyle = P.cream; g.beginPath(); g.arc(x, y, r, -Math.PI / 2, -Math.PI / 2 + ready * 6.28); g.stroke();
+    // a crosshair at the exact strike point (TB-223): the faint circle alone is easy to lose under a fingertip's glare
+    g.lineWidth = 2; g.beginPath(); g.moveTo(x - 7, y); g.lineTo(x + 7, y); g.moveTo(x, y - 7); g.lineTo(x, y + 7); g.stroke();
   }
 
   /** An arcing arrow: shadow on the ground, shaft in the air pointing along its flight. */

@@ -92,7 +92,7 @@ export const STR = {
     bossDmg: 'damage to bosses', eliteDmg: 'damage to elites', fireDmg: 'fire arrow damage', burnDur: 'burn time',
     stormDmg: 'storm arrow damage', stormChain: 'storm chains', homingDmg: 'moon arrow damage', critDmg: 'crit damage',
   } as Record<string, string>,
-  setVolume: 'Volume', setMotion: 'Motion', setNumbers: 'Numbers', setText: 'Text size', fsEnter: 'Fullscreen', fsExit: 'Exit fullscreen', soundOn: 'Sound on', soundOff: 'Sound off',
+  setVolume: 'Volume', setMotion: 'Motion', setNumbers: 'Numbers', setText: 'Text size', fsEnter: 'Fullscreen', fsExit: 'Exit fullscreen', soundOn: 'Sound on', soundOff: 'Sound off', autoOn: 'Auto fire: on', autoOff: 'Auto fire: off',
   setQuality: 'Graphics (reload to apply fully)', qualAuto: 'Auto', qualHigh: 'High', qualLow: 'Low',
   motionSystem: 'Follow system', motionFull: 'Full', motionReduced: 'Reduced',
   numShort: 'Short (1.25M)', numSci: 'Scientific (1.25e6)',
