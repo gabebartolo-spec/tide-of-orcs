@@ -665,7 +665,10 @@ body:not([data-mode="run"]) header #btn-settings { display: none; }
    reads as C when small); the display face is for headings. One button system: primary gold plank (.buy), secondary wood
    (.ghost), destructive rose (.danger), set apart. Path cards and the satchel share one leather; stitches are dark angled dashes. */
 /* body text in the system's UI face (Segoe UI on Windows): Heartwood is kept for headings of 1.2rem (24 px at 1080p) and up */
-:root { --body: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", sans-serif; }
+/* TB-224: the system face lives on the between-runs panel only (ART-STYLE flags this, TB-195p); the run HUD, fallen board, toasts and every
+   other surface stay in Heartwood. --body is Heartwood at :root; .panel redefines it for its own subtree. */
+:root { --panel-font: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", sans-serif; }
+.panel { --body: var(--panel-font); font-family: var(--body); }
 .stat .k, .tabs button, .detail .branch, .item .slot, .satbar, .hud-wave .k, .plate .pk, .plate .done, .plate .lock, .lootbanner .rar, .camplist .k,
 .hud-van, .hud-wall .lbl { text-transform: none; letter-spacing: .02em; }
 .stat .k, .tabs button, .detail .branch, .satbar, .hwnode .desc, .bcard .desc, .bcard .cost, .auto, .ghost, .camplist { font-size: 1rem; }
@@ -1062,3 +1065,40 @@ header, #hud, #toast, #campview, .wrap, .play { touch-action: pan-x pan-y; }
 }
 @media (pointer: coarse) and (max-height: 380px) and (orientation: landscape) { .fallen { padding-top: 4.75rem; } }
 @media (pointer: coarse) and (max-height: 340px) and (orientation: landscape) { .fallen { padding-top: 4.5rem; } .fallen .report { zoom: 0.72; } } /* 915x320: the board fits above the gesture bar without scrolling */
+
+/* Phone run HUD (TB-224): below 541 px tall the full-width plaque row (about 650 x 54 px over the canopy, plus a Settings plank) becomes a
+   compact carved cluster in the grove, left of the barricade, under the treeline: wall bar, starlight and wave. One Slain / Heartwood
+   plaque sits above the mute button, so nothing crowds the archer. The canopy stays clear, the plain stays free to aim over, and Settings moves beside the mute button as a 48 px plank. Every
+   piece keeps the PC HUD's art (wallbar, gem, banner); text is Heartwood at 14 px or more. --hud-k is the field's fit scale (field.ts). */
+@media (max-height: 540px), (max-width: 700px) {
+  :root { --hud-k: min(calc(100vh / 480), calc(100vw / 900)); --hud-w: 11rem; }
+  body:not([data-mode="camp"]) header { padding: 0; height: 0; background: none; border: 0; box-shadow: none; }
+  body:not([data-mode="camp"]) header .hud { position: fixed; z-index: 3; left: max(0.5rem, env(safe-area-inset-left, 0px)); top: calc(var(--hud-k) * 82); width: var(--hud-w); margin: 0;
+    display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 0.1875rem 0.25rem; min-width: 0; flex-wrap: nowrap; }
+  body:not([data-mode="camp"]) header .hud-wallbox { grid-column: 1 / -1; zoom: 0.525; gap: 0; }
+  body:not([data-mode="camp"]) header .hud-wall { margin-bottom: 2.1rem; }
+  body:not([data-mode="camp"]) header .hud-wall .lbl { font-size: 1.7rem; line-height: 2rem; }
+  body:not([data-mode="camp"]) header .hud-van { zoom: 1; font-size: 0.875rem; padding: 0; }
+  body:not([data-mode="camp"]) header .hud-star { grid-column: 1; gap: 0; }
+  body:not([data-mode="camp"]) header .hud-gem { width: 3rem; height: 3rem; margin: -0.5rem -0.25rem -0.5rem -0.5rem; }
+  body:not([data-mode="camp"]) header .odo { font-size: 1.5rem; }
+  body:not([data-mode="camp"]) header .hud-wave { grid-column: 2; justify-self: stretch; width: auto; min-width: 0; height: 2.25rem; margin: 0; padding: 0.4rem 0 0; gap: 0.3125rem; border-width: 0 0.75rem; overflow: visible;
+    border-image: image-set(url("/ui/banner.webp") 1x, url("/ui/banner@2x.webp") 2x) 0 48 fill / 0 0.75rem stretch; filter: drop-shadow(0 0.125rem 0.1875rem color-mix(in srgb, var(--ink) 80%, transparent)); }
+  body:not([data-mode="camp"]) header .hud-wave .k { font-size: 0.875rem; }
+  body:not([data-mode="camp"]) header .hud-wave .v { font-size: 1.125rem; }
+  body:not([data-mode="camp"]) header .hud-wave .stamp { font-size: 0.875rem; line-height: 1.25rem; padding: 0 0.25rem; letter-spacing: .03em; }
+  body:not([data-mode="camp"]) header .hud .stats { position: fixed; left: max(0.5rem, env(safe-area-inset-left, 0px)); bottom: calc(4.125rem + env(safe-area-inset-bottom, 0px)); display: flex; flex-wrap: nowrap; justify-content: center; align-items: baseline; gap: 0.5rem; box-sizing: border-box; width: var(--hud-w); height: 2.25rem; padding: 0.4rem 0 0;
+    border: solid transparent; border-width: 0 1rem; border-image: image-set(url("/ui/banner.webp") 1x, url("/ui/banner@2x.webp") 2x) 0 48 fill / 0 1rem stretch;
+    filter: drop-shadow(0 0.125rem 0.1875rem color-mix(in srgb, var(--ink) 80%, transparent)); }
+  body:not([data-mode="camp"]) header .stat { width: auto; min-width: 0; height: auto; margin: 0; padding: 0; gap: 0.25rem; border: 0; border-image: none; filter: none; align-items: baseline; justify-content: flex-start; }
+  body:not([data-mode="camp"]) header .stat .k { font-size: 0.875rem; }
+  body:not([data-mode="camp"]) header .stat .v { font-size: 1.125rem; }
+  /* Settings: a labelled plank beside the mute button (bottom left), clear of the canopy */
+  body[data-mode="run"] #btn-settings { position: fixed; z-index: 4; margin: 0; left: calc(max(34px, env(safe-area-inset-left, 0px)) + 3.5rem); bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+    min-width: 3rem; min-height: 3rem; padding-inline: 1rem; font-size: 1rem; pointer-events: auto; }
+}
+@media (max-height: 540px), (max-width: 700px) {
+  /* the fallen board owns the screen: the cluster stands down, Settings returns to the top right (Replant stays the only run action) */
+  body:has(#fallen:not([hidden])) header .hud { display: none; }
+  body[data-mode="run"]:has(#fallen:not([hidden])) #btn-settings { bottom: auto; left: auto; top: calc(0.5rem + env(safe-area-inset-top, 0px)); right: max(1rem, env(safe-area-inset-right, 0px)); }
+}
