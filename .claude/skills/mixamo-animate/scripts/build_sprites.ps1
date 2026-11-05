@@ -10,7 +10,7 @@ $vars = "WYAW", "RMATCH", "SWING", "MIRR", "H1", "MPH", "HINGE", "FREEZE", "WOFF
   "FINGCOPY", "POSEDUMP", "IDLEPOSE", "BOWALIGNF", "NOCKFING", "STRDRAW", "LIMBBEND", "STRNEAR", "STRTURN", "RETIME", "STABLESH", "HANDSMOOTH", "DRAWRAMP", "RELEASE", "TAIL"  # companion archer (TB-203)
 $all = { param($n) (0..($n - 1)) -join "," }  # TB-194: every clip frame (attacks were even frames only, 15 fps)
 $jobs = @(
-  @{ key = "orc.grunt"; m = "$a\grunt2\grunt2u.blend"; c = "$mx\Sword And Shield Walk.fbx"; ortho = "2.4"; fr = (0..32 -join ","); env = @{  # walk_grunt.ps1 (v19)
+  @{ key = "orc.grunt"; m = "$a\grunt2\grunt2u.blend"; c = "$mx\Orc Walk.fbx"; ortho = "2.4"; fr = (0..35 -join ","); env = @{  # walk_grunt.ps1 (v20, Orc Walk)
       RMATCH = "RightShoulder,RightArm,RightForeArm,RightHand"; SWING = "mixamorig:LeftArm:1;mixamorig:LeftForeArm:1"; H1 = "1"; MPH = "2"; HINGE = "world"; FREEZE = "mixamorig:RightShoulder,mixamorig:RightHand"
       MIRR = "mixamorig:LeftArm>mixamorig:RightArm:2.8;mixamorig:LeftForeArm>mixamorig:RightForeArm:1"
       WOFFS = "mixamorig:LeftArm:1,0,0,-25;mixamorig:RightArm:1,0,0,-17;mixamorig:RightForeArm:1,0,0,18;mixamorig:RightHand:1,0,0,20" } },
