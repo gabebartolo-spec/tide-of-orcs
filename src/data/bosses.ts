@@ -40,6 +40,25 @@ export function bossScript(tier: number): readonly MiniWave[] {
   return (scripts[tier] ??= [...BOSS_SCRIPT, ...TIER_ESCORT.filter((e) => e.tier <= tier)].sort((a, b) => a.at - b.at));
 }
 
+/** Boss roster (TB-230, GDD §4, director 5 Nov): the orc in the boss wave's Warboss slot (`kind: 'boss'`) rotates in this
+ *  fixed order by boss wave (wave 25 first, 50 second, …), repeating. Data only: every entry fights as OrcKind 'boss'.
+ *  `sprite` is its atlas key under `orc.`; an entry whose art is not in the atlas draws exactly as the Warboss. */
+export const BOSS_ROSTER = [
+  { id: 'warboss', name: 'Warboss', sprite: 'boss' },
+  { id: 'ogre', name: 'Ogre', sprite: 'ogre' },                          // TB-211 Troll_Orc
+  { id: 'orc', name: 'Orc', sprite: 'orcBoss' },                         // TB-213 dartuchiwa "Orc"
+  { id: 'packed', name: 'Orc Raider', sprite: 'packed' },                // TB-214 3DE_Study packed orc
+  { id: 'ogreCreature', name: 'Ogre Creature', sprite: 'ogreCreature' }, // TB-228 Sazerac
+] as const;
+export type BossEntry = (typeof BOSS_ROSTER)[number];
+export type BossId = BossEntry['id'];
+
+/** The roster boss a boss wave at this wave brings: index wave ÷ every − 1 (25 → 0), repeating; below 25 counts as the first. */
+export function bossFor(wave: number): BossEntry {
+  const n = Math.max(0, Math.floor(wave / BOSS_WAVE.every) - 1);
+  return BOSS_ROSTER[n % BOSS_ROSTER.length]!;
+}
+
 /** Boss tiers (TB-148, dev plan §8 #1, Nodebuster): clearing a boss wave while playing your highest tier unlocks the
  *  next one for good; at March the player picks any tier unlocked. Each tier above the first multiplies orc HP and
  *  starlight per kill, and boss Heartwood, from wave 1. `max: 1` keeps tiers off (P-148 proposes the numbers). */

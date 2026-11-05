@@ -1,4 +1,4 @@
-import { BOSS_WAVE, bossScript, TIERS, bossHw, tierHw, tierLoot } from '../data/bosses';
+import { BOSS_WAVE, bossFor, bossScript, TIERS, bossHw, tierHw, tierLoot } from '../data/bosses';
 import { HW_FX } from '../data/heartwood';
 import { hwRank } from './heartwood';
 import { FIELD, waveLoot } from '../data/balance';
@@ -34,7 +34,11 @@ export function bossStep(s: SimState, ev: EventBus, dt: number): void {
   const script = bossScript(s.run.tier);
   while (b.next < script.length && script[b.next]!.at <= b.t) {
     const m = script[b.next++]!;
-    for (const y of m.ys) spawnOrc(s, m.kind, y * FIELD.h, true);
+    for (const y of m.ys) {
+      const o = spawnOrc(s, m.kind, y * FIELD.h, true);
+      // the wave being played is the bossDone-th boss wave (summonBoss counted it), i.e. wave bossDone × every (TB-230)
+      if (o && m.kind === 'boss') o.bossId = bossFor(s.run.bossDone * BOSS_WAVE.every).id;
+    }
   }
   const cleared = b.left <= 0;
   if (!cleared && b.t < BOSS_WAVE.secs) return;

@@ -57,7 +57,7 @@ Rangers and Wardens keep straight volleys at `fireRate = 1.2 × 1.15^draw` per s
 | `SOURCES.knives.speed`, `ballista.speed` | 640, 760 px/s | balance.ts |
 | `VANGUARD.walkSpeed`, `engageRange` | 60 px/s; orcs within r + 18 px engage a vanguard | balance.ts |
 | `ORC_TYPES` | hp/speed/loot/radius/spawn multiples per kind (GDD §4) | orcs.ts |
-| `BOSS_WAVE`, `BOSS_SCRIPT` | every 25 waves, 60 s, clear loot 40 × waveLoot, clear Heartwood 3 per 25 waves (`hwPerTier`); 8 mini-waves, 28 orcs | bosses.ts |
+| `BOSS_WAVE`, `BOSS_SCRIPT` | every 25 waves, 60 s, clear loot 40 × waveLoot, clear Heartwood 3 per 25 waves (`hwPerTier`); 8 mini-waves, 28 orcs; the Warboss slot's boss rotates through `BOSS_ROSTER` by boss wave (`bossFor`, TB-230: 25 Warboss, 50 Ogre, 75 Orc, 100 Orc Raider, 125 Ogre Creature, repeat; same stats) | bosses.ts |
 | `TIERS` | max 6, hp 2, loot 1.5, hw 1: at tier t orc HP × 2^(t−1), starlight per kill and boss clear × 1.5^(t−1), boss Heartwood × t; a boss cleared at your highest tier unlocks the next (P-148 set F, director 2026-11-02) | bosses.ts |
 | `HW_FX` | Early Dawn +2 waves/rank, Stout Timber +0.25/rank, Warlords +0.5/rank | heartwood.ts |
 | `SKY` (render only) | 600 s day cycle, dusk alpha 0.85, two hill bands, lamp radius 150 | presentation.ts |

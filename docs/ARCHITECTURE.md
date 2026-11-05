@@ -22,7 +22,7 @@ tide-of-orcs/
                         waveInterval, waveSpeedMult, costWave, nodeCost, vanCost, vanBaseHp
       skillTree.ts      NODES[] (mirrors SKILL-TREE.md), TREE_CANVAS, TREE_VIEW, BRANCH_COLOR
       orcs.ts           ORC_TYPES, ORC_KINDS, FOE_FX (Fury/Swarm)
-      bosses.ts         BOSS_WAVE, BOSS_SCRIPT (TB-081)
+      bosses.ts         BOSS_WAVE, BOSS_SCRIPT (TB-081), BOSS_ROSTER + bossFor() fixed boss rotation (TB-230)
       heartwood.ts      HW_NODES, HW_FX (TB-053)
       camp.ts           encampment buildings, levels, materials (TB-188a)
       paths.ts          specialisation paths serpent / fox / magpie (TB-193a)
