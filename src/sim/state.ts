@@ -14,6 +14,8 @@ import { PathId } from '../data/paths';
 export interface Orc {
   live: boolean; kind: OrcKind; x: number; y: number; hp: number; maxhp: number; spd: number; r: number; loot: number; atk: number;
   dead: boolean; burn: number; hitT: number; wob: number; swingT: number;
+  /** Ground walked, world units (TB-236): the walk clip plays one cycle per stride of it, so feet match the march. Not saved. */
+  walk: number;
   /** Set-bonus timers in seconds (TB-099): bleeding takes more damage, slowed walks slower, pinned/rooted stand still. */
   bleed: number; slow: number; pin: number; root: number;
   /** Heart of the Kiln (TB-100): seconds this orc has burned, for the ramp. The Last Knife (TB-128): seconds left marked. */
@@ -47,7 +49,7 @@ export interface Projectile {
 }
 /** A patch of ground left by a set bonus (TB-099): Cinderground burns and slows, a Moonwell slows and mends the wall. */
 export interface Zone { live: boolean; kind: 'cinder' | 'moonwell'; x: number; y: number; r: number; life: number; used: boolean }
-export interface Wolf { x: number; y: number; tx: number; ty: number; biteT: number }
+export interface Wolf { x: number; y: number; tx: number; ty: number; biteT: number; /** Ground run, world units (TB-236). */ walk: number }
 export interface Vanguard {
   /** A line slot that respawns (TB-167); Standing Orders extras do not. */
   line: boolean;
@@ -57,6 +59,8 @@ export interface Vanguard {
   /** Moved this step, and which way it faces (1 right, -1 left). */
   mv: boolean; face: number;
   hp: number; maxhp: number; swingT: number; hitT: number;
+  /** Ground walked, world units (TB-236). */
+  walk: number;
 }
 
 export interface RunState {
@@ -121,21 +125,21 @@ export function freshRun(): RunState {
 }
 export function freshMeta(): MetaState { return { heartwood: 0, lifetimeKills: 0, bestWave: 1, prestiges: 0, hwLevels: {}, loot: freshLoot(), tier: 1, checkpoint: 1, camp: freshCamp() }; }
 
-const makeOrc = (): Orc => ({ live: false, kind: 'grunt', x: 0, y: 0, hp: 0, maxhp: 0, spd: 0, r: 0, loot: 0, atk: 0, dead: false, burn: 0, hitT: 0, wob: 0, swingT: 0, champ: false, bleed: 0, slow: 0, pin: 0, root: 0, chill: 0, stun: 0, poison: 0, poisonDps: 0, leapt: false, castT: 0, drum: false, gen: 0, bossId: '' });
+const makeOrc = (): Orc => ({ live: false, kind: 'grunt', x: 0, y: 0, hp: 0, maxhp: 0, spd: 0, r: 0, loot: 0, atk: 0, dead: false, burn: 0, hitT: 0, wob: 0, swingT: 0, walk: 0, champ: false, bleed: 0, slow: 0, pin: 0, root: 0, chill: 0, stun: 0, poison: 0, poisonDps: 0, leapt: false, castT: 0, drum: false, gen: 0, bossId: '' });
 const makeShot = (): Projectile => ({ live: false, kind: 'arrow', x: 0, y: 0, vx: 0, vy: 0, dmg: 0, pierce: 0, life: 0, fx: 0, crit: 0, critX: 1, target: null, tgen: 0, first: false, hit: new Set(), sx: 0, sy: 0, tx: 0, ty: 0, t: 0, h: 0, r: 0, back: false });
 const makeZone = (): Zone => ({ live: false, kind: 'cinder', x: 0, y: 0, r: 0, life: 0, used: false });
-const makeVan = (): Vanguard => ({ live: false, type: 'spear', line: false, x: 0, y: 0, tx: 0, ty: 0, mv: false, face: 1, hp: 0, maxhp: 0, swingT: 0, hitT: 0 });
+const makeVan = (): Vanguard => ({ live: false, type: 'spear', line: false, x: 0, y: 0, tx: 0, ty: 0, mv: false, face: 1, hp: 0, maxhp: 0, swingT: 0, hitT: 0, walk: 0 });
 
 export function createState(seed = 1, run: RunState = freshRun(), meta: MetaState = freshMeta()): SimState {
   const s: SimState = {
     tick: 0, t: 0, rng: createRng(seed), lootRng: createRng(seed * 31 + 7), matRng: createRng(seed * 17 + 3), lootPolicy: 'player', run, meta, stats: applyGear(deriveStats(run.levels, meta.hwLevels, meta.camp.levels, run.path ?? null), meta.loot),
     orcs: new Pool<Orc>(ORC_CAP, makeOrc), shots: new Pool<Projectile>(600, makeShot), vans: new Pool<Vanguard>(VANGUARD.poolCap, makeVan),
-    wolf: { x: 260, y: FIELD.h / 2, tx: 260, ty: FIELD.h / 2, biteT: 0 },
+    wolf: { x: 260, y: FIELD.h / 2, tx: 260, ty: FIELD.h / 2, biteT: 0, walk: 0 },
     pack: [],
     hawk: { x: 300, y: 100, a: 0 },
     zones: new Pool<Zone>(SET_FX.zoneCap, makeZone),
     knifeN: 0, vanRespawn: [],
-    fox: { x: 260, y: FIELD.h / 2 + 60, tx: 260, ty: FIELD.h / 2 + 60, biteT: 0 }, fangN: 0,
+    fox: { x: 260, y: FIELD.h / 2 + 60, tx: 260, ty: FIELD.h / 2 + 60, biteT: 0, walk: 0 }, fangN: 0,
   };
   if (s.run.barHp < 0) s.run.barHp = s.stats.barMax;
   return s;

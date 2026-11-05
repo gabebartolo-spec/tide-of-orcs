@@ -14,13 +14,13 @@ import { STR } from '../data/strings';
 import { Ceremony } from './ceremony';
 import { plainPoint } from './viewMap';
 import { Sprites } from './sprites';
-import { orcClipT, orcState, swingClipT, vanState } from './actorState';
+import { orcClipT, orcState, strideT, swingClipT, vanState } from './actorState';
 import { Ground, decorImg } from './ground';
 import { Ambience } from './ambience';
 import { Sky } from './sky';
 import { depthScale, depthY, setMeadowTop, worldY } from './depth';
 import { Interp } from './interp';
-import { FIELD_VIEW, PHONE_QUERY, QUALITY, GROUND, LOOT_VFX, ORC_SPRITE, SKY, TREELINE, VFX, DEPTH, dusk } from '../data/presentation';
+import { FIELD_VIEW, GAIT, PHONE_QUERY, QUALITY, GROUND, LOOT_VFX, ORC_SPRITE, SKY, TREELINE, VFX, DEPTH, dusk } from '../data/presentation';
 import { SLOTS } from '../data/loot';
 import { BOSS_ROSTER } from '../data/bosses';
 import { quality, fitScale } from './quality';
@@ -590,7 +590,7 @@ export class FieldRenderer {
       k = { key, atk: key + '.attack' };
       if (!o.bossId) this.orcKeys.set(o.kind, k);
     }
-    const ost = orcState(s, o), ot = orcClipT(o, ost, this.sprites.duration(k.atk), VFX.strike.orc);
+    const ost = orcState(s, o), ot = orcClipT(o, ost, this.sprites.duration(k.atk), VFX.strike.orc, this.sprites.duration(k.key), (GAIT.strideR[k.key] ?? (o.bossId ? GAIT.boss : 0)) * (or / o.r));  // stride by drawn size: back rows draw smaller (TB-232)
     this.sprites.drawActor(g, k.key, ost, ot, x, y + or * 0.9, or, o.hitT > 0, tint, glow, VFX.arrows.rimBlur);
     this.orcBars(o, x, y, or);
   }
@@ -639,7 +639,7 @@ export class FieldRenderer {
   private wolf(s: SimState, w: Wolf): void {
     const g = this.g, i = this.interp.off(w); g.save(); const wy = w.y + i.dy, wk = depthScale(wy); g.translate(w.x + i.dx, depthY(wy)); g.scale(wk, wk); g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 8, 12, 4, 0, 0, 6.28); g.fill();
     if (w.tx < w.x - 2) g.scale(-1, 1);
-    const d = Math.hypot(w.tx - w.x, w.ty - w.y), near = !!nearestOrc(s, w.x, w.y, (o) => Math.hypot(o.x - w.x, o.y - w.y) < SOURCES.wolf.reach), t = near ? Math.min(1, w.biteT / SOURCES.wolf.biteCd) * this.sprites.duration('wolf.attack') * 0.999 : this.clock;
+    const d = Math.hypot(w.tx - w.x, w.ty - w.y), near = !!nearestOrc(s, w.x, w.y, (o) => Math.hypot(o.x - w.x, o.y - w.y) < SOURCES.wolf.reach), t = near ? Math.min(1, w.biteT / SOURCES.wolf.biteCd) * this.sprites.duration('wolf.attack') * 0.999 : strideT(w.walk, (GAIT.strideR['wolf'] ?? 0) * ACTOR_R * wk, this.sprites.duration('wolf'));
     this.sprites.drawActor(g, 'wolf', near ? 'attack' : d > 2 ? 'walk' : 'idle', t, 0, 8, ACTOR_R); g.restore();
   }
 
@@ -694,7 +694,7 @@ export class FieldRenderer {
   private van(s: SimState, v: Vanguard): void {
     const g = this.g, T = VANGUARD[v.type]; const i = this.interp.off(v), wy = v.y + i.dy; this.at(v.x + i.dx, depthY(wy), v.face < 0, depthScale(wy));
     g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 16, 12, 4, 0, 0, 6.28); g.fill();
-    const vk = this.vanKey(v.type), vst = vanState(s, v), vt = vst === 'attack' ? swingClipT(v.swingT, T.cd, this.sprites.duration(vk.atk), VFX.strike[v.type]) : this.clock;
+    const vk = this.vanKey(v.type), vst = vanState(s, v), vt = vst === 'attack' ? swingClipT(v.swingT, T.cd, this.sprites.duration(vk.atk), VFX.strike[v.type]) : vst === 'walk' ? strideT(v.walk, (GAIT.strideR[vk.key] ?? 0) * ACTOR_R * depthScale(wy), this.sprites.duration(vk.key)) : this.clock;
     this.sprites.drawActor(g, vk.key, vst, vt, 0, 16, ACTOR_R, v.hitT > 0);
     this.vanBar(v); this.at(0, 0, false);
   }

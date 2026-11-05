@@ -48,3 +48,13 @@ describe('vanguard spread (TB-173)', () => {
     expect(Math.hypot(a.x - b.x, a.y - b.y)).toBeGreaterThan(VANGUARD.spread * 0.9);
   });
 });
+
+describe('ground walked (TB-236)', () => {
+  it('a vanguard counts exactly the distance it marched, and nothing while it stands', () => {
+    const s = createState(1), v = placeVanguard(s, 'spear')!, x0 = v.x, y0 = v.y;
+    orcAt(s, 400, v.y); run(s, 1);
+    expect(v.walk).toBeCloseTo(Math.hypot(v.x - x0, v.y - y0), 6);
+    const w = v.walk; v.mv = false; s.orcs.forEach((o) => { o.dead = true; }); v.x = v.tx; v.y = v.ty; run(s, 1);
+    expect(v.walk).toBeCloseTo(w, 6);
+  });
+});

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { FIELD, VANGUARD } from '../data/balance';
-import { createState } from '../sim/state';
-import { orcAnimT, orcClipT, orcState, orcSwingT, vanState } from './actorState';
+import { createState, type Orc } from '../sim/state';
+import { orcAnimT, orcClipT, orcState, orcSwingT, strideT, vanState } from './actorState';
 import { noInputs, step } from '../sim/step';
 import { EventBus } from '../sim/events';
 import { STEP } from '../data/balance';
@@ -70,5 +70,30 @@ describe('halted drummer drums on a loop (TB-186)', () => {
   it('other orcs still play their attack once per swing', () => {
     const s = createState(1), o = orcAt(s, 600, 200); o.swingT = 0.2;
     expect(orcClipT(o, 'attack', 2, 0.5)).toBeCloseTo(orcSwingT(o, 2, 0.5), 6);
+  });
+});
+
+describe('stride clock (TB-236)', () => {
+  it('plays one walk cycle per stride walked, whatever the speed', () => {
+    expect(strideT(30, 15, 1.2)).toBeCloseTo(2.4, 6);
+    expect(strideT(0, 15, 1.2)).toBe(0);
+    expect(strideT(30, 0, 1.2)).toBe(0);
+  });
+  it('a walking orc reads its clip from ground walked, so a stopped orc holds its frame', () => {
+    const o = { kind: 'grunt', r: 10, walk: 45, wob: 3 } as unknown as Orc;
+    const t = orcClipT(o, 'walk', 1, 0.5, 1.1, 1.5);
+    expect(t).toBeCloseTo(3 * 1.1, 6);
+    o.wob += 5; expect(orcClipT(o, 'walk', 1, 0.5, 1.1, 1.5)).toBeCloseTo(t, 6);
+  });
+});
+
+describe('orc ground walked (TB-236)', () => {
+  it('grows by the march, and a stunned orc holds its frame', () => {
+    const s = createState(1), ev = new EventBus();
+    const o = s.orcs.alloc()!; Object.assign(o, { kind: 'grunt', x: 800, y: 200, hp: 1e9, maxhp: 1e9, r: 12, spd: 40, dead: false, walk: 0 });
+    for (let i = 0; i < 30; i++) step(s, 1 / 30, noInputs, ev);
+    expect(o.walk).toBeCloseTo(800 - o.x, 6);
+    const w = o.walk; o.stun = 5; for (let i = 0; i < 30; i++) step(s, 1 / 30, noInputs, ev);
+    expect(o.walk).toBeCloseTo(w, 6);
   });
 });
