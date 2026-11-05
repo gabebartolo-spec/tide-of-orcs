@@ -28,17 +28,21 @@ export class CampLife {
   private seen = new Map<BuildingId, number>();
   private moments = new Map<BuildingId, number>();
 
-  /** Advance to time `t` (s) and draw. `g` is in scene units. */
-  draw(g: Ctx, levels: Partial<Record<BuildingId, number>>, t: number): void {
-    // an upgrade made while the scene was drawing plays its moment; one made while it was hidden just syncs
+  /** Notice level rises. One made while the scene was drawing plays its moment; one made while it was hidden just syncs.
+   *  Call it before the buildings draw, so the pop starts on the same frame. */
+  watch(levels: Partial<Record<BuildingId, number>>, t: number): void {
     const live = this.last >= 0 && t - this.last <= MAX_DT;
-    const dt = this.last < 0 ? 0 : Math.min(MAX_DT, Math.max(0, t - this.last));
-    this.last = t;
     for (const b of BUILDINGS) {
       const lv = Math.min(3, levels[b.id] ?? 0), was = this.seen.get(b.id);
       this.seen.set(b.id, lv);
       if (live && was !== undefined && lv > was) this.upgraded(b.id, lv, t);
     }
+  }
+
+  /** Advance to time `t` (s) and draw. `g` is in scene units. */
+  draw(g: Ctx, levels: Partial<Record<BuildingId, number>>, t: number): void {
+    const dt = this.last < 0 ? 0 : Math.min(MAX_DT, Math.max(0, t - this.last));
+    this.last = t;
     for (let bi = 0; bi < BUILDINGS.length; bi++) {
       const b = BUILDINGS[bi]!, lv = Math.min(3, levels[b.id] ?? 0);
       if (lv <= 0) continue;
@@ -49,6 +53,14 @@ export class CampLife {
     this.step(dt);
     this.paint(g);
     this.banners(g, levels, t);
+  }
+
+  /** Pop scale [width, height] for a building's image right now (1, 1 outside a moment). The image grows from its base. */
+  popScale(id: BuildingId, t: number): [number, number] {
+    const t0 = this.moments.get(id), C = CAMP_LIFE.pop;
+    if (t0 === undefined || t - t0 >= C.pop) return [1, 1];
+    const u = Math.max(0, (t - t0) / C.pop) - 1, e = 1 + (C.back + 1) * u ** 3 + C.back * u ** 2;
+    return [C.from2 + (1 - C.from2) * e, C.from + (1 - C.from) * e];
   }
 
   /** Start an upgrade moment: build dust along the new image's base. */
@@ -68,15 +80,15 @@ export class CampLife {
       const r = CAMP_ART[id][lv - 1]!, x = r.x + r.w * M.px, base = r.y + r.h * M.py, top = base - M.pole;
       const up = Math.min(1, e / M.raise), ease = 1 - (1 - up) ** 3;
       g.globalAlpha = e > M.raise + M.hold ? 1 - (e - M.raise - M.hold) / M.fade : 1;
-      g.strokeStyle = P.bark; g.lineWidth = 1.6; g.lineCap = 'round';
+      g.strokeStyle = P.bark; g.lineWidth = M.poleW; g.lineCap = 'round';
       g.beginPath(); g.moveTo(x, base); g.lineTo(x, top); g.stroke();
       const fy = base - M.flag * 0.8 - (base - top - M.flag * 0.8) * ease, f = M.flag, wv = Math.sin(e * M.flutter) * f * 0.12;
       g.fillStyle = P.elfCloak; g.beginPath();
       g.moveTo(x, fy); g.lineTo(x + f, fy + f * 0.2 + wv); g.lineTo(x + f * 0.72, fy + f * 0.4); g.lineTo(x + f, fy + f * 0.62 + wv); g.lineTo(x, fy + f * 0.8);
       g.closePath(); g.fill();
-      g.strokeStyle = P.starGold; g.lineWidth = 0.8; g.beginPath();
+      g.strokeStyle = P.starGold; g.lineWidth = 1.6; g.beginPath();
       g.moveTo(x + f, fy + f * 0.2 + wv); g.lineTo(x + f * 0.72, fy + f * 0.4); g.lineTo(x + f, fy + f * 0.62 + wv); g.stroke();
-      g.fillStyle = P.starGold; g.beginPath(); g.arc(x, top, 1.6, 0, Math.PI * 2); g.fill();
+      g.fillStyle = P.starGold; g.beginPath(); g.arc(x, top, 3, 0, Math.PI * 2); g.fill();
     }
     g.globalAlpha = 1;
   }

@@ -50,7 +50,8 @@ export class CampScene {
     this.backdrop.draw(g, this.k, this.ox, this.oy, this.dpr);
     g.setTransform(px, 0, 0, px, this.ox * this.dpr, this.oy * this.dpr);
     this.fauna.draw(g, t);
-    this.art.draw(g, levels, px);
+    this.life.watch(levels, t);
+    this.art.draw(g, levels, px, (id) => this.life.popScale(id, t));
     this.life.draw(g, levels, t);
   }
 }

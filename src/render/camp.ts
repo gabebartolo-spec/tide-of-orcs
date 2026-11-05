@@ -25,13 +25,17 @@ export class CampArt {
   private scale = 0;
 
   /** Draw every building at its level. `g` is in scene units; `px` is device pixels per scene unit. */
-  draw(g: Ctx, levels: Partial<Record<BuildingId, number>>, px: number): void {
+  draw(g: Ctx, levels: Partial<Record<BuildingId, number>>, px: number, pop: (id: BuildingId) => [number, number] = () => [1, 1]): void {
     if (Math.abs(px - this.scale) > 0.01) { this.cache.clear(); this.scale = px; }
     g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high';
     for (const b of CAMP_DRAW_ORDER) {
       const lv = Math.min(3, levels[b.id] ?? 0), p = CAMP_SPOTS[b.id], key = `${b.id}${lv}`;
       const im = lv > 0 ? img(key) : null;
-      if (im) { const r = CAMP_ART[b.id][lv - 1]!; g.drawImage(im, r.x, r.y, r.w, r.h); continue; }
+      if (im) {
+        // an upgrade pops the new image up from its base centre (TB-188h)
+        const r = CAMP_ART[b.id][lv - 1]!, [sx, sy] = pop(b.id), w = r.w * sx, h = r.h * sy;
+        g.drawImage(im, r.x + (r.w - w) / 2, r.y + r.h - h, w, h); continue;
+      }
       let c = this.cache.get(key);
       if (!c) { c = this.paint(b.id, lv, p.w, p.h, px); this.cache.set(key, c); }
       g.drawImage(c, p.x - p.w / 2 - PAD, p.y - p.h - PAD, p.w + PAD * 2, p.h + PAD * 2);

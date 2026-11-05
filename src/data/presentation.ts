@@ -272,9 +272,11 @@ export const CAMP_LIFE = {
   dustDy: 0.3,
   /** Upgrade moment (TB-188h): a burst of `n` build-dust puffs along the new image's base, and a pennant that climbs
    *  over `raise` s on a pole planted in the meadow at (`px`, `py`) of the new image's rect (pole `pole` units tall, flag `flag`
-   *  units), flutters for `hold` s, then fades over `fade` s. Dust puffs are soft (radial falloff), not flat discs. */
-  build: { n: 40, life: [0.8, 1.4], vx: [-30, 30], vy: [-20, -5], grav: 8, wind: 0, r0: 4, r1: 11, a: 0.45 },
-  moment: { raise: 0.9, hold: 2.2, fade: 0.6, px: 0.93, py: 0.86, pole: 70, flag: 20, flutter: 5 },
+   *  units), flutters for `hold` s, then fades over `fade` s; `poleW` is the pole's width. Dust puffs are soft (radial falloff), not flat discs. */
+  build: { n: 70, life: [1.0, 1.8], vx: [-55, 55], vy: [-45, -10], grav: 12, wind: 0, r0: 8, r1: 26, a: 0.75 },
+  moment: { raise: 0.9, hold: 2.2, fade: 0.6, px: 0.93, py: 0.86, pole: 120, flag: 38, poleW: 3.2, flutter: 5 },
+  /** The new image pops up from its base: starts at `from` height and `from2` width, springs to full size over `pop` s (easeOutBack, `back`). */
+  pop: { from: 0.55, from2: 1.12, pop: 0.55, back: 1.9 },
 } as const;
 
 /** UI motion and feedback kit (TB-195a, docs/plans/game-ui.md §3, ART-STYLE §Motion). Times in ms, sizes in CSS px. */
