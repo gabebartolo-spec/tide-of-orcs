@@ -133,9 +133,10 @@ export class Sprites {
     return a ? a.frames.length / a.fps : 0;
   }
 
-  /** Drawn height of `key` per unit of r (0 when it has no sprite), so a caller can size a sprite to a set height. */
   /** True when the atlas holds an animation under this key (TB-230 boss art fallback). */
   has(key: string): boolean { return !!this.atlas?.anims[key]; }
+
+  /** Drawn height of `key` per unit of r (0 when it has no sprite), so a caller can size a sprite to a set height. */
   heightPerR(key: string): number { return this.atlas?.anims[key]?.hPerR ?? 0; }
 
   /** Draw animation `key` with its feet at (x, y) for an actor of radius r. False when there is no sprite for it.
