@@ -188,3 +188,16 @@ J1, `tools/perf160.mjs` (now all eight kinds, TB-180), same PC and method as run
 Same 1080p 4× run with fewer kinds: old four kinds 73 fps (draw 6.1 ms), grunts only 78 fps (5.7 ms), against 92 fps in run 4. The new kinds cost about 1.7 ms of draw at 4×, and the field got dearer since run 4 anyway (TB-183). A mid-range CPU (about 2× slower than this one, run 4's reasoning) holds 60 fps or better at 1080p and 4K.
 
 Findings: TB-180 and TB-181 fixed; TB-182 (drum cue), TB-183 (perf headroom), TB-184 (checkpoint stall, director), TB-185 (CLAUDE.md lists `rally`), TB-186 (drummer one clip, director). C3, C4, D2 and E1 above were rewritten to match TB-136, TB-167, TB-171, TB-172 and TB-087.
+
+## Run 6 (5 Nov 2026, dev build of main at 9edba85, claude, TB-235)
+Regression pass after boss rotation (TB-230), sky and depth (TB-232), camp and paths. `npm run lint` and `npm run test` (472 tests) pass. The browser pane was hidden, so the visible steps ran in headless Chrome at 1600×900 with real button clicks.
+
+| Check | Result | Evidence |
+|---|---|---|
+| A1, C2–C4, D3, D4 | pass | Soak from a wipe, 300,000 ticks (~100 sim min) aiming at the front orc, buying every node while fallen, summoning every 25 ticks: 72 falls, waves to 68, checkpoint 66, live orcs peaked at exactly 160; 0 invariant violations (NaN, negative starlight, wall HP out of range, starlight moving while fallen); boss summon refused while fallen |
+| TB-230 | pass | Boss orcs carried `warboss` on the first boss wave and `ogre` on the second; a replant to checkpoint 46 brought the second boss again (bossDone reset by `startRun`); tier 2 unlocked on a clear |
+| C3, K2 | pass | Fall, "To the grove", Replant tab lists three paths; choosing Serpent set `run.path`; "March again" started wave 1 on that path, Heartwood kept |
+| K1 | not run | No materials in a fresh save, so no building could be upgraded; level 0 draws the timber frame as designed |
+| I3 | pass | 0 console errors or warnings in the soak and the headless session |
+
+Findings: none. Not a bug: replanting through `game.replant` while a `barricadeFell` event is still queued leaves the fallen overlay open on a standing run; only a script can do that (the panel's own Replant clears it).
