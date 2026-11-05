@@ -22,3 +22,6 @@ Third-party assets used in Tide of Orcs.
   https://www.freegameassets.com/painterly-fantasy-3d-models/sunfang-kukri, CC0 1.0 (no attribution required). Changed: rendered to a 2D icon.
 - Warboss (`public/sprites/sheet_boss.webp`; TB-229): "Fantasy orc" by Centurion_1705541 on BlendSwap (blend 31037),
   CC0 1.0 (no attribution required). Changed: re-rigged, Mixamo walk and attack clips retargeted, rendered to 2D sprite frames.
+- Warlord boss (`public/sprites/sheet_packed.webp`; TB-214): "Orc Model Rigged Packed Resources" by 3DE_Study on Sketchfab,
+  https://sketchfab.com/3d-models/orc-model-rigged-packed-resources-b82ab03340084827b5d9c1c234db4644, CC BY 4.0
+  (https://creativecommons.org/licenses/by/4.0/). Changed: its own walking and punch clips rendered to 2D sprite frames.

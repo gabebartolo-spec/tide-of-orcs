@@ -1,4 +1,4 @@
-﻿# Render every approved clip from the field camera (GAMECAM 20, CAMROT 0) into tide-assets\sprites\frames\<key>_N.png,
+# Render every approved clip from the field camera (GAMECAM 20, CAMROT 0) into tide-assets\sprites\frames\<key>_N.png,
 # then pack_sprites.py builds public/sprites/sheet_orcs.webp + sheet_elf.webp + atlas.json. Each entry repeats its approved recipe's env exactly;
 # only the camera, ORTHO (one per actor so walk and attack share a pixel scale), RES and frames differ.
 param([string[]]$Only = @(), [string]$Frames = "", [switch]$Missing)  # -Frames: render into another frames dir; -Missing: only frames with no png yet (TB-194)
@@ -27,6 +27,8 @@ $jobs = @(
       RMATCH = "LeftShoulder,LeftArm,LeftForeArm,LeftHand,RightShoulder,RightArm,RightForeArm,RightHand"; INPLACE = "1"
       WOFFS = "mixamorig:RightHand:1,0,0,60;mixamorig:RightHand:0,1,0,20" } },
   @{ key = "orc.boss.attack"; m = "$a\fantasy_orc\fo_thin.blend"; c = "$mx\Standing Melee Attack Downward AS100.fbx"; ortho = "3.2"; fr = (& $all 69); env = @{  # TB-229 attack v1 (director 5 Nov), no WOFFS; ortho 3.2 (1.8 clips the overhead club)
+  # TB-214 orc.packed / orc.packed.attack are NOT built here: they are the 3DE_Study model's own clips, rendered by render_own.py
+  # (ACT=walking FR=1-35 / ACT=punch FR=1-30, GAMECAM 20, ORTHO 2.9, CZ 0.75, RES 512; anchor 256,380.43 in anchors.json).
       RMATCH = "LeftShoulder,LeftArm,LeftForeArm,LeftHand,RightShoulder,RightArm,RightForeArm,RightHand"; INPLACE = "1" } },
   @{ key = "orc.berserker"; m = "$a\berserker\berserker_split.blend"; c = "$mx\Orc Walk.fbx"; ortho = "2.0"; fr = (0..35 -join ","); env = @{  # walk_berserker.ps1 (v1)
       RMATCH = "LeftShoulder,LeftArm,LeftForeArm,LeftHand,RightShoulder,RightArm,RightForeArm,RightHand"; INPLACE = "1"; GRIP2 = "1"
