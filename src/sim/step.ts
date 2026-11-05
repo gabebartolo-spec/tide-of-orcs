@@ -27,7 +27,7 @@ export function spawnOrc(s: SimState, kind: OrcKind, y?: number, champ = false):
   o.kind = kind; o.x = W + SIM_MISC.spawnXPad; o.y = y ?? SIM_MISC.spawnYPad + s.rng.next() * (H - 2 * SIM_MISC.spawnYPad);
   o.hp = hp; o.maxhp = hp; o.spd = T.speed * waveSpeedMult(w); o.r = T.radius; o.atk = hp * BARRICADE.orcAtkFrac;
   o.loot = waveLoot(w) * T.loot * F.loot * tierLoot(s.run.tier);
-  o.dead = false; o.burn = 0; o.bleed = 0; o.slow = 0; o.pin = 0; o.root = 0; o.chill = 0; o.stun = 0; o.poison = 0; o.poisonDps = 0; o.hitT = 0; o.wob = s.rng.next() * SIM_MISC.tau; o.swingT = s.rng.next(); o.champ = champ;
+  o.dead = false; o.burn = 0; o.bleed = 0; o.slow = 0; o.pin = 0; o.root = 0; o.chill = 0; o.stun = 0; o.poison = 0; o.poisonDps = 0; o.hitT = 0; o.wob = s.rng.next() * SIM_MISC.tau; o.walk = o.wob * o.r; o.swingT = s.rng.next(); o.champ = champ;
   o.gen++; o.leapt = false; o.castT = s.rng.next() * FIREBALL.every; o.drum = false; o.bossId = '';
   return o;
 }
@@ -104,7 +104,7 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
       return;
     }
     if (o.pin > 0 || o.root > 0) return;
-    o.x -= o.spd * walk * pace * (o.slow > 0 ? 1 - SET_FX.slow : 1) * dt;
+    { const m = o.spd * walk * pace * (o.slow > 0 ? 1 - SET_FX.slow : 1) * dt; o.x -= m; o.walk += Math.abs(m); }
   });
   if (run.fallen) return;
 
@@ -280,7 +280,7 @@ function wolfStep(s: SimState, ev: EventBus, wf: Wolf, dt: number, haste: number
   if (tg) { wf.tx = tg.x; wf.ty = tg.y; }
   const dx = wf.tx - wf.x, dy = wf.ty - wf.y, d = Math.hypot(dx, dy);
   const U = s.stats.units.wolf;
-  if (d > 2) { const m = Math.min(d, SOURCES.wolf.speed * U.spd * dt); wf.x += dx / d * m; wf.y += dy / d * m; }
+  if (d > 2) { const m = Math.min(d, SOURCES.wolf.speed * U.spd * dt); wf.x += dx / d * m; wf.y += dy / d * m; wf.walk += m; }
   wf.biteT += dt * haste * U.rate;
   if (tg && d < SOURCES.wolf.reach && wf.biteT > SOURCES.wolf.biteCd) { wf.biteT = 0; damage(s, ev, tg, unitHit(s, U, bite)); ev.push({ t: 'bite', x: tg.x, y: tg.y }); }
 }

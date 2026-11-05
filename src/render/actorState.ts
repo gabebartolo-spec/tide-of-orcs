@@ -40,5 +40,8 @@ export const orcSwingT = (o: Orc, dur: number, strike: number): number => swingC
 
 /** Clock for an orc's current clip. A halted war drummer drums on a loop (`orc.drummer.attack`, TB-186): it halts out of
  *  reach, so its swing timer never runs and a swing-timed clip would freeze. Other attacks play once per swing. */
-export const orcClipT = (o: Orc, st: ActorState, dur: number, strike: number): number =>
-  st === 'attack' && o.kind !== 'drummer' ? orcSwingT(o, dur, strike) : orcAnimT(o);
+export const orcClipT = (o: Orc, st: ActorState, dur: number, strike: number, walkDur = 0, strideR = 0): number =>
+  st === 'attack' && o.kind !== 'drummer' ? orcSwingT(o, dur, strike) : st === 'walk' && strideR > 0 ? strideT(o.walk, strideR * o.r, walkDur) : orcAnimT(o);
+
+/** Seconds into a walk clip by ground covered (TB-236): one clip cycle (`dur` s) per `stride` world units walked. */
+export const strideT = (walked: number, stride: number, dur: number): number => (stride > 0 ? (walked / stride) * dur : 0);

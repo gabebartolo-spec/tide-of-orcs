@@ -344,3 +344,15 @@ export const QUALITY = {
   fieldMp: 1.0, haloK: 0.6, shadowPx: 64, phoneParts: 300, deskParts: 900, resizeSettleMs: 250, gap60: 15, gapFloor: 30, shared: 1.5, sharedMp: 1.0,
   governor: { window: 60, every: 15, slowMs: 20, fastMs: 8, downAfter: 3, upAfter: 10, upAfterMax: 80, undoWithin: 30 },
 } as const;
+
+/** Walk gait (TB-236): world units walked per walk-clip cycle, per unit of the actor's radius, by atlas key. The walk clip
+ *  plays one cycle per stride of ground covered, so the feet match the march at any speed (chill, rage, drum, spd nodes)
+ *  and stop when the actor stops. Measured from the packed frames (lowest-foot travel per cycle, slide audit 5 Nov);
+ *  roster bosses without a measured stride use `boss`. */
+export const GAIT = {
+  strideR: {
+    'orc.grunt': 1.67, 'orc.runner': 1.3, 'orc.brute': 1.24, 'orc.berserker': 1.54, 'orc.shaman': 1.31, 'orc.drummer': 1.43,
+    'orc.wolfrider': 2.77, 'orc.boss': 2.08, 'van.spear': 2.1, 'van.blade': 1.78, wolf: 2.14,
+  } as Readonly<Record<string, number>>,
+  boss: 2.08,
+} as const;
