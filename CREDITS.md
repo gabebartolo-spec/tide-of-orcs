@@ -20,3 +20,5 @@ Third-party assets used in Tide of Orcs.
   (https://creativecommons.org/licenses/by/4.0/). Changed: its graze clip rendered to 2D sprite frames.
 - The Last Knife item icon (`public/items/last-knife.webp`; TB-231): "Sunfang kukri" from Free Game Assets (Painterly Fantasy),
   https://www.freegameassets.com/painterly-fantasy-3d-models/sunfang-kukri, CC0 1.0 (no attribution required). Changed: rendered to a 2D icon.
+- Warboss (`public/sprites/sheet_boss.webp`; TB-229): "Fantasy orc" by Centurion_1705541 on BlendSwap (blend 31037),
+  CC0 1.0 (no attribution required). Changed: re-rigged, Mixamo walk and attack clips retargeted, rendered to 2D sprite frames.
