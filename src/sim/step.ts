@@ -28,7 +28,7 @@ export function spawnOrc(s: SimState, kind: OrcKind, y?: number, champ = false):
   o.hp = hp; o.maxhp = hp; o.spd = T.speed * waveSpeedMult(w); o.r = T.radius; o.atk = hp * BARRICADE.orcAtkFrac;
   o.loot = waveLoot(w) * T.loot * F.loot * tierLoot(s.run.tier);
   o.dead = false; o.burn = 0; o.bleed = 0; o.slow = 0; o.pin = 0; o.root = 0; o.chill = 0; o.stun = 0; o.poison = 0; o.poisonDps = 0; o.hitT = 0; o.wob = s.rng.next() * SIM_MISC.tau; o.swingT = s.rng.next(); o.champ = champ;
-  o.gen++; o.leapt = false; o.castT = s.rng.next() * FIREBALL.every; o.drum = false;
+  o.gen++; o.leapt = false; o.castT = s.rng.next() * FIREBALL.every; o.drum = false; o.bossId = '';
   return o;
 }
 

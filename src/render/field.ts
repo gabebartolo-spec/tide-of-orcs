@@ -22,6 +22,7 @@ import { depthScale, depthY, setMeadowTop, worldY } from './depth';
 import { Interp } from './interp';
 import { FIELD_VIEW, PHONE_QUERY, QUALITY, GROUND, LOOT_VFX, ORC_SPRITE, SKY, TREELINE, VFX, DEPTH, dusk } from '../data/presentation';
 import { SLOTS } from '../data/loot';
+import { BOSS_ROSTER } from '../data/bosses';
 import { quality, fitScale } from './quality';
 import { setTiers } from '../sim/gear';
 
@@ -579,8 +580,16 @@ export class FieldRenderer {
     else { g.fillStyle = P.shadow; g.beginPath(); g.ellipse(x, y + or * 0.9, or * 0.9, or * 0.35, 0, 0, 6.28); g.fill(); }
     // Burning or chilled: the orc's own body takes the colour and a soft rim of it, so shading still reads (TB-089).
     const tint = o.burn > 0 ? P.fireTint : o.chill > 0 ? P.frostTint : '', glow = o.burn > 0 ? P.fire : o.chill > 0 ? P.frost : '';
-    let k = this.orcKeys.get(o.kind);
-    if (!k) { const key = `orc.${ORC_SPRITE[o.kind] ?? o.kind}`; k = { key, atk: key + '.attack' }; this.orcKeys.set(o.kind, k); }
+    let k = o.bossId ? undefined : this.orcKeys.get(o.kind);
+    if (!k) {
+      let key = `orc.${ORC_SPRITE[o.kind] ?? o.kind}`;
+      // TB-230: a roster boss uses its own art when the atlas has it, else exactly the Warboss's; it re-resolves each frame
+      // (one on screen) since its art may load after the first draw
+      const r = o.bossId ? BOSS_ROSTER.find((b) => b.id === o.bossId) : undefined;
+      if (r && this.sprites.has(`orc.${r.sprite}`)) key = `orc.${r.sprite}`;
+      k = { key, atk: key + '.attack' };
+      if (!o.bossId) this.orcKeys.set(o.kind, k);
+    }
     const ost = orcState(s, o), ot = orcClipT(o, ost, this.sprites.duration(k.atk), VFX.strike.orc);
     this.sprites.drawActor(g, k.key, ost, ot, x, y + or * 0.9, or, o.hitT > 0, tint, glow, VFX.arrows.rimBlur);
     this.orcBars(o, x, y, or);
