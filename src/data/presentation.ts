@@ -75,7 +75,7 @@ export const VFX = {
   blood: { hit: 4, kill: 10, vanHit: 4, vanFell: 10, speed: 70, lift: 60, gravity: 420, size: 2, drop: 6, splatLife: 6, splatAlpha: 0.55, dropSplat: 1.6, killSplat: 0.8, vanSplat: 9 },
   /** Orc wind-up: lean back over the last `from` fraction of the swing, `lean` × r (brute/boss own values). */
   /** Where the blow lands in each attack clip (0..1 of its frames), read off the frames: the clip is timed so this frame meets the sim hit (TB-161). */
-  strike: { spear: 72 / 99, blade: 34 / 110, orc: 44 / 69, archer: 33 / 44, ogre: 12 / 29 },  // TB-194: same clip frames, now every frame at 30 fps (was 36/50, 17/55, 22/35 of the even frames); archer: the companion's release, frame 33 of 44 (TB-203)
+  strike: { spear: 72 / 99, blade: 34 / 110, orc: 44 / 69, archer: 33 / 44, ogre: 12 / 29, wolfrider: 12 / 41 },  // TB-194: same clip frames, now every frame at 30 fps (was 36/50, 17/55, 22/35 of the even frames); archer: the companion's release, frame 33 of 44 (TB-203)
   orcWind: { from: 0.6, lean: 0.4, leanBrute: 0.5, liftBoss: 0.35 },
   /** Orc release: crescent swipe radius × r, arc half-width (rad), life; runner scale; boss slam ring × r. */
   orcSwipe: { r: 1.1, half: 0.9, life: 0.15, width: 2, widthBrute: 3.5, runner: 0.75, elite: 1.35, slam: 1.6, slamLife: 0.3 },
@@ -349,10 +349,14 @@ export const QUALITY = {
  *  plays one cycle per stride of ground covered, so the feet match the march at any speed (chill, rage, drum, spd nodes)
  *  and stop when the actor stops. Measured from the packed frames (lowest-foot travel per cycle, slide audit 5 Nov);
  *  roster bosses without a measured stride use `boss`. */
+/** Ground shadow under an orc, in radii: centre offset dx (toward its back) and half-width/height. The wolf rider anchors at the wolf's chest (TB-210). */
+export const ORC_SHADOW: Readonly<Partial<Record<string, { dx: number; rx: number; ry: number }>>> = { wolfrider: { dx: 2.4, rx: 1.6, ry: 0.4 } };
+export const ORC_SHADOW_BASE = { dx: 0, rx: 0.9, ry: 0.35 } as const;
+
 export const GAIT = {
   strideR: {
     'orc.grunt': 1.67, 'orc.runner': 1.3, 'orc.brute': 1.24, 'orc.berserker': 1.54, 'orc.shaman': 1.31, 'orc.drummer': 1.43,
-    'orc.wolfrider': 2.77, 'orc.boss': 2.08, 'orc.orcBoss': 1.63, 'orc.ogreCreature': 1.68, 'orc.ogre': 1.89, 'van.spear': 2.1, 'van.blade': 1.78, wolf: 2.14,
+    'orc.wolfrider': 2.54, 'orc.boss': 2.08, 'orc.orcBoss': 1.63, 'orc.ogreCreature': 1.68, 'orc.ogre': 1.89, 'van.spear': 2.1, 'van.blade': 1.78, wolf: 2.14,
   } as Readonly<Record<string, number>>,
   boss: 2.08,
 } as const;

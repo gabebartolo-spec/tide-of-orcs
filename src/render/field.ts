@@ -20,7 +20,7 @@ import { Ambience } from './ambience';
 import { Sky } from './sky';
 import { depthScale, depthY, setMeadowTop, worldY } from './depth';
 import { Interp } from './interp';
-import { FIELD_VIEW, GAIT, PHONE_QUERY, QUALITY, GROUND, LOOT_VFX, ORC_SPRITE, SKY, TREELINE, VFX, DEPTH, dusk } from '../data/presentation';
+import { FIELD_VIEW, GAIT, PHONE_QUERY, QUALITY, GROUND, LOOT_VFX, ORC_SHADOW, ORC_SHADOW_BASE, ORC_SPRITE, SKY, TREELINE, VFX, DEPTH, dusk } from '../data/presentation';
 import { SLOTS } from '../data/loot';
 import { BOSS_ROSTER } from '../data/bosses';
 import { quality, fitScale } from './quality';
@@ -576,8 +576,9 @@ export class FieldRenderer {
     // Orcs draw at their world position under the frame's base transform: no per-orc setTransform (TB-218 P7), which dominated a 160-orc frame.
     const g = this.g, wind = this.windUp(o), d = this.interp.off(o), x = o.x + d.dx + wind.dx, wy = o.y + d.dy, y = depthY(wy);
     const or = o.r * depthScale(wy);  // fake depth (TB-232): drawn row and size come from the world row; the sim keeps o.r
-    if (quality.q.cheap) { const sh = this.shadowBlit(); g.drawImage(sh, x - or * 0.9, y + or * 0.55, or * 1.8, or * 0.7); }   // phone tier: one prebaked blit
-    else { g.fillStyle = P.shadow; g.beginPath(); g.ellipse(x, y + or * 0.9, or * 0.9, or * 0.35, 0, 0, 6.28); g.fill(); }
+    const osh = ORC_SHADOW[o.kind] ?? ORC_SHADOW_BASE, shx = x + or * osh.dx;  // the wolf rider's shadow sits back under the wolf (TB-210)
+    if (quality.q.cheap) { const sh = this.shadowBlit(); g.drawImage(sh, shx - or * osh.rx, y + or * (0.9 - osh.ry), or * osh.rx * 2, or * osh.ry * 2); }   // phone tier: one prebaked blit
+    else { g.fillStyle = P.shadow; g.beginPath(); g.ellipse(shx, y + or * 0.9, or * osh.rx, or * osh.ry, 0, 0, 6.28); g.fill(); }
     // Burning or chilled: the orc's own body takes the colour and a soft rim of it, so shading still reads (TB-089).
     const tint = o.burn > 0 ? P.fireTint : o.chill > 0 ? P.frostTint : '', glow = o.burn > 0 ? P.fire : o.chill > 0 ? P.frost : '';
     let k = o.bossId ? undefined : this.orcKeys.get(o.kind);
@@ -590,7 +591,7 @@ export class FieldRenderer {
       k = { key, atk: key + '.attack' };
       if (!o.bossId) this.orcKeys.set(o.kind, k);
     }
-    const ost = orcState(s, o), ot = orcClipT(o, ost, this.sprites.duration(k.atk), k.key === 'orc.ogre' ? VFX.strike.ogre : VFX.strike.orc, this.sprites.duration(k.key), (GAIT.strideR[k.key] ?? (o.bossId ? GAIT.boss : 0)) * (or / o.r));  // stride by drawn size: back rows draw smaller (TB-232)
+    const ost = orcState(s, o), ot = orcClipT(o, ost, this.sprites.duration(k.atk), k.key === 'orc.ogre' ? VFX.strike.ogre : k.key === 'orc.wolfrider' ? VFX.strike.wolfrider : VFX.strike.orc, this.sprites.duration(k.key), (GAIT.strideR[k.key] ?? (o.bossId ? GAIT.boss : 0)) * (or / o.r));  // stride by drawn size: back rows draw smaller (TB-232)
     this.sprites.drawActor(g, k.key, ost === 'idle' ? 'attack' : ost, ost === 'idle' ? 0 : ot, x, y + or * 0.9, or, o.hitT > 0, tint, glow, VFX.arrows.rimBlur);  // a halted rider stands on attack frame 0, never a frozen gallop (TB-237)
     this.orcBars(o, x, y, or);
   }
