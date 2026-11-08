@@ -59,8 +59,8 @@ ANIMS = {
     "wolf": (25, False, "wolf", 1.6),  # TB-160 companion run, blam's CC BY Sketchfab wolf retextured; ortho 2.4 is a stand-in (the gltf is 1/100 scale)
     "wolf.attack": (25, False, "wolf", 1.6),  # all 33 bite frames; field.ts scrubs it with the bite cooldown
     "hawk": (30, False, "hawk", 3.0),  # TB-068 companion flight v1 (director 3 Nov): OSU CC BY Sketchfab hawk, its own Wings Flapping clip, frames 0-29 (render_hawk.py VIEW=game YAW=90); anchor = bird centre
-    "orc.wolfrider": (25, True, "orc.wolfrider", 2.6),  # run v8 (director 3 Nov): companion wolf run copied onto the rider wolf, orc at rest; frames from wolfrider/render_wr_sheet.py STEP=1
-    "orc.wolfrider.attack": (15, True, "orc.wolfrider", 2.6),  # shares the run body key, same ortho 1.4
+    "orc.wolfrider": (30, True, "orc.wolfrider", 2.6),  # TB-210: blam CC BY Orc_LightCavalry; Quaternius CC0 Gallop copied on (wolfrider_blam/build_gallop.py RARM=3), then smooth_run.py (34 frames); render_blam.py ORTHO 1.8
+    "orc.wolfrider.attack": (30, True, "orc.wolfrider", 2.6),  # TB-210: its own 07_attack_A clip (axe), all 41 frames, same ortho 1.8
 }
 # TB-188d: Tripo camp buildings, one static frame per building per level (render_camp.py, ORTHO 2.2, anchor = ground centre).
 # hPerR is the frame's height in metres, so camp.ts draws it with r = CAMP_UNITS_PER_M (field units per metre).
@@ -68,9 +68,16 @@ for _b in ("bowyer", "forge", "kitchen", "training"):
     for _l in (1, 2, 3): ANIMS[f"camp.{_b}.{_l}"] = (1, False, f"camp.{_b}.{_l}", 0)
 anchors = json.load(open(os.path.join(src, "anchors.json"), encoding="utf-8-sig"))
 
+# TB-210: the rider frames live in tide-assets/wolfrider_blam/frames; anchored at the wolf's chest so the muzzle stops at the barricade (ORC_SHADOW moves the shadow back).
+WRDIR = os.environ.get("WRFRAMES", os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(src))), "wolfrider_blam", "frames"))
+KEYDIR = {"orc.wolfrider": WRDIR, "orc.wolfrider.attack": WRDIR}
+anchors.update(json.load(open(os.path.join(WRDIR, "anchors_wolfrider.json"), encoding="utf-8-sig")))
+for _k in KEYDIR: anchors[_k] = [430.0] + list(anchors[_k][1:])
+
 def frames(key):
-    fs = [(int(m.group(1)), f) for f in os.listdir(src) if (m := re.fullmatch(re.escape(key) + r"_(\d+)\.png", f))]
-    return [Image.open(os.path.join(src, f)).convert("RGBA") for _, f in sorted(fs)]
+    src_ = KEYDIR.get(key, src)
+    fs = [(int(m.group(1)), f) for f in os.listdir(src_) if (m := re.fullmatch(re.escape(key) + r"_(\d+)\.png", f))]
+    return [Image.open(os.path.join(src_, f)).convert("RGBA") for _, f in sorted(fs)]
 
 cuts, body = {}, {}
 for key, (fps, mirror, bk, br) in ANIMS.items():
