@@ -28,3 +28,5 @@ Third-party assets used in Tide of Orcs.
 - Orc boss (`public/sprites/sheet_orcboss.webp`; TB-213): "Orc" by dartuchiwa on Sketchfab,
   https://sketchfab.com/3d-models/none-03ab7bc77db94a92953c3663ef8ffc6a, CC BY 4.0
   (https://creativecommons.org/licenses/by/4.0/). Changed: its own Walk and Punch clips rendered to 2D sprite frames.
+- Ogre Creature boss (`public/sprites/sheet_ogrecreature.webp`; TB-228): "Ogre Creature" by Sazerac on BlendSwap, CC0.
+  Changed: skeleton rebuilt with Mixamo bone names, hair removed, hide wrap added, Mixamo clips retargeted and rendered to 2D sprite frames.
