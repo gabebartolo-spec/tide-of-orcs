@@ -9,7 +9,9 @@ export function orcState(s: SimState, o: Orc): ActorState {
   // a halted shaman casts and a halted war drummer drums (TB-087)
   const halt = o.kind === 'shaman' ? ORC_FX.shamanHalt : o.kind === 'drummer' ? ORC_FX.drummerHalt : 0;
   if (halt) return o.x <= FIELD.barX + FIELD.barW + halt ? 'attack' : 'walk';
-  return o.x <= FIELD.barX + FIELD.barW + o.r || engagedVanguard(s, o) ? 'attack' : 'walk';
+  if (o.x <= FIELD.barX + FIELD.barW + o.r || engagedVanguard(s, o)) return 'attack';
+  // TB-237: the stride clock stops with the feet, so a rider held in place would freeze mid-gallop
+  return o.kind === 'wolfrider' && (s.run.fallen || o.pin > 0 || o.root > 0 || o.stun > 0) ? 'idle' : 'walk';
 }
 
 /** Seconds into an orc's sprite loop. `wob` starts at a random phase and advances ORC_WOB per sim second, so this runs at
