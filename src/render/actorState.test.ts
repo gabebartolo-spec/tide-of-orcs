@@ -31,6 +31,17 @@ describe('actor sprite state', () => {
   });
 });
 
+describe('canines at rest (TB-237)', () => {
+  it('a rider held in place stands; other orcs and a free rider keep walking', () => {
+    const s = createState(1), o = orcAt(s, 600, 200); o.kind = 'wolfrider';
+    expect(orcState(s, o)).toBe('walk');
+    o.root = 1; expect(orcState(s, o)).toBe('idle');
+    o.root = 0; o.pin = 1; expect(orcState(s, o)).toBe('idle');
+    o.pin = 0; s.run.fallen = true; expect(orcState(s, o)).toBe('idle');
+    o.kind = 'grunt'; expect(orcState(s, o)).toBe('walk');
+  });
+});
+
 describe('drawActor fallbacks', () => {
   const anim = { image: 'x', frames: [[0, 0, 8, 8], [8, 0, 8, 8]] as [number, number, number, number][], fps: 10, ax: 0.5, ay: 1, hPerR: 2 };
   const drawn = (anims: Record<string, typeof anim>, state: 'walk' | 'attack' | 'idle', t = 0.15) => {
