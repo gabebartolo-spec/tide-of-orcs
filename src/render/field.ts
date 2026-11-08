@@ -590,7 +590,7 @@ export class FieldRenderer {
       k = { key, atk: key + '.attack' };
       if (!o.bossId) this.orcKeys.set(o.kind, k);
     }
-    const ost = orcState(s, o), ot = orcClipT(o, ost, this.sprites.duration(k.atk), VFX.strike.orc, this.sprites.duration(k.key), (GAIT.strideR[k.key] ?? (o.bossId ? GAIT.boss : 0)) * (or / o.r));  // stride by drawn size: back rows draw smaller (TB-232)
+    const ost = orcState(s, o), ot = orcClipT(o, ost, this.sprites.duration(k.atk), k.key === 'orc.ogre' ? VFX.strike.ogre : VFX.strike.orc, this.sprites.duration(k.key), (GAIT.strideR[k.key] ?? (o.bossId ? GAIT.boss : 0)) * (or / o.r));  // stride by drawn size: back rows draw smaller (TB-232)
     this.sprites.drawActor(g, k.key, ost === 'idle' ? 'attack' : ost, ost === 'idle' ? 0 : ot, x, y + or * 0.9, or, o.hitT > 0, tint, glow, VFX.arrows.rimBlur);  // a halted rider stands on attack frame 0, never a frozen gallop (TB-237)
     this.orcBars(o, x, y, or);
   }
