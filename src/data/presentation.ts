@@ -352,7 +352,7 @@ export const QUALITY = {
 export const GAIT = {
   strideR: {
     'orc.grunt': 1.67, 'orc.runner': 1.3, 'orc.brute': 1.24, 'orc.berserker': 1.54, 'orc.shaman': 1.31, 'orc.drummer': 1.43,
-    'orc.wolfrider': 2.77, 'orc.boss': 2.08, 'orc.orcBoss': 1.63, 'van.spear': 2.1, 'van.blade': 1.78, wolf: 2.14,
+    'orc.wolfrider': 2.77, 'orc.boss': 2.08, 'orc.orcBoss': 1.63, 'orc.ogreCreature': 1.68, 'van.spear': 2.1, 'van.blade': 1.78, wolf: 2.14,
   } as Readonly<Record<string, number>>,
   boss: 2.08,
 } as const;

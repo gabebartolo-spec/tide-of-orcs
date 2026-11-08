@@ -11,13 +11,14 @@ from PIL import Image
 src, dst = sys.argv[1], sys.argv[2]
 RES, PX_PER_M, SHEET_W, PAD = 512, 110, 2048, 2
 # TB-194: four sheets (each <= 2 MB) since attacks are packed at 30 fps (every clip frame); was orcs + elf (TB-129)
-SHEETS = {"orcs": "sheet_orcs.webp", "orcs2": "sheet_orcs2.webp", "elf": "sheet_elf.webp", "van": "sheet_van.webp", "camp": "sheet_camp.webp", "boss": "sheet_boss.webp", "packed": "sheet_packed.webp", "orcBoss": "sheet_orcboss.webp", "archer": "sheet_archer.webp"}
+SHEETS = {"orcs": "sheet_orcs.webp", "orcs2": "sheet_orcs2.webp", "elf": "sheet_elf.webp", "van": "sheet_van.webp", "camp": "sheet_camp.webp", "boss": "sheet_boss.webp", "packed": "sheet_packed.webp", "orcBoss": "sheet_orcboss.webp", "ogreCreature": "sheet_ogrecreature.webp", "archer": "sheet_archer.webp"}
 ORCS2 = ("orc.runner", "orc.brute", "orc.wolfrider", "hawk")
 def sheet_of(key):
     if key.startswith("camp."): return SHEETS["camp"]
     if key.startswith("archer"): return SHEETS["archer"]  # TB-203 companion archer: its own sheet (206 frames would push sheet_elf past 2 MB)
     if key.startswith("orc.packed"): return SHEETS["packed"]  # TB-214 warlord boss (3DE_Study orc): its own sheet
     if key.startswith("orc.orcBoss"): return SHEETS["orcBoss"]  # TB-213 dartuchiwa orc boss: its own sheet
+    if key.startswith("orc.ogreCreature"): return SHEETS["ogreCreature"]  # TB-228 Sazerac ogre: its own sheet
     if key.startswith("orc.boss"): return SHEETS["boss"]  # TB-229 fantasy orc boss: its own sheet (105 big frames)
     if key.startswith(ORCS2): return SHEETS["orcs2"]
     if key.startswith("orc."): return SHEETS["orcs"]
@@ -46,6 +47,8 @@ ANIMS = {
     "orc.packed.attack": (30, True, "orc.packed", 2.4),  # TB-214 warlord v1: the model's own "punch" clip, frames 1-30
     "orc.orcBoss": (30, True, "orc.orcBoss", 2.4),  # TB-213 v1 (director 9 Nov): the model's own Walk clip, frames 1-29 (render_own.py ORTHO 2.4 CZ 0.6)
     "orc.orcBoss.attack": (30, True, "orc.orcBoss", 2.4),  # TB-213 v1: the model's own Punch clip, frames 1-33
+    "orc.ogreCreature": (30, True, "orc.ogreCreature", 2.4),  # TB-228 v1 (director 9 Nov): Orc Walk, frames 0-35 (apply_anim.py ORTHO 3.6)
+    "orc.ogreCreature.attack": (30, True, "orc.ogreCreature", 2.4),  # TB-228 v1: Standing Melee Attack Downward AS100, frames 0-67
     "elf": (30, False, "elf", 3.0),  # idle loop, every clip frame (TB-144)
     "elf.attack": (30, False, "elf", 3.0),  # all 32 frames; field.ts scrubs it with the bow charge
     "archer": (30, False, "archer", 3.0),  # TB-203 companion idle v7, 162 frames (5% slower resample of the elf idle)
