@@ -25,3 +25,6 @@ Third-party assets used in Tide of Orcs.
 - Warlord boss (`public/sprites/sheet_packed.webp`; TB-214): "Orc Model Rigged Packed Resources" by 3DE_Study on Sketchfab,
   https://sketchfab.com/3d-models/orc-model-rigged-packed-resources-b82ab03340084827b5d9c1c234db4644, CC BY 4.0
   (https://creativecommons.org/licenses/by/4.0/). Changed: its own walking and punch clips rendered to 2D sprite frames.
+- Orc boss (`public/sprites/sheet_orcboss.webp`; TB-213): "Orc" by dartuchiwa on Sketchfab,
+  https://sketchfab.com/3d-models/none-03ab7bc77db94a92953c3663ef8ffc6a, CC BY 4.0
+  (https://creativecommons.org/licenses/by/4.0/). Changed: its own Walk and Punch clips rendered to 2D sprite frames.
