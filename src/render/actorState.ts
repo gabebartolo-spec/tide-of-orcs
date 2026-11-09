@@ -1,5 +1,6 @@
+import { wallX } from '../sim/wallLine';
 import { ORC_FX } from '../data/orcs';
-import { BARRICADE, FIELD, ORC_WOB, VANGUARD } from '../data/balance';
+import { BARRICADE, ORC_WOB, VANGUARD } from '../data/balance';
 import { engagedVanguard } from '../sim/vanguard';
 import { Orc, SimState, Vanguard } from '../sim/state';
 import { ActorState } from './sprites';
@@ -8,8 +9,8 @@ import { ActorState } from './sprites';
 export function orcState(s: SimState, o: Orc): ActorState {
   // a halted shaman casts and a halted war drummer drums (TB-087)
   const halt = o.kind === 'shaman' ? ORC_FX.shamanHalt : o.kind === 'drummer' ? ORC_FX.drummerHalt : 0;
-  if (halt) return o.x <= FIELD.barX + FIELD.barW + halt ? 'attack' : 'walk';
-  if (o.x <= FIELD.barX + FIELD.barW + o.r || engagedVanguard(s, o)) return 'attack';
+  if (halt) return o.x <= wallX(o.y) + halt ? 'attack' : 'walk';
+  if (o.x <= wallX(o.y) + o.r || engagedVanguard(s, o)) return 'attack';
   // TB-237: the stride clock stops with the feet, so a rider held in place would freeze mid-gallop
   return o.kind === 'wolfrider' && (s.run.fallen || o.pin > 0 || o.root > 0 || o.stun > 0) ? 'idle' : 'walk';
 }

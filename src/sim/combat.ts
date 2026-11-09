@@ -1,3 +1,4 @@
+import { wallX } from './wallLine';
 import { MAT_DROP, MAT_IDS } from '../data/camp';
 import { ARROWS, FIELD, LOB, PLAYER, SIM_MISC } from '../data/balance';
 import { FIREBALL } from '../data/orcs';
@@ -229,12 +230,12 @@ export function bounce(s: SimState, x: number, y: number, dmg: number, hops: num
 /** Starfall: arrows fall straight down on up to `starArrows` random orcs across the plain (random ground where there are fewer), `stagger` s apart. */
 export function starfall(s: SimState, ev: EventBus): void {
   const S = ARROWS.starfall, foes: Orc[] = [];
-  s.orcs.forEach((o) => { if (!o.dead && o.x > FIELD.barX + FIELD.barW && o.x < FIELD.w) foes.push(o); });
+  s.orcs.forEach((o) => { if (!o.dead && o.x > wallX(o.y) && o.x < FIELD.w) foes.push(o); });
   for (let i = 0; i < s.stats.starArrows; i++) {
     const p = s.shots.alloc(); if (!p) return;
     let tx: number, ty: number;
-    if (foes.length) { const o = foes.splice(Math.floor(s.rng.next() * foes.length), 1)[0]!; tx = Math.max(FIELD.barX + FIELD.barW + o.r, o.x - o.spd * (S.flight + i * S.stagger)); ty = o.y; }
-    else { tx = FIELD.barX + 60 + s.rng.next() * (FIELD.w - FIELD.barX - 100); ty = 40 + s.rng.next() * (FIELD.h - 80); }
+    if (foes.length) { const o = foes.splice(Math.floor(s.rng.next() * foes.length), 1)[0]!; tx = Math.max(wallX(o.y) + o.r, o.x - o.spd * (S.flight + i * S.stagger)); ty = o.y; }
+    else { ty = 40 + s.rng.next() * (FIELD.h - 80); const x0 = wallX(ty) + 46; tx = x0 + s.rng.next() * (FIELD.w - 40 - x0); }
     p.kind = 'star'; p.sx = p.x = p.tx = tx; p.sy = p.y = p.ty = ty; p.t = -i * S.stagger; p.h = S.height; p.vx = p.vy = 0;
     p.r = S.r; p.dmg = s.stats.dmg * LOB.dmgMult * s.stats.starDmg; p.fx = rollFx(s); p.pierce = 0; p.life = Infinity; p.target = null; p.hit.clear();
   }

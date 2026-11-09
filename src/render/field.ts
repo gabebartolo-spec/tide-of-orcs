@@ -1,3 +1,6 @@
+import { wallX } from '../sim/wallLine';
+import { barFrac } from '../sim/barricade';
+import { WallDamage } from './wallDamage';
 import { Treeline } from './treeline';
 import { elfLayers, stepAimMix } from './elfPose';
 import { ARROWS, BARRICADE, FIELD, LOB, SOURCES, VANGUARD, WAVE_LEN } from '../data/balance';
@@ -5,7 +8,6 @@ import { FIREBALL, ORC_TYPES, OrcKind } from '../data/orcs';
 import { SimEvent } from '../sim/events';
 import { nearestOrc } from '../sim/combat';
 import { Orc, Projectile, SimState, Vanguard, Wolf } from '../sim/state';
-import { barFrac } from '../sim/barricade';
 import { engagedVanguard } from '../sim/vanguard';
 import { P } from './palette';
 import { Particles } from './particles';
@@ -73,6 +75,7 @@ export class FieldRenderer {
   readonly interp = new Interp();
   private ground = new Ground();
   private ambience = new Ambience(BAR_X + BAR_W);
+  private wallDamage = new WallDamage();
   /** Animation clock for sprite frames. */
   private clock = 0;
   /** Elf shot loop (TB-202): idle<->draw mix (0 idle, 1 draw), clock at the last elf draw, last aimed charge, current lob cooldown. */
@@ -171,7 +174,7 @@ export class FieldRenderer {
         case 'storm': this.storms.push({ pts: e.pts, life: VFX.stormLife, c: P.lilac }); for (let i = 1; i < e.pts.length; i++) fx.blood(e.pts[i]![0], e.pts[i]![1], footOf(ACTOR_R), P.bloodOrc, B.hit, 0); break;
         case 'burnSpread': fx.burst(e.tx, e.ty, P.amber, VFX.hit[0], VFX.hit[1]); break;
         case 'pinned': fx.burst(e.x, e.y, P.cream, VFX.hit[0], VFX.hit[1]); fx.text(e.x, e.y - 22, STR.pinned, P.cream); break;
-        case 'freeRally': fx.burst(BAR_X, H / 2, P.grove, VFX.regrow[0], VFX.regrow[1]); fx.text(BAR_X + 60, H / 2 - 40, STR.freeRally, P.grove); break;
+        case 'freeRally': fx.burst(wallX(H / 2), H / 2, P.grove, VFX.regrow[0], VFX.regrow[1]); fx.text(wallX(H / 2) + 46, H / 2 - 40, STR.freeRally, P.grove); break;
         case 'thunder': fx.burst(W / 2, H / 2, P.cream, VFX.regrow[0], VFX.regrow[1]); fx.text(W / 2, H / 2 - 40, STR.thunder, P.cream); break;
         case 'starCloak': fx.burst(e.x, e.y, P.starfall, VFX.hit[0], VFX.hit[1]); break;
         case 'impact': this.impacts.push({ x: e.x, y: e.y, r: e.r, life: IMPACT_LIFE }); fx.burst(e.x, e.y, P.cream, VFX.impact[0], VFX.impact[1]); fx.ring(e.x, e.y, e.r * VFX.lobDust.r, P.sand, 2, VFX.lobDust.life); break;
@@ -192,7 +195,7 @@ export class FieldRenderer {
         case 'orcSwing': this.orcSwing(e.kind, e.x, e.y, e.tx, e.ty, e.r); break;
         case 'vanStrike': this.vanStrike(e.type, e.x, e.y, e.tx, e.ty); break;
         case 'barricadeHit': this.shake = Math.min(1, this.shake + (e.amount / s.stats.barMax) * 4); break;
-        case 'barricadeRegrow': fx.burst(BAR_X, H / 2, P.grove, VFX.regrow[0], VFX.regrow[1]); break;
+        case 'barricadeRegrow': fx.burst(wallX(H / 2), H / 2, P.grove, VFX.regrow[0], VFX.regrow[1]); break;
         case 'vanguardRallied': fx.burst(e.x + 20, e.y, P.cream, VFX.rally[0], VFX.rally[1]); break;
         case 'vanguardHit': fx.blood(e.x, e.y, footOf(ACTOR_R) + 4, P.bloodElf, B.vanHit, -1); break;
         case 'vanguardFell': fx.burst(e.x, e.y, P.spear, VFX.vanFell[0], VFX.vanFell[1]); fx.blood(e.x, e.y, footOf(ACTOR_R) + 4, P.bloodElf, B.vanFell, 0); fx.splat(e.x, e.y + 16, B.vanSplat, P.bloodElf); break;
@@ -237,7 +240,7 @@ export class FieldRenderer {
 
   /** An orc's blow lands: crescent swipe (an X for elites, a ground slam for the boss); on the wall, timber and cream chips. Vanguard blood comes from vanguardHit. */
   private orcSwing(kind: string, x: number, y: number, tx: number, ty: number, r: number): void {
-    const fx = this.fx, S = VFX.orcSwipe, Wh = VFX.wallHit, ang = Math.atan2(ty - y, tx - x), wall = tx === BAR_X + BAR_W;
+    const fx = this.fx, S = VFX.orcSwipe, Wh = VFX.wallHit, ang = Math.atan2(ty - y, tx - x), wall = tx === wallX(ty);
     if (kind === 'boss') fx.ring(x - r * 0.6, y + footOf(r), r * S.slam, P.cream, S.widthBrute, S.slamLife);
     else {
       const rr = r * S.r * (kind === 'runner' ? S.runner : 1), w = kind === 'brute' ? S.widthBrute : S.width, elite = kind === 'elite';
@@ -245,6 +248,7 @@ export class FieldRenderer {
       if (elite) fx.arc(x, y, rr * S.elite, ang, S.half, P.cream, P.cream, w, S.life);
     }
     if (!wall) return;
+    if (!this.reducedMotion) { const dy = Math.max(ty, this.wallTop + Wh.capPad); this.wallDamage.dust(wallX(dy), dy); }
     ty = Math.max(ty, this.wallTop + Wh.capPad);  // an orc still in the wood strikes the wall's hidden length: its chips fly from the visible top
     const chips = kind === 'boss' ? Wh.chipsBoss : kind === 'brute' ? Wh.chipsBrute : Wh.chips;
     fx.burst(tx, ty, P.timber, chips, Wh.speed, Wh.chipAng, Wh.chipSpread); fx.burst(tx, ty, P.cream, Wh.cream, Wh.speed, Wh.chipAng, Wh.chipSpread);
@@ -262,7 +266,7 @@ export class FieldRenderer {
 
   draw(s: SimState, dt: number, aim: { x: number; y: number } | null = null): void {
     const g = this.g; this.sim = s;
-    this.fx.update(dt); this.clock += dt;
+    this.fx.update(dt); this.clock += dt; this.wallDamage.update(dt, barFrac(s), this.fx, this.reducedMotion);
     for (let i = this.storms.length - 1; i >= 0; i--) { this.storms[i]!.life -= dt; if (this.storms[i]!.life <= 0) this.storms.splice(i, 1); }
     for (let i = this.impacts.length - 1; i >= 0; i--) { this.impacts[i]!.life -= dt; if (this.impacts[i]!.life <= 0) this.impacts.splice(i, 1); }
     for (let i = this.puffs.length - 1; i >= 0; i--) { const pf = this.puffs[i]!; pf.life -= dt; pf.y -= pf.vy * dt; if (pf.life <= 0) this.puffs.splice(i, 1); }
@@ -290,14 +294,12 @@ export class FieldRenderer {
     this.forest(orcs);
 
     // barricade
-    const frac = barFrac(s);
     const top = Math.max(vis.y0, this.treeline.skirtBase(vis.y0) - TREELINE.cap.up); this.wallTop = top;  // the wall rises a little into the bush skirt; its stake tips are the cap,
     // the elf's post stands on the meadow, clear of the skirt (TB-232)
     // the whole post moves down together (never squashed against the skirt), so the elf stays at mid-meadow on a short phone view too
     { const r = this.postRows, sh = Math.max(0, this.treeline.skirtBase(vis.y0) + DEPTH.postClear - ACTOR_FOOT * depthScale(r.a) - depthY(r.a)); r.lo = depthY(r.a) + sh; r.hi = Math.min(H - ACTOR_FOOT * 2, depthY(r.b) + sh); }
-    g.fillStyle = P.wallShade; g.fillRect(BAR_X + 4, top + GROUND.fence.shadeFrom, BAR_W + 4, H - top - GROUND.fence.shadeFrom);
-    this.fencePanels(top, frac, H);
-    if (s.stats.spikes) { g.fillStyle = P.cream; for (let y = 8; y < H; y += 24) { g.beginPath(); g.moveTo(BAR_X + BAR_W, y); g.lineTo(BAR_X + BAR_W + 9, y + 4); g.lineTo(BAR_X + BAR_W, y + 8); g.closePath(); g.fill(); } }
+    this.fencePanels(top, H);
+    if (s.stats.spikes) { g.fillStyle = P.cream; for (let y = 8; y < H; y += 24) { const wx = wallX(y); g.beginPath(); g.moveTo(wx, y); g.lineTo(wx + 9, y + 4); g.lineTo(wx, y + 8); g.closePath(); g.fill(); } }
 
     this.fx.drawGround(g);
     s.zones.forEach((z) => {
@@ -306,10 +308,10 @@ export class FieldRenderer {
       g.beginPath(); g.ellipse(z.x, depthY(z.y), z.r, z.r * VFX.zoneSquash, 0, 0, 6.28); g.fill(); g.stroke(); g.globalAlpha = 1;
     });
 
-    if (s.stats.treant) { this.depthAt(BAR_X + 47, H / 2 + 44); g.fillStyle = P.treantTrunk; g.fillRect(BAR_X + 40, H / 2 + 10, 14, 34); g.fillStyle = P.treantLeaf; g.beginPath(); g.arc(BAR_X + 47, H / 2 + 2, 22, 0, 6.28); g.fill(); g.fillStyle = P.treantLeaf2; g.beginPath(); g.arc(BAR_X + 40, H / 2 - 6, 14, 0, 6.28); g.fill(); this.at(0, 0, false); }
+    if (s.stats.treant) { this.depthAt(wallX(H / 2) + 33, H / 2 + 44); g.fillStyle = P.treantTrunk; g.fillRect(wallX(H / 2) + 26, H / 2 + 10, 14, 34); g.fillStyle = P.treantLeaf; g.beginPath(); g.arc(wallX(H / 2) + 33, H / 2 + 2, 22, 0, 6.28); g.fill(); g.fillStyle = P.treantLeaf2; g.beginPath(); g.arc(wallX(H / 2) + 26, H / 2 - 6, 14, 0, 6.28); g.fill(); this.at(0, 0, false); }
 
     this.lobCd = s.stats.lobCd;
-    const drawn = Math.min(1, (s.run.shotT[0] ?? 0) / s.stats.lobCd), aiming = aim !== null && aim.x > BAR_X + BAR_W && !s.run.fallen;
+    const drawn = Math.min(1, (s.run.shotT[0] ?? 0) / s.stats.lobCd), aiming = aim !== null && aim.x > wallX(aim.y) && !s.run.fallen;
     this.elf(ELF_X, H / 2, aiming ? drawn : -1);
     this.gearFx();
     if (aim && aiming) this.reticle(aim.x, depthY(aim.y), s.stats.radius, drawn);
@@ -337,7 +339,7 @@ export class FieldRenderer {
     // aerial haze over the wood and the back rows, on top of every actor there, so a far orc is as soft as the trees behind it (TB-232)
     const hz = this.sky.haze(g, vis.x0, this.skyLine, vis.x1);
     // the barricade is the nearest prop and takes no distance haze: its panels inside the haze band are drawn again over it
-    if (hz > this.wallTop) { g.save(); g.beginPath(); g.rect(BAR_X - 40, this.wallTop - 4, BAR_W + 80, hz - this.wallTop + 4); g.clip(); this.fencePanels(this.wallTop, frac, hz); g.restore(); }
+    if (hz > this.wallTop) { g.save(); g.beginPath(); g.rect(0, this.wallTop - 4, W, hz - this.wallTop + 4); g.clip(); this.fencePanels(this.wallTop, hz); g.restore(); }
 
     // effects never rise into the sky band over the HUD: the world effects are clipped to the field below the crown line
     g.save(); g.beginPath(); g.rect(vis.x0 - 50, this.skyBand, vis.x1 - vis.x0 + 100, H - this.skyBand + 50); g.clip();
@@ -370,6 +372,7 @@ export class FieldRenderer {
     }
 
     this.ambience.motesDraw(g, this.clock, n, this.reducedMotion, Math.max(this.vis.y0, this.treeline.skirtBase(this.vis.y0)));  // the meadow only: no glow points over the trees
+    this.wallDamage.draw(g, this.clock);
     this.fx.draw(g);
     g.restore();
 
@@ -423,25 +426,17 @@ export class FieldRenderer {
   }
 
 
-  /** The barricade's stacked fence panels (or the plank fallback) from `top` down to `yMax`. */
-  private fencePanels(top: number, frac: number, yMax: number): void {
-    const g = this.g, H = FIELD.h, fence = decorImg('fence');
+  /** The barricade: one image of the whole slanted run down to `yMax` (or the plank fallback from `top`). It stays solid at any health; the HUD bar shows damage. */
+  private fencePanels(top: number, yMax: number): void {
+    const g = this.g, fence = decorImg('fence');
     if (fence) {
-      // stacked fence panels running into the field, top to bottom so each overlaps the one behind it
-      const L = GROUND.fence, lh = L.w * fence.height / fence.width;
-      // the top panel stands whole with its own pointed stakes as the wall's cap (TB-220): its top edge is `top`, nothing clips it or hides it
-      for (let i = 0, y = top; y < yMax; i++, y += L.step) {
-        const alive = y < 0 || y / H < frac || (i * 0.618034) % 1 < frac;  // same fixed break scatter as the planks
-        g.globalAlpha = alive ? 1 : 0.3;
-        g.drawImage(fence, BAR_X + BAR_W / 2 - L.w / 2 + (alive ? 0 : 5), y, L.w, lh);
-      }
-      g.globalAlpha = 1;
+      const L = GROUND.fence, k = fence.width / L.w, h = Math.min(yMax, L.y + L.h) - L.y;
+      g.drawImage(this.wallDamage.image(fence), 0, 0, fence.width, h * k, L.x, L.y, L.w, h);
     } else for (let y = top - ((top % 18) + 18) % 18; y < yMax; y += 18) {
-      // each plank breaks at a fixed point (golden-ratio scatter), so damage never flickers frame to frame
-      const alive = y < 0 || y / H < frac || ((y / 18) * 0.618034) % 1 < frac;
-      g.fillStyle = alive ? (y % 36 ? P.timber : P.timberDark) : P.timberSplinter;
-      g.fillRect(BAR_X, y, BAR_W, 16);
-      g.fillStyle = P.timberBand; g.fillRect(BAR_X + 2, y - 2, BAR_W - 4, 3);
+      const wx = wallX(y) - BAR_W;
+      g.fillStyle = y % 36 ? P.timber : P.timberDark;
+      g.fillRect(wx, y, BAR_W, 16);
+      g.fillStyle = P.timberBand; g.fillRect(wx + 2, y - 2, BAR_W - 4, 3);
     }
   }
 
@@ -628,7 +623,7 @@ export class FieldRenderer {
   private windUp(o: Orc): { dx: number; dy: number } {
     const w = this.wind; w.dx = 0; w.dy = 0;
     if (this.reducedMotion || !this.sim) return w;
-    if (o.x > BAR_X + BAR_W + o.r + 0.01 && !engagedVanguard(this.sim, o)) return w;
+    if (o.x > wallX(o.y) + o.r + 0.01 && !engagedVanguard(this.sim, o)) return w;
     const Wd = VFX.orcWind, u = (o.swingT / BARRICADE.orcSwing - (1 - Wd.from)) / Wd.from;
     if (u <= 0) return w;
     const k = Math.min(1, u) * o.r;

@@ -1,3 +1,4 @@
+import { wallX } from './wallLine';
 import { describe, expect, it } from 'vitest';
 import { createState } from './state';
 import { EventBus } from './events';
@@ -5,10 +6,10 @@ import { noInputs, spawnOrc, step } from './step';
 import { kill } from './combat';
 import { FIREBALL, ORC_FX, OrcKind } from '../data/orcs';
 import { BOSS_SCRIPT, bossScript } from '../data/bosses';
-import { FIELD, STEP } from '../data/balance';
+import { STEP } from '../data/balance';
 
 type S = ReturnType<typeof createState>;
-const WALL = FIELD.barX + FIELD.barW;
+const WALL = wallX(240);
 const orc = (s: S, kind: OrcKind, x: number, y = 240) => { const o = spawnOrc(s, kind, y)!; o.x = x; o.hp = o.maxhp = 1e9; return o; };
 const live = (s: S) => { const a: { kind: string; x: number; champ: boolean }[] = []; s.orcs.forEach((o) => { if (!o.dead) a.push(o); }); return a; };
 
