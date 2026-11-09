@@ -186,6 +186,16 @@ The node layout draws a tree: Waking is the trunk base, Muster and Grey Wolf the
 
 **Full-screen tree (TB-189).** A Full screen button at the top right of the Grove tree covers the window with the Grove pane: the whole tree fits beside the detail card (`TREE_VIEW.wholeMargin` of the space), the camera stays fixed (no pan or zoom), and clicking selects and buys as usual. Close or Esc returns to the normal view and its camera.
 
+## Pixel flipbooks (TB-240)
+
+One-shot effects from unTied Games' Super Pixel Effects Gigapack (licence and credit: CREDITS.md), chosen by the director on 10 Nov:
+arrow strike `symmetrical_impact_001` white, Storm Glade and Shock Arrows `lightning_strike_001` yellow, shatter `symmetrical_explosion_001` blue,
+orc death `symmetrical_smoke_burst_001` white, wall hit `directional_smoke_burst_001` white, boss slam `stylized_explosion_001` orange.
+Each is one horizontal strip in `public/vfx`, played at the pack's 15 fps and drawn with smoothing off so the pixels stay hard at any field scale.
+They play on top of the existing vector effects (the strike ring is replaced; the stroked ring returns only while the strip is loading).
+Not used, by choice: flame overlays (burning orcs are tinted on their own body), the ice cube and heart spells (too cute for the tone).
+Source pack lives outside the repo in tide-assets/vfx_gigapack; never commit the pack itself (its licence forbids redistribution).
+
 ## Asset pipeline (Tripo, Meshy, Cascadeur, ElevenLabs, Suno)
 Vector draws stay the baseline so the game is always playable without assets. Actors ship as **pre-rendered sprite sheets** on top of the same palette. Agents run Tripo, Meshy and ElevenLabs themselves, each job only with the director's written spend yes:
 - **Tripo** generates the 3D models (orc grunt/runner/brute/warboss, elf, spearman, bladedancer, wolf, hawk, treant). Prompt with the palette hexes and "soft low-poly toy-board, flat shading, no outlines". Colour reference (director, 31 Oct): Esoteric Ebb and Thronefall: muted, painterly, low-poly, flat shading, matte hand-painted textures (dusty sage, rust, ochre, bone). One model per actor; variants by tint in-engine, not by new models.
