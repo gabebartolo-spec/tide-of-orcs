@@ -22,13 +22,15 @@ import { Ambience } from './ambience';
 import { Sky } from './sky';
 import { depthScale, depthY, setMeadowTop, worldY } from './depth';
 import { Interp } from './interp';
-import { FIELD_VIEW, GAIT, PHONE_QUERY, QUALITY, WALL_ART, LOOT_VFX, ORC_SHADOW, ORC_SHADOW_BASE, ORC_SPRITE, SKY, TREELINE, VFX, DEPTH, dusk } from '../data/presentation';
+import { FIELD_VIEW, GAIT, PHONE_QUERY, QUALITY, WALL_ART, LOOT_VFX, ORC_SHADOW, ORC_SHADOW_BASE, ORC_SPRITE, SKY, TREELINE, VFX, DEPTH, FLIPBOOK_SIZE, dusk } from '../data/presentation';
+import { Flipbooks } from './flipbook';
 import { SLOTS } from '../data/loot';
 import { BOSS_ROSTER } from '../data/bosses';
 import { quality, fitScale } from './quality';
 import { setTiers } from '../sim/gear';
 
 const IMPACT_LIFE = VFX.impactLife;
+const FS = FLIPBOOK_SIZE;
 /** Foot offset below an actor's centre, where its blood lands. */
 const footOf = (r: number): number => r * 0.9;
 /** In-place insertion sort by y (TB-218 P7): the draw order barely changes frame to frame, so this is near O(n) and allocates nothing. */
@@ -59,6 +61,8 @@ function drawnEvent<E extends SimEvent>(e: E): E {
 export class FieldRenderer {
   private g: CanvasRenderingContext2D;
   private fx = new Particles();
+  /** Pixel-art one-shots (TB-240): arrow strike, lightning, shatter, orc death, wall dust, boss slam. */
+  private books = new Flipbooks();
   private shake = 0;
   private storms: { pts: [number, number][]; life: number; c: string }[] = [];
   private impacts: { x: number; y: number; r: number; life: number }[] = [];
@@ -164,6 +168,7 @@ export class FieldRenderer {
         case 'kill': {
           const r = ORC_TYPES[e.kind as OrcKind]?.radius ?? ACTOR_R;
           fx.burst(e.x, e.y, P.orc, VFX.kill[0], VFX.kill[1]); fx.blood(e.x, e.y, footOf(r), P.bloodOrc, B.kill, 0); fx.splat(e.x, e.y + footOf(r), r * B.killSplat, P.bloodOrc);
+          this.books.spawn('death', e.x, e.y, r * FS.deathPerR);
           fx.text(e.x, e.y - 14, '+' + fmt(e.loot), P.amber); break;
         }
         case 'hit': fx.burst(e.x, e.y, P.cream, VFX.hit[0], VFX.hit[1]); fx.blood(e.x, e.y, footOf(ACTOR_R), P.bloodOrc, B.hit, e.src === 'lob' ? 0 : 1); if (e.crit) fx.text(e.x, e.y - 22, 'crit', P.cream); break;
@@ -171,13 +176,13 @@ export class FieldRenderer {
         case 'bite': fx.burst(e.x, e.y, P.cream, VFX.bite[0], VFX.bite[1]); fx.blood(e.x, e.y, footOf(ACTOR_R), P.bloodOrc, B.hit, 0); break;
         case 'hawkDive': fx.burst(e.x, e.y, P.cream, VFX.hawk[0], VFX.hawk[1]); fx.blood(e.x, e.y, footOf(ACTOR_R), P.bloodOrc, B.kill, 0); break;
         case 'treantStamp': fx.burst(e.x, e.y, P.sage, VFX.treant[0], VFX.treant[1]); fx.blood(e.x + 30, e.y - 20, footOf(ACTOR_R), P.bloodOrc, B.hit, 1); this.shake = Math.min(1, this.shake + VFX.treantShake); break;
-        case 'storm': this.storms.push({ pts: e.pts, life: VFX.stormLife, c: P.lilac }); for (let i = 1; i < e.pts.length; i++) fx.blood(e.pts[i]![0], e.pts[i]![1], footOf(ACTOR_R), P.bloodOrc, B.hit, 0); break;
+        case 'storm': this.storms.push({ pts: e.pts, life: VFX.stormLife, c: P.lilac }); for (let i = 1; i < e.pts.length; i++) { const [px, py] = e.pts[i]!; fx.blood(px, py, footOf(ACTOR_R), P.bloodOrc, B.hit, 0); this.books.spawn('lightning', px, py + footOf(ACTOR_R), ACTOR_R * FS.lightningPerR); } break;
         case 'burnSpread': fx.burst(e.tx, e.ty, P.amber, VFX.hit[0], VFX.hit[1]); break;
         case 'pinned': fx.burst(e.x, e.y, P.cream, VFX.hit[0], VFX.hit[1]); fx.text(e.x, e.y - 22, STR.pinned, P.cream); break;
         case 'freeRally': fx.burst(wallX(H / 2), H / 2, P.grove, VFX.regrow[0], VFX.regrow[1]); fx.text(wallX(H / 2) + 46, H / 2 - 40, STR.freeRally, P.grove); break;
         case 'thunder': fx.burst(W / 2, H / 2, P.cream, VFX.regrow[0], VFX.regrow[1]); fx.text(W / 2, H / 2 - 40, STR.thunder, P.cream); break;
         case 'starCloak': fx.burst(e.x, e.y, P.starfall, VFX.hit[0], VFX.hit[1]); break;
-        case 'impact': this.impacts.push({ x: e.x, y: e.y, r: e.r, life: IMPACT_LIFE }); fx.burst(e.x, e.y, P.cream, VFX.impact[0], VFX.impact[1]); fx.ring(e.x, e.y, e.r * VFX.lobDust.r, P.sand, 2, VFX.lobDust.life); break;
+        case 'impact': if (this.books.ready('impact')) this.books.spawn('impact', e.x, e.y, e.r * FS.impactPerR); else { this.impacts.push({ x: e.x, y: e.y, r: e.r, life: IMPACT_LIFE }); fx.burst(e.x, e.y, P.cream, VFX.impact[0], VFX.impact[1]); } fx.ring(e.x, e.y, e.r * VFX.lobDust.r, P.sand, 2, VFX.lobDust.life); break;
         case 'fireStrike': this.patches.push({ x: e.x, y: e.y, r: e.r, life: A.patchLife, c: P.firePatch, fire: true }); fx.ring(e.x, e.y, e.r, P.fire, 3, A.ringLife); for (let i = 0; i < A.fire[0] * 3; i++) fx.flame(e.x + (Math.random() - 0.5) * e.r * 1.6, e.y + (Math.random() - 0.5) * e.r * 0.8, i % 2 ? P.fire : P.amber); fx.burst(e.x, e.y, P.fire, A.fire[0] * 2, A.fire[1]); break;
         case 'fireballCast': fx.burst(e.x, e.y, P.ember, F.cast[0], F.cast[1], Math.atan2(e.ty - e.y, e.tx - e.x), F.castSpread); for (let i = 0; i < F.castFlames; i++) fx.flame(e.x + (Math.random() - 0.5) * F.r, e.y, i % 2 ? P.fire : P.ember); break;
         case 'fireballStrike':
@@ -189,10 +194,10 @@ export class FieldRenderer {
           this.shake = Math.min(1, this.shake + F.shake); break;
         case 'chill': this.patches.push({ x: e.x, y: e.y, r: e.r, life: A.patchLife, c: P.frostPatch, fire: false }); fx.ring(e.x, e.y, e.r, P.frost, 3, A.ringLife); this.shards(e.x, e.y, e.r); fx.burst(e.x, e.y, P.frost, A.frost[0] * 2, A.frost[1]); break;
         case 'stun': fx.burst(e.x, e.y, P.spark, A.stun[0], A.stun[1]); break;
-        case 'shatter': fx.ring(e.x, e.y, e.r, P.frost, 3, A.shatterLife); this.shards(e.x, e.y, e.r * 0.8); fx.burst(e.x, e.y, P.frost, A.shatter[0], A.shatter[1]); fx.burst(e.x, e.y, P.cream, A.shatter[0] / 2, A.shatter[1]); break;
+        case 'shatter': fx.ring(e.x, e.y, e.r, P.frost, 3, A.shatterLife); this.shards(e.x, e.y, e.r * 0.8); fx.burst(e.x, e.y, P.frost, A.shatter[0], A.shatter[1]); fx.burst(e.x, e.y, P.cream, A.shatter[0] / 2, A.shatter[1]); this.books.spawn('shatter', e.x, e.y, e.r * FS.shatterPerR); break;
         case 'bounceHit': fx.ring(e.x, e.y, A.hopRing, P.arcane, 3, A.ringLife); fx.burst(e.x, e.y, P.arcane, A.bounce[0] * 2, A.bounce[1]); break;
-        case 'shock': for (const q of e.pts) { this.storms.push({ pts: [[e.x, e.y], q], life: VFX.stormLife, c: P.spark }); fx.burst(q[0], q[1], P.spark, A.stun[0], A.stun[1]); } break;
-        case 'orcSwing': this.orcSwing(e.kind, e.x, e.y, e.tx, e.ty, e.r); break;
+        case 'shock': for (const q of e.pts) { this.storms.push({ pts: [[e.x, e.y], q], life: VFX.stormLife, c: P.spark }); fx.burst(q[0], q[1], P.spark, A.stun[0], A.stun[1]); this.books.spawn('lightning', q[0], q[1] + footOf(ACTOR_R), ACTOR_R * FS.lightningPerR); } break;
+        case 'orcSwing': this.orcSwing(e.kind, e.x, e.y, e.tx, e.ty, e.r, e0.t === 'orcSwing' && e0.tx === wallX(e0.ty)); break;   // the wall test reads the sim row: drawn ty no longer lies on the wall line (TB-240)
         case 'vanStrike': this.vanStrike(e.type, e.x, e.y, e.tx, e.ty); break;
         case 'barricadeHit': this.shake = Math.min(1, this.shake + (e.amount / s.stats.barMax) * 4); break;
         case 'barricadeRegrow': fx.burst(wallX(H / 2), H / 2, P.grove, VFX.regrow[0], VFX.regrow[1]); break;
@@ -200,7 +205,7 @@ export class FieldRenderer {
         case 'vanguardHit': fx.blood(e.x, e.y, footOf(ACTOR_R) + 4, P.bloodElf, B.vanHit, -1); break;
         case 'vanguardFell': fx.burst(e.x, e.y, P.spear, VFX.vanFell[0], VFX.vanFell[1]); fx.blood(e.x, e.y, footOf(ACTOR_R) + 4, P.bloodElf, B.vanFell, 0); fx.splat(e.x, e.y + 16, B.vanSplat, P.bloodElf); break;
         case 'replant': this.ceremony.start(this.reducedMotion); break;
-        case 'gameReset': this.ceremony.skip(); this.slow = 0; this.edge = 0; this.flash = 0; this.beams.length = 0; break;
+        case 'gameReset': this.ceremony.skip(); this.slow = 0; this.edge = 0; this.flash = 0; this.beams.length = 0; this.books.clear(); break;
         case 'loot': this.lootDrop(e.x, e.y, e.rarity); break;
         default: break;
       }
@@ -239,9 +244,9 @@ export class FieldRenderer {
   }
 
   /** An orc's blow lands: crescent swipe (an X for elites, a ground slam for the boss); on the wall, timber and cream chips. Vanguard blood comes from vanguardHit. */
-  private orcSwing(kind: string, x: number, y: number, tx: number, ty: number, r: number): void {
-    const fx = this.fx, S = VFX.orcSwipe, Wh = VFX.wallHit, ang = Math.atan2(ty - y, tx - x), wall = tx === wallX(ty);
-    if (kind === 'boss') fx.ring(x - r * 0.6, y + footOf(r), r * S.slam, P.cream, S.widthBrute, S.slamLife);
+  private orcSwing(kind: string, x: number, y: number, tx: number, ty: number, r: number, wall: boolean): void {
+    const fx = this.fx, S = VFX.orcSwipe, Wh = VFX.wallHit, ang = Math.atan2(ty - y, tx - x);
+    if (kind === 'boss') { fx.ring(x - r * 0.6, y + footOf(r), r * S.slam, P.cream, S.widthBrute, S.slamLife); this.books.spawn('slam', x - r * 0.6, y + footOf(r), r * FS.slamPerR); }
     else {
       const rr = r * S.r * (kind === 'runner' ? S.runner : 1), w = kind === 'brute' ? S.widthBrute : S.width, elite = kind === 'elite';
       fx.arc(x, y, rr, ang, S.half, P.cream, P.cream, w, S.life);
@@ -250,6 +255,7 @@ export class FieldRenderer {
     if (!wall) return;
     if (!this.reducedMotion) { const dy = Math.max(ty, this.wallTop + Wh.capPad); this.wallDamage.dust(wallX(dy), dy); }
     ty = Math.max(ty, this.wallTop + Wh.capPad);  // an orc still in the wood strikes the wall's hidden length: its chips fly from the visible top
+    this.books.spawn('walldust', wallX(ty) + FS.wallDustDx, ty, FS.wallDust);
     const chips = kind === 'boss' ? Wh.chipsBoss : kind === 'brute' ? Wh.chipsBrute : Wh.chips;
     fx.burst(tx, ty, P.timber, chips, Wh.speed, Wh.chipAng, Wh.chipSpread); fx.burst(tx, ty, P.cream, Wh.cream, Wh.speed, Wh.chipAng, Wh.chipSpread);
     if (!this.reducedMotion) this.shake = Math.min(1, this.shake + (kind === 'boss' ? Wh.shakeBoss : kind === 'brute' ? Wh.shakeBrute : 0));
@@ -268,6 +274,7 @@ export class FieldRenderer {
     const g = this.g; this.sim = s;
     this.fx.update(dt); this.clock += dt; this.wallDamage.update(dt, barFrac(s), WALL_ART[s.stats.wallTier] ?? WALL_ART[0], this.fx, this.reducedMotion);
     for (let i = this.storms.length - 1; i >= 0; i--) { this.storms[i]!.life -= dt; if (this.storms[i]!.life <= 0) this.storms.splice(i, 1); }
+    this.books.update(dt);
     for (let i = this.impacts.length - 1; i >= 0; i--) { this.impacts[i]!.life -= dt; if (this.impacts[i]!.life <= 0) this.impacts.splice(i, 1); }
     for (let i = this.puffs.length - 1; i >= 0; i--) { const pf = this.puffs[i]!; pf.life -= dt; pf.y -= pf.vy * dt; if (pf.life <= 0) this.puffs.splice(i, 1); }
     if (this.shake > 0) this.shake = Math.max(0, this.shake - dt * 3);
@@ -352,6 +359,7 @@ export class FieldRenderer {
       if (blur) { g.shadowBlur = 0; g.shadowColor = P.noShadow; }
       g.globalAlpha = 1;
     }
+    this.books.draw(g);
     for (const im of this.impacts) { const k = im.life / IMPACT_LIFE; g.globalAlpha = k; g.strokeStyle = P.cream; g.lineWidth = 2; g.beginPath(); g.arc(im.x, im.y, im.r * (1.15 - 0.15 * k), 0, 6.28); g.stroke(); g.globalAlpha = 1; }
     for (const sm of this.storms) {
       if (sm.c === P.lilac) { g.globalAlpha = sm.life / VFX.stormLife; g.strokeStyle = sm.c; g.lineWidth = 2; g.beginPath(); sm.pts.forEach((p, i) => (i ? g.lineTo(p[0] + (Math.random() - 0.5) * 6, p[1] + (Math.random() - 0.5) * 6) : g.moveTo(p[0], p[1]))); g.stroke(); g.globalAlpha = 1; continue; }

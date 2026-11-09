@@ -376,3 +376,19 @@ export const GAIT = {
   } as Readonly<Record<string, number>>,
   boss: 2.08,
 } as const;
+
+/** Pixel flipbooks (TB-240), from unTied Games' Super Pixel Effects Gigapack (CREDITS.md): one strip of `n` frames `px` square
+ *  in public/vfx, played at `fps`; (`ax`, `ay`) is the anchor as a fraction of the frame, placed on the event point. */
+export const FLIPBOOK = {
+  impact: { src: 'vfx/impact.webp', n: 7, px: 96, fps: 15, ax: 0.5, ay: 0.5 },
+  lightning: { src: 'vfx/lightning.webp', n: 7, px: 128, fps: 15, ax: 0.5, ay: 0.9 },
+  shatter: { src: 'vfx/shatter.webp', n: 8, px: 64, fps: 15, ax: 0.5, ay: 0.5 },
+  death: { src: 'vfx/death.webp', n: 10, px: 64, fps: 15, ax: 0.5, ay: 0.5 },
+  walldust: { src: 'vfx/walldust.webp', n: 21, px: 64, fps: 15, ax: 0.5, ay: 0.8 },
+  slam: { src: 'vfx/slam.webp', n: 9, px: 96, fps: 15, ax: 0.5, ay: 0.5 },
+} as const;
+export type FlipbookKey = keyof typeof FLIPBOOK;
+/** Drawn frame width per event, in world px: × strike radius (impact, ring radius 46 of 96 px drawn at 1.15 r), × orc radius, or flat; wall dust sits wallDustDx in front of the wall line (orc side) so the wall does not hide it. */
+export const FLIPBOOK_SIZE = { impactPerR: 2.4, lightningPerR: 7, shatterPerR: 1.4, deathPerR: 3, wallDust: 40, wallDustDx: 16, slamPerR: 3.2 } as const;
+/** Most flipbooks alive at once (TB-240): a mass kill at the 160-orc cap must not cost a frame; extra ones are dropped. */
+export const FLIPBOOK_CAP = 80;
