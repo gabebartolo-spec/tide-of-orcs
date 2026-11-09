@@ -59,7 +59,7 @@ Layout coordinates are for a 1400×1320 tree canvas, root at (700, 890) (TB-163)
 | drummers | War Drummers | Grove | shamans | 1 | 9600 | — | 1180 | 1080 | War drummers march four times as often (they trickle in on their own from wave 40), each worth +150% starlight. |
 | drummerfury | Drummer Fury | Grove | drummers | 5 | 16000 | 2.4 | 1170 | 1020 | War drummers have +30% health and drop +40% starlight per rank. |
 | drummerswarm | Drummer Swarm | Grove | drummers | 5 | 16000 | 2.4 | 1120 | 1060 | War drummers march 20% more often per rank. |
-| timber | Seasoned Timber | Barricade | root | 10 | 25 | 1.6 | 570 | 960 | Barricade +25% health per rank. |
+| timber | Seasoned Timber | Barricade | root | 10 | 25 | 1.6 | 570 | 960 | Barricade +25% health per rank. The wall's look upgrades at ranks 3, 6, 10. |
 | repair | Patient Hands | Barricade | timber | 5 | 90 | 2.0 | 430 | 980 | Barricade mends 2% of its health per second per rank. |
 | spikes | Thornwall | Barricade | timber | 5 | 150 | 2.1 | 537 | 1013 | Orcs hacking at the wall take 20% of your arrow damage per second per rank. |
 | bulwark | Deep Roots | Barricade | repair | 1 | 2400 | — | 371 | 999 | Once per run, a falling barricade regrows to half health. |

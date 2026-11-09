@@ -22,7 +22,7 @@ import { Ambience } from './ambience';
 import { Sky } from './sky';
 import { depthScale, depthY, setMeadowTop, worldY } from './depth';
 import { Interp } from './interp';
-import { FIELD_VIEW, GAIT, PHONE_QUERY, QUALITY, GROUND, LOOT_VFX, ORC_SHADOW, ORC_SHADOW_BASE, ORC_SPRITE, SKY, TREELINE, VFX, DEPTH, dusk } from '../data/presentation';
+import { FIELD_VIEW, GAIT, PHONE_QUERY, QUALITY, WALL_ART, LOOT_VFX, ORC_SHADOW, ORC_SHADOW_BASE, ORC_SPRITE, SKY, TREELINE, VFX, DEPTH, dusk } from '../data/presentation';
 import { SLOTS } from '../data/loot';
 import { BOSS_ROSTER } from '../data/bosses';
 import { quality, fitScale } from './quality';
@@ -266,7 +266,7 @@ export class FieldRenderer {
 
   draw(s: SimState, dt: number, aim: { x: number; y: number } | null = null): void {
     const g = this.g; this.sim = s;
-    this.fx.update(dt); this.clock += dt; this.wallDamage.update(dt, barFrac(s), this.fx, this.reducedMotion);
+    this.fx.update(dt); this.clock += dt; this.wallDamage.update(dt, barFrac(s), WALL_ART[s.stats.wallTier] ?? WALL_ART[0], this.fx, this.reducedMotion);
     for (let i = this.storms.length - 1; i >= 0; i--) { this.storms[i]!.life -= dt; if (this.storms[i]!.life <= 0) this.storms.splice(i, 1); }
     for (let i = this.impacts.length - 1; i >= 0; i--) { this.impacts[i]!.life -= dt; if (this.impacts[i]!.life <= 0) this.impacts.splice(i, 1); }
     for (let i = this.puffs.length - 1; i >= 0; i--) { const pf = this.puffs[i]!; pf.life -= dt; pf.y -= pf.vy * dt; if (pf.life <= 0) this.puffs.splice(i, 1); }
@@ -428,10 +428,10 @@ export class FieldRenderer {
 
   /** The barricade: one image of the whole slanted run down to `yMax` (or the plank fallback from `top`). It stays solid at any health; the HUD bar shows damage. */
   private fencePanels(top: number, yMax: number): void {
-    const g = this.g, fence = decorImg('fence');
+    const g = this.g, L = WALL_ART[this.sim?.stats.wallTier ?? 0] ?? WALL_ART[0], fence = decorImg(`${L.key}_${this.wallDamage.stage}`) ?? decorImg(`${L.key}_0`);
     if (fence) {
-      const L = GROUND.fence, k = fence.width / L.w, h = Math.min(yMax, L.y + L.h) - L.y;
-      g.drawImage(this.wallDamage.image(fence), 0, 0, fence.width, h * k, L.x, L.y, L.w, h);
+      const k = fence.width / L.w, h = Math.min(yMax, L.y + L.h) - L.y;
+      g.drawImage(fence, 0, 0, fence.width, h * k, L.x, L.y, L.w, h);
     } else for (let y = top - ((top % 18) + 18) % 18; y < yMax; y += 18) {
       const wx = wallX(y) - BAR_W;
       g.fillStyle = y % 36 ? P.timber : P.timberDark;

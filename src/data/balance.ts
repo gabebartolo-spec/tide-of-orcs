@@ -2,6 +2,9 @@
 
 export const FIELD = { w: 900, h: 480, barX: 150, barW: 14, elfX: 64 } as const;
 /** The slanted wall (TB-238, 33 degrees off the screen's vertical): ground line x at baseY, x gained per unit of y toward the forest, and the orc-side face's offset from the ground line. */
+/** Seasoned Timber ranks at which the wall's look steps up a tier (director 9 Nov, TB-209): palisade, gate, ornate. */
+export const WALL_TIER_RANKS = [3, 6, 10] as const;
+
 export const WALL_LINE = { baseX: 110, baseY: 480, slope: 0.65, front: 22 } as const;
 /** Sim literals that used to sit in systems code (TB-219): orc spawn margins, wobble phase span, shot flight time, hit flash. */
 export const SIM_MISC = { spawnXPad: 24, spawnYPad: 50, tau: 6.28, shotLife: 2.2, hitFlash: 0.12 } as const;
