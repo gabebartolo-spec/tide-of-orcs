@@ -339,7 +339,7 @@ export class FieldRenderer {
     // aerial haze over the wood and the back rows, on top of every actor there, so a far orc is as soft as the trees behind it (TB-232)
     const hz = this.sky.haze(g, vis.x0, this.skyLine, vis.x1);
     // the barricade is the nearest prop and takes no distance haze: its panels inside the haze band are drawn again over it
-    if (hz > this.wallTop) { g.save(); g.beginPath(); g.rect(0, this.wallTop - 4, W, hz - this.wallTop + 4); g.clip(); this.fencePanels(this.wallTop, hz); g.restore(); }
+    this.fencePanels(this.wallTop, hz);  // from the art's own top, which stands above wallTop
 
     // effects never rise into the sky band over the HUD: the world effects are clipped to the field below the crown line
     g.save(); g.beginPath(); g.rect(vis.x0 - 50, this.skyBand, vis.x1 - vis.x0 + 100, H - this.skyBand + 50); g.clip();
@@ -431,7 +431,7 @@ export class FieldRenderer {
     const g = this.g, L = WALL_ART[this.sim?.stats.wallTier ?? 0] ?? WALL_ART[0], fence = decorImg(`${L.key}_${this.wallDamage.stage}`) ?? decorImg(`${L.key}_0`);
     if (fence) {
       const k = fence.width / L.w, h = Math.min(yMax, L.y + L.h) - L.y;
-      g.drawImage(fence, 0, 0, fence.width, h * k, L.x, L.y, L.w, h);
+      if (h > 0) g.drawImage(fence, 0, 0, fence.width, h * k, L.x, L.y, L.w, h);
     } else for (let y = top - ((top % 18) + 18) % 18; y < yMax; y += 18) {
       const wx = wallX(y) - BAR_W;
       g.fillStyle = y % 36 ? P.timber : P.timberDark;
