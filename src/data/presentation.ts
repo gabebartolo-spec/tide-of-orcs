@@ -129,7 +129,17 @@ export const GROUND = {
    *  drift, drift size; loose singles in the lane; petal radius; stem height; weight per kind. */
   flowers: { drifts: 16, per: [24, 36], driftW: 90, driftH: 22, edge: 0.22, topY: [150, 185] as const, lane: 40, r: [2.4, 3.8], stem: [3, 8], kinds: { daisy: 4, violet: 3, buttercup: 2, blossom: 1 } },
   /** Fence barricade (director 2 Nov, Sketchfab "the fence"): panel draw width, vertical step between stacked panels (units). */
-  fence: { w: 30, step: 22, shadeFrom: 30 },
+  fence: { x: -137.5, y: 128, w: 465.5, h: 689.5 },
+} as const;
+
+/** The wall's visible damage (TB-238). count breaks open evenly between health fractions first and last, on field y within yRange; half: half length in y;
+ *  cut: how far in from the wall's outer edge (leftEdge from the ground line) it reaches; jag/teeth: stake stub length and count, stakeRise their slope, swell the depth taper, rim the dark torn line, margin the erase past the edge. Debris: chunks, speed, life, size, spin, gravity. Dust: puffs per break, per blow, speed, life, radius, growth/s, alpha.
+ *  Flames burn in breaks that opened below flameBelow: tongues, height, half width, spacing, flicker rate, embers/s. maxBits caps flying bits. */
+export const WALL_DAMAGE = {
+  count: 12, first: 0.92, last: 0.04, yRange: [205, 465], half: [16, 30], cut: [14, 34], jag: 24, teeth: 13, leftEdge: -42, margin: 30, swell: 0.7, stakeRise: 0.25, rim: 1.6,
+  chunks: 9, chunkSpeed: 90, chunkLife: 0.9, chunkR: [2, 5], chunkSpin: 12, grav: 240,
+  puffs: 10, hitPuffs: 2, dustSpeed: 26, dustLife: 0.8, dustR: 4, dustGrow: 12, dustAlpha: 0.55,
+  flameBelow: 0.55, flameIn: 3, tongues: 3, flameH: 11, flameW: 2.6, tongueGap: 3, tongueDrop: 1, flameCore: 0.5, flicker: 9, emberRate: 7, maxBits: 160,
 } as const;
 
 /** Loot moments (TB-105, plan §11). Lives in seconds, sizes in field units.

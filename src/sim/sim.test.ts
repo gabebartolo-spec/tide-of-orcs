@@ -1,3 +1,4 @@
+import { wallX } from './wallLine';
 import { describe, expect, it } from 'vitest';
 import { createState, freshRun, freshMeta, recompute } from './state';
 import { EventBus } from './events';
@@ -179,8 +180,8 @@ describe('vanguard', () => {
     let v = null as null | Parameters<typeof nearestOrcTo>[1]; s.vans.forEach((x) => { v ??= x; });
     const old: Parameters<typeof s.orcs.release>[0][] = []; s.orcs.forEach((o) => old.push(o)); old.forEach((o) => s.orcs.release(o));
     spawnOrc(s, 'grunt', FIELD.h / 2); let o = null as null | ReturnType<typeof nearestOrcTo>; s.orcs.forEach((x) => { o = x; }); o!.dead = false;
-    o!.x = (FIELD.barX + FIELD.w) / 2 + 5; expect(nearestOrcTo(s, v!)).toBeNull();
-    o!.x = (FIELD.barX + FIELD.w) / 2 - 5; expect(nearestOrcTo(s, v!)).toBe(o);
+    o!.x = (wallX(FIELD.h / 2) - FIELD.barW + FIELD.w) / 2 + 5; expect(nearestOrcTo(s, v!)).toBeNull();
+    o!.x = (wallX(FIELD.h / 2) - FIELD.barW + FIELD.w) / 2 - 5; expect(nearestOrcTo(s, v!)).toBe(o);
     v!.face = -1; s.orcs.release(o!); step(s, STEP, aimed(s), ev); v!.x = v!.tx; v!.y = v!.ty;
     s.orcs.forEach((x) => { x.x = FIELD.w; }); step(s, STEP, aimed(s), ev); expect(v!.face).toBe(1);
   });

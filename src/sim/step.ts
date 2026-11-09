@@ -1,3 +1,4 @@
+import { wallX } from './wallLine';
 import { ARROWS, BARRICADE, FIELD, SIM_MISC, VANGUARD, LOB, ORC_WOB, PLAYER, SOURCES, WAVE_LEN, checkpointFor, waveHP, waveInterval, waveLoot, waveSpeedMult } from '../data/balance';
 import { FIREBALL, ORC_FX, ORC_KINDS, ORC_TYPES, OrcKind } from '../data/orcs';
 import { EventBus } from './events';
@@ -15,7 +16,7 @@ import { fireballLands, shamanCast } from './shaman';
 export interface Inputs { aim: { x: number; y: number } | null }
 export const noInputs: Inputs = { aim: null };
 
-const H = FIELD.h, W = FIELD.w, BAR_X = FIELD.barX, BAR_W = FIELD.barW, ELF_X = FIELD.elfX;
+const H = FIELD.h, W = FIELD.w, BAR_W = FIELD.barW, ELF_X = FIELD.elfX;
 const dist = (ax: number, ay: number, bx: number, by: number): number => Math.hypot(ax - bx, ay - by);
 
 /** March one orc in from the right edge, at height y (random if omitted). Returns false when the field is full. */
@@ -81,15 +82,16 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
     const hit = o.atk * BARRICADE.orcSwing * drum * (rage ? ORC_FX.rageHit : 1), walk = drum * (rage ? ORC_FX.rageSpeed : 1);
     // the shaman and the war drummer hold back from the wall; the shaman lobs fire, the drummer never strikes
     const halt = o.kind === 'shaman' ? ORC_FX.shamanHalt : o.kind === 'drummer' ? ORC_FX.drummerHalt : 0;
-    if (halt && o.x <= BAR_X + BAR_W + halt) {
-      o.x = BAR_X + BAR_W + halt;
+    const wx = wallX(o.y);
+    if (halt && o.x <= wx + halt) {
+      o.x = wx + halt;
       if (o.kind === 'shaman') { o.castT -= dt * pace; if (o.castT <= 0) { o.castT = FIREBALL.every; shamanCast(s, ev, o); } }
       return;
     }
     const v = halt ? null : engagedVanguard(s, o);
     if (v && o.kind === 'wolfrider' && !o.leapt) {
       // the rider's wolf leaps its first vanguard and lands beyond it
-      o.leapt = true; o.x = Math.max(BAR_X + BAR_W + o.r, v.x - o.r - VANGUARD.engageRange - 4); ev.push({ t: 'riderLeap', x: o.x, y: o.y });
+      o.leapt = true; o.x = Math.max(wx + o.r, v.x - o.r - VANGUARD.engageRange - 4); ev.push({ t: 'riderLeap', x: o.x, y: o.y });
       return;
     }
     if (v) {
@@ -97,9 +99,9 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
       if (o.swingT >= BARRICADE.orcSwing) { o.swingT = 0; ev.push({ t: 'orcSwing', kind: o.kind, x: o.x, y: o.y, tx: v.x, ty: v.y, r: o.r }); hurtVanguard(s, ev, v, hit); }
       return;
     }
-    if (o.x <= BAR_X + BAR_W + o.r) {
-      o.x = BAR_X + BAR_W + o.r; o.swingT += dt * pace;
-      if (o.swingT >= BARRICADE.orcSwing) { o.swingT = 0; ev.push({ t: 'orcSwing', kind: o.kind, x: o.x, y: o.y, tx: BAR_X + BAR_W, ty: o.y, r: o.r }); barricadeHit(s, ev, hit * BARRICADE.wallMult, o.y); }
+    if (o.x <= wx + o.r) {
+      o.x = wx + o.r; o.swingT += dt * pace;
+      if (o.swingT >= BARRICADE.orcSwing) { o.swingT = 0; ev.push({ t: 'orcSwing', kind: o.kind, x: o.x, y: o.y, tx: wx, ty: o.y, r: o.r }); barricadeHit(s, ev, hit * BARRICADE.wallMult, o.y); }
       if (st.spikes > 0) damage(s, ev, o, st.dmg * st.spikes * dt);
       return;
     }
@@ -116,7 +118,7 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
   if (run.thunder > 0) run.thunder = Math.max(0, run.thunder - dt);
   const lobCd = st.lobCd * drawMult(s);
   run.shotT[0] = Math.min(lobCd, (run.shotT[0] ?? 0) + dt);
-  if (run.shotT[0] >= lobCd && inputs.aim && inputs.aim.x > BAR_X + BAR_W) {
+  if (run.shotT[0] >= lobCd && inputs.aim && inputs.aim.x > wallX(inputs.aim.y)) {
     let { x, y } = inputs.aim;
     // Each owned enchantment rolls its chance (TB-111). A moon shot's circle settles onto the nearest orc near the aim point.
     // Fang of the Coiled Serpent: every few shots is a venom arrow that splits into three (TB-193a)
@@ -136,7 +138,7 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
     }
   }
   // Packlord 4: companions strike faster while an orc is near the wall (Rangers and Wardens too, TB-219)
-  const haste = st.petHaste > 0 && nearestOrc(s, BAR_X, H / 2, (o) => o.x < BAR_X + SET_FX.nearWall) ? 1 + st.petHaste : 1;
+  const haste = st.petHaste > 0 && nearestOrc(s, wallX(H / 2), H / 2, (o) => o.x < wallX(o.y) - BAR_W + SET_FX.nearWall) ? 1 + st.petHaste : 1;
   const pet = st.petDmg;
   // Rangers and wardens keep straight volleys at the nearest orc, each on its own unit nodes.
   for (let i = 1; i <= st.archers && i < 3; i++) {
@@ -160,7 +162,7 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
     if (run.stormT >= st.stormCd) {
       run.stormT = 0;
       const seen = new Set<Orc>(); const pts: [number, number][] = [];
-      let cur = nearestOrc(s, BAR_X + SOURCES.storm.seekX, H / 2), cap = st.chain, reb = 0;
+      let cur = nearestOrc(s, wallX(H / 2) - BAR_W + SOURCES.storm.seekX, H / 2), cap = st.chain, reb = 0;
       while (cur && pts.length < cap) {
         const c = cur; seen.add(c); pts.push([c.x, c.y]); damage(s, ev, c, st.dmg * SOURCES.storm.mult * st.kin * st.stormDmg);
         // Stormcaller 6: a killing link strikes again from the corpse
@@ -196,8 +198,8 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
     const U = st.units.treant; run.treantT += dt * haste * U.rate;
     if (run.treantT >= SOURCES.treant.cd) {
       run.treantT = 0; let any = false;
-      s.orcs.forEach((o) => { if (!o.dead && o.x < BAR_X + SOURCES.treant.range) { damage(s, ev, o, unitHit(s, U, st.dmg * SOURCES.treant.mult * st.kin * pet * U.dmg)); if (st.treantRoot) rootOrc(o, SET_FX.rootSecs); any = true; } });
-      if (any) ev.push({ t: 'treantStamp', x: BAR_X + 50, y: H / 2 + 30 });
+      s.orcs.forEach((o) => { if (!o.dead && o.x < wallX(o.y) - BAR_W + SOURCES.treant.range) { damage(s, ev, o, unitHit(s, U, st.dmg * SOURCES.treant.mult * st.kin * pet * U.dmg)); if (st.treantRoot) rootOrc(o, SET_FX.rootSecs); any = true; } });
+      if (any) ev.push({ t: 'treantStamp', x: wallX(H / 2 + 30) + 36, y: H / 2 + 30 });
     }
   }
 
@@ -264,7 +266,7 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
         if (a.pierce-- <= 0) spent = true;
       }
     });
-    if (spent || a.life <= 0 || (a.back && a.x < BAR_X) || a.x > W + 30 || a.y < -30 || a.y > H + 30) {
+    if (spent || a.life <= 0 || (a.back && a.x < wallX(a.y) - BAR_W) || a.x > W + 30 || a.y < -30 || a.y > H + 30) {
       // Siegebreaker 6: the last orc a bolt passed through is pinned
       if (a.kind === 'bolt' && st.boltPin && a.target && a.target.live && a.target.gen === a.tgen && !a.target.dead) { a.target.pin = SET_FX.pinSecs; ev.push({ t: 'pinned', x: a.target.x, y: a.target.y }); }
       s.shots.release(a);

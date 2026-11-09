@@ -1,3 +1,4 @@
+import { wallX } from './wallLine';
 import { FIELD, VANGUARD, VanType, vanBaseHp } from '../data/balance';
 import { EventBus } from './events';
 import { Orc, SimState, Vanguard } from './state';
@@ -18,8 +19,8 @@ export function placeVanguard(s: SimState, type: VanType, line = false): Vanguar
   const v = s.vans.alloc(); if (!v) return null;
   let lane = 0; while (used.has(laneY(lane))) lane++;
   const hp = vanBaseHp(type, s.run.wave) * s.stats.vanHp;
-  v.type = type; v.line = line; v.x = FIELD.barX + 10; v.tx = FIELD.barX + VANGUARD.standX;
-  v.y = v.ty = laneY(lane); v.mv = true; v.face = 1;
+  v.type = type; v.line = line; v.y = v.ty = laneY(lane);
+  v.x = wallX(v.y) - FIELD.barW + 10; v.tx = wallX(v.y) - FIELD.barW + VANGUARD.standX; v.mv = true; v.face = 1;
   v.hp = hp; v.maxhp = hp; v.swingT = 0; v.hitT = 0;
   return v;
 }
@@ -75,14 +76,14 @@ function spread(s: SimState, dt: number): void {
 }
 
 /** Vanguard only advance on orcs that have crossed halfway from the field's edge to the barricade (TB-169). */
-const HALF_X = (FIELD.barX + FIELD.w) / 2;
+const halfX = (y: number): number => (wallX(y) - FIELD.barW + FIELD.w) / 2;
 
 /** The live orc past halfway nearest this vanguard, or null when none has come that close. Orcs in `claimed` are
  *  another vanguard's target this step and are skipped while an unclaimed one is past halfway (TB-173). */
 export function nearestOrcTo(s: SimState, v: Vanguard, claimed?: Set<Orc>): Orc | null {
   let best: Orc | null = null, bd = Infinity, free: Orc | null = null, fd = Infinity;
   s.orcs.forEach((o) => {
-    if (o.dead || o.x > HALF_X) return; const d = Math.hypot(o.x - v.x, o.y - v.y);
+    if (o.dead || o.x > halfX(o.y)) return; const d = Math.hypot(o.x - v.x, o.y - v.y);
     if (d < bd) { bd = d; best = o; }
     if (!claimed?.has(o) && d < fd) { fd = d; free = o; }
   });
