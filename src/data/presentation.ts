@@ -129,17 +129,23 @@ export const GROUND = {
    *  drift, drift size; loose singles in the lane; petal radius; stem height; weight per kind. */
   flowers: { drifts: 16, per: [24, 36], driftW: 90, driftH: 22, edge: 0.22, topY: [150, 185] as const, lane: 40, r: [2.4, 3.8], stem: [3, 8], kinds: { daisy: 4, violet: 3, buttercup: 2, blossom: 1 } },
   /** Fence barricade (director 2 Nov, Sketchfab "the fence"): panel draw width, vertical step between stacked panels (units). */
-  fence: { x: -137.5, y: 128, w: 465.5, h: 689.5 },
 } as const;
 
-/** The wall's visible damage (TB-238). count breaks open evenly between health fractions first and last, on field y within yRange; half: half length in y;
- *  cut: how far in from the wall's outer edge (leftEdge from the ground line) it reaches; jag/teeth: stake stub length and count, stakeRise their slope, swell the depth taper, rim the dark torn line, margin the erase past the edge. Debris: chunks, speed, life, size, spin, gravity. Dust: puffs per break, per blow, speed, life, radius, growth/s, alpha.
- *  Flames burn in breaks that opened below flameBelow: tongues, height, half width, spacing, flicker rate, embers/s. maxBits caps flying bits. */
+/** The wall's look per tier (TB-209): image set (rendered from the segmented Tripo models, one image per damage stage), field placement, and the field y of the rendered breaches. */
+export const WALL_ART = [
+  { key: 'wall0', x: -167.0, y: 106.4, w: 495.0, h: 765.9, breaches: [623, 548, 450, 350, 234] },
+  { key: 'wall1', x: -145.5, y: 105.5, w: 499.2, h: 738.3, breaches: [605, 533, 440, 343, 232] },
+  { key: 'wall2', x: -123.0, y: 99.8, w: 471.1, h: 713.9, breaches: [585, 516, 427, 336, 229] },
+  { key: 'wall3', x: -72.8, y: 100.3, w: 415.3, h: 634.2, breaches: [609, 535, 475, 396, 316, 223] },
+] as const;
+
+/** The wall's visible damage (TB-238, TB-209). stages: the health fractions below which the next rendered stage shows. Debris on a stage change: chunks per breach, speed, life, size, spin, gravity. Dust: puffs per breach, per blow, speed, life, radius, growth/s, alpha.
+ *  Flames burn in the breaches from flameStage on: tongues, height, half width, spacing, flicker rate, embers/s. maxBits caps flying bits. */
 export const WALL_DAMAGE = {
-  count: 12, first: 0.92, last: 0.04, yRange: [205, 465], half: [16, 30], cut: [14, 34], jag: 24, teeth: 13, leftEdge: -42, margin: 30, swell: 0.7, stakeRise: 0.25, rim: 1.6,
+  stages: [0.75, 0.5, 0.25],
   chunks: 9, chunkSpeed: 90, chunkLife: 0.9, chunkR: [2, 5], chunkSpin: 12, grav: 240,
   puffs: 10, hitPuffs: 2, dustSpeed: 26, dustLife: 0.8, dustR: 4, dustGrow: 12, dustAlpha: 0.55,
-  flameBelow: 0.55, flameIn: 3, tongues: 3, flameH: 11, flameW: 2.6, tongueGap: 3, tongueDrop: 1, flameCore: 0.5, flicker: 9, emberRate: 7, maxBits: 160,
+  flameStage: 2, tongues: 3, flameH: 11, flameW: 2.6, tongueGap: 3, tongueDrop: 1, flameCore: 0.5, flicker: 9, emberRate: 7, maxBits: 160,
 } as const;
 
 /** Loot moments (TB-105, plan §11). Lives in seconds, sizes in field units.

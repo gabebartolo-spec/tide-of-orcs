@@ -160,4 +160,4 @@ All companion damage scales with Kinship (×1.4/rank, TB-184 set F). Kinship als
 | Prestige meta | Heartwood passive only | Heartwood tree (5 nodes); no passive since P-142 | dd09286, 3cc1563 (TB-053, TB-055), TB-142 |
 | Heartwood source | Scaled by wave reached | Only cleared bosses (every 25 waves); a fall pays none | TB-142 |
 | Bow branch | No circle | Wide Volley widens the strike circle | 16e3060 (TB-079) |
-| Barricade line | Straight vertical wall | Slanted wall on `wallX(y)`; breaks, debris, dust and flames show damage instead of a fade | TB-238 |
+| Barricade line | Straight vertical wall | Slanted wall on `wallX(y)`; rendered damage stages, debris, dust and flames show damage instead of a fade; the wall changes at Seasoned Timber ranks 3, 6, 10 | TB-238, TB-209 |

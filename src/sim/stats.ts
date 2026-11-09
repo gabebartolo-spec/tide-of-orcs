@@ -4,7 +4,7 @@ import { PATH_FX, PathId } from '../data/paths';
 import { HW_FX, HwLevels } from '../data/heartwood';
 import { SATCHEL, SPOILS_FX } from '../data/lootTables';
 import { FOE_FX, OrcKind } from '../data/orcs';
-import { ARROWS, BARRICADE, ELF_FX, LOB, NODE_FX, PLAYER, SHOT_FX, SOURCES, STACKING, UNIT_FX, VANGUARD } from '../data/balance';
+import { ARROWS, BARRICADE, ELF_FX, LOB, NODE_FX, PLAYER, SHOT_FX, SOURCES, STACKING, UNIT_FX, VANGUARD, WALL_TIER_RANKS } from '../data/balance';
 
 export type Levels = Partial<Record<NodeId, number>>;
 
@@ -28,7 +28,7 @@ export interface Stats {
   knives: { rate: number; dmg: number } | null;
   storm: boolean; ballista: number;
   // barricade
-  barMax: number; barRegen: number; spikes: number; bulwark: boolean;
+  wallTier: number; barMax: number; barRegen: number; spikes: number; bulwark: boolean;
   // vanguard
   muster: boolean; vanCap: number; vanHp: number; vanDmg: number; vanMend: number; vanRespawn: number; champion: boolean;
   // set bonuses (TB-099): 0 = off; numbers from SET_FX, applied by applyGear
@@ -139,6 +139,7 @@ export function deriveStats(lv: Levels, hw: HwLevels = {}, camp: CampLevels = {}
     knives: L('knives') ? { rate: fx(NODE_FX.knifeRate, L('knifespd')) / SOURCES.knives.cd, dmg: SOURCES.knives.base * fx(SHOT_FX.dmg, L('knifedmg')) * kin } : null,
     storm: L('storm') > 0,
     ballista: L('ballista') ? SOURCES.ballista.base * fx(NODE_FX.boltDmg, L('bolt')) * kin : 0,
+    wallTier: WALL_TIER_RANKS.filter((r) => L('timber') >= r).length,
     barMax: BARRICADE.baseHp * (1 + HW_FX.timberPerRank * (hw.hw_timber ?? 0)) * fx(BARRICADE.timberMult, L('timber')),
     barRegen: BARRICADE.regenPerRank * L('repair'),
     spikes: BARRICADE.spikesPerRank * L('spikes'),
