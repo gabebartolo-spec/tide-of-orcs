@@ -33,7 +33,7 @@ export class WallDamage {
 
   private collapse(y: number): void {
     const x = wallX(y);
-    for (let i = 0; i < D.chunks; i++) this.add(x + Math.random() * 20, y + (Math.random() - 0.5) * 40, (Math.random() + 0.1) * D.chunkSpeed, -Math.random() * D.chunkSpeed, D.chunkLife, D.chunkR[0] + Math.random() * (D.chunkR[1] - D.chunkR[0]), true, i % 2 ? P.timber : P.timberDark);
+    for (let i = 0; i < D.chunks; i++) this.add(x + Math.random() * 20, y + (Math.random() - 0.5) * 40, (Math.random() + 0.1) * D.chunkSpeed, -Math.random() * D.chunkSpeed, D.chunkLife, D.chunkR[0] + Math.random() * (D.chunkR[1] - D.chunkR[0]), true, P[this.art.chunks[i % 2]!]);
     this.dust(x + 10, y, D.puffs);
   }
 

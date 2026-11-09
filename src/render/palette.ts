@@ -19,6 +19,8 @@ export const P = {
   lamp: 'rgba(226,168,91,.2)', lampClear: 'rgba(226,168,91,0)',
   frost: '#bfe3ee', frostGlow: 'rgba(191,227,238,.45)', spark: '#f4eaa6', arcane: '#9b6bd6', arcaneCore: '#ece8ff',
   wallDust: '#cdbf9f',
+  // flying wall chunks, sampled from each wall's render (TB-239)
+  wallPalisade: '#6c4a33', wallPalisadeDark: '#553826', wallBattle: '#5e4333', wallBattleDark: '#4a3427', wallStone: '#6e614b', wallStoneDark: '#584e3c', wallHeart: '#50251f', wallHeartDark: '#401c17',
   fire: '#f2763a', fireTint: 'rgba(242,118,58,.5)', firePatch: 'rgba(242,118,58,.28)', frostTint: 'rgba(150,215,240,.6)', frostPatch: 'rgba(191,227,238,.35)',
   sparkGlow: 'rgba(244,234,166,.65)', arcaneGlow: 'rgba(155,107,214,.45)', starGold: '#ffd36b',
   /** Shaman fireball (TB-127): ember body, pale core, halo. */

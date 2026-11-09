@@ -131,12 +131,12 @@ export const GROUND = {
   /** Fence barricade (director 2 Nov, Sketchfab "the fence"): panel draw width, vertical step between stacked panels (units). */
 } as const;
 
-/** The wall's look per tier (TB-209): image set (rendered from the segmented Tripo models, one image per damage stage), field placement, and the field y of the rendered breaches. */
+/** The wall's look per tier (TB-209): image set (rendered from the segmented Tripo models, one image per damage stage), field placement, the field y of the rendered breaches, and the palette tokens of its flying chunks. */
 export const WALL_ART = [
-  { key: 'wall0', x: -167.0, y: 106.4, w: 495.0, h: 765.9, breaches: [623, 548, 450, 350, 234] },
-  { key: 'wall1', x: -145.5, y: 105.5, w: 499.2, h: 738.3, breaches: [605, 533, 440, 343, 232] },
-  { key: 'wall2', x: -123.0, y: 99.8, w: 471.1, h: 713.9, breaches: [585, 516, 427, 336, 229] },
-  { key: 'wall3', x: -72.8, y: 100.3, w: 415.3, h: 634.2, breaches: [609, 535, 475, 396, 316, 223] },
+  { key: 'wall0', x: -167.0, y: 105.9, w: 500.6, h: 766.4, breaches: [623, 548, 450, 350, 234], chunks: ['wallPalisade', 'wallPalisadeDark'] },
+  { key: 'wall1', x: -145.5, y: 101.7, w: 493.1, h: 742.0, breaches: [605, 533, 440, 343, 232], chunks: ['wallBattle', 'wallBattleDark'] },
+  { key: 'wall2', x: -123.0, y: 120.0, w: 472.5, h: 696.6, breaches: [585, 516, 427, 336, 229], chunks: ['wallStone', 'wallStoneDark'] },
+  { key: 'wall3', x: -72.8, y: 100.3, w: 425.2, h: 647.8, breaches: [609, 535, 475, 396, 316, 223], chunks: ['wallHeart', 'wallHeartDark'] },
 ] as const;
 
 /** The wall's visible damage (TB-238, TB-209). stages: the health fractions below which the next rendered stage shows. Debris on a stage change: chunks per breach, speed, life, size, spin, gravity. Dust: puffs per breach, per blow, speed, life, radius, growth/s, alpha.
