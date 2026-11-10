@@ -20,6 +20,7 @@ describe('audio cue map', () => {
     expect(cueFor({ t: 'barricadeFell', wave: 1, kills: 0, runTime: 0, heartwood: 0 })).toBe('wallFall');
     expect(cueFor({ t: 'vanguardRallied', type: 'x', x: 0, y: 0 })).toBe('rallyHorn');
     expect(cueFor({ t: 'bought', id: 'x', firstRank: true })).toBe('bought');
+    expect(cueFor({ t: 'buildingUpgraded', id: 'forge', level: 1 })).toBe('bought');
     expect(cueFor({ t: 'replant', heartwood: 1, forced: true })).toBe('replant');
     expect(cueFor({ t: 'wave', wave: 2 })).toBeNull();
   });

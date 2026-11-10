@@ -111,6 +111,7 @@ export function cueFor(e: SimEvent): Cue | null {
     case 'vanguardRallied': return 'rallyHorn';
     case 'vanguardHit': return 'orcHit';
     case 'bought': return 'bought';
+    case 'buildingUpgraded': return 'bought';   // TB-188h: reuses the buy chime until a camp cue is generated
     case 'fireStrike': return 'fireArrow';
     case 'bounceHit': return 'bounce';
     case 'shock': return 'shock';
