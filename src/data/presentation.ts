@@ -286,6 +286,8 @@ export const CAMP_LIFE = {
   sparks: { rate: 3.5, life: [0.45, 0.85], vx: [-7, 7], vy: [-30, -17], grav: 30, wind: 0, r0: 0.9, r1: 0.5, a: 1 },
   dust: { every: [1.6, 2.6], burst: 6, life: [0.5, 0.8], vx: [-11, 11], vy: [-8, -3], grav: 14, wind: 0, r0: 1.4, r1: 3.2, a: 0.55 },
   dustDy: 0.3,
+  /** Upgrade moment (TB-188h): dust puffs along the building's base (`count`, spread = fraction of its width each side of centre, starting `rise` units above the base) and a few gold motes that float up. Same pool, so it is bounded by `cap`. */
+  build: { count: 22, spread: 0.5, rise: 2, motes: 8, dust: { life: [0.7, 1.2], vx: [-16, 16], vy: [-14, -4], grav: 8, wind: 0, r0: 2, r1: 5, a: 0.7 }, mote: { life: [0.9, 1.5], vx: [-6, 6], vy: [-26, -14], grav: -4, wind: 0, r0: 1.1, r1: 0.4, a: 1 } },
 } as const;
 
 /** UI motion and feedback kit (TB-195a, docs/plans/game-ui.md §3, ART-STYLE §Motion). Times in ms, sizes in CSS px. */
