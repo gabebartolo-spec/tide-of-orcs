@@ -1,6 +1,6 @@
 # Devlog 14 — Real camp buildings, pixel effects
 
-*Build: `html5-dev` from `main` (8458044), 11 Nov 2026 (itch run 43002678594). Covers: everything since test build 7 (1690e41). Posted: (link added after posting)*
+*Build: `html5-dev` from `main` (8458044), 11 Nov 2026 (itch run 43002678594). Covers: everything since test build 7 (1690e41). Posted: https://veniceissinking.itch.io/elves-vs-orcs/devlog/1769503*
 
 The camp now draws from real 3D models, and the combat effects are hand-pixelled flipbooks.
 
