@@ -295,3 +295,4 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-242 | Camp plots clean-up (director 11 Nov): no shrubs or grass on any plot, all 16 images re-rendered in Blender (island greens and ground-cover faces removed, hedge shadow no longer cast, banners kept), training sword grip brown, stray tufts culled in post_camp | art | claude | done (this PR) |
 | TB-244 | Bug bash run 7 (director 11 Nov): lint, 482 tests, build, 206k-tick soak (81 falls, wave 53, 160 orc cap held), camp level 2 look; no findings; QA-CHECKLIST run 7 | qa | claude | done (this PR) |
 | TB-246 | sim: build levers (--path, --focus, --camp, --hwfocus, --set) so balance batches cover every lever | balance | claude | done (this PR) |
+| TB-247 | sim: --human k slow-player model (decide and aim refresh k times slower) to bracket human pace | balance | claude | done (this PR) |
