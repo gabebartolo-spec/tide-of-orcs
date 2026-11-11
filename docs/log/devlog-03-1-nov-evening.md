@@ -1,6 +1,6 @@
-# Devlog — 1 Nov (evening): Heartwood from bosses, gentler costs, 4K
+# Devlog 3 — 1 Nov (evening): Heartwood from bosses, gentler costs, 4K
 
-*Itch devlog for the html5-dev build pushed from `main` (aad928f) on 1 Nov 2026 (itch run 41299645890). Posted: https://veniceissinking.itch.io/elves-vs-orcs/devlog/1744474. It covers everything since the morning build (4667644).*
+*Build: `html5-dev` from `main` (aad928f), 1 Nov 2026 (itch run 41299645890). Covers: everything since the morning build (4667644). Posted: https://veniceissinking.itch.io/elves-vs-orcs/devlog/1744474*
 
 This build changes how runs grow. Heartwood is now earned by beating bosses rather than collected on every fall, so each run's skill tree matters more.
 

@@ -1,6 +1,6 @@
-# Devlog — 2 Nov (night): a standing line, a mixed tide, checkpoints
+# Devlog 5 — 2 Nov (night): a standing line, a mixed tide, checkpoints
 
-*Itch devlog for the html5-dev build pushed from `main` (ba521f8) on 2 Nov 2026 (itch run 41436431610). It covers everything since the 2 Nov build (1346a52). Posted: https://veniceissinking.itch.io/elves-vs-orcs/devlog/1747072/devlog-2-nov-night-a-standing-line-a-mixed-tide-checkpoints*
+*Build: `html5-dev` from `main` (ba521f8), 2 Nov 2026 (itch run 41436431610). Covers: everything since the 2 Nov build (1346a52). Posted: https://veniceissinking.itch.io/elves-vs-orcs/devlog/1747072*
 
 This build answers the last playtest: the vanguard felt useless, the tide was all grunts, and long runs dragged back to wave 1.
 
