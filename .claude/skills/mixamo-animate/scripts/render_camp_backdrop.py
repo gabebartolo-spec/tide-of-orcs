@@ -399,6 +399,7 @@ def fence_faces(bm_, lo, H):
             rf = max(abs(c.x - mx_) / hx, abs(c.y - my_) / hy)
             if rf > FENCE_R and c.z - lo < FENCE_Z * H and abs(g.normal.z) < 0.8: out_.append(g)
     return out_
+SAND_H = float(os.environ.get("SAND_H", "0.05"))
 GREEN_MUTE = (0.58, 0.78, 0.22)   # olive: luminance x this, matches the level 1-3 island greens
 TRIM = {"bowyer0": (float(os.environ.get("TRIM_Z", "0.2")), float(os.environ.get("TRIM_R", "0.27")))}
 def load_building(n, foot):
@@ -426,7 +427,7 @@ def load_building(n, foot):
             if p.normal.z > 0.85 and p.center.z < lo + 0.3 * H: bins[min(59, int((p.center.z - lo) / H * 60))] += p.area
     top = lo + (max(range(60), key=lambda i: bins[i]) + 1) / 60 * H
     # leftover island grass: faces near the top that sample green from the base colour texture
-    img = next((i for i in bpy.data.images if "basecolor" in i.name and i.users), None)
+    img = next((nd.image for o in ms for sl in o.material_slots if sl.material for nd in sl.material.node_tree.nodes if nd.type == "TEX_IMAGE" and nd.image and "basecolor" in nd.image.name), None)   # this model's own texture (the session holds every model loaded so far)
     sm = None
     if img and n.endswith("0"):   # level 0 (Tripo, 11 Nov): pull saturated island greens toward the meadow tone so the plots match levels 1-3
         import numpy as np
@@ -442,11 +443,16 @@ def load_building(n, foot):
         for f in bm_.faces:
             zs_ = [v.co.z for v in f.verts]
             if max(zs_) <= top + 0.002 * H: kill.append(f); continue
-            if sm and uvl and min(zs_) < top + (0.5 if n in ('bowyer0', 'training0') else 0.06) * H:
+            if sm and uvl and min(zs_) < top + 0.15 * H:   # ground cover only: banners and straw hang higher
                 u = sum(l[uvl].uv.x for l in f.loops) / len(f.loops); v_ = sum(l[uvl].uv.y for l in f.loops) / len(f.loops)
                 k = (int((v_ % 1) * (W_ - 1)) * W_ + int((u % 1) * (W_ - 1))) * 4
                 r_, g_, b_ = px_[k], px_[k + 1], px_[k + 2]
-                if g_ > r_ * 1.08 and g_ > b_ * 1.15 and (f.normal.z > 0.5 or n.endswith("0")): kill.append(f)
+                if g_ > r_ * 0.98 and g_ > b_ * 1.15: kill.append(f)
+            if sm and uvl and n.endswith("0") and max(zs_) < top + SAND_H * H and f.normal.z > 0.8:   # level 0: the baked sand patch tears where the grass was cut: drop it, the plate's meadow shows instead
+                u = sum(l[uvl].uv.x for l in f.loops) / len(f.loops); v_ = sum(l[uvl].uv.y for l in f.loops) / len(f.loops)
+                k = (int((v_ % 1) * (W_ - 1)) * W_ + int((u % 1) * (W_ - 1))) * 4
+                r_, g_, b_ = px_[k], px_[k + 1], px_[k + 2]
+                if r_ > b_ * 1.6 and r_ > g_ * 0.9: kill.append(f)
         if n.startswith("training") and os.environ.get("FENCE_CUT"): kill += fence_faces(bm_, lo, H)   # off: the fence is fused into the Tripo mesh, cutting shreds the model (3 Nov)
         if n in TRIM:   # drop loose stumps and tufts round the main mass: faces farther than r (m) from the tall parts' centre
             tall = [f.calc_center_median() for f in bm_.faces if f.calc_center_median().z > lo + TRIM[n][0] * H]
