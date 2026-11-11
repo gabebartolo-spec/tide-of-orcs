@@ -38,7 +38,7 @@ The single-file prototype (`docs/prototype.html`) proves the loop. The plan belo
 
 ### Out of scope for 1.0 (candidates for 1.x)
 - Multiple maps / biomes.
-- Achievements.
+- Steam achievements (the in-game achievements are in scope, M6).
 - Commercial release (public itch page, Steam): a maybe for later, not planned (director, 1 Nov).
 - Named hero companions with their own trees.
 - Cloud saves.
@@ -165,6 +165,10 @@ Orcs drop gear; six worn slots (seven since TB-225), a satchel, affixes, sets an
 - Private itch page as a proof of concept (TB-073, `docs/ITCH-PAGE.md`; builds via `itch.yml`): kept Restricted and up to date with each milestone; it goes public only if the director chooses. Last build: main bdc029f to `html5-dev`, 3 Nov; the director skipped further itch builds for now. Milestone tags stop at `m1`.
 - Save import/export (done in TB-065), version migration test suite (TB-140; save now v14).
 - Bug bash (TB-075, `docs/QA-CHECKLIST.md`): runs 1 and 2 done (PRs #33, #37); run 5 (3 Nov) re-checked boss tiers, the four late orcs, all sprites, checkpoints and boss-only Heartwood, and 160 orcs of all eight kinds: 60 fps at 1080p and 4K down to a 2× slower CPU, 58–61 fps at 1080p 4× (headroom down, TB-183); findings TB-180–186. Performance: no frame spikes in a visible browser with 160 orcs (TB-113); measured at 1080p and 4K with CPU throttling as a mid-range stand-in (TB-150, QA run 4): passes. Not yet on real mid-range hardware.
+
+### M6 — Balance test and achievements (12 Nov) · **in progress**
+- Vigorous balance test of every lever (batches A build levers, B build matrix, C prestige ladder, D arena stress). Sim tools done: `--path --focus --camp --hwfocus --set` (TB-246, 8d06a47) and `--human k` (TB-247, 3a8e745). Batch A (185 runs, 5 seeds, 90 min) found: Fox path is +7 waves over baseline (about +11%, paths must stay within 10%), sets, camp and branch focus sit inside the seed noise, and seven Heartwood nodes were never bought in 90 min so they still need a late-save test. Next: smoother metric (mean wave, first boss clear minute), batches B to D, findings under BALANCE.md `## Proposed`.
+- Achievements (director, 12 Nov): about 100, cosmetic unlock rewards, in-game panel with Steam mapping later, save migration approved. TB-248 list and `docs/ACHIEVEMENTS.md`, TB-249 system, TB-250 rewards; starts after the balance batches.
 
 A full mobile port stays out of the roadmap (director, 31 Oct): the game is built for PC first. The itch web build does play on phones in landscape since TB-155 (2 Nov); TB-064/TB-078 layout work stays in the code.
 **Done when:** the director calls it finished.
