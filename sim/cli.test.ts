@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { applyTune, pickChoice } from './cli';
+import { PATH_IDS } from '../src/data/paths';
+import { BUILDINGS } from '../src/data/camp';
 
 describe('balance runner args (TB-216e)', () => {
   it('applies a known tune key', () => {
@@ -21,5 +23,12 @@ describe('balance runner args (TB-216e)', () => {
   it('accepts a listed policy and rejects a typo', () => {
     expect(pickChoice('policy', 'wall', ['greedy', 'wall', 'dps', 'nobuy'] as const)).toBe('wall');
     expect(() => pickChoice('policy', 'gredy', ['greedy', 'wall', 'dps', 'nobuy'] as const)).toThrow("unknown --policy 'gredy'");
+  });
+  it('--path accepts every real path and rejects a typo (TB-246)', () => {
+    for (const id of PATH_IDS) expect(pickChoice('path', id, ['none', ...PATH_IDS] as const)).toBe(id);
+    expect(() => pickChoice('path', 'wolf', ['none', ...PATH_IDS] as const)).toThrow("unknown --path 'wolf'");
+  });
+  it('--camp all covers all four buildings', () => {
+    expect(BUILDINGS.map(b => b.id).sort()).toEqual(['bowyer', 'forge', 'kitchen', 'training']);
   });
 });
