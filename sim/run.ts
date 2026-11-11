@@ -64,6 +64,7 @@ const focusBranches = arg('focus', '').split(',').filter(Boolean);
 const campOrder: BuildingId[] = arg('camp', '') === 'all' ? BUILDINGS.map((b) => b.id) : arg('camp', '').split(',').filter(Boolean).map((id) => { if (!BUILDINGS.some((b) => b.id === id)) throw new Error(`unknown building ${id}`); return id as BuildingId; });
 const hwFocus = arg('hwfocus', '').split(',').filter(Boolean);
 const setArg = arg('set', '');
+const human = Math.max(1, Number(arg('human', '1')) || 1); // TB-247: slow-player factor (1 = script)
 const TUNE: Record<string, unknown> = { ARROWS, SOURCES, VANGUARD, BOSS_WAVE, TIERS, RARITY, DROP, AFFIX, MYTHIC_FX, PLAYER, LOB, BARRICADE, NODE_FX, COST_WAVE, STACKING, SHOT_FX, UNIT_FX, CHECKPOINT, ORC_TYPES, ORC_FX, FIREBALL, HP_RAMP, FOE_FX };
 applyTune(TUNE, arg('tune', ''));
 for (const kv of arg('cost', '').split(',').filter(Boolean)) { const [k, v] = kv.split('='); (NODES.find((x) => x.id === k) as { base: number }).base = Number(v); }
@@ -212,11 +213,12 @@ function tallyKinds(evs: ReturnType<EventBus['drain']>): void {
   }
   s.orcs.forEach((o) => { drumSamples++; if (o.drum) drummed++; });
 }
-const firstHits: number[] = []; let hitRun = false;
+const firstHits: number[] = []; let hitRun = false; let aimNow: ReturnType<typeof frontAim> = null;
 for (let i = 0; i < total; i++) {
-  step(s, STEP, { aim: frontAim(s) }, ev); // player model: frontAim
+  if (i % Math.round(30 * human) === 0) aimNow = frontAim(s); // human reaction: aim refreshed every ~0.5 s x factor
+  step(s, STEP, { aim: aimNow }, ev); // player model: frontAim
   if (!hitRun && s.run.barHp < s.stats.barMax) { hitRun = true; firstHits.push(s.run.wave); } // TB-154: wave the wall first takes damage, per run
-  if (i % 25 === 0) decide(i);
+  if (i % Math.round(25 * human) === 0) decide(i);
   if (savePath && s.run.wave > savedWave) { savedWave = s.run.wave; saved = JSON.stringify({ wave: s.run.wave, tier: s.run.tier, levels: s.run.levels, meta: s.meta }); }
   const evs = ev.drain(); tallyKinds(evs);
   for (const e of evs) if (e.t === 'bossReady') { mark('bossReady', i); summonBoss(s, ev); } else if (e.t === 'bossEnd') { bosses++; if (e.cleared) { mark('bossClear', i); clearedRun = true; } } else if (e.t === 'loot') {
@@ -239,7 +241,7 @@ const header = `# Balance run · policy=${policy} loot=${lootPolicy} seed=${seed
 const summary = `
 First fall at wave ${fallWave}. Falls (wave@run minutes): ${fallWaves.length ? fallWaves.map((w, i) => `${w}@${fallMins[i]}${fallTiers[i]! > 1 ? '/t' + fallTiers[i] : ''}`).join(', ') : '-'}. Replants: ${falls}. First wall damage (wave, per run): ${firstHits.join(', ') || '-'}. Heartwood: ${s.meta.heartwood}. Best wave: ${s.meta.bestWave}.
 Late orcs (TB-087): ${LATE.map((k) => `${k} ${kinds[k]!.kills} slain / ${kinds[k]!.swings} swings (first wave ${firstSeen[k] ?? '-'})`).join('; ')}. Fireballs ${fireballs} cast, ${fireHits} struck; rider leaps ${leaps}; vanguard fallen ${vanFell}; drummed share of live orcs ${drumSamples ? Math.round((1000 * drummed) / drumSamples) / 10 : 0}%.
-Build (TB-246): path ${pathArg}, focus ${focusBranches.join('+') || '-'}, camp upgrades ${campBought} (levels ${JSON.stringify(s.meta.camp.levels)}), set ${setArg || '-'}, mythic ${forced?.id ?? '-'}, hw order ${hwFocus.join('+') || 'cheapest'}, hw ranks ${JSON.stringify(s.meta.hwLevels)}.
+Build (TB-246): human ${human}, path ${pathArg}, focus ${focusBranches.join('+') || '-'}, camp upgrades ${campBought} (levels ${JSON.stringify(s.meta.camp.levels)}), set ${setArg || '-'}, mythic ${forced?.id ?? '-'}, hw order ${hwFocus.join('+') || 'cheapest'}, hw ranks ${JSON.stringify(s.meta.hwLevels)}.
 Milestones (TB-146): first Heartwood purchase affordable: ${ms.hwAfford}. First bought${doHwBuy ? '' : ' (no --hwbuy)'}: ${ms.hwBuy}. Heartwood nodes bought: ${hwBought}. First boss reached: ${ms.bossReady}. First boss cleared: ${ms.bossClear}.
 Tiers (TB-148): ${tierAt.length ? tierAt.join('; ') : 'none unlocked'}. Starlight earned per run minute, last run: ${Math.round(s.run.earned / Math.max(1, s.run.runTime / 60))}. Sources owned, last run: ${(['wolf', 'knives', 'fire', 'storm', 'ballista', 'moon'] as const).filter((k) => runStart.run.levels[k]).join(' ') || '-'}.
 `;
