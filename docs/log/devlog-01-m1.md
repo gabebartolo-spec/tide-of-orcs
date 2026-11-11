@@ -1,8 +1,8 @@
-# Devlog — M1: the arcing bow
+# Devlog 1 — M1 (30 Oct): the arcing bow
 
-*Itch devlog for the `m1` build (tag at 53b391d, 30 Oct 2026). It describes that build only. Later work on `main` (enemy summons, boss waves, the Heartwood tree, the phone Replant fix) belongs in the next devlog.*
+*Build: `m1` (tag at 53b391d), 30 Oct 2026, dev channel. Covers: the first playable build to this one. Later work on `main` belongs in the next devlog.*
 
-The second playable build of Tide of Orcs is up on the dev channel.
+The second playable build is up on the dev channel.
 
 ## What's new
 - **A new way to shoot.** Move your pointer over the plain and a strike circle follows it. Every 2.5 seconds the elf lobs one arrow in a high arc. It lands on the circle and hurts every orc inside. If you don't aim, she doesn't shoot. It's an incremental, not an idle. Your companions and vanguard still fight on their own.

@@ -1,6 +1,6 @@
-# Devlog — 1 Nov: loot, a new name and a living-wood grove
+# Devlog 2 — 1 Nov: loot, a new name and a living-wood grove
 
-*Itch devlog for the html5-dev build pushed from `main` on 1 Nov 2026 (itch run 41288928458). It covers everything since the `m1` build (53b391d, 30 Oct).*
+*Build: `html5-dev` from `main`, 1 Nov 2026 (itch run 41288928458). Covers: everything since the `m1` build (53b391d). Posted: https://veniceissinking.itch.io/elves-vs-orcs/devlog/1744255*
 
 The game has a new name: **Let's Hunt Some Orc!** This build is the biggest one yet: the full companion armoury, prestige, loot, a new look and real art and sound.
 
