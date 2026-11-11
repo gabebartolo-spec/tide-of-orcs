@@ -1,6 +1,6 @@
 # Devlog 15 — Balance testing tools, no game changes
 
-*Build: `html5-dev` from `main` (69ce8bf), 12 Nov 2026 (itch run 43113252146). Covers: everything since devlog 14 (8458044). Posted: pending*
+*Build: `html5-dev` from `main` (69ce8bf), 12 Nov 2026 (itch run 43113252146). Covers: everything since devlog 14 (8458044). Posted: https://veniceissinking.itch.io/elves-vs-orcs/devlog/1771071*
 
 This build plays the same as devlog 14. The work since then went into the balance simulator, so the game itself did not change.
 
