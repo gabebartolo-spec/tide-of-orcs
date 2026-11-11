@@ -1,4 +1,4 @@
-# Devlog 4 — 2 Nov: a real wolf, a living plain, honest swings
+# Devlog 4 — A real wolf, a living plain, honest swings
 
 *Build: `html5-dev` from `main` (1346a52), 2 Nov 2026 (itch run 41419227567). Covers: everything since the 1 Nov build (8d20894). Posted: https://veniceissinking.itch.io/elves-vs-orcs/devlog/1746684*
 

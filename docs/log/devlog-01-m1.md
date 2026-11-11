@@ -1,4 +1,4 @@
-# Devlog 1 — M1 (30 Oct): the arcing bow
+# Devlog 1 — M1: the arcing bow
 
 *Build: `m1` (tag at 53b391d), 30 Oct 2026, dev channel. Covers: the first playable build to this one. Later work on `main` belongs in the next devlog.*
 

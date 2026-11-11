@@ -11,8 +11,10 @@ Web builds go to **https://veniceissinking.itch.io/elves-vs-orcs** (page Restric
 Actions → "Release to itch.io" → Run workflow → pick a channel. `.github/workflows/itch.yml` runs lint, tests, build, stamps `dist/build.json` with tag/sha/date, and pushes `dist/` with butler. The game shows the build in the footer (ui reads `build.json`). A tag push (`m0`, `m1`, shipped 30 Oct) fires the same workflow; tags stop at `m1` and later milestones are untagged.
 
 ## Devlog rule (director, 4 Nov)
+Itch posts 1 to 13 (M1 to test build 7) are titled `Devlog N — …` in order with `What's new` / `What to test` headings (retitled 11 Nov, old links redirect). Posts 6 to 13 have no file in `docs/log/`.
+
 Every build posted to itch, on any channel (`html5`, `html5-dev`, `mobile-test`), needs a patch-notes devlog post for that build. Do not report a push as done until the notes are written and posted.
-1. Write `docs/log/devlog-NN-<slug>.md` (NN = the next number in sequence) in the house format: title `# Devlog N — <date>: <headline>`, one italic meta line (`Build: … Covers: … Posted: …`), a short intro, then `## What's new`, `## What to test`, `## Feedback`. Commit it.
+1. Write `docs/log/devlog-NN-<slug>.md` (NN = the next number in sequence) in the house format: title `Devlog N — <headline>` (same on itch and in the file; the date goes in the meta line), one italic meta line (`Build: … Covers: … Posted: …`), a short intro, then `## What's new`, `## What to test`, `## Feedback`. Commit it.
 2. Post it on the itch dashboard: `https://itch.io/dashboard/game/5261926/new-devlog` (butler has no devlog command and the itch API cannot create posts), signed in as VeniceIsSinking. Fill the title and body, tick Published, Save. The 4 Nov post is `/dashboard/post/1750213/edit`.
 3. Name the channel and the main sha in the post.
 
