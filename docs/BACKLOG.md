@@ -299,3 +299,4 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-248 | Achievements, list: design about 100 (director 12 Nov): progress milestones, collection (sets, mythics, camp, paths, branches), challenge, fun and secret; each with id, rule, event it listens to, cosmetic reward; docs/ACHIEVEMENTS.md | design | claude | open |
 | TB-249 | Achievements, system: earned ids in meta save (schema bump and migration approved 12 Nov), event-driven checks in src/sim, toast, DOM panel with hidden entries; ids map to Steam later | sim, ui | claude | open (after TB-248) |
 | TB-250 | Achievements, rewards: cosmetic unlocks only (skins, camp decor), no stats so balance is unaffected; needs director art approval per cosmetic | art | claude | open (after TB-249) |
+| TB-252 | Field light: wall contact shadow, sun wash from the upper left, edge vignette (director 12 Nov, visuals overhaul) | art | claude | done (this PR) |

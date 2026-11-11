@@ -17,6 +17,9 @@ export const P = {
   elfCloak: '#5f6f8a', archerCloak: '#8b9a7d', wolf: '#9aa3ad', bark: '#5a4634', knife: '#d9d4c3',
   treantTrunk: '#4e5e3f', treantLeaf: '#5f7d53', treantLeaf2: '#6f8f60', sage: '#8fa98a', grove: '#9fc48f',
   lamp: 'rgba(226,168,91,.2)', lampClear: 'rgba(226,168,91,0)',
+  // TB-252: field light (wall contact shadow, sun wash, edge vignette)
+  wallShadow: 'rgba(18,24,16,.34)', wallShadowSoft: 'rgba(18,24,16,.14)', wallShadowClear: 'rgba(18,24,16,0)',
+  sun: 'rgba(255,226,160,.16)', sunClear: 'rgba(255,226,160,0)', vignette: 'rgba(12,16,10,.42)', vignetteClear: 'rgba(12,16,10,0)',
   frost: '#bfe3ee', frostGlow: 'rgba(191,227,238,.45)', spark: '#f4eaa6', arcane: '#9b6bd6', arcaneCore: '#ece8ff',
   wallDust: '#cdbf9f',
   // flying wall chunks, sampled from each wall's render (TB-239)

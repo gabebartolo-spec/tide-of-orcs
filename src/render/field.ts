@@ -298,6 +298,7 @@ export class FieldRenderer {
     // forest (feet above the bush skirt) are drawn between its rows, so a walker is behind the trunks in front of it, never over them.
     const orcs = this.orcBuf; orcs.length = 0; for (const o of s.orcs.items) if (o.live && !o.dead) orcs.push(o);
     sortByY(orcs);
+    this.wallShadow(Math.max(vis.y0, this.treeline.skirtBase(vis.y0)), H);
     this.forest(orcs);
 
     // barricade
@@ -383,6 +384,7 @@ export class FieldRenderer {
     this.wallDamage.draw(g, this.clock);
     this.fx.draw(g);
     g.restore();
+    this.light(n);
 
     // HUD overlays (no shake)
     g.setTransform(sx, 0, 0, sy, ox, oy);
@@ -495,6 +497,32 @@ export class FieldRenderer {
     g.fillStyle = P.aimFill; g.beginPath(); g.arc(x, y, r, 0, 6.28); g.fill();
     g.strokeStyle = P.aimLine; g.lineWidth = 1.5; g.beginPath(); g.arc(x, y, r, 0, 6.28); g.stroke();
     g.strokeStyle = P.cream; g.beginPath(); g.arc(x, y, r, -Math.PI / 2, -Math.PI / 2 + ready * 6.28); g.stroke();
+  }
+
+  /** TB-252: the barricade's contact shadow on the plain, cast right (light from the upper left): a dense band hugging the foot of the
+   *  palisade and a soft one fading out across the grass, drawn under every actor. */
+  private wallShadow(y0: number, y1: number): void {
+    const g = this.g, L = SKY.light, step = 12;
+    const band = (w: number, c: string): void => {
+      g.fillStyle = c; g.beginPath(); g.moveTo(wallX(y0), y0);
+      for (let y = y0; y <= y1 + step; y += step) g.lineTo(wallX(y) + w * Math.min(1, (y - y0) / 40), y);
+      for (let y = y1 + step; y >= y0; y -= step) g.lineTo(wallX(y), y);
+      g.closePath(); g.fill();
+    };
+    band(L.far, P.wallShadowSoft); band(L.near, P.wallShadow);
+  }
+
+  /** TB-252: screen light over the world (under the HUD): a warm sun wash from the top-left that fades out as dusk falls, and an edge
+   *  vignette that frames the field. */
+  private light(n: number): void {
+    const g = this.g, L = SKY.light, v = this.vis, w = v.x1 - v.x0, h = v.y1 - v.y0;
+    if (!Number.isFinite(w) || !Number.isFinite(h) || !Number.isFinite(v.x0) || !Number.isFinite(v.y0) || w <= 0 || h <= 0) return;  // first frame before the view is sized
+    if (n < 0.99) {
+      const r = w * L.sunR, sg = g.createRadialGradient(v.x0, v.y0, 0, v.x0, v.y0, r); sg.addColorStop(0, P.sun); sg.addColorStop(1, P.sunClear);
+      g.globalAlpha = 1 - n; g.fillStyle = sg; g.fillRect(v.x0, v.y0, w, h); g.globalAlpha = 1;
+    }
+    const cx = v.x0 + w / 2, cy = v.y0 + h / 2, R = Math.hypot(w, h) / 2, vg = g.createRadialGradient(cx, cy, R * L.vigIn, cx, cy, R);
+    vg.addColorStop(0, P.vignetteClear); vg.addColorStop(1, P.vignette); g.fillStyle = vg; g.fillRect(v.x0, v.y0, w, h);
   }
 
   /** An arcing arrow: shadow on the ground, shaft in the air pointing along its flight. */
