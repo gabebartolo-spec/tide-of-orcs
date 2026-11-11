@@ -201,3 +201,16 @@ Regression pass after boss rotation (TB-230), sky and depth (TB-232), camp and p
 | I3 | pass | 0 console errors or warnings in the soak and the headless session |
 
 Findings: none. Not a bug: replanting through `game.replant` while a `barricadeFell` event is still queued leaves the fallen overlay open on a standing run; only a script can do that (the panel's own Replant clears it).
+
+## Run 7 (11 Nov 2026, dev build of main at 1d1799e, claude, TB-244)
+Regression pass after the pixel VFX (TB-240), camp from Tripo models (TB-241, TB-242) and the 11 Nov itch build. `npm run lint`, `npm run test` (482 tests) and `npm run build` pass. The browser pane was hidden, so the soak ran through the dev handle in page; the camp was looked at in the pane.
+
+| Check | Result | Evidence |
+|---|---|---|
+| A1, A5 | pass | Wipe: wave 1, root only; aiming at the front orc, 12 starlight at 27.9 s (tight against the 30 s target) |
+| C2–C4, D3, D4 | pass | Soak from a wipe, ~206,000 ticks (~69 sim min), aiming at the front orc, buying every node, summoning bosses: 81 falls, waves to 53, live orcs peaked at exactly 160; 0 invariant violations (NaN, negative starlight or wall HP, starlight moving while fallen); boss summon refused while fallen; a fall paid 0 or 3 Heartwood (3 only after a cleared boss) |
+| K1 | pass | While fallen with materials and Heartwood: each building upgraded twice to level 2 and stopped when funds ran out; the camp draws the level-2 models, banners and straw intact, no shrubs or sand patches |
+| I3 | pass | 0 console errors in the session |
+| Not run | | B3–B5, H2, I1, I2, J1, G, K2 (need the visible pane or the perf script) |
+
+Findings: none. A tip for later soaks: the buy intents are allowed while fallen (the grove tab), so a "buy refused while fallen" invariant is wrong; only boss summon is refused.
