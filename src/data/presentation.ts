@@ -8,7 +8,7 @@ export const SKY = {
   /** TB-252: light from the upper left. The barricade casts a contact shadow `near` units wide (dense) fading out by `far` units onto the
    *  plain; a warm sun wash spreads `sunR` x the canvas width from the top-left corner (gone by dusk), and a vignette darkens the edges
    *  from `vigIn` to 1 x the half-diagonal. */
-  light: { near: 10, far: 34, sunR: 1.1, vigIn: 0.55 },
+  light: { near: 18, far: 70, sunR: 0.95, vigIn: 0.4 },
   /** TB-232: the painted sky over the treeline. Under the HUD band an open strip of sky `open.frac` x the canvas height (at least `open.min`
    *  CSS px, so a phone still shows real distance) is kept clear of crowns: trees that would reach into it are drawn shorter (one uniform
    *  scale, never below `shrink` x their height). The skirt and the meadow never move; the gradient runs top -> low -> haze down to the crowns. */

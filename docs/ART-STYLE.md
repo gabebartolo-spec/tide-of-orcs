@@ -235,4 +235,4 @@ right-facing elk uses `elk_r.webp` (`CAMP_ELK_R_ART`, `right: true`), rendered w
 Materials panel, and all graze on the open meadow in one band (dy -22 to -40), never in the treeline grass.
 
 ## Field light (TB-252)
-Light comes from the upper left. The barricade casts a contact shadow onto the plain (a dense band at its foot, a soft one fading across the grass, under every actor); a warm sun wash spreads from the top-left corner and fades out at dusk; an edge vignette frames the field. Numbers in `SKY.light` (`src/data/presentation.ts`), colours `wallShadow*`, `sun*`, `vignette*` in the palette.
+Light comes from the upper left. The barricade casts a contact shadow onto the plain (a dense band at its foot, a soft one fading across the grass, under every actor); a warm sun wash spreads from the top-left corner with cool shade in the opposite corner, both fading out at dusk; an edge vignette frames the field. The wall shadow is stacked soft bands and tapers in from nothing at the bush skirt. Numbers in `SKY.light` (`src/data/presentation.ts`), colours `wallShadow*`, `sun*`, `vignette*` in the palette.

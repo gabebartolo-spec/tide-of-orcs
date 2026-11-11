@@ -503,13 +503,17 @@ export class FieldRenderer {
    *  palisade and a soft one fading out across the grass, drawn under every actor. */
   private wallShadow(y0: number, y1: number): void {
     const g = this.g, L = SKY.light, step = 12;
-    const band = (w: number, c: string): void => {
-      g.fillStyle = c; g.beginPath(); g.moveTo(wallX(y0), y0);
-      for (let y = y0; y <= y1 + step; y += step) g.lineTo(wallX(y) + w * Math.min(1, (y - y0) / 40), y);
+    const taper = 90;   // the shadow grows from nothing at the skirt to full width, so its top never ends on a ruled line
+    const band = (w: number): void => {
+      g.beginPath(); g.moveTo(wallX(y0), y0);
+      for (let y = y0; y <= y1 + step; y += step) { const t = Math.min(1, (y - y0) / taper); g.lineTo(wallX(y) + w * t * t * (3 - 2 * t), y); }
       for (let y = y1 + step; y >= y0; y -= step) g.lineTo(wallX(y), y);
       g.closePath(); g.fill();
     };
-    band(L.far, P.wallShadowSoft); band(L.near, P.wallShadow);
+    // stacked bands, widest first: the overlap builds a soft falloff from the dense foot out to nothing on the grass
+    const N = 6; g.fillStyle = P.wallShadowSoft;
+    for (let i = 0; i < N; i++) band(L.far - ((L.far - L.near) * i) / (N - 1));
+    g.fillStyle = P.wallShadow; band(L.near * 0.6);
   }
 
   /** TB-252: screen light over the world (under the HUD): a warm sun wash from the top-left that fades out as dusk falls, and an edge
@@ -519,7 +523,10 @@ export class FieldRenderer {
     if (!Number.isFinite(w) || !Number.isFinite(h) || !Number.isFinite(v.x0) || !Number.isFinite(v.y0) || w <= 0 || h <= 0) return;  // first frame before the view is sized
     if (n < 0.99) {
       const r = w * L.sunR, sg = g.createRadialGradient(v.x0, v.y0, 0, v.x0, v.y0, r); sg.addColorStop(0, P.sun); sg.addColorStop(1, P.sunClear);
-      g.globalAlpha = 1 - n; g.fillStyle = sg; g.fillRect(v.x0, v.y0, w, h); g.globalAlpha = 1;
+      g.globalAlpha = 1 - n; g.fillStyle = sg; g.fillRect(v.x0, v.y0, w, h);
+      // the far side from the sun sits in cool shade, so the plain reads lit on one side and shaded on the other
+      const cg = g.createRadialGradient(v.x1, v.y1, 0, v.x1, v.y1, r); cg.addColorStop(0, P.shade); cg.addColorStop(1, P.shadeClear);
+      g.fillStyle = cg; g.fillRect(v.x0, v.y0, w, h); g.globalAlpha = 1;
     }
     const cx = v.x0 + w / 2, cy = v.y0 + h / 2, R = Math.hypot(w, h) / 2, vg = g.createRadialGradient(cx, cy, R * L.vigIn, cx, cy, R);
     vg.addColorStop(0, P.vignetteClear); vg.addColorStop(1, P.vignette); g.fillStyle = vg; g.fillRect(v.x0, v.y0, w, h);
