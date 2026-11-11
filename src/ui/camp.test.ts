@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { BUILDINGS } from '../data/camp';
-import { CAMP_ART, CAMP_SCENE, CAMP_SPOTS } from '../data/presentation';
+import { CAMP_ART, CAMP_ART0, CAMP_SCENE, CAMP_SPOTS } from '../data/presentation';
 import { campFxText, campHit } from './camp';
 
 describe('camp UI (TB-188b, TB-188e scene)', () => {
@@ -19,7 +19,7 @@ describe('camp UI (TB-188b, TB-188e scene)', () => {
       expect(a[3]).not.toBe(b[3]);
     }
     // every level image exists in CAMP_ART and widens with its level
-    for (const b of BUILDINGS) { const r = CAMP_ART[b.id]; expect(r[0].w).toBeLessThan(r[2].w); }
+    for (const b of BUILDINGS) { const r = CAMP_ART[b.id]; expect(r[0].w).toBeLessThan(r[2].w); expect(CAMP_ART0[b.id].w).toBeLessThan(r[2].w); }
   });
   it('reads effects from CAMP_FX', () => {
     expect(campFxText('bowyer', 0)).toBe('');

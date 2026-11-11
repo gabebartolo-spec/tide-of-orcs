@@ -16,6 +16,20 @@ for n, (bx0, bx1, by0, by1) in sorted(L["rects"].items()):
     # the shadow catcher leaves a faint veil over the whole border: drop it so no rectangle shows, keep real shadow
     r_, g_, b_, a_ = im.split(); im = Image.merge("RGBA", (r_, g_, b_, a_.point(lambda v: 0 if v < 20 else min(255, round((v - 20) * 255 / 235)))))
     px0, py0 = round(bx0 * RX), round((1 - by1) * RY)            # border origin in plate pixels (top-left)
+    if n.endswith("0"):   # level 0: the hedge's shadow falls into the border as loose blobs: keep only the alpha islands that touch the largest one
+        import numpy as np
+        from scipy import ndimage
+        al0 = np.array(im.getchannel("A")); rgb = np.array(im.convert("RGB")).max(axis=2)
+        solid = (al0 > 200) & (rgb >= 12); ys_ = np.where(solid.any(axis=1))[0]
+        if len(ys_):   # hedge shadow: dark, in the upper 60% of the building's height, away from the building itself
+            cut = (ys_[0] + 0.6 * (ys_[-1] - ys_[0])); near_ = ndimage.binary_dilation(solid, iterations=10)
+            al0 = np.where((rgb < 12) & ~near_ & (np.arange(al0.shape[0])[:, None] < cut), 0, al0)
+        lab, k = ndimage.label(al0 > 6)
+        if k > 1:
+            big = np.bincount(lab.ravel())[1:].argmax() + 1
+            keep = np.isin(lab, np.unique(lab[solid & (lab > 0)]))
+            al0 = np.where(keep, al0, 0)
+        im.putalpha(Image.fromarray(al0.astype("uint8")))
     a = im.getchannel("A").point(lambda v: 255 if v > 6 else 0); bb = a.getbbox()
     im = im.crop(bb); x, y = px0 + bb[0], py0 + bb[1]
     im.save(os.path.join(pub, "decor", "camp", n + ".webp"), quality=92, method=6)

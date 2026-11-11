@@ -14,7 +14,7 @@ BACK_Y, FRONT_Y = 40, 150                         # scene y of the back and fron
 ROAD_Y, ROAD_HALF = 232, 13                       # road centre and half width (scene units)
 # building centres (scene x) and screen-width footprint at level 3 in scene units; levels 1/2 are LV_K of it
 SPOTS = {"bowyer": (230, 234, BACK_Y), "forge": (470, 234, FRONT_Y), "kitchen": (730, 242, BACK_Y), "training": (975, 278, FRONT_Y)}  # director 3 Nov round 3: 1.6x round 2, two staggered rows in a full-screen 1194x672 view
-LV_K = {1: 0.8, 2: 0.9, 3: 1.0}
+LV_K = {0: 0.7, 1: 0.8, 2: 0.9, 3: 1.0}   # level 0 = the cleared plot (Tripo, 11 Nov)
 PX = float(os.environ.get("PX", "4"))   # the elk pass is rendered with PX=3 (TB-208)
 ONLY = [s for s in os.environ.get("ONLY", "").split(",") if s]
 CAMP = r"C:\Users\DANTE\Documents\tide-assets\camp"
@@ -399,6 +399,8 @@ def fence_faces(bm_, lo, H):
             rf = max(abs(c.x - mx_) / hx, abs(c.y - my_) / hy)
             if rf > FENCE_R and c.z - lo < FENCE_Z * H and abs(g.normal.z) < 0.8: out_.append(g)
     return out_
+GREEN_MUTE = (0.58, 0.78, 0.22)   # olive: luminance x this, matches the level 1-3 island greens
+TRIM = {"bowyer0": (float(os.environ.get("TRIM_Z", "0.2")), float(os.environ.get("TRIM_R", "0.27")))}
 def load_building(n, foot):
     before = set(sc.objects); bpy.ops.import_scene.gltf(filepath=os.path.join(CAMP, n + ".glb"))
     ms = [o for o in sc.objects if o not in before and o.type == "MESH"]
@@ -424,8 +426,14 @@ def load_building(n, foot):
             if p.normal.z > 0.85 and p.center.z < lo + 0.3 * H: bins[min(59, int((p.center.z - lo) / H * 60))] += p.area
     top = lo + (max(range(60), key=lambda i: bins[i]) + 1) / 60 * H
     # leftover island grass: faces near the top that sample green from the base colour texture
-    img = next((i for i in bpy.data.images if i.name.endswith("basecolor.jpg") and i.users), None)
+    img = next((i for i in bpy.data.images if "basecolor" in i.name and i.users), None)
     sm = None
+    if img and n.endswith("0"):   # level 0 (Tripo, 11 Nov): pull saturated island greens toward the meadow tone so the plots match levels 1-3
+        import numpy as np
+        a_ = np.empty(img.size[0] * img.size[1] * 4, dtype=np.float32); img.pixels.foreach_get(a_); a_ = a_.reshape(-1, 4); r2, g2, b2 = a_[:, 0], a_[:, 1], a_[:, 2]
+        m_ = (g2 > r2 * 1.08) & (g2 > b2 * 1.15)
+        l_ = 0.3 * r2[m_] + 0.59 * g2[m_] + 0.11 * b2[m_]; a_[m_, 0] = l_ * GREEN_MUTE[0]; a_[m_, 1] = l_ * GREEN_MUTE[1]; a_[m_, 2] = l_ * GREEN_MUTE[2]
+        print("MUTE", n, int(m_.sum()), img.name); img.pixels.foreach_set(a_.ravel()); img.pack()
     if img:
         sm = img.copy(); sm.scale(512, 512); px_ = list(sm.pixels); W_ = 512
     for o in ms:
@@ -434,12 +442,19 @@ def load_building(n, foot):
         for f in bm_.faces:
             zs_ = [v.co.z for v in f.verts]
             if max(zs_) <= top + 0.002 * H: kill.append(f); continue
-            if sm and uvl and min(zs_) < top + 0.06 * H:
+            if sm and uvl and min(zs_) < top + (0.5 if n in ('bowyer0', 'training0') else 0.06) * H:
                 u = sum(l[uvl].uv.x for l in f.loops) / len(f.loops); v_ = sum(l[uvl].uv.y for l in f.loops) / len(f.loops)
                 k = (int((v_ % 1) * (W_ - 1)) * W_ + int((u % 1) * (W_ - 1))) * 4
                 r_, g_, b_ = px_[k], px_[k + 1], px_[k + 2]
-                if g_ > r_ * 1.08 and g_ > b_ * 1.15 and f.normal.z > 0.5: kill.append(f)
+                if g_ > r_ * 1.08 and g_ > b_ * 1.15 and (f.normal.z > 0.5 or n.endswith("0")): kill.append(f)
         if n.startswith("training") and os.environ.get("FENCE_CUT"): kill += fence_faces(bm_, lo, H)   # off: the fence is fused into the Tripo mesh, cutting shreds the model (3 Nov)
+        if n in TRIM:   # drop loose stumps and tufts round the main mass: faces farther than r (m) from the tall parts' centre
+            tall = [f.calc_center_median() for f in bm_.faces if f.calc_center_median().z > lo + TRIM[n][0] * H]
+            if tall:
+                cx_ = sum(c.x for c in tall) / len(tall); cy_ = sum(c.y for c in tall) / len(tall)
+                for f in bm_.faces:
+                    c = f.calc_center_median()
+                    if math.hypot(c.x - cx_, c.y - cy_) > TRIM[n][1]: kill.append(f)
         bmesh.ops.delete(bm_, geom=list(set(kill)), context="FACES"); bm_.to_mesh(me_); bm_.free()
         for v in me_.vertices: v.co.z -= top
     P = [v.co for o in ms for v in o.data.vertices]
@@ -450,12 +465,12 @@ def load_building(n, foot):
 
 GROUND_OBJ.is_shadow_catcher = True
 for o in ENV:
-    if o is not GROUND_OBJ: o.is_holdout = True
+    if o is not GROUND_OBJ: o.is_holdout = True; o.visible_shadow = False   # the plate already carries the hedge shadows
 comp(False); sc.render.film_transparent = True
 lj = os.path.join(out, "layout.json")
 rects = json.load(open(lj))["rects"] if os.path.exists(lj) else {}
 for bid, (x, foot, frow) in SPOTS.items():
-    for lv in (1, 2, 3):
+    for lv in (0, 1, 2, 3):
         n = f"{bid}{lv}"
         if not want(n) or not os.path.exists(os.path.join(CAMP, n + ".glb")): continue
         ms, P = load_building(n, foot * LV_K[lv])

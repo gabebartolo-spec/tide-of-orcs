@@ -1,11 +1,11 @@
 import { BuildingId } from '../data/camp';
-import { CAMP_ART, CAMP_DRAW_ORDER, CAMP_SPOTS } from '../data/presentation';
+import { CAMP_ART, CAMP_ART0, CAMP_DRAW_ORDER, CAMP_SPOTS } from '../data/presentation';
 import { P } from './palette';
 
 /** Encampment art (TB-188c, docs/plans/elf-encampment.md §1). TB-188k: levels 1-3 draw one image per building and level,
  *  public/decor/camp/<id><lv>.webp, rendered in Blender with the backdrop's camera, sun and pixel density and its contact shadow
- *  baked in, at its CAMP_ART rect. Images are 4 px per scene unit, so the canvas only ever downsamples them. Level 0 (and any
- *  image not loaded yet) draws the palette-token vector placeholder, painted once per scale to an offscreen canvas. */
+ *  baked in, at its CAMP_ART rect. Images are 4 px per scene unit, so the canvas only ever downsamples them. Level 0 draws its plot image the same way (CAMP_ART0, TB-188m). Until an image has loaded
+ *  a building draws the palette-token vector placeholder, painted once per scale to an offscreen canvas. */
 
 type Ctx = CanvasRenderingContext2D;
 /** Margin round each footprint in field units, for the banner and glow that reach past it. */
@@ -30,8 +30,8 @@ export class CampArt {
     g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high';
     for (const b of CAMP_DRAW_ORDER) {
       const lv = Math.min(3, levels[b.id] ?? 0), p = CAMP_SPOTS[b.id], key = `${b.id}${lv}`;
-      const im = lv > 0 ? img(key) : null;
-      if (im) { const r = CAMP_ART[b.id][lv - 1]!; g.drawImage(im, r.x, r.y, r.w, r.h); continue; }
+      const im = img(key);
+      if (im) { const r = lv > 0 ? CAMP_ART[b.id][lv - 1]! : CAMP_ART0[b.id]; g.drawImage(im, r.x, r.y, r.w, r.h); continue; }
       let c = this.cache.get(key);
       if (!c) { c = this.paint(b.id, lv, p.w, p.h, px); this.cache.set(key, c); }
       g.drawImage(c, p.x - p.w / 2 - PAD, p.y - p.h - PAD, p.w + PAD * 2, p.h + PAD * 2);

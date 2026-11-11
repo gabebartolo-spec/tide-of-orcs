@@ -243,6 +243,14 @@ export const CAMP_ART: Readonly<Record<'bowyer' | 'forge' | 'kitchen' | 'trainin
     { x: 817.0, y: 9.2, w: 302.0, h: 140.8, top: [901.6, 9.5] },
   ],
 }/*END*/;
+/** Level-0 plot images (public/decor/camp/<id>0.webp, TB-188m): the unbuilt Tripo plots, rendered by render_camp_backdrop.py and post_camp.py like
+ *  the levels above (printed by post_camp.py; do not edit by hand). Drawn in place of the vector placeholder once loaded. */
+export const CAMP_ART0: Readonly<Record<keyof typeof CAMP_ART, CampArtRect>> = /*ART0*/{
+  bowyer: { x: 122.0, y: -88.5, w: 190.2, h: 130.0, top: [248.5, -88.2] },
+  forge: { x: 386.2, y: 76.0, w: 166.5, h: 74.2, top: [502.5, 76.0] },
+  kitchen: { x: 640.8, y: -74.5, w: 178.2, h: 114.8, top: [726.5, -74.2] },
+  training: { x: 872.2, y: -15.8, w: 206.0, h: 167.2, top: [962.9, -15.5] },
+}/*END*/;
 /** Building image pixels per scene unit (render_camp_backdrop.py PX). */
 export const CAMP_ART_PX = 4;
 
