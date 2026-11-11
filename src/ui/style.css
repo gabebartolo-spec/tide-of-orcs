@@ -666,8 +666,7 @@ body:not([data-mode="run"]) header #btn-settings { display: none; }
 /* Between-runs polish (TB-195n, director's 13-point list, 3 Nov). Labels are sentence case at 1rem or more (Heartwood's capital E
    reads as C when small); the display face is for headings. One button system: primary gold plank (.buy), secondary wood
    (.ghost), destructive rose (.danger), set apart. Path cards and the satchel share one leather; stitches are dark angled dashes. */
-/* body text in the system's UI face (Segoe UI on Windows): Heartwood is kept for headings of 1.2rem (24 px at 1080p) and up */
-:root { --body: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", sans-serif; }
+/* Heartwood is the only face again (director, 11 Nov: the 3 Nov system-face body text read as a generic font). */
 .stat .k, .tabs button, .detail .branch, .item .slot, .satbar, .hud-wave .k, .plate .pk, .plate .done, .plate .lock, .lootbanner .rar, .camplist .k,
 .hud-van, .hud-wall .lbl { text-transform: none; letter-spacing: .02em; }
 .stat .k, .tabs button, .detail .branch, .satbar, .hwnode .desc, .bcard .desc, .bcard .cost, .auto, .ghost, .camplist { font-size: 1rem; }
