@@ -1,4 +1,4 @@
-# Devlog 3 — 1 Nov (evening): Heartwood from bosses, gentler costs, 4K
+# Devlog 3 — Heartwood from bosses, gentler costs, 4K
 
 *Build: `html5-dev` from `main` (aad928f), 1 Nov 2026 (itch run 41299645890). Covers: everything since the morning build (4667644). Posted: https://veniceissinking.itch.io/elves-vs-orcs/devlog/1744474*
 

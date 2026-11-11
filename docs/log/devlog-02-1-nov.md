@@ -1,4 +1,4 @@
-# Devlog 2 — 1 Nov: loot, a new name and a living-wood grove
+# Devlog 2 — Loot, a new name and a living-wood grove
 
 *Build: `html5-dev` from `main`, 1 Nov 2026 (itch run 41288928458). Covers: everything since the `m1` build (53b391d). Posted: https://veniceissinking.itch.io/elves-vs-orcs/devlog/1744255*
 

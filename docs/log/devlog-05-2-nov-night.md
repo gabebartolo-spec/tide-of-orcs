@@ -1,4 +1,4 @@
-# Devlog 5 — 2 Nov (night): a standing line, a mixed tide, checkpoints
+# Devlog 5 — A standing line, a mixed tide, checkpoints
 
 *Build: `html5-dev` from `main` (ba521f8), 2 Nov 2026 (itch run 41436431610). Covers: everything since the 2 Nov build (1346a52). Posted: https://veniceissinking.itch.io/elves-vs-orcs/devlog/1747072*
 
