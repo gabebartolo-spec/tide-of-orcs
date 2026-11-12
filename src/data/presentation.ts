@@ -375,6 +375,7 @@ export const QUALITY = {
  *  plays one cycle per stride of ground covered, so the feet match the march at any speed (chill, rage, drum, spd nodes)
  *  and stop when the actor stops. Measured from the packed frames (lowest-foot travel per cycle, slide audit 5 Nov);
  *  Jogging orcs (TB-255): old foot-sweep value x (jog root travel 1.69 m / that walk's sweep: Orc Walk 0.87, Sword And Shield 0.795); a foot's sweep is only the stance and under-reads the stride.
+ *  Vanguard (TB-256): old sweep x 1.909, Walking XBot's root travel per cycle over its foot sweep (1.342 / 0.703 m); a walk covers two stances per cycle.
  *  Roster bosses without a measured stride use `boss`. */
 /** Ground shadow under an orc, in radii: centre offset dx (toward its back) and half-width/height. The wolf rider anchors at the wolf's chest (TB-210). */
 export const ORC_SHADOW: Readonly<Partial<Record<string, { dx: number; rx: number; ry: number }>>> = { wolfrider: { dx: 2.4, rx: 1.6, ry: 0.4 } };
@@ -383,7 +384,7 @@ export const ORC_SHADOW_BASE = { dx: 0, rx: 0.9, ry: 0.35 } as const;
 export const GAIT = {
   strideR: {
     'orc.grunt': 3.25, 'orc.runner': 2.53, 'orc.brute': 2.41, 'orc.berserker': 3.0, 'orc.shaman': 2.79, 'orc.drummer': 2.78,
-    'orc.wolfrider': 2.54, 'orc.boss': 4.05, 'orc.orcBoss': 1.63, 'orc.ogreCreature': 1.68, 'orc.ogre': 1.89, 'van.spear': 2.1, 'van.blade': 1.78, wolf: 2.14,
+    'orc.wolfrider': 2.54, 'orc.boss': 4.05, 'orc.orcBoss': 1.63, 'orc.ogreCreature': 1.68, 'orc.ogre': 1.89, 'van.spear': 4.01, 'van.blade': 3.4, wolf: 2.14,
   } as Readonly<Record<string, number>>,
   boss: 2.08,
 } as const;
