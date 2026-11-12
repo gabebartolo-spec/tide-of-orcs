@@ -374,14 +374,15 @@ export const QUALITY = {
 /** Walk gait (TB-236): world units walked per walk-clip cycle, per unit of the actor's radius, by atlas key. The walk clip
  *  plays one cycle per stride of ground covered, so the feet match the march at any speed (chill, rage, drum, spd nodes)
  *  and stop when the actor stops. Measured from the packed frames (lowest-foot travel per cycle, slide audit 5 Nov);
- *  roster bosses without a measured stride use `boss`. */
+ *  grunt (TB-255): the jog clip's root travel per cycle (1.69 m x 1.92 r/m); a foot's sweep is only the stance and under-reads the stride.
+ *  Roster bosses without a measured stride use `boss`. */
 /** Ground shadow under an orc, in radii: centre offset dx (toward its back) and half-width/height. The wolf rider anchors at the wolf's chest (TB-210). */
 export const ORC_SHADOW: Readonly<Partial<Record<string, { dx: number; rx: number; ry: number }>>> = { wolfrider: { dx: 2.4, rx: 1.6, ry: 0.4 } };
 export const ORC_SHADOW_BASE = { dx: 0, rx: 0.9, ry: 0.35 } as const;
 
 export const GAIT = {
   strideR: {
-    'orc.grunt': 1.67, 'orc.runner': 1.3, 'orc.brute': 1.24, 'orc.berserker': 1.54, 'orc.shaman': 1.31, 'orc.drummer': 1.43,
+    'orc.grunt': 3.25, 'orc.runner': 1.3, 'orc.brute': 1.24, 'orc.berserker': 1.54, 'orc.shaman': 1.31, 'orc.drummer': 1.43,
     'orc.wolfrider': 2.54, 'orc.boss': 2.08, 'orc.orcBoss': 1.63, 'orc.ogreCreature': 1.68, 'orc.ogre': 1.89, 'van.spear': 2.1, 'van.blade': 1.78, wolf: 2.14,
   } as Readonly<Record<string, number>>,
   boss: 2.08,

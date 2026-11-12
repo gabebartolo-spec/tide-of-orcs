@@ -10,10 +10,10 @@ $vars = "WYAW", "RMATCH", "SWING", "MIRR", "H1", "MPH", "HINGE", "FREEZE", "WOFF
   "FINGCOPY", "POSEDUMP", "IDLEPOSE", "BOWALIGNF", "NOCKFING", "STRDRAW", "LIMBBEND", "STRNEAR", "STRTURN", "RETIME", "STABLESH", "HANDSMOOTH", "DRAWRAMP", "RELEASE", "TAIL"  # companion archer (TB-203)
 $all = { param($n) (0..($n - 1)) -join "," }  # TB-194: every clip frame (attacks were even frames only, 15 fps)
 $jobs = @(
-  @{ key = "orc.grunt"; m = "$a\grunt2\grunt2u.blend"; c = "$mx\Orc Walk.fbx"; ortho = "2.4"; fr = (0..35 -join ","); env = @{  # walk_grunt.ps1 (v20, Orc Walk)
+  @{ key = "orc.grunt"; m = "$a\grunt2\grunt2u.blend"; c = "$mx\Jogging XBot.fbx"; ortho = "2.4"; fr = (0..25 -join ","); env = @{  # TB-255 jog (director 12 Nov): Mixamo Jogging on X Bot, one cycle = frames 0-25 of 77 (3 cycles); was walk_grunt.ps1 v20 Orc Walk
       RMATCH = "RightShoulder,RightArm,RightForeArm,RightHand"; SWING = "mixamorig:LeftArm:1;mixamorig:LeftForeArm:1"; H1 = "1"; MPH = "2"; HINGE = "world"; FREEZE = "mixamorig:RightShoulder,mixamorig:RightHand"
       MIRR = "mixamorig:LeftArm>mixamorig:RightArm:2.8;mixamorig:LeftForeArm>mixamorig:RightForeArm:1"
-      WOFFS = "mixamorig:LeftArm:1,0,0,-25;mixamorig:RightArm:1,0,0,-17;mixamorig:RightForeArm:1,0,0,18;mixamorig:RightHand:1,0,0,20" } },
+      WOFFS = "mixamorig:LeftArm:1,0,0,-25;mixamorig:RightArm:1,0,0,-17;mixamorig:RightForeArm:1,0,0,18;mixamorig:RightHand:1,0,0,75"; INPLACE = "1" } },  # hand 75: the jog's bent elbow stood the axe up across the face
   @{ key = "orc.grunt.attack"; m = "$a\grunt2\grunt2u.blend"; c = "$mx\Standing Melee Attack Downward AS100.fbx"; ortho = "2.4"; fr = (& $all 69); env = @{  # attack_grunt.ps1 (v3)
       RMATCH = "RightShoulder,RightArm,RightForeArm,RightHand,LeftArm,LeftForeArm"; WOFFS = "mixamorig:RightArm:0,1,0,-45;mixamorig:RightHand:0,1,0,15" } },
   @{ key = "van.spear"; m = "$a\elf_spearman\spearman_1h_mid.blend"; c = "$mx\Sword And Shield Walk.fbx"; ortho = "2.6"; fr = (0..32 -join ","); env = @{  # walk_spearman_1h.ps1 (v16)
