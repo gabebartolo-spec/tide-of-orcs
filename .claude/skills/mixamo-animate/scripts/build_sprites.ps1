@@ -38,10 +38,9 @@ $jobs = @(
   @{ key = "orc.drummer"; m = "$a\drummer\drummer_raised.blend"; c = "$mx\Orc Walk.fbx"; ortho = "2.0"; fr = (0..35 -join ","); env = @{  # walk_drummer.ps1 (v2) on the raised chest drum (TB-186: one drum height for walk and drum clip)
       RMATCH = "LeftShoulder,LeftArm,LeftForeArm,LeftHand,RightShoulder,RightArm,RightForeArm,RightHand"; INPLACE = "1"
       REST = "mixamorig:LeftHandThumb1,mixamorig:LeftHandThumb2,mixamorig:LeftHandThumb3,mixamorig:RightHandThumb1,mixamorig:RightHandThumb2,mixamorig:RightHandThumb3" } },
-  # TB-186 drum clip v6: the exact Playing Drums AS100 loop (frames 18-51), no invented motion. Arms retargeted as the clip has them; the body (hips, spine, legs, thumbs) holds the bind pose; the drum is raised to where the clip's mallets strike.
-  @{ key = "orc.drummer.attack"; m = "$a\drummer\drummer_raised.blend"; c = "$mx\Playing Drums AS100.fbx"; ortho = "2.0"; fr = (18..51 -join ","); env = @{
-      RMATCH = "LeftShoulder,LeftArm,LeftForeArm,LeftHand,RightShoulder,RightArm,RightForeArm,RightHand"; INPLACE = "1"
-      REST = "mixamorig:Hips,mixamorig:Spine,mixamorig:Spine1,mixamorig:Spine2,mixamorig:Neck,mixamorig:Head,mixamorig:LeftUpLeg,mixamorig:LeftLeg,mixamorig:LeftFoot,mixamorig:LeftToeBase,mixamorig:RightUpLeg,mixamorig:RightLeg,mixamorig:RightFoot,mixamorig:RightToeBase,mixamorig:LeftHandThumb1,mixamorig:LeftHandThumb2,mixamorig:LeftHandThumb3,mixamorig:RightHandThumb1,mixamorig:RightHandThumb2,mixamorig:RightHandThumb3" } },
+  # orc.drummer.attack is NOT built here: the shipped clip is TB-186 v7 from drum_simple.py (24 frames, drummer_up_pretilt.blend; the v6
+  # "Playing Drums" retarget was rejected). Render it by hand: LIT=1 LITFLIP=1 blender -b --factory-startup drummer_up_pretilt.blend
+  # --python drum_simple.py -- <out>, copy <out>_0..23.png to frames\orc.drummer.attack_N.png, then repack (TB-253).
   @{ key = "orc.shaman"; m = "$a\shaman\shaman_cut2.blend"; c = "$mx\Sword And Shield Walk.fbx"; ortho = "2.0"; fr = (0..32 -join ","); env = @{  # walk_shaman.ps1 (v4)
       RMATCH = "RightShoulder,RightArm,RightForeArm,RightHand"; SWING = "mixamorig:LeftArm:1;mixamorig:LeftForeArm:0"; H1 = "1"; MPH = "2"; HINGE = "world"; FREEZE = "mixamorig:RightShoulder"
       MIRR = "mixamorig:LeftArm>mixamorig:RightArm:1.0;mixamorig:LeftForeArm>mixamorig:RightForeArm:0.5"; REST = "mixamorig:RightArm,mixamorig:RightForeArm,mixamorig:RightHand" } },

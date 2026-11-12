@@ -873,8 +873,9 @@ if os.environ.get("STABLESH"):  # TB-203: leg shading flickered frame to frame (
 def _litmask(path):  # TB-253: re-render this frame without the ground (4 samples) for the wall-only alpha; shadow pixels (outside it) are softened
     # to SHA of their strength and tinted toward the meadow's shade, as the wall art (pack_lit.py) does
     import numpy as _np
-    _g = bpy.data.objects.get("litground"); sp = sc.cycles.samples; _g.hide_render = True; sc.cycles.samples = 4; sc.render.filepath = path + ".m.png"
-    bpy.ops.render.render(write_still=True); _g.hide_render = False; sc.cycles.samples = sp
+    _g = bpy.data.objects.get("litground"); sp = sc.cycles.samples; _g.is_holdout = True; sc.cycles.samples = 4;  # holdout, not hidden: feet that dip below the ground stay masked (a hidden ground drew their soles as a dark ring)
+    sc.render.filepath = path + ".m.png"
+    bpy.ops.render.render(write_still=True); _g.is_holdout = False; sc.cycles.samples = sp
     def _ld(p_):
         im_ = bpy.data.images.load(p_); a_ = _np.array(im_.pixels[:], dtype=_np.float32).reshape(im_.size[1], im_.size[0], 4); return im_, a_
     im, a = _ld(path); mi, m = _ld(path + ".m.png"); wa = m[..., 3]; wa = _np.where((wa < 0.16) & (m[..., :3].max(-1) < 0.03), 0, wa);  # near-black ghost pixels (boss, drummer) drew a dotted ring

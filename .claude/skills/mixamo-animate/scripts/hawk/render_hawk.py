@@ -52,8 +52,10 @@ sc.render.resolution_x = sc.render.resolution_y = RES; sc.render.image_settings.
 os.makedirs(OUT, exist_ok=True)
 views = ["game", "front", "top"] if VIEW == "probe" else [VIEW]
 frames = [f0] if VIEW == "probe" else list(range(f0, f1, STEP))   # last frame == first for a loop
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))); import lit_render  # TB-253 (env LIT)
 for v in views:
     place(v)
+    if v == "game" and not bpy.data.objects.get("litground") and not getattr(lit_render, "_done", 0): lit_render.setup(sc, cam); lit_render._done = 1
     for i, f in enumerate(frames):
-        sc.frame_set(f); sc.render.filepath = os.path.join(OUT, f"{PFX}_{v}_{i}.png"); bpy.ops.render.render(write_still=True)
+        sc.frame_set(f); sc.render.filepath = os.path.join(OUT, f"{PFX}_{v}_{i}.png"); bpy.ops.render.render(write_still=True); lit_render.mask(sc, os.path.join(OUT, f"{PFX}_{v}_{i}.png"))
 print("DONE", len(frames), "frames x", views)

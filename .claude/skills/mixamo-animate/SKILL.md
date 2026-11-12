@@ -61,6 +61,9 @@ Blender: `C:\Program Files\Blender Foundation\Blender 5.2\blender.exe -b --facto
 | `OFFS=bone:x,y,z` | Local Euler offset (deg). Only for a measured fist alignment; prefer `ALIGN` |
 Older vars (`AIM`, `EDGE`, `GRIPAX`, `ABD`, `OFFS`, `DAMP`) were replaced by the grip-from-fist approach. Don't use them.
 
+## Lit renders (TB-253, 2026-11-12)
+`LIT=1` switches to Cycles (`SAMPLES` 48, denoise) with a camera-space sun `SUN=right,up,toward` (actors `-0.6,1.6,0.5`, walls `-0.75,0.55,0.35`), `SUNE` 3.2, `AMB` world strength (actors 0.65), `RIME` rim, and a 40 m shadow-catcher ground `litground`. `LITFLIP=1` for orcs (packed mirrored). Each frame is rendered again at 4 samples with the ground as **holdout** (not hidden: a hidden ground let feet below z=0 draw a dark ring) for the body-only alpha; pixels outside it are shadow, alpha x`SHA` 0.55, tinted to SHC (22,30,20), catcher alpha under 0.12 dropped. `NOGROUND=1` skips the catcher, `NOPROPSH=1` drops prop shadows. ~8 s per frame (elf ~11 s). Anchors get a 4th value 1 -> atlas `"lit":1` -> no in-engine ellipse. `-Only` needs `powershell -Command "& build_sprites.ps1 -Only a,b"`; with `-File` the list is one string and nothing renders.
+
 ## Two-hand weapons on Tripo's own rig (elf spearman, 2026-10-31)
 - **Mixamo's "unable to map your existing skeleton" is misleading**: an OBJ got it too. The cause is the posed arms (bent, touching the body). Skip the Mixamo auto-rig: export Tripo's Mixamo-preset rigged FBX (52 `mixamorig:` bones) and import with `use_anim=False` (with anim it hangs).
 - **No `DIRECT` on a Tripo rig** (body leans back ~45°). Use the default world retarget with `INPLACE=1` and `RMATCH` on both arms (raw retarget aimed the spear down/backward).

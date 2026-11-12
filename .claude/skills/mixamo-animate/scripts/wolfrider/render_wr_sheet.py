@@ -32,10 +32,11 @@ for mt in bpy.data.materials:
             if nd.type=="BSDF_PRINCIPLED": nd.inputs["Roughness"].default_value=1.0; nd.inputs["Metallic"].default_value=0.0
 arm=[o for o in bpy.data.objects if o.type=='ARMATURE'][0]
 os.makedirs(OUTDIR,exist_ok=True)
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))); import lit_render; lit_render.setup(sc, cam)  # TB-253 (env LIT; mirrored here AND at pack, so no LITFLIP)
 n=0
 for i,F in enumerate(range(sc.frame_start, sc.frame_end)):   # frame_end == frame_start pose, dropped
     if i%STEP: continue
-    sc.frame_set(F); path=f"{OUTDIR}/{KEY}_{n}.png"; sc.render.filepath=path; bpy.ops.render.render(write_still=True)
+    sc.frame_set(F); path=f"{OUTDIR}/{KEY}_{n}.png"; sc.render.filepath=path; bpy.ops.render.render(write_still=True); lit_render.mask(sc, path)
     img=bpy.data.images.load(path); px=np.array(img.pixels[:],dtype=np.float32).reshape(img.size[1],img.size[0],4)[:, ::-1, :]
     img.pixels.foreach_set(px.ravel()); img.filepath_raw=path; img.file_format='PNG'; img.save(); bpy.data.images.remove(img)
     n+=1

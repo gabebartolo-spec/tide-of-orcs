@@ -123,8 +123,10 @@ SPLICE = E("SPLICE")  # TB-211: token list (round 5) or "a:b:N" (round 3), see s
 if SPLICE:
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); import splice
     frames = splice.seq(SPLICE)
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))); import lit_render  # TB-253 (env LIT)
 for v in VIEWS:
     place(v)
+    if v == "game" and not bpy.data.objects.get("litground") and not getattr(lit_render, "_done", 0): lit_render.setup(sc, cam); lit_render._done = 1
     cam.data.ortho_scale = float(E("FORTHO", str(ORTHO))) if v in ("front", "back") else ORTHO
     for i, f in enumerate(frames):
         if SPLICE: splice.apply(sc, arm, WP, HB, f)
@@ -133,5 +135,5 @@ for v in VIEWS:
             d = rootw() - r0; piv.location.x -= d.x; piv.location.y -= d.y; bpy.context.view_layer.update()
         if E("PROBE"): rw = rootw(); print("ROOT", f, tuple(round(x, 3) for x in rw))
         if E("NORENDER"): continue
-        sc.render.filepath = os.path.join(OUT, f"{PFX}_{v}_{i}.png"); bpy.ops.render.render(write_still=True)
+        sc.render.filepath = os.path.join(OUT, f"{PFX}_{v}_{i}.png"); bpy.ops.render.render(write_still=True); lit_render.mask(sc, os.path.join(OUT, f"{PFX}_{v}_{i}.png"))
 print("DONE", len(frames), "frames x", VIEWS)
