@@ -870,6 +870,34 @@ if os.environ.get("STABLESH"):  # TB-203: leg shading flickered frame to frame (
         if hasattr(sc.eevee, k_): setattr(sc.eevee, k_, v_)
     for o_ in bpy.data.objects:  # the moving bow/arrow/quiver cast shifting shadows over the legs: props cast none
         if o_.name.startswith(("wpn_", "prop_")): o_.visible_shadow = False
+def _litmask(path):  # TB-253: re-render this frame without the ground (4 samples) for the wall-only alpha; shadow pixels (outside it) are softened
+    # to SHA of their strength and tinted toward the meadow's shade, as the wall art (pack_lit.py) does
+    import numpy as _np
+    _g = bpy.data.objects.get("litground"); sp = sc.cycles.samples; _g.hide_render = True; sc.cycles.samples = 4; sc.render.filepath = path + ".m.png"
+    bpy.ops.render.render(write_still=True); _g.hide_render = False; sc.cycles.samples = sp
+    def _ld(p_):
+        im_ = bpy.data.images.load(p_); a_ = _np.array(im_.pixels[:], dtype=_np.float32).reshape(im_.size[1], im_.size[0], 4); return im_, a_
+    im, a = _ld(path); mi, m = _ld(path + ".m.png"); wa = m[..., 3]; wa = _np.where((wa < 0.16) & (m[..., :3].max(-1) < 0.03), 0, wa);  # near-black ghost pixels (boss, drummer) drew a dotted ring
+    sh = wa <= 245 / 255; f = (1 - wa)[..., None]
+    SHA = float(os.environ.get("SHA", "0.55")); SHC = _np.array([22, 30, 20], dtype=_np.float32) / 255
+    sa = _np.where(a[..., 3] < 0.12, 0, a[..., 3] * SHA * (1 - wa))  # drop the faint catcher noise that spreads over the whole frame
+    a[..., 3] = _np.where(sh, _np.maximum(wa, sa), a[..., 3]); a[..., :3] = _np.where(sh[..., None], a[..., :3] * (1 - f) + SHC * f, a[..., :3])
+    im.pixels[:] = a.ravel(); im.filepath_raw = path; im.file_format = "PNG"; im.save(); bpy.data.images.remove(im); bpy.data.images.remove(mi); os.remove(path + ".m.png")
+if os.environ.get("LIT"):  # TB-253: the wall's sun (screen upper-left, a little toward the camera) in Cycles, with a shadow-catcher ground so
+    # each frame carries its own cast shadow; LITFLIP=1 for orcs (packed mirrored, so the sun is placed screen-right here and lands left in game)
+    bpy.context.view_layer.update(); _cm = cam.matrix_world.to_3x3(); _rt = _cm @ Vector((1, 0, 0)); _up = _cm @ Vector((0, 1, 0)); _bk = _cm @ Vector((0, 0, 1))
+    _sl = [float(x) for x in os.environ.get("SUN", "-0.75,0.55,0.35").split(",")]
+    if os.environ.get("LITFLIP"): _sl[0] = -_sl[0]
+    _sd = (_rt * _sl[0] + _up * _sl[1] + _bk * _sl[2] + Vector((0, 0, 0.9))).normalized()
+    sun.rotation_euler = _sd.to_track_quat("Z", "Y").to_euler(); sun.data.energy = float(os.environ.get("SUNE", "3.2")); sun.data.angle = 0.14; sun.data.color = (1, 0.95, 0.85)
+    rim.data.energy = float(os.environ.get("RIME", "0.6"))
+    w.node_tree.nodes["Background"].inputs[1].default_value = float(os.environ.get("AMB", "0.45"))
+    sc.render.engine = "CYCLES"; sc.cycles.samples = int(os.environ.get("SAMPLES", "48")); sc.cycles.use_denoising = True; sc.cycles.device = "GPU"
+    bpy.ops.mesh.primitive_plane_add(size=40, location=(0, 0, 0)); _gp = bpy.context.object; _gp.is_shadow_catcher = True; _gp.name = "litground"
+    if os.environ.get("NOGROUND"): bpy.data.objects.remove(_gp)
+    if os.environ.get("NOPROPSH"):
+        for o_ in bpy.data.objects:
+            if o_.name.startswith(("wpn_", "prop_")): print("NOPROPSH", o_.name); o_.visible_shadow = False
 for mt in bpy.data.materials:
     if mt.use_nodes:
         for nd in mt.node_tree.nodes:
@@ -985,6 +1013,7 @@ for i in fl:
         cam.location = tgt.matrix_world @ tgt.pose.bones["mixamorig:" + os.environ["FOCUS"]].head - _f * 5
     sc.render.filepath = f"{out}_{i}.png"
     bpy.ops.render.render(write_still=True)
+    if os.environ.get("LIT") and not os.environ.get("NOGROUND"): _litmask(f"{out}_{i}.png")
 
 print("ANIM wrote", out)
 

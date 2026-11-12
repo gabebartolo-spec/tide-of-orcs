@@ -96,13 +96,14 @@ foreach ($j in $jobs) {
   foreach ($v in $vars) { Remove-Item "Env:$v" -ErrorAction SilentlyContinue }
   foreach ($k in $j.env.Keys) { Set-Item "Env:$k" $j.env[$k] }
   $fr = $j.fr; if ($Missing -and $fr) { $fr = ($fr -split "," | Where-Object { -not (Test-Path "$o\$($j.key)_$_.png") }) -join ","; if (-not $fr) { "$($j.key) complete"; continue } }
+  $env:LIT = "1"; $env:SUN = "-0.6,1.6,0.5"; $env:AMB = "0.65"; if ($j.key -like "orc.*") { $env:LITFLIP = "1" } else { Remove-Item Env:LITFLIP -ErrorAction SilentlyContinue }  # TB-253 re-lit: wall sun + own cast shadow; orcs are packed mirrored
   $env:GAMECAM = "20"; $env:CAMROT = "0"; $env:ORTHO = $j.ortho; $env:RES = "512"; $env:ANCHOR = "1"; if ($fr) { $env:FR = $fr } else { Remove-Item Env:FR -ErrorAction SilentlyContinue }
   $out = & "$s\hid.ps1" $bl -b --factory-startup --python "$s\apply_anim.py" $j.m $j.c "$o\$($j.key)" | Select-String "^ANCHOR|Error"  # hid.ps1: no Blender window on the screen
   "$($j.key) $out"
   # stringify: a MatchInfo piped into Select-String passes through unmatched (empty groups -> 0,0 anchors). Numeric groups only: the elf's
   # arrow probe also prints "ANCHOR <frame> nock-headc/hz ..." lines, which must not be taken for the foot anchor.
   $m = $out | ForEach-Object { "$_" } | Select-String "^ANCHOR (\d+(?:\.\d+)?) (\d+(?:\.\d+)?)\s*$" | Select-Object -First 1
-  if ($m) { $anc[$j.key] = @([double]$m.Matches[0].Groups[1].Value, [double]$m.Matches[0].Groups[2].Value, [double]$j.ortho) }
+  if ($m) { $anc[$j.key] = @([double]$m.Matches[0].Groups[1].Value, [double]$m.Matches[0].Groups[2].Value, [double]$j.ortho, 1) }  # 4th value 1 = lit frames (TB-253)
 }
 $anc | ConvertTo-Json | Set-Content -Encoding utf8 $af
 python "$s\pack_sprites.py" $o (Join-Path $s "..\..\..\..\public\sprites")

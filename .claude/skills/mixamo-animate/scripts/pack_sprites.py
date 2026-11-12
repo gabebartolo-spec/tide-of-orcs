@@ -83,7 +83,8 @@ cuts, body = {}, {}
 for key, (fps, mirror, bk, br) in ANIMS.items():
     fr = frames(key)
     if not fr: print("PACK missing", key); continue
-    ax, ay, ortho = anchors[key]
+    ax, ay, ortho = anchors[key][:3]; lit = len(anchors[key]) > 3  # TB-253: a 4th anchor value marks frames re-lit with their own cast shadow
+    bt = 160 if lit else 8  # body height ignores the soft shadow (alpha <= ~140)
     s = PX_PER_M / (RES / ortho)
     box = [min(b[i] for b in (f.getchannel("A").point(lambda a: 255 if a > 8 else 0).getbbox() for f in fr)) if i < 2 else
            max(b[i] for b in (f.getchannel("A").point(lambda a: 255 if a > 8 else 0).getbbox() for f in fr)) for i in range(4)]
@@ -95,8 +96,8 @@ for key, (fps, mirror, bk, br) in ANIMS.items():
         out.append(c.transpose(Image.FLIP_LEFT_RIGHT) if mirror else c)
     fx, fy = (ax - box[0]) / (box[2] - box[0]), (ay - box[1]) / (box[3] - box[1])
     if key == bk:  # body height: the opaque vertical extent of frame 0, in sheet px
-        b0 = fr[0].getchannel("A").point(lambda a: 255 if a > 8 else 0).getbbox(); body[key] = (b0[3] - b0[1]) * s
-    cuts[key] = dict(imgs=out, fps=fps, ax=round(1 - fx if mirror else fx, 4), ay=round(fy, 4), bk=bk, br=br, touch=box[0] <= 0 or box[2] >= RES or box[1] <= 0)
+        b0 = fr[0].getchannel("A").point(lambda a: 255 if a > bt else 0).getbbox(); body[key] = (b0[3] - b0[1]) * s
+    cuts[key] = dict(imgs=out, fps=fps, ax=round(1 - fx if mirror else fx, 4), ay=round(fy, 4), bk=bk, br=br, lit=lit, touch=box[0] <= 0 or box[2] >= RES or box[1] <= 0)
 
 # shelf-pack every frame, one sheet per group (orcs / elf + vanguard)
 anims, sheets = {}, {}
@@ -112,12 +113,16 @@ for name in SHEETS.values():
     for key, c in group.items():
         for i, im in enumerate(c["imgs"]): sheet.paste(im, place[(key, i)][:2])
         fh = c["imgs"][0].height
-        anims[key] = dict(image=name, frames=[list(place[(key, i)]) for i in range(len(c["imgs"]))], fps=c["fps"], ax=c["ax"], ay=c["ay"], hPerR=round(fh / PX_PER_M if key.startswith("camp.") else fh / body[c["bk"]] * c["br"], 4))
+        anims[key] = dict(**({"lit": 1} if c.get("lit") else {}), image=name, frames=[list(place[(key, i)]) for i in range(len(c["imgs"]))], fps=c["fps"], ax=c["ax"], ay=c["ay"], hPerR=round(fh / PX_PER_M if key.startswith("camp.") else fh / body[c["bk"]] * c["br"], 4))
         print("PACK", key, len(c["imgs"]), "frames", f"{c['imgs'][0].width}x{fh}", "ax", c["ax"], "ay", c["ay"], "hPerR", anims[key]["hPerR"], "->", name, "EDGE-CLIPPED" if c["touch"] else "")
     sheets[name] = sheet
 os.makedirs(dst, exist_ok=True)
 for name, sheet in sheets.items():
-    sheet.save(os.path.join(dst, name), "WEBP", quality=90, method=6, alpha_quality=100)
+    q = 90  # TB-253: lit frames carry soft shadow alpha, so a full sheet can pass 2 MB; step quality down until it fits
+    while True:
+        sheet.save(os.path.join(dst, name), "WEBP", quality=q, method=6, alpha_quality=100)
+        if os.path.getsize(os.path.join(dst, name)) <= 2 * 1024 * 1024 or q <= 70: break
+        q -= 4
     print("PACK sheet", name, sheet.size, os.path.getsize(os.path.join(dst, name)) // 1024, "KB")
 json.dump(dict(images=sorted(sheets), anims=anims), open(os.path.join(dst, "atlas.json"), "w"), separators=(",", ":"))
 old = os.path.join(dst, "sheet.webp")

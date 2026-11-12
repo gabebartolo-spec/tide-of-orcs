@@ -6,7 +6,7 @@ import { SPRITE_BAKE, SPRITE_BAKE_PHONE } from '../data/presentation';
 import { quality } from './quality';
 
 /** One animation: its sheet image, frame rects on it, playback rate, foot anchor (0..1 of frame), drawn height per unit of actor radius. */
-export interface Anim { image: string; frames: [number, number, number, number][]; fps: number; ax: number; ay: number; hPerR: number }
+export interface Anim { image: string; frames: [number, number, number, number][]; fps: number; ax: number; ay: number; hPerR: number; lit?: number }
 /** Atlas: one JSON over several sheets (TB-129: orcs on one, elf + vanguard on another, each under the 2 MB budget). */
 export interface Atlas { images: string[]; anims: Record<string, Anim> }
 
@@ -135,6 +135,8 @@ export class Sprites {
 
   /** True when the atlas holds an animation under this key (TB-230 boss art fallback). */
   has(key: string): boolean { return !!this.atlas?.anims[key]; }
+  /** TB-253: the frames carry their own cast shadow (re-lit renders), so no flat ground ellipse is drawn under them. */
+  lit(key: string): boolean { return !!this.atlas?.anims[key]?.lit; }
 
   /** Drawn height of `key` per unit of r (0 when it has no sprite), so a caller can size a sprite to a set height. */
   heightPerR(key: string): number { return this.atlas?.anims[key]?.hPerR ?? 0; }
