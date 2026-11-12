@@ -52,7 +52,7 @@ Rangers and Wardens keep straight volleys at `fireRate = 1.2 × 1.15^draw` per s
 | Constant | Value | File |
 |---|---|---|
 | `PLAYER.fanRad` | 0.09 rad between ranger arrows | balance.ts |
-| `SOURCES.wolf` | base 4 (TB-157), bite every 0.5 s, speed 210 px/s, reach 22 px | balance.ts |
+| `SOURCES.wolf` | base 4 (TB-157), bite every 0.5 s, speed 105 px/s (TB-257, was 210: gallop cadence), reach 22 px | balance.ts |
 | `SOURCES.archerDmgFrac`, `archerOffsetY` | 0.7 × player dmg × kin; 90 px above/below the elf | balance.ts |
 | `SOURCES.knives.speed`, `ballista.speed` | 640, 760 px/s | balance.ts |
 | `VANGUARD.walkSpeed`, `engageRange` | 60 px/s; orcs within r + 18 px engage a vanguard | balance.ts |
