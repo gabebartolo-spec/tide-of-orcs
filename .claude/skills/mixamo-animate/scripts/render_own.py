@@ -38,7 +38,8 @@ for o in bpy.data.objects:
     if o.name in os.environ.get("HIDE", "").split(","): o.hide_render = True
 sc.render.resolution_x = sc.render.resolution_y = int(os.environ.get("RES", "360"))
 from bpy_extras.object_utils import world_to_camera_view as _w2c
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); import lit_render; lit_render.setup(sc, cam)  # TB-253 (env LIT)
 bpy.context.view_layer.update(); _p = _w2c(sc, cam, arm.matrix_world @ Vector((0, 0, 0))); print("ANCHOR", round(_p.x * sc.render.resolution_x, 2), round((1 - _p.y) * sc.render.resolution_y, 2))
 for i, f in enumerate(range(a, b + 1)):
     sc.frame_set(f)
-    sc.render.filepath = f"{out}_{i}.png"; bpy.ops.render.render(write_still=True)
+    sc.render.filepath = f"{out}_{i}.png"; bpy.ops.render.render(write_still=True); lit_render.mask(sc, f"{out}_{i}.png")

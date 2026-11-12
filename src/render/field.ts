@@ -580,7 +580,8 @@ export class FieldRenderer {
     const g = this.g, wind = this.windUp(o), d = this.interp.off(o), x = o.x + d.dx + wind.dx, wy = o.y + d.dy, y = depthY(wy);
     const or = o.r * depthScale(wy);  // fake depth (TB-232): drawn row and size come from the world row; the sim keeps o.r
     const osh = ORC_SHADOW[o.kind] ?? ORC_SHADOW_BASE, shx = x + or * osh.dx;  // the wolf rider's shadow sits back under the wolf (TB-210)
-    if (quality.q.cheap) { const sh = this.shadowBlit(); g.drawImage(sh, shx - or * osh.rx, y + or * (0.9 - osh.ry), or * osh.rx * 2, or * osh.ry * 2); }   // phone tier: one prebaked blit
+    const litSh = this.sprites.lit(`orc.${ORC_SPRITE[o.kind] ?? o.kind}`);  // TB-253: re-lit sprites bring their own shadow
+    if (litSh) { /* shadow baked into the frames */ } else if (quality.q.cheap) { const sh = this.shadowBlit(); g.drawImage(sh, shx - or * osh.rx, y + or * (0.9 - osh.ry), or * osh.rx * 2, or * osh.ry * 2); }   // phone tier: one prebaked blit
     else { g.fillStyle = P.shadow; g.beginPath(); g.ellipse(shx, y + or * 0.9, or * osh.rx, or * osh.ry, 0, 0, 6.28); g.fill(); }
     // Burning or chilled: the orc's own body takes the colour and a soft rim of it, so shading still reads (TB-089).
     const tint = o.burn > 0 ? P.fireTint : o.chill > 0 ? P.frostTint : '', glow = o.burn > 0 ? P.fire : o.chill > 0 ? P.frost : '';
@@ -666,7 +667,7 @@ export class FieldRenderer {
    *  and its draw clip (`elf.attack`) in step with the charge, so the string is at full draw as the lob leaves. */
   private elf(x: number, y: number, draw = -1): void {
     const g = this.g, k = this.postK(y); g.save(); g.translate(x, this.postY(y)); g.scale(k, k);
-    g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 16, 12, 4, 0, 0, 6.28); g.fill();
+    if (!this.sprites.lit('elf')) { g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 16, 12, 4, 0, 0, 6.28); g.fill(); }
     const key = 'elf', aiming = draw >= 0;
     this.aimMix = stepAimMix(this.aimMix, aiming, this.clock - this.elfClock, VFX.elfShot.aim); this.elfClock = this.clock;
     if (aiming) this.lastCharge = draw;
@@ -681,7 +682,7 @@ export class FieldRenderer {
    *  string releases as the volley leaves. With no orc in range its timer runs past the interval and it stands at idle. */
   private archer(s: SimState, i: number, x: number, y: number): void {
     const g = this.g, k = this.postK(y); g.save(); g.translate(x, this.postY(y)); g.scale(k, k); g.globalAlpha = 0.85;
-    g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 16, 12, 4, 0, 0, 6.28); g.fill();
+    if (!this.sprites.lit('archer')) { g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 16, 12, 4, 0, 0, 6.28); g.fill(); }
     const U = s.stats.units[i === 1 ? 'ranger' : 'warden'], cd = 1 / (s.stats.fireRate * U.rate), shotT = s.run.shotT[i] ?? 0;
     const dur = this.sprites.duration('archer.attack'), shooting = dur > 0 && shotT < cd;
     this.sprites.drawActor(g, 'archer', shooting ? 'attack' : 'walk', shooting ? swingClipT(shotT, cd, dur, VFX.strike.archer) : this.clock, 0, 16, ACTOR_R);
@@ -698,7 +699,7 @@ export class FieldRenderer {
 
   private van(s: SimState, v: Vanguard): void {
     const g = this.g, T = VANGUARD[v.type]; const i = this.interp.off(v), wy = v.y + i.dy; this.at(v.x + i.dx, depthY(wy), v.face < 0, depthScale(wy));
-    g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 16, 12, 4, 0, 0, 6.28); g.fill();
+    if (!this.sprites.lit(this.vanKey(v.type).key)) { g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 16, 12, 4, 0, 0, 6.28); g.fill(); }
     const vk = this.vanKey(v.type), vst = vanState(s, v), vt = vst === 'attack' ? swingClipT(v.swingT, T.cd, this.sprites.duration(vk.atk), VFX.strike[v.type]) : vst === 'walk' ? strideT(v.walk, (GAIT.strideR[vk.key] ?? 0) * ACTOR_R * depthScale(wy), this.sprites.duration(vk.key)) : this.clock;
     this.sprites.drawActor(g, vk.key, vst, vt, 0, 16, ACTOR_R, v.hitT > 0);
     this.vanBar(v); this.at(0, 0, false);

@@ -145,7 +145,8 @@ rim = bpy.data.objects.new("rim", bpy.data.lights.new("rim", "SUN")); sc.collect
 sc.view_settings.view_transform = "Standard"; sc.eevee.taa_render_samples = 32
 sc.render.resolution_x = sc.render.resolution_y = int(os.environ.get("RES", "512"))
 from bpy_extras.object_utils import world_to_camera_view as w2c
-setcam(0); bpy.context.view_layer.update(); p = w2c(sc, cam, W @ Vector((0, 0, 0))); print("ANCHOR", round(p.x * sc.render.resolution_x, 2), round((1 - p.y) * sc.render.resolution_y, 2))
+import sys; sys.path.insert(0, os.path.dirname(__file__)); import lit_render  # TB-253
+setcam(0); bpy.context.view_layer.update(); p = w2c(sc, cam, W @ Vector((0, 0, 0))); print("ANCHOR", round(p.x * sc.render.resolution_x, 2), round((1 - p.y) * sc.render.resolution_y, 2)); lit_render.setup(sc, cam)
 def apply(i):
     for s in (L, R):
         u = (i / N - s.phase) % 1.0; phi = PHI_B + AMP * LAM(u)
@@ -163,5 +164,6 @@ for i in fl:
         setcam({"game": 0, "front": 90, "side": -90, "top": 0}[v])
         if v == "top": cam.location = (0, SKIN_Y, 4); cam.rotation_euler = Euler((0, 0, 0))
         sc.render.filepath = f"{out}{'' if v == 'game' else '_' + v}_{i}.png"; bpy.ops.render.render(write_still=True)
+        if v == "game": lit_render.mask(sc, sc.render.filepath)
 if os.environ.get("SAVE"): bpy.ops.wm.save_as_mainfile(filepath=os.environ["SAVE"])
 print("DONE")

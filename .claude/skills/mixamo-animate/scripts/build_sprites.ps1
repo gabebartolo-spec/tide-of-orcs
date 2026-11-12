@@ -10,10 +10,10 @@ $vars = "WYAW", "RMATCH", "SWING", "MIRR", "H1", "MPH", "HINGE", "FREEZE", "WOFF
   "FINGCOPY", "POSEDUMP", "IDLEPOSE", "BOWALIGNF", "NOCKFING", "STRDRAW", "LIMBBEND", "STRNEAR", "STRTURN", "RETIME", "STABLESH", "HANDSMOOTH", "DRAWRAMP", "RELEASE", "TAIL"  # companion archer (TB-203)
 $all = { param($n) (0..($n - 1)) -join "," }  # TB-194: every clip frame (attacks were even frames only, 15 fps)
 $jobs = @(
-  @{ key = "orc.grunt"; m = "$a\grunt2\grunt2u.blend"; c = "$mx\Orc Walk.fbx"; ortho = "2.4"; fr = (0..35 -join ","); env = @{  # walk_grunt.ps1 (v20, Orc Walk)
+  @{ key = "orc.grunt"; m = "$a\grunt2\grunt2u.blend"; c = "$mx\Jogging XBot.fbx"; ortho = "2.4"; fr = (0..25 -join ","); env = @{  # TB-255 jog (director 12 Nov): Mixamo Jogging on X Bot, one cycle = frames 0-25 of 77 (3 cycles); was walk_grunt.ps1 v20 Orc Walk
       RMATCH = "RightShoulder,RightArm,RightForeArm,RightHand"; SWING = "mixamorig:LeftArm:1;mixamorig:LeftForeArm:1"; H1 = "1"; MPH = "2"; HINGE = "world"; FREEZE = "mixamorig:RightShoulder,mixamorig:RightHand"
       MIRR = "mixamorig:LeftArm>mixamorig:RightArm:2.8;mixamorig:LeftForeArm>mixamorig:RightForeArm:1"
-      WOFFS = "mixamorig:LeftArm:1,0,0,-25;mixamorig:RightArm:1,0,0,-17;mixamorig:RightForeArm:1,0,0,18;mixamorig:RightHand:1,0,0,20" } },
+      WOFFS = "mixamorig:LeftArm:1,0,0,-25;mixamorig:RightArm:1,0,0,-17;mixamorig:RightForeArm:1,0,0,18;mixamorig:RightHand:1,0,0,75"; INPLACE = "1" } },  # hand 75: the jog's bent elbow stood the axe up across the face
   @{ key = "orc.grunt.attack"; m = "$a\grunt2\grunt2u.blend"; c = "$mx\Standing Melee Attack Downward AS100.fbx"; ortho = "2.4"; fr = (& $all 69); env = @{  # attack_grunt.ps1 (v3)
       RMATCH = "RightShoulder,RightArm,RightForeArm,RightHand,LeftArm,LeftForeArm"; WOFFS = "mixamorig:RightArm:0,1,0,-45;mixamorig:RightHand:0,1,0,15" } },
   @{ key = "van.spear"; m = "$a\elf_spearman\spearman_1h_mid.blend"; c = "$mx\Sword And Shield Walk.fbx"; ortho = "2.6"; fr = (0..32 -join ","); env = @{  # walk_spearman_1h.ps1 (v16)
@@ -23,36 +23,35 @@ $jobs = @(
       ARMSET = "Left:18.6,-15.6"; ELBOWSET = "Left:37"; ARMTWIST = "Left:17.1,22.7" } },
   @{ key = "van.spear.attack"; m = "$a\elf_spearman\spearman_2h_g0.08.blend"; c = "$mx\Bayonet Stab AS100.fbx"; ortho = "2.6"; fr = (& $all 99); env = @{  # attack_spearman.ps1 (v1)
       RMATCH = "RightShoulder,RightArm,RightForeArm,RightHand,LeftShoulder,LeftArm,LeftForeArm,LeftHand"; INPLACE = "1"; ALIGN = "Left:-0.607,-0.5,0.618;Right:0.012,-0.004,1.0"; GRIP2 = "1" } },
-  @{ key = "orc.boss"; m = "$a\fantasy_orc\fo_thin.blend"; c = "$mx\Orc Walk.fbx"; ortho = "1.6"; fr = (0..35 -join ","); env = @{  # TB-229 walk v3 (director 5 Nov): berserker walk minus GRIP2
+  @{ key = "orc.boss"; m = "$a\fantasy_orc\fo_thin.blend"; c = "$mx\Jogging XBot.fbx"; ortho = "1.6"; fr = (0..25 -join ","); env = @{  # TB-255 jog (one cycle of Jogging XBot); was TB-229 walk v3 (director 5 Nov): berserker walk minus GRIP2
       RMATCH = "LeftShoulder,LeftArm,LeftForeArm,LeftHand,RightShoulder,RightArm,RightForeArm,RightHand"; INPLACE = "1"
-      WOFFS = "mixamorig:RightHand:1,0,0,60;mixamorig:RightHand:0,1,0,20" } },
+      WOFFS = "mixamorig:RightHand:1,0,0,115;mixamorig:RightHand:0,1,0,20" } },  # TB-255: 115 (was 60) tips the club off the face on the jog
   @{ key = "orc.boss.attack"; m = "$a\fantasy_orc\fo_thin.blend"; c = "$mx\Standing Melee Attack Downward AS100.fbx"; ortho = "3.2"; fr = (& $all 69); env = @{  # TB-229 attack v1 (director 5 Nov), no WOFFS; ortho 3.2 (1.8 clips the overhead club)
   # TB-214 orc.packed / orc.packed.attack are NOT built here: they are the 3DE_Study model's own clips, rendered by render_own.py
   # (ACT=walking FR=1-35 / ACT=punch FR=1-30, GAMECAM 20, ORTHO 2.9, CZ 0.75, RES 512; anchor 256,380.43 in anchors.json).
       RMATCH = "LeftShoulder,LeftArm,LeftForeArm,LeftHand,RightShoulder,RightArm,RightForeArm,RightHand"; INPLACE = "1" } },
-  @{ key = "orc.berserker"; m = "$a\berserker\berserker_split.blend"; c = "$mx\Orc Walk.fbx"; ortho = "2.0"; fr = (0..35 -join ","); env = @{  # walk_berserker.ps1 (v1)
+  @{ key = "orc.berserker"; m = "$a\berserker\berserker_split.blend"; c = "$mx\Orc Walk.fbx"; ortho = "2.0"; fr = (0..25 -join ","); env = @{  # TB-255 jog (one cycle of Jogging XBot); was walk_berserker.ps1 (v1)
       RMATCH = "LeftShoulder,LeftArm,LeftForeArm,LeftHand,RightShoulder,RightArm,RightForeArm,RightHand"; INPLACE = "1"; GRIP2 = "1"
       WOFFS = "mixamorig:LeftHand:0,0,1,90;mixamorig:RightHand:0,0,1,-90;mixamorig:LeftHand:1,0,0,-20;mixamorig:RightHand:1,0,0,-20" } },
   @{ key = "orc.berserker.attack"; m = "$a\berserker\berserker_split.blend"; c = "$mx\Standing Melee Attack Downward AS100.fbx"; ortho = "2.0"; fr = (& $all 69); env = @{  # attack_berserker.ps1 (v1)
       RMATCH = "LeftShoulder,LeftArm,LeftForeArm,LeftHand,RightShoulder,RightArm,RightForeArm,RightHand"; INPLACE = "1"; GRIP2 = "1" } },
-  @{ key = "orc.drummer"; m = "$a\drummer\drummer_raised.blend"; c = "$mx\Orc Walk.fbx"; ortho = "2.0"; fr = (0..35 -join ","); env = @{  # walk_drummer.ps1 (v2) on the raised chest drum (TB-186: one drum height for walk and drum clip)
+  @{ key = "orc.drummer"; m = "$a\drummer\drummer_raised.blend"; c = "$mx\Orc Walk.fbx"; ortho = "2.0"; fr = (0..25 -join ","); env = @{  # TB-255 jog (one cycle of Jogging XBot); was walk_drummer.ps1 (v2) on the raised chest drum (TB-186: one drum height for walk and drum clip)
       RMATCH = "LeftShoulder,LeftArm,LeftForeArm,LeftHand,RightShoulder,RightArm,RightForeArm,RightHand"; INPLACE = "1"
       REST = "mixamorig:LeftHandThumb1,mixamorig:LeftHandThumb2,mixamorig:LeftHandThumb3,mixamorig:RightHandThumb1,mixamorig:RightHandThumb2,mixamorig:RightHandThumb3" } },
-  # TB-186 drum clip v6: the exact Playing Drums AS100 loop (frames 18-51), no invented motion. Arms retargeted as the clip has them; the body (hips, spine, legs, thumbs) holds the bind pose; the drum is raised to where the clip's mallets strike.
-  @{ key = "orc.drummer.attack"; m = "$a\drummer\drummer_raised.blend"; c = "$mx\Playing Drums AS100.fbx"; ortho = "2.0"; fr = (18..51 -join ","); env = @{
-      RMATCH = "LeftShoulder,LeftArm,LeftForeArm,LeftHand,RightShoulder,RightArm,RightForeArm,RightHand"; INPLACE = "1"
-      REST = "mixamorig:Hips,mixamorig:Spine,mixamorig:Spine1,mixamorig:Spine2,mixamorig:Neck,mixamorig:Head,mixamorig:LeftUpLeg,mixamorig:LeftLeg,mixamorig:LeftFoot,mixamorig:LeftToeBase,mixamorig:RightUpLeg,mixamorig:RightLeg,mixamorig:RightFoot,mixamorig:RightToeBase,mixamorig:LeftHandThumb1,mixamorig:LeftHandThumb2,mixamorig:LeftHandThumb3,mixamorig:RightHandThumb1,mixamorig:RightHandThumb2,mixamorig:RightHandThumb3" } },
-  @{ key = "orc.shaman"; m = "$a\shaman\shaman_cut2.blend"; c = "$mx\Sword And Shield Walk.fbx"; ortho = "2.0"; fr = (0..32 -join ","); env = @{  # walk_shaman.ps1 (v4)
-      RMATCH = "RightShoulder,RightArm,RightForeArm,RightHand"; SWING = "mixamorig:LeftArm:1;mixamorig:LeftForeArm:0"; H1 = "1"; MPH = "2"; HINGE = "world"; FREEZE = "mixamorig:RightShoulder"
+  # orc.drummer.attack is NOT built here: the shipped clip is TB-186 v7 from drum_simple.py (24 frames, drummer_up_pretilt.blend; the v6
+  # "Playing Drums" retarget was rejected). Render it by hand: LIT=1 LITFLIP=1 blender -b --factory-startup drummer_up_pretilt.blend
+  # --python drum_simple.py -- <out>, copy <out>_0..23.png to frames\orc.drummer.attack_N.png, then repack (TB-253).
+  @{ key = "orc.shaman"; m = "$a\shaman\shaman_cut2.blend"; c = "$mx\Sword And Shield Walk.fbx"; ortho = "2.0"; fr = (0..25 -join ","); env = @{  # TB-255 jog (one cycle of Jogging XBot); was walk_shaman.ps1 (v4)
+      RMATCH = "RightShoulder,RightArm,RightForeArm,RightHand"; SWING = "mixamorig:LeftArm:1;mixamorig:LeftForeArm:0"; H1 = "1"; INPLACE = "1"; MPH = "2"; HINGE = "world"; FREEZE = "mixamorig:RightShoulder"
       MIRR = "mixamorig:LeftArm>mixamorig:RightArm:1.0;mixamorig:LeftForeArm>mixamorig:RightForeArm:0.5"; REST = "mixamorig:RightArm,mixamorig:RightForeArm,mixamorig:RightHand" } },
   @{ key = "orc.shaman.attack"; m = "$a\shaman\shaman_cut2.blend"; c = "$mx\Standing 1H Magic Attack 01 MIRROR AS100.fbx"; ortho = "2.0"; fr = (& $all 69); env = @{  # cast_shaman.ps1 (v2)
       RMATCH = "RightShoulder,RightArm,RightForeArm,RightHand,LeftShoulder,LeftArm,LeftForeArm,LeftHand"; REST = "mixamorig:RightArm,mixamorig:RightForeArm,mixamorig:RightHand"; FREEZE = "mixamorig:RightShoulder"
       INPLACE = "1"; WOFFS = "mixamorig:RightArm:1,0,0,-15" } },
-  @{ key = "orc.runner"; m = "$a/runner/runner_split.blend"; c = "$mx/Orc Walk.fbx"; ortho = "1.8"; fr = (0..35 -join ","); env = @{  # walk_runner.ps1 (v2); ORTHO 1.8 = the attack's, so both share a pixel scale
+  @{ key = "orc.runner"; m = "$a/runner/runner_split.blend"; c = "$mx\Jogging XBot.fbx"; ortho = "1.8"; fr = (0..25 -join ","); env = @{  # TB-255 jog (one cycle of Jogging XBot); was walk_runner.ps1 (v2); ORTHO 1.8 = the attack's, so both share a pixel scale
       WYAW = "mixamorig:Neck,mixamorig:Head>mixamorig:Spine2"; RMATCH = "Spine,LeftShoulder,LeftArm,LeftForeArm,LeftHand,RightShoulder,RightArm,RightForeArm,RightHand"; INPLACE = "1"; GRIP2 = "1"; WOFFS = "mixamorig:RightHand:0,0,1,-60" } },
   @{ key = "orc.runner.attack"; m = "$a/runner/runner_split.blend"; c = "$mx/Standing Melee Attack Downward AS100.fbx"; ortho = "1.8"; fr = (& $all 69); env = @{  # attack_runner.ps1 (v4)
       WYAW = "mixamorig:Neck,mixamorig:Head>mixamorig:Spine2"; RMATCH = "Spine,LeftShoulder,LeftArm,LeftForeArm,LeftHand,RightShoulder,RightArm,RightForeArm,RightHand"; INPLACE = "1"; GRIP2 = "1"; WOFFS = "mixamorig:RightHand:0,0,1,-60" } },
-  @{ key = "orc.brute"; m = "$a/brute/brute_split.blend"; c = "$mx/Orc Walk.fbx"; ortho = "2.3"; fr = (0..35 -join ","); env = @{  # walk_brute.ps1 (v1); ORTHO 2.3 = the attack's, so both share a pixel scale
+  @{ key = "orc.brute"; m = "$a/brute/brute_split.blend"; c = "$mx\Jogging XBot.fbx"; ortho = "2.3"; fr = (0..25 -join ","); env = @{  # TB-255 jog (one cycle of Jogging XBot); was walk_brute.ps1 (v1); ORTHO 2.3 = the attack's, so both share a pixel scale
       WYAW = "mixamorig:Neck,mixamorig:Head>mixamorig:Spine2"; RMATCH = "Spine,LeftShoulder,LeftArm,LeftForeArm,LeftHand,RightShoulder,RightArm,RightForeArm,RightHand"; INPLACE = "1"; GRIP2 = "1"; WOFFS = "mixamorig:LeftHand:0,0,1,90;mixamorig:LeftHand:0,1,0,30;mixamorig:LeftHand:1,0,0,15" } },
   @{ key = "orc.brute.attack"; m = "$a/brute/brute_split.blend"; c = "$mx/Standing Melee Attack Downward AS100.fbx"; ortho = "2.3"; fr = (& $all 69); env = @{  # attack_brute.ps1 (v1)  (LeftHand WOFFS = club off the left arm)
       WYAW = "mixamorig:Neck,mixamorig:Head>mixamorig:Spine2"; RMATCH = "Spine,LeftShoulder,LeftArm,LeftForeArm,LeftHand,RightShoulder,RightArm,RightForeArm,RightHand"; INPLACE = "1"; GRIP2 = "1"; WOFFS = "mixamorig:LeftHand:0,0,1,90;mixamorig:LeftHand:0,1,0,30;mixamorig:LeftHand:1,0,0,15" } },
@@ -96,13 +95,14 @@ foreach ($j in $jobs) {
   foreach ($v in $vars) { Remove-Item "Env:$v" -ErrorAction SilentlyContinue }
   foreach ($k in $j.env.Keys) { Set-Item "Env:$k" $j.env[$k] }
   $fr = $j.fr; if ($Missing -and $fr) { $fr = ($fr -split "," | Where-Object { -not (Test-Path "$o\$($j.key)_$_.png") }) -join ","; if (-not $fr) { "$($j.key) complete"; continue } }
+  $env:LIT = "1"; $env:SUN = "-0.6,1.6,0.5"; $env:AMB = "0.65"; if ($j.key -like "orc.*") { $env:LITFLIP = "1" } else { Remove-Item Env:LITFLIP -ErrorAction SilentlyContinue }  # TB-253 re-lit: wall sun + own cast shadow; orcs are packed mirrored
   $env:GAMECAM = "20"; $env:CAMROT = "0"; $env:ORTHO = $j.ortho; $env:RES = "512"; $env:ANCHOR = "1"; if ($fr) { $env:FR = $fr } else { Remove-Item Env:FR -ErrorAction SilentlyContinue }
   $out = & "$s\hid.ps1" $bl -b --factory-startup --python "$s\apply_anim.py" $j.m $j.c "$o\$($j.key)" | Select-String "^ANCHOR|Error"  # hid.ps1: no Blender window on the screen
   "$($j.key) $out"
   # stringify: a MatchInfo piped into Select-String passes through unmatched (empty groups -> 0,0 anchors). Numeric groups only: the elf's
   # arrow probe also prints "ANCHOR <frame> nock-headc/hz ..." lines, which must not be taken for the foot anchor.
   $m = $out | ForEach-Object { "$_" } | Select-String "^ANCHOR (\d+(?:\.\d+)?) (\d+(?:\.\d+)?)\s*$" | Select-Object -First 1
-  if ($m) { $anc[$j.key] = @([double]$m.Matches[0].Groups[1].Value, [double]$m.Matches[0].Groups[2].Value, [double]$j.ortho) }
+  if ($m) { $anc[$j.key] = @([double]$m.Matches[0].Groups[1].Value, [double]$m.Matches[0].Groups[2].Value, [double]$j.ortho, 1) }  # 4th value 1 = lit frames (TB-253)
 }
 $anc | ConvertTo-Json | Set-Content -Encoding utf8 $af
 python "$s\pack_sprites.py" $o (Join-Path $s "..\..\..\..\public\sprites")
