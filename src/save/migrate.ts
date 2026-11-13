@@ -75,6 +75,11 @@ export const migrations: Record<number, (s: AnySave) => AnySave> = {
     const run = s.run as { wave?: number };
     return { ...s, version: 17, run: { ...run, ach: freshAchRun(run.wave ?? 1) }, meta: { ...(s.meta as object), ach: freshAchMeta() } };
   },
+  /** v17 to v18: worn cosmetics (TB-250). Every slot starts empty (the default look); what was earned and the worn title stay. */
+  17: (s) => {
+    const meta = s.meta as { ach?: object };
+    return { ...s, version: 18, meta: { ...meta, ach: { ...freshAchMeta(), ...meta.ach, worn: {} } } };
+  },
 };
 
 export function migrate(raw: unknown): Save {

@@ -25,7 +25,8 @@ import { applyGear, setTiers } from './sim/gear';
 import { Stats, deriveStats } from './sim/stats';
 import { SimEvent } from './sim/events';
 import { gain } from './sim/prestige';
-import { setTitle, sweepAchievements, trackAchievements } from './sim/achievements';
+import type { CosmeticId, CosmeticSlot } from './data/achievements';
+import { setTitle, sweepAchievements, trackAchievements, wearCosmetic } from './sim/achievements';
 
 /** A fresh RNG seed from the clock: boot, import and wipe all use it, so no two games share a roll sequence (TB-216b). */
 export const clockSeed = (): number => (Date.now() % 2147483647) | 0;
@@ -103,6 +104,8 @@ export class GameController {
   }
   /** Wear an earned title on the HUD tag, or none (TB-249). */
   setTitle(id: string | null): boolean { const ok = setTitle(this.state, id); if (ok) this.save(); return ok; }
+  /** Wear an earned cosmetic in its slot, or clear the slot (TB-250). */
+  wearCosmetic(slot: CosmeticSlot, id: CosmeticId | null): boolean { const ok = wearCosmetic(this.state, slot, id); if (ok) this.save(); return ok; }
   private logLoot(kind: LootKind, extra: Partial<LootRecord>): void { const now = Date.now(); this.lootLog.push(lootRecord(this.state, kind, extra, now, lootStart(now))); }
   private logItem(kind: LootKind, uid: string, extra: Partial<LootRecord> = {}): void {
     const it = this.state.meta.loot.items.find((i) => i.uid === uid);

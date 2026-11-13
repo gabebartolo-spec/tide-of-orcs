@@ -85,6 +85,14 @@ $jobs = @(
       NOCKFING = "1"; STRDRAW = "1"; LIMBBEND = "0.08"; STRNEAR = "0.16,0.40"; STRTURN = "0.03"; RETIME = "1.05"; STABLESH = "1"; HANDSMOOTH = "7,18,12"; DRAWRAMP = "5"; RELEASE = "5"; TAIL = "10"
       IDLEPOSE = "$a\archer\v3\idle0.json"; BOWALIGNF = "8,15"; FINGCOPY = "Right:Index>Middle,Ring,Pinky;Left:Index>Middle,Ring,Pinky" } }
 )
+# TB-250 cloak dyes (director 13 Nov): the elf idle + draw jobs again on a re-dyed copy of hero27 (recolor_cloak.py RGB=..., only the teal
+# cloak and hood texels move), keys elf.<dye> / elf.<dye>.attack. Make the blend first:
+#   $env:RGB = "<r,g,b>"; hid.ps1 blender -b --factory-startup --python recolor_cloak.py hero27.blend dyes\<dye>\hero27_<dye>.blend
+# RGB: ember 0.560,0.230,0.110  frost 0.765,0.835,0.863  dusk 0.431,0.290,0.431  starlit 0.184,0.235,0.431  gold 0.722,0.569,0.247
+$elfJobs = $jobs | Where-Object { $_.key -in "elf", "elf.attack" }
+foreach ($dye in "ember", "frost", "dusk", "starlit", "gold") {
+  foreach ($e in $elfJobs) { $jobs += @{ key = $e.key -replace "^elf", "elf.$dye"; m = "$a\elf_hero\dyes\$dye\hero27_$dye.blend"; c = $e.c; ortho = $e.ortho; fr = $e.fr; env = $e.env } }
+}
 # orc.wolfrider.attack is NOT an apply_anim job: the wolf rider is a Tripo "Other" rig driven by Quaternius Wolf "Attack" (no Mixamo skeleton).
 # Its 20 frames + anchor come from wolfrider\render_wr_sheet.py (same field camera, ORTHO 1.4, RES 512, mirrored to face screen-right):
 #   $env:ORTHO = "1.4"; & $bl -b --python "$s\wolfrider\render_wr_sheet.py" -- "$a\wolf_rider\wolfrider_anim6.blend" $o orc.wolfrider.attack

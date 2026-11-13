@@ -1,6 +1,6 @@
 /** Achievements (TB-249): event-driven checks over the events a frame drained. Pure: no DOM, no clock.
  *  Each rule reads the event that triggers it and the state it needs; docs/ACHIEVEMENTS.md says which event each listens to. */
-import { ACH, ACHIEVEMENTS, ACH_N } from '../data/achievements';
+import { ACH, ACHIEVEMENTS, ACH_N, COSMETIC_SLOT, CosmeticId, CosmeticSlot } from '../data/achievements';
 import { NODES, Branch } from '../data/skillTree';
 import { HW_NODES, HW_FX } from '../data/heartwood';
 import { BUILDINGS, BuildingId } from '../data/camp';
@@ -30,7 +30,7 @@ export const freshAchRun = (from = 1): AchRun => ({ from, hit: false, bossHit: f
   waveKills: 0, waveShatter: 0, waveLegends: 0, waveLoosed: false, waveWhole: false, plank: false, crowd: false });
 
 export type AchCount = 'boss' | 'wolf' | 'unhorsed' | 'salvage' | 'reroll' | 'heirloom';
-/** Kept for good (meta.ach, v17). */
+/** Kept for good (meta.ach, v17; `worn` v18). */
 export interface AchMeta {
   earned: string[];
   /** The worn title (an earned achievement's id whose reward is a title), shown on the HUD tag; null = none. */
@@ -41,8 +41,10 @@ export interface AchMeta {
   kinds: string[]; mythics: string[]; bosses: string[];
   /** Prestige count when the last tier unlocked (Climber). */
   tierAt: number;
+  /** The worn cosmetic in each slot (TB-250); an empty slot wears the default look. */
+  worn: Partial<Record<CosmeticSlot, CosmeticId>>;
 }
-export const freshAchMeta = (): AchMeta => ({ earned: [], title: null, n: {}, kinds: [], mythics: [], bosses: [], tierAt: 0 });
+export const freshAchMeta = (): AchMeta => ({ earned: [], title: null, n: {}, kinds: [], mythics: [], bosses: [], tierAt: 0, worn: {} });
 
 /** Kills by one strike, waiting for the strike's closing event (`impact`, `storm`, `treantStamp`). Not saved. */
 export interface AchPending { lob: number; storm: number; treant: number }
@@ -214,6 +216,20 @@ export function trackAchievements(s: SimState, events: readonly SimEvent[], pend
   if (s.orcs.count >= ORC_CAP && !s.run.fallen) s.run.ach.crowd = true;
   if (sweep) sweepAchievements(s, out);
   return out;
+}
+
+/** True when an earned achievement's reward is this cosmetic (TB-250). */
+export function hasCosmetic(s: SimState, id: CosmeticId): boolean {
+  return s.meta.ach.earned.some((e) => ACH[e]?.cosmetic === id);
+}
+
+/** Wear an earned cosmetic in its slot, or clear the slot (id null). Returns whether it changed (TB-250). */
+export function wearCosmetic(s: SimState, slot: CosmeticSlot, id: CosmeticId | null): boolean {
+  if (id !== null && (COSMETIC_SLOT[id] !== slot || !hasCosmetic(s, id))) return false;
+  const worn = s.meta.ach.worn;
+  if ((worn[slot] ?? null) === id) return false;
+  if (id === null) delete worn[slot]; else worn[slot] = id;
+  return true;
 }
 
 /** Wear an earned title (or none). Returns whether it changed. */

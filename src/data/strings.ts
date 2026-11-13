@@ -43,6 +43,7 @@ export const STR = {
   deedSealed: 'Sealed', deedSealedRule: 'A secret, revealed when earned',
   deedTitle: (t: string) => `Title: ${t}`, deedCosmetic: (c: string) => `Reward: ${c}`, deedSoon: 'arrives with the art pass',
   deedWear: 'Wear title', deedWorn: 'Worn', deedNoTitle: 'No title', deedTitleWorn: (t: string) => `Title worn: ${t}`,
+  deedDress: 'Wear', deedUndress: 'Worn · take off', deedDressed: (c: string) => `Now wearing: ${c}`, deedUndressed: 'Back in your own cloak',
   deedEarned: (name: string) => `Achievement: ${name}`, deedsEarned: (n: number) => `${n} achievements earned`,
   turnSideways: 'Turn your phone sideways to hold the wall.',
   tabSatchel: 'Satchel', satchelTitle: 'Satchel', satchelWorn: 'Worn',

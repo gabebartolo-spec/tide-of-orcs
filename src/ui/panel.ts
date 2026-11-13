@@ -74,7 +74,8 @@ export class Panel {
     armHover(document.body); // TB-195k
     // TB-195k: an equip lands with the stamp under its chime
     this.satchel = new SatchelPane(game, (c) => { this.onCue(c); if (c === 'equip' || c === 'setRise') this.onCue('uiStamp'); }); $('tab-satchel').onclick = () => { this.onCue('uiPop'); this.setTab('satchel'); this.satchel.render(); this.markNew(0); };
-    this.deeds = new AchievementsPane(game, (t) => { this.onCue('uiStamp'); this.showTitle(t); if (t) this.toast(STR.deedTitleWorn(t)); });
+    this.deeds = new AchievementsPane(game, (t) => { this.onCue('uiStamp'); this.showTitle(t); if (t) this.toast(STR.deedTitleWorn(t)); },
+      (c) => { this.onCue('uiStamp'); this.toast(c ? STR.deedDressed(c) : STR.deedUndressed); });
     $('tab-deeds').textContent = STR.tabDeeds; $('tab-deeds').onclick = () => { this.onCue('uiPop'); this.setTab('deeds'); this.deeds.render(); };
     this.showTitle(wornTitle(game.state.meta.ach.title));
     fitPages([$('pane-satchel'), $('pane-prestige'), $('pane-settings')]);

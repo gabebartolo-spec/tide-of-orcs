@@ -18,6 +18,12 @@ export const COSMETICS = {
 } as const;
 export type CosmeticId = keyof typeof COSMETICS;
 
+/** Cosmetics the player wears, one per slot (TB-250). Only the cloak dyes have art so far; the rest show "arrives with the art pass". */
+export type CosmeticSlot = 'cloak';
+/** Each cloak dye's sprite suffix: the elf draws `elf.<dye>` and `elf.<dye>.attack` (sheet_elf_<dye>.webp), the default `elf` without one. */
+export const CLOAK_DYES = { cloak_ember: 'ember', cloak_frost: 'frost', cloak_dusk: 'dusk', cloak_starlit: 'starlit', cloak_gold: 'gold' } as const;
+export const COSMETIC_SLOT: Partial<Record<CosmeticId, CosmeticSlot>> = Object.fromEntries(Object.keys(CLOAK_DYES).map((k) => [k, 'cloak']));
+
 export interface AchDef {
   id: string; name: string; group: AchGroup; rule: string;
   /** Exactly one reward: a title the player can wear on the HUD tag, or a cosmetic. */

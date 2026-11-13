@@ -4,7 +4,7 @@ import { NODES } from '../data/skillTree';
 import { SETS } from '../data/lootTables';
 import { SimEvent } from './events';
 import { SimState, createState } from './state';
-import { freshAchPending, setTitle, sweepAchievements, trackAchievements } from './achievements';
+import { freshAchPending, setTitle, sweepAchievements, trackAchievements, wearCosmetic } from './achievements';
 import { step } from './step';
 import { EventBus } from './events';
 
@@ -96,6 +96,17 @@ describe('achievement checks (TB-249)', () => {
     expect(setTitle(s, 'first_blood')).toBe(true); expect(s.meta.ach.title).toBe('first_blood');
     expect(setTitle(s, 'slain_1k')).toBe(false); // a cosmetic, not a title
     expect(setTitle(s, null)).toBe(true);
+  });
+  it('cosmetics: an earned cloak dye is worn in the cloak slot, one at a time (TB-250)', () => {
+    const s = createState(1);
+    expect(s.meta.ach.worn).toEqual({});
+    expect(wearCosmetic(s, 'cloak', 'cloak_ember')).toBe(false); // not earned yet (Half a Hundred)
+    s.meta.ach.earned.push('wave_50', 'tier_3', 'slain_1k');
+    expect(wearCosmetic(s, 'cloak', 'cloak_ember')).toBe(true); expect(s.meta.ach.worn.cloak).toBe('cloak_ember');
+    expect(wearCosmetic(s, 'cloak', 'cloak_ember')).toBe(false); // already worn
+    expect(wearCosmetic(s, 'cloak', 'cloak_frost')).toBe(true); expect(s.meta.ach.worn.cloak).toBe('cloak_frost');
+    expect(wearCosmetic(s, 'cloak', 'trail_leaf')).toBe(false); // earned, but not a cloak
+    expect(wearCosmetic(s, 'cloak', null)).toBe(true); expect(s.meta.ach.worn).toEqual({});
   });
   it('real play earns First Blood through the sim events (pure, deterministic)', () => {
     const s = createState(3), ev = new EventBus(), pend = freshAchPending(), got: string[] = [];
