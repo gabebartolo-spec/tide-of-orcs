@@ -489,6 +489,7 @@ export class FieldRenderer {
     setMeadowTop(tl.skirtBase(y0));  // the depth curve starts on the meadow's back row for this view
     const edge = tl.skirtEdge(y0), wood = band + (hud + TREELINE.first - band) * SKY.wood;
     // the sky runs behind the rows down to the skirt, deepening into the wood's shade under the crowns: no pale strip between trunks
+    this.sky.tone(dusk(this.clock));  // TB-261: the sky, clouds and far haze follow the day
     this.sky.draw(g, this.clock, x0, y0, x1, hud, band, wood, edge - SKY.fade, tl.skirtBase(y0) + SKY.fade, this.reducedMotion);
     tl.treesUpTo(g, y0, x0, x1, Infinity); tl.skirtUpTo(g, y0, x0, x1, Infinity);
     tl.orcsStart();

@@ -2,7 +2,7 @@ import { DEPTH, SKY } from '../data/presentation';
 import { FIELD } from '../data/balance';
 import { depthY, hazeAt, meadowTop, worldY } from './depth';
 import { createRng } from '../sim/rng';
-import { P, withAlpha } from './palette';
+import { P, SKY_TONE, mixHex, withAlpha, type SkyTone } from './palette';
 
 const C = SKY.clouds;
 interface Puff { x: number; v: number; r: number; lobes: { dx: number; dy: number; r: number }[] }
@@ -11,6 +11,13 @@ interface Puff { x: number; v: number; r: number; lobes: { dx: number; dy: numbe
  *  overlapping radial blobs (cream top, cool shade beneath), so the edge stays painterly with no hard outline. */
 export class Sky {
   private puffs: Puff[] = [];
+  /** This frame's sky colours (TB-261), set by `tone`. */
+  readonly c: SkyTone = { ...SKY_TONE.day };
+  /** Blend the sky colours for dusk `n` (0 midday, 1 deepest dusk): day -> gold at `SKY.gold` -> dusk. */
+  tone(n: number): void {
+    const T = SKY_TONE, lo = n < SKY.gold, a = lo ? T.day : T.gold, b = lo ? T.gold : T.dusk, t = lo ? n / SKY.gold : (n - SKY.gold) / (1 - SKY.gold);
+    for (const k of Object.keys(this.c) as (keyof SkyTone)[]) this.c[k] = mixHex(a[k], b[k], t);
+  }
   constructor() {
     const rng = createRng(C.seed);
     for (let i = 0; i < C.n; i++) {
@@ -27,21 +34,22 @@ export class Sky {
   draw(g: CanvasRenderingContext2D, t: number, x0: number, y0: number, x1: number, top: number, band: number, wood: number, fade: number, bottom: number, still: boolean): void {
     if (!Number.isFinite(x0) || !Number.isFinite(y0) || !Number.isFinite(x1) || bottom <= y0) return;
     const h = bottom - y0, gr = g.createLinearGradient(0, y0, 0, bottom), at = (y: number): number => Math.min(1, Math.max(0, (y - y0) / h));
-    gr.addColorStop(0, P.skyTop); gr.addColorStop(at(top), P.skyTop); gr.addColorStop(at(band), P.skyLow); gr.addColorStop(at(wood), P.woodDeep); gr.addColorStop(Math.max(at(wood), at(fade)), P.woodDeep); gr.addColorStop(1, withAlpha(P.woodDeep, 0));
+    const c = this.c; gr.addColorStop(0, c.top); gr.addColorStop(at(top), c.top); gr.addColorStop(at(band), c.low); gr.addColorStop(at(wood), P.woodDeep); gr.addColorStop(Math.max(at(wood), at(fade)), P.woodDeep); gr.addColorStop(1, withAlpha(P.woodDeep, 0));
     g.fillStyle = gr; g.fillRect(x0, y0, x1 - x0, h);
     const span = x1 - x0 + 2 * C.r[1], tt = still ? 0 : t, a0 = g.globalAlpha;
     // clouds keep under the HUD band's foot (never cut by a plaque): sized to the open strip, their tops at least `top`, their feet behind the crowns
     const rs = Math.min(1, Math.max(0.35, (band - top) / C.r[1]));
     g.save(); g.beginPath(); g.rect(x0, top, x1 - x0, bottom - top); g.clip();
     g.globalAlpha = a0 * C.alpha;
+    const cloud = withAlpha(c.cloud, 0.9), shade = withAlpha(c.shade, 0.55), clear = withAlpha(c.cloud, 0);
     this.puffs.forEach((p, i) => {
       const cx = x0 - C.r[1] + ((((p.x * span + tt * C.drift * p.v) % span) + span) % span);
       const pr = p.r * rs, cy = top + 1.1 * pr + Math.max(0, band - top - 1.1 * pr) * 0.5 * ((i * 0.618034) % 1);
       for (const L of p.lobes) {
         const l = { r: L.r * rs }, x = cx + L.dx * rs, y = cy + L.dy * rs;
-        const sh = g.createRadialGradient(x, y + l.r * 0.35, 0, x, y + l.r * 0.35, l.r); sh.addColorStop(0, P.cloudShade); sh.addColorStop(1, P.cloudClear);
+        const sh = g.createRadialGradient(x, y + l.r * 0.35, 0, x, y + l.r * 0.35, l.r); sh.addColorStop(0, shade); sh.addColorStop(1, clear);
         g.fillStyle = sh; g.fillRect(x - l.r, y - l.r * 0.65, l.r * 2, l.r * 2);
-        const lit = g.createRadialGradient(x, y - l.r * 0.15, 0, x, y - l.r * 0.15, l.r * 0.85); lit.addColorStop(0, P.cloud); lit.addColorStop(0.6, P.cloud); lit.addColorStop(1, P.cloudClear);
+        const lit = g.createRadialGradient(x, y - l.r * 0.15, 0, x, y - l.r * 0.15, l.r * 0.85); lit.addColorStop(0, cloud); lit.addColorStop(0.6, cloud); lit.addColorStop(1, clear);
         g.fillStyle = lit; g.fillRect(x - l.r, y - l.r, l.r * 2, l.r * 2);
       }
     });
@@ -55,7 +63,7 @@ export class Sky {
     if (!Number.isFinite(x0) || !Number.isFinite(sky) || !Number.isFinite(x1)) return sky;
     const t0 = meadowTop(), end = depthY(t0 + (FIELD.h - t0) * DEPTH.hazeTo); if (end <= sky) return sky;
     const gr = g.createLinearGradient(0, sky, 0, end), N = 16;
-    for (let i = 0; i <= N; i++) { const v = sky + ((end - sky) * i) / N; gr.addColorStop(i / N, withAlpha(P.skyHaze, hazeAt(worldY(v), sky))); }
+    for (let i = 0; i <= N; i++) { const v = sky + ((end - sky) * i) / N; gr.addColorStop(i / N, withAlpha(this.c.haze, hazeAt(worldY(v), sky))); }
     // the open sky keeps its own gradient: the wash starts at the crown line
     g.fillStyle = gr; g.fillRect(x0, sky, x1 - x0, end - sky);
     return end;

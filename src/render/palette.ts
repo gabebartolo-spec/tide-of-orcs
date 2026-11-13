@@ -58,6 +58,22 @@ export const PATH_TINT: Readonly<Record<'serpent' | 'fox' | 'magpie', { colour: 
   magpie: { colour: '#a8bde0', light: '#7fb4ff', deep: '#28324a', pale: '#f2f4fa' },
 };
 
+/** Sky through the day (TB-261): the open sky, clouds and far haze at midday, golden hour and deepest dusk, keyed by `dusk()` 0 / `SKY.gold` / 1.
+ *  Only the sky strip, the clouds and the existing aerial haze take these; the plain gets no wash (TB-174). Day is the TB-232 sky. */
+export const SKY_TONE = {
+  day: { top: '#9fbcc9', low: '#c9d8cf', haze: '#e3e2c8', cloud: '#f6f2e4', shade: '#c4cec8' },
+  gold: { top: '#9fb3c4', low: '#e8cfa4', haze: '#ecd3a2', cloud: '#f7e3bf', shade: '#cdb7a2' },
+  dusk: { top: '#56628a', low: '#d39c86', haze: '#dcae8c', cloud: '#eebfa4', shade: '#7f7896' },
+} as const;
+export type SkyTone = { -readonly [K in keyof typeof SKY_TONE.day]: string };
+
+/** Two `#rrggbb` tokens mixed `t` (0 = a, 1 = b), as `#rrggbb`. */
+export function mixHex(a: string, b: string, t: number): string {
+  const x = parseInt(a.slice(1, 7), 16), y = parseInt(b.slice(1, 7), 16), k = Math.min(1, Math.max(0, t));
+  const c = (s: number): number => Math.round(((x >> s) & 255) * (1 - k) + ((y >> s) & 255) * k);
+  return '#' + ((c(16) << 16) | (c(8) << 8) | c(0)).toString(16).padStart(6, '0');
+}
+
 /** A `#rrggbb` palette token at alpha `a`, as an rgba() string (for gradients whose stops fade one token). */
 export function withAlpha(token: string, a: number): string {
   const n = parseInt(token.slice(1, 7), 16);
