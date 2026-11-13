@@ -21,8 +21,9 @@ import { Ground, decorImg } from './ground';
 import { Ambience } from './ambience';
 import { Sky } from './sky';
 import { depthScale, depthY, setMeadowTop, worldY } from './depth';
+import { fitPostRows } from './postRows';
 import { Interp } from './interp';
-import { FIELD_VIEW, GAIT, PHONE_QUERY, QUALITY, WALL_ART, WALL_FRONT, LOOT_VFX, ORC_SHADOW, ORC_SHADOW_BASE, ORC_SPRITE, SKY, TREELINE, VFX, DEPTH, FLIPBOOK_SIZE, dusk } from '../data/presentation';
+import { FIELD_VIEW, GAIT, PHONE_QUERY, QUALITY, WALL_ART, WALL_FRONT, LOOT_VFX, ORC_SHADOW, ORC_SHADOW_BASE, ORC_SPRITE, SKY, TREELINE, VFX, FLIPBOOK_SIZE, dusk } from '../data/presentation';
 import { Flipbooks } from './flipbook';
 import { WaveStrip } from './waveStrip';
 import { SLOTS } from '../data/loot';
@@ -46,7 +47,6 @@ function sortByY(a: { y: number }[]): void {
 /** Radius the elf and vanguard sprites are sized against (their vector bodies span ~12 units). */
 const ACTOR_R = 12;
 /** Feet of a 12-unit actor sprite below its anchor (the elf, archers and vanguard draw at +16). */
-const ACTOR_FOOT = 16;
 /** Drop beam and equip glow colour per rarity. */
 const RAR_C: Record<string, string> = { common: P.cream, rare: P.spear, epic: P.lilac, legendary: P.starGold, mythic: P.rose };
 const W = FIELD.w, H = FIELD.h, BAR_X = FIELD.barX, BAR_W = FIELD.barW, ELF_X = FIELD.elfX;
@@ -289,6 +289,9 @@ export class FieldRenderer {
     if (this.shake > 0) this.shake = Math.max(0, this.shake - dt * 3);
     this.watchGear(s);
     this.glow.t = Math.max(0, this.glow.t - dt); this.leaves = Math.max(0, this.leaves - dt); this.edge = Math.max(0, this.edge - dt); this.slow = Math.max(0, this.slow - dt);
+    // TB-267: the first frame back from the camp pages can run before the ResizeObserver has sized the canvas: a zero-size canvas has no view to
+    // draw (its scale is 0 and every view edge NaN), so size it now, and skip the frame if it is still empty
+    if (!this.canvas.width || !this.canvas.height) { this.resize(); if (!this.canvas.width || !this.canvas.height) return; }
     const cw = this.canvas.width, ch = this.canvas.height, dpr = cw / Math.max(1, this.canvas.clientWidth || cw);
     const k = cw / ch <= W / H ? cw / W : ch / H, ox = (cw - W * k) / 2, oy = ch - H * k;
     const vw = this.view; vw.k = k / dpr; vw.ox = ox / dpr; vw.oy = oy / dpr;
@@ -297,6 +300,9 @@ export class FieldRenderer {
     const shx = sh ? (Math.random() - 0.5) * 6 * sh : 0, shy = sh ? (Math.random() - 0.5) * 4 * sh : 0;
     g.setTransform(sx, 0, 0, sy, ox + shx * sx, oy + shy * sy);
     const bt = this.base; bt.sx = sx; bt.sy = sy; bt.ex = ox + shx * sx; bt.ey = oy + shy * sy;
+
+    // the elf's post stands on the meadow, clear of the skirt (TB-232); fitted before anything reads postY (the dusk lamp below does)
+    fitPostRows(this.postRows, this.treeline.skirtBase(vis.y0), H);
 
     // plain (and the meadow beyond it, wherever the window reaches past the plain)
     this.ground.draw(g, k, vis.x0, vis.y0, vis.x1, vis.y1);
@@ -311,9 +317,6 @@ export class FieldRenderer {
 
     // barricade
     const top = Math.max(vis.y0, this.treeline.skirtBase(vis.y0) - TREELINE.cap.up); this.wallTop = top;  // the wall rises a little into the bush skirt; its stake tips are the cap,
-    // the elf's post stands on the meadow, clear of the skirt (TB-232)
-    // the whole post moves down together (never squashed against the skirt), so the elf stays at mid-meadow on a short phone view too
-    { const r = this.postRows, sh = Math.max(0, this.treeline.skirtBase(vis.y0) + DEPTH.postClear - ACTOR_FOOT * depthScale(r.a) - depthY(r.a)); r.lo = depthY(r.a) + sh; r.hi = Math.min(H - ACTOR_FOOT * 2, depthY(r.b) + sh); }
     this.fencePanels(top, H);
     // the bush skirt in front of the wall's cut top: the palisade runs into the forest edge, never up among the trees (TB-268)
     this.treeline.skirtUpTo(g, vis.y0, vis.x0, vis.x1, Infinity);
