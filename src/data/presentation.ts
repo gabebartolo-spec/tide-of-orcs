@@ -50,9 +50,10 @@ export const TREELINE = {
   unit: 9.5, size: [0.96, 1.04] as const,
   /** Rows hang from the view top (`first` + row x `gap` down to a base, `lift` of jitter); a row only holds kinds up to `slack` x its room, then shrinks as one. */
   slack: 1.12,
-  /** The barricade's top: the rendered wall is cut `up` units above the bush skirt base and runs into the forest edge (director 13 Nov, TB-268: "Bushes cover the end").
-   *  `bushes` are laid along the cut, across the wall's painted width there: one every `step` (x0.75..1.25) units, `h` tall, their feet `drop` units below the cut. */
-  cap: { up: 2, bushes: { step: 9, h: [14, 24] as const, drop: [0, 5] as const } },
+  /** The barricade's far end (TB-268 redo, director 13 Nov: the bushes over the cut were "the same problem in reverse"): the rendered wall
+   *  is slid along its own line until its finished end stands on the meadow `foot` units below the bush skirt base, in front of the skirt,
+   *  never cut and never covered. `up`: how far above that foot an orc's blow on the wall's hidden length throws its chips. */
+  cap: { foot: 4, up: 10 },
   /** Row 0 (the canopy against the HUD band): each tree is sized (x0.95..`stretch` of natural, same aspect) so its crown top lands `crown[0]`..`crown[1]` units below the band, so no bare strip shows between the HUD and the crowns. `hudGap` css px of air is kept under the HUD's lowest control. */
   crown: [2, 9] as const, stretch: 1.2, hudGap: 18,
   grow: 0.06, step: 22, stepGrow: 0.18, jitter: 0.65, lift: 8, bush: 0.1, bushH: [18, 28] as const,
@@ -140,12 +141,12 @@ export const GROUND = {
   /** Fence barricade (director 2 Nov, Sketchfab "the fence"): panel draw width, vertical step between stacked panels (units). */
 } as const;
 
-/** The wall's look per tier (TB-209): image set (rendered from the segmented Tripo models, one image per damage stage), field placement, the field y of the rendered breaches, and the palette tokens of its flying chunks. */
+/** The wall's look per tier (TB-209): image set (rendered from the segmented Tripo models, one image per damage stage), field placement, `foot` (the field y where its finished far end meets the ground, stage 0), the field y of the rendered breaches, and the palette tokens of its flying chunks. */
 export const WALL_ART = [
-  { key: 'wall0', x: -167.0, y: 106.4, w: 536.7, h: 766.4, breaches: [623, 548, 450, 350, 234], chunks: ['wallPalisade', 'wallPalisadeDark'] },
-  { key: 'wall1', x: -145.5, y: 102.2, w: 512.3, h: 744.8, breaches: [605, 533, 440, 343, 232], chunks: ['wallBattle', 'wallBattleDark'] },
-  { key: 'wall2', x: -123.0, y: 120.0, w: 478.1, h: 695.6, breaches: [585, 516, 427, 336, 229], chunks: ['wallStone', 'wallStoneDark'] },
-  { key: 'wall3', x: -73.3, y: 100.3, w: 437.3, h: 636.1, breaches: [609, 535, 475, 396, 316, 223], chunks: ['wallHeart', 'wallHeartDark'] },
+  { key: 'wall0', x: -167.0, y: 106.4, w: 536.7, h: 766.4, foot: 219.8, breaches: [623, 548, 450, 350, 234], chunks: ['wallPalisade', 'wallPalisadeDark'] },
+  { key: 'wall1', x: -145.5, y: 102.2, w: 512.3, h: 744.8, foot: 223.1, breaches: [605, 533, 440, 343, 232], chunks: ['wallBattle', 'wallBattleDark'] },
+  { key: 'wall2', x: -123.0, y: 120.0, w: 478.1, h: 695.6, foot: 236.2, breaches: [585, 516, 427, 336, 229], chunks: ['wallStone', 'wallStoneDark'] },
+  { key: 'wall3', x: -73.3, y: 100.3, w: 437.3, h: 636.1, foot: 220.8, breaches: [609, 535, 475, 396, 316, 223], chunks: ['wallHeart', 'wallHeartDark'] },
 ] as const;
 
 /** An actor's drawn box for the wall-front redraw (TB-264), in drawn radii from its foot: half width, height above, depth below.
