@@ -187,15 +187,18 @@ The node layout draws a tree: Waking is the trunk base, Muster and Grey Wolf the
 
 **Full-screen tree (TB-189).** A Full screen button at the top right of the Grove tree covers the window with the Grove pane: the whole tree fits beside the detail card (`TREE_VIEW.wholeMargin` of the space), the camera stays fixed (no pan or zoom), and clicking selects and buys as usual. Close or Esc returns to the normal view and its camera.
 
-## Pixel flipbooks (TB-240)
+## Lit flipbooks (TB-262; pixel lightning TB-240)
 
-One-shot effects from unTied Games' Super Pixel Effects Gigapack (licence and credit: CREDITS.md), chosen by the director on 10 Nov:
-arrow strike `symmetrical_impact_001` white, Storm Glade and Shock Arrows `lightning_strike_001` yellow, shatter `symmetrical_explosion_001` blue,
-orc death `symmetrical_smoke_burst_001` white, wall hit `directional_smoke_burst_001` white, boss slam `stylized_explosion_001` orange.
-Each is one horizontal strip in `public/vfx`, played at the pack's 15 fps and drawn with smoothing off so the pixels stay hard at any field scale.
-They play on top of the existing vector effects (the strike ring is replaced; the stroked ring returns only while the strip is loading).
-Not used, by choice: flame overlays (burning orcs are tinted on their own body), the ice cube and heart spells (too cute for the tone).
-Source pack lives outside the repo in tide-assets/vfx_gigapack; never commit the pack itself (its licence forbids redistribution).
+One-shot effects as horizontal strips in `public/vfx`, played at 15 fps. Five are rendered in Cycles under the actors' sun (TB-262, director 13 Nov,
+replacing the TB-240 pixel strips): arrow strike `impact` (a sand dust ring and bark clods), boss slam `slam` (a wider ring), orc death `death`
+(a pale rising puff, never smoke), frost `shatter` (ice shards) and wall hit `walldust` (dust and timber splinters drifting to the orc side, no ground
+shadow). Dust is a lit scattering volume, so puffs have a sunlit top, a shaded underside and soft edges; each frame carries the shadow catcher's soft
+cast shadow. These strips are flagged `lit` in `FLIPBOOK` and drawn with smoothing on. Storm Glade and Shock Arrows keep the unTied Games
+`lightning_strike_001` yellow pixel strip (credit: CREDITS.md), drawn with smoothing off so its pixels stay hard.
+Recipe: `.claude/skills/mixamo-animate/scripts/vfx/render_vfx.py` then `pack_vfx.py` (SKILL.md §Lit VFX). 1 Blender unit = the event radius r;
+the strip width is `FLIPBOOK_SIZE` x r. The arrow strike's stroked dust ring draws only while its strip is loading.
+Not used, by choice: flame overlays (burning orcs are tinted on their own body). The pixel pack lives outside the repo in tide-assets/vfx_gigapack;
+never commit it (its licence forbids redistribution).
 
 ## Asset pipeline (Tripo, Meshy, Cascadeur, ElevenLabs, Suno)
 Vector draws stay the baseline so the game is always playable without assets. Actors ship as **pre-rendered sprite sheets** on top of the same palette. Agents run Tripo, Meshy and ElevenLabs themselves, each job only with the director's written spend yes:

@@ -36,5 +36,5 @@ Third-party assets used in Tide of Orcs.
   (https://creativecommons.org/licenses/by/4.0/). Changed: its own Walk and Punch clips rendered to 2D sprite frames.
 - Ogre Creature boss (`public/sprites/sheet_ogrecreature.webp`; TB-228): "Ogre Creature" by Sazerac on BlendSwap, CC0.
   Changed: skeleton rebuilt with Mixamo bone names, hair removed, hide wrap added, Mixamo clips retargeted and rendered to 2D sprite frames.
-- Pixel effects (`public/vfx/*.webp`; TB-240): Super Pixel Effects Gigapack - Will Tice / unTied Games, https://untiedgames.itch.io,
-  licence http://untiedgames.com/files/license.txt (bundled in the game only, not redistributed). Changed: chosen frames packed into strips.
+- Pixel lightning (`public/vfx/lightning.webp`; TB-240): Super Pixel Effects Gigapack - Will Tice / unTied Games, https://untiedgames.itch.io,
+  licence http://untiedgames.com/files/license.txt (bundled in the game only, not redistributed). Changed: chosen frames packed into a strip. The other `public/vfx` strips are our own Cycles renders (TB-262).
