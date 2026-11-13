@@ -19,13 +19,16 @@ export const noInputs: Inputs = { aim: null };
 const H = FIELD.h, W = FIELD.w, BAR_W = FIELD.barW, ELF_X = FIELD.elfX;
 const dist = (ax: number, ay: number, bx: number, by: number): number => Math.hypot(ax - bx, ay - by);
 
+/** The spawn row at fraction `f` (0 back, 1 front) of the meadow band orcs march on; boss scripts place their lines with it too. */
+export const spawnRow = (f: number): number => SIM_MISC.spawnTop + f * (H - SIM_MISC.spawnYPad - SIM_MISC.spawnTop);
+
 /** March one orc in from the right edge, at height y (random if omitted). Returns false when the field is full. */
 export function spawnOrc(s: SimState, kind: OrcKind, y?: number, champ = false): Orc | null {
   const w = s.run.wave, F = s.stats.foes[kind];
   const o = s.orcs.alloc(); if (!o) { if (champ && s.run.boss) s.run.boss.left--; return null; }
   const T = ORC_TYPES[kind];
   const hp = waveHP(w) * T.hp * F.hp * tierHp(s.run.tier);
-  o.kind = kind; o.x = W + SIM_MISC.spawnXPad; o.y = y ?? SIM_MISC.spawnYPad + s.rng.next() * (H - 2 * SIM_MISC.spawnYPad);
+  o.kind = kind; o.x = W + SIM_MISC.spawnXPad; o.y = y ?? spawnRow(s.rng.next());
   o.hp = hp; o.maxhp = hp; o.spd = T.speed * waveSpeedMult(w); o.r = T.radius; o.atk = hp * BARRICADE.orcAtkFrac;
   o.loot = waveLoot(w) * T.loot * F.loot * tierLoot(s.run.tier);
   o.dead = false; o.burn = 0; o.bleed = 0; o.slow = 0; o.pin = 0; o.root = 0; o.chill = 0; o.stun = 0; o.poison = 0; o.poisonDps = 0; o.hitT = 0; o.wob = s.rng.next() * SIM_MISC.tau; o.walk = o.wob * o.r; o.swingT = s.rng.next(); o.champ = champ;
