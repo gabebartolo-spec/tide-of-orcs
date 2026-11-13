@@ -50,8 +50,9 @@ export const TREELINE = {
   unit: 9.5, size: [0.96, 1.04] as const,
   /** Rows hang from the view top (`first` + row x `gap` down to a base, `lift` of jitter); a row only holds kinds up to `slack` x its room, then shrinks as one. */
   slack: 1.12,
-  /** The barricade's top: its stake tips stand `up` units above the bush skirt base, in front of the bushes, never reaching into them (TB-232); the forest stands unbroken behind it. */
-  cap: { up: 2 },
+  /** The barricade's top: the rendered wall is cut `up` units above the bush skirt base and runs into the forest edge (director 13 Nov, TB-268: "Bushes cover the end").
+   *  `bushes` are laid along the cut, across the wall's painted width there: one every `step` (x0.75..1.25) units, `h` tall, their feet `drop` units below the cut. */
+  cap: { up: 2, bushes: { step: 9, h: [14, 24] as const, drop: [0, 5] as const } },
   /** Row 0 (the canopy against the HUD band): each tree is sized (x0.95..`stretch` of natural, same aspect) so its crown top lands `crown[0]`..`crown[1]` units below the band, so no bare strip shows between the HUD and the crowns. `hudGap` css px of air is kept under the HUD's lowest control. */
   crown: [2, 9] as const, stretch: 1.2, hudGap: 18,
   grow: 0.06, step: 22, stepGrow: 0.18, jitter: 0.65, lift: 8, bush: 0.1, bushH: [18, 28] as const,
