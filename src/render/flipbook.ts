@@ -8,7 +8,7 @@ export function flipFrame(key: FlipbookKey, age: number): number {
 
 interface Shot { key: FlipbookKey; x: number; y: number; w: number; age: number; flip: boolean }
 
-/** Pixel-art one-shot effects (TB-240): strips in public/vfx, drawn unsmoothed so their pixels stay hard at any field scale.
+/** One-shot effects: strips in public/vfx. Lit Cycles strips (TB-262) draw smoothed; pixel strips (TB-240) unsmoothed, so their pixels stay hard.
  *  A strip that has not loaded yet is simply skipped; callers keep their vector effect as well. */
 export class Flipbooks {
   private imgs = new Map<FlipbookKey, HTMLImageElement>();
@@ -36,10 +36,11 @@ export class Flipbooks {
 
   draw(g: CanvasRenderingContext2D): void {
     if (!this.shots.length) return;
-    const sm = g.imageSmoothingEnabled; g.imageSmoothingEnabled = false;
+    const sm = g.imageSmoothingEnabled;
     for (const s of this.shots) {
       const b = FLIPBOOK[s.key], f = flipFrame(s.key, s.age), im = this.imgs.get(s.key);
       if (f < 0 || !im) continue;
+      g.imageSmoothingEnabled = b.lit;
       const x = s.x - s.w * b.ax, y = s.y - s.w * b.ay;
       if (s.flip) { g.save(); g.translate(s.x, 0); g.scale(-1, 1); g.translate(-s.x, 0); }
       g.drawImage(im, f * b.px, 0, b.px, b.px, x, y, s.w, s.w);

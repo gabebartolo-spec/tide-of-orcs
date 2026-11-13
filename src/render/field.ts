@@ -61,7 +61,7 @@ function drawnEvent<E extends SimEvent>(e: E): E {
 export class FieldRenderer {
   private g: CanvasRenderingContext2D;
   private fx = new Particles();
-  /** Pixel-art one-shots (TB-240): arrow strike, lightning, shatter, orc death, wall dust, boss slam. */
+  /** One-shot flipbooks: lit Cycles strips (TB-262) for the arrow strike, shatter, orc death, wall dust and boss slam; pixel lightning (TB-240). */
   private books = new Flipbooks();
   private shake = 0;
   private storms: { pts: [number, number][]; life: number; c: string }[] = [];
@@ -182,7 +182,7 @@ export class FieldRenderer {
         case 'freeRally': fx.burst(wallX(H / 2), H / 2, P.grove, VFX.regrow[0], VFX.regrow[1]); fx.text(wallX(H / 2) + 46, H / 2 - 40, STR.freeRally, P.grove); break;
         case 'thunder': fx.burst(W / 2, H / 2, P.cream, VFX.regrow[0], VFX.regrow[1]); fx.text(W / 2, H / 2 - 40, STR.thunder, P.cream); break;
         case 'starCloak': fx.burst(e.x, e.y, P.starfall, VFX.hit[0], VFX.hit[1]); break;
-        case 'impact': if (this.books.ready('impact')) this.books.spawn('impact', e.x, e.y, e.r * FS.impactPerR); else { this.impacts.push({ x: e.x, y: e.y, r: e.r, life: IMPACT_LIFE }); fx.burst(e.x, e.y, P.cream, VFX.impact[0], VFX.impact[1]); } fx.ring(e.x, e.y, e.r * VFX.lobDust.r, P.sand, 2, VFX.lobDust.life); break;
+        case 'impact': if (this.books.ready('impact')) this.books.spawn('impact', e.x, e.y, e.r * FS.impactPerR); else { this.impacts.push({ x: e.x, y: e.y, r: e.r, life: IMPACT_LIFE }); fx.burst(e.x, e.y, P.cream, VFX.impact[0], VFX.impact[1]); fx.ring(e.x, e.y, e.r * VFX.lobDust.r, P.sand, 2, VFX.lobDust.life); } break;  // the lit strip (TB-262) carries its own dust ring
         case 'fireStrike': this.patches.push({ x: e.x, y: e.y, r: e.r, life: A.patchLife, c: P.firePatch, fire: true }); fx.ring(e.x, e.y, e.r, P.fire, 3, A.ringLife); for (let i = 0; i < A.fire[0] * 3; i++) fx.flame(e.x + (Math.random() - 0.5) * e.r * 1.6, e.y + (Math.random() - 0.5) * e.r * 0.8, i % 2 ? P.fire : P.amber); fx.burst(e.x, e.y, P.fire, A.fire[0] * 2, A.fire[1]); break;
         case 'fireballCast': fx.burst(e.x, e.y, P.ember, F.cast[0], F.cast[1], Math.atan2(e.ty - e.y, e.tx - e.x), F.castSpread); for (let i = 0; i < F.castFlames; i++) fx.flame(e.x + (Math.random() - 0.5) * F.r, e.y, i % 2 ? P.fire : P.ember); break;
         case 'fireballStrike':
