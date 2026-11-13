@@ -1,4 +1,6 @@
-import { WALL_LINE } from '../data/balance';
+import { FIELD, WALL_LINE } from '../data/balance';
+
+const H = FIELD.h;
 import { TREELINE, WALL_ART } from '../data/presentation';
 import { depthScale, depthY } from './depth';
 
@@ -19,8 +21,10 @@ export function placeWall(art: WallArt, skirtBase: number): PlacedWall {
  *  the end foot (the end post's far side, its ground brace) stand on the end foot's row, so they move with the post and never shear. */
 export const wallGround = (L: PlacedWall, x: number): number => L.foot + Math.max(0, L.footX - x) / WALL_LINE.slope;
 
-/** TB-268 (director 13 Nov, "Shrink it with depth"): the drawn row of art point (`x`, `y`). Each column stands on its own ground row,
- *  drawn where an orc on that row stands (`depthY`) and scaled as that orc is (`depthScale`), so the wall shrinks toward the forest. */
+/** TB-268 (director 13 Nov, "Shrink it with depth", then "why is the fence curved. just make it look normal"): the drawn row of art
+ *  point (`x`, `y`). The wall stays straight: its ground and its height both run in a straight line from the end foot (drawn where an
+ *  orc on that row stands, at that orc's scale) to the plain's front edge (unscaled), so the posts shrink evenly toward the forest. */
 export function wallWarpY(L: PlacedWall, x: number, y: number): number {
-  const gy = wallGround(L, x); return depthY(gy) - (gy - y) * depthScale(gy);
+  const gy = wallGround(L, x), f = L.foot, t = (gy - f) / (H - f), g0 = depthY(f), s0 = depthScale(f);
+  const s = s0 + (1 - s0) * t; return g0 + (H - g0) * t - (gy - y) * s;
 }
