@@ -1,8 +1,7 @@
 import { WALL_ART, WALL_DAMAGE as D } from '../data/presentation';
-import { wallX } from '../sim/wallLine';
 import { P } from './palette';
 import { Particles } from './particles';
-import type { PlacedWall as WallArt } from './wallArt';
+import { wallFaceX as wallX, type PlacedWall as WallArt } from './wallArt';
 
 /** Which rendered damage stage shows at this health fraction: 0 whole, up to one per WALL_DAMAGE.stages entry. */
 export const wallStage = (frac: number): 0 | 1 | 2 | 3 => D.stages.filter((f) => frac < f).length as 0 | 1 | 2 | 3;

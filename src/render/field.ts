@@ -24,7 +24,7 @@ import { depthScale, depthY, setMeadowTop, worldY } from './depth';
 import { fitPostRows } from './postRows';
 import { placeWall, type PlacedWall } from './wallArt';
 import { Interp } from './interp';
-import { FIELD_VIEW, GAIT, PHONE_QUERY, QUALITY, WALL_ART, WALL_FRONT, LOOT_VFX, ORC_SHADOW, ORC_SHADOW_BASE, ORC_SPRITE, SKY, TREELINE, VFX, FLIPBOOK_SIZE, dusk } from '../data/presentation';
+import { FIELD_VIEW, GAIT, PHONE_QUERY, QUALITY, WALL_ART, LOOT_VFX, ORC_SHADOW, ORC_SHADOW_BASE, ORC_SPRITE, SKY, TREELINE, VFX, FLIPBOOK_SIZE, dusk } from '../data/presentation';
 import { Flipbooks } from './flipbook';
 import { WaveStrip } from './waveStrip';
 import { SLOTS } from '../data/loot';
@@ -362,10 +362,8 @@ export class FieldRenderer {
     g.globalAlpha = a0;
     this.treeline.end(g);
     // aerial haze over the wood and the back rows, on top of every actor there, so a far orc is as soft as the trees behind it (TB-232)
-    const hz = this.sky.haze(g, vis.x0, this.skyLine, vis.x1);
-    // the barricade is the nearest prop and takes no distance haze: its panels inside the haze band are drawn again over it
-    this.fencePanels(this.wall.y, hz);  // from the art's own top
-    this.wallFront(s, orcs, vans, hz);
+    // the barricade takes the same haze as the trees and orcs at its far end (TB-268): it is drawn in perspective, not as the nearest prop
+    this.sky.haze(g, vis.x0, this.skyLine, vis.x1);
 
     // effects never rise into the sky band over the HUD: the world effects are clipped to the field below the crown line
     g.save(); g.beginPath(); g.rect(vis.x0 - 50, this.skyBand, vis.x1 - vis.x0 + 100, H - this.skyBand + 50); g.clip();
@@ -462,35 +460,6 @@ export class FieldRenderer {
     }
   }
 
-  /** TB-264: the wall's top is drawn again over the haze (it takes none, TB-239), which hid every actor standing in front of it there.
-   *  Actors near it are drawn again offscreen, hazed exactly as on the field, cut to the wall's own pixels and laid back over it. */
-  private wallFront(s: SimState, orcs: Orc[], vans: Vanguard[], hz: number): void {
-    const L = this.wall, y1 = Math.min(hz, L.y + L.h), F = WALL_FRONT;
-    if (y1 <= L.y || !decorImg(`${L.key}_0`)) return;
-    const near = (x: number, wy: number, r: number): boolean => { const y = depthY(wy), k = r * depthScale(wy); return x - k * F.halfW < L.x + L.w && x + k * F.halfW > L.x && y - k * F.up < y1 && y + k * F.down > L.y; };
-    const os: Orc[] = []; for (let i = this.orcsIn; i < orcs.length; i++) { const o = orcs[i]!; if (near(o.x, o.y, o.r)) os.push(o); }
-    const vs = vans.filter((v) => near(v.x, v.y, ACTOR_R));
-    const ws = s.stats.wolf ? [s.wolf, ...s.pack.slice(0, s.stats.extraWolves)].filter((w) => near(w.x, w.y, ACTOR_R)) : [];
-    if (!os.length && !vs.length && !ws.length) return;
-    const b = this.base, dx0 = Math.floor(b.sx * L.x + b.ex), dy0 = Math.floor(b.sy * L.y + b.ey);
-    const w = Math.ceil(b.sx * (L.x + L.w) + b.ex) - dx0, h = Math.ceil(b.sy * y1 + b.ey) - dy0;
-    if (w < 1 || h < 1) return;
-    const c = (this.frontCanvas ??= document.createElement('canvas')); if (c.width < w || c.height < h) { c.width = Math.max(c.width, w); c.height = Math.max(c.height, h); }
-    const og = c.getContext('2d')!, g = this.g, base = this.base;
-    og.setTransform(1, 0, 0, 1, 0, 0); og.clearRect(0, 0, c.width, c.height);
-    this.g = og; this.base = { sx: b.sx, sy: b.sy, ex: b.ex - dx0, ey: b.ey - dy0 };
-    try {
-      this.at(0, 0, false);
-      for (const v of vs) this.van(s, v);
-      for (const wf of ws) this.wolf(s, wf);
-      for (const o of os) { og.globalAlpha = Math.min(1, (o.y - this.emergeAt) / SKY.emerge); this.orc(s, o); }
-      og.globalAlpha = 1; this.at(0, 0, false);
-      og.globalCompositeOperation = 'source-atop'; this.sky.haze(og, this.vis.x0, this.skyLine, this.vis.x1);   // the same wash, on the actors only
-      og.globalCompositeOperation = 'destination-in'; this.fencePanels(L.y, hz);                                  // kept only where the wall was redrawn
-    } finally { og.globalCompositeOperation = 'source-over'; this.g = g; this.base = base; }
-    g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(c, 0, 0, w, h, dx0, dy0, w, h); g.restore();
-  }
-  private frontCanvas: HTMLCanvasElement | null = null;
 
   /** The forest edge along the top of the view (TB-220): the tree rows and the bush skirt first, then every orc still walking inside the forest, so each one is drawn whole and in front (never cut to an ear, an axe or a leg by a crown); the wall follows. */
   private forest(orcs: Orc[]): void {
