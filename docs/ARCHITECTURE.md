@@ -104,6 +104,7 @@ function frame(now) {
   requestAnimationFrame(frame);
 }
 ```
+- TB-267: `frame` always schedules the next frame, and each step (tick, event handlers, field/camp/tree draws, HUD, save) runs through `guard()` (`src/frameGuard.ts`): a throw is logged to the console once per distinct message, the newest 5 are kept under `localStorage['tide-of-orcs-errors']`, and the loop carries on; a failed field draw calls `field.recover()` (context reset). The sketch above leaves the guards out.
 - When the tab is hidden, rAF pauses; on return the 0.25 s clamp means at most 12 steps run. The gap is not credited: there is no offline progress. While `run.fallen` is true, `step` returns immediately.
 - Autosave every 20 s and on `beforeunload`/`pagehide`, and when the tab is hidden (`visibilitychange`, `src/saveTriggers.ts`, TB-216b: a hidden tab stops the frame loop and may be discarded without pagehide); also after a Heartwood purchase and a replant.
 

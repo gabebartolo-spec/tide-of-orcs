@@ -158,6 +158,11 @@ export class FieldRenderer {
     this.canvas.width = w; this.canvas.height = h; this.resizes++;
     this.sprites.clearBakes();   // bakes are in device px: a new scale needs new ones
   }
+  /** TB-267: after a draw threw part way, point back at the field's own context and clear any transform, alpha, blend, shadow or clip left set. */
+  recover(): void {
+    const g = this.canvas.getContext('2d')!; this.g = g;
+    const r = (g as { reset?: () => void }).reset; if (r) r.call(g); else { const w = this.canvas.width; this.canvas.width = w; }
+  }
   /** Phone landscape layout (coarse pointer, short screen). */
   phone = false;
   /** Backing-store reallocations, for the resize regression check. */
