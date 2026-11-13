@@ -30,7 +30,7 @@ export const DEPTH = { top: 176, far: 0.62, near: 1, squeeze: 0.3, hazeSky: 0.16
 /** Treeline along the top of the view (TB-207, TB-220): sprites from the Sketchfab Handpainted Tree Pack (rudolfs, CC-BY), rendered
  *  in tide-assets/trees (512 px renders, shipped at 44 px per model unit so a tree is never drawn past its native pixels at 1080p DPR 2).
  *  Rows of trees stacked from the view top down to `stop` (units above the plain's top edge, at least `minRows` rows): each row nearer
- *  than the last, so taller, brighter and wider spaced. The back rows use the darker `_far` sprites. Every tree is drawn at its real
+ *  than the last, so taller, brighter and wider spaced. Rows behind the nearest use the depth-graded sprites `_d1`.. (TB-260). Every tree is drawn at its real
  *  model height (`kinds`, in model units) times `unit`, always with one uniform scale so nothing squashes or warps. */
 export const TREELINE = {
   seed: 207, span: [-700, 1600] as const,
@@ -39,6 +39,9 @@ export const TREELINE = {
     young: 0.3, kinds: ['oak_green_1', 'oak_green_2', 'spruce_2', 'spruce_3'] as const, youngH: [24, 38] as const },
   /** Pre-scaled sprite levels stop below `mipMin` px high; the soft ground shadow is `shadowPx` wide and `shade` x the sprite width under a tree and a bush. */
   mipMin: 24, shadowPx: 64, shade: { tree: 0.45, bush: 0.85 },
+  /** Depth grades (TB-260): the sprites are lit in Cycles like the actors; a row 1, 2, 3+ behind the nearest draws `tree_<kind>_d1..d<depth>`
+   *  (pack_trees.py: colour mixed 0.22 / 0.36 / 0.48 toward `woodDeep`). A `far` skirt bush draws grade 1. */
+  depth: 3,
   /** Device-exact sprite cache: most entries kept before it is rebuilt. The first `fill.rows` rows (the canopy against the view top) hold only kinds at least `fill.min` x the tallest that fits. */
   exactCap: 700, fill: { rows: 3, min: 0.9 },
   /** World units per model unit, and the random size spread (x unit) of one tree. */

@@ -82,10 +82,14 @@ function buildMips(im: HTMLImageElement): HTMLCanvasElement[] {
   return out;
 }
 
+/** Sprite suffix for a tree `back` rows behind the nearest: '' for the nearest, then `_d1`.. capped at `TREELINE.depth` (TB-260). */
+export const grade = (back: number): string => (back <= 0 ? '' : `_d${Math.min(back, T.depth)}`);
+
 function load(): void {
   if (started || typeof Image === 'undefined') return;
   started = true;
-  for (const k of [...T.kinds, BUSH]) for (const v of [k, `${k}_far`]) {
+  for (const k of [...T.kinds, BUSH]) for (let d = 0; d <= T.depth; d++) {
+    const v = k + grade(d);
     const im = new Image(); im.onload = (): void => { imgs.set(v, im); mips.set(v, buildMips(im)); }; im.src = `${import.meta.env.BASE_URL}decor/tree_${v}.webp`;
   }
 }
@@ -158,13 +162,13 @@ export class Treeline {
         if (r === 0 && t.key !== BUSH) h = Math.min(h * T.stretch, Math.max(h * 0.95, off - crown));
         // the open sky under the HUD (TB-232): a crown that would reach into it is drawn shorter, one uniform scale, at most down to `shrink`
         if (off - h < crown) h = Math.max(h * SKY.shrink, off - crown);
-        this.spots.push({ x: t.x, off, key: r < n - 1 ? `${t.key}_far` : t.key, h, flip: t.flip, shadow: T.shade.tree });
+        this.spots.push({ x: t.x, off, key: t.key + grade(n - 1 - r), h, flip: t.flip, shadow: T.shade.tree });
       }
     }
     const sb = T.first + (n - 1) * T.gap + T.skirt.lift;
     this.skirt.forEach((tr, i) => {
       const base = sb - T.skirt.offset * (T.skirt.rows - 1 - i);
-      for (const t of tr) this.edges.push({ x: t.x, off: base + t.dy, key: t.far ? `${t.key}_far` : t.key, h: t.h, flip: t.flip, shadow: T.shade.bush });
+      for (const t of tr) this.edges.push({ x: t.x, off: base + t.dy, key: t.key + grade(t.far ? 1 : 0), h: t.h, flip: t.flip, shadow: T.shade.bush });
     });
     this.spots.sort((a, b) => a.off - b.off); this.edges.sort((a, b) => a.off - b.off);
   }

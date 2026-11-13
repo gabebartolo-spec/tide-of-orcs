@@ -5,7 +5,7 @@ class FakeImage {
   set src(_v: string) { queueMicrotask(() => this.onload?.()); }
 }
 vi.stubGlobal('Image', FakeImage);
-const { Treeline, treeHeight, rowScale, rowKinds, rowRoom, fitSize } = await import('./treeline');
+const { Treeline, treeHeight, rowScale, rowKinds, rowRoom, fitSize, grade } = await import('./treeline');
 const { TREELINE } = await import('../data/presentation');
 
 function mockCtx() {
@@ -20,6 +20,12 @@ function mockCtx() {
 }
 
 describe('treeline', () => {
+  it('grades rows by distance behind the nearest, capped at the deepest grade (TB-260)', () => {
+    expect(grade(0)).toBe('');
+    expect(grade(1)).toBe('_d1');
+    expect(grade(TREELINE.depth + 4)).toBe(`_d${TREELINE.depth}`);
+  });
+
   it('does not throw on a zero-size / NaN view, so the frame loop survives', () => {
     const t = new Treeline(), { g } = mockCtx();
     expect(() => t.draw(g, NaN, NaN, NaN)).not.toThrow();
