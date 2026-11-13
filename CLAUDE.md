@@ -14,6 +14,7 @@ Let's Hunt Some Orc! is a relaxing incremental tower-defence game. A lone elf ar
 | `docs/ART-STYLE.md` | Palette tokens, shape language, typography, motion |
 | `docs/BACKLOG.md` | Epics and tasks, status, owner |
 | `docs/RELEASE.md` | itch.io builds per milestone (tag `m1`, `m2` … to ship) |
+| `docs/ACHIEVEMENTS.md` | Every achievement: id, rule, event it listens to, cosmetic reward (DRAFT until the director approves) |
 | `docs/AGENT-TEAM.md` | How agent teams split work on this repo |
 | `docs/prototype.html` | The original concept: tone, look and the core loop. Frozen. Mechanics have deliberately diverged since (GDD §14), so don't port from it |
 
