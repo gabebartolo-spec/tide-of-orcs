@@ -1,6 +1,6 @@
 # Releasing to itch.io
 
-Web builds go to **https://veniceissinking.itch.io/elves-vs-orcs** (page Restricted, a private proof of concept; see ITCH-PAGE.md). Builds of `main` go to the `html5-dev` channel by manual workflow run; a tagged `v1.0.0` would go to `html5`. Phone test builds go to the `mobile-test` channel (since 4 Nov). The latest is main e237bca on `html5-dev` (13 Nov, run 43415345862, devlog 1774580); the latest `mobile-test` is build 7, main 1690e41 (9 Nov, run 42610725014). Every itch push ships with a patch-notes devlog on the project page, posted as VeniceIsSinking (build 5: devlog 1753168).
+Web builds go to **https://veniceissinking.itch.io/elves-vs-orcs** (page Restricted, a private proof of concept; see ITCH-PAGE.md). Builds of `main` go to the `html5-dev` channel by manual workflow run; a tagged `v1.0.0` would go to `html5`. Phone test builds go to the `mobile-test` channel (since 4 Nov). The latest is main 359199d on `html5-dev` (14 Nov, run 43445789829, devlog 1775072); the latest `mobile-test` is build 7, main 1690e41 (9 Nov, run 42610725014). Every itch push ships with a patch-notes devlog on the project page, posted as VeniceIsSinking (build 5: devlog 1753168).
 
 ## One-time setup (Gabe)
 1. On itch.io, open the project → Edit → set **Kind of project: HTML** and tick *This file will be played in the browser*. Set viewport to 1280 × 720 (or "Click to launch in fullscreen"), enable *Mobile friendly* with orientation *Landscape* (TB-155).
