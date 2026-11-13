@@ -2,7 +2,7 @@ import { WALL_ART, WALL_DAMAGE as D } from '../data/presentation';
 import { wallX } from '../sim/wallLine';
 import { P } from './palette';
 import { Particles } from './particles';
-import type { PlacedWall as WallArt } from './wallArt';
+import { wallWarpY, type PlacedWall as WallArt } from './wallArt';
 
 /** Which rendered damage stage shows at this health fraction: 0 whole, up to one per WALL_DAMAGE.stages entry. */
 export const wallStage = (frac: number): 0 | 1 | 2 | 3 => D.stages.filter((f) => frac < f).length as 0 | 1 | 2 | 3;
@@ -20,9 +20,9 @@ export class WallDamage {
   update(dt: number, frac: number, art: WallArt, fx: Particles, reduced: boolean): void {
     this.art = art;
     const n = wallStage(frac);
-    if (n > this.stage && this.seen && !reduced) for (const y of art.breaches) this.collapse(y);
+    if (n > this.stage && this.seen && !reduced) for (const y of art.breaches) this.collapse(wallWarpY(art, wallX(y), y), wallX(y));
     this.stage = n; this.seen = true;
-    if (!reduced && n >= D.flameStage) for (const y of art.breaches) if (Math.random() < D.emberRate * dt) fx.flame(wallX(y), y, Math.random() < 0.5 ? P.fire : P.ember);
+    if (!reduced && n >= D.flameStage) for (const y of art.breaches) if (Math.random() < D.emberRate * dt) fx.flame(wallX(y), wallWarpY(art, wallX(y), y), Math.random() < 0.5 ? P.fire : P.ember);
     for (let i = this.bits.length - 1; i >= 0; i--) {
       const p = this.bits[i]!; p.life -= dt;
       if (p.life <= 0) { this.bits[i] = this.bits[this.bits.length - 1]!; this.bits.pop(); continue; }
@@ -31,8 +31,8 @@ export class WallDamage {
     }
   }
 
-  private collapse(y: number): void {
-    const x = wallX(y);
+  /** Debris and dust from a breach at drawn point (`x`, `y`). */
+  private collapse(y: number, x: number): void {
     for (let i = 0; i < D.chunks; i++) this.add(x + Math.random() * 20, y + (Math.random() - 0.5) * 40, (Math.random() + 0.1) * D.chunkSpeed, -Math.random() * D.chunkSpeed, D.chunkLife, D.chunkR[0] + Math.random() * (D.chunkR[1] - D.chunkR[0]), true, P[this.art.chunks[i % 2]!]);
     this.dust(x + 10, y, D.puffs);
   }
@@ -50,7 +50,7 @@ export class WallDamage {
   draw(g: CanvasRenderingContext2D, clock: number): void {
     if (this.stage >= D.flameStage) this.art.breaches.forEach((by, i) => {
       for (let t = 0; t < D.tongues; t++) {
-        const ph = clock * D.flicker + i * 2.1 + t * 1.7, h = D.flameH * (0.7 + 0.3 * Math.sin(ph)), x = wallX(by) + (t - (D.tongues - 1) / 2) * D.tongueGap, y = by + t * D.tongueDrop, sway = Math.sin(ph * 1.3) * D.flameW * 0.6;
+        const ph = clock * D.flicker + i * 2.1 + t * 1.7, h = D.flameH * (0.7 + 0.3 * Math.sin(ph)), x = wallX(by) + (t - (D.tongues - 1) / 2) * D.tongueGap, y = wallWarpY(this.art, wallX(by), by) + t * D.tongueDrop, sway = Math.sin(ph * 1.3) * D.flameW * 0.6;
         const tongue = (w: number, hh: number, c: string): void => {  // a teardrop: round belly low, thin licking tip
           g.fillStyle = c; g.beginPath(); g.moveTo(x, y);
           g.bezierCurveTo(x - w * 1.5, y, x - w, y - hh * 0.5, x + sway, y - hh); g.bezierCurveTo(x + w, y - hh * 0.5, x + w * 1.5, y, x, y); g.fill();
