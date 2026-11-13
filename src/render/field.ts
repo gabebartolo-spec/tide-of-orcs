@@ -20,9 +20,9 @@ import { orcClipT, orcState, strideT, swingClipT, vanState } from './actorState'
 import { Ground, decorImg } from './ground';
 import { Ambience } from './ambience';
 import { Sky } from './sky';
-import { depthScale, depthY, meadowTop, setMeadowTop, worldY } from './depth';
+import { depthScale, depthY, setMeadowTop, worldY } from './depth';
 import { fitPostRows } from './postRows';
-import { placeWall, wallWarpY, type PlacedWall } from './wallArt';
+import { placeWall, type PlacedWall } from './wallArt';
 import { Interp } from './interp';
 import { FIELD_VIEW, GAIT, PHONE_QUERY, QUALITY, WALL_ART, WALL_FRONT, LOOT_VFX, ORC_SHADOW, ORC_SHADOW_BASE, ORC_SPRITE, SKY, TREELINE, VFX, FLIPBOOK_SIZE, dusk } from '../data/presentation';
 import { Flipbooks } from './flipbook';
@@ -321,10 +321,10 @@ export class FieldRenderer {
     sortByY(orcs);
     this.forest(orcs);
 
-    // barricade: drawn whole, over the forest edge and its bush skirt (it is nearer than both), shrinking with depth toward the forest
-    const wf = this.wall.foot; this.wallTop = Math.max(vis.y0, depthY(wf) - TREELINE.cap.up * depthScale(wf));
-    this.fencePanels(vis.y0, H);
-    if (s.stats.spikes) { g.fillStyle = P.cream; for (let y = 8; y < H; y += 24) { const wx = wallX(y), v = depthY(y), k = depthScale(y); g.beginPath(); g.moveTo(wx, v); g.lineTo(wx + 9 * k, v + 4 * k); g.lineTo(wx, v + 8 * k); g.closePath(); g.fill(); } }
+    // barricade: drawn whole, over the forest edge and its bush skirt (it is nearer than both)
+    const top = Math.max(vis.y0, this.wall.y); this.wallTop = Math.max(vis.y0, this.wall.foot - TREELINE.cap.up);
+    this.fencePanels(top, H);
+    if (s.stats.spikes) { g.fillStyle = P.cream; for (let y = 8; y < H; y += 24) { const wx = wallX(y); g.beginPath(); g.moveTo(wx, y); g.lineTo(wx + 9, y + 4); g.lineTo(wx, y + 8); g.closePath(); g.fill(); } }
 
     this.fx.drawGround(g);
     s.zones.forEach((z) => {
@@ -364,7 +364,7 @@ export class FieldRenderer {
     // aerial haze over the wood and the back rows, on top of every actor there, so a far orc is as soft as the trees behind it (TB-232)
     const hz = this.sky.haze(g, vis.x0, this.skyLine, vis.x1);
     // the barricade is the nearest prop and takes no distance haze: its panels inside the haze band are drawn again over it
-    this.fencePanels(-Infinity, hz);  // from the art's own top
+    this.fencePanels(this.wall.y, hz);  // from the art's own top
     this.wallFront(s, orcs, vans, hz);
 
     // effects never rise into the sky band over the HUD: the world effects are clipped to the field below the crown line
@@ -448,12 +448,12 @@ export class FieldRenderer {
   }
 
 
-  /** The barricade: one image of the whole slanted run, drawn rows `top` to `yMax` (or the plank fallback from `top`). It stays solid at any health; the HUD bar shows damage. */
+  /** The barricade: one image of the whole slanted run down to `yMax` (or the plank fallback from `top`). It stays solid at any health; the HUD bar shows damage. */
   private fencePanels(top: number, yMax: number): void {
     const g = this.g, L = this.wall, fence = decorImg(`${L.key}_${this.wallDamage.stage}`) ?? decorImg(`${L.key}_0`);
     if (fence) {
-      const W = this.warpWall(fence), k = W.c.height / W.h, a = Math.max(W.y, top), h = Math.min(yMax, W.y + W.h) - a;
-      if (h > 0) g.drawImage(W.c, 0, (a - W.y) * k, W.c.width, h * k, W.x, a, W.w, h);
+      const k = fence.width / L.w, a = Math.max(L.y, top), h = Math.min(yMax, L.y + L.h) - a;
+      if (h > 0) g.drawImage(fence, 0, (a - L.y) * k, fence.width, h * k, L.x, a, L.w, h);
     } else for (let y = top - ((top % 18) + 18) % 18; y < yMax; y += 18) {
       const wx = wallX(y) - BAR_W;
       g.fillStyle = y % 36 ? P.timber : P.timberDark;
@@ -462,31 +462,11 @@ export class FieldRenderer {
     }
   }
 
-  /** TB-268: the wall art warped with depth (`wallWarpY`), one device-pixel column at a time, kept until the art, its placement, the
-   *  meadow's back row or the device scale changes. */
-  private warpWall(fence: HTMLImageElement): { c: HTMLCanvasElement; x: number; y: number; w: number; h: number } {
-    const L = this.wall, d = Math.min(4, Math.max(1, this.base.sx)), key = `${L.x}|${L.y}|${meadowTop()}|${d}`, W = this.warp;
-    if (W && W.key === key && W.src === fence) return W;
-    const n = Math.max(1, Math.ceil(L.w * d)), tops = new Float32Array(n), bots = new Float32Array(n);
-    let y0 = Infinity, y1 = -Infinity;
-    for (let i = 0; i < n; i++) {
-      const x = L.x + (i + 0.5) / d; tops[i] = wallWarpY(L, x, L.y); bots[i] = wallWarpY(L, x, L.y + L.h);
-      y0 = Math.min(y0, tops[i]!); y1 = Math.max(y1, bots[i]!);
-    }
-    const c = W?.c ?? document.createElement('canvas'); c.width = n; c.height = Math.ceil((y1 - y0) * d) + 1;
-    const cg = c.getContext('2d')!; cg.clearRect(0, 0, c.width, c.height); cg.imageSmoothingQuality = 'high';
-    const fw = fence.width / n;
-    for (let i = 0; i < n; i++) cg.drawImage(fence, i * fw, 0, fw, fence.height, i, (tops[i]! - y0) * d, 1, (bots[i]! - tops[i]!) * d);
-    const out = { c, key, src: fence, x: L.x, y: y0, w: n / d, h: c.height / d }; this.warp = out; return out;
-  }
-  private warp: { c: HTMLCanvasElement; key: string; src: HTMLImageElement; x: number; y: number; w: number; h: number } | null = null;
-
   /** TB-264: the wall's top is drawn again over the haze (it takes none, TB-239), which hid every actor standing in front of it there.
    *  Actors near it are drawn again offscreen, hazed exactly as on the field, cut to the wall's own pixels and laid back over it. */
   private wallFront(s: SimState, orcs: Orc[], vans: Vanguard[], hz: number): void {
-    const L = this.warp, F = WALL_FRONT;
-    if (!L || !decorImg(`${this.wall.key}_0`)) return;
-    const y1 = Math.min(hz, L.y + L.h); if (y1 <= L.y) return;
+    const L = this.wall, y1 = Math.min(hz, L.y + L.h), F = WALL_FRONT;
+    if (y1 <= L.y || !decorImg(`${L.key}_0`)) return;
     const near = (x: number, wy: number, r: number): boolean => { const y = depthY(wy), k = r * depthScale(wy); return x - k * F.halfW < L.x + L.w && x + k * F.halfW > L.x && y - k * F.up < y1 && y + k * F.down > L.y; };
     const os: Orc[] = []; for (let i = this.orcsIn; i < orcs.length; i++) { const o = orcs[i]!; if (near(o.x, o.y, o.r)) os.push(o); }
     const vs = vans.filter((v) => near(v.x, v.y, ACTOR_R));
@@ -506,7 +486,7 @@ export class FieldRenderer {
       for (const o of os) { og.globalAlpha = Math.min(1, (o.y - this.emergeAt) / SKY.emerge); this.orc(s, o); }
       og.globalAlpha = 1; this.at(0, 0, false);
       og.globalCompositeOperation = 'source-atop'; this.sky.haze(og, this.vis.x0, this.skyLine, this.vis.x1);   // the same wash, on the actors only
-      og.globalCompositeOperation = 'destination-in'; this.fencePanels(-Infinity, hz);                                 // kept only where the wall was redrawn
+      og.globalCompositeOperation = 'destination-in'; this.fencePanels(L.y, hz);                                  // kept only where the wall was redrawn
     } finally { og.globalCompositeOperation = 'source-over'; this.g = g; this.base = base; }
     g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(c, 0, 0, w, h, dx0, dy0, w, h); g.restore();
   }
