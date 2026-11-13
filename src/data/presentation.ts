@@ -113,6 +113,9 @@ export const GROUND = {
   seed: 0x6a7e31,
   /** Keep-clear strip in front of the wall (units). */
   wallGap: 22,
+  /** Painted meadow (TB-259): public/decor/ground.webp, the plain baked top-down in Blender under the actors' sun (scripts/ground/bake_ground.py),
+   *  laid over this world rect (units) between the vector colour drifts and the tufts, rocks and flowers. Its edges feather to alpha. */
+  bake: { x0: -140, y0: 100, x1: 1040, y1: 490 },
   /** Lusher, darker grass drifts: count, blobs per drift, blob radius, y squash, blob scatter. */
   lush: { n: 11, blobs: [4, 7], r: [14, 30], squash: 0.45, spread: 34 },
   /** Worn dry-grass patches with a barren earth core: count, blobs, radius, squash, scatter; bare core blobs and their scale. */

@@ -89,13 +89,19 @@ let started = false;
 function loadDecor(): void {
   if (started || typeof Image === 'undefined') return;
   started = true;
+  const bake = new Image(); bake.onload = (): void => { imgs.set('ground', bake); }; bake.src = `${import.meta.env.BASE_URL}decor/ground.webp`;
   for (const k of DECOR) { const im = new Image(); im.onload = (): void => { imgs.set(k, im); }; im.src = `${import.meta.env.BASE_URL}decor/${k}.webp`; }
 }
 export const decorImg = (k: DecorKey): HTMLImageElement | null => imgs.get(k) ?? null;
 
-function paint(g: CanvasRenderingContext2D, L: GroundLayout): void {
+/** The plain's colour: flat fill and soft drifts (under the painted bake, and its fallback where the bake is missing or ends). */
+function paintBase(g: CanvasRenderingContext2D, L: GroundLayout): void {
   g.fillStyle = P.plain; g.fillRect(-PAD, -PAD, W + PAD * 2, H + PAD * 2);
   blobs(g, L.lush, P.plainLush); blobs(g, L.sunlit, P.plainSun); blobs(g, L.worn, P.plainWorn); blobs(g, L.bare, P.plainBare);
+}
+
+/** Rocks, tufts and flowers, over the bake. */
+function paintDetail(g: CanvasRenderingContext2D, L: GroundLayout): void {
   for (const r of L.rocks) {
     g.fillStyle = P.shadow; g.beginPath(); g.ellipse(r.x + r.r * 0.25, r.y + r.r * r.squash * 0.55, r.r * 1.1, r.r * r.squash * 0.7, 0, 0, 6.28); g.fill();
     g.fillStyle = P.rock; g.beginPath(); g.ellipse(r.x, r.y, r.r, r.r * r.squash, 0, 0, 6.28); g.fill();
@@ -163,10 +169,16 @@ export class Ground {
       const cw = Math.ceil(ow / 128) * 128, ch = Math.ceil(oh / 128) * 128;
       if (this.off.width < ow || this.off.height < oh || this.off.width > cw + 256 || this.off.height > ch + 256) { this.off.width = cw; this.off.height = ch; }
       const og = this.off.getContext('2d')!; og.setTransform(1, 0, 0, 1, 0, 0); og.clearRect(0, 0, this.off.width, this.off.height);
-      for (let ty = Math.floor(y0 / H) * H; ty < y1; ty += H) for (let tx = Math.floor(x0 / W) * W; tx < x1; tx += W) {
-        og.setTransform(k, 0, 0, k, (tx - x0 + PAD) * k, (ty - y0 + PAD) * k);
-        paint(og, ty < 0 ? this.above : this.layout);
-      }
+      const tiles = (fn: (L: GroundLayout) => void): void => {
+        for (let ty = Math.floor(y0 / H) * H; ty < y1; ty += H) for (let tx = Math.floor(x0 / W) * W; tx < x1; tx += W) {
+          og.setTransform(k, 0, 0, k, (tx - x0 + PAD) * k, (ty - y0 + PAD) * k);
+          fn(ty < 0 ? this.above : this.layout);
+        }
+      };
+      tiles((L) => paintBase(og, L));
+      const bake = imgs.get('ground'), B = GROUND.bake;  // TB-259: the painted plain, lit by the actors' sun; edges feather into the drifts
+      if (bake) { og.setTransform(k, 0, 0, k, (PAD - x0) * k, (PAD - y0) * k); og.drawImage(bake, B.x0, B.y0, B.x1 - B.x0, B.y1 - B.y0); }
+      tiles((L) => paintDetail(og, L));
     }
     g.drawImage(this.off, 0, 0, ow, oh, x0 - PAD, y0 - PAD, x1 - x0 + PAD * 2, y1 - y0 + PAD * 2);
   }
