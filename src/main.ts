@@ -1,3 +1,4 @@
+import { guard, report } from './frameGuard';
 import { bindSaveTriggers } from './saveTriggers';
 import { STEP } from './data/balance';
 import { GameController } from './game';
@@ -129,8 +130,14 @@ document.addEventListener('visibilitychange', () => { if (document.hidden) goAwa
 addEventListener('pageshow', comeBack);
 // A coarse portrait phone shows the rotate prompt (style.css .turn): the sim holds still behind it (TB-218)
 const portraitMq = matchMedia('(orientation: portrait) and (pointer: coarse)');
+// TB-267: the next frame is always scheduled and each step runs guarded, so one bad step (a throw in a draw or an event handler) is logged and
+// skipped, never a frozen game; a failed field draw resets the canvas state it may have left half set
 function frame(now: number): void {
-  if (away || portraitMq.matches) { last = now; lastDraw = 0; requestAnimationFrame(frame); return; }
+  try { step(now); } catch (e) { report('frame', e); }
+  requestAnimationFrame(frame);
+}
+function step(now: number): void {
+  if (away || portraitMq.matches) { last = now; lastDraw = 0; return; }
   if (resync) { resync = false; last = now; acc = 0; }
   // a stalled frame (rotation layout, tab restore) advances one step, never a catch-up burst (TB-218)
   const gap = Math.max(0, (now - last) / 1000), dt = gap > STALL_S || now < settleUntil ? Math.min(STEP, gap) : Math.min(0.25, gap); last = now;
@@ -139,27 +146,28 @@ function frame(now: number): void {
   // the field holds still while the replant ceremony plays
   if (field.ceremony.active) acc = 0;
   // TB-194: snapshot movers before the last step, then draw them `acc / STEP` of the way from there to now (render/interp.ts)
-  while (acc >= STEP) { if (acc < 2 * STEP) field.interp.snap(game.state); game.tick(STEP); acc -= STEP; }
+  guard('tick', () => { while (acc >= STEP) { if (acc < 2 * STEP) field.interp.snap(game.state); game.tick(STEP); acc -= STEP; } });
+  if (acc >= STEP) acc = 0;   // a tick that threw drops the rest of this frame's steps, never a pile-up
   field.interp.alpha = acc / STEP;
   const events = game.events.drain();
-  game.noteEvents(events); field.consume(events, game.state); panel.handleEvents(events); audio.consume(events);
+  guard('notes', () => game.noteEvents(events)); guard('fx', () => field.consume(events, game.state));
+  guard('panel', () => panel.handleEvents(events)); guard('audio', () => audio.consume(events));
   // the field is hidden (zero-size) on the camp pages, so skip its draw there (TB-136)
   drawDt += dt;
   if (!document.hidden && document.body.dataset.mode !== 'camp' && now - lastDraw >= quality.q.drawGap - 1) {
-    const w0 = performance.now(); field.draw(game.state, drawDt, game.aim); drawDt = 0;
+    const w0 = performance.now(); if (!guard('draw', () => field.draw(game.state, drawDt, game.aim))) field.recover(); drawDt = 0;
     if (lastDraw && quality.frame(now - lastDraw, performance.now() - w0)) field.resize();
     lastDraw = now;
   } else if (document.body.dataset.mode === 'camp') { drawDt = 0; lastDraw = 0; }
   // camp and tree follow the same draw cap as the field, so a 120 Hz screen draws them at 60 (TB-218)
   const paced = now - campDraw >= quality.q.drawGap - 1;
-  if (paced && !document.hidden && campView.offsetParent) { campScene.draw(game.state.meta.camp.levels, now / 1000); }
+  if (paced && !document.hidden && campView.offsetParent) guard('camp', () => campScene.draw(game.state.meta.camp.levels, now / 1000));
   treeWrap.classList.toggle('burning', field.ceremony.burning);
   // the Grove canvas draws once per paced frame at most, and only while it is on screen (TB-218)
-  hudT += dt; if (hudT > 0.15) { hudT = 0; treeDue = true; panel.update(); }
-  if (paced && (tree.live || treeDue && treeWrap.offsetParent !== null)) { treeDue = false; tree.draw(game.state, game.state.t); }
+  hudT += dt; if (hudT > 0.15) { hudT = 0; treeDue = true; guard('hud', () => panel.update()); }
+  if (paced && (tree.live || treeDue && treeWrap.offsetParent !== null)) { treeDue = false; guard('tree', () => tree.draw(game.state, game.state.t)); }
   if (paced) campDraw = now;
-  saveT += dt; if (saveT > 20) { saveT = 0; game.save(); }
-  requestAnimationFrame(frame);
+  saveT += dt; if (saveT > 20) { saveT = 0; guard('save', () => game.save()); }
 }
 requestAnimationFrame(frame);
 bindSaveTriggers(window, document, () => game.save());
