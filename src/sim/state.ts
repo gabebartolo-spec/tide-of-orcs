@@ -10,6 +10,7 @@ import { Rng, createRng } from './rng';
 import { applyGear } from './gear';
 import { EquipPolicy } from './loot';
 import { PathId } from '../data/paths';
+import { AchMeta, AchPending, AchRun, freshAchMeta, freshAchPending, freshAchRun } from './achievements';
 
 export interface Orc {
   live: boolean; kind: OrcKind; x: number; y: number; hp: number; maxhp: number; spd: number; r: number; loot: number; atk: number;
@@ -31,6 +32,8 @@ export interface Orc {
   gen: number;
   /** TB-230: the roster boss (data/bosses BOSS_ROSTER id) a 'boss' orc is, for its sprite; '' for every other orc. Not saved. */
   bossId: string;
+  /** A war drummer's drum beats so far (TB-249 Silence the Drum); reset on spawn. Not saved. */
+  beats: number;
 }
 export type ProjectileKind = 'arrow' | 'knife' | 'bolt' | 'lob' | 'bounce' | 'star' | 'fireball';
 export interface Projectile {
@@ -83,6 +86,8 @@ export interface RunState {
   path: PathId | null; hoardN: number;
   /** Heartwood banked from boss waves cleared this run (v15, TB-205); the fallen overlay shows it (a fall pays none, TB-171). */
   hwEarned: number;
+  /** Achievement tallies for this run (v17, TB-249). */
+  ach: AchRun;
 }
 /** heartwood: all Heartwood ever earned (spent on the Heartwood tree; no passive bonus since P-142); hwLevels: ranks bought;
  *  tier: the highest boss tier unlocked (TB-148). */
@@ -90,7 +95,9 @@ export interface MetaState { heartwood: number; lifetimeKills: number; bestWave:
   /** Wave the next run starts at: one past the last checkpoint wave cleared (TB-159). 1 = none yet. */
   checkpoint: number;
   /** Encampment (TB-188a, v13): building levels and materials, kept across runs. */
-  camp: CampMeta }
+  camp: CampMeta;
+  /** Achievements (v17, TB-249): earned ids, the worn title, lifetime tallies. */
+  ach: AchMeta }
 export interface CampMeta { levels: CampLevels; mats: Mats }
 export const freshCamp = (): CampMeta => ({ levels: {}, mats: {} });
 
@@ -116,16 +123,18 @@ export interface SimState {
   vanRespawn: number[];
   /** Run-only path state, not saved (TB-193a): the Foxfire Tail's fox, and shots toward the Fang's next venom arrow. */
   fox: Wolf; fangN: number;
+  /** Kills by the strike in flight, for one-strike achievements (TB-249). Not saved. */
+  achPend: AchPending;
   /** Run-only mythic state, not saved (TB-100): starlight toward the next Starfall and its cooldown. */
 }
 
 export function freshRun(): RunState {
   return { wave: 1, waveT: 0, runTime: 0, starlight: 0, earned: 0, kills: 0, levels: { root: 1 }, barHp: -1, bulwarkUsed: false, fallen: false, bossDone: 0, boss: null, thunder: 0, freeRallyUsed: false,
-    foeT: {}, stormT: 0, shotT: [0, 0, 0], knifeT: 0, hawkT: 0, treantT: 0, ballT: 0, tier: 1, path: null, hoardN: 0, hwEarned: 0 };
+    foeT: {}, stormT: 0, shotT: [0, 0, 0], knifeT: 0, hawkT: 0, treantT: 0, ballT: 0, tier: 1, path: null, hoardN: 0, hwEarned: 0, ach: freshAchRun() };
 }
-export function freshMeta(): MetaState { return { heartwood: 0, lifetimeKills: 0, bestWave: 1, prestiges: 0, hwLevels: {}, loot: freshLoot(), tier: 1, checkpoint: 1, camp: freshCamp() }; }
+export function freshMeta(): MetaState { return { heartwood: 0, lifetimeKills: 0, bestWave: 1, prestiges: 0, hwLevels: {}, loot: freshLoot(), tier: 1, checkpoint: 1, camp: freshCamp(), ach: freshAchMeta() }; }
 
-const makeOrc = (): Orc => ({ live: false, kind: 'grunt', x: 0, y: 0, hp: 0, maxhp: 0, spd: 0, r: 0, loot: 0, atk: 0, dead: false, burn: 0, hitT: 0, wob: 0, swingT: 0, walk: 0, champ: false, bleed: 0, slow: 0, pin: 0, root: 0, chill: 0, stun: 0, poison: 0, poisonDps: 0, leapt: false, castT: 0, drum: false, gen: 0, bossId: '' });
+const makeOrc = (): Orc => ({ live: false, kind: 'grunt', x: 0, y: 0, hp: 0, maxhp: 0, spd: 0, r: 0, loot: 0, atk: 0, dead: false, burn: 0, hitT: 0, wob: 0, swingT: 0, walk: 0, champ: false, bleed: 0, slow: 0, pin: 0, root: 0, chill: 0, stun: 0, poison: 0, poisonDps: 0, leapt: false, castT: 0, drum: false, gen: 0, bossId: '', beats: 0 });
 const makeShot = (): Projectile => ({ live: false, kind: 'arrow', x: 0, y: 0, vx: 0, vy: 0, dmg: 0, pierce: 0, life: 0, fx: 0, crit: 0, critX: 1, target: null, tgen: 0, first: false, hit: new Set(), sx: 0, sy: 0, tx: 0, ty: 0, t: 0, h: 0, r: 0, back: false });
 const makeZone = (): Zone => ({ live: false, kind: 'cinder', x: 0, y: 0, r: 0, life: 0, used: false });
 const makeVan = (): Vanguard => ({ live: false, type: 'spear', line: false, x: 0, y: 0, tx: 0, ty: 0, mv: false, face: 1, hp: 0, maxhp: 0, swingT: 0, hitT: 0, walk: 0 });
@@ -139,7 +148,7 @@ export function createState(seed = 1, run: RunState = freshRun(), meta: MetaStat
     hawk: { x: 300, y: 100, a: 0 },
     zones: new Pool<Zone>(SET_FX.zoneCap, makeZone),
     knifeN: 0, vanRespawn: [],
-    fox: { x: 260, y: FIELD.h / 2 + 60, tx: 260, ty: FIELD.h / 2 + 60, biteT: 0, walk: 0 }, fangN: 0,
+    fox: { x: 260, y: FIELD.h / 2 + 60, tx: 260, ty: FIELD.h / 2 + 60, biteT: 0, walk: 0 }, fangN: 0, achPend: freshAchPending(),
   };
   if (s.run.barHp < 0) s.run.barHp = s.stats.barMax;
   return s;

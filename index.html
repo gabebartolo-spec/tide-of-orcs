@@ -24,6 +24,7 @@
           <span class="lbl" id="hud-wall-t"></span>
         </div>
         <span class="hud-van" id="hud-van" hidden></span>
+        <span class="hud-title" id="hud-title" hidden></span>
       </div>
       <div class="hud-star"><span class="hud-gem" id="hud-gem" aria-hidden="true"><span class="cut"></span></span><span class="odo" id="st-star" role="img"></span></div>
       <div class="hud-wave" id="hud-wave"><span class="k" id="k-wave"></span><span class="v" id="st-wave">1</span><span class="stamp" id="hud-stamp" hidden></span></div>
@@ -64,6 +65,7 @@
         <button role="tab" id="tab-satchel" aria-selected="false"></button>
         <button role="tab" id="tab-camp" aria-selected="false"></button>
         <button role="tab" id="tab-prestige" aria-selected="false"></button>
+        <button role="tab" id="tab-deeds" aria-selected="false"></button>
         <button role="tab" id="tab-settings" aria-selected="false"></button>
       </div>
       <div class="tab" id="pane-grove">
@@ -91,6 +93,12 @@
           <div class="paths" id="paths"></div>
           <h2 id="hw-title"></h2>
           <div class="hwtree" id="hw-tree"></div>
+        </div>
+      </div>
+      <div class="tab" id="pane-deeds" data-fit="scroll" hidden>
+        <div class="prestige deeds">
+          <div class="deedbar"><h2 id="deeds-title"></h2><span class="k" id="deeds-count"></span><button class="ghost" id="deeds-notitle" type="button"></button></div>
+          <div id="deeds-list"></div>
         </div>
       </div>
       <div class="tab" id="pane-settings" hidden>

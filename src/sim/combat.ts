@@ -3,7 +3,7 @@ import { MAT_DROP, MAT_IDS } from '../data/camp';
 import { ARROWS, FIELD, LOB, PLAYER, SIM_MISC } from '../data/balance';
 import { FIREBALL } from '../data/orcs';
 import { spawnOrc } from './step';
-import { EventBus } from './events';
+import { EventBus, KillSrc } from './events';
 import { Orc, ProjectileKind, SimState, Zone, recompute } from './state';
 import { UnitFx } from './stats';
 import { ownedAffixes, rollDrop } from './lootRoll';
@@ -42,9 +42,10 @@ export function dropMat(s: SimState, ev: EventBus, o: Orc): void {
   ev.push({ t: 'matDrop', mat, x: o.x, y: o.y });
 }
 
-/** `byLob`: the elf's arrow struck the killing blow (The Magpie's Talon, TB-193a). */
-export function kill(s: SimState, ev: EventBus, o: Orc, byLob = false): void {
+/** `by`: what struck the killing blow (TB-249 achievements); a lob or a Starfall arrow is the elf's own (The Magpie's Talon, TB-193a). */
+export function kill(s: SimState, ev: EventBus, o: Orc, by: KillSrc = 'other'): void {
   if (o.dead) return;
+  const byLob = by === 'lob' || by === 'star';
   o.dead = true;
   const st = s.stats;
   let loot = o.loot * st.starMult;
@@ -54,7 +55,7 @@ export function kill(s: SimState, ev: EventBus, o: Orc, byLob = false): void {
   s.run.kills++; s.meta.lifetimeKills++; s.run.starlight += loot; s.run.earned += loot;
   if (o.champ && s.run.boss) s.run.boss.left--;
   dropMat(s, ev, o);
-  ev.push({ t: 'kill', x: o.x, y: o.y, loot, kind: o.kind });
+  ev.push({ t: 'kill', x: o.x, y: o.y, loot, kind: o.kind, by, champ: o.champ, beats: o.beats });
   // Shatter: a chilled orc bursts and strikes those around it (which may shatter in turn; each orc dies once).
   if (o.chill > 0 && s.stats.shatter > 0) {
     const R = ARROWS.shatter.radius;
@@ -115,10 +116,10 @@ export function addZone(s: SimState, kind: Zone['kind'], x: number, y: number, r
   z.kind = kind; z.x = x; z.y = y; z.r = r; z.life = life; z.used = false;
 }
 
-export function damage(s: SimState, ev: EventBus, o: Orc, amt: number, byLob = false): void {
+export function damage(s: SimState, ev: EventBus, o: Orc, amt: number, by: KillSrc = 'other'): void {
   if (o.dead) return;
   o.hp -= amt * takenMult(s, o); o.hitT = SIM_MISC.hitFlash;
-  if (o.hp <= 0) kill(s, ev, o, byLob);
+  if (o.hp <= 0) kill(s, ev, o, by);
 }
 
 /** Poison (TB-193a): a fresh dose resets the clock and keeps the stronger dose. */
@@ -173,7 +174,7 @@ export function castFireball(s: SimState, ev: EventBus, sx: number, sy: number, 
  *  Moonveil: a moon shot always crits at 4 pieces (a rolled crit still wins) and leaves a Moonwell at 6.
  *  Emberwright 6: fire lobs leave Cinderground.
  *  `first` (a lob's first strike, not a Longshaft repeat or a Starfall arrow) also looses Shock Arrows and Rebound. */
-export function impact(s: SimState, ev: EventBus, p: { tx: number; ty: number; r: number; dmg: number; fx?: number }, first = false): void {
+export function impact(s: SimState, ev: EventBus, p: { tx: number; ty: number; r: number; dmg: number; fx?: number; kind?: string }, first = false): void {
   const st = s.stats, f = p.fx ?? FX.ALL;
   const fire = st.fire && (f & FX.FIRE) > 0, frost = st.slow > 0 && (f & FX.FROST) > 0, shock = (f & FX.SHOCK) > 0, moonShot = st.homing && (f & FX.MOON) > 0;
   const moon = moonShot && st.moonCrit > 0, stun = st.stun && shock;
@@ -195,7 +196,7 @@ export function impact(s: SimState, ev: EventBus, p: { tx: number; ty: number; r
     // Venom: crits poison; the Fang's venom arrow poisons everything it strikes (TB-193a)
     if (crit && st.venom > 0) poisonOrc(o, st.dmg * st.venom * st.venomMult);
     if (f & FX.VENOM) poisonOrc(o, st.dmg * Math.max(st.venom, PATH_FX.fangVenom) * st.venomMult);
-    damage(s, ev, o, p.dmg * (crit ? st.critMult : moon ? SET_FX.moonCritMult : 1), true);
+    damage(s, ev, o, p.dmg * (crit ? st.critMult : moon ? SET_FX.moonCritMult : 1), p.kind === 'star' ? 'star' : 'lob');
   });
   ev.push({ t: 'impact', x: p.tx, y: p.ty, r: p.r });
   if (fire && st.cinder) addZone(s, 'cinder', p.tx, p.ty, p.r, SET_FX.cinderSecs);

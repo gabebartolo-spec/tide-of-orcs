@@ -1,5 +1,6 @@
 import { checkpointFor } from '../data/balance';
 import { freshLoot } from '../data/loot';
+import { freshAchMeta, freshAchRun } from '../sim/achievements';
 import { CURRENT_VERSION, RETIRED_NODE_IDS, RETIRED_V3, RETIRED_V4, Save } from './schema';
 
 type AnySave = { version: number } & Record<string, unknown>;
@@ -67,6 +68,12 @@ export const migrations: Record<number, (s: AnySave) => AnySave> = {
     const run = { ...(s.run as { best?: It }) };
     if (run.best) run.best = fix(run.best);
     return { ...s, version: 16, meta, run };
+  },
+  /** v16 to v17: achievements (TB-249, approved 12 Nov). Nothing earned yet; the first load's sweep grants what the save already holds.
+   *  The saved run counts its challenges from the wave it is on. */
+  16: (s) => {
+    const run = s.run as { wave?: number };
+    return { ...s, version: 17, run: { ...run, ach: freshAchRun(run.wave ?? 1) }, meta: { ...(s.meta as object), ach: freshAchMeta() } };
   },
 };
 

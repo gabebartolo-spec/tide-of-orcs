@@ -29,7 +29,7 @@ export function spawnOrc(s: SimState, kind: OrcKind, y?: number, champ = false):
   o.hp = hp; o.maxhp = hp; o.spd = T.speed * waveSpeedMult(w); o.r = T.radius; o.atk = hp * BARRICADE.orcAtkFrac;
   o.loot = waveLoot(w) * T.loot * F.loot * tierLoot(s.run.tier);
   o.dead = false; o.burn = 0; o.bleed = 0; o.slow = 0; o.pin = 0; o.root = 0; o.chill = 0; o.stun = 0; o.poison = 0; o.poisonDps = 0; o.hitT = 0; o.wob = s.rng.next() * SIM_MISC.tau; o.walk = o.wob * o.r; o.swingT = s.rng.next(); o.champ = champ;
-  o.gen++; o.leapt = false; o.castT = s.rng.next() * FIREBALL.every; o.drum = false; o.bossId = '';
+  o.gen++; o.leapt = false; o.castT = s.rng.next() * FIREBALL.every; o.drum = false; o.bossId = ''; o.beats = 0;
   return o;
 }
 
@@ -59,15 +59,15 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
   s.orcs.forEach((o) => { o.drum = false; });
   s.orcs.forEach((d) => {
     if (d.dead || d.kind !== 'drummer') return;
-    d.castT = Math.min(d.castT, ORC_FX.drumEvery) - dt; if (d.castT <= 0) { d.castT += ORC_FX.drumEvery; ev.push({ t: 'drumBeat', x: d.x, y: d.y }); }
+    d.castT = Math.min(d.castT, ORC_FX.drumEvery) - dt; if (d.castT <= 0) { d.castT += ORC_FX.drumEvery; d.beats++; ev.push({ t: 'drumBeat', x: d.x, y: d.y }); }
     s.orcs.forEach((o) => { if (!o.dead && o !== d && (o.x - d.x) ** 2 + (o.y - d.y) ** 2 < ORC_FX.drumReach ** 2) o.drum = true; });
   });
   s.orcs.forEach((o) => {
     if (o.dead || run.fallen) return;
     o.wob += dt * ORC_WOB;
-    if (o.burn > 0) { o.burn -= dt; o.hp -= st.dmg * SOURCES.burnFrac * st.burn * takenMult(s, o) * dt; if (o.hp <= 0) { damage(s, ev, o, 0); return; } }
+    if (o.burn > 0) { o.burn -= dt; o.hp -= st.dmg * SOURCES.burnFrac * st.burn * takenMult(s, o) * dt; if (o.hp <= 0) { damage(s, ev, o, 0, 'burn'); return; } }
     // Venom (TB-193a): poison ticks like a burn
-    if (o.poison > 0) { o.poison -= dt; o.hp -= o.poisonDps * takenMult(s, o) * dt; if (o.hp <= 0) { damage(s, ev, o, 0); return; } }
+    if (o.poison > 0) { o.poison -= dt; o.hp -= o.poisonDps * takenMult(s, o) * dt; if (o.hp <= 0) { damage(s, ev, o, 0, 'venom'); return; } }
     if (o.bleed > 0) o.bleed -= dt;
     if (o.slow > 0) o.slow -= dt;
     if (o.pin > 0) o.pin -= dt;
@@ -102,7 +102,7 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
     if (o.x <= wx + o.r) {
       o.x = wx + o.r; o.swingT += dt * pace;
       if (o.swingT >= BARRICADE.orcSwing) { o.swingT = 0; ev.push({ t: 'orcSwing', kind: o.kind, x: o.x, y: o.y, tx: wx, ty: o.y, r: o.r }); barricadeHit(s, ev, hit * BARRICADE.wallMult, o.y); }
-      if (st.spikes > 0) damage(s, ev, o, st.dmg * st.spikes * dt);
+      if (st.spikes > 0) damage(s, ev, o, st.dmg * st.spikes * dt, 'thorns');
       return;
     }
     if (o.pin > 0 || o.root > 0) return;
@@ -164,7 +164,7 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
       const seen = new Set<Orc>(); const pts: [number, number][] = [];
       let cur = nearestOrc(s, wallX(H / 2) - BAR_W + SOURCES.storm.seekX, H / 2), cap = st.chain, reb = 0;
       while (cur && pts.length < cap) {
-        const c = cur; seen.add(c); pts.push([c.x, c.y]); damage(s, ev, c, st.dmg * SOURCES.storm.mult * st.kin * st.stormDmg);
+        const c = cur; seen.add(c); pts.push([c.x, c.y]); damage(s, ev, c, st.dmg * SOURCES.storm.mult * st.kin * st.stormDmg, 'storm');
         // Stormcaller 6: a killing link strikes again from the corpse
         if (c.dead && reb < st.rebound) { reb++; cap++; }
         cur = nearestOrc(s, c.x, c.y, (o) => !seen.has(o) && dist(o.x, o.y, c.x, c.y) < st.chainJump);
@@ -190,7 +190,7 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
     if (run.hawkT >= SOURCES.hawk.cd) {
       run.hawkT = 0; let best: Orc | null = null, bn = -1;
       s.orcs.forEach((o) => { if (o.dead) return; let n = 0; s.orcs.forEach((p) => { if (!p.dead && dist(p.x, p.y, o.x, o.y) < SOURCES.hawk.radius) n++; }); if (n > bn) { bn = n; best = o; } });
-      if (best) { const b = best as Orc; s.orcs.forEach((p) => { if (!p.dead && dist(p.x, p.y, b.x, b.y) < SOURCES.hawk.radius) damage(s, ev, p, unitHit(s, U, st.dmg * SOURCES.hawk.mult * st.kin * pet * U.dmg)); }); ev.push({ t: 'hawkDive', x: b.x, y: b.y }); hk.x = b.x; hk.y = b.y - SOURCES.hawk.diveLift; }
+      if (best) { const b = best as Orc; s.orcs.forEach((p) => { if (!p.dead && dist(p.x, p.y, b.x, b.y) < SOURCES.hawk.radius) damage(s, ev, p, unitHit(s, U, st.dmg * SOURCES.hawk.mult * st.kin * pet * U.dmg), 'hawk'); }); ev.push({ t: 'hawkDive', x: b.x, y: b.y }); hk.x = b.x; hk.y = b.y - SOURCES.hawk.diveLift; }
     }
   }
 
@@ -198,7 +198,7 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
     const U = st.units.treant; run.treantT += dt * haste * U.rate;
     if (run.treantT >= SOURCES.treant.cd) {
       run.treantT = 0; let any = false;
-      s.orcs.forEach((o) => { if (!o.dead && o.x < wallX(o.y) - BAR_W + SOURCES.treant.range) { damage(s, ev, o, unitHit(s, U, st.dmg * SOURCES.treant.mult * st.kin * pet * U.dmg)); if (st.treantRoot) rootOrc(o, SET_FX.rootSecs); any = true; } });
+      s.orcs.forEach((o) => { if (!o.dead && o.x < wallX(o.y) - BAR_W + SOURCES.treant.range) { damage(s, ev, o, unitHit(s, U, st.dmg * SOURCES.treant.mult * st.kin * pet * U.dmg), 'treant'); if (st.treantRoot) rootOrc(o, SET_FX.rootSecs); any = true; } });
       if (any) ev.push({ t: 'treantStamp', x: wallX(H / 2 + 30) + 36, y: H / 2 + 30 });
     }
   }
@@ -234,7 +234,7 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
       a.vx = dx / (d || 1) * ARROWS.bounce.speed; a.vy = dy / (d || 1) * ARROWS.bounce.speed;
       if (d > tg.r + 4 + m) { a.x += dx / d * m; a.y += dy / d * m; return; }
       a.hit.add(tg); ev.push({ t: 'hit', x: tg.x, y: tg.y, crit: false, src: 'bounce' }); ev.push({ t: 'bounceHit', x: tg.x, y: tg.y });
-      damage(s, ev, tg, a.dmg);
+      damage(s, ev, tg, a.dmg, 'bounce');
       if (a.pierce > 0) bounce(s, tg.x, tg.y, a.dmg * ARROWS.bounce.falloff, a.pierce - 1, a.hit);
       s.shots.release(a);
       return;
@@ -255,7 +255,7 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
         // Siegebreaker 4: a bolt's first target takes more and is knocked back from the wall
         if (a.kind === 'bolt' && st.boltShove && a.hit.size === 1) { d *= 1 + SET_FX.boltFirst; o.x += SET_FX.boltShove; }
         ev.push({ t: 'hit', x: o.x, y: o.y, crit, src: a.kind });
-        damage(s, ev, o, d);
+        damage(s, ev, o, d, a.kind === 'knife' ? 'knife' : a.kind === 'bolt' ? 'bolt' : 'arrow');
         if (st.fire && a.fx & FX.FIRE) o.burn = st.burnSecs;
         // Pinning Bolts: every orc a bolt passes through is held still
         if (a.kind === 'bolt' && st.boltRoot > 0) rootOrc(o, st.boltRoot);
@@ -284,7 +284,7 @@ function wolfStep(s: SimState, ev: EventBus, wf: Wolf, dt: number, haste: number
   const U = s.stats.units.wolf;
   if (d > 2) { const m = Math.min(d, SOURCES.wolf.speed * U.spd * dt); wf.x += dx / d * m; wf.y += dy / d * m; wf.walk += m; }
   wf.biteT += dt * haste * U.rate;
-  if (tg && d < SOURCES.wolf.reach && wf.biteT > SOURCES.wolf.biteCd) { wf.biteT = 0; damage(s, ev, tg, unitHit(s, U, bite)); ev.push({ t: 'bite', x: tg.x, y: tg.y }); }
+  if (tg && d < SOURCES.wolf.reach && wf.biteT > SOURCES.wolf.biteCd) { wf.biteT = 0; damage(s, ev, tg, unitHit(s, U, bite), 'wolf'); ev.push({ t: 'bite', x: tg.x, y: tg.y }); }
 }
 
 /** Cinderground and Moonwells (TB-099): tick down, burn or slow the orcs inside; Moonwells mend the wall. */

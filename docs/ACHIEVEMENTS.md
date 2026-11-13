@@ -1,6 +1,6 @@
 # Achievements
 
-Status: **DRAFT** (TB-248, 13 Nov 2026). The director decides the list; TB-249 builds the system from it and TB-250 makes the cosmetics.
+Status: **Current** (list approved by the director 13 Nov 2026, TB-248). TB-249 built the system (`src/data/achievements.ts`, `src/sim/achievements.ts`, `src/ui/achievements.ts`); TB-250 makes the cosmetics.
 
 100 achievements in five groups: Progress (28), Collection (34), Challenge (18), Fun (12), Secret (8).
 
@@ -11,23 +11,31 @@ Status: **DRAFT** (TB-248, 13 Nov 2026). The director decides the list; TB-249 b
 - **Cosmetic only.** A reward changes how something looks, never a number (no stats, no starlight, no Heartwood, no drop odds), so balance never has to know achievements exist.
 - **Event-driven.** Each check runs in `src/sim` when the event in its row fires: pure, no DOM, no clock. "Run" counters reset with the run; "lifetime" counters live in the meta save.
 - **Secret** entries show as a sealed plate (no name, no rule) until earned.
-- Thresholds below go into `src/data/achievements.ts`, not systems code.
+- Thresholds below go into `src/data/achievements.ts` (`ACH_N`), not systems code.
+- **Reach-wave challenges** ("reach wave N without …") count only in a run that started below wave N (`run.ach.from`), so a checkpoint start past N can't skip the challenge.
+- **Old saves.** On load (and after an import) a sweep grants every state-only row the save already meets: lifetime kills, best wave, replants, tiers, nodes, camp, sets, mythics. Event-only rows (challenges, fun, most secrets) start from zero.
+- **Unlock toast.** One line per achievement; more than `ACH_N.toastBatch` at once (an old save's first sweep) share one "N achievements earned" line.
+- **Panel.** The Achievements tab (between runs) lists the five groups, earned rows lit, with a Wear button on each earned title and No title to take it off.
 
 ### Events
 
-Existing `SimEvent`s cover most rows. TB-249 adds five, marked **new** in the tables:
+Existing `SimEvent`s cover most rows. TB-249 adds these, marked **new** in the tables. The UI events carry nothing: the checks read worn gear, counts and path from state.
 
 | New event | Fires when | Carries |
 |---|---|---|
-| `equip` | gear is worn or taken off | worn set counts, worn mythic ids |
-| `salvage` | an item is salvaged (by hand or by the loot filter) | rarity |
+| `equip` | gear is worn or taken off | — |
+| `salvage` | an item is salvaged by hand | — |
 | `reroll` | an affix is rerolled | — |
-| `pathChosen` | a path is picked on the Replant tab | path id |
-| `kill` gains `by` | an orc dies | the source: `lob`, `arrow`, `knife`, `bolt`, `storm`, `burn`, `wolf`, `hawk`, `treant`, `vanguard`, `thorns`, `venom` |
+| `pathChosen` | a path is picked on the Replant tab | path id or null |
+| `achievement` | an achievement is earned (pushed by `GameController`, read by toast and panel) | id |
+| `kill` gains `by`, `champ`, `beats` | an orc dies | `by`: `lob`, `star`, `arrow`, `bounce`, `knife`, `bolt`, `storm`, `burn`, `venom`, `wolf`, `hawk`, `treant`, `vanguard`, `thorns`, `other`; `champ`: it was a champion; `beats`: drum beats a drummer struck |
+| `bossEnd` gains `secs` | a boss wave ends | seconds the boss wave ran |
+
+One-strike rows (`one_lob_10`, `storm_5`, `treant_10`) count `kill`s by that source and close the count on the strike's own event (`impact`, `storm`, `treantStamp`).
 
 ### Rewards
 
-Two kinds. **Titles** are text only: the player picks one in the Achievements panel and it shows on the HUD's carved tag. **Cosmetics** are art (TB-250, each approved by the director before it ships):
+Two kinds. **Titles** are text only: the player picks one in the Achievements panel and it shows on a carved tag under the wall bar in the run HUD. **Cosmetics** are art (TB-250, each approved by the director before it ships):
 
 | Reward id | What it is | Where |
 |---|---|---|
@@ -63,7 +71,7 @@ That is 36 art pieces; every other row gives a title.
 | 12 | `wave_100` | The Hundredth Wave | Reach wave 100 | `wave` | `bow_thornwood` |
 | 13 | `wave_150` | Beyond Counting | Reach wave 150 | `wave` | Title: Unbroken |
 | 14 | `wave_200` | The Wall That Stood | Reach wave 200 | `wave` | `cloak_gold` |
-| 15 | `first_fall` | It Isn't a Loss | The barricade falls for the first time | `barricadeFell` | Title: Seedling |
+| 15 | `first_fall` | It Isn't a Loss | The barricade falls for the first time | `barricadeFell` (a fall, not a hand replant) | Title: Seedling |
 | 16 | `replant_1` | Replanted | Replant the grove | `replant` | `camp_sapling` |
 | 17 | `replant_10` | Ten Seasons | Replant 10 times | `replant` | Title: Gardener |
 | 18 | `replant_50` | Old Growth | Replant 50 times | `replant` | Title: Old Growth |
@@ -165,7 +173,7 @@ Shown as sealed plates until earned. The rule column is what the panel shows onc
 |---|---|---|---|---|---|
 | 93 | `secret_last_plank` | One Plank Left | The wall drops below 1% health and is standing when the next wave comes | `barricadeHit`, `wave` | `camp_standing_stone` |
 | 94 | `secret_hands_off` | Let Them Handle It | Clear a whole wave from 20 on without loosing an arrow (companions and vanguard only) | `wave`, `loose` | Title: Delegator |
-| 95 | `secret_twelve` | Leave It Standing | Replant by hand at exactly wave 12, the first wave it is allowed | `replant` (not forced) | Title: Punctual |
+| 95 | `secret_twelve` | Leave It Standing | Replant by hand at exactly wave 12, the first wave it is allowed | `barricadeFell` (`chosen`, wave 12) | Title: Punctual |
 | 96 | `secret_let_march` | Let Them March | Summon a boss wave and let its clock run out with every champion alive | `bossEnd` (not cleared) | Title: Spectator |
 | 97 | `secret_hoarder` | Five Waiting | Leave five boss waves waiting, unsummoned | `bossReady` | Title: Patient |
 | 98 | `secret_full_satchel` | No Room | Fill the satchel to its last slot | `loot` (kept) | Title: Packrat |

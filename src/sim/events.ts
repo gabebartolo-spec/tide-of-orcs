@@ -1,6 +1,10 @@
 /** Sim → render/audio events. Sim pushes; observers drain once per frame. */
+
+/** What struck an orc's killing blow (TB-249): achievements count kills by source. Chained deaths (shatter, venom burst) are `other`. */
+export type KillSrc = 'lob' | 'star' | 'arrow' | 'bounce' | 'knife' | 'bolt' | 'storm' | 'burn' | 'venom' | 'wolf' | 'hawk' | 'treant' | 'vanguard' | 'thorns' | 'other';
 export type SimEvent =
-  | { t: 'kill'; x: number; y: number; loot: number; kind: string }
+  /** `champ`: it marched in a boss wave; `beats`: a war drummer's drum beats before it fell (0 for other kinds). */
+  | { t: 'kill'; x: number; y: number; loot: number; kind: string; by: KillSrc; champ: boolean; beats: number }
   /** An item dropped (TB-094); `kept` is false when the loot filter salvaged it on the spot. */
   | { t: 'loot'; x: number; y: number; uid: string; rarity: string; kept: boolean }
   /** `src` says what struck (lob, arrow, knife, bolt) so render can pick the impact. */
@@ -26,7 +30,8 @@ export type SimEvent =
   | { t: 'wave'; wave: number }
   | { t: 'bossReady' }
   | { t: 'bossStart' }
-  | { t: 'bossEnd'; cleared: boolean; loot: number; hw: number }
+  /** `secs`: seconds the boss wave ran. */
+  | { t: 'bossEnd'; cleared: boolean; loot: number; hw: number; secs: number }
   | { t: 'tierUnlocked'; tier: number }
   | { t: 'storm'; pts: [number, number][] }
   /** Arrow enchantments (TB-089). `fireStrike`: a lob landed with Fire Arrows. `bounceHit`: a Rebound bolt struck. `shock`: lightning from (x, y) to each of pts. `stun`, `chill`: a strike stunned or chilled orcs. `shatter`: a chilled orc died and burst. `starfall`: the rain began. */
@@ -57,6 +62,13 @@ export type SimEvent =
   | { t: 'matDrop'; mat: string; x: number; y: number }
   | { t: 'buildingUpgraded'; id: string; level: number }
   | { t: 'replant'; heartwood: number; forced: boolean }
+  /** Satchel and Replant intents (TB-249), for achievements: gear worn or taken off, an item salvaged by hand, an affix rerolled, a path picked. */
+  | { t: 'equip' }
+  | { t: 'salvage' }
+  | { t: 'reroll' }
+  | { t: 'pathChosen'; path: string | null }
+  /** An achievement earned (TB-249): GameController pushes it after the sim's checks; the UI toasts it. */
+  | { t: 'achievement'; id: string }
   /** Wipe or import swapped the whole game (TB-216b): field and audio drop the old game's transient state. */
   | { t: 'gameReset' };
 

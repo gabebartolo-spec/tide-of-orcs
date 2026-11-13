@@ -117,7 +117,7 @@ describe('paths: mythics (TB-193a)', () => {
   });
   it("Magpie's Talon: arrow kills steal more starlight; other kills do not", () => {
     const s = on('magpie', { mythic: 'magpies-talon' }), ev = new EventBus();
-    const a = orcAt(s, 600, 300); s.run.starlight = 0; a.hp = 1; damage(s, ev, a, 10, true);
+    const a = orcAt(s, 600, 300); s.run.starlight = 0; a.hp = 1; damage(s, ev, a, 10, 'lob');
     expect(s.run.starlight).toBeCloseTo(a.loot * s.stats.starMult * (1 + P.talonStar));
     const b = orcAt(s, 600, 300); s.run.starlight = 0; b.hp = 1; damage(s, ev, b, 10);
     expect(s.run.starlight).toBeCloseTo(b.loot * s.stats.starMult);
@@ -127,7 +127,7 @@ describe('paths: mythics (TB-193a)', () => {
     const fx = P as { talonDrop: number }, was = fx.talonDrop; fx.talonDrop = 1;
     const drops = (talon: boolean) => {
       const s = on('magpie', talon ? { mythic: 'magpies-talon' } : {}), ev = new EventBus(), o = orcAt(s, 600, 300);
-      s.stats.satchelCap = 999; o.kind = 'boss'; o.hp = 1; damage(s, ev, o, 10, true);
+      s.stats.satchelCap = 999; o.kind = 'boss'; o.hp = 1; damage(s, ev, o, 10, 'lob');
       return ev.drain().filter((e) => e.t === 'loot').length;
     };
     try { expect(drops(true)).toBe(drops(false) + 1); } finally { fx.talonDrop = was; }
