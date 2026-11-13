@@ -139,6 +139,10 @@ export const WALL_ART = [
   { key: 'wall3', x: -73.3, y: 100.3, w: 437.3, h: 636.1, breaches: [609, 535, 475, 396, 316, 223], chunks: ['wallHeart', 'wallHeartDark'] },
 ] as const;
 
+/** An actor's drawn box for the wall-front redraw (TB-264), in drawn radii from its foot: half width, height above, depth below.
+ *  Generous on purpose: an actor caught by it is only drawn again, and the result is cut to the wall's own pixels. */
+export const WALL_FRONT = { halfW: 3, up: 5, down: 1.5 } as const;
+
 /** The wall's visible damage (TB-238, TB-209). stages: the health fractions below which the next rendered stage shows. Debris on a stage change: chunks per breach, speed, life, size, spin, gravity. Dust: puffs per breach, per blow, speed, life, radius, growth/s, alpha.
  *  Flames burn in the breaches from flameStage on: tongues, height, half width, spacing, flicker rate, embers/s. maxBits caps flying bits. */
 export const WALL_DAMAGE = {
@@ -376,6 +380,8 @@ export const QUALITY = {
  *  and stop when the actor stops. Measured from the packed frames (lowest-foot travel per cycle, slide audit 5 Nov);
  *  Jogging orcs (TB-255): old foot-sweep value x (jog root travel 1.69 m / that walk's sweep: Orc Walk 0.87, Sword And Shield 0.795); a foot's sweep is only the stance and under-reads the stride.
  *  Vanguard (TB-256): old sweep x 1.909, Walking XBot's root travel per cycle over its foot sweep (1.342 / 0.703 m); a walk covers two stances per cycle.
+ *  Wolf (TB-265): the mean speed of every paw vertex in ground contact over the run clip (0.00229 gltf units/frame x 19.2 frames x 1142
+ *  field units per gltf unit) = 50.3 units per cycle; 2.14 planted only the hind paws, so the gallop cycled 4.1/s at speed 105 (now 2.1/s).
  *  Roster bosses without a measured stride use `boss`. */
 /** Ground shadow under an orc, in radii: centre offset dx (toward its back) and half-width/height. The wolf rider anchors at the wolf's chest (TB-210). */
 export const ORC_SHADOW: Readonly<Partial<Record<string, { dx: number; rx: number; ry: number }>>> = { wolfrider: { dx: 2.4, rx: 1.6, ry: 0.4 } };
@@ -384,7 +390,7 @@ export const ORC_SHADOW_BASE = { dx: 0, rx: 0.9, ry: 0.35 } as const;
 export const GAIT = {
   strideR: {
     'orc.grunt': 3.25, 'orc.runner': 2.53, 'orc.brute': 2.41, 'orc.berserker': 3.0, 'orc.shaman': 2.79, 'orc.drummer': 2.78,
-    'orc.wolfrider': 2.54, 'orc.boss': 4.05, 'orc.orcBoss': 1.63, 'orc.ogreCreature': 1.68, 'orc.ogre': 1.89, 'van.spear': 4.01, 'van.blade': 3.4, wolf: 2.14,
+    'orc.wolfrider': 2.54, 'orc.boss': 4.05, 'orc.orcBoss': 1.63, 'orc.ogreCreature': 1.68, 'orc.ogre': 1.89, 'van.spear': 4.01, 'van.blade': 3.4, wolf: 4.19,
   } as Readonly<Record<string, number>>,
   boss: 2.08,
 } as const;

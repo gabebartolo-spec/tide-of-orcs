@@ -48,7 +48,7 @@ if WG!=1:
             nt.links.new(src,hs.inputs["Color"]); nt.links.new(hs.outputs["Color"],sk); print("WOLFGAIN",mt.name,WG)
 arm=[o for o in bpy.data.objects if o.type=='ARMATURE'][0]
 os.makedirs(OUTDIR,exist_ok=True)
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))); import lit_render; lit_render.setup(sc, cam)  # TB-253 (env LIT; mirrored here AND at pack, so no LITFLIP)
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))); import lit_render; lit_render.setup(sc, cam)  # TB-253 (env LIT). LITFLIP=1 with MIRROR=0 (the game sheets: pack mirrors once); none when mirrored here too
 n=0
 FL=[int(x) for x in os.environ["FRAMES"].split(",")] if os.environ.get("FRAMES") else range(sc.frame_start, sc.frame_end)
 MIR=os.environ.get("MIRROR","1")=="1"
