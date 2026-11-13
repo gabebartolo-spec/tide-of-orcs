@@ -893,6 +893,7 @@ if os.environ.get("LIT"):  # TB-253: the wall's sun (screen upper-left, a little
     sun.rotation_euler = _sd.to_track_quat("Z", "Y").to_euler(); sun.data.energy = float(os.environ.get("SUNE", "3.2")); sun.data.angle = 0.14; sun.data.color = (1, 0.95, 0.85)
     rim.data.energy = float(os.environ.get("RIME", "0.6"))
     w.node_tree.nodes["Background"].inputs[1].default_value = float(os.environ.get("AMB", "0.45"))
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); import lit_render; lit_render.eevee_outputs()  # EEVEE-only textures (ogre228)
     sc.render.engine = "CYCLES"; sc.cycles.samples = int(os.environ.get("SAMPLES", "48")); sc.cycles.use_denoising = True; sc.cycles.device = "GPU"
     bpy.ops.mesh.primitive_plane_add(size=40, location=(0, 0, 0)); _gp = bpy.context.object; _gp.is_shadow_catcher = True; _gp.name = "litground"
     if os.environ.get("NOGROUND"): bpy.data.objects.remove(_gp)

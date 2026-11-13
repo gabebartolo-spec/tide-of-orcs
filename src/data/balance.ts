@@ -65,7 +65,7 @@ export const SOURCES = {
   treant: { cd: 3, mult: 3, range: 160 },
   ballista: { cd: 4, base: 40, speed: 760 },
   knives: { cd: 1.4, base: 5, speed: 640 },
-  wolf: { base: 4, biteCd: 0.5, speed: 105, reach: 22 },  // TB-257 (director 12 Nov): 105 (was 210) = 4.1 gallop strides/s; 210 cycled the legs 8.2/s
+  wolf: { base: 4, biteCd: 0.5, speed: 105, reach: 22 },  // TB-257 (director 12 Nov): 105 (was 210); the gallop cadence follows GAIT.strideR.wolf (2.1 strides/s at 105, TB-265)
   archerDmgFrac: 0.7, archerOffsetY: 90,
 } as const;
 

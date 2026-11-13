@@ -22,7 +22,7 @@ import { Ambience } from './ambience';
 import { Sky } from './sky';
 import { depthScale, depthY, setMeadowTop, worldY } from './depth';
 import { Interp } from './interp';
-import { FIELD_VIEW, GAIT, PHONE_QUERY, QUALITY, WALL_ART, LOOT_VFX, ORC_SHADOW, ORC_SHADOW_BASE, ORC_SPRITE, SKY, TREELINE, VFX, DEPTH, FLIPBOOK_SIZE, dusk } from '../data/presentation';
+import { FIELD_VIEW, GAIT, PHONE_QUERY, QUALITY, WALL_ART, WALL_FRONT, LOOT_VFX, ORC_SHADOW, ORC_SHADOW_BASE, ORC_SPRITE, SKY, TREELINE, VFX, DEPTH, FLIPBOOK_SIZE, dusk } from '../data/presentation';
 import { Flipbooks } from './flipbook';
 import { SLOTS } from '../data/loot';
 import { BOSS_ROSTER } from '../data/bosses';
@@ -347,6 +347,7 @@ export class FieldRenderer {
     const hz = this.sky.haze(g, vis.x0, this.skyLine, vis.x1);
     // the barricade is the nearest prop and takes no distance haze: its panels inside the haze band are drawn again over it
     this.fencePanels(this.wallTop, hz);  // from the art's own top, which stands above wallTop
+    this.wallFront(s, orcs, vans, hz);
 
     // effects never rise into the sky band over the HUD: the world effects are clipped to the field below the crown line
     g.save(); g.beginPath(); g.rect(vis.x0 - 50, this.skyBand, vis.x1 - vis.x0 + 100, H - this.skyBand + 50); g.clip();
@@ -447,6 +448,36 @@ export class FieldRenderer {
       g.fillStyle = P.timberBand; g.fillRect(wx + 2, y - 2, BAR_W - 4, 3);
     }
   }
+
+  /** TB-264: the wall's top is drawn again over the haze (it takes none, TB-239), which hid every actor standing in front of it there.
+   *  Actors near it are drawn again offscreen, hazed exactly as on the field, cut to the wall's own pixels and laid back over it. */
+  private wallFront(s: SimState, orcs: Orc[], vans: Vanguard[], hz: number): void {
+    const L = WALL_ART[s.stats.wallTier] ?? WALL_ART[0], y1 = Math.min(hz, L.y + L.h), F = WALL_FRONT;
+    if (y1 <= L.y || !decorImg(`${L.key}_0`)) return;
+    const near = (x: number, wy: number, r: number): boolean => { const y = depthY(wy), k = r * depthScale(wy); return x - k * F.halfW < L.x + L.w && x + k * F.halfW > L.x && y - k * F.up < y1 && y + k * F.down > L.y; };
+    const os: Orc[] = []; for (let i = this.orcsIn; i < orcs.length; i++) { const o = orcs[i]!; if (near(o.x, o.y, o.r)) os.push(o); }
+    const vs = vans.filter((v) => near(v.x, v.y, ACTOR_R));
+    const ws = s.stats.wolf ? [s.wolf, ...s.pack.slice(0, s.stats.extraWolves)].filter((w) => near(w.x, w.y, ACTOR_R)) : [];
+    if (!os.length && !vs.length && !ws.length) return;
+    const b = this.base, dx0 = Math.floor(b.sx * L.x + b.ex), dy0 = Math.floor(b.sy * L.y + b.ey);
+    const w = Math.ceil(b.sx * (L.x + L.w) + b.ex) - dx0, h = Math.ceil(b.sy * y1 + b.ey) - dy0;
+    if (w < 1 || h < 1) return;
+    const c = (this.frontCanvas ??= document.createElement('canvas')); if (c.width < w || c.height < h) { c.width = Math.max(c.width, w); c.height = Math.max(c.height, h); }
+    const og = c.getContext('2d')!, g = this.g, base = this.base;
+    og.setTransform(1, 0, 0, 1, 0, 0); og.clearRect(0, 0, c.width, c.height);
+    this.g = og; this.base = { sx: b.sx, sy: b.sy, ex: b.ex - dx0, ey: b.ey - dy0 };
+    try {
+      this.at(0, 0, false);
+      for (const v of vs) this.van(s, v);
+      for (const wf of ws) this.wolf(s, wf);
+      for (const o of os) { og.globalAlpha = Math.min(1, (o.y - this.emergeAt) / SKY.emerge); this.orc(s, o); }
+      og.globalAlpha = 1; this.at(0, 0, false);
+      og.globalCompositeOperation = 'source-atop'; this.sky.haze(og, this.vis.x0, this.skyLine, this.vis.x1);   // the same wash, on the actors only
+      og.globalCompositeOperation = 'destination-in'; this.fencePanels(this.wallTop, hz);                       // kept only where the wall was redrawn
+    } finally { og.globalCompositeOperation = 'source-over'; this.g = g; this.base = base; }
+    g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(c, 0, 0, w, h, dx0, dy0, w, h); g.restore();
+  }
+  private frontCanvas: HTMLCanvasElement | null = null;
 
   /** The forest edge along the top of the view (TB-220): the tree rows and the bush skirt first, then every orc still walking inside the forest, so each one is drawn whole and in front (never cut to an ear, an axe or a leg by a crown); the wall follows. */
   private forest(orcs: Orc[]): void {
@@ -580,11 +611,6 @@ export class FieldRenderer {
     const g = this.g, wind = this.windUp(o), d = this.interp.off(o), x = o.x + d.dx + wind.dx, wy = o.y + d.dy, y = depthY(wy);
     const or = o.r * depthScale(wy);  // fake depth (TB-232): drawn row and size come from the world row; the sim keeps o.r
     const osh = ORC_SHADOW[o.kind] ?? ORC_SHADOW_BASE, shx = x + or * osh.dx;  // the wolf rider's shadow sits back under the wolf (TB-210)
-    const litSh = this.sprites.lit(`orc.${ORC_SPRITE[o.kind] ?? o.kind}`);  // TB-253: re-lit sprites bring their own shadow
-    if (litSh) { /* shadow baked into the frames */ } else if (quality.q.cheap) { const sh = this.shadowBlit(); g.drawImage(sh, shx - or * osh.rx, y + or * (0.9 - osh.ry), or * osh.rx * 2, or * osh.ry * 2); }   // phone tier: one prebaked blit
-    else { g.fillStyle = P.shadow; g.beginPath(); g.ellipse(shx, y + or * 0.9, or * osh.rx, or * osh.ry, 0, 0, 6.28); g.fill(); }
-    // Burning or chilled: the orc's own body takes the colour and a soft rim of it, so shading still reads (TB-089).
-    const tint = o.burn > 0 ? P.fireTint : o.chill > 0 ? P.frostTint : '', glow = o.burn > 0 ? P.fire : o.chill > 0 ? P.frost : '';
     let k = o.bossId ? undefined : this.orcKeys.get(o.kind);
     if (!k) {
       let key = `orc.${ORC_SPRITE[o.kind] ?? o.kind}`;
@@ -595,6 +621,11 @@ export class FieldRenderer {
       k = { key, atk: key + '.attack' };
       if (!o.bossId) this.orcKeys.set(o.kind, k);
     }
+    // TB-253: re-lit sprites bring their own shadow; asked of the drawn key, so a roster boss follows its own art, not the Warboss's
+    if (this.sprites.lit(k.key)) { /* shadow baked into the frames */ } else if (quality.q.cheap) { const sh = this.shadowBlit(); g.drawImage(sh, shx - or * osh.rx, y + or * (0.9 - osh.ry), or * osh.rx * 2, or * osh.ry * 2); }   // phone tier: one prebaked blit
+    else { g.fillStyle = P.shadow; g.beginPath(); g.ellipse(shx, y + or * 0.9, or * osh.rx, or * osh.ry, 0, 0, 6.28); g.fill(); }
+    // Burning or chilled: the orc's own body takes the colour and a soft rim of it, so shading still reads (TB-089).
+    const tint = o.burn > 0 ? P.fireTint : o.chill > 0 ? P.frostTint : '', glow = o.burn > 0 ? P.fire : o.chill > 0 ? P.frost : '';
     const ost = orcState(s, o), ot = orcClipT(o, ost, this.sprites.duration(k.atk), k.key === 'orc.ogre' ? VFX.strike.ogre : k.key === 'orc.wolfrider' ? VFX.strike.wolfrider : VFX.strike.orc, this.sprites.duration(k.key), (GAIT.strideR[k.key] ?? (o.bossId ? GAIT.boss : 0)) * (or / o.r));  // stride by drawn size: back rows draw smaller (TB-232)
     this.sprites.drawActor(g, k.key, ost === 'idle' ? 'attack' : ost, ost === 'idle' ? 0 : ot, x, y + or * 0.9, or, o.hitT > 0, tint, glow, VFX.arrows.rimBlur);  // a halted rider stands on attack frame 0, never a frozen gallop (TB-237)
     this.orcBars(o, x, y, or);
@@ -642,11 +673,14 @@ export class FieldRenderer {
 
   /** Companion wolf (TB-160): runs while it closes on its target, the bite clip scrubbed by the bite cooldown; faces its target. */
   private wolf(s: SimState, w: Wolf): void {
-    const g = this.g, i = this.interp.off(w); g.save(); const wy = w.y + i.dy, wk = depthScale(wy); g.translate(w.x + i.dx, depthY(wy)); g.scale(wk, wk); g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 8, 12, 4, 0, 0, 6.28); g.fill();
-    if (w.tx < w.x - 2) g.scale(-1, 1);
+    const g = this.g, i = this.interp.off(w); g.save(); const wy = w.y + i.dy, wk = depthScale(wy); g.translate(w.x + i.dx, depthY(wy)); g.scale(wk, wk);
+    if (!this.sprites.lit('wolf')) { g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 8, 12, 4, 0, 0, 6.28); g.fill(); }  // TB-253: lit frames carry their own
+    // facing left: the left-facing render when the atlas has it (a mirrored lit sheet would throw its baked shadow to the wrong side, TB-253)
+    const left = w.tx < w.x - 2, key = left && this.sprites.has('wolf.l') ? 'wolf.l' : 'wolf';
+    if (left && key === 'wolf') g.scale(-1, 1);
     const d = Math.hypot(w.tx - w.x, w.ty - w.y), near = !!nearestOrc(s, w.x, w.y, (o) => Math.hypot(o.x - w.x, o.y - w.y) < SOURCES.wolf.reach), runs = d > 2 && !s.run.fallen, t = near ? Math.min(1, w.biteT / SOURCES.wolf.biteCd) * this.sprites.duration('wolf.attack') * 0.999 : strideT(w.walk, (GAIT.strideR['wolf'] ?? 0) * ACTOR_R * wk, this.sprites.duration('wolf'));
     // the run clip has no standing frame (frame 0 is airborne): a wolf at rest stands on the bite clip's frame 0, all paws down (TB-237)
-    this.sprites.drawActor(g, 'wolf', near || !runs ? 'attack' : 'walk', near || runs ? t : 0, 0, 8, ACTOR_R); g.restore();
+    this.sprites.drawActor(g, key, near || !runs ? 'attack' : 'walk', near || runs ? t : 0, 0, 8, ACTOR_R); g.restore();
   }
 
   /** Thunderclap sparks, set-bonus marks (bleed, pin, root) and health bar. */

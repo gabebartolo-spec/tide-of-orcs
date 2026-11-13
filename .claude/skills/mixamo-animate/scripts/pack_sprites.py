@@ -48,7 +48,7 @@ ANIMS = {
     "orc.packed.attack": (30, True, "orc.packed", 2.4),  # TB-214 warlord v1: the model's own "punch" clip, frames 1-30
     "orc.orcBoss": (30, True, "orc.orcBoss", 2.4),  # TB-213 v1 (director 9 Nov): the model's own Walk clip, frames 1-29 (render_own.py ORTHO 2.4 CZ 0.6)
     "orc.orcBoss.attack": (30, True, "orc.orcBoss", 2.4),  # TB-213 v1: the model's own Punch clip, frames 1-33
-    "orc.ogre": (30, False, "orc.ogre", 3.4),  # TB-211 (director 9 Nov, side-on): its own take 61-110, right arm 70% to take idle 1; ogre/render_ogre.py VIEW=game YAW=270 ORTHO=4.2 INPLACE=1 SPLICE="61-110~1@0.7"; faces left, no mirror
+    "orc.ogre": (30, False, "orc.ogre", 3.4),  # TB-211 (director 9 Nov, side-on): its own take 61-110, right arm 70% to take idle 1; ogre/render_ogre.py VIEW=game YAW=270 ORTHO=5.6 CZ=1.95 (4.2 before TB-253 lit) INPLACE=1 SPLICE="61-110~1@0.7"; faces left, no mirror
     "orc.ogre.attack": (30, False, "orc.ogre", 3.4),  # TB-211: 29 frames, splice idle 171, blend to 180, take chop 180-190, blend back; strike frame 12
     "orc.ogreCreature": (30, True, "orc.ogreCreature", 2.4),  # TB-228 v1 (director 9 Nov): Orc Walk, frames 0-35 (apply_anim.py ORTHO 3.6)
     "orc.ogreCreature.attack": (30, True, "orc.ogreCreature", 2.4),  # TB-228 v1: Standing Melee Attack Downward AS100, frames 0-67
@@ -58,7 +58,9 @@ ANIMS = {
     "archer.attack": (30, False, "archer", 3.0),  # TB-203 v7: 44 frames, release at frame 33; field.ts plays it on each volley
     "wolf": (25, False, "wolf", 1.6),  # TB-160 companion run, blam's CC BY Sketchfab wolf retextured; ortho 2.4 is a stand-in (the gltf is 1/100 scale)
     "wolf.attack": (25, False, "wolf", 1.6),  # all 33 bite frames; field.ts scrubs it with the bite cooldown
-    "hawk": (30, False, "hawk", 3.0),  # TB-068 companion flight v1 (director 3 Nov): OSU CC BY Sketchfab hawk, its own Wings Flapping clip, frames 0-29 (render_hawk.py VIEW=game YAW=90); anchor = bird centre
+    "wolf.l": (25, False, "wolf", 1.6),  # TB-253: the same run turned to face screen-left (render_wolf.py FACE=left), so the baked shadow keeps its side
+    "wolf.l.attack": (25, False, "wolf", 1.6),  # field.ts draws wolf.l when the target is to the left instead of mirroring
+    "hawk": (30, False, "hawk", 3.0),  # TB-068 companion flight v1 (director 3 Nov): OSU CC BY Sketchfab hawk, its own Wings Flapping clip, frames 0-29 (render_hawk.py VIEW=game YAW=90 ORTHO=1.7: at 1.4 the downstroke wingtip ran off the frame bottom, TB-253); anchor = bird centre
     "orc.wolfrider": (30, True, "orc.wolfrider", 2.6),  # TB-210: blam CC BY Orc_LightCavalry; Quaternius CC0 Gallop copied on (wolfrider_blam/build_gallop.py RARM=3), then smooth_run.py (34 frames); render_blam.py ORTHO 1.8
     "orc.wolfrider.attack": (30, True, "orc.wolfrider", 2.6),  # TB-210: its own 07_attack_A clip (axe), all 41 frames, same ortho 1.8
 }
@@ -97,7 +99,7 @@ for key, (fps, mirror, bk, br) in ANIMS.items():
     fx, fy = (ax - box[0]) / (box[2] - box[0]), (ay - box[1]) / (box[3] - box[1])
     if key == bk:  # body height: the opaque vertical extent of frame 0, in sheet px
         b0 = fr[0].getchannel("A").point(lambda a: 255 if a > bt else 0).getbbox(); body[key] = (b0[3] - b0[1]) * s
-    cuts[key] = dict(imgs=out, fps=fps, ax=round(1 - fx if mirror else fx, 4), ay=round(fy, 4), bk=bk, br=br, lit=lit, touch=box[0] <= 0 or box[2] >= RES or box[1] <= 0)
+    cuts[key] = dict(imgs=out, fps=fps, ax=round(1 - fx if mirror else fx, 4), ay=round(fy, 4), bk=bk, br=br, lit=lit, touch=box[0] <= 0 or box[2] >= RES or box[1] <= 0 or box[3] >= RES)  # TB-253: the bottom too (the hawk wingtip ran off it unflagged)
 
 # shelf-pack every frame, one sheet per group (orcs / elf + vanguard)
 anims, sheets = {}, {}
@@ -124,6 +126,11 @@ for name, sheet in sheets.items():
         if os.path.getsize(os.path.join(dst, name)) <= 2 * 1024 * 1024 or q <= 70: break
         q -= 4
     print("PACK sheet", name, sheet.size, os.path.getsize(os.path.join(dst, name)) // 1024, "KB")
+    # phone tier (TB-218 P6) loads sprites/half/ with every atlas rect halved (sprites.ts halveAtlas): write it with the full sheet,
+    # every time, or it goes stale and phones draw the wrong frames (TB-258: five of six were stale, the boss sheets had none)
+    os.makedirs(os.path.join(dst, "half"), exist_ok=True)
+    sheet.resize((sheet.width // 2, (sheet.height + 1) // 2), Image.LANCZOS).save(os.path.join(dst, "half", name), "WEBP", quality=q, method=6, alpha_quality=100)
+    print("PACK half", name, os.path.getsize(os.path.join(dst, "half", name)) // 1024, "KB")
 json.dump(dict(images=sorted(sheets), anims=anims), open(os.path.join(dst, "atlas.json"), "w"), separators=(",", ":"))
 old = os.path.join(dst, "sheet.webp")
 if os.path.exists(old): os.remove(old); print("PACK removed", old)

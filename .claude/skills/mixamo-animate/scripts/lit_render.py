@@ -13,8 +13,22 @@ def on():
     return bool(E("LIT"))
 
 
+def eevee_outputs():
+    """Blends authored with a separate EEVEE-target and CYCLES-target Material Output (ogre228: textured Principled for EEVEE,
+    flat grey Diffuse for CYCLES) render untextured in Cycles. The approved art is the EEVEE output, so it drives every engine."""
+    for m in bpy.data.materials:
+        if not m.use_nodes or not m.node_tree: continue
+        outs = [n for n in m.node_tree.nodes if n.type == "OUTPUT_MATERIAL"]
+        ev = [n for n in outs if n.target == "EEVEE" and n.inputs["Surface"].links]
+        if not ev: continue
+        for n in outs:
+            if n.target == "CYCLES": m.node_tree.nodes.remove(n)
+        ev[0].target = "ALL"; ev[0].is_active_output = True
+
+
 def setup(sc, cam):
     if not on(): return
+    eevee_outputs()
     bpy.context.view_layer.update(); cm = cam.matrix_world.to_3x3()
     rt, up, bk = cm @ Vector((1, 0, 0)), cm @ Vector((0, 1, 0)), cm @ Vector((0, 0, 1))
     sl = [float(x) for x in E("SUN", "-0.6,1.6,0.5").split(",")]
@@ -51,8 +65,20 @@ def mask(sc, path):
 
     def ld(p):
         im = bpy.data.images.load(p); return im, np.array(im.pixels[:], dtype=np.float32).reshape(im.size[1], im.size[0], 4)
-    im, a = ld(path); mi, m = ld(path + ".m.png"); wa = m[..., 3]; sh = wa <= 245 / 255; f = (1 - wa)[..., None]
+    im, a = ld(path); mi, m = ld(path + ".m.png"); wa = m[..., 3]
+    wa = np.where((wa < 0.16) & (m[..., :3].max(-1) < 0.03), 0, wa)  # near-black ghost pixels of the 4-sample pass (as apply_anim._litmask): without this
+    sh = wa <= 245 / 255; f = (1 - wa)[..., None]                    # the frame corners kept alpha 5-12, so the crop took the whole 512 px frame
     SHA = float(E("SHA", "0.55")); SHC = np.array([22, 30, 20], dtype=np.float32) / 255
     sa = np.where(a[..., 3] < 0.12, 0, a[..., 3] * SHA * (1 - wa))
     a[..., 3] = np.where(sh, np.maximum(wa, sa), a[..., 3]); a[..., :3] = np.where(sh[..., None], a[..., :3] * (1 - f) + SHC * f, a[..., :3])
+    a[..., 3] = np.where(sh & (wa < 0.5), a[..., 3] * edge_ramp(a.shape[0], a.shape[1]), a[..., 3])  # a shadow running off the frame fades, never cuts
     im.pixels[:] = a.ravel(); im.filepath_raw = path; im.file_format = "PNG"; im.save(); bpy.data.images.remove(im); bpy.data.images.remove(mi); os.remove(path + ".m.png")
+
+
+def edge_ramp(h, w, px=16):
+    """0 at the frame border rising to 1 at px in: cast-shadow alpha is multiplied by it (wolf rider attack f8, TB-253: the tail's
+    shadow ran off the 512 frame and ended in a straight line)."""
+    import numpy as np
+    y = np.minimum(np.arange(h), np.arange(h)[::-1])[:, None]; x = np.minimum(np.arange(w), np.arange(w)[::-1])[None, :]
+    return np.clip(np.minimum(y, x) / px, 0, 1)
+
