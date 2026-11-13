@@ -1,7 +1,7 @@
 # Render every approved clip from the field camera (GAMECAM 20, CAMROT 0) into tide-assets\sprites\frames\<key>_N.png,
 # then pack_sprites.py builds public/sprites/sheet_orcs.webp + sheet_elf.webp + atlas.json. Each entry repeats its approved recipe's env exactly;
 # only the camera, ORTHO (one per actor so walk and attack share a pixel scale), RES and frames differ.
-param([string[]]$Only = @(), [string]$Frames = "", [switch]$Missing)  # -Frames: render into another frames dir; -Missing: only frames with no png yet (TB-194)
+param([string[]]$Only = @(), [string]$Frames = "", [switch]$Missing, [switch]$NoPack)  # -Frames: render into another frames dir; -Missing: only frames with no png yet (TB-194); -NoPack: skip pack_sprites (parallel runs, TB-250)
 $s = $PSScriptRoot; $bl = "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe"; $a = "C:\Users\DANTE\Documents\tide-assets"; $mx = "$a\mixamo"
 $o = if ($Frames) { $Frames } else { "$a\sprites\frames" }; New-Item -ItemType Directory -Force $o | Out-Null
 $vars = "WYAW", "RMATCH", "SWING", "MIRR", "H1", "MPH", "HINGE", "FREEZE", "WOFFS", "OFFS", "REST", "ARMSET", "ELBOWSET", "ARMTWIST", "DIRECT", "INPLACE", "ALIGN", "GRIP2", "CLIP", "CLIPDBG", "ELBOW", "HPROBE", "LHPROBE", "AMP", "DAMP", "ABD", "HIDE", "FOCUS",
@@ -85,6 +85,14 @@ $jobs = @(
       NOCKFING = "1"; STRDRAW = "1"; LIMBBEND = "0.08"; STRNEAR = "0.16,0.40"; STRTURN = "0.03"; RETIME = "1.05"; STABLESH = "1"; HANDSMOOTH = "7,18,12"; DRAWRAMP = "5"; RELEASE = "5"; TAIL = "10"
       IDLEPOSE = "$a\archer\v3\idle0.json"; BOWALIGNF = "8,15"; FINGCOPY = "Right:Index>Middle,Ring,Pinky;Left:Index>Middle,Ring,Pinky" } }
 )
+# TB-250 cloak dyes (director 13 Nov): the elf idle + draw jobs again on a re-dyed copy of hero27 (recolor_cloak.py RGB=..., only the teal
+# cloak and hood texels move), keys elf.<dye> / elf.<dye>.attack. Make the blend first:
+#   $env:RGB = "<r,g,b>"; hid.ps1 blender -b --factory-startup --python recolor_cloak.py hero27.blend dyes\<dye>\hero27_<dye>.blend
+# RGB: ember 0.560,0.230,0.110  frost 0.765,0.835,0.863  dusk 0.431,0.290,0.431  starlit 0.184,0.235,0.431  gold 0.722,0.569,0.247
+$elfJobs = $jobs | Where-Object { $_.key -in "elf", "elf.attack" }
+foreach ($dye in "ember", "frost", "dusk", "starlit", "gold") {
+  foreach ($e in $elfJobs) { $jobs += @{ key = $e.key -replace "^elf", "elf.$dye"; m = "$a\elf_hero\dyes\$dye\hero27_$dye.blend"; c = $e.c; ortho = $e.ortho; fr = $e.fr; env = $e.env } }
+}
 # orc.wolfrider.attack is NOT an apply_anim job: the wolf rider is a Tripo "Other" rig driven by Quaternius Wolf "Attack" (no Mixamo skeleton).
 # Its 20 frames + anchor come from wolfrider\render_wr_sheet.py (same field camera, ORTHO 1.4, RES 512, mirrored to face screen-right):
 #   $env:ORTHO = "1.4"; & $bl -b --python "$s\wolfrider\render_wr_sheet.py" -- "$a\wolf_rider\wolfrider_anim6.blend" $o orc.wolfrider.attack
@@ -104,5 +112,10 @@ foreach ($j in $jobs) {
   $m = $out | ForEach-Object { "$_" } | Select-String "^ANCHOR (\d+(?:\.\d+)?) (\d+(?:\.\d+)?)\s*$" | Select-Object -First 1
   if ($m) { $anc[$j.key] = @([double]$m.Matches[0].Groups[1].Value, [double]$m.Matches[0].Groups[2].Value, [double]$j.ortho, 1) }  # 4th value 1 = lit frames (TB-253)
 }
-$anc | ConvertTo-Json | Set-Content -Encoding utf8 $af
+# TB-250: parallel runs (-NoPack, one per dye) share anchors.json: re-read it under a lock and merge only this run's keys
+$mine = @{}; foreach ($j in $jobs) { if ((-not $Only.Count -or $Only -contains $j.key) -and $anc.ContainsKey($j.key)) { $mine[$j.key] = $anc[$j.key] } }
+$mx_ = New-Object Threading.Mutex($false, "Global	ide_anchors_json"); [void]$mx_.WaitOne()
+try { $anc = @{}; if (Test-Path $af) { (Get-Content $af | ConvertFrom-Json).PSObject.Properties | ForEach-Object { $anc[$_.Name] = $_.Value } }
+  foreach ($k in $mine.Keys) { $anc[$k] = $mine[$k] }; $anc | ConvertTo-Json | Set-Content -Encoding utf8 $af } finally { $mx_.ReleaseMutex() }
+if ($NoPack) { return }
 python "$s\pack_sprites.py" $o (Join-Path $s "..\..\..\..\public\sprites")

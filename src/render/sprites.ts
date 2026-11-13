@@ -39,6 +39,8 @@ export function parseAtlas(raw: unknown): Atlas | null {
 
 /** Sheets that gate the first frame; the others load SHEETS_LATER_MS after them, one by one (TB-218). */
 const SHEETS_FIRST = ['sheet_elf.webp', 'sheet_orcs.webp'], SHEETS_LATER_MS = 2500;
+/** Sheets fetched only when a draw asks for one of their anims (`want`): the cloak dyes, one sheet each (TB-250). */
+export const onDemandSheet = (name: string): boolean => name.startsWith('sheet_elf_');
 
 /** The atlas without anims whose sheet failed to load; null when no sheet loaded (TB-216c). */
 export function keepLoaded(atlas: Atlas, loaded: ReadonlySet<string>): Atlas | null {
@@ -59,6 +61,10 @@ export function halveAtlas(a: Atlas): Atlas {
 
 export class Sprites {
   private atlas: Atlas | null = null;
+  /** Every anim the atlas lists, loaded or not, and where its sheets live; `want` loads an on-demand sheet from it. */
+  private full: Atlas | null = null; private sheetUrl = '';
+  /** On-demand sheets asked for (loading, loaded or failed): each is fetched once. */
+  private asked = new Set<string>();
   /** Decoded sheets by atlas image name. */
   private imgs = new Map<string, HTMLImageElement>();
   /** Scratch canvas for tinting one frame without touching the sheet. */
@@ -77,22 +83,17 @@ export class Sprites {
       // phone tier (TB-218 P6): half-size sheets under sprites/half/, frame rects halved to match (92 MB -> 23 MB decoded)
       const dir = quality.q.cheap ? 'sprites/half/' : 'sprites/';
       if (quality.q.cheap) atlas = halveAtlas(atlas);
-      const full = atlas;
-      const fetchSheets = async (names: string[]): Promise<Map<string, HTMLImageElement>> => {
-        const settled = await Promise.allSettled(names.map(async (name) => {
-          const img = new Image(); img.src = base + dir + name;
-          await img.decode();
-          return [name, img] as const;
-        }));
-        return new Map(settled.flatMap((r) => (r.status === 'fulfilled' ? [r.value] : [])));
-      };
-      // first paint needs only the elf and the first orcs (TB-218 payload): those sheets gate `loading`, the rest stream in afterwards
-      const first = full.images.filter((n) => SHEETS_FIRST.includes(n)), later = full.images.filter((n) => !SHEETS_FIRST.includes(n));
+      const full = atlas; this.sheetUrl = base + dir;
+      const fetchSheets = (names: string[]): Promise<Map<string, HTMLImageElement>> => this.fetchSheets(names);
+      // first paint needs only the elf and the first orcs (TB-218 payload): those sheets gate `loading`, the rest stream in afterwards;
+      // the cloak dye sheets wait until a worn dye is drawn (TB-250)
+      const eager = full.images.filter((n) => !onDemandSheet(n));
+      const first = eager.filter((n) => SHEETS_FIRST.includes(n)), later = eager.filter((n) => !SHEETS_FIRST.includes(n));
       // one bad sheet drops only its own anims; the rest keep their sprites (TB-216c)
-      const imgs = await fetchSheets(first.length ? first : full.images);
+      const imgs = await fetchSheets(first.length ? first : eager);
       const kept = keepLoaded(full, new Set(imgs.keys()));
       if (!kept) return false;
-      this.atlas = kept; this.imgs = imgs; this.clearBakes();
+      this.atlas = kept; this.imgs = imgs; this.full = full; this.clearBakes();  // `want` waits for this: it adds to the same imgs map
       if (first.length && later.length) void (async () => {
         await new Promise((r) => setTimeout(r, SHEETS_LATER_MS));
         for (const name of later) {   // one at a time: no decode burst while the run plays
@@ -104,6 +105,31 @@ export class Sprites {
       })();
       return true;
     } catch { return false; } finally { this.loading = false; }
+  }
+
+  /** Decode these sheets; a failed one is left out. */
+  private async fetchSheets(names: string[]): Promise<Map<string, HTMLImageElement>> {
+    const settled = await Promise.allSettled(names.map(async (name) => {
+      const img = new Image(); img.src = this.sheetUrl + name;
+      await img.decode();
+      return [name, img] as const;
+    }));
+    return new Map(settled.flatMap((r) => (r.status === 'fulfilled' ? [r.value] : [])));
+  }
+
+  /** True when `key` can be drawn now. An anim on an on-demand sheet that is not loaded yet starts its sheet loading (once) and
+   *  returns false, so the caller draws its default until the sheet arrives (TB-250 cloak dyes). */
+  want(key: string): boolean {
+    if (this.atlas?.anims[key]) return true;
+    const name = this.full?.anims[key]?.image;
+    if (!name || this.asked.has(name)) return false;
+    this.asked.add(name);
+    void this.fetchSheets([name]).then((got) => {
+      const img = got.get(name), full = this.full;
+      if (!img || !full) return;
+      this.imgs.set(name, img); this.atlas = keepLoaded(full, new Set(this.imgs.keys())) ?? this.atlas; this.clearBakes();
+    });
+    return false;
   }
 
   /**

@@ -13,6 +13,13 @@ describe('achievements pane (TB-249)', () => {
     expect(deedRow('first_blood', true, true)).toContain('class="worn"');
     expect(deedRow('slain_1k', true, false)).not.toContain('data-wear');
   });
+  it('an earned cloak dye offers Wear, a worn one offers take off, and it has art so it never says "arrives" (TB-250)', () => {
+    expect(deedRow('wave_50', false, false)).not.toContain('data-dress');
+    expect(deedRow('wave_50', true, false)).toContain('data-dress="cloak_ember"');
+    expect(deedRow('wave_50', true, true)).toContain('data-undress="cloak"');
+    expect(deedRow('wave_50', true, false)).not.toContain('arrives');
+    expect(deedRow('slain_1k', true, false)).toContain('arrives'); // Leaf trail: no art yet
+  });
   it('the worn title reads its words', () => {
     expect(wornTitle('first_blood')).toBe('Warden'); expect(wornTitle(null)).toBeNull(); expect(wornTitle('slain_1k')).toBeNull();
   });
