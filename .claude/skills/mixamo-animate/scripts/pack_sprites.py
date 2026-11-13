@@ -122,7 +122,9 @@ for name in list(SHEETS.values()) + [f"sheet_elf_{d}.webp" for d in DYES]:
         print("PACK", key, len(c["imgs"]), "frames", f"{c['imgs'][0].width}x{fh}", "ax", c["ax"], "ay", c["ay"], "hPerR", anims[key]["hPerR"], "->", name, "EDGE-CLIPPED" if c["touch"] else "")
     sheets[name] = sheet
 os.makedirs(dst, exist_ok=True)
-for name, sheet in sheets.items():
+ONLY = set(filter(None, os.environ.get("ONLYSHEETS", "").split(",")))  # TB-250: write just these sheets (atlas.json is always whole); each
+for name, sheet in sheets.items():  # method=6 encode costs ~40 s, so a 14-sheet pack took 12 min for one changed clip
+    if ONLY and name not in ONLY: continue
     q = 90  # TB-253: lit frames carry soft shadow alpha, so a full sheet can pass 2 MB; step quality down until it fits
     while True:
         sheet.save(os.path.join(dst, name), "WEBP", quality=q, method=6, alpha_quality=100)

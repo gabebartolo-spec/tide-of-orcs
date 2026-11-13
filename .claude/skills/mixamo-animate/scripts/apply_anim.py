@@ -877,13 +877,15 @@ def _litmask(path):  # TB-253: re-render this frame without the ground (4 sample
     sc.render.filepath = path + ".m.png"
     bpy.ops.render.render(write_still=True); _g.is_holdout = False; sc.cycles.samples = sp
     def _ld(p_):
-        im_ = bpy.data.images.load(p_); a_ = _np.array(im_.pixels[:], dtype=_np.float32).reshape(im_.size[1], im_.size[0], 4); return im_, a_
+        # TB-250: foreach_get, not pixels[:] (a per-float Python copy that took seconds a frame); same data
+        im_ = bpy.data.images.load(p_); a_ = _np.empty(im_.size[0] * im_.size[1] * 4, dtype=_np.float32); im_.pixels.foreach_get(a_)
+        return im_, a_.reshape(im_.size[1], im_.size[0], 4)
     im, a = _ld(path); mi, m = _ld(path + ".m.png"); wa = m[..., 3]; wa = _np.where((wa < 0.16) & (m[..., :3].max(-1) < 0.03), 0, wa);  # near-black ghost pixels (boss, drummer) drew a dotted ring
     sh = wa <= 245 / 255; f = (1 - wa)[..., None]
     SHA = float(os.environ.get("SHA", "0.55")); SHC = _np.array([22, 30, 20], dtype=_np.float32) / 255
     sa = _np.where(a[..., 3] < 0.12, 0, a[..., 3] * SHA * (1 - wa))  # drop the faint catcher noise that spreads over the whole frame
     a[..., 3] = _np.where(sh, _np.maximum(wa, sa), a[..., 3]); a[..., :3] = _np.where(sh[..., None], a[..., :3] * (1 - f) + SHC * f, a[..., :3])
-    im.pixels[:] = a.ravel(); im.filepath_raw = path; im.file_format = "PNG"; im.save(); bpy.data.images.remove(im); bpy.data.images.remove(mi); os.remove(path + ".m.png")
+    im.pixels.foreach_set(_np.ascontiguousarray(a, dtype=_np.float32).ravel()); im.filepath_raw = path; im.file_format = "PNG"; im.save(); bpy.data.images.remove(im); bpy.data.images.remove(mi); os.remove(path + ".m.png")
 if os.environ.get("LIT"):  # TB-253: the wall's sun (screen upper-left, a little toward the camera) in Cycles, with a shadow-catcher ground so
     # each frame carries its own cast shadow; LITFLIP=1 for orcs (packed mirrored, so the sun is placed screen-right here and lands left in game)
     bpy.context.view_layer.update(); _cm = cam.matrix_world.to_3x3(); _rt = _cm @ Vector((1, 0, 0)); _up = _cm @ Vector((0, 1, 0)); _bk = _cm @ Vector((0, 0, 1))
@@ -895,6 +897,18 @@ if os.environ.get("LIT"):  # TB-253: the wall's sun (screen upper-left, a little
     w.node_tree.nodes["Background"].inputs[1].default_value = float(os.environ.get("AMB", "0.45"))
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); import lit_render; lit_render.eevee_outputs()  # EEVEE-only textures (ogre228)
     sc.render.engine = "CYCLES"; sc.cycles.samples = int(os.environ.get("SAMPLES", "48")); sc.cycles.use_denoising = True; sc.cycles.device = "GPU"
+    # TB-250: --factory-startup leaves Cycles with no compute device, so device="GPU" silently rendered on the CPU (~9.4 s/frame,
+    # RTX 4070 SUPER idle). Enable OptiX (else CUDA) GPUs; CPUONLY=1 keeps the old CPU path.
+    if not os.environ.get("CPUONLY"):
+        _cp = bpy.context.preferences.addons["cycles"].preferences
+        for _t in ("OPTIX", "CUDA"):
+            try: _cp.compute_device_type = _t; _cp.get_devices()
+            except TypeError: continue
+            _gd = [d for d in _cp.devices if d.type == _t]
+            if _gd:
+                for d in _cp.devices: d.use = d.type == _t
+                print("GPU", _t, [d.name for d in _gd]); break
+        else: sc.cycles.device = "CPU"; print("GPU none, CPU render")
     bpy.ops.mesh.primitive_plane_add(size=40, location=(0, 0, 0)); _gp = bpy.context.object; _gp.is_shadow_catcher = True; _gp.name = "litground"
     if os.environ.get("NOGROUND"): bpy.data.objects.remove(_gp)
     if os.environ.get("NOPROPSH"):
