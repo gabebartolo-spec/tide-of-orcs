@@ -6,8 +6,10 @@ export const FIELD = { w: 900, h: 480, barX: 150, barW: 14, elfX: 64 } as const;
 export const WALL_TIER_RANKS = [3, 6, 10] as const;
 
 export const WALL_LINE = { baseX: 110, baseY: 480, slope: 0.65, front: 22 } as const;
-/** Sim literals that used to sit in systems code (TB-219): orc spawn margins, wobble phase span, shot flight time, hit flash. */
-export const SIM_MISC = { spawnXPad: 24, spawnYPad: 50, tau: 6.28, shotLife: 2.2, hitFlash: 0.12 } as const;
+/** Sim literals that used to sit in systems code (TB-219): orc spawn margins, wobble phase span, shot flight time, hit flash.
+ *  Orcs march in on rows `spawnTop`..H-`spawnYPad` only: the meadow every screen shows. Above it the treeline covers the field
+ *  (its bush skirt reaches row 218 on a 360 px tall phone, plus the 30-row fade-in), and an orc there was never drawn but still hit the wall. */
+export const SIM_MISC = { spawnXPad: 24, spawnYPad: 50, spawnTop: 250, tau: 6.28, shotLife: 2.2, hitFlash: 0.12 } as const;
 export const WAVE_LEN = 24;
 /** Checkpoints (TB-159; every 5 since TB-172): clearing every `every`-th wave lets later runs start just past it (0 = off). */
 export const CHECKPOINT = { every: 5 };
