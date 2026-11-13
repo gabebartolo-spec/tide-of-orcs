@@ -33,6 +33,8 @@ import { PATHS } from '../data/paths';
 import { drawSigil } from '../render/sigil';
 import { TimerBag } from './timerBag';
 import { P } from '../render/palette';
+import { AchievementsPane, wornTitle } from './achievements';
+import { ACH, ACH_N } from '../data/achievements';
 
 /** Buy sparks (TB-195b): starlight gold, frost blue, grove green and lilac, so they read against the gold button. */
 const BUY_SPARKS = [P.starGold, P.frost, P.grove, P.lilac] as const;
@@ -46,6 +48,8 @@ export class Panel {
   private toastTimer = 0;
   private wipeArmed = false;
   private satchel: SatchelPane;
+  /** Achievements tab and title picker (TB-249). */
+  private deeds: AchievementsPane;
   private plate = new Plate();
   /** Encampment card and Replant-tab list (TB-188b). */
   readonly camp: CampPane;
@@ -70,6 +74,9 @@ export class Panel {
     armHover(document.body); // TB-195k
     // TB-195k: an equip lands with the stamp under its chime
     this.satchel = new SatchelPane(game, (c) => { this.onCue(c); if (c === 'equip' || c === 'setRise') this.onCue('uiStamp'); }); $('tab-satchel').onclick = () => { this.onCue('uiPop'); this.setTab('satchel'); this.satchel.render(); this.markNew(0); };
+    this.deeds = new AchievementsPane(game, (t) => { this.onCue('uiStamp'); this.showTitle(t); if (t) this.toast(STR.deedTitleWorn(t)); });
+    $('tab-deeds').textContent = STR.tabDeeds; $('tab-deeds').onclick = () => { this.onCue('uiPop'); this.setTab('deeds'); this.deeds.render(); };
+    this.showTitle(wornTitle(game.state.meta.ach.title));
     fitPages([$('pane-satchel'), $('pane-prestige'), $('pane-settings')]);
     $('tab-grove').onclick = () => { this.onCue('uiPop'); this.setTab('grove'); }; $('tab-camp').onclick = () => { this.onCue('uiPop'); this.setTab('camp'); }; $('tab-prestige').onclick = () => { this.onCue('uiPop'); this.setTab('prestige'); }; $('tab-settings').onclick = () => { this.onCue('uiPop'); this.setTab('settings'); };
     this.initSettings();
@@ -155,6 +162,12 @@ export class Panel {
   }
 
   handleEvents(events: ReturnType<GameController['events']['drain']>): void {
+    // a sweep on an old save can earn many at once: past ACH_N.toastBatch they share one line
+    const won = events.flatMap((e) => (e.t === 'achievement' ? [e.id] : []));
+    if (won.length) {
+      this.onCue('uiStamp'); this.toast(won.length > ACH_N.toastBatch ? STR.deedsEarned(won.length) : won.map((id) => STR.deedEarned(ACH[id]?.name ?? id)).join(' · '));
+      if (!$('pane-deeds').hidden) this.deeds.render();
+    }
     for (const e of events) {
       if (e.t === 'wave') this.hud.waveCleared();
       else if (e.t === 'kill' && e.kind === 'boss') this.toast(STR.bossFalls);
@@ -242,7 +255,7 @@ export class Panel {
     this.tab = k; $('camp-title').textContent = tabTitle(k); $('camp-go').textContent = k === 'prestige' ? STR.replantBtn : STR.campGo; document.body.dataset.tab = k;
     if (k !== 'camp') this.camp.close();
     if (k !== 'grove') this.setTreeFull(false);
-    for (const t of ['grove', 'satchel', 'camp', 'prestige', 'settings'] as const) { $('pane-' + t).hidden = k !== t; $('tab-' + t).setAttribute('aria-selected', String(k === t)); }
+    for (const t of ['grove', 'satchel', 'camp', 'prestige', 'deeds', 'settings'] as const) { $('pane-' + t).hidden = k !== t; $('tab-' + t).setAttribute('aria-selected', String(k === t)); }
   }
 
   /** Called after any settings change so main.ts can apply volume and motion. */
@@ -350,6 +363,9 @@ export class Panel {
     if (!this.wipeArmed) { this.wipeArmed = true; btn.textContent = STR.wipeConfirm; clearTimeout(this.wipeTimer); this.wipeTimer = window.setTimeout(() => { this.wipeArmed = false; btn.textContent = STR.wipe; }, CONFIRM_ARM_MS); return; }
     clearTimeout(this.wipeTimer); this.reportTimers.clear(); this.game.wipe(); this.resetSatchelView(); this.wipeArmed = false; btn.textContent = STR.wipe; $('fallen').hidden = true; this.setMode('run'); this.tree.selected = 'sharp'; this.renderDetail(); this.renderHw(); this.toast(STR.freshDawn);
   }
+
+  /** The worn title on a carved tag under the wall bar (TB-249). */
+  private showTitle(t: string | null): void { const el = $('hud-title'); el.hidden = !t; el.textContent = t ?? ''; }
 
   toast(msg: string): void {
     const el = $('toast'); el.textContent = msg; el.classList.add('on');

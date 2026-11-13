@@ -48,7 +48,7 @@ export function bossStep(s: SimState, ev: EventBus, dt: number): void {
   s.run.starlight += loot; s.run.earned += loot; s.run.boss = null; s.meta.heartwood += hw; s.run.hwEarned += hw;
   // stragglers of a failed challenge keep marching as ordinary orcs
   s.orcs.forEach((o) => { o.champ = false; });
-  ev.push({ t: 'bossEnd', cleared, loot, hw });
+  ev.push({ t: 'bossEnd', cleared, loot, hw, secs: b.t });
   // a boss beaten at the highest tier unlocked opens the next one for good (TB-148)
   if (cleared && s.run.tier >= s.meta.tier && s.meta.tier < TIERS.max) { s.meta.tier++; ev.push({ t: 'tierUnlocked', tier: s.meta.tier }); }
 }

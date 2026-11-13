@@ -37,6 +37,13 @@ export const STR = {
   replanted: (hw: number) => `The grove is replanted. ${hw} Heartwood carried back.`,
   saved: 'Saved', wipe: 'Wipe save', wipeConfirm: 'Really wipe? click again', freshDawn: 'A fresh dawn.',
   tabSettings: 'Settings',
+  // Achievements (TB-249)
+  tabDeeds: 'Achievements', deedsCount: (n: number, all: number) => `${n} / ${all} earned`,
+  deedGroup: { progress: 'Progress', collection: 'Collection', challenge: 'Challenge', fun: 'Fun', secret: 'Secret' } as Record<string, string>,
+  deedSealed: 'Sealed', deedSealedRule: 'A secret, revealed when earned',
+  deedTitle: (t: string) => `Title: ${t}`, deedCosmetic: (c: string) => `Reward: ${c}`, deedSoon: 'arrives with the art pass',
+  deedWear: 'Wear title', deedWorn: 'Worn', deedNoTitle: 'No title', deedTitleWorn: (t: string) => `Title worn: ${t}`,
+  deedEarned: (name: string) => `Achievement: ${name}`, deedsEarned: (n: number) => `${n} achievements earned`,
   turnSideways: 'Turn your phone sideways to hold the wall.',
   tabSatchel: 'Satchel', satchelTitle: 'Satchel', satchelWorn: 'Worn',
   satchelCount: (n: number, cap: number, glimmer: number) => `Satchel ${n} / ${cap} · ${glimmer} Glimmer`,

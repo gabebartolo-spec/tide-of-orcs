@@ -25,6 +25,7 @@ import { applyGear, setTiers } from './sim/gear';
 import { Stats, deriveStats } from './sim/stats';
 import { SimEvent } from './sim/events';
 import { gain } from './sim/prestige';
+import { setTitle, sweepAchievements, trackAchievements } from './sim/achievements';
 
 /** A fresh RNG seed from the clock: boot, import and wipe all use it, so no two games share a roll sequence (TB-216b). */
 export const clockSeed = (): number => (Date.now() % 2147483647) | 0;
@@ -53,6 +54,7 @@ export class GameController {
     // a save that migrates but has the wrong shape fails like an unreadable one: backed up, writes blocked (TB-199, TB-216b)
     if (save) try { state = loadState(seed, save); this.settings = sanitizeSettings(save.settings); } catch { markLoadFailed(); }
     this.state = state ?? createState(seed);
+    this.announce(sweepAchievements(this.state));
   }
 
   tick(dt: number): void {
@@ -79,19 +81,28 @@ export class GameController {
   equipItem(uid: string): boolean {
     const s = this.state, tiers = setTiers(s.meta.loot, s.stats.setBoost), ok = equip(s.meta.loot, uid);
     if (!ok) return ok;
-    recompute(s); this.logItem('equip', uid);
+    recompute(s); this.logItem('equip', uid); this.events.push({ t: 'equip' });
     const now = setTiers(s.meta.loot, s.stats.setBoost), set = s.meta.loot.items.find((i) => i.uid === uid)?.set;
     if (now > tiers) this.logLoot('set', { tiers: now, ...(set ? { set } : {}) });
     this.save(); return ok;
   }
-  salvageItem(uid: string): boolean { this.logItem('salvage', uid); const ok = salvage(this.state.meta.loot, uid, this.state.stats); if (ok) this.save(); else this.lootLog.pop(); return ok; }
+  salvageItem(uid: string): boolean { this.logItem('salvage', uid); const ok = salvage(this.state.meta.loot, uid, this.state.stats); if (ok) { this.events.push({ t: 'salvage' }); this.save(); } else this.lootLog.pop(); return ok; }
   heirloomItem(uid: string): boolean { const ok = toggleHeirloom(this.state.meta.loot, uid); if (ok) this.save(); return ok; }
-  rerollItem(uid: string, i: number): boolean { const s = this.state, ok = reroll(s.meta.loot, uid, i, s.lootRng, s.stats.rerollMult, ownedAffixes(s.stats)); if (ok) { recompute(s); this.logItem('reroll', uid, { affix: i }); this.save(); } return ok; }
+  rerollItem(uid: string, i: number): boolean { const s = this.state, ok = reroll(s.meta.loot, uid, i, s.lootRng, s.stats.rerollMult, ownedAffixes(s.stats)); if (ok) { recompute(s); this.logItem('reroll', uid, { affix: i }); this.events.push({ t: 'reroll' }); this.save(); } return ok; }
 
-  /** Feed each frame's drained sim events (main loop): drops become loot telemetry. */
+  /** Feed each frame's drained sim events (main loop): drops become loot telemetry; achievement checks run (TB-249). */
   noteEvents(events: readonly SimEvent[]): void {
     for (const e of events) if (e.t === 'loot') this.logLoot('drop', { rarity: e.rarity, kept: e.kept });
+    this.announce(trackAchievements(this.state, events, this.state.achPend));
   }
+  /** Newly earned achievements reach field, panel and audio as events next frame, and are saved at once. */
+  private announce(ids: readonly string[]): void {
+    if (!ids.length) return;
+    for (const id of ids) this.events.push({ t: 'achievement', id });
+    this.save();
+  }
+  /** Wear an earned title on the HUD tag, or none (TB-249). */
+  setTitle(id: string | null): boolean { const ok = setTitle(this.state, id); if (ok) this.save(); return ok; }
   private logLoot(kind: LootKind, extra: Partial<LootRecord>): void { const now = Date.now(); this.lootLog.push(lootRecord(this.state, kind, extra, now, lootStart(now))); }
   private logItem(kind: LootKind, uid: string, extra: Partial<LootRecord> = {}): void {
     const it = this.state.meta.loot.items.find((i) => i.uid === uid);
@@ -106,7 +117,7 @@ export class GameController {
   pullBack(): boolean { return pullBack(this.state, this.events); }
   canReplant(): boolean { return canReplant(this.state); }
   /** Specialisation path (TB-193a): picked on the Replant screen, carried into the next run. */
-  choosePath(path: PathId | null): boolean { const ok = choosePath(this.state, path); if (ok) this.save(); return ok; }
+  choosePath(path: PathId | null): boolean { const ok = choosePath(this.state, path); if (ok) { this.events.push({ t: 'pathChosen', path }); this.save(); } return ok; }
   replant(tier?: number, path?: PathId | null): number { if (!canReplant(this.state)) return 0; const rec = runRecord(this.state, gain()); const hw = replant(this.state, this.events, tier, path === undefined ? this.state.run.path ?? null : path); appendTelemetry({ ...rec, heartwoodGained: hw, heartwoodTotal: this.state.meta.heartwood }); this.save(); return hw; }
   /** Finished-run records as an export file (TB-070). */
   telemetry(): { json: string; runs: number; loot: number } { this.save(); const runs = readTelemetry(), loot = readLoot(); return { json: telemetryJson(runs, undefined, loot), runs: runs.length, loot: loot.length }; }
@@ -118,6 +129,7 @@ export class GameController {
     const s = importSave(str);
     this.state = loadState(clockSeed(), s); this.reset();
     this.settings = sanitizeSettings(s.settings); this.lootLog = []; clearLoadFailed(); this.save();
+    this.announce(sweepAchievements(this.state));
   }
   /** Wipe drops the buffered loot telemetry too, so a fresh game never logs the old one's drops (TB-199). */
   wipe(): void { clearSave(); this.lootLog = []; this.state = createState(clockSeed()); this.reset(); }

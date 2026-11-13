@@ -14,6 +14,7 @@ import { v12 } from './fixtures/v12';
 import { v13 } from './fixtures/v13';
 import { v14 } from './fixtures/v14';
 import { v15 } from './fixtures/v15';
+import { v16 } from './fixtures/v16';
 import { migrate } from './migrate';
 import { CURRENT_VERSION, Save, defaultSettings } from './schema';
 import { exportSave, importSave } from './storage';
@@ -22,7 +23,7 @@ import { SimState, createState, freshMeta, freshRun } from '../sim/state';
 import { step } from '../sim/step';
 
 /** Every save version a shipped build ever wrote (TB-140). v2–v10 were played and saved by the build of their day. */
-const OLD: Record<string, object> = { v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15 };
+const OLD: Record<string, object> = { v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16 };
 
 /** Load a migrated save the way GameController does (src/game.ts): fresh defaults under the saved fields. */
 const load = (save: Save): SimState => createState(7, { ...freshRun(), ...save.run }, { ...freshMeta(), ...save.meta });
@@ -71,6 +72,12 @@ describe('every old save loads and plays', () => {
     expect(migrate(JSON.parse(JSON.stringify(v14))).run.path).toBe('serpent');
     expect(migrate(JSON.parse(JSON.stringify(v13))).meta.camp.mats).toEqual(v13.meta.camp.mats);
     expect(migrate(JSON.parse(JSON.stringify(v12))).run.path).toBeNull();
+  });
+  it('v16 saves migrate to v17 with no achievements earned and the run counting from its wave (TB-249)', () => {
+    const save = migrate(JSON.parse(JSON.stringify(v16)));
+    expect(save.meta.ach).toEqual({ earned: [], title: null, n: {}, kinds: [], mythics: [], bosses: [], tierAt: 0 });
+    expect(save.run.ach.from).toBe(v16.run.wave); expect(save.run.ach.hit).toBe(false);
+    expect(save.meta.lifetimeKills).toBe(v16.meta.lifetimeKills);
   });
   it('keeps the progress an old save carried', () => {
     for (const fixture of [v2, v5, v8]) {

@@ -649,7 +649,7 @@ header h1 { display: inline-block; background-size: 100% 0.625rem; }
   background: var(--cream); opacity: .8; -webkit-mask: var(--g) center / contain no-repeat; mask: var(--g) center / contain no-repeat; transform-origin: 50% 70%;
   transition: transform var(--tok-in) cubic-bezier(.34, 1.56, .64, 1), opacity var(--tok-in) ease-out; pointer-events: none; }
 #tab-grove { --g: url("/ui/glyph-bow.svg"); } #tab-satchel { --g: url("/ui/glyph-satchel.svg"); } #tab-camp { --g: url("/ui/glyph-tent.svg"); }
-#tab-prestige { --g: url("/ui/glyph-seed.svg"); } #tab-settings { --g: url("/ui/glyph-cog.svg"); }
+#tab-prestige { --g: url("/ui/glyph-seed.svg"); } #tab-deeds { --g: url("/ui/glyph-medal.svg"); } #tab-settings { --g: url("/ui/glyph-cog.svg"); }
 @media (hover: hover) and (pointer: fine) { .tabs button:hover::after { opacity: 1; } }
 .tabs button[aria-selected="true"]::before { filter: none; box-shadow: 0 0 0 0.125rem var(--amber), 0 0 0.75rem var(--amber), 0 0.1875rem 0.375rem var(--ink); }
 .tabs button[aria-selected="true"]::after { opacity: 1; transform: translateY(var(--tok-lift)) scale(var(--tok-on)); }
@@ -776,7 +776,7 @@ body[data-mode="camp"] .campbar { padding-bottom: 1rem; }
 .replant .hwnode .name, .replant .hwnode .desc { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .replant .hwnode > div:first-child { min-width: 0; }
 .replant .hwnode .buy { flex: 0 0 auto; min-width: 8.5rem; }
-#pane-prestige { overflow-y: auto; padding-bottom: 1.5rem; }
+#pane-prestige, #pane-deeds { overflow-y: auto; padding-bottom: 1.5rem; }
 #sat-count { font-size: 1rem; }
 .settings .set > span:first-child { font-size: 1.0625rem; } .settings output { font-size: 1rem; }
 .replant .hwnode .name { font-size: 1rem; overflow: visible; }
@@ -913,7 +913,7 @@ body:not([data-mode="camp"]) :is(header .stat, .hud-wave) { width: 16rem; min-wi
 /* Mobile layout foundation (TB-218, Pixel 8 landscape 915x412): zoom lock, safe-area insets, short HUD. */
 html, body { touch-action: pan-x pan-y; }
 #game { touch-action: none; }
-.panel, #pane-satchel, #pane-prestige, #pane-settings, #fallen, #detail { touch-action: pan-y; }
+.panel, #pane-satchel, #pane-prestige, #pane-deeds, #pane-settings, #fallen, #detail { touch-action: pan-y; }
 @media (max-height: 540px) {
   body:not([data-mode="camp"]) header { padding-bottom: 0.5rem; padding-left: max(1.75rem, env(safe-area-inset-left)); padding-right: max(1.75rem, env(safe-area-inset-right)); }
   body:not([data-mode="camp"]) .rally { left: max(1.5rem, env(safe-area-inset-left)); right: max(1.5rem, env(safe-area-inset-right)); bottom: max(1.25rem, env(safe-area-inset-bottom)); }
@@ -976,7 +976,7 @@ body:has(#fallen:not([hidden])) .mute-corner { display: none !important; } /* th
   .prestige .row, .row { gap: 8px; }
   .prestige .col { gap: 8px; }
   /* every scroll container pans vertically under a finger and never chains to the page */
-  .panel, #pane-satchel, #pane-prestige, #pane-settings, #fallen, #detail, #sat-grid, #sat-detail { touch-action: pan-y; overscroll-behavior: contain; }
+  .panel, #pane-satchel, #pane-prestige, #pane-deeds, #pane-settings, #fallen, #detail, #sat-grid, #sat-detail { touch-action: pan-y; overscroll-behavior: contain; }
   #pane-settings { overflow-y: auto; }
   body[data-mode="camp"] .tab:not([hidden]) { overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
 }
@@ -1097,3 +1097,18 @@ header, #hud, #toast, #campview, .wrap, .play { touch-action: pan-x pan-y; }
 body:not([data-mode=camp]) .hud-wall .lbl { height: 2rem; line-height: 2rem; padding: 0 0.5rem; border-radius: 0; background: none; box-sizing: border-box;
   border: solid transparent; border-width: 0 1.2rem; border-image: image-set(url("/ui/tag.webp") 1x, url("/ui/tag@2x.webp") 2x) 0 24 fill / 0 1.2rem stretch;
   filter: drop-shadow(0 0.1875rem 0.25rem color-mix(in srgb, var(--ink) 70%, transparent)); }
+/* Achievements (TB-249): the worn title on the carved tag under the wall bar, and the Achievements tab */
+.hud-title { align-self: center; height: 1.75rem; line-height: 1.75rem; padding: 0 0.375rem; box-sizing: border-box; font-size: 1rem; font-weight: 700; letter-spacing: .04em; color: #fff4dc; white-space: nowrap;
+  border: solid transparent; border-width: 0 1.05rem; border-image: image-set(url("/ui/tag.webp") 1x, url("/ui/tag@2x.webp") 2x) 0 24 fill / 0 1.05rem stretch;
+  text-shadow: 0 0 0.125rem #2a1a0a, 0.0625rem 0.0625rem 0 #2a1a0a, -0.0625rem -0.0625rem 0 #2a1a0a; filter: drop-shadow(0 0.1875rem 0.25rem color-mix(in srgb, var(--ink) 70%, transparent)); }
+body[data-mode="camp"] .hud-title { display: none; }
+.prestige.deeds { display: block; }
+.deedbar { display: flex; align-items: baseline; gap: 1rem; } .deedbar h2 { margin: 0; } .deedbar .ghost { margin-left: auto; }
+.prestige.deeds h3 { margin: 1rem 0 0.375rem; font-family: var(--display); color: var(--star-gold); } .prestige.deeds h3 .k { font-family: inherit; font-size: 0.875rem; color: var(--text-dim); }
+ul.deeds { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr)); gap: 0.375rem; }
+.deed { display: grid; grid-template-columns: 1fr auto; gap: 0.125rem 0.5rem; padding: 0.5rem 0.625rem; border: 0.0625rem solid var(--line); background: var(--grain), var(--ink); opacity: 0.6; }
+.deed.on { opacity: 1; border-color: color-mix(in srgb, var(--star-gold) 60%, transparent); }
+.deed .nm { font-weight: 700; color: var(--text); } .deed.on .nm { color: var(--star-gold); }
+.deed .rule, .deed .rw { grid-column: 1; font-size: 0.875rem; color: var(--text-dim); }
+.deed .ghost, .deed .worn { grid-column: 2; grid-row: 1 / span 3; align-self: center; } .deed .worn { font-size: 0.875rem; color: var(--grove); }
+.deed.sealed .nm { font-style: italic; letter-spacing: .1em; }

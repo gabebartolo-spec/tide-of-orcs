@@ -54,7 +54,7 @@ export function vanguardStep(s: SimState, ev: EventBus, dt: number): void {
       if (Math.hypot(o.x - v.x, o.y - v.y) < T.reach + o.r) {
         if (!hitAny) ev.push({ t: 'vanStrike', type: v.type, x: v.x, y: v.y, tx: o.x, ty: o.y });
         ev.push({ t: 'bleed', x: o.x, y: o.y, r: o.r });
-        damage(s, ev, o, unitHit(s, U, st.dmg * T.dmg * st.vanDmg * U.dmg)); hitAny = true;
+        damage(s, ev, o, unitHit(s, U, st.dmg * T.dmg * st.vanDmg * U.dmg), 'vanguard'); hitAny = true;
       }
     });
     if (hitAny) v.swingT = 0;
