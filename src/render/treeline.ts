@@ -191,26 +191,6 @@ export class Treeline {
   skirtUpTo(g: CanvasRenderingContext2D, y0: number, x0: number, x1: number, y: number): void {
     const l = this.edges; while (this.si < l.length && y0 + this.hud + l[this.si]!.off <= y) this.put(g, l[this.si++]!, y0 + this.hud, x0, x1);
   }
-  private capSpots: Spot[] = []; private capId = '';
-  /** TB-268: bushes along the wall's cut top, across world x `xa`..`xb` at world row `y`, so the palisade runs into the forest edge. */
-  wallCap(g: CanvasRenderingContext2D, y0: number, xa: number, xb: number, y: number): void {
-    const C = T.cap.bushes, off = y - y0 - this.hud, id = `${Math.round(xa)}|${Math.round(xb)}|${Math.round(off)}`;
-    if (id !== this.capId) {
-      this.capId = id; this.capSpots = []; const rng = createRng(T.seed * 100 + 991);
-      for (let x = xa + rng.next() * C.step * 0.5; x <= xb; x += C.step * (0.75 + rng.next() * 0.5)) {
-        this.capSpots.push({ x, off: off + C.drop[0] + rng.next() * (C.drop[1] - C.drop[0]), key: BUSH, h: C.h[0] + rng.next() * (C.h[1] - C.h[0]), flip: rng.next() < 0.5, shadow: T.shade.bush });
-      }
-      this.capSpots.sort((a, b) => a.off - b.off);
-    }
-    for (const s of this.capSpots) this.put(g, s, y0 + this.hud, -Infinity, Infinity);
-  }
-  /** The skirt spots reaching world x `xa`..`xb`, drawn again (the wall's unhazed redraw cuts them out of itself, TB-268); counts no occluder. */
-  skirtOver(g: CanvasRenderingContext2D, y0: number, xa: number, xb: number): void {
-    const mark = this.orcMark; this.orcMark = false;
-    for (const s of this.edges) this.put(g, s, y0 + this.hud, xa, xb);
-    for (const s of this.capSpots) this.put(g, s, y0 + this.hud, xa, xb);
-    this.orcMark = mark;
-  }
   /** World y of the HUD band's foot, where the open sky begins. */
   top(y0: number): number { return y0 + this.hud; }
   /** Highest crown top (world y) of the laid-out trees for the view at `y0`, and the band bottom it should sit under; for the capture audit. */

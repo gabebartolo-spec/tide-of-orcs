@@ -50,9 +50,10 @@ export const TREELINE = {
   unit: 9.5, size: [0.96, 1.04] as const,
   /** Rows hang from the view top (`first` + row x `gap` down to a base, `lift` of jitter); a row only holds kinds up to `slack` x its room, then shrinks as one. */
   slack: 1.12,
-  /** The barricade's top: the rendered wall is cut `up` units above the bush skirt base and runs into the forest edge (director 13 Nov, TB-268: "Bushes cover the end").
-   *  `bushes` are laid along the cut, across the wall's painted width there: one every `step` (x0.75..1.25) units, `h` tall, their feet `drop` units below the cut. */
-  cap: { up: 2, bushes: { step: 9, h: [14, 24] as const, drop: [0, 5] as const } },
+  /** The barricade's far end (TB-268 redo, director 13 Nov: the bushes over the cut were "the same problem in reverse"): the rendered wall
+   *  is slid along its own line until its finished end stands on the meadow `foot` units below the bush skirt base, in front of the skirt,
+   *  never cut and never covered. `up`: how far above that foot an orc's blow on the wall's hidden length throws its chips. */
+  cap: { foot: 4, up: 10 },
   /** Row 0 (the canopy against the HUD band): each tree is sized (x0.95..`stretch` of natural, same aspect) so its crown top lands `crown[0]`..`crown[1]` units below the band, so no bare strip shows between the HUD and the crowns. `hudGap` css px of air is kept under the HUD's lowest control. */
   crown: [2, 9] as const, stretch: 1.2, hudGap: 18,
   grow: 0.06, step: 22, stepGrow: 0.18, jitter: 0.65, lift: 8, bush: 0.1, bushH: [18, 28] as const,
@@ -140,17 +141,18 @@ export const GROUND = {
   /** Fence barricade (director 2 Nov, Sketchfab "the fence"): panel draw width, vertical step between stacked panels (units). */
 } as const;
 
-/** The wall's look per tier (TB-209): image set (rendered from the segmented Tripo models, one image per damage stage), field placement, the field y of the rendered breaches, and the palette tokens of its flying chunks. */
+/** The wall art's camera (TB-268): a perspective render (yaw 17.6, pitch 30, scale falling 0.125% a row like `depthScale`). Its orc-side
+ *  face at the foot is drawn at x = `face` on row 480 and runs `slope` px right per row up the screen, the line orcs stop on. */
+export const WALL_VIEW = { slope: 0.616, face: 124.5 } as const;
+
+/** The wall's look per tier (TB-209): image set (rendered from the segmented Tripo models, one image per damage stage), field placement, `foot` (the field y where its finished far end meets the ground, stage 0), the field y of the rendered breaches, and the palette tokens of its flying chunks. */
 export const WALL_ART = [
-  { key: 'wall0', x: -167.0, y: 106.4, w: 536.7, h: 766.4, breaches: [623, 548, 450, 350, 234], chunks: ['wallPalisade', 'wallPalisadeDark'] },
-  { key: 'wall1', x: -145.5, y: 102.2, w: 512.3, h: 744.8, breaches: [605, 533, 440, 343, 232], chunks: ['wallBattle', 'wallBattleDark'] },
-  { key: 'wall2', x: -123.0, y: 120.0, w: 478.1, h: 695.6, breaches: [585, 516, 427, 336, 229], chunks: ['wallStone', 'wallStoneDark'] },
-  { key: 'wall3', x: -73.3, y: 100.3, w: 437.3, h: 636.1, breaches: [609, 535, 475, 396, 316, 223], chunks: ['wallHeart', 'wallHeartDark'] },
+  { key: 'wall0', x: -265.7, y: 119.1, w: 612.7, h: 810.9, foot: 181.9, breaches: [543, 446, 348, 271, 201], chunks: ['wallPalisade', 'wallPalisadeDark'] },
+  { key: 'wall1', x: -297.3, y: 119.8, w: 641.2, h: 810.2, foot: 179.8, breaches: [518, 429, 339, 266, 200], chunks: ['wallBattle', 'wallBattleDark'] },
+  { key: 'wall2', x: -288.2, y: 131.7, w: 624.4, h: 798.3, foot: 178.2, breaches: [610, 489, 372, 282, 203], chunks: ['wallStone', 'wallStoneDark'] },
+  { key: 'wall3', x: -199.8, y: 117.4, w: 541.4, h: 799.0, foot: 178.0, breaches: [601, 481, 404, 324, 259, 198], chunks: ['wallHeart', 'wallHeartDark'] },
 ] as const;
 
-/** An actor's drawn box for the wall-front redraw (TB-264), in drawn radii from its foot: half width, height above, depth below.
- *  Generous on purpose: an actor caught by it is only drawn again, and the result is cut to the wall's own pixels. */
-export const WALL_FRONT = { halfW: 3, up: 5, down: 1.5 } as const;
 
 /** The wall's visible damage (TB-238, TB-209). stages: the health fractions below which the next rendered stage shows. Debris on a stage change: chunks per breach, speed, life, size, spin, gravity. Dust: puffs per breach, per blow, speed, life, radius, growth/s, alpha.
  *  Flames burn in the breaches from flameStage on: tongues, height, half width, spacing, flicker rate, embers/s. maxBits caps flying bits. */

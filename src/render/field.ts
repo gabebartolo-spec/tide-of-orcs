@@ -22,8 +22,9 @@ import { Ambience } from './ambience';
 import { Sky } from './sky';
 import { depthScale, depthY, setMeadowTop, worldY } from './depth';
 import { fitPostRows } from './postRows';
+import { placeWall, type PlacedWall } from './wallArt';
 import { Interp } from './interp';
-import { FIELD_VIEW, GAIT, PHONE_QUERY, QUALITY, WALL_ART, WALL_FRONT, LOOT_VFX, ORC_SHADOW, ORC_SHADOW_BASE, ORC_SPRITE, SKY, TREELINE, VFX, FLIPBOOK_SIZE, dusk } from '../data/presentation';
+import { FIELD_VIEW, GAIT, PHONE_QUERY, QUALITY, WALL_ART, LOOT_VFX, ORC_SHADOW, ORC_SHADOW_BASE, ORC_SPRITE, SKY, TREELINE, VFX, FLIPBOOK_SIZE, dusk } from '../data/presentation';
 import { Flipbooks } from './flipbook';
 import { WaveStrip } from './waveStrip';
 import { SLOTS } from '../data/loot';
@@ -103,6 +104,8 @@ export class FieldRenderer {
   private sky = new Sky();
   /** World y of the HUD band's foot, of the crown line (the open sky's foot) and of the wall's top, as last drawn. */
   private skyBand = -Infinity; private skyLine = -Infinity; private wallTop = -Infinity;
+  /** The wall art placed for this view (TB-268). */
+  private wall: PlacedWall = placeWall(WALL_ART[0], NaN);
   /** Drawn rows of the elf's post (TB-232): the first and last sim rows of the post and where they are drawn this frame. */
   private postRows = { a: H / 2 - SOURCES.archerOffsetY, b: H / 2 + SOURCES.archerOffsetY, lo: depthY(H / 2 - SOURCES.archerOffsetY), hi: depthY(H / 2 + SOURCES.archerOffsetY) };
   /** Drawn row of a member of the elf's post (elf, companion archers, ballista) standing on sim row `y`: the post's rows are spread over
@@ -281,7 +284,7 @@ export class FieldRenderer {
 
   draw(s: SimState, dt: number, aim: { x: number; y: number } | null = null): void {
     const g = this.g; this.sim = s;
-    this.fx.update(dt); this.clock += dt; this.wallDamage.update(dt, barFrac(s), WALL_ART[s.stats.wallTier] ?? WALL_ART[0], this.fx, this.reducedMotion);
+    this.fx.update(dt); this.clock += dt;
     for (let i = this.storms.length - 1; i >= 0; i--) { this.storms[i]!.life -= dt; if (this.storms[i]!.life <= 0) this.storms.splice(i, 1); }
     this.books.update(dt);
     for (let i = this.impacts.length - 1; i >= 0; i--) { this.impacts[i]!.life -= dt; if (this.impacts[i]!.life <= 0) this.impacts.splice(i, 1); }
@@ -303,6 +306,9 @@ export class FieldRenderer {
 
     // the elf's post stands on the meadow, clear of the skirt (TB-232); fitted before anything reads postY (the dusk lamp below does)
     fitPostRows(this.postRows, this.treeline.skirtBase(vis.y0), H);
+    // the wall's finished far end stands on the meadow in front of the bush skirt (TB-268)
+    this.wall = placeWall(WALL_ART[s.stats.wallTier] ?? WALL_ART[0], this.treeline.skirtBase(vis.y0));
+    this.wallDamage.update(dt, barFrac(s), this.wall, this.fx, this.reducedMotion);
 
     // plain (and the meadow beyond it, wherever the window reaches past the plain)
     this.ground.draw(g, k, vis.x0, vis.y0, vis.x1, vis.y1);
@@ -315,13 +321,9 @@ export class FieldRenderer {
     sortByY(orcs);
     this.forest(orcs);
 
-    // barricade
-    const top = Math.max(vis.y0, this.treeline.skirtBase(vis.y0) - TREELINE.cap.up); this.wallTop = top;  // the wall rises a little into the bush skirt; its stake tips are the cap,
+    // barricade: drawn whole, over the forest edge and its bush skirt (it is nearer than both)
+    const top = Math.max(vis.y0, this.wall.y); this.wallTop = Math.max(vis.y0, this.wall.foot - TREELINE.cap.up);
     this.fencePanels(top, H);
-    // the bush skirt in front of the wall's cut top: the palisade runs into the forest edge, never up among the trees (TB-268)
-    this.treeline.skirtUpTo(g, vis.y0, vis.x0, vis.x1, Infinity);
-    const cut = this.cutSpan(top); if (cut) this.treeline.wallCap(g, vis.y0, cut.xa, cut.xb, top);
-    this.treeline.orcsStart();
     if (s.stats.spikes) { g.fillStyle = P.cream; for (let y = 8; y < H; y += 24) { const wx = wallX(y); g.beginPath(); g.moveTo(wx, y); g.lineTo(wx + 9, y + 4); g.lineTo(wx, y + 8); g.closePath(); g.fill(); } }
 
     this.fx.drawGround(g);
@@ -360,10 +362,8 @@ export class FieldRenderer {
     g.globalAlpha = a0;
     this.treeline.end(g);
     // aerial haze over the wood and the back rows, on top of every actor there, so a far orc is as soft as the trees behind it (TB-232)
-    const hz = this.sky.haze(g, vis.x0, this.skyLine, vis.x1);
-    // the barricade is the nearest prop and takes no distance haze: its panels inside the haze band are drawn again over it
-    this.wallUnhazed(hz);
-    this.wallFront(s, orcs, vans, hz);
+    // the barricade takes the same haze as the trees and orcs at its far end (TB-268): it is drawn in perspective, not as the nearest prop
+    this.sky.haze(g, vis.x0, this.skyLine, vis.x1);
 
     // effects never rise into the sky band over the HUD: the world effects are clipped to the field below the crown line
     g.save(); g.beginPath(); g.rect(vis.x0 - 50, this.skyBand, vis.x1 - vis.x0 + 100, H - this.skyBand + 50); g.clip();
@@ -448,9 +448,8 @@ export class FieldRenderer {
 
   /** The barricade: one image of the whole slanted run down to `yMax` (or the plank fallback from `top`). It stays solid at any health; the HUD bar shows damage. */
   private fencePanels(top: number, yMax: number): void {
-    const g = this.g, L = WALL_ART[this.sim?.stats.wallTier ?? 0] ?? WALL_ART[0], fence = decorImg(`${L.key}_${this.wallDamage.stage}`) ?? decorImg(`${L.key}_0`);
+    const g = this.g, L = this.wall, fence = decorImg(`${L.key}_${this.wallDamage.stage}`) ?? decorImg(`${L.key}_0`);
     if (fence) {
-      // cut at `top`: the rendered wall stands taller than the meadow, and above the bush skirt it would stand among the trees (TB-268)
       const k = fence.width / L.w, a = Math.max(L.y, top), h = Math.min(yMax, L.y + L.h) - a;
       if (h > 0) g.drawImage(fence, 0, (a - L.y) * k, fence.width, h * k, L.x, a, L.w, h);
     } else for (let y = top - ((top % 18) + 18) % 18; y < yMax; y += 18) {
@@ -461,74 +460,6 @@ export class FieldRenderer {
     }
   }
 
-  private cut = { id: '', xa: 0, xb: -1 }; private cutRow: HTMLCanvasElement | null = null;
-  /** World x span of the wall art's painted pixels on world row `y` (its cut top), measured once per art and row; null if none. */
-  private cutSpan(y: number): { xa: number; xb: number } | null {
-    const L = WALL_ART[this.sim?.stats.wallTier ?? 0] ?? WALL_ART[0], st = this.wallDamage.stage, fence = decorImg(`${L.key}_${st}`) ?? decorImg(`${L.key}_0`);
-    if (!fence || typeof document === 'undefined' || y < L.y || y >= L.y + L.h) return null;
-    const k = fence.width / L.w, r = Math.floor((y - L.y) * k), id = `${L.key}_${st}|${r}`, c = this.cut;
-    if (id !== c.id) {
-      c.id = id; c.xb = -1;
-      const cv = (this.cutRow ??= document.createElement('canvas')); cv.width = fence.width; cv.height = 1;
-      const x = cv.getContext('2d', { willReadFrequently: true }); if (!x) return null;
-      x.clearRect(0, 0, cv.width, 1); x.drawImage(fence, 0, r, fence.width, 1, 0, 0, fence.width, 1);
-      const px = x.getImageData(0, 0, cv.width, 1).data; let i0 = -1, i1 = -1;
-      for (let i = 0; i < cv.width; i++) if (px[i * 4 + 3]! > 40) { if (i0 < 0) i0 = i; i1 = i; }
-      if (i0 >= 0) { c.xa = L.x + i0 / k; c.xb = L.x + (i1 + 1) / k; }
-    }
-    return c.xb >= c.xa ? { xa: c.xa, xb: c.xb } : null;
-  }
-
-  /** The barricade takes no distance haze: its rows inside the haze band are drawn again over it, less the skirt bushes standing in front of
-   *  its cut top (they keep their haze). Drawn offscreen, the bushes cut out of it, then laid back. */
-  private wallUnhazed(hz: number): void {
-    const L = WALL_ART[this.sim?.stats.wallTier ?? 0] ?? WALL_ART[0], a = Math.max(L.y, this.wallTop), y1 = Math.min(hz, L.y + L.h);
-    if (y1 <= a) return;
-    if (!decorImg(`${L.key}_0`) || typeof document === 'undefined') { this.fencePanels(this.wallTop, hz); return; }
-    const b = this.base, dx0 = Math.floor(b.sx * L.x + b.ex), dy0 = Math.floor(b.sy * a + b.ey);
-    const w = Math.ceil(b.sx * (L.x + L.w) + b.ex) - dx0, h = Math.ceil(b.sy * y1 + b.ey) - dy0;
-    if (w < 1 || h < 1) return;
-    const c = (this.coverCanvas ??= document.createElement('canvas')); if (c.width < w || c.height < h) { c.width = Math.max(c.width, w); c.height = Math.max(c.height, h); }
-    const og = c.getContext('2d')!, g = this.g;
-    og.setTransform(1, 0, 0, 1, 0, 0); og.clearRect(0, 0, c.width, c.height); og.setTransform(b.sx, 0, 0, b.sy, b.ex - dx0, b.ey - dy0);
-    this.g = og;
-    try {
-      this.fencePanels(this.wallTop, hz);
-      og.globalCompositeOperation = 'destination-out'; this.treeline.skirtOver(og, this.vis.y0, L.x, L.x + L.w);
-    } finally { og.globalCompositeOperation = 'source-over'; this.g = g; }
-    g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(c, 0, 0, w, h, dx0, dy0, w, h); g.restore();
-  }
-
-  /** TB-264: the wall's top is drawn again over the haze (it takes none, TB-239), which hid every actor standing in front of it there.
-   *  Actors near it are drawn again offscreen, hazed exactly as on the field, cut to the wall's own pixels and laid back over it. */
-  private wallFront(s: SimState, orcs: Orc[], vans: Vanguard[], hz: number): void {
-    const L = WALL_ART[s.stats.wallTier] ?? WALL_ART[0], y1 = Math.min(hz, L.y + L.h), F = WALL_FRONT;
-    if (y1 <= L.y || !decorImg(`${L.key}_0`)) return;
-    const near = (x: number, wy: number, r: number): boolean => { const y = depthY(wy), k = r * depthScale(wy); return x - k * F.halfW < L.x + L.w && x + k * F.halfW > L.x && y - k * F.up < y1 && y + k * F.down > L.y; };
-    const os: Orc[] = []; for (let i = this.orcsIn; i < orcs.length; i++) { const o = orcs[i]!; if (near(o.x, o.y, o.r)) os.push(o); }
-    const vs = vans.filter((v) => near(v.x, v.y, ACTOR_R));
-    const ws = s.stats.wolf ? [s.wolf, ...s.pack.slice(0, s.stats.extraWolves)].filter((w) => near(w.x, w.y, ACTOR_R)) : [];
-    if (!os.length && !vs.length && !ws.length) return;
-    const b = this.base, dx0 = Math.floor(b.sx * L.x + b.ex), dy0 = Math.floor(b.sy * L.y + b.ey);
-    const w = Math.ceil(b.sx * (L.x + L.w) + b.ex) - dx0, h = Math.ceil(b.sy * y1 + b.ey) - dy0;
-    if (w < 1 || h < 1) return;
-    const c = (this.frontCanvas ??= document.createElement('canvas')); if (c.width < w || c.height < h) { c.width = Math.max(c.width, w); c.height = Math.max(c.height, h); }
-    const og = c.getContext('2d')!, g = this.g, base = this.base;
-    og.setTransform(1, 0, 0, 1, 0, 0); og.clearRect(0, 0, c.width, c.height);
-    this.g = og; this.base = { sx: b.sx, sy: b.sy, ex: b.ex - dx0, ey: b.ey - dy0 };
-    try {
-      this.at(0, 0, false);
-      for (const v of vs) this.van(s, v);
-      for (const wf of ws) this.wolf(s, wf);
-      for (const o of os) { og.globalAlpha = Math.min(1, (o.y - this.emergeAt) / SKY.emerge); this.orc(s, o); }
-      og.globalAlpha = 1; this.at(0, 0, false);
-      og.globalCompositeOperation = 'source-atop'; this.sky.haze(og, this.vis.x0, this.skyLine, this.vis.x1);   // the same wash, on the actors only
-      og.globalCompositeOperation = 'destination-in'; this.fencePanels(this.wallTop, hz);                       // kept only where the wall was redrawn
-    } finally { og.globalCompositeOperation = 'source-over'; this.g = g; this.base = base; }
-    g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(c, 0, 0, w, h, dx0, dy0, w, h); g.restore();
-  }
-  private frontCanvas: HTMLCanvasElement | null = null;
-  private coverCanvas: HTMLCanvasElement | null = null;
 
   /** The forest edge along the top of the view (TB-220): the tree rows and the bush skirt first, then every orc still walking inside the forest, so each one is drawn whole and in front (never cut to an ear, an axe or a leg by a crown); the wall follows. */
   private forest(orcs: Orc[]): void {
@@ -542,7 +473,8 @@ export class FieldRenderer {
     // the sky runs behind the rows down to the skirt, deepening into the wood's shade under the crowns: no pale strip between trunks
     this.sky.tone(dusk(this.clock));  // TB-261: the sky, clouds and far haze follow the day
     this.sky.draw(g, this.clock, x0, y0, x1, hud, band, wood, edge - SKY.fade, tl.skirtBase(y0) + SKY.fade, this.reducedMotion);
-    tl.treesUpTo(g, y0, x0, x1, Infinity);  // the bush skirt waits for the barricade, so its bushes stand over the wall's cut end (TB-268)
+    tl.treesUpTo(g, y0, x0, x1, Infinity); tl.skirtUpTo(g, y0, x0, x1, Infinity);  // the bush skirt stands behind the barricade's far end (TB-268)
+    tl.orcsStart();
     // orcs never show among the trees (director, 5 Nov): an orc is not drawn at all until its feet clear the bush skirt, then fades in
     // over its first `SKY.emerge` units of meadow, so it appears out on the field, never in front of a trunk or crown
     let i = 0; while (i < orcs.length && orcs[i]!.y < edge) i++;

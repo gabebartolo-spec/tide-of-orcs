@@ -1,12 +1,11 @@
 import { WALL_ART, WALL_DAMAGE as D } from '../data/presentation';
-import { wallX } from '../sim/wallLine';
 import { P } from './palette';
 import { Particles } from './particles';
+import { wallFaceX as wallX, type PlacedWall as WallArt } from './wallArt';
 
 /** Which rendered damage stage shows at this health fraction: 0 whole, up to one per WALL_DAMAGE.stages entry. */
 export const wallStage = (frac: number): 0 | 1 | 2 | 3 => D.stages.filter((f) => frac < f).length as 0 | 1 | 2 | 3;
 
-type WallArt = (typeof WALL_ART)[number];
 interface Bit { x: number; y: number; vx: number; vy: number; life: number; max: number; r: number; spin: number; rot: number; chunk: boolean; c: string }
 
 /** The wall's visible damage (render only): which rendered stage shows, debris and dust at its breaches when the stage worsens, dust on every blow, small flames in the worst breaches. */
