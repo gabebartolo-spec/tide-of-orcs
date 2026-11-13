@@ -24,6 +24,7 @@ import { depthScale, depthY, setMeadowTop, worldY } from './depth';
 import { Interp } from './interp';
 import { FIELD_VIEW, GAIT, PHONE_QUERY, QUALITY, WALL_ART, WALL_FRONT, LOOT_VFX, ORC_SHADOW, ORC_SHADOW_BASE, ORC_SPRITE, SKY, TREELINE, VFX, DEPTH, FLIPBOOK_SIZE, dusk } from '../data/presentation';
 import { Flipbooks } from './flipbook';
+import { WaveStrip } from './waveStrip';
 import { SLOTS } from '../data/loot';
 import { BOSS_ROSTER } from '../data/bosses';
 import { quality, fitScale } from './quality';
@@ -63,6 +64,8 @@ export class FieldRenderer {
   private fx = new Particles();
   /** One-shot flipbooks: lit Cycles strips (TB-262) for the arrow strike, shatter, orc death, wall dust and boss slam; pixel lightning (TB-240). */
   private books = new Flipbooks();
+  /** The wave progress strip: a carved rail lit like the HUD (TB-263). */
+  private strip = new WaveStrip();
   private shake = 0;
   private storms: { pts: [number, number][]; life: number; c: string }[] = [];
   private impacts: { x: number; y: number; r: number; life: number }[] = [];
@@ -388,14 +391,9 @@ export class FieldRenderer {
     // HUD overlays (no shake)
     g.setTransform(sx, 0, 0, sy, ox, oy);
     // The wall bar, barricade and vanguard counts are the DOM HUD now (TB-195b, src/ui/hud.ts); the wave strip stays on the field.
-    // TB-207: the strip floats inside the field (inset clear of the full-screen side crop), rounded, instead of running along its edge
+    // TB-207: the strip floats inside the field (inset clear of the full-screen side crop); TB-263 carves it like the wall bar
     const wx = BAR_X + BAR_W / 2 + FIELD_VIEW.reach + 12, wy = H - 15 - (this.phone ? FIELD_VIEW.phoneStripLift : 0), ww = W - 40 - wx, wh = 6, wt = Math.min(1, s.run.waveT / WAVE_LEN);
-    g.fillStyle = P.ink; g.globalAlpha = 0.6; g.beginPath(); g.roundRect(wx - 2, wy - 2, ww + 4, wh + 4, wh / 2 + 2); g.fill(); g.globalAlpha = 1;
-    g.fillStyle = P.dim45; g.beginPath(); g.roundRect(wx, wy, ww, wh, wh / 2); g.fill();
-    if (wt > 0) { g.fillStyle = P.amber; g.beginPath(); g.roundRect(wx, wy, Math.max(wh, ww * wt), wh, wh / 2); g.fill(); }
-    // a cream rim and a glowing bead at the leading edge, so the strip reads as a finished gauge
-    g.strokeStyle = P.cream; g.globalAlpha = 0.35; g.lineWidth = 1; g.beginPath(); g.roundRect(wx - 1, wy - 1, ww + 2, wh + 2, wh / 2 + 1); g.stroke(); g.globalAlpha = 1;
-    if (wt > 0) { const bx = wx + Math.max(wh, ww * wt) - wh / 2; g.fillStyle = P.amber; g.globalAlpha = 0.3; g.beginPath(); g.arc(bx, wy + wh / 2, wh * 1.4, 0, 6.28); g.fill(); g.globalAlpha = 1; g.fillStyle = P.cream; g.beginPath(); g.arc(bx, wy + wh / 2, wh * 0.45, 0, 6.28); g.fill(); }
+    this.strip.draw(g, wx, wy, ww, wh, wt);  // TB-263: a carved rail with the lit heartwood fill
     if (this.flash > 0) { this.flash -= dt; g.globalAlpha = Math.max(0, this.flash / LOOT_VFX.flashLife) * this.flashA; g.fillStyle = this.flashC; g.fillRect(this.vis.x0, this.vis.y0, this.vis.x1 - this.vis.x0, H - this.vis.y0); g.globalAlpha = 1; }
     if (this.edge > 0) { const M = LOOT_VFX.mythic; g.globalAlpha = (this.edge / M.edge) * (0.6 + 0.4 * Math.sin(this.clock * M.flicker)); g.strokeStyle = P.rose; g.lineWidth = M.edgeW; g.strokeRect(this.vis.x0 + M.edgeW / 2, this.vis.y0 + M.edgeW / 2, this.vis.x1 - this.vis.x0 - M.edgeW, H - this.vis.y0 - M.edgeW); g.globalAlpha = 1; }
     this.ceremony.draw(g, dt, this.vis.x0, this.vis.y0, this.vis.x1, H);

@@ -42,6 +42,26 @@ def gold():
 
 def srgb(h): return tuple(((int(h[i:i+2], 16) / 255) ** 2.2) for i in (1, 3, 5))
 
+def actors_sun(s, suns):
+    """TB-263: light the piece with the field actors' sun (lit_render: SUN -0.6,1.6,0.5, 3.2, angle 0.14, warm white, sky world
+    SKYC) so the HUD and the field share one light: the key comes from the same screen direction (upper left, 20.6 deg off
+    vertical) in the same warm white and softness. It meets the face-on plaque at 38 deg (HUDINC; the old key's tilt, so carved
+    relief still reads: 20 deg, the sun on the field ground, flattened it), and the sky fill is 0.35 (HUDAMB; 0.65 as on the
+    actors washed metallic gilt to flat pale yellow and wax to pink). The strongest sun becomes that key; the others are capped
+    at lit_render's rim 0.6, unshadowed. HUDLIT=0 renders the old studio light (TB-136/TB-195h)."""
+    from mathutils import Vector
+    az = Vector((-0.6, 1.6)).normalized(); inc = math.radians(float(os.environ.get('HUDINC', '38')))
+    d = Vector((az.x * math.sin(inc), az.y * math.sin(inc), math.cos(inc)))
+    key = max(suns, key=lambda o: o.data.energy)
+    for o in suns:
+        if o is key:
+            o.rotation_euler = d.to_track_quat('Z', 'Y').to_euler(); o.data.energy = 3.2; o.data.angle = 0.14; o.data.color = (1, 0.95, 0.85)
+        else:
+            o.data.energy = min(o.data.energy, 0.6); o.data.use_shadow = False
+    s.world.use_nodes = True; bg = s.world.node_tree.nodes['Background']
+    bg.inputs[0].default_value = [float(x) for x in os.environ.get('SKYC', '0.8,0.88,1').split(',')] + [1]
+    bg.inputs[1].default_value = float(os.environ.get('HUDAMB', '0.35'))
+
 def light_cam(w, h):
     s = bpy.context.scene
     cam = bpy.data.cameras.new('cam'); cam.type = 'ORTHO'; cam.ortho_scale = max(w, h)
@@ -52,6 +72,7 @@ def light_cam(w, h):
     fill = bpy.data.lights.new('fill', 'SUN'); fill.energy = 0.6
     fo = bpy.data.objects.new('fill', fill); fo.rotation_euler = (math.radians(60), 0, math.radians(60)); s.collection.objects.link(fo)
     s.world = bpy.data.worlds.new('w'); s.world.color = (0.05, 0.06, 0.05)
+    if os.environ.get('HUDLIT', '1') == '1': actors_sun(s, [o for o in s.collection.objects if o.type == 'LIGHT'])
 
 def slab(name, verts2d, depth, bevel, mat):
     me = bpy.data.meshes.new(name); bm = bmesh.new()
