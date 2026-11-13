@@ -307,7 +307,7 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-257 | Visuals, wolf gait (director 12 Nov, too fast): stride already plants (2.16 measured vs 2.14); speed 210 cycled the gallop 8.2/s, so SOURCES.wolf.speed 210 -> 105 (4.1 strides/s) | art | claude | done 7da05cb |
 | TB-258 | Phone sprites stale (found 13 Nov): the cheap tier loads public/sprites/half/, but only camp was current; archer, elf, orcs, orcs2, van were older packs and the five boss sheets had no half copy. pack_sprites.py now writes every half sheet on each pack (director: ship with TB-253 phase 2) | art | claude | done (4dc9c0f) |
 | TB-259 | Visual overhaul 3, painted ground (director 12 Nov): the meadow as a painted ground in the lit style instead of the flat fill | art | claude | done (c13f71c) |
-| TB-260 | Visual overhaul 4, treeline depth (director 12 Nov): depth and light across the treeline rows to match the lit actors | art | claude | in progress |
+| TB-260 | Visual overhaul 4, treeline depth (director 12 Nov): depth and light across the treeline rows to match the lit actors | art | claude | done (PR pending) |
 | TB-261 | Visual overhaul 5a, lighting and time of day (director 13 Nov): a warm grade or day-to-dusk over the waves, built on the existing 10-minute cycle; no tint over the plain (cut in TB-174) | art | claude | open (after TB-260) |
 | TB-262 | Visual overhaul 5b, hit and death VFX in the lit style (director 13 Nov): impacts and deaths that read with the baked light and shadows | art | claude | open (after TB-261) |
 | TB-263 | Visual overhaul 5c, UI and HUD restyle to match the painted look (director 13 Nov) | ui | claude | open (after TB-262) |
