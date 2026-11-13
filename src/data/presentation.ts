@@ -3,6 +3,8 @@ import { BUILDINGS } from './camp';
 export const SKY = {
   /** Seconds for one full day-dusk-day cycle. */
   dayCycle: 600,
+  /** TB-261: where golden hour sits on the `dusk()` curve (0 midday, 1 deepest dusk); the sky tones (`SKY_TONE`) blend day -> gold -> dusk. */
+  gold: 0.5,
   /** Lamplight radius on the grove bank at full night. */
   lampR: 150,
   /** TB-232: the painted sky over the treeline. Under the HUD band an open strip of sky `open.frac` x the canvas height (at least `open.min`
