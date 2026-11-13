@@ -178,6 +178,14 @@ The richer carved wood (director 3 Nov, Hades reference): the TB-136 material pu
 - Wall-bar cracks are real splits: each rail is built from pieces between jagged crack lines, and per state the gaps widen
   and loose pieces tilt. Swallowtail ends are two convex halves (a concave ngon bevels into a stepped edge).
 - The report stamp is red-brown wax (#7a2a2a), a material colour, not the rose token; rose stays Heartwood and danger.
+- Lit by the actors' sun (TB-263, director 13 Nov): `actors_sun()` in `carve_hud.py` and `carve.py` (on by default, `HUDLIT=0` for the
+  old studio light) takes the key from the field sun's screen direction (upper left, `SUN=-0.6,1.6`) in its warm white and softness,
+  meeting the face-on plaque at 38° (`HUDINC`) with a sky fill of 0.35 (`HUDAMB`); the warm rim drops to lit_render's 0.6. The actors'
+  own 20° and 0.65 flattened the relief, washed metallic gilt to flat pale yellow and turned the wax pink. Relit: wall bar (all crack
+  states and fill), gem, banner, stamp, March plaque and `button.png` (so the panel buttons follow); other panel pieces unchanged.
+- The barricade label hangs on a carved `tag` (192x40, caps 24, drawn at 0.8 scale) instead of a flat pill. The field's wave strip
+  is a carved `wavebar` rail (640x32, caps 40, channel 30% of the height) with the wall bar's lit fill in its groove, drawn by
+  `src/render/waveStrip.ts` (`WAVE_STRIP` in presentation.ts); the TB-207 vector strip draws until both images load.
 
 ## Arcane skill tree (TB-163)
 

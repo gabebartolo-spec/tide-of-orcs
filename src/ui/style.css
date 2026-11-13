@@ -1092,3 +1092,8 @@ header, #hud, #toast, #campview, .wrap, .play { touch-action: pan-x pan-y; }
   body:not([data-mode="camp"]) .hud-wallbox { margin-right: 0.875rem; }
   body:not([data-mode="camp"]) .hud .stats { gap: 0.75rem; }
 }
+/* TB-263: the barricade label hangs under the wall bar on a carved tag (carve_hud.py `tag`, 192x40, caps 24) instead of a flat pill;
+   drawn at 0.8 scale (2rem tall, 1.2rem caps) so its nails stay round. */
+body:not([data-mode=camp]) .hud-wall .lbl { height: 2rem; line-height: 2rem; padding: 0 0.5rem; border-radius: 0; background: none; box-sizing: border-box;
+  border: solid transparent; border-width: 0 1.2rem; border-image: image-set(url("/ui/tag.webp") 1x, url("/ui/tag@2x.webp") 2x) 0 24 fill / 0 1.2rem stretch;
+  filter: drop-shadow(0 0.1875rem 0.25rem color-mix(in srgb, var(--ink) 70%, transparent)); }

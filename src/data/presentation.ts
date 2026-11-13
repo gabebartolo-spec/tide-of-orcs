@@ -419,3 +419,7 @@ export type FlipbookKey = keyof typeof FLIPBOOK;
 export const FLIPBOOK_SIZE = { impactPerR: 2.4, lightningPerR: 7, shatterPerR: 2.4, deathPerR: 4, wallDust: 40, wallDustDx: 16, slamPerR: 3.2 } as const;
 /** Most flipbooks alive at once (TB-240): a mass kill at the 160-orc cap must not cost a frame; extra ones are dropped. */
 export const FLIPBOOK_CAP = 80;
+/** The field's wave progress strip as a carved rail (TB-263, art/ui/carve_hud.py `wavebar`, lit like the HUD): source px of the 2x
+ *  piece, the end caps that do not stretch (`cap`), where the channel's fill starts inside each end (`inset`, inner edge of the gilt
+ *  band) and the channel's share of the piece height (`chan`). The fill is the wall bar's lit heartwood. */
+export const WAVE_STRIP = { src: 'ui/wavebar@2x.webp', fill: 'ui/wallbar-fill@2x.webp', w: 1280, h: 64, cap: 80, inset: 66, chan: 0.3 } as const;

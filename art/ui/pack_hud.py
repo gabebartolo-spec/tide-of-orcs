@@ -13,7 +13,7 @@ PIECES = {
     'gem': (14, 0.55), 'banner': (0, 0), 'wallbar': (0, 0), 'wallbar-crack1': (0, 0), 'wallbar-crack2': (0, 0),
     'wallbar-crack3': (0, 0), 'wallbar-fill': (0, 0), 'token-bow': (0, 0), 'token-satchel': (0, 0), 'token-seed': (0, 0),
     'token-cog': (0, 0), 'plate': (0, 0), 'satchel': (0, 0), 'pocket': (0, 0), 'report': (0, 0), 'stamp': (0, 0),
-    'march': (12, 0.75),
+    'march': (12, 0.75), 'tag': (0, 0), 'wavebar': (0, 0),
 }
 GLOW = (255, 196, 110)  # amber-hot starlight, between amber #e2a85b and fireCore #fff1c8
 
@@ -38,6 +38,7 @@ def save(im, path):
 
 total = 0
 for name, (r, k) in PIECES.items():
+    if not os.path.exists(os.path.join(raw, name + '.png')): continue  # TB-263: pack only what was re-rendered
     im = Image.open(os.path.join(raw, name + '.png')).convert('RGBA')
     if r: im = glow(im, r, k)
     # clear near-zero alpha dust so the edge is clean

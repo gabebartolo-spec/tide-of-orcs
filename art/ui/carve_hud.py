@@ -21,6 +21,26 @@ def reset():
     s.render.image_settings.file_format = 'PNG'; s.render.image_settings.color_mode = 'RGBA'
     return s
 
+def actors_sun(s, suns):
+    """TB-263: light the piece with the field actors' sun (lit_render: SUN -0.6,1.6,0.5, 3.2, angle 0.14, warm white, sky world
+    SKYC) so the HUD and the field share one light: the key comes from the same screen direction (upper left, 20.6 deg off
+    vertical) in the same warm white and softness. It meets the face-on plaque at 38 deg (HUDINC; the old key's tilt, so carved
+    relief still reads: 20 deg, the sun on the field ground, flattened it), and the sky fill is 0.35 (HUDAMB; 0.65 as on the
+    actors washed metallic gilt to flat pale yellow and wax to pink). The strongest sun becomes that key; the others are capped
+    at lit_render's rim 0.6, unshadowed. HUDLIT=0 renders the old studio light (TB-136/TB-195h)."""
+    from mathutils import Vector
+    az = Vector((-0.6, 1.6)).normalized(); inc = math.radians(float(os.environ.get('HUDINC', '38')))
+    d = Vector((az.x * math.sin(inc), az.y * math.sin(inc), math.cos(inc)))
+    key = max(suns, key=lambda o: o.data.energy)
+    for o in suns:
+        if o is key:
+            o.rotation_euler = d.to_track_quat('Z', 'Y').to_euler(); o.data.energy = 3.2; o.data.angle = 0.14; o.data.color = (1, 0.95, 0.85)
+        else:
+            o.data.energy = min(o.data.energy, 0.6); o.data.use_shadow = False
+    s.world.use_nodes = True; bg = s.world.node_tree.nodes['Background']
+    bg.inputs[0].default_value = [float(x) for x in os.environ.get('SKYC', '0.8,0.88,1').split(',')] + [1]
+    bg.inputs[1].default_value = float(os.environ.get('HUDAMB', '0.35'))
+
 def light_cam(w, h, px_w):
     """Top-down ortho camera over a w x h unit area rendered px_w wide. Key from the top left (as carve.py), a warm low
     rim from the top right that grazes every carved edge, a cool soft fill."""
@@ -35,6 +55,7 @@ def light_cam(w, h, px_w):
     sun('rim', 5.0, (1, 0.62, 0.3), 74, 135, 0.08)
     sun('fill', 0.5, (0.75, 0.82, 1), 60, 60, 0.6)
     s.world = bpy.data.worlds.new('w'); s.world.color = (0.04, 0.045, 0.04)
+    if os.environ.get('HUDLIT', '1') == '1': actors_sun(s, [o for o in s.collection.objects if o.type == 'LIGHT'])
 
 def render(name):
     if only and name not in only: return False
@@ -327,6 +348,30 @@ if want('wallbar-fill'):
     b = lit.node_tree.nodes['Principled BSDF']; b.inputs['Emission Color'].default_value = (*srgb('#ffb061'), 1); b.inputs['Emission Strength'].default_value = 0.6
     o = plank('fill', -3.8, -0.2, 3.8, 0.2, lit, 'x', 0.16, 0.02, 0.06)
     render('wallbar-fill')
+
+# --- barricade tag (TB-263): the small dark plaque that hangs under the wall bar and carries "Barricade 150 / 150", replacing the
+# flat CSS pill. A bark plank, gilt inlay line, a gilt nail at each end. 1x 192x40; 3-slice caps 24
+if want('tag'):
+    reset(); W, H = 4.8, 1.0; light_cam(W, H, 384); materials()
+    L, hh = 2.32, 0.4
+    body = box('body', -L, -hh, L, hh, 0.2, DARK, 0.1); relief(body, 'x', 0.035)
+    tube('inlay', rrect(-L + 0.4, -hh + 0.11, L - 0.4, hh - 0.11, 0.08), 0.022, GOLD, 0.21, True)
+    for sx in (-1, 1):
+        disc('nail', sx * (L - 0.2), 0, 0.075, 0.06, GOLD, 0.2, 0.025)
+    render('tag')
+
+# --- wave strip (TB-263): the field's wave progress gauge as a thin timber rail with a sunken channel and gilt bands, like the
+# wall bar; the lit heartwood fill (wallbar-fill) sits in the channel. 1x 640x32; 3-slice caps 40; channel 30% of the height
+if want('wavebar'):
+    reset(); light_cam(10.0, 0.5, 1280); materials()
+    L, hh, ch = 4.92, 0.22, 0.075
+    box('back', -L + 0.2, -ch - 0.01, L - 0.2, ch + 0.01, 0.06, flat('chan', '#120d09', 0.9), 0.01)
+    rnd = random.Random(5)
+    rail('top', L, ch, hh, [], rnd, 0, 0); rail('bot', L, -hh, -ch, [], rnd, 0, 0)
+    plank('cl', -L, -ch, -L + 0.2, ch, BARKV, 'y', 0.26, 0.02, 0.04); plank('cr', L - 0.2, -ch, L, ch, BARKV, 'y', 0.26, 0.02, 0.04)
+    for sx in (-1, 1):
+        box('band', sx * (L - 0.38) - 0.05, -hh - 0.01, sx * (L - 0.38) + 0.05, hh + 0.01, 0.3, GOLD, 0.02)
+    render('wavebar')
 
 # --- tab tokens: carved roundels with a gilt rim and a raised gilt emblem. 1x 72
 def token_base():

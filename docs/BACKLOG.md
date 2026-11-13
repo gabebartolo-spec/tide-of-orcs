@@ -310,6 +310,6 @@ Ids are stable (`TB-###`). Status: `todo` · `doing` · `review` · `done <hash>
 | TB-260 | Visual overhaul 4, treeline depth (director 12 Nov): depth and light across the treeline rows to match the lit actors | art | claude | done (f167ef9) |
 | TB-261 | Visual overhaul 5a, lighting and time of day (director 13 Nov): a warm grade or day-to-dusk over the waves, built on the existing 10-minute cycle; no tint over the plain (cut in TB-174) | art | claude | done (d4a7c8b) |
 | TB-262 | Visual overhaul 5b, hit and death VFX in the lit style (director 13 Nov): impacts and deaths that read with the baked light and shadows | art | claude | done (9ff3f4d) |
-| TB-263 | Visual overhaul 5c, UI and HUD restyle to match the painted look (director 13 Nov) | ui | claude | in progress |
+| TB-263 | Visual overhaul 5c, UI and HUD restyle to match the painted look (director 13 Nov) | ui | claude | done (PR pending) |
 | TB-264 | Actors drawn under the wall top (director 13 Nov: the ogre's cleaver and head under the log end): the unhazed wall-top redraw (TB-239) covered actors in front of it; `field.ts` wallFront redraws nearby actors, hazed, cut to the wall's pixels | render | claude | done (4dc9c0f) |
 | TB-265 | Wolf gallop looked fast-forwarded (director 13 Nov): GAIT.strideR.wolf 2.14 planted only the hind paws, so the run cycled 4.1/s; 4.19 from the mean paw-contact speed of the clip (2.1/s at speed 105) | art | claude | done (4dc9c0f) |
