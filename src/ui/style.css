@@ -901,6 +901,11 @@ body:not([data-mode="camp"]) :is(header .stat, .hud-wave) { width: 16rem; min-wi
   body:not([data-mode="camp"]) .hud-wall { width: 13rem; --chan: 10.7rem; }
   body:not([data-mode="camp"]) .hud-wall .fill { left: 1.1rem; background-size: 12.3rem 1rem; }
 }
+/* TB-270: below these widths the tightened HUD still ran past the right edge and Settings was cut off (a browser snapped to half of a 1920 screen is 960 px wide);
+   the run header scales down as a whole there, so every piece keeps its proportions. Mouse layouts only: touch screens have their own HUD (TB-218). */
+@media (max-width: 1100px) and (pointer: fine) { body:not([data-mode="camp"]) header { zoom: 0.82; width: calc(100vw / 0.82); } }
+@media (max-width: 1280px) and (pointer: fine) { body:not([data-mode="camp"]) header:has(#btn-pullback:not([hidden])) { zoom: 0.86; width: calc(100vw / 0.86); } }
+@media (max-width: 1100px) and (pointer: fine) { body:not([data-mode="camp"]) header:has(#btn-pullback:not([hidden])) { zoom: 0.76; width: calc(100vw / 0.76); } }
 /* TB-220: wide windows (rem 20 px at 1920) only overflow when the Replant pull-back button joins the row, so the same tightening applies just then. */
 @media (min-width: 1641px) {
   body:not([data-mode="camp"]) header:has(#btn-pullback:not([hidden])) { padding-inline: 1.25rem; }
