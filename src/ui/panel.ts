@@ -135,7 +135,7 @@ export class Panel {
   /** Called ~6 Hz. */
   update(): void {
     const s = this.game.state;
-    this.hud.starlight(s.run.starlight); this.hud.wall(s.run.barHp, s.stats.barMax, STR.barricadeHud(fmt(Math.max(0, s.run.barHp)), fmt(s.stats.barMax))); $('hud-van').hidden = !s.stats.muster; if (s.stats.muster) $('hud-van').textContent = STR.vanguardHud(s.vans.count, s.stats.vanCap); $('st-wave').textContent = s.run.tier > 1 ? STR.waveTide(s.run.wave, STR.tideName(s.run.tier)) : String(s.run.wave); $('st-kills').textContent = fmt(s.meta.lifetimeKills); $('st-heart').textContent = STR.heartAvail(hwSpendable(s));
+    this.hud.starlight(s.run.starlight); this.hud.wall(s.run.barHp, s.stats.barMax, STR.barricadeHud(fmt(Math.max(0, s.run.barHp)), fmt(s.stats.barMax))); $('hud-van').hidden = !s.stats.muster; if (s.stats.muster) $('hud-van').textContent = STR.vanguardHud(s.vans.count, s.stats.vanCap); $('st-wave').textContent = String(s.run.wave); $('hud-tide').hidden = s.run.tier <= 1; if (s.run.tier > 1) $('hud-tide').textContent = STR.tideName(s.run.tier); $('st-kills').textContent = fmt(s.meta.lifetimeKills); $('st-heart').textContent = STR.heartAvail(hwSpendable(s));
     if (!$('pane-satchel').hidden) this.satchel.update();
     for (const b of $('hw-tree').querySelectorAll<HTMLButtonElement>('button[data-hw]')) b.disabled = !canBuyHw(s, b.dataset.hw as HwId);
     this.camp.update(); this.paths.update();

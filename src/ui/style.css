@@ -1108,6 +1108,18 @@ body:not([data-mode=camp]) .hud-wall .lbl { height: 2rem; line-height: 2rem; pad
   border: solid transparent; border-width: 0 1.05rem; border-image: image-set(url("/ui/tag.webp") 1x, url("/ui/tag@2x.webp") 2x) 0 24 fill / 0 1.05rem stretch;
   text-shadow: 0 0 0.125rem #2a1a0a, 0.0625rem 0.0625rem 0 #2a1a0a, -0.0625rem -0.0625rem 0 #2a1a0a; filter: drop-shadow(0 0.1875rem 0.25rem color-mix(in srgb, var(--ink) 70%, transparent)); }
 body[data-mode="camp"] .hud-title { display: none; }
+/* TB-272: the tide (tier 2 and up) hangs under the wave plaque on the same carved tag; inside the plaque "Wave 69 · Second Tide" overran it */
+.hud-wave .tide { position: absolute; left: 50%; top: calc(100% - 0.125rem); transform: translateX(-50%); height: 1.75rem; line-height: 1.75rem; padding: 0 0.375rem; box-sizing: border-box;
+  font-size: 1rem; font-weight: 700; letter-spacing: .04em; color: #fff4dc; white-space: nowrap;
+  border: solid transparent; border-width: 0 1.05rem; border-image: image-set(url("/ui/tag.webp") 1x, url("/ui/tag@2x.webp") 2x) 0 24 fill / 0 1.05rem stretch;
+  text-shadow: 0 0 0.125rem #2a1a0a, 0.0625rem 0.0625rem 0 #2a1a0a, -0.0625rem -0.0625rem 0 #2a1a0a; filter: drop-shadow(0 0.1875rem 0.25rem color-mix(in srgb, var(--ink) 70%, transparent)); }
+.hud-wave .tide[hidden] { display: none; }
+/* TB-273: the vanguard count (Muster owned) sat half under the barricade tag in dim text on the sky; it hangs on its own carved tag below it now */
+body:not([data-mode="camp"]) .hud-wall { margin-bottom: 2.375rem; }
+body:not([data-mode="camp"]) .hud-van { align-self: center; height: 1.5rem; line-height: 1.5rem; padding: 0 0.375rem; box-sizing: border-box; font-size: 0.875rem; font-weight: 700; color: #fff4dc; white-space: nowrap;
+  border: solid transparent; border-width: 0 0.9rem; border-image: image-set(url("/ui/tag.webp") 1x, url("/ui/tag@2x.webp") 2x) 0 24 fill / 0 0.9rem stretch;
+  text-shadow: 0 0 0.125rem #2a1a0a, 0.0625rem 0.0625rem 0 #2a1a0a, -0.0625rem -0.0625rem 0 #2a1a0a; filter: drop-shadow(0 0.1875rem 0.25rem color-mix(in srgb, var(--ink) 70%, transparent)); }
+body:not([data-mode="camp"]) .hud-van[hidden] { display: none; }
 .prestige.deeds { display: block; }
 .deedbar { display: flex; align-items: baseline; gap: 1rem; } .deedbar h2 { margin: 0; } .deedbar .ghost { margin-left: auto; }
 .prestige.deeds h3 { margin: 1rem 0 0.375rem; font-family: var(--display); color: var(--star-gold); } .prestige.deeds h3 .k { font-family: inherit; font-size: 0.875rem; color: var(--text-dim); }

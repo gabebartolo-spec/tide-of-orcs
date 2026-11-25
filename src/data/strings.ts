@@ -23,7 +23,6 @@ export const STR = {
   waveN: (w: number) => `Wave ${w}`, waveCleared: 'Cleared',
   /** Boss tiers (TB-148): the tide a run plays at, picked at March. */
   tideName: (t: number) => `${['First', 'Second', 'Third', 'Fourth', 'Fifth', 'Sixth', 'Seventh', 'Eighth', 'Ninth', 'Tenth'][t - 1] ?? `${t}th`} Tide`,
-  waveTide: (w: number, tide: string) => `${w} · ${tide}`,
   tierUnlocked: (tide: string) => `The ${tide} gathers. Pick it when you march again.`,
   tierDown: 'Easier tide', tierUp: 'Harder tide',
   bossFalls: 'A Warboss falls. The tide hesitates.',
