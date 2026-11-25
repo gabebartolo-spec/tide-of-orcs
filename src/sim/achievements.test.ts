@@ -108,6 +108,17 @@ describe('achievement checks (TB-249)', () => {
     expect(wearCosmetic(s, 'cloak', 'trail_leaf')).toBe(false); // earned, but not a cloak
     expect(wearCosmetic(s, 'cloak', null)).toBe(true); expect(s.meta.ach.worn).toEqual({});
   });
+  it('cosmetics: trails and the rune ring wear in their own slots beside the cloak (TB-250)', () => {
+    const s = createState(1);
+    s.meta.ach.earned.push('wave_50', 'slain_1k', 'branch_bow');
+    expect(wearCosmetic(s, 'trail', 'trail_star')).toBe(false); // Every Myth not earned
+    expect(wearCosmetic(s, 'trail', 'trail_leaf')).toBe(true);
+    expect(wearCosmetic(s, 'ring', 'trail_leaf')).toBe(false); // a trail is not a ring
+    expect(wearCosmetic(s, 'ring', 'ring_rune')).toBe(true);
+    expect(wearCosmetic(s, 'cloak', 'cloak_ember')).toBe(true);
+    expect(s.meta.ach.worn).toEqual({ cloak: 'cloak_ember', trail: 'trail_leaf', ring: 'ring_rune' });
+    expect(wearCosmetic(s, 'trail', null)).toBe(true); expect(s.meta.ach.worn).toEqual({ cloak: 'cloak_ember', ring: 'ring_rune' });
+  });
   it('real play earns First Blood through the sim events (pure, deterministic)', () => {
     const s = createState(3), ev = new EventBus(), pend = freshAchPending(), got: string[] = [];
     for (let i = 0; i < 30 * 40; i++) {

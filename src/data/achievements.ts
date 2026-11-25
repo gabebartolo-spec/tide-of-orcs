@@ -18,11 +18,19 @@ export const COSMETICS = {
 } as const;
 export type CosmeticId = keyof typeof COSMETICS;
 
-/** Cosmetics the player wears, one per slot (TB-250). Only the cloak dyes have art so far; the rest show "arrives with the art pass". */
-export type CosmeticSlot = 'cloak';
+/** Cosmetics the player wears, one per slot (TB-250). Cloak dyes, arrow trails and the rune ring have art; the rest show "arrives with the art pass". */
+export type CosmeticSlot = 'cloak' | 'trail' | 'ring';
+export const COSMETIC_SLOTS: readonly CosmeticSlot[] = ['cloak', 'trail', 'ring'];
 /** Each cloak dye's sprite suffix: the elf draws `elf.<dye>` and `elf.<dye>.attack` (sheet_elf_<dye>.webp), the default `elf` without one. */
 export const CLOAK_DYES = { cloak_ember: 'ember', cloak_frost: 'frost', cloak_dusk: 'dusk', cloak_starlit: 'starlit', cloak_gold: 'gold' } as const;
-export const COSMETIC_SLOT: Partial<Record<CosmeticId, CosmeticSlot>> = Object.fromEntries(Object.keys(CLOAK_DYES).map((k) => [k, 'cloak']));
+/** Each arrow trail's look behind the lobbed arrow (TB-250): drawn in vector by render/field.ts, sizes in presentation.ts COSMETIC_VFX. */
+export const TRAILS = { trail_ember: 'ember', trail_star: 'star', trail_leaf: 'leaf' } as const;
+export type TrailStyle = (typeof TRAILS)[keyof typeof TRAILS];
+export const COSMETIC_SLOT: Partial<Record<CosmeticId, CosmeticSlot>> = {
+  ...Object.fromEntries(Object.keys(CLOAK_DYES).map((k) => [k, 'cloak'])),
+  ...Object.fromEntries(Object.keys(TRAILS).map((k) => [k, 'trail'])),
+  ring_rune: 'ring',
+};
 
 export interface AchDef {
   id: string; name: string; group: AchGroup; rule: string;

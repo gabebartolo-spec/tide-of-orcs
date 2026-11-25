@@ -29,7 +29,7 @@ import { Flipbooks } from './flipbook';
 import { WaveStrip } from './waveStrip';
 import { SLOTS } from '../data/loot';
 import { BOSS_ROSTER } from '../data/bosses';
-import { CLOAK_DYES } from '../data/achievements';
+import { CLOAK_DYES, TRAILS, type TrailStyle } from '../data/achievements';
 import { quality, fitScale } from './quality';
 import { setTiers } from '../sim/gear';
 
@@ -509,24 +509,71 @@ export class FieldRenderer {
     g.fillStyle = P.aimFill; g.beginPath(); g.arc(x, y, r, 0, 6.28); g.fill();
     g.strokeStyle = P.aimLine; g.lineWidth = 1.5; g.beginPath(); g.arc(x, y, r, 0, 6.28); g.stroke();
     g.strokeStyle = P.cream; g.beginPath(); g.arc(x, y, r, -Math.PI / 2, -Math.PI / 2 + ready * 6.28); g.stroke();
+    if (this.sim?.meta.ach.worn.ring === 'ring_rune') this.runeRing(x, y, r, ready);
   }
 
-  /** An arcing arrow: shadow on the ground, shaft in the air pointing along its flight. */
-  private lob(a: Projectile): void {
+  /** Rune ring (TB-250): carved runes turning slowly round the strike circle, brightening as the bow draws. Each glyph is
+   *  two or three short strokes picked by its index, so the ring reads as writing without any text. */
+  private runeRing(x: number, y: number, r: number, ready: number): void {
+    const g = this.g, R = VFX.cosmetic.rune, rr = r + R.gap, s = R.size, turn = this.reducedMotion ? 0 : this.clock * R.spin;
+    g.strokeStyle = P.starGold; g.lineWidth = R.w; g.lineCap = 'round';
+    g.globalAlpha = R.alpha * (1 - R.readyGlow + R.readyGlow * Math.max(0, ready));
+    for (let i = 0; i < R.n; i++) {
+      const a = turn + (i / R.n) * 6.28, cx = x + Math.cos(a) * rr, cy = y + Math.sin(a) * rr;
+      g.save(); g.translate(cx, cy); g.rotate(a + Math.PI / 2); g.beginPath();
+      g.moveTo(0, -s); g.lineTo(0, s);                                         // every rune has a stave
+      if (i % 3 === 0) { g.moveTo(0, -s); g.lineTo(s * 0.7, -s * 0.3); g.moveTo(0, 0); g.lineTo(s * 0.7, s * 0.4); }
+      else if (i % 3 === 1) { g.moveTo(-s * 0.6, -s * 0.5); g.lineTo(s * 0.6, s * 0.1); }
+      else { g.moveTo(0, -s * 0.2); g.lineTo(-s * 0.6, s * 0.5); g.moveTo(0, -s * 0.2); g.lineTo(s * 0.6, s * 0.5); }
+      g.stroke(); g.restore();
+    }
+    g.globalAlpha = 1; g.lineCap = 'butt';
+  }
+
+  /** An arcing arrow: shadow on the ground, shaft in the air pointing along its flight. A worn trail (TB-250) replaces the ghost shafts. */
+  private lob(a: Projectile, dt: number): void {
     const g = this.g, u = Math.min(1, a.t / LOB.flight);
     if (u >= 1) return;
     const dx = a.tx - a.sx, dy = a.ty - a.sy - LOB.arc * 4 * (1 - 2 * u), n = Math.hypot(dx, dy) || 1, ay = a.y - a.h;
     g.fillStyle = P.shadow; g.beginPath(); g.ellipse(a.x, a.y, 4, 1.5, 0, 0, 6.28); g.fill();
     g.strokeStyle = this.tint || P.cream; g.lineWidth = this.tint ? VFX.arrows.lobW : 1.5;
     if (this.tint) { g.fillStyle = this.tint; g.beginPath(); g.arc(a.x, ay, VFX.arrows.headR, 0, 6.28); g.fill(); }
-    if (!this.reducedMotion) {
+    const worn = this.sim?.meta.ach.worn.trail, style = worn ? TRAILS[worn as keyof typeof TRAILS] : undefined;
+    if (!this.reducedMotion && style) this.cosmeticTrail(a, style, ay, dt);
+    else if (!this.reducedMotion) {
       const T = VFX.trail;
       for (let i = 1; i <= T.lob; i++) {
         const v = Math.max(0, (a.t - T.gap * T.lobSpacing * i) / LOB.flight), gx = a.sx + (a.tx - a.sx) * v, gy = a.sy + (a.ty - a.sy) * v - LOB.arc * 4 * v * (1 - v);
         g.globalAlpha = T.alpha * (1 - (i - 1) / T.lob); g.beginPath(); g.moveTo(gx, gy); g.lineTo(gx - (dx / n) * 14, gy - (dy / n) * 14); g.stroke();
       }
       g.globalAlpha = 1;
-    } g.beginPath(); g.moveTo(a.x, ay); g.lineTo(a.x - (dx / n) * 14, ay - (dy / n) * 14); g.stroke();
+    }
+    g.strokeStyle = this.tint || P.cream; g.lineWidth = this.tint ? VFX.arrows.lobW : 1.5;
+    g.beginPath(); g.moveTo(a.x, ay); g.lineTo(a.x - (dx / n) * 14, ay - (dy / n) * 14); g.stroke();
+  }
+
+  /** A worn arrow trail (TB-250) along the lob's own arc: ember sparks, twinkling gold stars, or spinning leaves. */
+  private cosmeticTrail(a: Projectile, style: TrailStyle, ay: number, dt: number): void {
+    const g = this.g, C = VFX.cosmetic[style], gap = VFX.trail.gap * C.spacing;
+    for (let i = 1; i <= C.n; i++) {
+      const v = Math.max(0, (a.t - gap * i) / LOB.flight), gx = a.sx + (a.tx - a.sx) * v, gy = a.sy + (a.ty - a.sy) * v - LOB.arc * 4 * v * (1 - v);
+      const k = 1 - (i - 1) / C.n; g.globalAlpha = C.alpha * k;
+      if (style === 'ember') {
+        const E = VFX.cosmetic.ember, r = E.r * (0.5 + 0.5 * k);
+        g.fillStyle = P.fireGlow; g.beginPath(); g.arc(gx, gy, r * E.glow, 0, 6.28); g.fill();
+        g.fillStyle = i < 2 ? P.fireCore : i < 4 ? P.ember : P.fire; g.beginPath(); g.arc(gx, gy, r, 0, 6.28); g.fill();
+      } else if (style === 'star') {
+        const S = VFX.cosmetic.star, r = S.r * k * (0.75 + 0.25 * Math.sin(this.clock * S.twinkle + i * 1.7));
+        g.fillStyle = P.starGold; g.beginPath();
+        g.moveTo(gx, gy - r); g.lineTo(gx + r * 0.3, gy - r * 0.3); g.lineTo(gx + r, gy); g.lineTo(gx + r * 0.3, gy + r * 0.3);
+        g.lineTo(gx, gy + r); g.lineTo(gx - r * 0.3, gy + r * 0.3); g.lineTo(gx - r, gy); g.lineTo(gx - r * 0.3, gy - r * 0.3); g.closePath(); g.fill();
+      } else {
+        const L = VFX.cosmetic.leaf; g.fillStyle = i % 3 === 0 ? P.ember : i % 3 === 1 ? P.amber : P.fire;
+        g.beginPath(); g.ellipse(gx, gy, L.len * (0.6 + 0.4 * k), L.wide, this.clock * L.spin + i * 1.3, 0, 6.28); g.fill();
+      }
+    }
+    g.globalAlpha = 1;
+    if (style === 'ember' && Math.random() < VFX.cosmetic.ember.sparks * dt) this.fx.flame(a.x, ay, Math.random() < 0.5 ? P.ember : P.fire);
   }
 
   /** The shaman's fireball (TB-127): a shadow on the ground, a glowing ball (pale core, ember body, fire rim and halo) along its arc,
@@ -575,7 +622,7 @@ export class FieldRenderer {
   /** One projectile at its sim position (the caller offsets it for interpolation). */
   private shot(a: Projectile, dt: number): void {
     const g = this.g, A = VFX.arrows;
-    if (a.kind === 'lob') { this.lob(a); return; }
+    if (a.kind === 'lob') { this.lob(a, dt); return; }
     if (a.kind === 'fireball') { this.fireball(a, dt); return; }
     if (a.kind === 'star') { this.star(a); return; }
     if (a.kind === 'bounce') { g.fillStyle = P.arcaneGlow; g.beginPath(); g.arc(a.x, a.y, A.orbR * 2.2, 0, 6.28); g.fill(); g.fillStyle = P.arcane; g.beginPath(); g.arc(a.x, a.y, A.orbR * 1.4, 0, 6.28); g.fill(); g.fillStyle = P.arcaneCore; g.beginPath(); g.arc(a.x, a.y, A.orbR * 0.7, 0, 6.28); g.fill(); }
