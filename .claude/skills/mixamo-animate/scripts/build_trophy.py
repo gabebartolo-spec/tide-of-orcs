@@ -6,8 +6,10 @@
 # Rigs without Head/Neck names (the troll ogre's joint123): HEADB = comma bone names whose groups (and their child bones') count as
 # head, NECKB = comma bone names that count as neck.
 # CUT=plane (for heads whose skin weights are ragged): keep every vertex above a level plane between the neck bone and the head
-# bone (CUTF 0..1 along that gap, 0.3) and within RADK x the neck-to-head length of the head bone, sideways (3).
-# Subdivision modifiers are switched off before the cut (the weights belong to the base mesh). EEVEE-only materials (ogre228)
+# bone (CUTF 0..1 along that gap, 0.3, plus DZ metres) and within RADK x the neck-to-head length of the head bone sideways (along x; 3),
+# or within RAD metres when set, and RADY (default twice that) front to back (the snout), and BACK metres behind it.
+# In weights mode subdivision modifiers are switched off before the cut (the weights belong to the base mesh); a plane cut keeps
+# them (orc213's face detail is a multires sculpt). EEVEE-only materials (ogre228)
 # are made to drive Cycles, as lit_render.eevee_outputs() does for the sprites.
 # Env: NECK (0.5), KEEP (0.5), EYES (comma substrings, default eye,глаз), HEADW (0.5), DROP (comma substrings of meshes to leave out), TEX (dir: relink missing images by name)
 import bpy, bmesh, os, sys, math
@@ -30,10 +32,10 @@ for a in bpy.data.objects:
         for b in a.data.bones:
             if b.name in os.environ.get("HEADB", "").split(",") and os.environ.get("HEADB"): HB |= {b.name.lower()} | {c.name.lower() for c in b.children_recursive}
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); import lit_render; lit_render.eevee_outputs()
+PLANE = os.environ.get("CUT") == "plane"
 for o in bpy.data.objects:
     for m in getattr(o, "modifiers", []):
-        if m.type in ("SUBSURF", "MULTIRES"): m.show_render = m.show_viewport = False
-PLANE = os.environ.get("CUT") == "plane"
+        if m.type in ("SUBSURF", "MULTIRES") and not PLANE: m.show_render = m.show_viewport = False
 if PLANE:
     def bone(test):
         for a in bpy.data.objects:
@@ -42,9 +44,14 @@ if PLANE:
                     if test(b.name.lower()): return a.matrix_world @ b.head_local
     hb = bone(lambda n: n in HB if HB else n.endswith("head")); nb = bone(lambda n: n in NB if NB else n.endswith("neck"))
     ZC = nb.z + float(os.environ.get("CUTF", "0.3")) * (hb.z - nb.z); RAD = float(os.environ.get("RADK", "3")) * (hb - nb).length
+    if os.environ.get("RAD"): RAD = float(os.environ["RAD"])            # absolute radius in metres (orc213: its neck and head bones nearly touch)
+    ZC += float(os.environ.get("DZ", "0"))                               # metres added to the cut height
     print("PLANE z", round(ZC, 3), "rad", round(RAD, 3), "head", tuple(round(x, 2) for x in hb))
 bpy.context.view_layer.update()
 dg = bpy.context.evaluated_depsgraph_get(); parts = []
+if PLANE:   # BACK: keep only this many metres behind the head bone (away from the eyes): ogre228's hunched back
+    EW = [o.matrix_world @ v.co for o in bpy.data.objects if o.type == "MESH" and any(s in o.name.lower() for s in EYES) for v in o.data.vertices]
+    FY = 1 if EW and sum(p.y for p in EW) / len(EW) > hb.y else -1; BACK = float(os.environ.get("BACK", "9"))
 for o in list(bpy.data.objects):
     if o.type != "MESH" or o.hide_render or any(s in o.name.lower() for s in DROP): continue
     gi = {g.index: g.name for g in o.vertex_groups}
@@ -58,7 +65,7 @@ for o in list(bpy.data.objects):
             elif n.endswith("neck") or n.endswith("neck1"): s += NECK * e.weight
         return s
     ev = o.evaluated_get(dg); me = bpy.data.meshes.new_from_object(ev, depsgraph=dg); me.transform(o.matrix_world)
-    if PLANE: keep = [v.co.z >= ZC and (v.co.xy - hb.xy).length <= RAD for v in me.vertices]
+    if PLANE: keep = [v.co.z >= ZC and abs(v.co.x - hb.x) <= RAD and abs(v.co.y - hb.y) <= float(os.environ.get("RADY", 2 * RAD)) and (v.co.y - hb.y) * FY >= -BACK for v in me.vertices]   # a box: the shoulders lie along x, the snout sticks out along y
     else: keep = [score(v) >= KEEP for v in o.data.vertices]
     if len(keep) != len(me.vertices): print("SKIP vertex count changed", o.name); continue
     if not any(keep): continue
@@ -76,7 +83,7 @@ P = [v.co for p in parts for v in p.data.vertices]
 lo = Vector((min(p.x for p in P), min(p.y for p in P), min(p.z for p in P))); hi = Vector((max(p.x for p in P), max(p.y for p in P), max(p.z for p in P)))
 cen = (lo + hi) / 2
 E = [v.co for p in parts if any(s in p.name.lower() for s in EYES) for v in p.data.vertices]
-if not E: raise SystemExit("no eyes mesh matching " + EYES)
+if not E: raise SystemExit("no eyes mesh matching " + ",".join(EYES))
 f = sum(E, Vector()) / len(E) - cen; f.z = 0; f.normalize()
 yaw = math.atan2(f.y, f.x); R = Matrix.Rotation(math.pi - yaw, 4, "Z")   # turn the face to -X
 w = None

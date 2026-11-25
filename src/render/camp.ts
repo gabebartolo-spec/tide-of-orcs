@@ -1,5 +1,6 @@
 import { BuildingId } from '../data/camp';
-import { CAMP_ART, CAMP_ART0, CAMP_DRAW_ORDER, CAMP_SPOTS } from '../data/presentation';
+import { CAMP_ART, CAMP_ART0, CAMP_DECOR_ART, CAMP_SPOTS, CampDecorId } from '../data/presentation';
+import { campLayers } from './campDecor';
 import { P } from './palette';
 
 /** Encampment art (TB-188c, docs/plans/elf-encampment.md §1). TB-188k: levels 1-3 draw one image per building and level,
@@ -24,11 +25,13 @@ export class CampArt {
   private cache = new Map<string, HTMLCanvasElement>();
   private scale = 0;
 
-  /** Draw every building at its level. `g` is in scene units; `px` is device pixels per scene unit. */
-  draw(g: Ctx, levels: Partial<Record<BuildingId, number>>, px: number): void {
+  /** Draw every building at its level, and the earned decor (TB-250), back to front. `g` is in scene units; `px` is device pixels per
+   *  scene unit. A decor piece whose image has not loaded draws nothing. */
+  draw(g: Ctx, levels: Partial<Record<BuildingId, number>>, px: number, decor: readonly CampDecorId[] = []): void {
     if (Math.abs(px - this.scale) > 0.01) { this.cache.clear(); this.scale = px; }
     g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high';
-    for (const b of CAMP_DRAW_ORDER) {
+    for (const b of campLayers(decor)) {
+      if (b.kind === 'decor') { const im = img(b.id), r = CAMP_DECOR_ART[b.id]; if (im) g.drawImage(im, r.x, r.y, r.w, r.h); continue; }
       const lv = Math.min(3, levels[b.id] ?? 0), p = CAMP_SPOTS[b.id], key = `${b.id}${lv}`;
       const im = img(key);
       if (im) { const r = lv > 0 ? CAMP_ART[b.id][lv - 1]! : CAMP_ART0[b.id]; g.drawImage(im, r.x, r.y, r.w, r.h); continue; }

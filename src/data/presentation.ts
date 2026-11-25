@@ -312,6 +312,25 @@ export const CAMP_ELK_R_ART: CampSheetRect = /*ELKR*/{ x: 570.7, y: -161.0, w: 6
 /** Scene point under the rendered elk's hooves (render_camp_backdrop.py ELK_AT): the anchor each elk scales about. */
 export const CAMP_ELK_FOOT = { x: 600, y: -110 } as const;
 
+/** Camp decor (TB-250 batch 2): each piece appears in the camp once the achievement whose cosmetic it is has been earned; it has no
+ *  wear slot. Boss trophies (a boss's head cut from its model by build_trophy.py, on a shelf before a round wooden plaque on a post)
+ *  stand in a row on the meadow between the kitchen and the training ground; path banners (a pennant in the path's deep tint with its sigil, on a pole)
+ *  stand above the road. Rendered by render_camp_backdrop.py's trophy_* and banner_* passes with the buildings' camera, sun and
+ *  4 px per unit, cropped by post_decor.py to public/decor/camp/<id>.webp, drawn at x, y (top-left), w x h scene units. `foot` is
+ *  the scene y the piece stands on: decor and buildings are drawn back to front by it. Rects are printed by post_decor.py. */
+export interface CampDecorRect { readonly x: number; readonly y: number; readonly w: number; readonly h: number; readonly foot: number }
+export const CAMP_DECOR_ART = {
+  trophy_warboss: { x: 823.5, y: -79.8, w: 64.5, h: 74.0, foot: -28 },
+  trophy_ogre: { x: 886.0, y: -91.8, w: 45.0, h: 62.0, foot: -40 },
+  trophy_orc: { x: 929.5, y: -83.8, w: 44.5, h: 61.2, foot: -32 },
+  trophy_raider: { x: 972.2, y: -95.8, w: 44.8, h: 62.2, foot: -44 },
+  trophy_ogre_creature: { x: 1015.2, y: -85.8, w: 44.8, h: 62.2, foot: -34 },
+  banner_serpent: { x: 607.2, y: 127.5, w: 48.2, h: 80.8, foot: 192 },
+  banner_fox: { x: 651.0, y: 121.5, w: 59.8, h: 86.8, foot: 186 },
+  banner_magpie: { x: 727.5, y: 127.5, w: 43.2, h: 69.0, foot: 192 },
+} as const satisfies Readonly<Record<string, CampDecorRect>>;
+export type CampDecorId = keyof typeof CAMP_DECOR_ART;
+
 export const CAMP_LIFE = {
   cap: 120,
   sparks: { rate: 3.5, life: [0.45, 0.85], vx: [-7, 7], vy: [-30, -17], grav: 30, wind: 0, r0: 0.9, r1: 0.5, a: 1 },

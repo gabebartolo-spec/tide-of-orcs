@@ -1,0 +1,18 @@
+{
+ "size": [
+  1280,
+  800
+ ],
+ "dpr": 1,
+ "order": [
+  "first_boss",
+  "boss_streak",
+  "boss_swift",
+  "boss_tier6",
+  "boss_roster",
+  "path_serpent",
+  "path_fox",
+  "path_magpie"
+ ],
+ "k": 1.0720268006700167
+}
