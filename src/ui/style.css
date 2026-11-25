@@ -42,7 +42,8 @@ header h1 em { color: var(--amber); font-style: normal; }
 .main { display: grid; grid-template-columns: minmax(0, 1fr) 23.75rem; gap: 0.875rem; align-items: start; }
 .field { position: relative; width: 100%; aspect-ratio: 15 / 8; max-width: 100%; border-radius: 0.625rem; overflow: hidden; background: var(--sage-deep); outline: 0.0625rem solid var(--line); }
 .field canvas { width: 100%; height: 100%; display: block; cursor: none; touch-action: none; }
-.toast { position: absolute; left: 50%; top: 0.75rem; transform: translateX(-50%); background: color-mix(in srgb, var(--ink) 85%, transparent); border: 0.0625rem solid var(--line); padding: 0.375rem 0.875rem; border-radius: 62.4375rem; font-size: 0.9375rem; pointer-events: none; opacity: 0; transition: opacity .3s; white-space: nowrap; }
+/* TB-269: the toast is fixed at the body level, under the header (--hud-clear, set by the panel), so it shows on the camp pages and is never hidden behind the run HUD plates */
+.toast { position: fixed; z-index: 6; left: 50%; top: calc(var(--hud-clear, 0px) + 0.75rem); transform: translateX(-50%); background: color-mix(in srgb, var(--ink) 85%, transparent); border: 0.0625rem solid var(--line); padding: 0.375rem 0.875rem; border-radius: 62.4375rem; font-size: 0.9375rem; pointer-events: none; opacity: 0; transition: opacity .3s; white-space: nowrap; }
 .toast.on { opacity: 1; }
 .fallen { position: absolute; inset: 0; background: color-mix(in srgb, var(--ink) 82%, transparent); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.625rem; text-align: center; padding: 1.25rem; }
 .fallen h2 { font-family: var(--display); font-weight: 400; font-size: 2.125rem; margin: 0; }
@@ -127,7 +128,7 @@ header h1 em { color: var(--amber); font-style: normal; }
 /* Satchel tab badge: items kept since it was last opened */
 .tabs .badge { margin-left: 0.375rem; padding: 0 0.4375rem; border-radius: 62.4375rem; background: var(--amber); color: var(--ink); font-size: 0.75rem; letter-spacing: 0; text-transform: none; font-weight: 700; }
 /* Drop banners (TB-192): one card per kept drop under the toast, icon + rarity + name, rarity framed */
-.lootbanners { position: absolute; left: 50%; top: 3.25rem; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 0.375rem; pointer-events: none; z-index: 2; }
+.lootbanners { position: absolute; left: 50%; top: calc(var(--hud-clear, 0px) + 3.25rem); transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 0.375rem; pointer-events: none; z-index: 2; }
 .lootbanner { display: flex; align-items: center; gap: 0.75rem; padding: 0.375rem 1.125rem 0.375rem 0.375rem; border-radius: 0.5rem; background: linear-gradient(to right, color-mix(in srgb, var(--rar) 35%, var(--ink)), color-mix(in srgb, var(--ink) 90%, transparent)); border: 0.125rem solid var(--rar); box-shadow: 0 0 1rem color-mix(in srgb, var(--rar) 55%, transparent); animation: banner-in .35s ease-out; white-space: nowrap; }
 .lootbanner .txt { display: flex; flex-direction: column; }
 .lootbanner .rar { color: var(--rar); font-size: 0.8125rem; text-transform: uppercase; letter-spacing: .14em; font-weight: 700; }
@@ -900,6 +901,11 @@ body:not([data-mode="camp"]) :is(header .stat, .hud-wave) { width: 16rem; min-wi
   body:not([data-mode="camp"]) .hud-wall { width: 13rem; --chan: 10.7rem; }
   body:not([data-mode="camp"]) .hud-wall .fill { left: 1.1rem; background-size: 12.3rem 1rem; }
 }
+/* TB-270: below these widths the tightened HUD still ran past the right edge and Settings was cut off (a browser snapped to half of a 1920 screen is 960 px wide);
+   the run header scales down as a whole there, so every piece keeps its proportions. Mouse layouts only: touch screens have their own HUD (TB-218). */
+@media (max-width: 1100px) and (pointer: fine) { body:not([data-mode="camp"]) header { zoom: 0.82; width: calc(100vw / 0.82); } }
+@media (max-width: 1280px) and (pointer: fine) { body:not([data-mode="camp"]) header:has(#btn-pullback:not([hidden])) { zoom: 0.86; width: calc(100vw / 0.86); } }
+@media (max-width: 1100px) and (pointer: fine) { body:not([data-mode="camp"]) header:has(#btn-pullback:not([hidden])) { zoom: 0.76; width: calc(100vw / 0.76); } }
 /* TB-220: wide windows (rem 20 px at 1920) only overflow when the Replant pull-back button joins the row, so the same tightening applies just then. */
 @media (min-width: 1641px) {
   body:not([data-mode="camp"]) header:has(#btn-pullback:not([hidden])) { padding-inline: 1.25rem; }
@@ -1102,6 +1108,18 @@ body:not([data-mode=camp]) .hud-wall .lbl { height: 2rem; line-height: 2rem; pad
   border: solid transparent; border-width: 0 1.05rem; border-image: image-set(url("/ui/tag.webp") 1x, url("/ui/tag@2x.webp") 2x) 0 24 fill / 0 1.05rem stretch;
   text-shadow: 0 0 0.125rem #2a1a0a, 0.0625rem 0.0625rem 0 #2a1a0a, -0.0625rem -0.0625rem 0 #2a1a0a; filter: drop-shadow(0 0.1875rem 0.25rem color-mix(in srgb, var(--ink) 70%, transparent)); }
 body[data-mode="camp"] .hud-title { display: none; }
+/* TB-272: the tide (tier 2 and up) hangs under the wave plaque on the same carved tag; inside the plaque "Wave 69 · Second Tide" overran it */
+.hud-wave .tide { position: absolute; left: 50%; top: calc(100% - 0.125rem); transform: translateX(-50%); height: 1.75rem; line-height: 1.75rem; padding: 0 0.375rem; box-sizing: border-box;
+  font-size: 1rem; font-weight: 700; letter-spacing: .04em; color: #fff4dc; white-space: nowrap;
+  border: solid transparent; border-width: 0 1.05rem; border-image: image-set(url("/ui/tag.webp") 1x, url("/ui/tag@2x.webp") 2x) 0 24 fill / 0 1.05rem stretch;
+  text-shadow: 0 0 0.125rem #2a1a0a, 0.0625rem 0.0625rem 0 #2a1a0a, -0.0625rem -0.0625rem 0 #2a1a0a; filter: drop-shadow(0 0.1875rem 0.25rem color-mix(in srgb, var(--ink) 70%, transparent)); }
+.hud-wave .tide[hidden] { display: none; }
+/* TB-273: the vanguard count (Muster owned) sat half under the barricade tag in dim text on the sky; it hangs on its own carved tag below it now */
+body:not([data-mode="camp"]) .hud-wall { margin-bottom: 2.375rem; }
+body:not([data-mode="camp"]) .hud-van { align-self: center; height: 1.5rem; line-height: 1.5rem; padding: 0 0.375rem; box-sizing: border-box; font-size: 0.875rem; font-weight: 700; color: #fff4dc; white-space: nowrap;
+  border: solid transparent; border-width: 0 0.9rem; border-image: image-set(url("/ui/tag.webp") 1x, url("/ui/tag@2x.webp") 2x) 0 24 fill / 0 0.9rem stretch;
+  text-shadow: 0 0 0.125rem #2a1a0a, 0.0625rem 0.0625rem 0 #2a1a0a, -0.0625rem -0.0625rem 0 #2a1a0a; filter: drop-shadow(0 0.1875rem 0.25rem color-mix(in srgb, var(--ink) 70%, transparent)); }
+body:not([data-mode="camp"]) .hud-van[hidden] { display: none; }
 .prestige.deeds { display: block; }
 .deedbar { display: flex; align-items: baseline; gap: 1rem; } .deedbar h2 { margin: 0; } .deedbar .ghost { margin-left: auto; }
 .prestige.deeds h3 { margin: 1rem 0 0.375rem; font-family: var(--display); color: var(--star-gold); } .prestige.deeds h3 .k { font-family: inherit; font-size: 0.875rem; color: var(--text-dim); }

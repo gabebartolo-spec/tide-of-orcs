@@ -10,6 +10,9 @@ export const WALL_LINE = { baseX: 110, baseY: 480, slope: 0.65, front: 22 } as c
  *  Orcs march in on rows `spawnTop`..H-`spawnYPad` only: the meadow every screen shows. Above it the treeline covers the field
  *  (its bush skirt reaches row 218 on a 360 px tall phone, plus the 30-row fade-in), and an orc there was never drawn but still hit the wall. */
 export const SIM_MISC = { spawnXPad: 24, spawnYPad: 50, spawnTop: 250, tau: 6.28, shotLife: 2.2, hitFlash: 0.12 } as const;
+/** Event buffer per frame (TB-271): past `fxCap` the render-only effects are dropped; every other event (fall, boss, loot, kill, achievement
+ *  input) is kept up to `hardCap`, so a busy late-wave frame can never lose the fall or a boss result. */
+export const EVENT_CAP = { fxCap: 2000, hardCap: 20000 } as const;
 export const WAVE_LEN = 24;
 /** Checkpoints (TB-159; every 5 since TB-172): clearing every `every`-th wave lets later runs start just past it (0 = off). */
 export const CHECKPOINT = { every: 5 };

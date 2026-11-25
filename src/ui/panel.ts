@@ -135,7 +135,7 @@ export class Panel {
   /** Called ~6 Hz. */
   update(): void {
     const s = this.game.state;
-    this.hud.starlight(s.run.starlight); this.hud.wall(s.run.barHp, s.stats.barMax, STR.barricadeHud(fmt(Math.max(0, s.run.barHp)), fmt(s.stats.barMax))); $('hud-van').hidden = !s.stats.muster; if (s.stats.muster) $('hud-van').textContent = STR.vanguardHud(s.vans.count, s.stats.vanCap); $('st-wave').textContent = s.run.tier > 1 ? STR.waveTide(s.run.wave, STR.tideName(s.run.tier)) : String(s.run.wave); $('st-kills').textContent = fmt(s.meta.lifetimeKills); $('st-heart').textContent = STR.heartAvail(hwSpendable(s));
+    this.hud.starlight(s.run.starlight); this.hud.wall(s.run.barHp, s.stats.barMax, STR.barricadeHud(fmt(Math.max(0, s.run.barHp)), fmt(s.stats.barMax))); $('hud-van').hidden = !s.stats.muster; if (s.stats.muster) $('hud-van').textContent = STR.vanguardHud(s.vans.count, s.stats.vanCap); $('st-wave').textContent = String(s.run.wave); $('hud-tide').hidden = s.run.tier <= 1; if (s.run.tier > 1) $('hud-tide').textContent = STR.tideName(s.run.tier); $('st-kills').textContent = fmt(s.meta.lifetimeKills); $('st-heart').textContent = STR.heartAvail(hwSpendable(s));
     if (!$('pane-satchel').hidden) this.satchel.update();
     for (const b of $('hw-tree').querySelectorAll<HTMLButtonElement>('button[data-hw]')) b.disabled = !canBuyHw(s, b.dataset.hw as HwId);
     this.camp.update(); this.paths.update();
@@ -190,7 +190,7 @@ export class Panel {
 
   /** A kept drop's card (TB-192): icon, name and rarity under the toast, for LOOT_BANNER.life seconds by rarity. */
   private lootBanner(it: Parameters<typeof itemName>[0]): void {
-    const box = $('loot-banners'), el = document.createElement('div');
+    this.clearHud(); const box = $('loot-banners'), el = document.createElement('div');
     el.className = `lootbanner r-${it.rarity}`;
     el.innerHTML = `${glyph(it.slot, it, true)}<span class="txt"><span class="rar">${STR.rarityName[it.rarity] ?? it.rarity}</span><span class="nm">${STR.lootFound(itemName(it))}</span></span>`;
     box.prepend(el);
@@ -368,8 +368,14 @@ export class Panel {
   /** The worn title on a carved tag under the wall bar (TB-249). */
   private showTitle(t: string | null): void { const el = $('hud-title'); el.hidden = !t; el.textContent = t ?? ''; }
 
+  /** TB-269: toasts and drop banners sit under the header, whose height changes with the mode, layout and text size. */
+  private clearHud(): void {
+    const h = document.querySelector('header'), b = h && getComputedStyle(h).display !== 'none' ? h.getBoundingClientRect().bottom : 0;
+    document.documentElement.style.setProperty('--hud-clear', `${Math.max(0, Math.round(b))}px`);
+  }
+
   toast(msg: string): void {
-    const el = $('toast'); el.textContent = msg; el.classList.add('on');
+    this.clearHud(); const el = $('toast'); el.textContent = msg; el.classList.add('on');
     clearTimeout(this.toastTimer); this.toastTimer = window.setTimeout(() => el.classList.remove('on'), 2600);
   }
 }

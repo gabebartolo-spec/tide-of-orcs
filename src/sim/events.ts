@@ -1,3 +1,4 @@
+import { EVENT_CAP } from '../data/balance';
 /** Sim → render/audio events. Sim pushes; observers drain once per frame. */
 
 /** What struck an orc's killing blow (TB-249): achievements count kills by source. Chained deaths (shatter, venom burst) are `other`. */
@@ -72,8 +73,15 @@ export type SimEvent =
   /** Wipe or import swapped the whole game (TB-216b): field and audio drop the old game's transient state. */
   | { t: 'gameReset' };
 
+/** Events only render and audio read (no achievement, panel or save logic): the first to go when a frame's buffer is full (TB-271). */
+const FX_ONLY: ReadonlySet<SimEvent['t']> = new Set<SimEvent['t']>(['hit', 'orcSwing', 'vanStrike', 'bleed', 'bounceHit', 'fireStrike', 'chill', 'stun',
+  'pinned', 'burnSpread', 'vanguardHit', 'fireballCast', 'fireballStrike', 'bite', 'hawkDive', 'drumBeat', 'riderLeap', 'starCloak', 'ignite', 'knife']);
+
 export class EventBus {
   private buf: SimEvent[] = [];
-  push(e: SimEvent): void { if (this.buf.length < 2000) this.buf.push(e); }
+  push(e: SimEvent): void {
+    const n = this.buf.length;
+    if (n < EVENT_CAP.fxCap || (n < EVENT_CAP.hardCap && !FX_ONLY.has(e.t))) this.buf.push(e);
+  }
   drain(): SimEvent[] { const out = this.buf; this.buf = []; return out; }
 }

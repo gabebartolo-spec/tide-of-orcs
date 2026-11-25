@@ -214,3 +214,25 @@ Regression pass after the pixel VFX (TB-240), camp from Tripo models (TB-241, TB
 | Not run | | B3–B5, H2, I1, I2, J1, G, K2 (need the visible pane or the perf script) |
 
 Findings: none. A tip for later soaks: the buy intents are allowed while fallen (the grove tab), so a "buy refused while fallen" invariant is wrong; only boss summon is refused.
+
+## Run 8 (25 Nov 2026, launch bug bash, dev build of main at 105b8e1, claude)
+Full pass before launch (itch only). `npm run lint`, `npm run test` (527 tests, 529 after the fixes) and `npm run build` pass; the production build (`vite preview`) loads with every request 200 and no console output. Headless Chromium in a cloud container (SwiftShader, no GPU), real pointer and clicks; the late checks use a wave-68, tier-2 save made by the soak.
+
+| Check | Result | Evidence |
+|---|---|---|
+| A1–A4 | pass | Wipe: wave 1, 0 starlight, grunts only, `root` only. Hover sets the aim and the strike circle follows; a click adds nothing; the pointer off the plain clears the aim |
+| C2–C4, D3, D4 | pass | Two soaks from a wipe, 200,000 ticks each (~67 sim min), aiming at the front orc, buying every node and Heartwood rank, upgrading buildings, choosing a random path and tier at each Replant: 70 and 45 falls, waves to 55 and 69, checkpoint 66, tier 2 unlocked, live orcs peaked at exactly 160, all nine kinds marched; 0 invariant violations (NaN, negative starlight or Heartwood, wall HP out of range, starlight rising while fallen, boss summoned while fallen, still fallen after Replant); falls paid 0 Heartwood except after a cleared boss (3, 6) |
+| C2, C3 | pass, see TB-271 | Fallen board, To the grove, all six tabs by click |
+| B5 | pass | Tab enters the tree, Enter learns |
+| G1, G2 | pass | Late save: 40 items in the grid, item card with Wear, Lock, Salvage; compare plates |
+| K1 | pass | Each of the four buildings upgraded to level 1 by click on the camp scene, toast per upgrade |
+| K2 | pass | Path cards on the Replant tab; the tier picker (‹ Second Tide ›) and March again start a tier-2 run at the checkpoint |
+| Achievements | pass | 28–29 earned in each soak; wearing a cloak, bow and trail from the Achievements tab saves and toasts; worn bow, cloak and trail draw on the elf |
+| H1, H2, H3 | pass | Reload restores wave, ranks, prestiges; Export, then Import (two clicks) restores starlight and slain; a bad string toasts "That save could not be read"; Wipe (two clicks) resets; hidden tab advances one tick at most |
+| I1, I2 | pass | Motion "Reduced" sets `data-calm` and `field.reducedMotion`; volume 0 sets the master gain to 0 |
+| I3 | pass | 0 console errors, warnings, failed requests or frame-guard throws in any session |
+| Layout | fixed | 960–2560 px wide: see TB-269, TB-270, TB-272, TB-273 |
+| J1 | pending | The container has no GPU (SwiftShader), so its numbers say nothing; the run on the director's PC waits for a window with no Blender render |
+
+Findings, all fixed in this run's PR: TB-269 (toasts hidden behind the HUD, and never shown on the grove pages), TB-270 (Settings cut off below ~1100 px wide), TB-271 (a full event buffer could drop the fall, so no fallen panel), TB-272 (tide name ran off the wave plaque), TB-273 (vanguard count under the barricade tag), TB-274 (Thornwall spikes up in the sky).
+Not filed, for the director: the Achievements tab still lists "(arrives with the art pass)" rewards (the cosmetics thread's TB-250 work), and Settings shows a "Playtest data · Download run log" button in the launch build.
