@@ -26,6 +26,12 @@ describe('achievements pane (TB-249)', () => {
     expect(deedRow('branch_bow', true, true)).toContain('data-undress="ring"');
     expect(deedRow('slain_1k', true, false)).not.toContain('arrives');
   });
+  it('bow woods are wearable in the bow slot (TB-250)', () => {
+    expect(deedRow('wave_100', true, false)).toContain('data-dress="bow_thornwood"');
+    expect(deedRow('replant_100', true, true)).toContain('data-undress="bow"');
+    expect(deedRow('set_moonveil', true, false)).toContain('data-dress="bow_moonsilver"');
+    expect(deedRow('wave_100', true, false)).not.toContain('arrives');
+  });
   it('the worn title reads its words', () => {
     expect(wornTitle('first_blood')).toBe('Warden'); expect(wornTitle(null)).toBeNull(); expect(wornTitle('slain_1k')).toBeNull();
   });

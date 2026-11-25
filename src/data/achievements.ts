@@ -18,16 +18,20 @@ export const COSMETICS = {
 } as const;
 export type CosmeticId = keyof typeof COSMETICS;
 
-/** Cosmetics the player wears, one per slot (TB-250). Cloak dyes, arrow trails and the rune ring have art; the rest show "arrives with the art pass". */
-export type CosmeticSlot = 'cloak' | 'trail' | 'ring';
-export const COSMETIC_SLOTS: readonly CosmeticSlot[] = ['cloak', 'trail', 'ring'];
+/** Cosmetics the player wears, one per slot (TB-250). Cloak dyes, bow woods, arrow trails and the rune ring have art; the rest show "arrives with the art pass". */
+export type CosmeticSlot = 'cloak' | 'bow' | 'trail' | 'ring';
+export const COSMETIC_SLOTS: readonly CosmeticSlot[] = ['cloak', 'bow', 'trail', 'ring'];
 /** Each cloak dye's sprite suffix: the elf draws `elf.<dye>` and `elf.<dye>.attack` (sheet_elf_<dye>.webp), the default `elf` without one. */
 export const CLOAK_DYES = { cloak_ember: 'ember', cloak_frost: 'frost', cloak_dusk: 'dusk', cloak_starlit: 'starlit', cloak_gold: 'gold' } as const;
+/** Each bow wood's sprite suffix (TB-250): bow-only frames `elfbow.<wood>` and `elfbow.<wood>.attack` (sheet_bow_<wood>.webp), drawn over
+ *  the elf's own frame so a wood goes with any cloak dye; the default bow draws nothing extra. */
+export const BOW_WOODS = { bow_moonsilver: 'moonsilver', bow_thornwood: 'thornwood', bow_heartwood: 'heartwood' } as const;
 /** Each arrow trail's look behind the lobbed arrow (TB-250): drawn in vector by render/field.ts, sizes in presentation.ts COSMETIC_VFX. */
 export const TRAILS = { trail_ember: 'ember', trail_star: 'star', trail_leaf: 'leaf' } as const;
 export type TrailStyle = (typeof TRAILS)[keyof typeof TRAILS];
 export const COSMETIC_SLOT: Partial<Record<CosmeticId, CosmeticSlot>> = {
   ...Object.fromEntries(Object.keys(CLOAK_DYES).map((k) => [k, 'cloak'])),
+  ...Object.fromEntries(Object.keys(BOW_WOODS).map((k) => [k, 'bow'])),
   ...Object.fromEntries(Object.keys(TRAILS).map((k) => [k, 'trail'])),
   ring_rune: 'ring',
 };
