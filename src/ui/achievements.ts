@@ -36,7 +36,7 @@ export class AchievementsPane {
     };
   }
   render(): void {
-    const m = this.game.state.meta.ach, got = new Set(m.earned), sig = `${m.earned.length}|${m.title}|${m.worn.cloak ?? ''}|${m.worn.trail ?? ''}|${m.worn.ring ?? ''}`;
+    const m = this.game.state.meta.ach, got = new Set(m.earned), sig = `${m.earned.length}|${m.title}|${m.worn.cloak ?? ''}|${m.worn.bow ?? ''}|${m.worn.trail ?? ''}|${m.worn.ring ?? ''}`;
     if (sig === this.sig) return; this.sig = sig;
     $('deeds-count').textContent = STR.deedsCount(got.size, ACHIEVEMENTS.length);
     ($('deeds-notitle') as HTMLButtonElement).disabled = !m.title;

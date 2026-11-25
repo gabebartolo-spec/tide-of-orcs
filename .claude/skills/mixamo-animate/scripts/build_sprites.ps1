@@ -7,7 +7,8 @@ $o = if ($Frames) { $Frames } else { "$a\sprites\frames" }; New-Item -ItemType D
 $vars = "WYAW", "RMATCH", "SWING", "MIRR", "H1", "MPH", "HINGE", "FREEZE", "WOFFS", "OFFS", "REST", "ARMSET", "ELBOWSET", "ARMTWIST", "DIRECT", "INPLACE", "ALIGN", "GRIP2", "CLIP", "CLIPDBG", "ELBOW", "HPROBE", "LHPROBE", "AMP", "DAMP", "ABD", "HIDE", "FOCUS",
   "QUIVER", "QFLOAT", "QPOSE", "QLEN", "QBOB", "ARROWF", "ARROWL", "RESTUP", "BOWALIGN", "GRIPSIDE", "ARROWPATH", "ARROWDBG",  # elf hero (bow + floating quiver)
   "FMATCH", "FINGSRC", "MPROBE", "MALLETAXIS", "MALLETMAX", "MALLETFORE", "MALLETSET",  # bladedancer daggers
-  "FINGCOPY", "POSEDUMP", "IDLEPOSE", "BOWALIGNF", "NOCKFING", "STRDRAW", "LIMBBEND", "STRNEAR", "STRTURN", "RETIME", "STABLESH", "HANDSMOOTH", "DRAWRAMP", "RELEASE", "TAIL"  # companion archer (TB-203)
+  "FINGCOPY", "POSEDUMP", "IDLEPOSE", "BOWALIGNF", "NOCKFING", "STRDRAW", "LIMBBEND", "STRNEAR", "STRTURN", "RETIME", "STABLESH", "HANDSMOOTH", "DRAWRAMP", "RELEASE", "TAIL",  # companion archer (TB-203)
+  "BOWONLY"  # TB-250 bow woods
 $all = { param($n) (0..($n - 1)) -join "," }  # TB-194: every clip frame (attacks were even frames only, 15 fps)
 $jobs = @(
   @{ key = "orc.grunt"; m = "$a\grunt2\grunt2u.blend"; c = "$mx\Jogging XBot.fbx"; ortho = "2.4"; fr = (0..25 -join ","); env = @{  # TB-255 jog (director 12 Nov): Mixamo Jogging on X Bot, one cycle = frames 0-25 of 77 (3 cycles); was walk_grunt.ps1 v20 Orc Walk
@@ -92,6 +93,13 @@ $jobs = @(
 $elfJobs = $jobs | Where-Object { $_.key -in "elf", "elf.attack" }
 foreach ($dye in "ember", "frost", "dusk", "starlit", "gold") {
   foreach ($e in $elfJobs) { $jobs += @{ key = $e.key -replace "^elf", "elf.$dye"; m = "$a\elf_hero\dyes\$dye\hero27_$dye.blend"; c = $e.c; ortho = $e.ortho; fr = $e.fr; env = $e.env } }
+}
+# TB-250 bow woods: the elf idle + draw jobs again on a copy of hero27 with only the bow's wood re-coloured (recolor_bow.py), rendered
+# BOWONLY (every other mesh a holdout) as keys elfbow.<wood> / elfbow.<wood>.attack: bow-only frames the game draws over any cloak's elf.
+#   $env:RGB = "<r,g,b>"; hid.ps1 blender -b --factory-startup --python recolor_bow.py hero27.blend bows\<wood>\hero27_<wood>.blend
+# RGB: moonsilver 0.780,0.800,0.860  thornwood 0.300,0.320,0.240  heartwood 0.500,0.180,0.130
+foreach ($wood in "moonsilver", "thornwood", "heartwood") {
+  foreach ($e in $elfJobs) { $ev = $e.env.Clone(); $ev.BOWONLY = "1"; $jobs += @{ key = $e.key -replace "^elf", "elfbow.$wood"; m = "$a\elf_hero\bows\$wood\hero27_$wood.blend"; c = $e.c; ortho = $e.ortho; fr = $e.fr; env = $ev } }
 }
 # orc.wolfrider.attack is NOT an apply_anim job: the wolf rider is a Tripo "Other" rig driven by Quaternius Wolf "Attack" (no Mixamo skeleton).
 # Its 20 frames + anchor come from wolfrider\render_wr_sheet.py (same field camera, ORTHO 1.4, RES 512, mirrored to face screen-right):

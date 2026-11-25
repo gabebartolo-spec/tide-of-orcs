@@ -39,8 +39,8 @@ export function parseAtlas(raw: unknown): Atlas | null {
 
 /** Sheets that gate the first frame; the others load SHEETS_LATER_MS after them, one by one (TB-218). */
 const SHEETS_FIRST = ['sheet_elf.webp', 'sheet_orcs.webp'], SHEETS_LATER_MS = 2500;
-/** Sheets fetched only when a draw asks for one of their anims (`want`): the cloak dyes, one sheet each (TB-250). */
-export const onDemandSheet = (name: string): boolean => name.startsWith('sheet_elf_');
+/** Sheets fetched only when a draw asks for one of their anims (`want`): the cloak dyes and bow woods, one sheet each (TB-250). */
+export const onDemandSheet = (name: string): boolean => name.startsWith('sheet_elf_') || name.startsWith('sheet_bow_');
 
 /** The atlas without anims whose sheet failed to load; null when no sheet loaded (TB-216c). */
 export function keepLoaded(atlas: Atlas, loaded: ReadonlySet<string>): Atlas | null {

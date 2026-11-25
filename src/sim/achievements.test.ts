@@ -119,6 +119,17 @@ describe('achievement checks (TB-249)', () => {
     expect(s.meta.ach.worn).toEqual({ cloak: 'cloak_ember', trail: 'trail_leaf', ring: 'ring_rune' });
     expect(wearCosmetic(s, 'trail', null)).toBe(true); expect(s.meta.ach.worn).toEqual({ cloak: 'cloak_ember', ring: 'ring_rune' });
   });
+  it('cosmetics: a bow wood wears in the bow slot beside the cloak (TB-250)', () => {
+    const s = createState(1);
+    expect(wearCosmetic(s, 'bow', 'bow_thornwood')).toBe(false); // The Hundredth Wave not earned
+    s.meta.ach.earned.push('wave_100', 'replant_100', 'wave_50');
+    expect(wearCosmetic(s, 'bow', 'bow_thornwood')).toBe(true);
+    expect(wearCosmetic(s, 'cloak', 'bow_heartwood')).toBe(false); // a bow is not a cloak
+    expect(wearCosmetic(s, 'bow', 'bow_heartwood')).toBe(true);
+    expect(wearCosmetic(s, 'cloak', 'cloak_ember')).toBe(true);
+    expect(s.meta.ach.worn).toEqual({ cloak: 'cloak_ember', bow: 'bow_heartwood' });
+    expect(wearCosmetic(s, 'bow', null)).toBe(true); expect(s.meta.ach.worn).toEqual({ cloak: 'cloak_ember' });
+  });
   it('real play earns First Blood through the sim events (pure, deterministic)', () => {
     const s = createState(3), ev = new EventBus(), pend = freshAchPending(), got: string[] = [];
     for (let i = 0; i < 30 * 40; i++) {

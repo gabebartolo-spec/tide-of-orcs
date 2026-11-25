@@ -29,7 +29,7 @@ import { Flipbooks } from './flipbook';
 import { WaveStrip } from './waveStrip';
 import { SLOTS } from '../data/loot';
 import { BOSS_ROSTER } from '../data/bosses';
-import { CLOAK_DYES, TRAILS, type TrailStyle } from '../data/achievements';
+import { BOW_WOODS, CLOAK_DYES, TRAILS, type TrailStyle } from '../data/achievements';
 import { quality, fitScale } from './quality';
 import { setTiers } from '../sim/gear';
 
@@ -737,17 +737,30 @@ export class FieldRenderer {
     return this.sprites.want(key) && this.sprites.want(this.elfAtk.get(key)!) ? key : 'elf';
   }
 
+  /** The worn bow wood's overlay key `elfbow.<wood>` once its sheet is in, else '' (the elf's own bow, nothing drawn over it). Its
+   *  bow-only frames match the elf's frame for frame, so drawn over any cloak's elf they hide the default wood (TB-250). */
+  private bowKeys = new Map<string, string>();
+  private bowKey(): string {
+    const worn = this.sim?.meta.ach.worn.bow, wood = worn && BOW_WOODS[worn as keyof typeof BOW_WOODS];
+    if (!wood) return '';
+    let key = this.bowKeys.get(wood);
+    if (!key) { key = `elfbow.${wood}`; this.bowKeys.set(wood, key); this.elfAtk.set(key, key + '.attack'); }
+    return this.sprites.want(key) && this.sprites.want(this.elfAtk.get(key)!) ? key : '';
+  }
+
   /** `draw` is the bow's charge (0..1) while the player aims, -1 otherwise. The sprite elf plays its idle loop (`elf`) at rest
    *  and its draw clip (`elf.attack`) in step with the charge, so the string is at full draw as the lob leaves. */
   private elf(x: number, y: number, draw = -1): void {
     const g = this.g, k = this.postK(y); g.save(); g.translate(x, this.postY(y)); g.scale(k, k);
-    const key = this.elfKey(), aiming = draw >= 0;
+    const key = this.elfKey(), bow = this.bowKey(), aiming = draw >= 0;
     if (!this.sprites.lit(key)) { g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 16, 12, 4, 0, 0, 6.28); g.fill(); }
     this.aimMix = stepAimMix(this.aimMix, aiming, this.clock - this.elfClock, VFX.elfShot.aim); this.elfClock = this.clock;
     if (aiming) this.lastCharge = draw;
     const a0 = g.globalAlpha;
     for (const l of elfLayers(this.lastCharge, this.lastCharge * this.lobCd, this.aimMix, this.sprites.duration(this.elfAtk.get(key) ?? 'elf.attack'), VFX.elfShot.release)) {
-      g.globalAlpha = a0 * l.alpha; this.sprites.drawActor(g, key, l.state, l.state === 'walk' ? this.clock : l.t, 0, 16, ACTOR_R);
+      const t = l.state === 'walk' ? this.clock : l.t;
+      g.globalAlpha = a0 * l.alpha; this.sprites.drawActor(g, key, l.state, t, 0, 16, ACTOR_R);
+      if (bow) this.sprites.drawActor(g, bow, l.state, t, 0, 16, ACTOR_R);
     }
     g.restore();
   }

@@ -117,3 +117,23 @@ function rig(): Sprites {
   priv.atlas = parseAtlas({ anims: { 'orc.grunt': anim } }); priv.imgs = new Map([['sheet_elf.webp', {}]]);
   return sp;
 }
+
+describe('bow wood overlays (TB-250)', () => {
+  it('the cloak dye and bow wood sheets load on demand; the shared sheets do not', async () => {
+    const { onDemandSheet } = await import('./sprites');
+    expect(onDemandSheet('sheet_bow_moonsilver.webp')).toBe(true);
+    expect(onDemandSheet('sheet_elf_ember.webp')).toBe(true);
+    expect(onDemandSheet('sheet_elf.webp')).toBe(false);
+  });
+  it('each wood ships bow-only frames that lie exactly over the elf: same count, size, anchor, height and rate', async () => {
+    const { readFileSync } = await import('node:fs');
+    const { BOW_WOODS } = await import('../data/achievements');
+    const atlas = parseAtlas(JSON.parse(readFileSync('public/sprites/atlas.json', 'utf8')))!;
+    for (const wood of Object.values(BOW_WOODS)) for (const clip of ['', '.attack']) {
+      const elf = atlas.anims[`elf${clip}`]!, bow = atlas.anims[`elfbow.${wood}${clip}`]!;
+      expect(bow.image).toBe(`sheet_bow_${wood}.webp`);
+      expect([bow.frames.length, bow.ax, bow.ay, bow.hPerR, bow.fps, bow.lit]).toEqual([elf.frames.length, elf.ax, elf.ay, elf.hPerR, elf.fps, elf.lit]);
+      bow.frames.forEach((f, i) => expect([f[2], f[3]]).toEqual([elf.frames[i]![2], elf.frames[i]![3]]));
+    }
+  });
+});

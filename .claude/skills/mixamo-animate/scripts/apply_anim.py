@@ -924,6 +924,11 @@ for mt in bpy.data.materials:
                 for l in list(nd.inputs["Roughness"].links) + list(nd.inputs["Metallic"].links): mt.node_tree.links.remove(l)
 for o in bpy.data.objects:
     if o.name in os.environ.get("HIDE","").split(","): o.hide_render = True
+if os.environ.get("BOWONLY"):  # TB-250 bow woods: only the bow's visible pixels. Every other mesh (body, quiver, arrow, ground) is a holdout,
+    # so it still casts shadows and bounces light onto the bow exactly as in the full render but leaves alpha 0; the game draws this
+    # frame over the elf's own frame, which hides the default bow wood under it (any cloak dye, since the shapes are the same)
+    for o in bpy.data.objects:
+        if o.type == "MESH" and o.name != "wpn_bow": o.is_holdout = True
 sc.render.resolution_x = sc.render.resolution_y = int(os.environ.get("RES", "360"))
 if os.environ.get("ANCHOR"):  # sprite foot anchor: the ground point under the rig origin, in image pixels from the top-left
     from bpy_extras.object_utils import world_to_camera_view as _w2c
@@ -1029,7 +1034,7 @@ for i in fl:
         cam.location = tgt.matrix_world @ tgt.pose.bones["mixamorig:" + os.environ["FOCUS"]].head - _f * 5
     sc.render.filepath = f"{out}_{i}.png"
     bpy.ops.render.render(write_still=True)
-    if os.environ.get("LIT") and not os.environ.get("NOGROUND"): _litmask(f"{out}_{i}.png")
+    if os.environ.get("LIT") and not os.environ.get("NOGROUND") and not os.environ.get("BOWONLY"): _litmask(f"{out}_{i}.png")
 
 print("ANIM wrote", out)
 
