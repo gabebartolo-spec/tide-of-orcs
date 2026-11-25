@@ -23,7 +23,7 @@ export function deedRow(id: string, earned: boolean, worn: boolean): string {
 /** The Achievements tab (TB-249): five groups, earned rows lit, secrets sealed, the title picker and the cloak picker (TB-250). */
 export class AchievementsPane {
   private sig = '';
-  constructor(private game: GameController, private onWear: (title: string | null) => void, private onDress: (cosmetic: string | null) => void) {
+  constructor(private game: GameController, private onWear: (title: string | null) => void, private onDress: (cosmetic: string | null, slot: CosmeticSlot) => void) {
     $('deeds-title').textContent = STR.tabDeeds; $('deeds-notitle').textContent = STR.deedNoTitle;
     $('deeds-notitle').onclick = () => { if (this.game.setTitle(null)) { this.onWear(null); this.render(); } };
     $('deeds-list').onclick = (e) => {
@@ -31,12 +31,12 @@ export class AchievementsPane {
       if (!d) return;
       if (d.wear && this.game.setTitle(d.wear)) { this.onWear(wornTitle(d.wear)); this.render(); }
       const dress = d.dress as CosmeticId | undefined, undress = d.undress as CosmeticSlot | undefined;
-      if (dress && COSMETIC_SLOT[dress] && this.game.wearCosmetic(COSMETIC_SLOT[dress]!, dress)) { this.onDress(COSMETICS[dress]); this.render(); }
-      if (undress && this.game.wearCosmetic(undress, null)) { this.onDress(null); this.render(); }
+      if (dress && COSMETIC_SLOT[dress] && this.game.wearCosmetic(COSMETIC_SLOT[dress]!, dress)) { this.onDress(COSMETICS[dress], COSMETIC_SLOT[dress]!); this.render(); }
+      if (undress && this.game.wearCosmetic(undress, null)) { this.onDress(null, undress); this.render(); }
     };
   }
   render(): void {
-    const m = this.game.state.meta.ach, got = new Set(m.earned), sig = `${m.earned.length}|${m.title}|${m.worn.cloak ?? ''}`;
+    const m = this.game.state.meta.ach, got = new Set(m.earned), sig = `${m.earned.length}|${m.title}|${m.worn.cloak ?? ''}|${m.worn.trail ?? ''}|${m.worn.ring ?? ''}`;
     if (sig === this.sig) return; this.sig = sig;
     $('deeds-count').textContent = STR.deedsCount(got.size, ACHIEVEMENTS.length);
     ($('deeds-notitle') as HTMLButtonElement).disabled = !m.title;

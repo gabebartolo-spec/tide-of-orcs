@@ -41,8 +41,8 @@ Two kinds. **Titles** are text only: the player picks one in the Achievements pa
 |---|---|---|
 | `cloak_ember`, `cloak_frost`, `cloak_dusk`, `cloak_starlit`, `cloak_gold` | elf cloak and hood in another dye (**shipped**, director 13 Nov: ember rust red, frost pale ice, dusk muted plum, starlit night blue, gold) | elf sprite |
 | `bow_moonsilver`, `bow_thornwood`, `bow_heartwood` | elf bow in another wood | elf sprite |
-| `trail_ember`, `trail_star`, `trail_leaf` | trail behind the lobbed arrow | field |
-| `ring_rune` | carved runes around the strike circle | field |
+| `trail_ember`, `trail_star`, `trail_leaf` | trail behind the lobbed arrow (**built 25 Nov, awaiting director approval**: ember sparks with a glow, twinkling gold stars, spinning autumn leaves; vector, sizes in `VFX.cosmetic`) | field |
+| `ring_rune` | carved runes around the strike circle (**built 25 Nov, awaiting director approval**: eight gold runes turning slowly, brightening as the bow draws) | field |
 | `wall_banner_grove`, `wall_banner_tide` | a banner hung on the barricade | field |
 | `wall_lanterns` | lanterns along the barricade top | field |
 | `wall_skulls` | orc skull trophies on the barricade posts | field |
@@ -51,7 +51,7 @@ Two kinds. **Titles** are text only: the player picks one in the Achievements pa
 | `camp_campfire`, `camp_wolf_statue`, `camp_standing_stone`, `camp_lantern_string`, `camp_armour_stand`, `camp_bell`, `camp_sapling` | decor pieces | camp scene |
 | `banner_serpent`, `banner_fox`, `banner_magpie` | the path's banner on a pole | camp scene |
 
-Wearing (TB-250): an earned cloak dye has a **Wear** button on its row in the Achievements panel; the worn row reads *Worn · take off*, which puts the elf back in the default cloak. One cloak is worn at a time (`meta.ach.worn.cloak`, save v18). Each dye is its own sheet (`sheet_elf_<dye>.webp`), fetched only when that dye is worn; until it arrives the elf draws in the default cloak. Cosmetics without art yet still read "arrives with the art pass".
+Wearing (TB-250): an earned cloak dye has a **Wear** button on its row in the Achievements panel; the worn row reads *Worn · take off*, which puts the elf back in the default cloak. One cloak is worn at a time (`meta.ach.worn.cloak`, save v18). Each dye is its own sheet (`sheet_elf_<dye>.webp`), fetched only when that dye is worn; until it arrives the elf draws in the default cloak. Trails and the rune ring wear the same way in their own slots (`worn.trail`, `worn.ring`; no schema change, an absent slot is the default look), so a cloak, a trail and a ring can be worn together. Cosmetics without art yet still read "arrives with the art pass".
 
 That is 36 art pieces; every other row gives a title.
 

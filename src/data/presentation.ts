@@ -95,6 +95,14 @@ export const VFX = {
   bow: { pull: 5 },
   /** Elf shot loop (TB-202): seconds to crossfade full draw back to draw frame 0 after each lob (director 3 Nov), and idle <-> draw when aim starts or stops. */
   elfShot: { release: 0.15, aim: 0.15 },
+  /** Worn cosmetics on the field (TB-250). Trails: ghosts behind the lobbed arrow (count, spacing in s), size, sparks per second
+   *  (ember, with a halo glow × r) or twinkle rate (star) or spin (leaf, rad/s; autumn colours so they read on the green meadow). Rune ring: glyph count, gap outside the strike circle, glyph size, spin (rad/s). */
+  cosmetic: {
+    ember: { n: 7, spacing: 1.2, r: 3.2, glow: 2.2, sparks: 40, alpha: 0.9 },
+    star: { n: 5, spacing: 1.5, r: 4.5, twinkle: 14, alpha: 0.95 },
+    leaf: { n: 6, spacing: 1.6, len: 5, wide: 2.4, spin: 9, alpha: 0.95 },
+    rune: { n: 8, gap: 7, size: 4, spin: 0.35, w: 1.4, alpha: 0.85, readyGlow: 0.5 },
+  },
   /** Projectile trails: ghost count per kind, spacing along the path (s), alpha of the first ghost. */
   trail: { lob: 3, arrow: 3, bolt: 4, knife: 2, bounce: 8, star: 2, gap: 0.025, alpha: 0.45, lobSpacing: 2 },
   /** Lob landing: dust ring on the ground (× circle radius), its life. */

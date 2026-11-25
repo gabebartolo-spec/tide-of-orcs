@@ -18,7 +18,13 @@ describe('achievements pane (TB-249)', () => {
     expect(deedRow('wave_50', true, false)).toContain('data-dress="cloak_ember"');
     expect(deedRow('wave_50', true, true)).toContain('data-undress="cloak"');
     expect(deedRow('wave_50', true, false)).not.toContain('arrives');
-    expect(deedRow('slain_1k', true, false)).toContain('arrives'); // Leaf trail: no art yet
+    expect(deedRow('first_boss', true, false)).toContain('arrives'); // a trophy: no art yet
+  });
+  it('arrow trails and the rune ring are wearable too (TB-250)', () => {
+    expect(deedRow('slain_1k', true, false)).toContain('data-dress="trail_leaf"');
+    expect(deedRow('slain_1k', true, true)).toContain('data-undress="trail"');
+    expect(deedRow('branch_bow', true, true)).toContain('data-undress="ring"');
+    expect(deedRow('slain_1k', true, false)).not.toContain('arrives');
   });
   it('the worn title reads its words', () => {
     expect(wornTitle('first_blood')).toBe('Warden'); expect(wornTitle(null)).toBeNull(); expect(wornTitle('slain_1k')).toBeNull();
