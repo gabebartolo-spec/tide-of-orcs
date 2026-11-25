@@ -190,7 +190,7 @@ export class Panel {
 
   /** A kept drop's card (TB-192): icon, name and rarity under the toast, for LOOT_BANNER.life seconds by rarity. */
   private lootBanner(it: Parameters<typeof itemName>[0]): void {
-    const box = $('loot-banners'), el = document.createElement('div');
+    this.clearHud(); const box = $('loot-banners'), el = document.createElement('div');
     el.className = `lootbanner r-${it.rarity}`;
     el.innerHTML = `${glyph(it.slot, it, true)}<span class="txt"><span class="rar">${STR.rarityName[it.rarity] ?? it.rarity}</span><span class="nm">${STR.lootFound(itemName(it))}</span></span>`;
     box.prepend(el);
@@ -368,8 +368,14 @@ export class Panel {
   /** The worn title on a carved tag under the wall bar (TB-249). */
   private showTitle(t: string | null): void { const el = $('hud-title'); el.hidden = !t; el.textContent = t ?? ''; }
 
+  /** TB-269: toasts and drop banners sit under the header, whose height changes with the mode, layout and text size. */
+  private clearHud(): void {
+    const h = document.querySelector('header'), b = h && getComputedStyle(h).display !== 'none' ? h.getBoundingClientRect().bottom : 0;
+    document.documentElement.style.setProperty('--hud-clear', `${Math.max(0, Math.round(b))}px`);
+  }
+
   toast(msg: string): void {
-    const el = $('toast'); el.textContent = msg; el.classList.add('on');
+    this.clearHud(); const el = $('toast'); el.textContent = msg; el.classList.add('on');
     clearTimeout(this.toastTimer); this.toastTimer = window.setTimeout(() => el.classList.remove('on'), 2600);
   }
 }
