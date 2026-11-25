@@ -22,9 +22,9 @@ import { Ambience } from './ambience';
 import { Sky } from './sky';
 import { depthScale, depthY, setMeadowTop, worldY } from './depth';
 import { fitPostRows } from './postRows';
-import { placeWall, type PlacedWall } from './wallArt';
+import { placeWall, wallFaceX, type PlacedWall } from './wallArt';
 import { Interp } from './interp';
-import { FIELD_VIEW, GAIT, PHONE_QUERY, QUALITY, WALL_ART, LOOT_VFX, ORC_SHADOW, ORC_SHADOW_BASE, ORC_SPRITE, SKY, TREELINE, VFX, FLIPBOOK_SIZE, dusk } from '../data/presentation';
+import { FIELD_VIEW, GAIT, SPIKES, PHONE_QUERY, QUALITY, WALL_ART, LOOT_VFX, ORC_SHADOW, ORC_SHADOW_BASE, ORC_SPRITE, SKY, TREELINE, VFX, FLIPBOOK_SIZE, dusk } from '../data/presentation';
 import { Flipbooks } from './flipbook';
 import { WaveStrip } from './waveStrip';
 import { SLOTS } from '../data/loot';
@@ -324,7 +324,8 @@ export class FieldRenderer {
     // barricade: drawn whole, over the forest edge and its bush skirt (it is nearer than both)
     const top = Math.max(vis.y0, this.wall.y); this.wallTop = Math.max(vis.y0, this.wall.foot - TREELINE.cap.up);
     this.fencePanels(top, H);
-    if (s.stats.spikes) { g.fillStyle = P.cream; for (let y = 8; y < H; y += 24) { const wx = wallX(y); g.beginPath(); g.moveTo(wx, y); g.lineTo(wx + 9, y + 4); g.lineTo(wx, y + 8); g.closePath(); g.fill(); } }
+    // Thornwall spikes (TB-274): along the drawn wall's face, from its far end on the meadow to the near edge; the sim's wall line ran past the art into the sky
+    if (s.stats.spikes) { g.fillStyle = P.cream; const y0 = Math.max(top, this.wall.foot); for (let y = y0 + ((SPIKES.gap - (y0 % SPIKES.gap)) % SPIKES.gap); y < H; y += SPIKES.gap) { const wx = wallFaceX(y); g.beginPath(); g.moveTo(wx, y); g.lineTo(wx + SPIKES.len, y + SPIKES.half); g.lineTo(wx, y + 2 * SPIKES.half); g.closePath(); g.fill(); } }
 
     this.fx.drawGround(g);
     s.zones.forEach((z) => {

@@ -152,6 +152,8 @@ export const GROUND = {
 /** The wall art's camera (TB-268): a perspective render (yaw 17.6, pitch 30, scale falling 0.125% a row like `depthScale`). Its orc-side
  *  face at the foot is drawn at x = `face` on row 480 and runs `slope` px right per row up the screen, the line orcs stop on. */
 export const WALL_VIEW = { slope: 0.616, face: 124.5 } as const;
+/** Thornwall's spikes on the wall face (TB-274): one every `gap` screen rows, `len` long, `half` half-height. */
+export const SPIKES = { gap: 24, len: 9, half: 4 } as const;
 
 /** The wall's look per tier (TB-209): image set (rendered from the segmented Tripo models, one image per damage stage), field placement, `foot` (the field y where its finished far end meets the ground, stage 0), the field y of the rendered breaches, and the palette tokens of its flying chunks. */
 export const WALL_ART = [
