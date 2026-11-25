@@ -40,7 +40,7 @@ Two kinds. **Titles** are text only: the player picks one in the Achievements pa
 | Reward id | What it is | Where |
 |---|---|---|
 | `cloak_ember`, `cloak_frost`, `cloak_dusk`, `cloak_starlit`, `cloak_gold` | elf cloak and hood in another dye (**shipped**, director 13 Nov: ember rust red, frost pale ice, dusk muted plum, starlit night blue, gold) | elf sprite |
-| `bow_moonsilver`, `bow_thornwood`, `bow_heartwood` | elf bow in another wood (**in review**, PR tb-250-bows: moonsilver pale silver, thornwood dark grey-green, heartwood deep red; only the wood is re-coloured, the grip and tip wraps and the string keep theirs) | elf sprite |
+| `bow_moonsilver`, `bow_thornwood`, `bow_heartwood` | elf bow in another wood (**shipped, director approved 25 Nov**: moonsilver pale silver, thornwood dark grey-green, heartwood deep red; only the wood is re-coloured, the grip and tip wraps and the string keep theirs) | elf sprite |
 | `trail_ember`, `trail_star`, `trail_leaf` | trail behind the lobbed arrow (**shipped, director approved 25 Nov**: ember sparks with a glow, twinkling gold stars, spinning autumn leaves; vector, sizes in `VFX.cosmetic`) | field |
 | `ring_rune` | carved runes around the strike circle (**shipped, director approved 25 Nov**: eight gold runes turning slowly, brightening as the bow draws) | field |
 | `wall_banner_grove`, `wall_banner_tide` | a banner hung on the barricade | field |
