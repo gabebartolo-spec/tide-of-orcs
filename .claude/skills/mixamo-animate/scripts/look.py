@@ -26,7 +26,8 @@ def _cfg():
 def profile_name(cfg, path):
     want = os.environ.get("LOOK", "")
     if want and want != "off": return want
-    p = path.replace("\\", "/").lower()
+    import sys  # FBX/glTF importers (render_ogre, render_wolf, render_hawk) start from an empty scene: match their argv paths too
+    p = " ".join([path or ""] + sys.argv).replace("\\", "/").lower()
     for name, prof in cfg["profiles"].items():
         if any(m.lower() in p for m in prof.get("match", [])): return name
     return "default"
@@ -133,7 +134,10 @@ def apply(path=None):
     if prof.get("flat") or g.get("flat"):  # toy-board facets: flat shading on every mesh (ART-STYLE: "flat shading")
         for o in bpy.data.objects:
             if o.type == "MESH":
-                for p in o.data.polygons: p.use_smooth = False
+                for md in [md for md in o.modifiers if md.type == "NODES" and "smooth" in md.name.lower()]: o.modifiers.remove(md)
+                if o.data.has_custom_normals:  # custom split normals override flat faces: clear them or nothing changes
+                    with bpy.context.temp_override(object=o, active_object=o, selected_objects=[o]): bpy.ops.mesh.customdata_custom_splitnormals_clear()
+                o.data.shade_flat()
                 if prof.get("decimate") and not o.data.shape_keys:
                     d = o.modifiers.new("look_facets", "DECIMATE"); d.ratio = prof["decimate"]
                     o.modifiers.move(len(o.modifiers) - 1, 0)  # before the Armature, so the facets ride the skin
