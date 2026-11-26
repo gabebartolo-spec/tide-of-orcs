@@ -1,0 +1,7 @@
+# Fox fix candidates (TB-276): Foxden is the biggest Fox lever (knock-out -5.6 waves). Same seeds as the baseline for a paired read.
+fox-den12 | --minutes 90 --hwbuy --path fox --tune PATH_FX.denDmg=0.12
+fox-den10 | --minutes 90 --hwbuy --path fox --tune PATH_FX.denDmg=0.1
+fox-start5 | --minutes 90 --hwbuy --path fox --tune PATH_FX.startFox=0.05,PATH_FX.denDmg=0.12
+ladder-fox-den12 | --minutes 240 --hwbuy --path fox --tune PATH_FX.denDmg=0.12
+ladder-fox-den10 | --minutes 240 --hwbuy --path fox --tune PATH_FX.denDmg=0.1
+fox-den10-human3 | --minutes 90 --hwbuy --path fox --human 3 --tune PATH_FX.denDmg=0.1
