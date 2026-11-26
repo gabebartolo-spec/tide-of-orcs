@@ -23,11 +23,11 @@ export const BOSS_BED = 'music-boss';
 export function nextBed(bed: Bed): Bed { return bed === 'music-a' ? 'music-b' : 'music-a'; }
 
 /** Extra orc voice takes (TB-280), file stems under public/audio/. The cue's own file is always take 1. */
-export const ORC_DEATH_VARS: readonly string[] = [];
-export const BRUTE_DEATH_VARS: readonly string[] = [];
+export const ORC_DEATH_VARS: readonly string[] = ['orcDeath2', 'orcDeath3'];
+export const BRUTE_DEATH_VARS: readonly string[] = ['bruteDeath2', 'bruteDeath3'];
 /** orcPain and orcBark have no file of their own: their first var stands in for it. */
-export const ORC_PAIN_VARS: readonly string[] = [];
-export const ORC_BARK_VARS: readonly string[] = [];
+export const ORC_PAIN_VARS: readonly string[] = ['orcPain1', 'orcPain2'];
+export const ORC_BARK_VARS: readonly string[] = ['orcBark1', 'orcBark2'];
 
 export const AUDIO = {
   sfxGain: 0.8,
