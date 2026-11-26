@@ -157,6 +157,24 @@ Report columns per minute: wave, starlight, kills/min, kills, wall %, vanguard c
 
 ## Proposed
 
+### P-277 · Late bosses and the wave-85 wall (2026-11-26, TB-277) · open: schedule and HP ease proposed, late progression needs a design call
+All runs `--hwbuy`, seeds 1 to 5, on GitHub (`sim/results/tb277-bosses`, `tb277-wall`, `tb277-wall2`, `tb277-hw`). Base = `BOSS_WAVE.lateFrom` 75, `lateEvery` 10 (bosses at 25, 50, 75, 85, 95 …).
+
+| set | 240 min best / mean20 | 480 min best | total Heartwood |
+|---|---|---|---|
+| current (boss every 25) | 76.4 / 74.5 | 84.2 | 9 |
+| bosses every 10 past 75 | 76.4 / 74.5 | 84.4 | 9 (10.8 at 480) |
+| + `HP_RAMP.lateFrom` 60, `lateRate` 1.15 | 81.4 / 79.6 | – | 9 |
+| + lateFrom 60, rate 1.13 | 83.2 / 81.7 | 87.4 | 9 |
+| **+ lateFrom 65, rate 1.10 (proposed)** | **85.4 / 83.3** | **85.6** | 9 |
+| + lateFrom 65, rate 1.10, no checkpoints | 46.0 / 32.2 | 46.2 | 221 (552 at 480) |
+
+What it says:
+- The schedule alone changes nothing: no run clears a boss past wave 50. At the wave-75 boss (seed 1, debug) the boss still has 99% HP when the 60 s run out, with 126 orcs on the field.
+- Easing orc HP from wave 65 (×1.10 a wave instead of ×1.2) moves the wall from ~76 to ~85, and a 480-min session gains nothing over 240: the run tree is maxed (~420 nodes) by play minute 120 and starlight piles up unspent.
+- Heartwood stops at 9 (bosses 25 and 50, once each): a checkpoint past a boss wave forfeits it (GDD §checkpoints), so a boss is never retried. Without checkpoints bosses repeat and Heartwood flows (552 in 480 min), but the higher tiers this unlocks stall runs at 46, and P-276 found the whole Heartwood tree at full rank worth only +5 waves.
+- So no number change gives late progression: everything the player can buy is finite while wave HP grows without end. Needs a design call (an open-ended power source); `## Current` is unchanged.
+
 ### P-276 · Balance batches B to D and the Fox path (2026-11-26, TB-276) · applied: Foxden 0.10 (director 26 Nov, decision card "Apply Foxden +10%")
 All runs: 90 sim min (240 for the ladder), `--hwbuy`, seeds 1 to 5, main at 7054ef1 plus the sim tools of this PR. Run on GitHub (`npm run batch`, `.github/workflows/balance-batch.yml`); every run's numbers are in `sim/results/<batch>/runs.csv`. **mean20** is the mean of the last 20 fall waves, smoother than best wave (which steps at boss walls).
 
@@ -178,7 +196,7 @@ The three paths now sit within 2.5% of each other; Fox leads, most clearly in lo
 
 **Batch B, build matrix** (path × branch focus, camp, slow human; 32 builds): no build leaves the seed noise (best-wave spread per build is 5 to 25 waves across seeds). Camp upgrades give +1 to +5 best wave on every path, Bow focus +4.8 with no path and nothing with one, Armoury+Grove focus 0 to −4, `--human 3` −1 to −3 and reaches each wave 4 to 6 min later. Nothing to change.
 
-**Batch C, prestige ladder.** 240-min runs gain only +3 to +5 best waves over 90 min. Every run clears the wave-75 boss, then loops: checkpoint 75, falls at 76 to 78 within 0.3 to 1 min, Heartwood stops (next boss is wave 100). Heartwood earned in 240 min buys 3 nodes (Early Dawn, Far Sight, Old Friend); the other eight are never bought. **Late-save test** (each node at full rank from the start, best wave vs 72.8): Far Sight +2.2, Glimmerwork and Heirloom +1.8, Standing Orders +1.6 (and reaches wave 30 five min sooner), Old Friend +0.8, Warlords, Deep Satchel, Fortune and Stout Timber within ±0.8, Warboss Tithe −1.0, Early Dawn −1.6. All eleven at full rank: +5.0 best wave, first boss at 16.7 min instead of 25.5. The Heartwood tree is worth little against the late wall, and past wave 75 nothing more is earned: this is the TB-184 finding ("55+ needs a new late progression source") moved up 20 waves. A design question, not a number change; new row TB-277.
+**Batch C, prestige ladder.** 240-min runs gain only +3 to +5 best waves over 90 min. No run clears the wave-75 boss (total Heartwood 9; corrected 26 Nov, P-277); every run loops: checkpoint 75, falls at 76 to 78 within 0.3 to 1 min, Heartwood stops (next boss is wave 100). Heartwood earned in 240 min buys 3 nodes (Early Dawn, Far Sight, Old Friend); the other eight are never bought. **Late-save test** (each node at full rank from the start, best wave vs 72.8): Far Sight +2.2, Glimmerwork and Heirloom +1.8, Standing Orders +1.6 (and reaches wave 30 five min sooner), Old Friend +0.8, Warlords, Deep Satchel, Fortune and Stout Timber within ±0.8, Warboss Tithe −1.0, Early Dawn −1.6. All eleven at full rank: +5.0 best wave, first boss at 16.7 min instead of 25.5. The Heartwood tree is worth little against the late wall, and past wave 75 nothing more is earned: this is the TB-184 finding ("55+ needs a new late progression source") moved up 20 waves. A design question, not a number change; new row TB-277.
 
 **Batch D, arena stress** (each path's 90-min player, `npm run arena -- --load … --path p --wave w --tide --orcs grunt:0 --seeds 5 --secs 180`): seconds the wall stands at waves 70 / 75 / 80 / 85: no path 31 / 66 / 32 / 44, Serpent 46 / 60 / 37 / 24, Fox 115 / 52 / 53 / 43, Magpie 131 / 52 / 80 / 48. Past wave 75 every path's wall stands under 90 s; no path breaks the late wall.
 
