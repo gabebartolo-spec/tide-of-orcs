@@ -49,8 +49,8 @@ fr = lambda t: int(round(t * FPS))
 # crop (page shots, 3840x2160 sources): (cx0, cy0, w0) -> (cx1, cy1, w1) in source px, eased; w is the crop width (16:9).
 EDL = [
     # arrival: the plain, the tide, the elf, the strike
-    dict(shot='s01b_wide', k=(0, 4), inf=10),
-    dict(shot='s01a_band', k=(4, 8), inf=20),
+    dict(shot='s01a_band', k=(0, 4), inf=20),   # the hook: the tide close, from the first frame
+    dict(shot='s01b_wide', k=(4, 8), inf=10),
     dict(shot='s02_elf', k=(8, 12), inf=('loose', 9.0)),
     dict(shot='s03_strike', k=(12, 16), inf=('impact', 13.0)),
     # grow: the tree, the wolf, companions (2-beat cuts), armoury (a bar each)
@@ -63,16 +63,19 @@ EDL = [
     dict(shot='s07b_frost', k=(36, 40), inf=('shatter', 39.4), after=135),
     dict(shot='s07c_storm', k=(40, 44), inf=20),
     # hold: section B of the track
-    dict(shot='s08_hold', k=(44, 56), inf=2),
+    dict(shot='s08_hold', k=(44, 50), inf=2),
+    dict(shot='s08b_melee', k=(50, 56), inf=90),
     dict(shot='s09a_tide', k=(56, 60), inf=15),
     dict(shot='s09b_splinter', k=(60, 64), inf=15),
     dict(shot='s10a_boss', k=(64, 68), inf=30),
-    dict(shot='s10b_wall', k=(68, 80), inf=20),
+    dict(shot='s10b_wall', k=(68, 74), inf=20),
+    dict(shot='s10c_close', k=(74, 80), inf=40),
     # fall: the track's break
     dict(shot='s11_fall', k=(80, 88), inf=('barricadeFell', 82.25), fallgrade=82.25),  # the field stills and greys, as the game's own fallen dim
     # return
-    dict(shot='d10a_paths', k=(88, 96), inf=10, page=True, crop=((1920, 1080, 3840), (1920, 1060, 3700))),
-    dict(shot='d10b_camp', k=(96, 104), inf=10, page=True, crop=((1340, 1324, 2680), (2120, 1310, 2400))),
+    dict(shot='d10a_paths', k=(88, 92), inf=10, page=True, crop=((1920, 1080, 3840), (1920, 1060, 3700))),
+    dict(shot='d10b_camp', k=(92, 98), inf=10, page=True, crop=((1150, 1200, 2000), (1100, 1220, 1700))),   # lodge and forge
+    dict(shot='d10b_camp', k=(98, 104), inf=100, page=True, crop=((2750, 1440, 1800), (2850, 1400, 1600))),  # hall and training yard
     # march again (after the splice, on the outro hits)
     dict(shot='s12a_late', k=(104, 112), inf=30),
     dict(shot='s13_end', k=(112, 999), inf=10, end=True),
@@ -127,6 +130,9 @@ CAPS = [  # (png, start beat, end beat): captions sit over the cut, not over a s
 ]
 MANUAL_SFX = [  # (trailer beat, cue, gain): sounds for page shots and moments recorded before the shot began
     (17.0, 'bought', 0.8), (44.0, 'rallyHorn', 0.75), (64.0, 'bossRoar', 1.0), (88.0, 'replant', 0.8),
+]
+HITS = [  # (trailer beat, shake px, frames, flash): the roar and the fall land in the picture too
+    (64.0, 9, 14, 0.0), (82.25, 16, 20, 0.35),
 ]
 END_K = 112             # the final hit: the end card fades up over the plate
 CAP_FADE = 7          # frames in and out
@@ -205,12 +211,31 @@ def end_card(im, j):
 
 def fall_grade(im, j, k):
     """After the wall falls the run freezes; the plate drains to a cold, dim grey over a second and a half (the game dims the field too)."""
-    u = ease((j - fr(T(k))) / 45)
-    if u <= 0:
+    d = j - fr(T(k))
+    u = 0.6 * ease(d / 10) + 0.4 * ease((d - 10) / 50)
+    if d < 0:
         return im
     from PIL import ImageEnhance
     im = ImageEnhance.Color(im).enhance(1 - 0.65 * u)
     return ImageEnhance.Brightness(im).enhance(1 - 0.45 * u)
+
+
+def hit(im, j):
+    """Shake (and a pale flash) on the big hits: the plate is scaled up a touch so the shake never shows an edge."""
+    import random
+    for k, amp, n, flash in HITS:
+        d = j - fr(T(k))
+        if not 0 <= d < n:
+            continue
+        a = amp * (1 - d / n) ** 2; r = random.Random(j * 7919)
+        dx, dy = r.uniform(-a, a), r.uniform(-a, a)
+        m = 1 + 2 * amp / W
+        big = im.resize((round(W * m), round(H * m)), Image.BILINEAR)
+        l, t = (big.width - W) / 2 + dx, (big.height - H) / 2 + dy
+        im = big.crop((round(l), round(t), round(l) + W, round(t) + H))
+        if flash and d < 5:
+            im = Image.blend(im, Image.new('RGB', (W, H), (235, 230, 215)), flash * (1 - d / 5))
+    return im
 
 
 def render_video(path, j_from=0, j_to=None):
@@ -222,6 +247,7 @@ def render_video(path, j_from=0, j_to=None):
         im = frame_for(row, j) if row else Image.new('RGB', (W, H))
         if row and row.get('fallgrade'):
             im = fall_grade(im, j, row['fallgrade'])
+        im = hit(im, j)
         im = overlay_caps(im, j)
         if row and row.get('end'):
             im = end_card(im, j)

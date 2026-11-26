@@ -151,6 +151,15 @@ const SHOTS = {
     // no bow here: the vanguard hold on their own, so kills come one at a time instead of a pile of death smoke under the strike circle
     await record(page, dir, n, { cam: move({ x: 200, y: 430, z: 2.7 }, { x: 260, y: 300, z: 2.5 }, n), perFrame: (p) => p.evaluate(() => { __tr.aimP = null; __tide.game.clearAim(); }) });
   },
+  // 8b. Hold, close: the same stand from inside the melee.
+  async s08b_melee(page, dir) {
+    await page.evaluate((spec) => __tr.setup(spec), { wave: 30, levels: { ...ranks(BOW, 4), ...ranks(VAN, 5), timber: 6 }, ach: DECOR, wall: 1 });
+    await page.evaluate(async () => { __tr.soften(0.02); __tr.light(0.55); __tr.warm(3, 'none'); __tr.clearOrcs();
+      await __tr.knot('grunt', 12, 330, 300, 40, 30, 47); await __tr.knot('grunt', 12, 360, 400, 40, 30, 53); await __tr.knot('brute', 3, 420, 350, 30, 50, 59); });
+    const n = sec(8);
+    // no bow here: the vanguard hold on their own, so kills come one at a time instead of a pile of death smoke under the strike circle
+    await record(page, dir, n, { cam: move({ x: 285, y: 370, z: 3.9 }, { x: 268, y: 355, z: 4.3 }, n), perFrame: (p) => p.evaluate(() => { __tr.aimP = null; __tide.game.clearAim(); }) });
+  },
   // 9a. The plain fills: runners, brutes, wolf riders, drummers, berserkers; a slow push over the whole tide.
   async s09a_tide(page, dir) {
     await page.evaluate((spec) => __tr.setup(spec), { wave: 46, levels: { ...ranks(BOW, 4), timber: 6 }, ach: DECOR, wall: 1 });
@@ -185,7 +194,7 @@ const SHOTS = {
     if (!await page.evaluate(() => !!__tide.game.state.orcs.items.find((o) => o.live && !o.dead && o.kind === 'boss'))) throw new Error('no Warboss on the field');
     const n = sec(14), aimFrom = sec(6);
     // he strides in unopposed for six seconds; then the elf turns the bow on him
-    await record(page, dir, n, { cam: follow((m) => m.boss ?? m.group, { z: 3.5, zEnd: 3.1, n, k: 1.3, off: { x: -25, y: -14 } }),
+    await record(page, dir, n, { cam: follow((m) => m.boss ?? m.group, { z: 4.3, zEnd: 3.6, n, k: 1.3, off: { x: -18, y: -12 } }),
       perFrame: (p, i) => p.evaluate(([on]) => { const b = __tide.game.state.orcs.items.find((o) => o.live && !o.dead && o.kind === 'boss');
         if (on && b) __tr.aimAt(b.x - 10, b.y); else { __tr.aimP = null; __tide.game.clearAim(); } }, [i >= aimFrom]) });
   },  // 10b. The Warboss reaches the wall; the vanguard close on him (no bow, so his strikes and theirs stay readable).
@@ -196,6 +205,18 @@ const SHOTS = {
     await page.evaluate(() => { const s = __tide.game.state; for (const o of s.orcs.items) if (o.live && !o.dead) { o.x -= 560; if (o.kind === 'boss') o.x = Math.max(o.x, 300); } });
     const n = sec(10);
     await record(page, dir, n, { cam: follow((m) => m.boss ?? m.group, { z: 2.7, zEnd: 3.0, n, k: 1.6, off: { x: -20, y: -10 } }),
+      perFrame: (p) => p.evaluate(() => { const s = __tide.game.state; __tr.aimP = null; __tide.game.clearAim(); }) });
+  },
+
+
+  // 10c. The Warboss at the wall, close: his swings and the vanguard on him.
+  async s10c_close(page, dir) {
+    await page.evaluate((spec) => __tr.setup(spec), { wave: 25, levels: { ...ranks(BOW, 3), ...ranks(VAN, 3), timber: 6 }, ach: DECOR, wall: 1 });
+    await page.evaluate(() => { __tr.wallFloor = 0.9; __tr.soften(0.05); __tr.light(0.82); __tr.warm(4, 'none'); __tide.game.summonBoss(); });
+    for (let i = 0; i < 40; i++) { const on = await page.evaluate(() => { __tr.warm(1, 'none'); return !!__tide.game.state.orcs.items.find((o) => o.live && !o.dead && o.kind === 'boss'); }); if (on) break; }
+    await page.evaluate(() => { const s = __tide.game.state; for (const o of s.orcs.items) if (o.live && !o.dead) { o.x -= 560; if (o.kind === 'boss') o.x = Math.max(o.x, 300); } });
+    const n = sec(10);
+    await record(page, dir, n, { cam: follow((m) => m.boss ?? m.group, { z: 4.0, zEnd: 4.4, n, k: 1.6, off: { x: -12, y: -14 } }),
       perFrame: (p) => p.evaluate(() => { const s = __tide.game.state; __tr.aimP = null; __tide.game.clearAim(); }) });
   },
 
