@@ -12,6 +12,7 @@ import numpy as np
 SR = 48000
 HERE = os.path.dirname(os.path.abspath(__file__))
 AUD = os.path.join(HERE, '..', '..', 'public', 'audio')
+GRUNTS = '/mnt/project-files/launch/grunts'   # TB-280 ElevenLabs takes (PR #354), until they land on main
 
 CUES = {  # gain, gap (s), file stem: src/data/audio.ts CUES
     'loose': (0.5, 0.08, 'loose'), 'arrowHit': (0.45, 0.05, 'arrowHit'), 'knife': (0.5, 0.08, 'knife'), 'ignite': (0.5, 0.2, 'ignite'),
@@ -23,8 +24,14 @@ CUES = {  # gain, gap (s), file stem: src/data/audio.ts CUES
     'fireballCast': (0.55, 0.2, 'fireballCast'), 'fireballHit': (0.65, 0.15, 'fireballHit'),
     'lootDrop': (0.35, 0.15, 'lootDrop'), 'lootRare': (0.5, 0.2, 'lootRare'), 'lootEpic': (0.65, 0.3, 'lootEpic'),
     'lootLegendary': (0.8, 0.5, 'lootLegendary'), 'lootMythic': (1, 1, 'lootMythic'), 'warDrum': (1, 0.4, 'warDrum'),
+    'orcPain': (0.45, 0.35, 'orcPain1'), 'orcBark': (0.5, 0.7, 'orcBark1'),
     'uiStamp': (0.7, 0.3, 'ui/stamp'), 'uiPath': (0.7, 0.5, 'ui/path'), 'uiPanel': (0.4, 0.2, 'ui/panel'),
 }
+# Orc voices (TB-280, src/data/audio.ts CUES vars/jitter): every take a cue can play, one at random, never the same twice running
+TAKES = {'orcDeath': ['orcDeath', 'orcDeath2', 'orcDeath3'], 'bruteDeath': ['bruteDeath', 'bruteDeath2', 'bruteDeath3'],
+         'orcPain': ['orcPain1', 'orcPain2'], 'orcBark': ['orcBark1', 'orcBark2']}
+JITTER = {'orcDeath': 0.1, 'bruteDeath': 0.08, 'orcPain': 0.1, 'orcBark': 0.1}   # ± playbackRate; others AUDIO.pitchJitter 0.06
+FIELD_W = 900           # world units across the whole plain; the camera shows FIELD_W / z of it
 DUCK = {'bossRoar', 'wallFall', 'rallyHorn', 'replant', 'lootLegendary', 'lootMythic'}
 LOOT = {'common': 'lootDrop', 'rare': 'lootRare', 'epic': 'lootEpic', 'legendary': 'lootLegendary', 'mythic': 'lootMythic'}
 BIG = {'boss', 'brute', 'elite', 'drummer'}
@@ -45,6 +52,12 @@ def cue_for(e):
     return m.get(t)
 
 
+def voice_for(e):
+    """voiceFor: an orc grunt layered on a hit, a bark on a wall or vanguard strike."""
+    t = e.get('t')
+    return 'orcPain' if t == 'hit' else 'orcBark' if t in ('barricadeHit', 'vanguardHit') else None
+
+
 _buf = {}
 
 
@@ -52,6 +65,8 @@ def load(stem):
     if stem not in _buf:
         for ext in ('.ogg', '.mp3', '.wav'):
             p = os.path.join(AUD, stem + ext)
+            if not os.path.exists(p):
+                p = os.path.join(GRUNTS, stem + ext)
             if os.path.exists(p):
                 raw = subprocess.run(['ffmpeg', '-loglevel', 'error', '-i', p, '-f', 'f32le', '-ac', '2', '-ar', str(SR), '-'], capture_output=True).stdout
                 _buf[stem] = np.frombuffer(raw, np.float32).reshape(-1, 2).copy(); break
@@ -75,8 +90,8 @@ def music(bt, total, splice_from=120, splice_to=168, start=16):
 
 def build(edl, total, bt, manual, sfx_bus=0.55, seed=7, out=None):
     rng = random.Random(seed)
-    n = int(round(total * SR)) + SR
-    sfx = np.zeros((n, 2), np.float32); duck_t = []
+    n_all = int(round(total * SR)) + SR
+    sfx = np.zeros((n_all, 2), np.float32); duck_t = []
     last = {}
     hits = []
     for r in edl:
@@ -88,24 +103,39 @@ def build(edl, total, bt, manual, sfx_bus=0.55, seed=7, out=None):
             if i >= len(meta):
                 break
             t = j / 30
+            cam = meta[i].get('cam') or {'x': 450, 'z': 1}
             for e in meta[i]['ev']:
                 if isinstance(e, str):
                     e = {'t': e}
-                c = cue_for(e)
-                if not c or c not in CUES or c in r.get('skip', ()):
-                    continue
-                g, gap, stem = CUES[c]
-                if t - last.get(c, -9) < gap:
-                    continue
-                last[c] = t; hits.append((t, c, g * r.get('sfx', 1.0)))
+                for c in (cue_for(e), voice_for(e)):
+                    if not c or c not in CUES or c in r.get('skip', ()):
+                        continue
+                    g, gap, stem = CUES[c]
+                    if t - last.get(c, -9) < gap:
+                        continue
+                    pan = 0.0; g *= r.get('sfx', 1.0)
+                    if 'x' in e:   # place it where it is on screen; a sound off the edge of the frame is heard faint, from that side
+                        p = (e['x'] - cam['x']) / (FIELD_W / cam['z'] / 2)
+                        if abs(p) > 1.1:
+                            g *= 0.3
+                        pan = max(-0.7, min(0.7, p * 0.6))
+                    last[c] = t; hits.append((t, c, g, pan))
     for t, c, g in list(manual):
-        hits.append((t, c, g))
-    for t, c, g in hits:
-        stem = CUES[c][2]; x = load(stem)
-        rate = 1 + rng.uniform(-0.06, 0.06)
+        hits.append((t, c, g, 0.0))
+    take = {}
+    for t, c, g, pan in sorted(hits):
+        stem = CUES[c][2]; opts = TAKES.get(c)
+        if opts:   # a random take, never the same one twice running (the game's pickTake)
+            k = rng.randrange(len(opts) - 1) if c in take else rng.randrange(len(opts))
+            if c in take and k >= take[c]:
+                k += 1
+            take[c] = k; stem = opts[k]
+        x = load(stem)
+        jit = JITTER.get(c, 0.06); rate = 1 + rng.uniform(-jit, jit)
         idx = np.arange(0, len(x) - 1, rate)
         y = np.stack([np.interp(idx, np.arange(len(x)), x[:, ch]) for ch in (0, 1)], 1).astype(np.float32)
-        a = int(t * SR); b = min(n, a + len(y))
+        th = (pan + 1) * np.pi / 4; y = y * np.array([np.cos(th), np.sin(th)], np.float32) * np.sqrt(2)   # equal-power pan, centre unchanged
+        a = int(t * SR); b = min(n_all, a + len(y))
         sfx[a:b] += y[:b - a] * g
         if c in DUCK:
             duck_t.append(t)
@@ -120,7 +150,7 @@ def build(edl, total, bt, manual, sfx_bus=0.55, seed=7, out=None):
     write_wav(tmp, mix)
     loudnorm(tmp, out)
     os.remove(tmp)
-    return hits
+    return [(t, c, g) for t, c, g, _ in hits]
 
 
 def write_wav(path, x):

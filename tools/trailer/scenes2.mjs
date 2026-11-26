@@ -21,19 +21,20 @@ const CAMP_ACH = ['first_boss', 'boss_streak', 'boss_roster', 'boss_swift', 'bos
 const smooth = (u) => { u = Math.max(0, Math.min(1, u)); return u * u * (3 - 2 * u); };
 const mix = (a, b, u) => a + (b - a) * u;
 /** A move from camera a to b over n frames, eased in and out. */
-const move = (a, b, n) => (i) => { const u = smooth(i / (n - 1)); return { x: mix(a.x, b.x, u), y: mix(a.y, b.y, u), z: mix(a.z, b.z, u), drawn: a.drawn }; };
+// No zooms (director, 26 Nov: "the awkward zooming is not great"): every shot holds one zoom; a camera only pans, slowly, at a steady speed.
+const move = (a, b, n) => (i) => { const u = smooth(i / (n - 1)); return { x: mix(a.x, b.x, u), y: mix(a.y, b.y, u), z: a.z, drawn: a.drawn }; };
 /** Follow a moving point (pick(meta) -> {x, y} or null) with a critically damped spring; offset frames the subject off-centre. */
-function follow(pick, { z, zEnd = z, n = 1, k = 2.2, off = { x: 0, y: 0 }, start }) {
+function follow(pick, { z, n = 1, k = 2.2, off = { x: 0, y: 0 }, start, lead = 0.6 }) {
   let p = start ? { ...start } : null, v = { x: 0, y: 0 }, last = null, tv = { x: 0, y: 0 };
   return (i, m) => {
     const t = pick(m); const raw = t ? { x: t.x + off.x, y: t.y + off.y } : null;
     if (raw && last) for (const a of ['x', 'y']) tv[a] += ((raw[a] - last[a]) * FPS - tv[a]) * 0.1;   // the subject's own velocity, smoothed
     if (raw) last = raw; else { v.x *= 0.85; v.y *= 0.85; }
-    const tgt = raw ? { x: raw.x + tv.x * 2 / k, y: raw.y + tv.y * 2 / k } : p ? { x: p.x + v.x / k, y: p.y + v.y / k } : { x: 450, y: 300 };   // lead it, so a steady march stays framed
+    const tgt = raw ? { x: raw.x + tv.x * lead * 2 / k, y: raw.y + tv.y * lead * 2 / k } : p ? { x: p.x + v.x / k, y: p.y + v.y / k } : { x: 450, y: 300 };   // lead it, so a steady march stays framed
     if (!p) p = { ...(raw ?? tgt) };
     const dt = 1 / FPS, w = k;
     for (const a of ['x', 'y']) { const acc = w * w * (tgt[a] - p[a]) - 2 * w * v[a]; v[a] += acc * dt; p[a] += v[a] * dt; }
-    return { x: p.x, y: p.y, z: mix(z, zEnd, smooth(i / Math.max(1, n - 1))) };
+    return { x: p.x, y: p.y, z };
   };
 }
 const ELF = { x: 64, y: 300 };
@@ -46,7 +47,7 @@ const SHOTS = {
     await page.evaluate(async () => { __tr.soften(0); __tr.light(0.55); __tr.warm(1, 'none'); __tr.clearOrcs();
       await __tr.knot('grunt', 18, 800, 285, 80, 32, 3); });
     const n = sec(5);
-    await record(page, dir, n, { cam: follow((m) => m.group, { z: 3.3, zEnd: 3.0, n, k: 1.2, off: { x: -30, y: -22 } }) });
+    await record(page, dir, n, { cam: follow((m) => m.group, { z: 3.3, n, k: 1.2, off: { x: -30, y: -22 } }) });
   },
   // 1b. Establishing: the whole plain at golden hour, the band crossing toward the wall and the elf; a slow push in.
   async s01b_wide(page, dir) {
@@ -86,7 +87,7 @@ const SHOTS = {
     await page.evaluate((spec) => __tr.setup(spec), { wave: 10, levels: { muster: 1, wolf: 1, fangs: 5, wolfrate: 3, wolfspd: 3 }, wall: 1 });
     await page.evaluate(async () => { __tr.soften(0); __tr.light(0.35); __tr.warm(1, 'none'); __tr.clearOrcs(); await __tr.knot('grunt', 10, 330, 330, 45, 40, 19); });
     const n = sec(5);
-    await record(page, dir, n, { cam: follow((m) => m.wolf, { z: 4.2, zEnd: 4.4, n, k: 2.2, off: { x: 10, y: -8 } }) });
+    await record(page, dir, n, { cam: follow((m) => m.wolf, { z: 4.2, n, k: 2.2, off: { x: 10, y: -8 } }) });
   },
   // 6b. The hawk dives into the thickest knot.
   async s06b_hawk(page, dir) {
@@ -114,21 +115,21 @@ const SHOTS = {
     await page.evaluate((spec) => __tr.setup(spec), { wave: 14, levels: { sharp: 3, wide: 6, multi: 2, knives: 1, fire: 1, firechance: 5, kindle: 3, wildfire: 3 }, wall: 1 });
     await page.evaluate(async () => { __tr.soften(0); __tr.light(0.45); __tr.warm(1, 'none'); __tr.clearOrcs(); await __tr.knot('grunt', 22, 520, 330, 60, 45, 37); });
     const n = sec(6);
-    await record(page, dir, n, { cam: follow((m) => m.group, { z: 2.9, zEnd: 3.2, n, k: 1.3, off: { x: -10, y: -10 } }), perFrame: (p) => p.evaluate(() => { const c = __tr.groupC(); if (c) __tr.aimAt(c.x - 6, c.y); }) });
+    await record(page, dir, n, { cam: follow((m) => m.group, { z: 2.9, n, k: 1.3, off: { x: -10, y: -10 } }), perFrame: (p) => p.evaluate(() => { const c = __tr.groupC(); if (c) __tr.aimAt(c.x - 6, c.y); }) });
   },
   // 7b. Frost arrows chill a crowd, then the strike shatters it.
   async s07b_frost(page, dir) {
     await page.evaluate((spec) => __tr.setup(spec), { wave: 14, levels: { sharp: 3, wide: 6, multi: 2, knives: 1, fire: 1, frost: 1, frostchance: 5, shatter: 5 }, wall: 1 });
     await page.evaluate(async () => { __tr.soften(0); __tr.light(0.45); __tr.warm(1, 'none'); __tr.clearOrcs(); await __tr.knot('grunt', 22, 520, 330, 60, 45, 41); });
     const n = sec(7);
-    await record(page, dir, n, { cam: follow((m) => m.group, { z: 2.9, zEnd: 3.2, n, k: 1.3, off: { x: -10, y: -10 } }), perFrame: (p) => p.evaluate(() => { const c = __tr.groupC(); if (c) __tr.aimAt(c.x - 6, c.y); }) });
+    await record(page, dir, n, { cam: follow((m) => m.group, { z: 2.9, n, k: 1.3, off: { x: -10, y: -10 } }), perFrame: (p) => p.evaluate(() => { const c = __tr.groupC(); if (c) __tr.aimAt(c.x - 6, c.y); }) });
   },
   // 7c. Lightning leaps through the pack (Storm Glade and Shock Arrows).
   async s07c_storm(page, dir) {
     await page.evaluate((spec) => __tr.setup(spec), { wave: 14, levels: { sharp: 3, wide: 4, knives: 1, fire: 1, storm: 1, shock: 1, shockchance: 5, static: 3, stun: 2 }, wall: 1 });
     await page.evaluate(async () => { __tr.soften(0); __tr.light(0.5); __tr.warm(1, 'none'); __tr.clearOrcs(); await __tr.knot('grunt', 18, 520, 330, 70, 50, 43); });
     const n = sec(8);
-    await record(page, dir, n, { cam: follow((m) => m.group, { z: 2.7, zEnd: 2.9, n, k: 1.3, off: { x: -10, y: -10 } }), perFrame: (p) => p.evaluate(() => { const c = __tr.groupC(); if (c) __tr.aimAt(c.x - 6, c.y); }) });
+    await record(page, dir, n, { cam: follow((m) => m.group, { z: 2.7, n, k: 1.3, off: { x: -10, y: -10 } }), perFrame: (p) => p.evaluate(() => { const c = __tr.groupC(); if (c) __tr.aimAt(c.x - 6, c.y); }) });
   },
   // 7d. The ballista bolt punches through a whole file of orcs.
   async s07d_ballista(page, dir) {
@@ -171,7 +172,7 @@ const SHOTS = {
       await __tr.knot('drummer', 2, 720, 310, 20, 50, 101); await __tr.knot('runner', 6, 500, 230, 40, 50, 103);
       __tr.group = __tide.game.state.orcs.items.filter((o) => o.live && !o.dead); });
     const n = sec(7);
-    await record(page, dir, n, { cam: follow((m) => m.group, { z: 2.0, zEnd: 2.2, n, k: 1.0, off: { x: -60, y: 0 } }), perFrame: aimCrowd(260) });
+    await record(page, dir, n, { cam: follow((m) => m.group, { z: 2.0, n, k: 1.0, off: { x: -60, y: 0 } }), perFrame: aimCrowd(260) });
   },
   // 9b. The wall takes the blows and splinters (close on the timber under attack).
   async s09b_splinter(page, dir) {
@@ -194,7 +195,7 @@ const SHOTS = {
     if (!await page.evaluate(() => !!__tide.game.state.orcs.items.find((o) => o.live && !o.dead && o.kind === 'boss'))) throw new Error('no Warboss on the field');
     const n = sec(14), aimFrom = sec(6);
     // he strides in unopposed for six seconds; then the elf turns the bow on him
-    await record(page, dir, n, { cam: follow((m) => m.boss ?? m.group, { z: 4.3, zEnd: 3.6, n, k: 1.3, off: { x: -18, y: -12 } }),
+    await record(page, dir, n, { cam: follow((m) => m.boss ?? m.group, { z: 4.3, n, k: 1.3, off: { x: -18, y: -12 } }),
       perFrame: (p, i) => p.evaluate(([on]) => { const b = __tide.game.state.orcs.items.find((o) => o.live && !o.dead && o.kind === 'boss');
         if (on && b) __tr.aimAt(b.x - 10, b.y); else { __tr.aimP = null; __tide.game.clearAim(); } }, [i >= aimFrom]) });
   },  // 10b. The Warboss reaches the wall; the vanguard close on him (no bow, so his strikes and theirs stay readable).
@@ -204,7 +205,7 @@ const SHOTS = {
     for (let i = 0; i < 40; i++) { const on = await page.evaluate(() => { __tr.warm(1, 'none'); return !!__tide.game.state.orcs.items.find((o) => o.live && !o.dead && o.kind === 'boss'); }); if (on) break; }
     await page.evaluate(() => { const s = __tide.game.state; for (const o of s.orcs.items) if (o.live && !o.dead) { o.x -= 560; if (o.kind === 'boss') o.x = Math.max(o.x, 300); } });
     const n = sec(10);
-    await record(page, dir, n, { cam: follow((m) => m.boss ?? m.group, { z: 2.7, zEnd: 3.0, n, k: 1.6, off: { x: -20, y: -10 } }),
+    await record(page, dir, n, { cam: follow((m) => m.boss ?? m.group, { z: 2.7, n, k: 1.6, off: { x: -20, y: -10 } }),
       perFrame: (p) => p.evaluate(() => { const s = __tide.game.state; __tr.aimP = null; __tide.game.clearAim(); }) });
   },
 
@@ -216,7 +217,7 @@ const SHOTS = {
     for (let i = 0; i < 40; i++) { const on = await page.evaluate(() => { __tr.warm(1, 'none'); return !!__tide.game.state.orcs.items.find((o) => o.live && !o.dead && o.kind === 'boss'); }); if (on) break; }
     await page.evaluate(() => { const s = __tide.game.state; for (const o of s.orcs.items) if (o.live && !o.dead) { o.x -= 560; if (o.kind === 'boss') o.x = Math.max(o.x, 300); } });
     const n = sec(10);
-    await record(page, dir, n, { cam: follow((m) => m.boss ?? m.group, { z: 4.0, zEnd: 4.4, n, k: 1.6, off: { x: -12, y: -14 } }),
+    await record(page, dir, n, { cam: follow((m) => m.boss ?? m.group, { z: 4.0, n, k: 1.6, off: { x: -12, y: -14 } }),
       perFrame: (p) => p.evaluate(() => { const s = __tide.game.state; __tr.aimP = null; __tide.game.clearAim(); }) });
   },
 

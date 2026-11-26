@@ -51,10 +51,10 @@ EDL = [
     # arrival: the plain, the tide, the elf, the strike
     dict(shot='s01a_band', k=(0, 4), inf=20),   # the hook: the tide close, from the first frame
     dict(shot='s01b_wide', k=(4, 8), inf=10),
-    dict(shot='s02_elf', k=(8, 12), inf=('loose', 9.0)),
-    dict(shot='s03_strike', k=(12, 16), inf=('impact', 13.0)),
+    dict(shot='s02_elf', k=(8, 11), inf=('loose', 9.0)),
+    dict(shot='s03_strike', k=(11, 14), inf=('impact', 11.75)),   # cut before the pack's smoke clears to empty grass
     # grow: the tree, the wolf, companions (2-beat cuts), armoury (a bar each)
-    dict(shot='d04_grove', k=(16, 20), inf=('buy', 17.0), page=True, crop=((1920, 1125, 3680), (1920, 1125, 3680))),  # crop drops the legend strip
+    dict(shot='d04_grove', k=(14, 20), inf=('buy', 16.0), page=True, crop=((1920, 1125, 3680), (1920, 1125, 3680))),  # crop drops the legend strip
     dict(shot='s05_wolf', k=(20, 24), inf=10),
     dict(shot='s06a_bite', k=(24, 26), inf=('bite', 24.6)),
     dict(shot='s06b_hawk', k=(26, 28), inf=('hawkDive', 27.4), after=55),
@@ -73,9 +73,9 @@ EDL = [
     # fall: the track's break
     dict(shot='s11_fall', k=(80, 88), inf=('barricadeFell', 82.25), fallgrade=82.25),  # the field stills and greys, as the game's own fallen dim
     # return
-    dict(shot='d10a_paths', k=(88, 92), inf=10, page=True, crop=((1920, 1080, 3840), (1920, 1060, 3700))),
-    dict(shot='d10b_camp', k=(92, 98), inf=10, page=True, crop=((1150, 1200, 2000), (1100, 1220, 1700))),   # lodge and forge
-    dict(shot='d10b_camp', k=(98, 104), inf=100, page=True, crop=((2750, 1440, 1800), (2850, 1400, 1600))),  # hall and training yard
+    dict(shot='d10a_paths', k=(88, 92), inf=10, page=True, crop=((1920, 1080, 3840), (1920, 1080, 3840))),
+    dict(shot='d10b_camp', k=(92, 98), inf=10, page=True, crop=((1180, 1210, 1850), (1080, 1210, 1850))),   # lodge and forge: a slow pan, no zoom
+    dict(shot='d10b_camp', k=(98, 104), inf=90, page=True, crop=((2740, 1420, 1700), (2860, 1420, 1700))),  # hall and training yard: a slow pan, no zoom
     # march again (after the splice, on the outro hits)
     dict(shot='s12a_late', k=(104, 112), inf=30),
     dict(shot='s13_end', k=(112, 999), inf=10, end=True),
@@ -125,11 +125,11 @@ def resolve_in(row):
 
 # ---------------- picture ----------------
 CAPS = [  # (png, start beat, end beat): captions sit over the cut, not over a shot, so one may run across a cut
-    ('c01', 0.5, 3.6), ('c02', 8.5, 15.5), ('c03', 16.5, 23.5), ('c06', 48.5, 55.5), ('c08', 64.5, 71.0),
+    ('c01', 0.5, 3.6), ('c02', 8.5, 13.6), ('c03', 14.5, 23.5), ('c06', 48.5, 55.5), ('c08', 64.5, 71.0),
     ('c09', 82.6, 87.6), ('c10', 88.5, 95.5),
 ]
 MANUAL_SFX = [  # (trailer beat, cue, gain): sounds for page shots and moments recorded before the shot began
-    (17.0, 'bought', 0.8), (44.0, 'rallyHorn', 0.75), (64.0, 'bossRoar', 1.0), (88.0, 'replant', 0.8),
+    (16.0, 'bought', 0.8), (44.0, 'rallyHorn', 0.75), (64.0, 'bossRoar', 1.0), (88.0, 'replant', 0.8),
 ]
 HITS = [  # (trailer beat, shake px, frames, flash): the roar and the fall land in the picture too
     (64.0, 9, 14, 0.0), (82.25, 16, 20, 0.35),
