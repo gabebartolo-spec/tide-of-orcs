@@ -46,7 +46,7 @@ Two kinds. **Titles** are text only: the player picks one in the Achievements pa
 | `wall_banner_grove`, `wall_banner_tide` | a banner hung on the barricade | field |
 | `wall_lanterns` | lanterns along the barricade top | field |
 | `wall_skulls` | orc skull trophies on the barricade posts | field |
-| `shield_fox` | **Fox tabards** (in review): the fox path banner's roundel painted on every spearman's tunic, on the skirt at his right hip (the side the field camera sees; on the chest his arm hides it); shows once earned, no wear slot | vanguard sprite |
+| `shield_fox` | **Fox tabards** (in review): every spearman's tunic and skirt cloth dyed rust orange, with the fox path banner's roundel, cream-rimmed, painted on the skirt at his right hip (the side the field camera sees; on the chest his arm hides it); shows once earned, no wear slot | vanguard sprite |
 | `trophy_warboss`, `trophy_ogre`, `trophy_orc`, `trophy_raider`, `trophy_ogre_creature` | the boss's mounted head (**shipped, director approved 26 Nov**: each boss's head cut from its own model on a shelf before a round wooden plaque on a post, in a row on the meadow between the kitchen and the training ground; shows once earned, no wear slot) | camp scene |
 | `camp_campfire`, `camp_wolf_statue`, `camp_standing_stone`, `camp_lantern_string`, `camp_armour_stand`, `camp_bell`, `camp_sapling` | decor pieces | camp scene |
 | `banner_serpent`, `banner_fox`, `banner_magpie` | the path's banner on a pole (**shipped, director approved 26 Nov**: a pointed pennant in the path's deep tint with its sigil, on a pole with a crossbar, above the road between the forge and the training ground; shows once earned, no wear slot) | camp scene |

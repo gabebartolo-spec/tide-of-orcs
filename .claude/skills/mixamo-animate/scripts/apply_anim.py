@@ -932,7 +932,7 @@ if os.environ.get("BOWONLY"):  # TB-250 bow woods: only the bow's visible pixels
 if os.environ.get("TABARDONLY"):  # TB-250 fox tabards: only the fox paint shell (fox_decal.py) shows; the body, spear and ground are holdouts, so
     # the paint is lit and shadowed as in the full render and hidden wherever the spear or an arm passes in front of it
     for o in bpy.data.objects:
-        if o.type == "MESH" and o.name != "tabard_fox": o.is_holdout = True
+        if o.type == "MESH" and not o.name.startswith("tabard_"): o.is_holdout = True   # tabard_fox (sigil), tabard_cloth (dyed tunic)
 sc.render.resolution_x = sc.render.resolution_y = int(os.environ.get("RES", "360"))
 if os.environ.get("ANCHOR"):  # sprite foot anchor: the ground point under the rig origin, in image pixels from the top-left
     from bpy_extras.object_utils import world_to_camera_view as _w2c

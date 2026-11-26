@@ -103,7 +103,7 @@ foreach ($wood in "moonsilver", "thornwood", "heartwood") {
 }
 # TB-250 fox tabards (shield_fox): the spearman walk + attack jobs again on copies of their blends carrying the fox paint shell (fox_decal.py),
 # rendered TABARDONLY (every other mesh a holdout) as keys vanfox.spear / vanfox.spear.attack: paint-only frames field.ts draws over van.spear.
-#   $env:PLACES = "-x:-0.019,0.324:0.12"; hid.ps1 blender -b --factory-startup <blend> --python fox_decal.py -- elf_spearman\fox\<blend>_fox.blend
+#   $env:PLACES = "-x:-0.019,0.324:0.12"; $env:TUNIC = "0.722,0.361,0.165"; $env:RIM = "0.937,0.902,0.824"; hid.ps1 blender -b --factory-startup <blend> --python fox_decal.py -- elf_spearman\fox\<blend>_fox.blend
 foreach ($e in ($jobs | Where-Object { $_.key -in "van.spear", "van.spear.attack" })) {
   $ev = $e.env.Clone(); $ev.TABARDONLY = "1"
   $jobs += @{ key = $e.key -replace "^van", "vanfox"; m = "$a\elf_spearman\fox\$([IO.Path]::GetFileNameWithoutExtension($e.m))_fox.blend"; c = $e.c; ortho = $e.ortho; fr = $e.fr; env = $ev }
