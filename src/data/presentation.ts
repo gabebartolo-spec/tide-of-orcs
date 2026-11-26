@@ -464,6 +464,10 @@ export const PHONE_QUERY = '(pointer: coarse) and (max-height: 540px)';
 /** Baked burning/chilled sprite frames (TB-216d). A glowing frame bakes whole at its drawn device height snapped to
  *  `quantum` px, with its sub-pixel offset snapped to 1/`sub` px, and is blitted 1:1 on whole pixels (TB-216f); `steps` is the per-doubling bucket of heightBucket(); past `cap` baked
  *  frames the whole cache is dropped and rebuilt on demand. */
+/** TB-278 night on the backdrop plate: each sprite frame gets a night copy (desaturated by `sat`, multiplied by P.nightSprite),
+ *  baked once per frame and drawn over the day frame at the dusk weight, so characters cool and darken with the director's
+ *  night target. Skipped below `min`; at most `cap` night frames are held (the cache drops whole past it). */
+export const NIGHT_SPRITE = { sat: 0.7, min: 0.02, cap: 1024 } as const;
 export const SPRITE_BAKE = { steps: 4, cap: 2048, quantum: 0.5, sub: 4 } as const;
 /** Phone-tier bakes (TB-218 P1): the rim bake snaps its height to a coarser `quantum` and its offset to whole device px (`sub` 1),
  *  flash bakes too (no live brightness filter), and the cache is held under `maxBytes` of pixels (dropped whole past it). */
