@@ -255,15 +255,15 @@ export const HUD = {
   /** Wall bar fill colour bands: above `high` it glows grove, above `low` amber, else rose (and the bar throbs). */
   high: 0.5, low: 0.25,
   /** Odometer: ms each digit rolls to its new place. */
-  roll: 380,
+  roll: 260,
   /** Gem sparkle: smallest starlight gain that sparkles, ms between sparkles, burst scale. */
-  sparkleMin: 1, sparkleGap: 900, sparkleScale: 0.3,
+  sparkleMin: 1, sparkleGap: 900, sparkleScale: 0.2,
   /** Wave-clear stamp: ms it slams in (from `stampFrom` scale), ms it holds, ms it fades. */
-  stampIn: 260, stampFrom: 1.5, stampHold: 1100, stampOut: 400,
+  stampIn: 140, stampFrom: 1.25, stampHold: 900, stampOut: 200, stampSpring: 0.6, bannerPop: 0.96,
   /** Wall bar shake on a hit: rem amplitude per hit fraction of max HP (capped at `shakeMax`), ms. */
-  shakeK: 6, shakeMax: 0.6, shakeMs: 360,
+  shakeK: 6, shakeMin: 0.15, shakeMax: 0.5, shakeMs: 240, flashMs: 220,
   /** Odometer: ms each changed digit's strip rolls from its old digit to its new one (all together, no overshoot). */
-  odoRoll: 480,
+  odoRoll: 380,
 } as const;
 
 /** Tooltip plates (TB-195c): rows = most now → next lines shown; gap = rem from the cursor; in = ms spring-in; w = plate width in rem. */

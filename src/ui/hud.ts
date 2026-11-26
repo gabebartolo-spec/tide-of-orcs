@@ -37,12 +37,15 @@ export class Odometer {
         cell.setAttribute('aria-hidden', 'true'); this.el.appendChild(cell);
       }
     }
-    // TB-195b: each changed digit rolls its strip from the old digit to the new one; all start and land together, with no
-    // overshoot, so at rest every digit sits on one baseline.
+    // TB-195c: one driver. A changed digit rolls from where its strip is right now (read from the live transform, so a new value
+    // mid-roll carries on instead of snapping back) to its new place; all start and land together, no overshoot.
     digits.forEach((d, i) => {
       const s = this.strips[i]!, old = s.dataset.d, to = `translateY(${-d * 10}%)`;
-      s.dataset.d = String(d); s.style.transform = to;
-      if (old !== undefined && old !== String(d) && !calm()) s.animate([{ transform: `translateY(${-Number(old) * 10}%)` }, { transform: to }], { duration: HUD.odoRoll, easing: 'cubic-bezier(.25, .6, .3, 1)' });
+      s.dataset.d = String(d);
+      if (old === undefined || old === String(d) || calm()) { if (old !== String(d)) s.getAnimations().forEach((a) => a.cancel()); s.style.transform = to; return; }
+      const from = s.getAnimations().length ? getComputedStyle(s).transform : `translateY(${-Number(old) * 10}%)`;
+      s.getAnimations().forEach((a) => a.cancel()); s.style.transform = to;
+      s.animate([{ transform: from === 'none' ? to : from }, { transform: to }], { duration: HUD.odoRoll, easing: 'cubic-bezier(.2, .7, .3, 1)' });
     });
   }
 }
@@ -79,10 +82,12 @@ export class Hud {
     this.lastHp = hp;
   }
 
+  /** A hit: the bar frame flashes rose for `flashMs` and shakes a little (flash only under reduced motion). */
   private shake(k: number): void {
+    const bar = $('hud-wall'), amp = Math.max(HUD.shakeMin, Math.min(HUD.shakeMax, k * HUD.shakeK));
+    bar.animate([{ boxShadow: `0 0 0 0.125rem ${P.rose}` }, { boxShadow: `0 0 0 0.125rem transparent` }], { duration: HUD.flashMs, easing: 'ease-out' });
     if (calm()) return;
-    const bar = $('hud-wall'), amp = Math.min(HUD.shakeMax, k * HUD.shakeK);
-    tween(bar, HUD.shakeMs, (t) => { bar.style.transform = t >= 1 ? '' : `translateX(${Math.sin(t * Math.PI * 6) * amp * (1 - t)}rem)`; });
+    tween(bar, HUD.shakeMs, (t) => { bar.style.transform = t >= 1 ? '' : `translateX(${Math.sin(t * Math.PI * 4) * amp * (1 - t) * (1 - t)}rem)`; });
   }
 
   /** A wave cleared: the banner pops and the CLEARED stamp slams onto it, holds, fades. Reduced motion shows and fades it, no slam. */
@@ -96,8 +101,8 @@ export class Hud {
       if (t >= 1) { st.hidden = true; banner.classList.remove('stamp-ending'); } }), HUD.stampHold); };
     if (calm()) { st.style.transform = ''; st.style.opacity = '1'; fade(); return; }
     tween(st, HUD.stampIn, (t) => {
-      const e = springEase(t, JUICE.overshoot); st.style.opacity = String(Math.min(1, t * 6));
+      const e = springEase(t, HUD.stampSpring); st.style.opacity = String(Math.min(1, t * 3));
       st.style.transform = `translate(-50%, -50%) rotate(-3deg) scale(${HUD.stampFrom + (1 - HUD.stampFrom) * e})`;
-    }, () => { pop(banner, JUICE.dur.pop, 1.08); fade(); });
+    }, () => { pop(banner, JUICE.dur.pop, HUD.bannerPop); fade(); });
   }
 }
