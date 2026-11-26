@@ -1,6 +1,6 @@
-// TB-250 wall banners proof. Start `npm run dev -- --port 5260`, then: node tools/wallbanner-capture.mjs <debug port> <outDir> [on|off] [sizes] [tiers] [stages]
+// TB-250 wall cosmetics proof. Start `npm run dev -- --port 5260`, then: [ACH=a,b,...] node tools/wallbanner-capture.mjs <debug port> <outDir> [on|off] [sizes] [tiers] [stages]
 // One fresh headless Chrome per size. Per tier (wall0-3) and damage stage (0-3) it pins the wall tier, the wall's health inside that stage,
-// wave 12, and (with `on`) the two banner achievements earned (wave_10 -> grove, boss_50 -> tide), then saves a screenshot and writes
+// wave 12, and (with `on`) the achievements in ACH earned (default wave_10, boss_50: the grove and tide banners), then saves a screenshot and writes
 // audit.json: per shot the stage shown, the HUD bottom (css px), the view, the placed wall and each standard's drawn box (css px).
 import { tmpdir } from 'node:os';
 import { spawn } from 'node:child_process';
@@ -31,7 +31,7 @@ async function session(port, W, H, out) {
     await sleep(3000);
     for (const tier of TIERS) for (const st of STAGES) {
       await ev(`(() => { clearInterval(window.__pin); const t = window.__tide, s = t.game.state, e = s.meta.ach.earned;
-        for (const a of ['wave_10', 'boss_50']) { const i = e.indexOf(a); if (${on === 'on'} && i < 0) e.push(a); if (${on !== 'on'} && i >= 0) e.splice(i, 1); }
+        for (const a of ${JSON.stringify((process.env.ACH ?? 'wave_10,boss_50').split(','))}) { const i = e.indexOf(a); if (${on === 'on'} && i < 0) e.push(a); if (${on !== 'on'} && i >= 0) e.splice(i, 1); }
         const pin = () => { s.stats.wallTier = ${tier}; s.run.wave = 12; s.run.barHp = s.stats.barMax * ${HP[st]}; s.run.fallen = false; document.getElementById('fallen').hidden = true; document.getElementById('hud-stamp').hidden = true; };
         pin(); window.__pin = setInterval(pin, 16); })()`);
       await sleep(2500);
