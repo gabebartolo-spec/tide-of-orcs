@@ -104,3 +104,24 @@ except:
   `v6_on_target.png` (walk frame 8 on battlefield_day.png at 67 px).
 - Still open: the sculpt's own hunch (head forward of the shoulders, long arms) keeps him lower and wider than the target
   orcs even on an upright clip. With the head pitched down, the face falls in the shade tone.
+
+## v7 (coordinator brief, 27 Nov: no chest strap, upright spine, face lit)
+Everything from v6 kept (Walking clip, axe-arm pose, camera, flat skin, smoothed-normal 3-tone ramp and its steps, ink, shield)
+except:
+- Chest strap removed. The modelled band `wpn_C` is deleted. The painted Tripo strap turned out to be its own geometry lying
+  on the skin (one 414-face band and two 64-face buckle islands), so those islands are deleted (`grunt_dream_v7.blend`); the
+  skin underneath is whole. Any strap colour left in the texture along that path is repainted to the flat skin colour
+  (694,083 px, `grunt_dream_v7s.blend`). Loincloth, belt and pauldron kept. Checked front (CAMROT 120) and back (CAMROT 270):
+  no strap, edge or ink line in any of the 37 frames.
+- Hunch: a constant offset on top of the Walking clip: Spine, Spine1, Spine2 each -8 deg, Neck -15, Head -15 (v6 was +5 x3,
+  -15, -20). In this rig a positive Spine X tilts him forward; the v4 note "+5 = less hunch" had the sign wrong. In the side
+  view the head now sits over the shoulders.
+- Face: with the head up it lands in the lit tone (shade only under the jaw), so no head-only shade step was added.
+- Clip test: CLIP 0, LFIST 0, LFISTSURF 0 on all frames (`grunt_dream_v4_s4.blend` with the v7 clip and pose).
+- Tone shares (`tones.py`, pixels nearest each target tone): still 0.60 lit / 0.40 shade / 0.00 dark, walk frame 8
+  0.62 / 0.38 / 0.00, against the target orc's 0.48 / 0.36 / 0.16. Standing up turns the chest to the sun, so he reads
+  lighter than v6 (0.50); the shade steps were kept as v6 per the brief.
+- Files: `v7_sidebyside.png` (target orc | v7 still), `v7_walk_ingame.gif` (shipped jog | v7 walk, front-row size),
+  `v7_on_target.png` (walk frame 8 on battlefield_day.png at 67 px).
+- Still open: no dark-core tone anywhere (the target has 16%); the sculpt's long arms and wide stance still make him squatter
+  than the target orcs; the shade patches on the chest follow the sculpt's pecs rather than one clean form shadow.
