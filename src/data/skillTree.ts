@@ -166,7 +166,7 @@ export const NODES: readonly SkillNode[] = [
   p('serpent', n('venom', 'Venom', 'Bow', 'coil', 1, 1500, 1, 500, 40, 'Your crits poison orcs for 3 s.')),
   p('serpent', n('toxin', 'Toxin', 'Bow', 'venom', 5, 1200, 2.0, 420, 30, 'Poison +30% damage per rank.')),
   p('serpent', n('gaze', "Serpent's Gaze", 'Bow', 'viper', 3, 900, 2.2, 280, 60, 'Your strike circle +8% wider per rank.')),
-  p('fox', n('foxden', 'Den Mother', 'Vanguard', 'root', 5, 400, 2.0, 80, 450, 'Vanguard and companions +15% damage per rank.')),
+  p('fox', n('foxden', 'Den Mother', 'Vanguard', 'root', 5, 400, 2.0, 80, 450, 'Vanguard and companions +10% damage per rank.')),
   p('fox', n('foxhide', 'Fox Hide', 'Vanguard', 'foxden', 5, 500, 2.0, 80, 530, 'Vanguard +20% health per rank.')),
   p('fox', n('foxrun', 'Swift Return', 'Vanguard', 'foxden', 5, 500, 2.0, 150, 500, 'Fallen vanguard return 12% sooner per rank.')),
   p('fox', n('foxpack', 'Pack Tactics', 'Vanguard', 'foxhide', 2, 1500, 2.6, 80, 610, '+1 vanguard may stand at once per rank.')),
