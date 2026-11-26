@@ -1,0 +1,61 @@
+# Batches B, Fox knock-out and C together (TB-276); see the three source files for what each line tests.
+none-- | --minutes 90 --hwbuy
+none-bow | --minutes 90 --hwbuy --focus Bow
+none-pack | --minutes 90 --hwbuy --focus Vanguard,Companions
+none-wall | --minutes 90 --hwbuy --focus Barricade
+none-spoils | --minutes 90 --hwbuy --focus Spoils
+none-arm | --minutes 90 --hwbuy --focus Armoury,Grove
+none-camp | --minutes 90 --hwbuy --camp all
+none-human3 | --minutes 90 --hwbuy --human 3
+serpent-- | --minutes 90 --hwbuy --path serpent
+serpent-bow | --minutes 90 --hwbuy --path serpent --focus Bow
+serpent-pack | --minutes 90 --hwbuy --path serpent --focus Vanguard,Companions
+serpent-wall | --minutes 90 --hwbuy --path serpent --focus Barricade
+serpent-spoils | --minutes 90 --hwbuy --path serpent --focus Spoils
+serpent-arm | --minutes 90 --hwbuy --path serpent --focus Armoury,Grove
+serpent-camp | --minutes 90 --hwbuy --path serpent --camp all
+serpent-human3 | --minutes 90 --hwbuy --path serpent --human 3
+fox-- | --minutes 90 --hwbuy --path fox
+fox-bow | --minutes 90 --hwbuy --path fox --focus Bow
+fox-pack | --minutes 90 --hwbuy --path fox --focus Vanguard,Companions
+fox-wall | --minutes 90 --hwbuy --path fox --focus Barricade
+fox-spoils | --minutes 90 --hwbuy --path fox --focus Spoils
+fox-arm | --minutes 90 --hwbuy --path fox --focus Armoury,Grove
+fox-camp | --minutes 90 --hwbuy --path fox --camp all
+fox-human3 | --minutes 90 --hwbuy --path fox --human 3
+magpie-- | --minutes 90 --hwbuy --path magpie
+magpie-bow | --minutes 90 --hwbuy --path magpie --focus Bow
+magpie-pack | --minutes 90 --hwbuy --path magpie --focus Vanguard,Companions
+magpie-wall | --minutes 90 --hwbuy --path magpie --focus Barricade
+magpie-spoils | --minutes 90 --hwbuy --path magpie --focus Spoils
+magpie-arm | --minutes 90 --hwbuy --path magpie --focus Armoury,Grove
+magpie-camp | --minutes 90 --hwbuy --path magpie --camp all
+magpie-human3 | --minutes 90 --hwbuy --path magpie --human 3
+fox | --minutes 90 --hwbuy --path fox
+fox-no-startFox | --minutes 90 --hwbuy --path fox --tune PATH_FX.startFox=0
+fox-no-denDmg | --minutes 90 --hwbuy --path fox --tune PATH_FX.denDmg=0
+fox-no-hideHp | --minutes 90 --hwbuy --path fox --tune PATH_FX.hideHp=0
+fox-no-returnCut | --minutes 90 --hwbuy --path fox --tune PATH_FX.returnCut=0
+fox-no-packCap | --minutes 90 --hwbuy --path fox --tune PATH_FX.packCap=0
+fox-no-cunningRate | --minutes 90 --hwbuy --path fox --tune PATH_FX.cunningRate=0
+fox-no-setFoxDmg | --minutes 90 --hwbuy --path fox --tune PATH_FX.setFoxDmg=0
+fox-no-setReturn | --minutes 90 --hwbuy --path fox --tune PATH_FX.setReturn=0
+fox-no-packBuff | --minutes 90 --hwbuy --path fox --tune PATH_FX.packBuff=0
+fox-no-foxMult | --minutes 90 --hwbuy --path fox --tune PATH_FX.foxMult=0
+ladder-none | --minutes 240 --hwbuy
+ladder-serpent | --minutes 240 --hwbuy --path serpent
+ladder-fox | --minutes 240 --hwbuy --path fox
+ladder-magpie | --minutes 240 --hwbuy --path magpie
+hw-none | --minutes 90 --hwbuy
+hw_dawn | --minutes 90 --hwbuy --hw hw_dawn:5
+hw_wolf | --minutes 90 --hwbuy --hw hw_wolf:1
+hw_timber | --minutes 90 --hwbuy --hw hw_timber:3
+hw_orders | --minutes 90 --hwbuy --hw hw_orders:2
+hw_boss | --minutes 90 --hwbuy --hw hw_boss:3
+hw_find | --minutes 90 --hwbuy --hw hw_find:3
+hw_fortune | --minutes 90 --hwbuy --hw hw_fortune:3
+hw_satchel | --minutes 90 --hwbuy --hw hw_satchel:1
+hw_tithe | --minutes 90 --hwbuy --hw hw_tithe:1
+hw_heirloom | --minutes 90 --hwbuy --hw hw_heirloom:1
+hw_glimmer | --minutes 90 --hwbuy --hw hw_glimmer:1
+hw-all | --minutes 90 --hwbuy --hw hw_dawn:5,hw_wolf:1,hw_timber:3,hw_orders:2,hw_boss:3,hw_find:3,hw_fortune:3,hw_satchel:1,hw_tithe:1,hw_heirloom:1,hw_glimmer:1
