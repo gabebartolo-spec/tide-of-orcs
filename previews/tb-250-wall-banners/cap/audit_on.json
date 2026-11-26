@@ -1,5 +1,6 @@
 {
  "1920x1080_wall0_s0_on": {
+  "fallen": false,
   "tier": 0,
   "stage": 0,
   "hudBottom": 118,
@@ -59,6 +60,7 @@
   ]
  },
  "1920x1080_wall0_s1_on": {
+  "fallen": false,
   "tier": 0,
   "stage": 1,
   "hudBottom": 118,
@@ -118,6 +120,7 @@
   ]
  },
  "1920x1080_wall0_s2_on": {
+  "fallen": false,
   "tier": 0,
   "stage": 2,
   "hudBottom": 118,
@@ -237,6 +240,7 @@
   ]
  },
  "1920x1080_wall1_s0_on": {
+  "fallen": false,
   "tier": 1,
   "stage": 0,
   "hudBottom": 118,
@@ -318,6 +322,7 @@
   ]
  },
  "1920x1080_wall1_s1_on": {
+  "fallen": false,
   "tier": 1,
   "stage": 1,
   "hudBottom": 118,
@@ -399,6 +404,7 @@
   ]
  },
  "1920x1080_wall1_s2_on": {
+  "fallen": false,
   "tier": 1,
   "stage": 2,
   "hudBottom": 118,
@@ -562,6 +568,7 @@
   ]
  },
  "1920x1080_wall2_s0_on": {
+  "fallen": false,
   "tier": 2,
   "stage": 0,
   "hudBottom": 118,
@@ -643,6 +650,7 @@
   ]
  },
  "1920x1080_wall2_s1_on": {
+  "fallen": false,
   "tier": 2,
   "stage": 1,
   "hudBottom": 118,
@@ -724,6 +732,7 @@
   ]
  },
  "1920x1080_wall2_s2_on": {
+  "fallen": false,
   "tier": 2,
   "stage": 2,
   "hudBottom": 118,
@@ -887,6 +896,7 @@
   ]
  },
  "1920x1080_wall3_s0_on": {
+  "fallen": false,
   "tier": 3,
   "stage": 0,
   "hudBottom": 118,
@@ -969,6 +979,7 @@
   ]
  },
  "1920x1080_wall3_s1_on": {
+  "fallen": false,
   "tier": 3,
   "stage": 1,
   "hudBottom": 118,
@@ -1051,6 +1062,7 @@
   ]
  },
  "1920x1080_wall3_s2_on": {
+  "fallen": false,
   "tier": 3,
   "stage": 2,
   "hudBottom": 118,
@@ -1216,6 +1228,7 @@
   ]
  },
  "1280x720_wall0_s0_on": {
+  "fallen": false,
   "tier": 0,
   "stage": 0,
   "hudBottom": 81,
@@ -1275,6 +1288,7 @@
   ]
  },
  "1280x720_wall0_s1_on": {
+  "fallen": false,
   "tier": 0,
   "stage": 1,
   "hudBottom": 81,
@@ -1334,6 +1348,7 @@
   ]
  },
  "1280x720_wall0_s2_on": {
+  "fallen": false,
   "tier": 0,
   "stage": 2,
   "hudBottom": 81,
@@ -1453,6 +1468,7 @@
   ]
  },
  "1280x720_wall1_s0_on": {
+  "fallen": false,
   "tier": 1,
   "stage": 0,
   "hudBottom": 81,
@@ -1534,6 +1550,7 @@
   ]
  },
  "1280x720_wall1_s1_on": {
+  "fallen": false,
   "tier": 1,
   "stage": 1,
   "hudBottom": 81,
@@ -1615,6 +1632,7 @@
   ]
  },
  "1280x720_wall1_s2_on": {
+  "fallen": false,
   "tier": 1,
   "stage": 2,
   "hudBottom": 81,
@@ -1778,6 +1796,7 @@
   ]
  },
  "1280x720_wall2_s0_on": {
+  "fallen": false,
   "tier": 2,
   "stage": 0,
   "hudBottom": 81,
@@ -1859,6 +1878,7 @@
   ]
  },
  "1280x720_wall2_s1_on": {
+  "fallen": false,
   "tier": 2,
   "stage": 1,
   "hudBottom": 81,
@@ -1940,6 +1960,7 @@
   ]
  },
  "1280x720_wall2_s2_on": {
+  "fallen": false,
   "tier": 2,
   "stage": 2,
   "hudBottom": 81,
@@ -2103,6 +2124,7 @@
   ]
  },
  "1280x720_wall3_s0_on": {
+  "fallen": false,
   "tier": 3,
   "stage": 0,
   "hudBottom": 81,
@@ -2185,6 +2207,7 @@
   ]
  },
  "1280x720_wall3_s1_on": {
+  "fallen": false,
   "tier": 3,
   "stage": 1,
   "hudBottom": 81,
@@ -2267,6 +2290,7 @@
   ]
  },
  "1280x720_wall3_s2_on": {
+  "fallen": false,
   "tier": 3,
   "stage": 2,
   "hudBottom": 81,
@@ -2432,6 +2456,7 @@
   ]
  },
  "1280x800_wall0_s0_on": {
+  "fallen": false,
   "tier": 0,
   "stage": 0,
   "hudBottom": 81,
@@ -2491,6 +2516,7 @@
   ]
  },
  "1280x800_wall0_s1_on": {
+  "fallen": false,
   "tier": 0,
   "stage": 1,
   "hudBottom": 81,
@@ -2550,6 +2576,7 @@
   ]
  },
  "1280x800_wall0_s2_on": {
+  "fallen": false,
   "tier": 0,
   "stage": 2,
   "hudBottom": 81,
@@ -2669,6 +2696,7 @@
   ]
  },
  "1280x800_wall1_s0_on": {
+  "fallen": false,
   "tier": 1,
   "stage": 0,
   "hudBottom": 81,
@@ -2750,6 +2778,7 @@
   ]
  },
  "1280x800_wall1_s1_on": {
+  "fallen": false,
   "tier": 1,
   "stage": 1,
   "hudBottom": 81,
@@ -2831,6 +2860,7 @@
   ]
  },
  "1280x800_wall1_s2_on": {
+  "fallen": false,
   "tier": 1,
   "stage": 2,
   "hudBottom": 81,
@@ -2994,6 +3024,7 @@
   ]
  },
  "1280x800_wall2_s0_on": {
+  "fallen": false,
   "tier": 2,
   "stage": 0,
   "hudBottom": 81,
@@ -3075,6 +3106,7 @@
   ]
  },
  "1280x800_wall2_s1_on": {
+  "fallen": false,
   "tier": 2,
   "stage": 1,
   "hudBottom": 81,
@@ -3156,6 +3188,7 @@
   ]
  },
  "1280x800_wall2_s2_on": {
+  "fallen": false,
   "tier": 2,
   "stage": 2,
   "hudBottom": 81,
@@ -3319,6 +3352,7 @@
   ]
  },
  "1280x800_wall3_s0_on": {
+  "fallen": false,
   "tier": 3,
   "stage": 0,
   "hudBottom": 81,
@@ -3401,6 +3435,7 @@
   ]
  },
  "1280x800_wall3_s1_on": {
+  "fallen": false,
   "tier": 3,
   "stage": 1,
   "hudBottom": 81,
@@ -3483,6 +3518,7 @@
   ]
  },
  "1280x800_wall3_s2_on": {
+  "fallen": false,
   "tier": 3,
   "stage": 2,
   "hudBottom": 81,

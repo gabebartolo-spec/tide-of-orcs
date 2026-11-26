@@ -46,9 +46,11 @@ describe('wall banners (TB-250)', () => {
     }
   });
 
-  it('hangs a lantern from alternate tall posts, skipping the banner posts', () => {
+  it('hangs three lanterns from tall posts 3, 5, 7, skipping the banner posts, 3 cap widths tall', () => {
     const posts: readonly number[] = WALL_PROPS.wall_lanterns.posts;
-    expect(posts).toEqual([1, 3, 5, 7]);
+    expect(posts).toEqual([3, 5, 7]);
+    expect(WALL_PROPS.wall_lanterns.h).toBe(3.0);
+    expect(WALL_PROPS.wall_skulls.h).toBe(1.4);
     for (const b of Object.values(WALL_BANNERS.spot)) expect(posts).not.toContain(b);
   });
 
@@ -59,9 +61,9 @@ describe('wall banners (TB-250)', () => {
   it('pins each lantern top and skull foot to its post top on every tier and stage, over the wall', () => {
     for (let t = 0; t < 4; t++) for (let st = 0; st < 4; st++) {
       const w = placeWall(WALL_ART[t]!, 100), sp = wallPropSprites(['wall_lanterns', 'wall_skulls'], w, t, st);
-      expect(sp).toHaveLength(4 + 8);
+      expect(sp).toHaveLength(3 + 8);
       sp.forEach((s, j) => {
-        const lan = j < 4, row = lan ? 'tall' : 'plain', n = lan ? WALL_PROPS.wall_lanterns.posts[j]! : WALL_PROPS.wall_skulls.posts[j - 4]!;
+        const lan = j < 3, row = lan ? 'tall' : 'plain', n = lan ? WALL_PROPS.wall_lanterns.posts[j]! : WALL_PROPS.wall_skulls.posts[j - 3]!;
         const spot = WALL_SPOTS[row][t]![st]![n - 1]!, R: WallDecorRect = WALL_DECOR_ART[s.id], p = lan ? R.top! : R.foot;
         expect(s.x + (p[0] * s.w) / R.w).toBeCloseTo(w.x + spot[0], 6);
         expect(s.y + (p[1] * s.h) / R.h).toBeCloseTo(w.y + spot[1], 6);
