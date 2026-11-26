@@ -65,3 +65,20 @@ Everything from v3 kept (Jogging clip, axe-arm pose, hue shift, CAMROT 180 game 
 - Blend: `grunt_dream_v4.blend` (shield `_v4_s3`, strap `_v4_s4`).
 - Files: `v4_sidebyside.png`, `v4_walk_ingame.gif` (shipped jog | v4 jog, front-row size), `v4_on_field_zoom.png`,
   `v4_on_target.png` (walk frame 8 on `target/battlefield_day.png` at 67 px, the measured height of the orcs there: 65, 67, 70 px).
+
+## v5 (coordinator brief, 27 Nov: the director's battlefield_day.png target sets camera and shading)
+Everything from v4 kept (clip, arm pose, shield, planks, strap, spine) except:
+- Camera: front three-quarter, walking toward screen-left: `GAMECAM=30 CAMROT=120` (30 deg top-down; 120 turns the view from
+  the shield side toward his front). Face and chest face the camera; the shield arm is on the far side, beside the body.
+  Neck -15 and Head -20 deg (were -10 each) so the face reads from 30 deg above. Frames are not mirrored.
+- Flat cartoon shading (`grunt_dream_v5.blend`, mk_v5): skin pixels of the base texture set to one flat colour, the target
+  orcs' lit skin sRGB (155,169,72) (median of hue 62-82 pixels in three orcs of battlefield_day.png; their shade is
+  (120,130,55)). Every body, strap and shield material is Emission(base colour x tone): tone is a constant 3-step ramp of
+  N.L in camera space against the key sun direction: lit 1.0 (N.L > -0.15), shade 0.56 linear (= the target's shade ratio),
+  small dark core 0.27 (N.L < -0.6). No soft light, no AO; the cast shadow on the ground is kept.
+- Ink: outer line 2 game px drawn per frame as in v4 (5.63 px on the 512 frames, body 173 px); the 3D hull (0.8% of height)
+  draws the inner lines where parts overlap. Freestyle was not used.
+- Clip test: CLIP 0, LFIST 0, LFISTSURF 0 on all frames (`grunt_dream_v4_s4.blend` + the v5 head pose; the hull shell on the
+  v5 blend makes the clip probe read high, as in v2).
+- Files: `v5_sidebyside.png` (target orc, upscaled | v5 still), `v5_walk_ingame.gif` (shipped jog | v5 jog, front-row size),
+  `v5_on_target.png` (walk frame 8 on battlefield_day.png at 67 px, the measured height of the orcs there).
