@@ -215,6 +215,14 @@ the strip width is `FLIPBOOK_SIZE` x r. The arrow strike's stroked dust ring dra
 Not used, by choice: flame overlays (burning orcs are tinted on their own body). The pixel pack lives outside the repo in tide-assets/vfx_gigapack;
 never commit it (its licence forbids redistribution).
 
+## Unified look (TB-278)
+
+The director's own targets in `docs/art/unified-look/target/` are the source of truth: `battlefield_day.png` (midday) and `battlefield_night.png` (the dark end of the 10-minute day cycle, `SKY.dayCycle`), plus the approved character lineup `characters.png`. Inked, flat-coloured cartoon look: bold dark outlines, flat shading, warm sand paths through green meadow, teal mountain.
+
+- **Backdrop plate.** `public/decor/plate_day.webp` (4096 px) is the day target with every actor, effect, HUD piece and the wall removed by an image-model edit, laid over `BACKDROP` (the 1920x1080 view's field). It replaces the vector sky, the tree rows, the ground bake and its detail, and the aerial haze. Past the plate's sides it repeats mirrored; above it the top sky row stretches up. `plate_night.webp`, when present, fades in with `dusk()`.
+- **Wall.** `public/decor/wallplate_day.webp` is the target's wall, stakes and two watchtowers on transparency in the same frame (keyed from a flat magenta cut), drawn in place of the tiered wall sprites. `wallplate_night.webp` fades in the same way.
+- **Ink outline.** Every sprite frame in `public/sprites` (and `half/`) carries a baked dark outline, 3 px at full size (`scripts/look/ink_outline.py`, which reads the pristine sheets from git, so rerun it from the commit before the outline when sheets change).
+
 ## Asset pipeline (Tripo, Meshy, Cascadeur, ElevenLabs, Suno)
 Vector draws stay the baseline so the game is always playable without assets. Actors ship as **pre-rendered sprite sheets** on top of the same palette. Agents run Tripo, Meshy and ElevenLabs themselves, each job only with the director's written spend yes:
 - **Tripo** generates the 3D models (orc grunt/runner/brute/warboss, elf, spearman, bladedancer, wolf, hawk, treant). Prompt with the palette hexes and "soft low-poly toy-board, flat shading, no outlines". Colour reference (director, 31 Oct): Esoteric Ebb and Thronefall: muted, painterly, low-poly, flat shading, matte hand-painted textures (dusty sage, rust, ochre, bone). One model per actor; variants by tint in-engine, not by new models.
