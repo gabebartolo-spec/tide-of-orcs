@@ -1,4 +1,4 @@
-// Trailer capture rig, take 2 (TB-277 redo). The field canvas is rendered at SCALE x its CSS size, and every output frame is a
+// Trailer capture rig, take 2 (TB-278 redo). The field canvas is rendered at SCALE x its CSS size, and every output frame is a
 // virtual-camera crop of it (world centre x, y and zoom z, where z = 1 shows the whole plain), resampled to 1920 x 1080 in the page.
 // So close-ups are drawn at full sprite resolution, never upscaled, and no DOM (HUD, toasts, cursor) is in a field shot.
 // DOM shots (the Grove page, path cards, the fallen panel, the camp) use page screenshots at deviceScaleFactor 2 instead.

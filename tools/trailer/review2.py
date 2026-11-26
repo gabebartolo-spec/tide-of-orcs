@@ -1,4 +1,4 @@
-"""Review aids for a cut (TB-277): what a viewer sees and hears, laid out so nothing is judged from a thumbnail sheet alone.
+"""Review aids for a cut (TB-278): what a viewer sees and hears, laid out so nothing is judged from a thumbnail sheet alone.
 
   python3 review2.py frames <mp4> <outdir> [every_s]   full-size stills every every_s seconds (default 0.5), named by time
   python3 review2.py sound <mp4> <png>                  loudness over time (momentary LUFS), spectrogram and cut/beat marks

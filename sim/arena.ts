@@ -5,6 +5,7 @@
  * --load file.json: play as the player `npm run balance -- --save file.json` saved at its best wave (default wave: that wave).
  * --levels id:rank,...: run-tree ranks owned before the budget is spent.
  * --budget: starlight the player spends on the run tree first (cheapest node, then the next, like the balance runner); 0 = bare.
+ * --path serpent|fox|magpie: the run's path. --tune also reaches PATH_FX.
  * --vans: vanguards placed before the first orc. --tide keeps the wave's ordinary marching on; without it only --orcs march.
  * The wave never advances. Reports per seed and the average: seconds the wall stood (cap --secs), wall health left, kills and
  * landed swings per kind, fireballs, rider leaps, vanguards fallen, and the share of live orcs inside a drum's reach.
@@ -23,6 +24,8 @@ import { ARROWS, BARRICADE, LOB, NODE_FX, PLAYER, SHOT_FX, SOURCES, STEP, UNIT_F
 import { AFFIX } from '../src/data/lootTables';
 import { FIREBALL, ORC_FX, ORC_KINDS, ORC_TYPES, OrcKind } from '../src/data/orcs';
 import { BOSS_WAVE } from '../src/data/bosses';
+import { PATH_FX, PATH_IDS } from '../src/data/paths';
+import { pickChoice } from './cli';
 
 const args = process.argv.slice(2);
 const arg = (k: string, d: string) => { const i = args.indexOf(`--${k}`); return i >= 0 ? args[i + 1] ?? d : d; };
@@ -31,7 +34,9 @@ const loaded = arg('load', '') ? JSON.parse(readFileSync(arg('load', ''), 'utf-8
 const wave = Number(arg('wave', String(loaded?.wave ?? 40))), secs = Number(arg('secs', '120')), seeds = Number(arg('seeds', '3')), budget = Number(arg('budget', '0'));
 const tide = args.includes('--tide'), vs = arg('vs', '') as OrcKind | '';
 const vans = arg('vans', '').split(',').filter(Boolean) as VanType[];
-const TUNE: Record<string, unknown> = { ORC_TYPES, ORC_FX, FIREBALL, BOSS_WAVE, NODE_FX, UNIT_FX, SHOT_FX, SOURCES, ARROWS, PLAYER, LOB, BARRICADE, VANGUARD, AFFIX };
+const TUNE: Record<string, unknown> = { ORC_TYPES, ORC_FX, FIREBALL, BOSS_WAVE, NODE_FX, UNIT_FX, SHOT_FX, SOURCES, ARROWS, PLAYER, LOB, BARRICADE, VANGUARD, AFFIX, PATH_FX };
+/** --path fox: the run's specialisation path (a saved player does not carry it, it is picked at each Replant). */
+const pathArg = pickChoice('path', arg('path', 'none'), ['none', ...PATH_IDS] as const);
 for (const kv of arg('tune', '').split(',').filter(Boolean)) {
   const [path, v] = kv.split('='), keys = path!.split('.'), last = keys.pop()!;
   const obj = keys.reduce<Record<string, unknown>>((o, k) => (o === TUNE ? TUNE[k] : o[k]) as Record<string, unknown>, TUNE);
@@ -62,6 +67,7 @@ function shop(s: SimState, ev: EventBus): void {
 function arenaState(seed: number): SimState {
   const run = freshRun(); run.wave = wave; run.starlight = budget;
   if (loaded) { run.levels = structuredClone(loaded.levels); run.tier = loaded.tier; }
+  if (pathArg !== 'none') run.path = pathArg;
   const s = createState(seed, run, loaded ? structuredClone(loaded.meta) : undefined); s.meta.checkpoint = wave; recompute(s);
   return s;
 }

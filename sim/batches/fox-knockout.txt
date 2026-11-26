@@ -1,0 +1,12 @@
+# Fox knock-out (TB-276): each Fox number set to 0 in turn, to find what carries the Fox lead. 90 sim min, --hwbuy.
+fox | --minutes 90 --hwbuy --path fox
+fox-no-startFox | --minutes 90 --hwbuy --path fox --tune PATH_FX.startFox=0
+fox-no-denDmg | --minutes 90 --hwbuy --path fox --tune PATH_FX.denDmg=0
+fox-no-hideHp | --minutes 90 --hwbuy --path fox --tune PATH_FX.hideHp=0
+fox-no-returnCut | --minutes 90 --hwbuy --path fox --tune PATH_FX.returnCut=0
+fox-no-packCap | --minutes 90 --hwbuy --path fox --tune PATH_FX.packCap=0
+fox-no-cunningRate | --minutes 90 --hwbuy --path fox --tune PATH_FX.cunningRate=0
+fox-no-setFoxDmg | --minutes 90 --hwbuy --path fox --tune PATH_FX.setFoxDmg=0
+fox-no-setReturn | --minutes 90 --hwbuy --path fox --tune PATH_FX.setReturn=0
+fox-no-packBuff | --minutes 90 --hwbuy --path fox --tune PATH_FX.packBuff=0
+fox-no-foxMult | --minutes 90 --hwbuy --path fox --tune PATH_FX.foxMult=0

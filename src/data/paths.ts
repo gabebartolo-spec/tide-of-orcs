@@ -1,6 +1,6 @@
 /** Specialisation paths (TB-193a, docs/plans/specialisation.md). One path per run, picked at Replant and changeable
  *  every run. A path opens its branch of the Grove tree, gives a small starting bonus, and lets its set and mythic drop.
- *  Every number here is BALANCE ## Proposed P-193: placeholder, untuned. */
+ *  Every number here is BALANCE ## Proposed P-193: placeholder, untuned, except denDmg (P-276, director 26 Nov). */
 
 export type PathId = 'serpent' | 'fox' | 'magpie';
 export const PATH_IDS: readonly PathId[] = ['serpent', 'fox', 'magpie'];
@@ -21,7 +21,7 @@ export const PATH_FX = {
   // Serpent nodes: crit chance, crit damage, venom dps (× elf damage per second), venom seconds, Toxin, circle
   coilCrit: 0.04, viperCritx: 0.3, venomDps: 0.5, venomSecs: 3, toxin: 0.3, gazeRadius: 0.08,
   // Fox nodes: vanguard and companion damage, vanguard health, faster return (×(1 − cut) per rank), +vanguard, companion rate
-  denDmg: 0.15, hideHp: 0.2, returnCut: 0.12, packCap: 1, cunningRate: 0.1,
+  denDmg: 0.1, hideHp: 0.2, returnCut: 0.12, packCap: 1, cunningRate: 0.1,
   // Magpie nodes: starlight, item find, luck, reroll cost cut, salvage Glimmer
   magpieStar: 0.1, glitterFind: 0.05, trinketLuck: 0.03, haggleCut: 0.1, shinyGlimmer: 0.2,
   // Serpent's Coil set: +crit; crits poison (dps as venomDps); 6: a poisoned orc that dies bursts for burst × elf damage

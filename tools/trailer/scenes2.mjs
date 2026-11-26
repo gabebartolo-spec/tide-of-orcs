@@ -1,4 +1,4 @@
-// Launch trailer take 2 (TB-277): every shot recorded through rig2's virtual camera at native sprite resolution, HUD and health
+// Launch trailer take 2 (TB-278): every shot recorded through rig2's virtual camera at native sprite resolution, HUD and health
 // bars off. Each shot is recorded a little longer than its slot in the cut; edl2.py picks the in-point (often from an event in
 // meta.json, so a loose, a bite or an impact lands on the beat).
 // Usage: node scenes2.mjs <outDir> [shot,shot,...]   (needs `npx vite --port 5270` from the repo root)

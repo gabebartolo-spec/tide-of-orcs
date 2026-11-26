@@ -1,0 +1,33 @@
+# Batch B, build matrix (TB-276): every path x a branch focus, plus camp and a slow human per path. 90 sim min, --hwbuy.
+none-- | --minutes 90 --hwbuy
+none-bow | --minutes 90 --hwbuy --focus Bow
+none-pack | --minutes 90 --hwbuy --focus Vanguard,Companions
+none-wall | --minutes 90 --hwbuy --focus Barricade
+none-spoils | --minutes 90 --hwbuy --focus Spoils
+none-arm | --minutes 90 --hwbuy --focus Armoury,Grove
+none-camp | --minutes 90 --hwbuy --camp all
+none-human3 | --minutes 90 --hwbuy --human 3
+serpent-- | --minutes 90 --hwbuy --path serpent
+serpent-bow | --minutes 90 --hwbuy --path serpent --focus Bow
+serpent-pack | --minutes 90 --hwbuy --path serpent --focus Vanguard,Companions
+serpent-wall | --minutes 90 --hwbuy --path serpent --focus Barricade
+serpent-spoils | --minutes 90 --hwbuy --path serpent --focus Spoils
+serpent-arm | --minutes 90 --hwbuy --path serpent --focus Armoury,Grove
+serpent-camp | --minutes 90 --hwbuy --path serpent --camp all
+serpent-human3 | --minutes 90 --hwbuy --path serpent --human 3
+fox-- | --minutes 90 --hwbuy --path fox
+fox-bow | --minutes 90 --hwbuy --path fox --focus Bow
+fox-pack | --minutes 90 --hwbuy --path fox --focus Vanguard,Companions
+fox-wall | --minutes 90 --hwbuy --path fox --focus Barricade
+fox-spoils | --minutes 90 --hwbuy --path fox --focus Spoils
+fox-arm | --minutes 90 --hwbuy --path fox --focus Armoury,Grove
+fox-camp | --minutes 90 --hwbuy --path fox --camp all
+fox-human3 | --minutes 90 --hwbuy --path fox --human 3
+magpie-- | --minutes 90 --hwbuy --path magpie
+magpie-bow | --minutes 90 --hwbuy --path magpie --focus Bow
+magpie-pack | --minutes 90 --hwbuy --path magpie --focus Vanguard,Companions
+magpie-wall | --minutes 90 --hwbuy --path magpie --focus Barricade
+magpie-spoils | --minutes 90 --hwbuy --path magpie --focus Spoils
+magpie-arm | --minutes 90 --hwbuy --path magpie --focus Armoury,Grove
+magpie-camp | --minutes 90 --hwbuy --path magpie --camp all
+magpie-human3 | --minutes 90 --hwbuy --path magpie --human 3

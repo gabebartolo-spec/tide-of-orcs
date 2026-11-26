@@ -11,6 +11,7 @@
     "lint": "eslint src sim && tsc --noEmit",
     "balance": "tsx sim/run.ts",
     "arena": "tsx sim/arena.ts",
+    "batch": "tsx sim/batch.ts",
     "desktop": "npm run build && electron .",
     "desktop:pack": "npm run build && electron-builder --win dir"
   },

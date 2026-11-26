@@ -1,4 +1,4 @@
-// Launch trailer take 2 (TB-277): the DOM shots (the Grove tree, the fallen report, the path cards, the camp), recorded as full
+// Launch trailer take 2 (TB-278): the DOM shots (the Grove tree, the fallen report, the path cards, the camp), recorded as full
 // page screenshots at deviceScaleFactor 2 (3840 x 2160). The tree is framed by its own camera (drawn at device resolution);
 // the other pages are framed in the edit with a crop of at most 2x, so every pixel is native.
 // Usage: node scenes_dom.mjs <outDir> [shot,...]   (needs `npx vite --port 5270` from the repo root)

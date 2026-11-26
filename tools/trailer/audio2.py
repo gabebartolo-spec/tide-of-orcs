@@ -1,4 +1,4 @@
-"""Trailer take 2 sound (TB-277): music B on the cut's beat grid, plus the game's own SFX from each shot's logged events.
+"""Trailer take 2 sound (TB-278): music B on the cut's beat grid, plus the game's own SFX from each shot's logged events.
 
 Music: track beats 16..120, spliced at the downbeat to 168..end (a 12 ms crossfade under the outro's first hit).
 SFX: each field shot's meta.json events in the frames the cut uses, mapped to cues the way src/data/audio.ts does (cueFor,

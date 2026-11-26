@@ -1,4 +1,4 @@
-"""Launch trailer take 2 (TB-277): cut, composite and mix from the shots in out2/shots.
+"""Launch trailer take 2 (TB-278): cut, composite and mix from the shots in out2/shots.
 
 Time runs on music B's measured beat grid (beats.json, librosa, 91.3 BPM). The trailer starts on beat 16 of the track (the
 first hard downbeat, 10.70 s in) and plays straight to beat 120, then splices to beat 168 (the outro hits) and plays to the
