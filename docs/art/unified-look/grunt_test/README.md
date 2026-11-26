@@ -82,3 +82,25 @@ Everything from v4 kept (clip, arm pose, shield, planks, strap, spine) except:
   v5 blend makes the clip probe read high, as in v2).
 - Files: `v5_sidebyside.png` (target orc, upscaled | v5 still), `v5_walk_ingame.gif` (shipped jog | v5 jog, front-row size),
   `v5_on_target.png` (walk frame 8 on battlefield_day.png at 67 px, the measured height of the orcs there).
+
+## v6 (coordinator brief, 27 Nov: upright walk, one shade shape per limb, shield face lit)
+Everything from v5 kept (camera GAMECAM 30 / CAMROT 120, flat skin colour, 3-tone ramp, ink, shield, strap, spine and head pose)
+except:
+- Walk: Mixamo `Walking` (37 frames, 0-36 rendered) instead of Jogging: chest up, the clip's own small lean. The axe arm keeps the
+  v19 recipe, with two changes. The mirrored swing gain is 1.0 instead of 2.8 (at 2.8 the axe swung behind his back mid-step).
+  The RightHand WOFFS X is 25 instead of 60 (at 60 the haft went through the forearm on this clip). Orc Walk was tried; Walking
+  stands taller.
+- Shade shapes (`grunt_dream_v6.blend`, mk_v6): a geometry-nodes modifier after the Armature on the body and on `wpn_R` (which
+  shares the body material) blurs the deformed vertex normals 15 times along the mesh edges and stores them in world space as
+  `snrm`. The toon step reads `snrm` instead of the true normal, so muscle bumps no longer break the shade into blotches. The
+  mesh itself is unchanged; the outline still uses the true geometry.
+- With smoothed normals the old shade step (N.L < -0.15) put 61% of the skin in shade. The body's shade step is now N.L < -0.45
+  (core < -0.75). This makes the lit share 0.50 lit / 0.50 shade on walk frame 0 and frame 8, against 0.48 lit / 0.36 shade /
+  0.16 dark on the target orc (pixels nearest each sampled target tone, `tones.py`).
+- Shield: lit rather than turned. The wood's shade step is N.L < -0.7 (core < -0.9), so the plank face reads in the lit tone with
+  its grain, and only the plank edges turned away from the sun go dark.
+- Clip test: CLIP 0, LFIST 0, LFISTSURF 0 on all frames (`grunt_dream_v4_s4.blend` with the v6 clip and arm pose).
+- Files: `v6_sidebyside.png` (target orc | v6 still), `v6_walk_ingame.gif` (shipped jog | v6 walk, front-row size),
+  `v6_on_target.png` (walk frame 8 on battlefield_day.png at 67 px).
+- Still open: the sculpt's own hunch (head forward of the shoulders, long arms) keeps him lower and wider than the target
+  orcs even on an upright clip. With the head pitched down, the face falls in the shade tone.
