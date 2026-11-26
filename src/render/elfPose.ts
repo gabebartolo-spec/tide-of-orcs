@@ -1,6 +1,7 @@
 /** Hero elf shot loop (TB-202). The draw clip (`elf.attack`, 32 frames) ends at full draw and plays in step with the bow's
  *  charge, so full draw lands as the lob leaves. No Mixamo clip runs full draw back to the nock on this rig, so after each lob
- *  the full-draw frame crossfades into draw frame 0 over `release` s (director 3 Nov); aim start/stop crossfades idle and draw. */
+ *  the clip scrubs back from full draw to where the new draw has got to over `release` s: one pose at a time, never two
+ *  overlaid (a crossfade of the two poses read as a ghosted, buggy archer: director, 26 Nov). Aim start/stop crossfades idle and draw. */
 export interface ElfLayer { state: 'walk' | 'attack'; t: number; alpha: number }
 
 /** Clip time for a charge (0..1): charge 1 is the last (full-draw) frame. */
@@ -18,7 +19,7 @@ export function elfLayers(charge: number, sinceShot: number, aimMix: number, dur
   if (aimMix < 1) out.push({ state: 'walk', t: 0, alpha: 1 });
   if (aimMix <= 0) return out;
   const k = release > 0 ? Math.min(1, Math.max(0, sinceShot) / release) : 1;
-  if (k < 1) out.push({ state: 'attack', t: chargeT(1, dur), alpha: aimMix });
-  out.push({ state: 'attack', t: chargeT(charge, dur), alpha: aimMix * (k < 1 ? k : 1) });
+  const e = k * k * (3 - 2 * k);   // ease the snap back so it starts and lands softly
+  out.push({ state: 'attack', t: chargeT(charge + (1 - charge) * (1 - e), dur), alpha: aimMix });
   return out;
 }
