@@ -163,6 +163,41 @@ export const WALL_ART = [
   { key: 'wall3', x: -199.8, y: 117.4, w: 541.4, h: 799.0, foot: 178.0, breaches: [601, 481, 404, 324, 259, 198], chunks: ['wallHeart', 'wallHeartDark'] },
 ] as const;
 
+/** TB-250 wall cosmetics: spots on the visible wall, the same posts at every tier and damage stage. Printed by tools/wall_spots.py from
+ *  wall0's tall posts (the 8 visible ones, nearest first, picked by hand on its render): `capW` is each post's cap width (field units),
+ *  `tall[tier][stage][post]` its [centre x, top y, foot y] in field units from the placed wall art's top-left (x, y). wall1-3 have no
+ *  tall posts: the spot is the same distance from the wall's far end, on that tier's own top edge, the foot its near face's bottom. */
+export const WALL_SPOTS = {
+  capW: [17.4, 16.68, 13.16, 12.77, 10.39, 10.06, 8.28, 8.4],
+  tall: [
+    [[[341.5, 314.2, 446.0], [359.3, 289.5, 418.6], [444.4, 169.1, 279.9], [454.0, 155.7, 264.2], [513.3, 74.2, 165.7], [521.3, 62.9, 152.8], [564.2, 2.2, 82.5], [578.7, 6.2, 61.4]], [[341.5, 314.2, 446.0], [359.3, 289.5, 418.6], [444.4, 169.1, 334.7], [454.0, 155.7, 264.2], [513.3, 74.2, 165.7], [521.3, 62.9, 152.8], [564.2, 2.2, 82.5], [578.7, 6.2, 82.5]], [[341.5, 314.2, 446.0], [359.3, 289.5, 418.6], [444.4, 169.1, 312.4], [454.0, 167.5, 264.2], [513.3, 74.2, 228.8], [521.3, 62.9, 152.8], [564.2, 2.2, 82.5], [578.7, 6.2, 61.4]], [[343.9, 313.7, 490.6], [361.7, 287.2, 488.7], [446.8, 167.5, 275.9], [456.4, 154.6, 259.2], [515.7, 71.8, 160.3], [523.6, 61.0, 148.8], [566.5, 1.5, 99.1], [581.1, 5.5, 74.5]]],
+    [[[380.7, 317.5, 443.2], [403.4, 272.2, 423.3], [485.0, 158.8, 279.4], [492.9, 147.8, 266.5], [550.6, 65.5, 165.5], [554.8, 59.8, 156.8], [596.8, 1.8, 83.7], [612.2, 1.3, 58.8]], [[388.4, 305.5, 443.2], [403.4, 272.2, 420.5], [486.4, 158.6, 316.7], [493.2, 147.8, 316.9], [553.2, 61.5, 165.5], [554.8, 59.8, 154.7], [600.7, 1.3, 83.7], [612.2, 1.3, 74.3]], [[395.4, 283.5, 436.7], [403.4, 272.2, 407.6], [493.2, 148.5, 266.5], [503.9, 146.8, 278.2], [555.0, 59.9, 220.3], [558.6, 60.1, 140.9], [601.7, 1.3, 115.3], [616.2, 1.5, 84.6]], [[400.3, 275.0, 517.8], [403.4, 272.2, 448.4], [492.2, 147.8, 332.1], [507.9, 142.6, 306.4], [555.0, 59.9, 167.1], [571.9, 58.2, 164.3], [612.2, 1.3, 87.2], [625.1, 58.3, 92.8]]],
+    [[[368.7, 305.3, 440.4], [386.1, 277.3, 413.5], [469.2, 169.5, 275.4], [478.6, 157.9, 258.8], [536.6, 65.1, 160.1], [544.4, 52.3, 148.1], [586.3, 4.2, 78.5], [600.9, 5.0, 50.9]], [[375.0, 295.9, 431.0], [392.4, 270.7, 467.6], [475.6, 161.8, 262.5], [484.9, 148.7, 246.3], [542.9, 54.6, 150.7], [550.7, 46.0, 138.8], [592.6, 4.0, 65.9], [607.2, 5.4, 63.1]], [[372.2, 321.9, 485.0], [389.6, 307.5, 486.1], [472.7, 165.1, 329.1], [482.1, 153.4, 321.8], [540.1, 60.5, 154.7], [547.9, 48.1, 143.4], [589.8, 4.0, 71.5], [604.4, 5.2, 73.4]], [[374.5, 325.0, 488.5], [391.9, 306.6, 484.7], [475.1, 162.3, 334.9], [484.5, 149.7, 265.6], [542.5, 56.0, 179.5], [550.3, 46.2, 168.8], [592.2, 4.0, 102.4], [606.8, 5.4, 79.5]]],
+    [[[280.3, 327.1, 445.1], [297.7, 302.4, 435.7], [380.9, 183.4, 279.9], [390.3, 158.3, 266.5], [448.2, 84.6, 166.9], [456.0, 76.2, 163.4], [498.0, 9.1, 84.8], [512.5, 5.0, 61.4]], [[287.6, 318.6, 507.9], [305.0, 288.8, 425.0], [388.1, 161.8, 269.1], [397.5, 155.8, 252.2], [455.5, 76.6, 163.4], [463.3, 65.7, 156.6], [505.2, 4.0, 74.8], [519.8, 5.9, 88.6]], [[292.7, 310.4, 481.7], [310.1, 280.1, 473.5], [393.3, 156.2, 335.2], [402.7, 152.5, 304.0], [460.7, 70.5, 161.5], [468.5, 49.3, 159.6], [510.4, 4.9, 98.2], [525.0, 73.2, 85.8]], [[300.4, 297.8, 481.7], [317.9, 270.3, 385.8], [401.0, 155.2, 304.9], [410.4, 142.4, 304.7], [468.4, 49.4, 199.7], [476.2, 43.2, 167.6], [518.1, 5.6, 105.2], [532.7, 63.3, 71.7]]],
+  ],
+} as const satisfies { capW: readonly number[]; tall: readonly (readonly (readonly (readonly [number, number, number])[])[])[] };
+/** Wall banners (TB-250; director 26 Nov): grove on the 2nd tall post, tide on the 4th (1-based, nearest first). On wall0 each standard
+ *  stands on its post's cap; on wall1-3 it stands on a post of that tier (log, stone pillar, red pilaster: `post[tier]`) planted behind
+ *  the wall, rising `postOver` cap widths above its top (stage 0, so it stays whole as the wall breaks); its foot is drawn `postSink` below the
+ *  top, where the wall hides it (the orc-side foot row showed the post's base past the wall's sloped bottom edge). Sizes in cap widths:
+ *  the standard's pole height `standardH`, the post's width `postW`. */
+export const WALL_BANNERS = {
+  spot: { wall_banner_grove: 2, wall_banner_tide: 4 },
+  post: [null, 'wall_post_log', 'wall_post_stone', 'wall_post_pilaster'],
+  postOver: 1.8, postSink: 3, postW: 0.8, standardH: 3.0,
+} as const;
+/** The wall cosmetic sprites (public/decor/<id>.webp, written by post_wall_decor.py from wall_standard.py / wall_post.py renders): image
+ *  size, the foot (the pole's or post's bottom centre) and, for posts, the top's near rim (px) and the px per post width (`unit`). */
+export interface WallDecorRect { readonly w: number; readonly h: number; readonly foot: readonly [number, number]; readonly top?: readonly [number, number]; readonly unit?: number }
+export const WALL_DECOR_ART = {
+  wall_banner_grove: { w: 150, h: 420, foot: [74.9, 415.4] },
+  wall_banner_tide: { w: 150, h: 420, foot: [74.9, 415.4] },
+  wall_post_log: { w: 159, h: 640, foot: [39.6, 588.9], top: [39.6, 37.0], unit: 70.81 },
+  wall_post_stone: { w: 162, h: 640, foot: [44.1, 579.6], top: [44.1, 37.6], unit: 69.55 },
+  wall_post_pilaster: { w: 174, h: 640, foot: [56.8, 578.1], top: [56.8, 39.1], unit: 69.15 },
+} as const satisfies Readonly<Record<string, WallDecorRect>>;
+export type WallDecorId = keyof typeof WALL_DECOR_ART;
+
 
 /** The wall's visible damage (TB-238, TB-209). stages: the health fractions below which the next rendered stage shows. Debris on a stage change: chunks per breach, speed, life, size, spin, gravity. Dust: puffs per breach, per blow, speed, life, radius, growth/s, alpha.
  *  Flames burn in the breaches from flameStage on: tongues, height, half width, spacing, flicker rate, embers/s. maxBits caps flying bits. */

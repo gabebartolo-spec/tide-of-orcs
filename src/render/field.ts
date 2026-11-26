@@ -1,6 +1,7 @@
 import { wallX } from '../sim/wallLine';
 import { barFrac } from '../sim/barricade';
 import { WallDamage } from './wallDamage';
+import { wallBanners, wallBannerSprites, WallSprite } from './wallDecor';
 import { Treeline } from './treeline';
 import { elfLayers, stepAimMix } from './elfPose';
 import { ARROWS, BARRICADE, FIELD, LOB, SOURCES, VANGUARD, WAVE_LEN } from '../data/balance';
@@ -106,6 +107,8 @@ export class FieldRenderer {
   private skyBand = -Infinity; private skyLine = -Infinity; private wallTop = -Infinity;
   /** The wall art placed for this view (TB-268). */
   private wall: PlacedWall = placeWall(WALL_ART[0], NaN);
+  /** The wall banner sprites drawn this frame (field rects; read by tools/wallbanner-capture.mjs). */
+  wallStandards: readonly WallSprite[] = [];
   /** Drawn rows of the elf's post (TB-232): the first and last sim rows of the post and where they are drawn this frame. */
   private postRows = { a: H / 2 - SOURCES.archerOffsetY, b: H / 2 + SOURCES.archerOffsetY, lo: depthY(H / 2 - SOURCES.archerOffsetY), hi: depthY(H / 2 + SOURCES.archerOffsetY) };
   /** Drawn row of a member of the elf's post (elf, companion archers, ballista) standing on sim row `y`: the post's rows are spread over
@@ -323,7 +326,11 @@ export class FieldRenderer {
 
     // barricade: drawn whole, over the forest edge and its bush skirt (it is nearer than both)
     const top = Math.max(vis.y0, this.wall.y); this.wallTop = Math.max(vis.y0, this.wall.foot - TREELINE.cap.up);
+    // earned wall banners (TB-250): a wall1-3 post and its standard stand behind the wall, wall0's standards on its post caps over it
+    this.wallStandards = wallBannerSprites(wallBanners(s.meta.ach.earned), this.wall, s.stats.wallTier, this.wallDamage.stage);
+    this.wallSprites(true);
     this.fencePanels(top, H);
+    this.wallSprites(false);
     // Thornwall spikes (TB-274): along the drawn wall's face, from its far end on the meadow to the near edge; the sim's wall line ran past the art into the sky
     if (s.stats.spikes) { g.fillStyle = P.cream; const y0 = Math.max(top, this.wall.foot); for (let y = y0 + ((SPIKES.gap - (y0 % SPIKES.gap)) % SPIKES.gap); y < H; y += SPIKES.gap) { const wx = wallFaceX(y); g.beginPath(); g.moveTo(wx, y); g.lineTo(wx + SPIKES.len, y + SPIKES.half); g.lineTo(wx, y + 2 * SPIKES.half); g.closePath(); g.fill(); } }
 
@@ -446,6 +453,10 @@ export class FieldRenderer {
     g.globalAlpha = 1;
   }
 
+
+  private wallSprites(behind: boolean): void {
+    for (const b of this.wallStandards) { const im = b.behind === behind ? decorImg(b.id) : null; if (im) this.g.drawImage(im, b.x, b.y, b.w, b.h); }
+  }
 
   /** The barricade: one image of the whole slanted run down to `yMax` (or the plank fallback from `top`). It stays solid at any health; the HUD bar shows damage. */
   private fencePanels(top: number, yMax: number): void {
