@@ -287,6 +287,8 @@ export class Panel {
       navigator.clipboard?.writeText(blob).then(() => this.toast(STR.exported), () => {});
     };
     $('btn-import').onclick = () => this.importSave();
+    // the run log download is a playtest aid: dev builds only, never in the launch build (director 26 Nov, TB-275)
+    if (!import.meta.env.DEV) { $('btn-telemetry').parentElement?.remove(); $('set-tel-k').remove(); return; }
     $('set-tel-k').textContent = STR.setTel; $('btn-telemetry').textContent = STR.telBtn;
     $('btn-telemetry').onclick = () => {
       const { json, runs, loot } = this.game.telemetry(); if (!runs && !loot) { this.toast(STR.telNone); return; }
