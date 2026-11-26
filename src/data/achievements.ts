@@ -13,7 +13,7 @@ export const COSMETICS = {
   shield_fox: 'Fox shields',
   trophy_warboss: 'Warboss trophy', trophy_ogre: 'Ogre trophy', trophy_orc: 'Orc trophy', trophy_raider: 'Raider trophy', trophy_ogre_creature: 'Ogre Creature trophy',
   camp_campfire: 'Campfire', camp_wolf_statue: 'Wolf statue', camp_standing_stone: 'Standing stone', camp_lantern_string: 'Lantern string',
-  camp_armour_stand: 'Armour stand', camp_bell: 'Camp bell', camp_sapling: 'Grove sapling',
+  camp_bell: 'Camp bell', camp_sapling: 'Grove sapling',
   banner_serpent: 'Serpent banner', banner_fox: 'Fox banner', banner_magpie: 'Magpie banner',
 } as const;
 export type CosmeticId = keyof typeof COSMETICS;
@@ -121,7 +121,7 @@ export const ACHIEVEMENTS: readonly AchDef[] = [
   C('set_serpents_coil', "Serpent's Coil", "Wear all six Serpent's Coil pieces", { title: 'Coiled' }),
   C('set_foxfire_pack', 'Foxfire Pack', 'Wear all six Foxfire Pack pieces', { title: 'Foxfire' }),
   C('set_magpies_hoard', "Magpie's Hoard", "Wear all six Magpie's Hoard pieces", { title: 'Magpie' }),
-  C('set_all', 'Wardrobe of Legends', 'Earn every set achievement', { cosmetic: 'camp_armour_stand' }),
+  C('set_all', 'Wardrobe of Legends', 'Earn every set achievement', { title: 'Wardrobe Legend' }),
   C('mythic_first', 'Myth Made Real', 'Find a mythic', { title: 'Mythfinder' }),
   C('mythic_all', 'Every Myth', 'Find all 11 mythics', { cosmetic: 'trail_star' }),
   C('legendary_first', 'Legend in the Grass', 'Find a legendary', { title: 'Lucky' }),

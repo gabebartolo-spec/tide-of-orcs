@@ -10,7 +10,7 @@ os.makedirs(os.path.join(pub, "decor", "camp"), exist_ok=True)
 comp = Image.open(os.path.join(src, "plate.png")).convert("RGBA") if prev else None
 art = {}
 for n, (bx0, bx1, by0, by1) in sorted(L["rects"].items()):
-    if not n.startswith(("trophy_", "banner_")): continue
+    if not n.startswith(("trophy_", "banner_", "camp_")): continue
     im = Image.open(os.path.join(src, n + ".png")).convert("RGBA")
     r_, g_, b_, a_ = im.split(); im = Image.merge("RGBA", (r_, g_, b_, a_.point(lambda v: 0 if v < 20 else min(255, round((v - 20) * 255 / 235)))))
     px0, py0 = round(bx0 * RX), round((1 - by1) * RY)
