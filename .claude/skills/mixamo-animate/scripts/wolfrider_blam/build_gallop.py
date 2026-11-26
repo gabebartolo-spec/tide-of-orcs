@@ -12,6 +12,7 @@ from mathutils import Vector, Matrix
 a = sys.argv[sys.argv.index("--") + 1:]
 FBX, QFBX, OUT = a[0], a[1], a[2]
 PARTS = os.environ.get("PARTS", "").split(","); HEIGHT = float(os.environ.get("HEIGHT", "0.82")); YAW = float(os.environ.get("YAW", "90"))
+BOB = float(os.environ.get("BOB", "0"))
 RARM = int(os.environ["RARM"]) if os.environ.get("RARM") else None
 
 # Quaternius segments: blam bone -> (quat bone a, 'head'|'tail', quat bone b, 'head'|'tail')
@@ -108,6 +109,9 @@ for i in range(n):
         pb = arm.pose.bones[b]; head = pb.matrix.to_translation()
         R = Matrix.Rotation(q_d[i][b], 3, lat) @ idle_rot[b]
         pb.matrix = Matrix.Translation(head) @ R.to_4x4(); bpy.context.view_layer.update()
+    if BOB:   # rider rides the gallop: he lags the wolf's vertical lift by one frame (sags when the wolf rises, lands late)
+        dz = BOB * (q_lift[i - 1] - q_lift[i]) * b_h / q_h / arm.matrix_world.to_scale().z; pbr = arm.pose.bones["Bip002"]
+        pbr.matrix = Matrix.Translation(Vector((0, 0, dz))) @ pbr.matrix; bpy.context.view_layer.update()
     lift = q_lift[i] * b_h / q_h; zmin = min(v.z for v in meshes_z(wolf_names))
     root.matrix_world = Matrix.Translation(Vector((0, 0, lift - zmin))) @ root.matrix_world; bpy.context.view_layer.update()
     root.keyframe_insert("location", frame=F)
