@@ -95,7 +95,7 @@ export function sweepAchievements(s: SimState, out: string[] = []): string[] {
   if (MYTHICS.every((x) => m.ach.mythics.includes(x.id))) earn(s, 'mythic_all', out);
   if (m.loot.items.some((it) => LEGEND.has(it.rarity))) earn(s, 'legendary_first', out);
   if (ORC_KINDS.every((k) => m.ach.kinds.includes(k))) earn(s, 'bestiary', out);
-  if (BOSS_ROSTER.every((b) => m.ach.bosses.includes(b.id))) earn(s, 'boss_roster', out);
+  if (BOSS_ROSTER.filter((b) => !('late' in b)).every((b) => m.ach.bosses.includes(b.id))) earn(s, 'boss_roster', out);
   if ((m.ach.n.wolf ?? 0) >= ACH_N.wolfKills) earn(s, 'wolf_1k', out);
   if ((m.ach.n.unhorsed ?? 0) >= ACH_N.unhorsed) earn(s, 'unhorsed_100', out);
   if ((m.ach.n.salvage ?? 0) >= ACH_N.salvages) earn(s, 'salvage_1k', out);

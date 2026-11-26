@@ -162,10 +162,10 @@ export function drawMult(s: SimState): number {
 
 /** Orc shaman (TB-127): a fireball lobbed from the staff at (sx, sy) onto (tx, ty). Flies like the elf's lob on FIREBALL's
  *  timings and lands as a `fireballStrike` dealing `dmg` (TB-087, shaman.ts). */
-export function castFireball(s: SimState, ev: EventBus, sx: number, sy: number, tx: number, ty: number, dmg = 0): void {
+export function castFireball(s: SimState, ev: EventBus, sx: number, sy: number, tx: number, ty: number, dmg = 0, r: number = FIREBALL.radius): void {
   const p = s.shots.alloc(); if (!p) return;
   p.kind = 'fireball'; p.sx = p.x = sx; p.sy = p.y = sy; p.tx = tx; p.ty = ty; p.t = 0; p.h = 0; p.vx = p.vy = 0;
-  p.r = FIREBALL.radius; p.dmg = dmg; p.fx = 0; p.crit = 0; p.critX = 1; p.pierce = 0; p.life = Infinity; p.target = null; p.hit.clear(); p.back = false;
+  p.r = r; p.dmg = dmg; p.fx = 0; p.crit = 0; p.critX = 1; p.pierce = 0; p.life = Infinity; p.target = null; p.hit.clear(); p.back = false;
   ev.push({ t: 'fireballCast', x: sx, y: sy, tx, ty });
 }
 

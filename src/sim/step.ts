@@ -8,9 +8,9 @@ import { PATH_FX } from '../data/paths';
 import { FX, bounce, damage, drawMult, rootOrc, impact, lob, nearestOrc, rollFx, shoot, starfall, takenMult, unitHit, volley } from './combat';
 import { barricadeHit, barricadeRegen } from './barricade';
 import { bossStep } from './boss';
-import { isBossWave, tierHp, tierLoot } from '../data/bosses';
+import { BOSS_FX, bossTrait, isBossWave, tierHp, tierLoot } from '../data/bosses';
 import { engagedVanguard, hurtVanguard, vanguardStep } from './vanguard';
-import { fireballLands, shamanCast } from './shaman';
+import { fireballLands, shamanCast, witchCast } from './shaman';
 
 /** Player aim: the pointer's position on the field, or null when the player is not aiming. The elf only shoots while aimed. */
 export interface Inputs { aim: { x: number; y: number } | null }
@@ -23,6 +23,14 @@ const dist = (ax: number, ay: number, bx: number, by: number): number => Math.hy
 export const spawnRow = (f: number): number => SIM_MISC.spawnTop + f * (H - SIM_MISC.spawnYPad - SIM_MISC.spawnTop);
 
 /** March one orc in from the right edge, at height y (random if omitted). Returns false when the field is full. */
+/** The Hound-Master's call (TB-277): BOSS_FX.houndCall wolf riders spawn level with him, spread either side. */
+function callHounds(s: SimState, o: Orc): void {
+  for (let k = 0; k < BOSS_FX.houndCall; k++) {
+    const h = spawnOrc(s, 'wolfrider', Math.min(H - o.r, Math.max(o.r, o.y + (k % 2 ? 1 : -1) * o.r * 2 * (1 + (k >> 1)))));
+    if (h) h.x = o.x + o.r;
+  }
+}
+
 export function spawnOrc(s: SimState, kind: OrcKind, y?: number, champ = false): Orc | null {
   const w = s.run.wave, F = s.stats.foes[kind];
   const o = s.orcs.alloc(); if (!o) { if (champ && s.run.boss) s.run.boss.left--; return null; }
@@ -59,12 +67,17 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
   zoneStep(s, dt);
 
   // orcs: a war drummer's beat quickens those near it (one drum's worth, never stacked)
-  s.orcs.forEach((o) => { o.drum = false; });
+  // TB-277: a late boss's trait (the War-Chief drums the whole field; the Fire-Witch quickens every shaman)
+  let fieldDrum = false, witch = false;
+  s.orcs.forEach((o) => { o.drum = false; if (!o.dead && o.bossId) { const t = bossTrait(o.bossId); if (t === 'drum') fieldDrum = true; else if (t === 'fire') witch = true; } });
   s.orcs.forEach((d) => {
-    if (d.dead || d.kind !== 'drummer') return;
+    if (d.dead) return;
+    if (fieldDrum && d.bossId && bossTrait(d.bossId) === 'drum') { d.castT = Math.min(d.castT, ORC_FX.drumEvery) - dt; if (d.castT <= 0) { d.castT += ORC_FX.drumEvery; ev.push({ t: 'drumBeat', x: d.x, y: d.y }); } }
+    if (d.kind !== 'drummer') return;
     d.castT = Math.min(d.castT, ORC_FX.drumEvery) - dt; if (d.castT <= 0) { d.castT += ORC_FX.drumEvery; d.beats++; ev.push({ t: 'drumBeat', x: d.x, y: d.y }); }
     s.orcs.forEach((o) => { if (!o.dead && o !== d && (o.x - d.x) ** 2 + (o.y - d.y) ** 2 < ORC_FX.drumReach ** 2) o.drum = true; });
   });
+  if (fieldDrum) s.orcs.forEach((o) => { if (!o.dead && !(o.bossId && bossTrait(o.bossId) === 'drum')) o.drum = true; });
   s.orcs.forEach((o) => {
     if (o.dead || run.fallen) return;
     o.wob += dt * ORC_WOB;
@@ -81,14 +94,20 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
     const pace = o.chill > 0 ? 1 - st.slow : 1;
     if (o.chill > 0) o.chill -= dt;
     // TB-087: a raging berserker runs and hits harder; a drum's beat quickens step and blow
-    const rage = o.kind === 'berserker' && o.hp < o.maxhp * ORC_FX.rageAt, drum = o.drum ? 1 + ORC_FX.drumBoost : 1;
-    const hit = o.atk * BARRICADE.orcSwing * drum * (rage ? ORC_FX.rageHit : 1), walk = drum * (rage ? ORC_FX.rageSpeed : 1);
-    // the shaman and the war drummer hold back from the wall; the shaman lobs fire, the drummer never strikes
-    const halt = o.kind === 'shaman' ? ORC_FX.shamanHalt : o.kind === 'drummer' ? ORC_FX.drummerHalt : 0;
+    // TB-277: the Unbroken rages like a berserker, and harder again below rage2At
+    const trait = o.bossId ? bossTrait(o.bossId) : null;
+    const rage = (o.kind === 'berserker' || trait === 'rage') && o.hp < o.maxhp * ORC_FX.rageAt, drum = o.drum ? 1 + ORC_FX.drumBoost : 1;
+    const rage2 = trait === 'rage' && o.hp < o.maxhp * BOSS_FX.rage2At ? BOSS_FX.rage2Hit : 1;
+    const hit = o.atk * BARRICADE.orcSwing * drum * (rage ? ORC_FX.rageHit : 1) * rage2, walk = drum * (rage ? ORC_FX.rageSpeed : 1);
+    // the shaman and the war drummer hold back from the wall (so do the Fire-Witch and the War-Chief); the shaman lobs fire, the drummer never strikes
+    const halt = o.kind === 'shaman' || trait === 'fire' ? ORC_FX.shamanHalt : o.kind === 'drummer' || trait === 'drum' ? ORC_FX.drummerHalt : 0;
     const wx = wallX(o.y);
+    // the Hound-Master calls wolf riders in beside him while he lives
+    if (trait === 'hounds') { o.castT -= dt; if (o.castT <= 0) { o.castT = BOSS_FX.houndEvery; callHounds(s, o); } }
     if (halt && o.x <= wx + halt) {
       o.x = wx + halt;
-      if (o.kind === 'shaman') { o.castT -= dt * pace; if (o.castT <= 0) { o.castT = FIREBALL.every; shamanCast(s, ev, o); } }
+      if (o.kind === 'shaman') { o.castT -= dt * pace * (witch ? BOSS_FX.shamanQuick : 1); if (o.castT <= 0) { o.castT = FIREBALL.every; shamanCast(s, ev, o); } }
+      else if (trait === 'fire') { o.castT -= dt * pace; if (o.castT <= 0) { o.castT = BOSS_FX.fireEvery; witchCast(s, ev, o); } }
       return;
     }
     const v = halt ? null : engagedVanguard(s, o);

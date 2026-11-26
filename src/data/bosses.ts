@@ -66,7 +66,26 @@ export const BOSS_ROSTER = [
   { id: 'orc', name: 'Orc', sprite: 'orcBoss' },                         // TB-213 dartuchiwa "Orc"
   { id: 'packed', name: 'Orc Raider', sprite: 'packed' },                // TB-214 3DE_Study packed orc
   { id: 'ogreCreature', name: 'Ogre Creature', sprite: 'ogreCreature' }, // TB-228 Sazerac
+  // TB-277 late bosses (director 26 Nov): each a giant of a later orc kind, with its trait (BOSS_FX). Art: Tripo, pending.
+  { id: 'houndmaster', name: 'Grisk the Hound-Master', sprite: 'houndmaster', trait: 'hounds', late: true },
+  { id: 'firewitch', name: 'Mother Ashka, the Fire-Witch', sprite: 'firewitch', trait: 'fire', late: true },
+  { id: 'warchief', name: 'Thrumm the War-Chief', sprite: 'warchief', trait: 'drum', late: true },
+  { id: 'unbroken', name: 'Gorrak the Unbroken', sprite: 'unbroken', trait: 'rage', late: true },
 ] as const;
+export type BossTrait = 'hounds' | 'fire' | 'drum' | 'rage';
+/** The trait of a roster boss id, or null for the five first bosses (they fight as the plain Warboss). */
+export const bossTrait = (id: string): BossTrait | null => (BOSS_ROSTER.find((b) => b.id === id) as { trait?: BossTrait } | undefined)?.trait ?? null;
+
+/** Late boss traits (TB-277, BALANCE P-277; proposed numbers).
+ *  hounds: on foot (no leap); every houndEvery s calls houndCall wolf riders in beside it.
+ *  fire: halts at shamanHalt and every fireEvery s lobs a fireball fireR wide for fireHits Warboss swings; living shamans cast shamanQuick times faster.
+ *  drum: halts at drummerHalt and drums every orc on the field (the war drummer's boost, field wide).
+ *  rage: rages below rageAt (berserker speed and hit), and again below rage2At, hitting rage2Hit times harder. */
+export const BOSS_FX = {
+  houndEvery: 10, houndCall: 2,
+  fireEvery: 3, fireR: 1.6, fireHits: 1, shamanQuick: 1.5,
+  rage2At: 0.25, rage2Hit: 1.5,
+} as const;
 export type BossEntry = (typeof BOSS_ROSTER)[number];
 export type BossId = BossEntry['id'];
 
