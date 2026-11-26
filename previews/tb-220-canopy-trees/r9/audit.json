@@ -1,0 +1,362 @@
+{
+ "1920x1080d1_w1": {
+  "waveText": "1",
+  "want": 1,
+  "stampHidden": true,
+  "fallenHidden": true,
+  "barHp": 150,
+  "barMax": 150,
+  "hudBottom": 96,
+  "barText": "BARRICADE 150 / 150",
+  "crownTop": 106.3,
+  "gapUnderHud": 10.3,
+  "orcsInForest": 1,
+  "dpr": 1,
+  "inner": [
+   1920,
+   1080
+  ]
+ },
+ "1920x1080d1_w10": {
+  "waveText": "10",
+  "want": 10,
+  "stampHidden": true,
+  "fallenHidden": true,
+  "barHp": 150,
+  "barMax": 150,
+  "hudBottom": 96,
+  "barText": "BARRICADE 150 / 150",
+  "crownTop": 106.3,
+  "gapUnderHud": 10.3,
+  "orcsInForest": 2,
+  "dpr": 1,
+  "inner": [
+   1920,
+   1080
+  ]
+ },
+ "1920x1080d1_w25": {
+  "waveText": "25",
+  "want": 25,
+  "stampHidden": true,
+  "fallenHidden": true,
+  "barHp": 150,
+  "barMax": 150,
+  "hudBottom": 96,
+  "barText": "BARRICADE 150 / 150",
+  "crownTop": 106.3,
+  "gapUnderHud": 10.3,
+  "orcsInForest": 8,
+  "dpr": 1,
+  "inner": [
+   1920,
+   1080
+  ]
+ },
+ "1920x1080d1_w50": {
+  "waveText": "50",
+  "want": 50,
+  "stampHidden": true,
+  "fallenHidden": true,
+  "barHp": 150,
+  "barMax": 150,
+  "hudBottom": 96,
+  "barText": "BARRICADE 150 / 150",
+  "crownTop": 106.3,
+  "gapUnderHud": 10.3,
+  "orcsInForest": 16,
+  "dpr": 1,
+  "inner": [
+   1920,
+   1080
+  ]
+ },
+ "1920x1080d2_w1": {
+  "waveText": "1",
+  "want": 1,
+  "stampHidden": true,
+  "fallenHidden": true,
+  "barHp": 150,
+  "barMax": 150,
+  "hudBottom": 96,
+  "barText": "BARRICADE 150 / 150",
+  "crownTop": 106.3,
+  "gapUnderHud": 10.3,
+  "orcsInForest": 0,
+  "dpr": 2,
+  "inner": [
+   1920,
+   1080
+  ]
+ },
+ "1920x1080d2_w10": {
+  "waveText": "10",
+  "want": 10,
+  "stampHidden": true,
+  "fallenHidden": true,
+  "barHp": 150,
+  "barMax": 150,
+  "hudBottom": 96,
+  "barText": "BARRICADE 150 / 150",
+  "crownTop": 106.3,
+  "gapUnderHud": 10.3,
+  "orcsInForest": 2,
+  "dpr": 2,
+  "inner": [
+   1920,
+   1080
+  ]
+ },
+ "1920x1080d2_w25": {
+  "waveText": "25",
+  "want": 25,
+  "stampHidden": true,
+  "fallenHidden": true,
+  "barHp": 150,
+  "barMax": 150,
+  "hudBottom": 96,
+  "barText": "BARRICADE 150 / 150",
+  "crownTop": 106.3,
+  "gapUnderHud": 10.3,
+  "orcsInForest": 8,
+  "dpr": 2,
+  "inner": [
+   1920,
+   1080
+  ]
+ },
+ "1920x1080d2_w50": {
+  "waveText": "50",
+  "want": 50,
+  "stampHidden": true,
+  "fallenHidden": true,
+  "barHp": 150,
+  "barMax": 150,
+  "hudBottom": 96,
+  "barText": "BARRICADE 150 / 150",
+  "crownTop": 106.3,
+  "gapUnderHud": 10.3,
+  "orcsInForest": 13,
+  "dpr": 2,
+  "inner": [
+   1920,
+   1080
+  ]
+ },
+ "1920x1080d3_w1": {
+  "waveText": "1",
+  "want": 1,
+  "stampHidden": true,
+  "fallenHidden": true,
+  "barHp": 150,
+  "barMax": 150,
+  "hudBottom": 96,
+  "barText": "BARRICADE 150 / 150",
+  "crownTop": 106.3,
+  "gapUnderHud": 10.3,
+  "orcsInForest": 1,
+  "dpr": 3,
+  "inner": [
+   1920,
+   1080
+  ]
+ },
+ "1920x1080d3_w10": {
+  "waveText": "10",
+  "want": 10,
+  "stampHidden": true,
+  "fallenHidden": true,
+  "barHp": 150,
+  "barMax": 150,
+  "hudBottom": 96,
+  "barText": "BARRICADE 150 / 150",
+  "crownTop": 106.3,
+  "gapUnderHud": 10.3,
+  "orcsInForest": 2,
+  "dpr": 3,
+  "inner": [
+   1920,
+   1080
+  ]
+ },
+ "1920x1080d3_w25": {
+  "waveText": "25",
+  "want": 25,
+  "stampHidden": true,
+  "fallenHidden": true,
+  "barHp": 150,
+  "barMax": 150,
+  "hudBottom": 96,
+  "barText": "BARRICADE 150 / 150",
+  "crownTop": 106.3,
+  "gapUnderHud": 10.3,
+  "orcsInForest": 16,
+  "dpr": 3,
+  "inner": [
+   1920,
+   1080
+  ]
+ },
+ "1920x1080d3_w50": {
+  "waveText": "50",
+  "want": 50,
+  "stampHidden": true,
+  "fallenHidden": true,
+  "barHp": 150,
+  "barMax": 150,
+  "hudBottom": 96,
+  "barText": "BARRICADE 150 / 150",
+  "crownTop": 106.3,
+  "gapUnderHud": 10.3,
+  "orcsInForest": 24,
+  "dpr": 3,
+  "inner": [
+   1920,
+   1080
+  ]
+ },
+ "1280x720d1_w1": {
+  "waveText": "1",
+  "want": 1,
+  "stampHidden": true,
+  "fallenHidden": true,
+  "barHp": 150,
+  "barMax": 150,
+  "hudBottom": 77,
+  "barText": "BARRICADE 150 / 150",
+  "crownTop": 85.7,
+  "gapUnderHud": 8.9,
+  "orcsInForest": 3,
+  "dpr": 1,
+  "inner": [
+   1280,
+   720
+  ]
+ },
+ "1280x720d1_w10": {
+  "waveText": "10",
+  "want": 10,
+  "stampHidden": true,
+  "fallenHidden": true,
+  "barHp": 150,
+  "barMax": 150,
+  "hudBottom": 77,
+  "barText": "BARRICADE 150 / 150",
+  "crownTop": 85.7,
+  "gapUnderHud": 8.9,
+  "orcsInForest": 3,
+  "dpr": 1,
+  "inner": [
+   1280,
+   720
+  ]
+ },
+ "1280x720d1_w25": {
+  "waveText": "25",
+  "want": 25,
+  "stampHidden": true,
+  "fallenHidden": true,
+  "barHp": 150,
+  "barMax": 150,
+  "hudBottom": 77,
+  "barText": "BARRICADE 150 / 150",
+  "crownTop": 85.7,
+  "gapUnderHud": 8.9,
+  "orcsInForest": 8,
+  "dpr": 1,
+  "inner": [
+   1280,
+   720
+  ]
+ },
+ "1280x720d1_w50": {
+  "waveText": "50",
+  "want": 50,
+  "stampHidden": true,
+  "fallenHidden": true,
+  "barHp": 150,
+  "barMax": 150,
+  "hudBottom": 77,
+  "barText": "BARRICADE 150 / 150",
+  "crownTop": 85.7,
+  "gapUnderHud": 8.9,
+  "orcsInForest": 18,
+  "dpr": 1,
+  "inner": [
+   1280,
+   720
+  ]
+ },
+ "1280x720d2_w1": {
+  "waveText": "1",
+  "want": 1,
+  "stampHidden": true,
+  "fallenHidden": true,
+  "barHp": 150,
+  "barMax": 150,
+  "hudBottom": 77,
+  "barText": "BARRICADE 150 / 150",
+  "crownTop": 85.7,
+  "gapUnderHud": 8.9,
+  "orcsInForest": 1,
+  "dpr": 2,
+  "inner": [
+   1280,
+   720
+  ]
+ },
+ "1280x720d2_w10": {
+  "waveText": "10",
+  "want": 10,
+  "stampHidden": true,
+  "fallenHidden": true,
+  "barHp": 150,
+  "barMax": 150,
+  "hudBottom": 77,
+  "barText": "BARRICADE 150 / 150",
+  "crownTop": 85.7,
+  "gapUnderHud": 8.9,
+  "orcsInForest": 3,
+  "dpr": 2,
+  "inner": [
+   1280,
+   720
+  ]
+ },
+ "1280x720d2_w25": {
+  "waveText": "25",
+  "want": 25,
+  "stampHidden": true,
+  "fallenHidden": true,
+  "barHp": 150,
+  "barMax": 150,
+  "hudBottom": 77,
+  "barText": "BARRICADE 150 / 150",
+  "crownTop": 85.7,
+  "gapUnderHud": 8.9,
+  "orcsInForest": 14,
+  "dpr": 2,
+  "inner": [
+   1280,
+   720
+  ]
+ },
+ "1280x720d2_w50": {
+  "waveText": "50",
+  "want": 50,
+  "stampHidden": true,
+  "fallenHidden": true,
+  "barHp": 150,
+  "barMax": 150,
+  "hudBottom": 77,
+  "barText": "BARRICADE 150 / 150",
+  "crownTop": 85.7,
+  "gapUnderHud": 8.9,
+  "orcsInForest": 32,
+  "dpr": 2,
+  "inner": [
+   1280,
+   720
+  ]
+ }
+}
