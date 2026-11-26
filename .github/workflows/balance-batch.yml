@@ -45,3 +45,6 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with: { name: 'batch-${{ matrix.label }}', path: 'sim/out/batch-${{ matrix.label }}' }
+      - name: Results
+        if: always()
+        run: cat "sim/out/batch-${{ matrix.label }}/runs.csv" "sim/out/batch-${{ matrix.label }}/summary.md" || true
