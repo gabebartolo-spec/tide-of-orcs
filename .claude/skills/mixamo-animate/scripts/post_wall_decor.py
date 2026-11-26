@@ -5,7 +5,7 @@ import sys, json, os
 from PIL import Image
 
 src, repo, names = sys.argv[1], sys.argv[2], sys.argv[3:]
-MAXH = {'wall_banner': 420, 'wall_post': 640}       # the drawn height is ~120 css px (standard) / ~300 css px (post) at 1080p: 2x for DPR 2
+MAXH = {'wall_banner': 420, 'wall_post': 640, 'wall': 200}   # drawn ~120 css px (standard), ~300 (post), <100 (lantern, skull) at 1080p: 2x for DPR 2
 for n in names:
     im = Image.open(os.path.join(src, n + '.png')).convert('RGBA'); meta = json.load(open(os.path.join(src, n + '.json')))
     a = im.getchannel('A').point(lambda v: 255 if v > 6 else 0); x0, y0, x1, y1 = a.getbbox()

@@ -1,7 +1,7 @@
 import { wallX } from '../sim/wallLine';
 import { barFrac } from '../sim/barricade';
 import { WallDamage } from './wallDamage';
-import { wallBanners, wallBannerSprites, WallSprite } from './wallDecor';
+import { wallCosmetics, wallDecorSprites, WallSprite } from './wallDecor';
 import { Treeline } from './treeline';
 import { elfLayers, stepAimMix } from './elfPose';
 import { ARROWS, BARRICADE, FIELD, LOB, SOURCES, VANGUARD, WAVE_LEN } from '../data/balance';
@@ -327,7 +327,7 @@ export class FieldRenderer {
     // barricade: drawn whole, over the forest edge and its bush skirt (it is nearer than both)
     const top = Math.max(vis.y0, this.wall.y); this.wallTop = Math.max(vis.y0, this.wall.foot - TREELINE.cap.up);
     // earned wall banners (TB-250): a wall1-3 post and its standard stand behind the wall, wall0's standards on its post caps over it
-    this.wallStandards = wallBannerSprites(wallBanners(s.meta.ach.earned), this.wall, s.stats.wallTier, this.wallDamage.stage);
+    this.wallStandards = wallDecorSprites(wallCosmetics(s.meta.ach.earned), this.wall, s.stats.wallTier, this.wallDamage.stage);
     this.wallSprites(true);
     this.fencePanels(top, H);
     this.wallSprites(false);

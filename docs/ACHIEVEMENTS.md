@@ -44,8 +44,8 @@ Two kinds. **Titles** are text only: the player picks one in the Achievements pa
 | `trail_ember`, `trail_star`, `trail_leaf` | trail behind the lobbed arrow (**shipped, director approved 25 Nov**: ember sparks with a glow, twinkling gold stars, spinning autumn leaves; vector, sizes in `VFX.cosmetic`) | field |
 | `ring_rune` | carved runes around the strike circle (**shipped, director approved 25 Nov**: eight gold runes turning slowly, brightening as the bow draws) | field |
 | `wall_banner_grove`, `wall_banner_tide` | a banner standard on the barricade (**in review, TB-250**: grove the seed glyph on grove green, tide a broken orc axe on dark iron grey; grove on the 2nd tall post, tide on the 4th, nearest first. wall0 stands each on its tall post's cap; wall1-3 plant a post of the tier behind the wall (log, stone pillar, red pilaster) and the standard on its top; the same spots at every damage stage; shows once earned, no wear slot) | field |
-| `wall_lanterns` | lanterns along the barricade top | field |
-| `wall_skulls` | orc skull trophies on the barricade posts | field |
+| `wall_lanterns` | lanterns along the barricade top (**in review, TB-250**: 4, hung by their bracket from tall posts 1, 3, 5, 7, nearest first, skipping the two banner posts; the same spots on every tier, `WALL_PROPS`) | field |
+| `wall_skulls` | orc skull trophies on the barricade posts (**in review, TB-250**: a skull on a stake on every 3rd plain post, 8 along the visible wall; the same spots on every tier, `WALL_PROPS`) | field |
 | `shield_fox` | painted fox on the spearmen's shields | vanguard sprite |
 | `trophy_warboss`, `trophy_ogre`, `trophy_orc`, `trophy_raider`, `trophy_ogre_creature` | the boss's mounted head (**shipped, director approved 26 Nov**: each boss's head cut from its own model on a shelf before a round wooden plaque on a post, in a row on the meadow between the kitchen and the training ground; shows once earned, no wear slot) | camp scene |
 | `camp_campfire`, `camp_wolf_statue`, `camp_standing_stone`, `camp_lantern_string`, `camp_armour_stand`, `camp_bell`, `camp_sapling` | decor pieces | camp scene |
