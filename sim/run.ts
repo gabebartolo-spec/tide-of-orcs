@@ -23,7 +23,7 @@ import { SimState, createState } from '../src/sim/state';
 import { EventBus } from '../src/sim/events';
 import { step } from '../src/sim/step';
 
-import { buy, canBuy, costOf } from '../src/sim/tree';
+import { DEEP, buy, canBuy, costOf } from '../src/sim/tree';
 import { canReplant, replant } from '../src/sim/prestige';
 import { NODES, NodeId } from '../src/data/skillTree';
 import { ARROWS, BARRICADE, CHECKPOINT, COST_WAVE, HP_RAMP, LOB, NODE_FX, PLAYER, SHOT_FX, SOURCES, STACKING, STEP, UNIT_FX, VANGUARD, waveHP } from '../src/data/balance';
@@ -57,6 +57,7 @@ for (const kv of arg('tune', '').split(',').filter(Boolean)) {
   obj[last] = Number(v);
 }
 for (const kv of arg('cost', '').split(',').filter(Boolean)) { const [k, v] = kv.split('='); (NODES.find((x) => x.id === k) as { base: number }).base = Number(v); }
+for (const kv of arg('deep', '').split(',').filter(Boolean)) { const [k, mx, m] = kv.split(':'); const nd = NODES.find((x) => x.id === k) as { max: number }; DEEP[k as NodeId] = { from: nd.max, mult: Number(m) }; nd.max = Number(mx); }
 for (const kv of arg('hw', '').split(',').filter(Boolean)) { const [k, v] = kv.split(':'); s.meta.hwLevels[k as HwId] = Number(v); }
 /** --mythic: a forced mythic, kept worn and locked so the equip policy never swaps it out. */
 const forced = MYTHICS.find((m) => m.id === arg('mythic', '')), doReroll = args.includes('--reroll');
