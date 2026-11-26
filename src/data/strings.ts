@@ -92,7 +92,7 @@ export const STR = {
     bossDmg: 'damage to bosses', eliteDmg: 'damage to elites', fireDmg: 'fire arrow damage', burnDur: 'burn time',
     stormDmg: 'storm arrow damage', stormChain: 'storm chains', homingDmg: 'moon arrow damage', critDmg: 'crit damage',
   } as Record<string, string>,
-  setVolume: 'Volume', setMotion: 'Motion', setNumbers: 'Numbers', setText: 'Text size', fsEnter: 'Fullscreen', fsExit: 'Exit fullscreen', soundOn: 'Sound on', soundOff: 'Sound off',
+  setVolume: 'Volume', setMotion: 'Motion', setNumbers: 'Numbers', setText: 'Text size', fsEnter: 'Fullscreen', fsExit: 'Exit fullscreen', soundOn: 'Sound on', soundOff: 'Sound off', autoHud: 'Auto', autoOn: 'Auto fire: on', autoOff: 'Auto fire: off',
   setQuality: 'Graphics (reload to apply fully)', qualAuto: 'Auto', qualHigh: 'High', qualLow: 'Low',
   motionSystem: 'Follow system', motionFull: 'Full', motionReduced: 'Reduced',
   numShort: 'Short (1.25M)', numSci: 'Scientific (1.25e6)',
@@ -102,6 +102,7 @@ export const STR = {
 
   starlightCost: (n: string) => `${n} starlight`,
   barricadeHud: (hp: string, max: string) => `Barricade ${hp} / ${max}`,
+  /** Phone HUD wall label: the numbers alone, so the glyphs stay legible at 16 px ("BARRICADE" misread at 13 px, TB-223). */
   barricadeShort: (hp: string, max: string) => `${hp} / ${max}`,
   vanguardHud: (n: number, cap: number) => `VANGUARD ${n} / ${cap}`,
   replantGainK: 'Heartwood on replant', replantBtn: 'Replant',

@@ -123,6 +123,10 @@ Statuses predate the lob, wall and aim changes of 1–2 Nov (TB-154, TB-164) unl
 | Worn gear power (TB-108) | +60–90% vs bare, about +2–3 waves at late orc HP (director, 2026-11-01; "+10 waves" dropped) | met: +1.5 waves mean worn vs bare, seeds 1–4, 25 h (P-108b gain 0.75; was +4.75) |
 | Tree fully bought in a run | never | met: 117 of 156 buyable ranks at most (greedy run 5) |
 
+### Auto fire (TB-223)
+
+`AUTO_FIRE.reticleEvery` = 6: with Auto fire on and no finger aiming, `autoTarget` is re-evaluated every 6th sim tick (10 Hz) and the result is held between evaluations, so the reticle does not jitter. No effect on damage or cadence; the bow keeps its normal draw time.
+
 ## Heartwood tree (M3, built TB-053; shown to the player as Grudges, TB-112)
 Bought with Heartwood, never reset. Costs in HW. The tree spends from `available = earned − spent`. The header shows `available / earned` once anything is spent. Early Dawn's skipped boss waves are not owed (`bossDone` starts at `floor(startWave / BOSS_WAVE.every)`). Standing Orders spearmen are placed free, ignoring Muster and the line cap. Vanguard are not saved, so a load places them again (TB-219); the vanguard pool holds `VANGUARD.poolCap` (12) units, enough for a maxed line of 7 plus both.
 

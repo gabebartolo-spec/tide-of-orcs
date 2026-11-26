@@ -1,0 +1,3159 @@
+{
+ "l412": {
+  "fonts": {
+   "run": {
+    "texts": 9,
+    "nonHeartwood": [],
+    "under14px": [],
+    "missingGlyphs": []
+   },
+   "big": {
+    "texts": 15,
+    "nonHeartwood": [],
+    "under14px": [],
+    "missingGlyphs": []
+   },
+   "settings": {
+    "texts": 25,
+    "nonHeartwood": [],
+    "under14px": [],
+    "missingGlyphs": []
+   },
+   "grove": {
+    "texts": 13,
+    "nonHeartwood": [],
+    "under14px": [],
+    "missingGlyphs": []
+   },
+   "satchel": {
+    "texts": 10,
+    "nonHeartwood": [],
+    "under14px": [],
+    "missingGlyphs": []
+   },
+   "camp": {
+    "texts": 15,
+    "nonHeartwood": [],
+    "under14px": [],
+    "missingGlyphs": []
+   },
+   "replant": {
+    "texts": 53,
+    "nonHeartwood": [],
+    "under14px": [],
+    "missingGlyphs": []
+   },
+   "fallen": {
+    "texts": 24,
+    "nonHeartwood": [],
+    "under14px": [],
+    "missingGlyphs": []
+   }
+  },
+  "geo": {
+   "view": {
+    "k": 0.858,
+    "ox": 71.3,
+    "oy": 0
+   },
+   "box": {
+    "wall": {
+     "l": 34,
+     "t": 4,
+     "r": 226,
+     "b": 28,
+     "w": 192,
+     "h": 24
+    },
+    "wallN": {
+     "l": 232,
+     "t": 8,
+     "r": 283.6,
+     "b": 24,
+     "w": 51.6,
+     "h": 16
+    },
+    "star": {
+     "l": 293.6,
+     "t": 4,
+     "r": 347.1,
+     "b": 28,
+     "w": 53.5,
+     "h": 24
+    },
+    "wave": {
+     "l": 357.1,
+     "t": 4,
+     "r": 434,
+     "b": 28,
+     "w": 76.9,
+     "h": 24
+    },
+    "slain": {
+     "l": 444,
+     "t": 4,
+     "r": 526.4,
+     "b": 28,
+     "w": 82.5,
+     "h": 24
+    },
+    "auto": {
+     "l": 795.6,
+     "t": 4,
+     "r": 863,
+     "b": 28,
+     "w": 67.4,
+     "h": 24
+    },
+    "settings": {
+     "l": 863,
+     "t": 0,
+     "r": 911,
+     "b": 48,
+     "w": 48,
+     "h": 48
+    },
+    "pullback": null,
+    "mute": {
+     "l": 34,
+     "t": 352,
+     "r": 82,
+     "b": 400,
+     "w": 48,
+     "h": 48
+    },
+    "boss": null
+   },
+   "touch": [
+    {
+     "k": "auto",
+     "w": 67.4,
+     "h": 24,
+     "ok": false
+    },
+    {
+     "k": "settings",
+     "w": 48,
+     "h": 48,
+     "ok": true
+    },
+    {
+     "k": "mute",
+     "w": 48,
+     "h": 48,
+     "ok": true
+    }
+   ],
+   "overlaps": [],
+   "railTopBottom": [
+    2,
+    30
+   ],
+   "canopy": {
+    "skirtBaseCss": 66.9,
+    "bushTopCss": 28.3,
+    "railBottomVsBushTop": -1.7,
+    "railCoverPctOfBand": 21.1
+   },
+   "elfHeadTopCss": 171.6,
+   "elfHeadGapToRail": 141.6,
+   "orcFeetCss": {
+    "top": 90.1,
+    "bottom": 336.4
+   },
+   "dockTopCss": 352,
+   "feetGapToDock": 15.6,
+   "feetGapToRail": 60.1,
+   "fs": {
+    "wallN": 16,
+    "wave": 18,
+    "waveK": 16,
+    "kills": 18,
+    "killsK": 16,
+    "star": 20,
+    "auto": 16,
+    "pullback": null,
+    "boss": 16
+   },
+   "wrapped": true
+  },
+  "reach": {
+   "lowestOrcWorldY": 392,
+   "fingerRows": [
+    {
+     "fingerY": 408,
+     "aimY": 475.4
+    },
+    {
+     "fingerY": 396,
+     "aimY": 461.5
+    },
+    {
+     "fingerY": 384,
+     "aimY": 447.4
+    },
+    {
+     "fingerY": 372,
+     "aimY": 433.4
+    },
+    {
+     "fingerY": 360,
+     "aimY": 416.3
+    },
+    {
+     "fingerY": 348,
+     "aimY": 393
+    },
+    {
+     "fingerY": 336,
+     "aimY": 369.7
+    },
+    {
+     "fingerY": 324,
+     "aimY": 346.4
+    },
+    {
+     "fingerY": 312,
+     "aimY": 323.1
+    },
+    {
+     "fingerY": 300,
+     "aimY": 299.8
+    },
+    {
+     "fingerY": 288,
+     "aimY": 276.5
+    },
+    {
+     "fingerY": 276,
+     "aimY": 256.3
+    },
+    {
+     "fingerY": 264,
+     "aimY": 242.3
+    }
+   ],
+   "lowestReachedAtFingerY": 408,
+   "bottomPxLeftBelowFinger": 4
+  },
+  "auto": {
+   "autoFire": true,
+   "noFinger": true,
+   "shown": {
+    "x": 285.05343999999644,
+    "y": 105
+   },
+   "shotsLive": 1,
+   "shotsFired": null
+  },
+  "manualWins": {
+   "aim": {
+    "x": 343.4,
+    "y": 174.8
+   },
+   "shownIsAim": true
+  },
+  "extraGeo": {
+   "view": {
+    "k": 0.858,
+    "ox": 71.3,
+    "oy": 0
+   },
+   "box": {
+    "wall": {
+     "l": 34,
+     "t": 4,
+     "r": 226,
+     "b": 28,
+     "w": 192,
+     "h": 24
+    },
+    "wallN": {
+     "l": 232,
+     "t": 8,
+     "r": 283.6,
+     "b": 24,
+     "w": 51.6,
+     "h": 16
+    },
+    "star": {
+     "l": 293.6,
+     "t": 4,
+     "r": 347.1,
+     "b": 28,
+     "w": 53.5,
+     "h": 24
+    },
+    "wave": {
+     "l": 357.1,
+     "t": 4,
+     "r": 434,
+     "b": 28,
+     "w": 76.9,
+     "h": 24
+    },
+    "slain": {
+     "l": 444,
+     "t": 4,
+     "r": 526.4,
+     "b": 28,
+     "w": 82.5,
+     "h": 24
+    },
+    "auto": {
+     "l": 795.6,
+     "t": 4,
+     "r": 863,
+     "b": 28,
+     "w": 67.4,
+     "h": 24
+    },
+    "settings": {
+     "l": 863,
+     "t": 0,
+     "r": 911,
+     "b": 48,
+     "w": 48,
+     "h": 48
+    },
+    "pullback": null,
+    "mute": {
+     "l": 34,
+     "t": 352,
+     "r": 82,
+     "b": 400,
+     "w": 48,
+     "h": 48
+    },
+    "boss": null
+   },
+   "touch": [
+    {
+     "k": "auto",
+     "w": 67.4,
+     "h": 24,
+     "ok": false
+    },
+    {
+     "k": "settings",
+     "w": 48,
+     "h": 48,
+     "ok": true
+    },
+    {
+     "k": "mute",
+     "w": 48,
+     "h": 48,
+     "ok": true
+    }
+   ],
+   "overlaps": [],
+   "railTopBottom": [
+    2,
+    30
+   ],
+   "canopy": {
+    "skirtBaseCss": 67,
+    "bushTopCss": 28.3,
+    "railBottomVsBushTop": -1.7,
+    "railCoverPctOfBand": 21.1
+   },
+   "elfHeadTopCss": 171.7,
+   "elfHeadGapToRail": 141.7,
+   "orcFeetCss": {
+    "top": 90.1,
+    "bottom": 336.5
+   },
+   "dockTopCss": 352,
+   "feetGapToDock": 15.5,
+   "feetGapToRail": 60.1,
+   "fs": {
+    "wallN": 16,
+    "wave": 18,
+    "waveK": 16,
+    "kills": 18,
+    "killsK": 16,
+    "star": 20,
+    "auto": 16,
+    "pullback": null,
+    "boss": 16
+   },
+   "wrapped": true
+  },
+  "bigGeo": {
+   "view": {
+    "k": 0.858,
+    "ox": 71.3,
+    "oy": 0
+   },
+   "box": {
+    "wall": {
+     "l": 34,
+     "t": 4,
+     "r": 226,
+     "b": 28,
+     "w": 192,
+     "h": 24
+    },
+    "wallN": {
+     "l": 232,
+     "t": 8,
+     "r": 310.6,
+     "b": 24,
+     "w": 78.6,
+     "h": 16
+    },
+    "star": {
+     "l": 320.6,
+     "t": 4,
+     "r": 386.3,
+     "b": 28,
+     "w": 65.7,
+     "h": 24
+    },
+    "wave": {
+     "l": 396.3,
+     "t": 4,
+     "r": 572,
+     "b": 28,
+     "w": 175.7,
+     "h": 24
+    },
+    "slain": {
+     "l": 582,
+     "t": 4,
+     "r": 682.6,
+     "b": 28,
+     "w": 100.6,
+     "h": 24
+    },
+    "auto": {
+     "l": 795.6,
+     "t": 4,
+     "r": 863,
+     "b": 28,
+     "w": 67.4,
+     "h": 24
+    },
+    "settings": {
+     "l": 863,
+     "t": 0,
+     "r": 911,
+     "b": 48,
+     "w": 48,
+     "h": 48
+    },
+    "pullback": {
+     "l": 692.6,
+     "t": 4,
+     "r": 765.8,
+     "b": 28,
+     "w": 73.2,
+     "h": 24
+    },
+    "mute": {
+     "l": 34,
+     "t": 352,
+     "r": 82,
+     "b": 400,
+     "w": 48,
+     "h": 48
+    },
+    "boss": {
+     "l": 652.4,
+     "t": 310,
+     "r": 853,
+     "b": 372,
+     "w": 200.6,
+     "h": 62
+    }
+   },
+   "touch": [
+    {
+     "k": "auto",
+     "w": 67.4,
+     "h": 24,
+     "ok": false
+    },
+    {
+     "k": "settings",
+     "w": 48,
+     "h": 48,
+     "ok": true
+    },
+    {
+     "k": "pullback",
+     "w": 73.2,
+     "h": 24,
+     "ok": false
+    },
+    {
+     "k": "mute",
+     "w": 48,
+     "h": 48,
+     "ok": true
+    },
+    {
+     "k": "boss",
+     "w": 200.6,
+     "h": 62,
+     "ok": true
+    }
+   ],
+   "overlaps": [],
+   "railTopBottom": [
+    2,
+    30
+   ],
+   "canopy": {
+    "skirtBaseCss": 67,
+    "bushTopCss": 28.3,
+    "railBottomVsBushTop": -1.7,
+    "railCoverPctOfBand": 29.8
+   },
+   "elfHeadTopCss": 171.7,
+   "elfHeadGapToRail": 141.7,
+   "orcFeetCss": {
+    "top": 90.1,
+    "bottom": 336.5
+   },
+   "dockTopCss": 4,
+   "feetGapToDock": -332.5,
+   "feetGapToRail": 60.1,
+   "fs": {
+    "wallN": 16,
+    "wave": 18,
+    "waveK": 16,
+    "kills": 18,
+    "killsK": 16,
+    "star": 20,
+    "auto": 16,
+    "pullback": 16,
+    "boss": 16
+   },
+   "wrapped": true
+  },
+  "settingsBox": {
+   "mute": {
+    "t": 568.4,
+    "b": 617.2,
+    "l": 48,
+    "r": 165.2
+   },
+   "back": [
+    {
+     "id": "btn-pullback",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-close",
+     "t": 6,
+     "b": 54,
+     "l": 724.7,
+     "r": 881
+    },
+    {
+     "id": "camp-go",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    }
+   ],
+   "innerH": 412,
+   "innerW": 915
+  },
+  "groveBox": {
+   "mute": {
+    "t": 0,
+    "b": 0,
+    "l": 0,
+    "r": 0
+   },
+   "back": [
+    {
+     "id": "btn-pullback",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-close",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-go",
+     "t": 0,
+     "b": 48,
+     "l": 737,
+     "r": 881
+    }
+   ],
+   "innerH": 412,
+   "innerW": 915
+  },
+  "satchelBox": {
+   "mute": {
+    "t": 0,
+    "b": 0,
+    "l": 0,
+    "r": 0
+   },
+   "back": [
+    {
+     "id": "btn-pullback",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-close",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-go",
+     "t": 0,
+     "b": 48,
+     "l": 737,
+     "r": 881
+    }
+   ],
+   "innerH": 412,
+   "innerW": 915
+  },
+  "campBox": {
+   "mute": {
+    "t": 0,
+    "b": 0,
+    "l": 0,
+    "r": 0
+   },
+   "back": [
+    {
+     "id": "btn-pullback",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-close",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-go",
+     "t": 0,
+     "b": 48,
+     "l": 737,
+     "r": 881
+    }
+   ],
+   "innerH": 412,
+   "innerW": 915
+  },
+  "replantBox": {
+   "mute": {
+    "t": 0,
+    "b": 0,
+    "l": 0,
+    "r": 0
+   },
+   "back": [
+    {
+     "id": "btn-pullback",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-close",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-go",
+     "t": 0,
+     "b": 48,
+     "l": 737,
+     "r": 881
+    }
+   ],
+   "innerH": 412,
+   "innerW": 915
+  }
+ },
+ "l360": {
+  "fonts": {
+   "run": {
+    "texts": 24,
+    "nonHeartwood": [],
+    "under14px": [
+     {
+      "el": "DT",
+      "px": 13.8,
+      "t": "Wave reached"
+     },
+     {
+      "el": "DT",
+      "px": 13.8,
+      "t": "Orcs slain"
+     },
+     {
+      "el": "DT",
+      "px": 13.8,
+      "t": "Minutes held"
+     },
+     {
+      "el": "DT",
+      "px": 13.8,
+      "t": "Starlight / mi"
+     },
+     {
+      "el": "DT",
+      "px": 13.8,
+      "t": "Best wave"
+     },
+     {
+      "el": "fallen-loot",
+      "px": 13.8,
+      "t": "No items found"
+     }
+    ],
+    "missingGlyphs": []
+   },
+   "big": {
+    "texts": 28,
+    "nonHeartwood": [],
+    "under14px": [
+     {
+      "el": "DT",
+      "px": 13.8,
+      "t": "Wave reached"
+     },
+     {
+      "el": "DT",
+      "px": 13.8,
+      "t": "Orcs slain"
+     },
+     {
+      "el": "DT",
+      "px": 13.8,
+      "t": "Minutes held"
+     },
+     {
+      "el": "DT",
+      "px": 13.8,
+      "t": "Starlight / mi"
+     },
+     {
+      "el": "DT",
+      "px": 13.8,
+      "t": "Best wave"
+     },
+     {
+      "el": "fallen-loot",
+      "px": 13.8,
+      "t": "No items found"
+     }
+    ],
+    "missingGlyphs": []
+   },
+   "settings": {
+    "texts": 40,
+    "nonHeartwood": [],
+    "under14px": [
+     {
+      "el": "DT",
+      "px": 13.8,
+      "t": "Wave reached"
+     },
+     {
+      "el": "DT",
+      "px": 13.8,
+      "t": "Orcs slain"
+     },
+     {
+      "el": "DT",
+      "px": 13.8,
+      "t": "Minutes held"
+     },
+     {
+      "el": "DT",
+      "px": 13.8,
+      "t": "Starlight / mi"
+     },
+     {
+      "el": "DT",
+      "px": 13.8,
+      "t": "Best wave"
+     },
+     {
+      "el": "fallen-loot",
+      "px": 13.8,
+      "t": "No items found"
+     }
+    ],
+    "missingGlyphs": []
+   },
+   "grove": {
+    "texts": 13,
+    "nonHeartwood": [],
+    "under14px": [],
+    "missingGlyphs": []
+   },
+   "satchel": {
+    "texts": 10,
+    "nonHeartwood": [],
+    "under14px": [],
+    "missingGlyphs": []
+   },
+   "camp": {
+    "texts": 15,
+    "nonHeartwood": [],
+    "under14px": [],
+    "missingGlyphs": []
+   },
+   "replant": {
+    "texts": 53,
+    "nonHeartwood": [],
+    "under14px": [],
+    "missingGlyphs": []
+   },
+   "fallen": {
+    "texts": 24,
+    "nonHeartwood": [],
+    "under14px": [
+     {
+      "el": "DT",
+      "px": 13.8,
+      "t": "Wave reached"
+     },
+     {
+      "el": "DT",
+      "px": 13.8,
+      "t": "Orcs slain"
+     },
+     {
+      "el": "DT",
+      "px": 13.8,
+      "t": "Minutes held"
+     },
+     {
+      "el": "DT",
+      "px": 13.8,
+      "t": "Starlight / mi"
+     },
+     {
+      "el": "DT",
+      "px": 13.8,
+      "t": "Best wave"
+     },
+     {
+      "el": "fallen-loot",
+      "px": 13.8,
+      "t": "No items found"
+     }
+    ],
+    "missingGlyphs": []
+   }
+  },
+  "geo": {
+   "view": {
+    "k": 0.75,
+    "ox": 120,
+    "oy": 0
+   },
+   "box": {
+    "wall": {
+     "l": 34,
+     "t": 4,
+     "r": 226,
+     "b": 28,
+     "w": 192,
+     "h": 24
+    },
+    "wallN": {
+     "l": 232,
+     "t": 8,
+     "r": 283.6,
+     "b": 24,
+     "w": 51.6,
+     "h": 16
+    },
+    "star": {
+     "l": 293.6,
+     "t": 4,
+     "r": 347.1,
+     "b": 28,
+     "w": 53.5,
+     "h": 24
+    },
+    "wave": {
+     "l": 357.1,
+     "t": 4,
+     "r": 434,
+     "b": 28,
+     "w": 76.9,
+     "h": 24
+    },
+    "slain": {
+     "l": 444,
+     "t": 4,
+     "r": 526.4,
+     "b": 28,
+     "w": 82.5,
+     "h": 24
+    },
+    "auto": {
+     "l": 795.6,
+     "t": 4,
+     "r": 863,
+     "b": 28,
+     "w": 67.4,
+     "h": 24
+    },
+    "settings": {
+     "l": 863,
+     "t": 0,
+     "r": 911,
+     "b": 48,
+     "w": 48,
+     "h": 48
+    },
+    "pullback": null,
+    "mute": null,
+    "boss": null
+   },
+   "touch": [
+    {
+     "k": "auto",
+     "w": 67.4,
+     "h": 24,
+     "ok": false
+    },
+    {
+     "k": "settings",
+     "w": 48,
+     "h": 48,
+     "ok": true
+    }
+   ],
+   "overlaps": [],
+   "railTopBottom": [
+    2,
+    30
+   ],
+   "canopy": {
+    "skirtBaseCss": 58.5,
+    "bushTopCss": 24.8,
+    "railBottomVsBushTop": -5.3,
+    "railCoverPctOfBand": 24.2
+   },
+   "elfHeadTopCss": 150,
+   "elfHeadGapToRail": 120,
+   "orcFeetCss": {
+    "top": 78.8,
+    "bottom": 294
+   },
+   "dockTopCss": null,
+   "feetGapToDock": null,
+   "feetGapToRail": 48.8,
+   "fs": {
+    "wallN": 16,
+    "wave": 18,
+    "waveK": 16,
+    "kills": 18,
+    "killsK": 16,
+    "star": 20,
+    "auto": 16,
+    "pullback": null,
+    "boss": 16
+   },
+   "wrapped": true
+  },
+  "reach": {
+   "lowestOrcWorldY": 392,
+   "fingerRows": [
+    {
+     "fingerY": 356,
+     "aimY": null
+    },
+    {
+     "fingerY": 344,
+     "aimY": null
+    },
+    {
+     "fingerY": 332,
+     "aimY": null
+    },
+    {
+     "fingerY": 320,
+     "aimY": null
+    },
+    {
+     "fingerY": 308,
+     "aimY": null
+    },
+    {
+     "fingerY": 296,
+     "aimY": null
+    },
+    {
+     "fingerY": 284,
+     "aimY": null
+    },
+    {
+     "fingerY": 272,
+     "aimY": null
+    },
+    {
+     "fingerY": 260,
+     "aimY": null
+    },
+    {
+     "fingerY": 248,
+     "aimY": null
+    },
+    {
+     "fingerY": 236,
+     "aimY": null
+    },
+    {
+     "fingerY": 224,
+     "aimY": null
+    },
+    {
+     "fingerY": 212,
+     "aimY": null
+    }
+   ],
+   "lowestReachedAtFingerY": null,
+   "bottomPxLeftBelowFinger": null
+  },
+  "auto": {
+   "autoFire": true,
+   "noFinger": true,
+   "shown": {
+    "x": 295.8668799999966,
+    "y": 105
+   },
+   "shotsLive": 1,
+   "shotsFired": null
+  },
+  "manualWins": {
+   "aim": null,
+   "shownIsAim": false
+  },
+  "extraGeo": {
+   "view": {
+    "k": 0.75,
+    "ox": 120,
+    "oy": 0
+   },
+   "box": {
+    "wall": {
+     "l": 34,
+     "t": 4,
+     "r": 226,
+     "b": 28,
+     "w": 192,
+     "h": 24
+    },
+    "wallN": {
+     "l": 232,
+     "t": 8,
+     "r": 283.6,
+     "b": 24,
+     "w": 51.6,
+     "h": 16
+    },
+    "star": {
+     "l": 293.6,
+     "t": 4,
+     "r": 347.1,
+     "b": 28,
+     "w": 53.5,
+     "h": 24
+    },
+    "wave": {
+     "l": 357.1,
+     "t": 4,
+     "r": 434,
+     "b": 28,
+     "w": 76.9,
+     "h": 24
+    },
+    "slain": {
+     "l": 444,
+     "t": 4,
+     "r": 526.4,
+     "b": 28,
+     "w": 82.5,
+     "h": 24
+    },
+    "auto": {
+     "l": 795.6,
+     "t": 4,
+     "r": 863,
+     "b": 28,
+     "w": 67.4,
+     "h": 24
+    },
+    "settings": {
+     "l": 863,
+     "t": 0,
+     "r": 911,
+     "b": 48,
+     "w": 48,
+     "h": 48
+    },
+    "pullback": null,
+    "mute": null,
+    "boss": null
+   },
+   "touch": [
+    {
+     "k": "auto",
+     "w": 67.4,
+     "h": 24,
+     "ok": false
+    },
+    {
+     "k": "settings",
+     "w": 48,
+     "h": 48,
+     "ok": true
+    }
+   ],
+   "overlaps": [],
+   "railTopBottom": [
+    2,
+    30
+   ],
+   "canopy": {
+    "skirtBaseCss": 58.5,
+    "bushTopCss": 24.8,
+    "railBottomVsBushTop": -5.3,
+    "railCoverPctOfBand": 24.2
+   },
+   "elfHeadTopCss": 150,
+   "elfHeadGapToRail": 120,
+   "orcFeetCss": {
+    "top": 78.8,
+    "bottom": 294
+   },
+   "dockTopCss": null,
+   "feetGapToDock": null,
+   "feetGapToRail": 48.8,
+   "fs": {
+    "wallN": 16,
+    "wave": 18,
+    "waveK": 16,
+    "kills": 18,
+    "killsK": 16,
+    "star": 20,
+    "auto": 16,
+    "pullback": null,
+    "boss": 16
+   },
+   "wrapped": true
+  },
+  "bigGeo": {
+   "view": {
+    "k": 0.75,
+    "ox": 120,
+    "oy": 0
+   },
+   "box": {
+    "wall": {
+     "l": 34,
+     "t": 4,
+     "r": 226,
+     "b": 28,
+     "w": 192,
+     "h": 24
+    },
+    "wallN": {
+     "l": 232,
+     "t": 8,
+     "r": 310.6,
+     "b": 24,
+     "w": 78.6,
+     "h": 16
+    },
+    "star": {
+     "l": 320.6,
+     "t": 4,
+     "r": 386.3,
+     "b": 28,
+     "w": 65.7,
+     "h": 24
+    },
+    "wave": {
+     "l": 396.3,
+     "t": 4,
+     "r": 572,
+     "b": 28,
+     "w": 175.7,
+     "h": 24
+    },
+    "slain": {
+     "l": 582,
+     "t": 4,
+     "r": 682.6,
+     "b": 28,
+     "w": 100.6,
+     "h": 24
+    },
+    "auto": {
+     "l": 795.6,
+     "t": 4,
+     "r": 863,
+     "b": 28,
+     "w": 67.4,
+     "h": 24
+    },
+    "settings": {
+     "l": 863,
+     "t": 0,
+     "r": 911,
+     "b": 48,
+     "w": 48,
+     "h": 48
+    },
+    "pullback": {
+     "l": 692.6,
+     "t": 4,
+     "r": 765.8,
+     "b": 28,
+     "w": 73.2,
+     "h": 24
+    },
+    "mute": null,
+    "boss": null
+   },
+   "touch": [
+    {
+     "k": "auto",
+     "w": 67.4,
+     "h": 24,
+     "ok": false
+    },
+    {
+     "k": "settings",
+     "w": 48,
+     "h": 48,
+     "ok": true
+    },
+    {
+     "k": "pullback",
+     "w": 73.2,
+     "h": 24,
+     "ok": false
+    }
+   ],
+   "overlaps": [],
+   "railTopBottom": [
+    2,
+    30
+   ],
+   "canopy": {
+    "skirtBaseCss": 58.5,
+    "bushTopCss": 24.8,
+    "railBottomVsBushTop": -5.3,
+    "railCoverPctOfBand": 34.1
+   },
+   "elfHeadTopCss": 150,
+   "elfHeadGapToRail": 120,
+   "orcFeetCss": {
+    "top": 78.8,
+    "bottom": 294
+   },
+   "dockTopCss": 4,
+   "feetGapToDock": -290,
+   "feetGapToRail": 48.8,
+   "fs": {
+    "wallN": 16,
+    "wave": 18,
+    "waveK": 16,
+    "kills": 18,
+    "killsK": 16,
+    "star": 20,
+    "auto": 16,
+    "pullback": 16,
+    "boss": 16
+   },
+   "wrapped": true
+  },
+  "settingsBox": {
+   "mute": {
+    "t": 568.4,
+    "b": 617.2,
+    "l": 48,
+    "r": 165.2
+   },
+   "back": [
+    {
+     "id": "btn-pullback",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-close",
+     "t": 6,
+     "b": 54,
+     "l": 724.7,
+     "r": 881
+    },
+    {
+     "id": "camp-go",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    }
+   ],
+   "innerH": 360,
+   "innerW": 915
+  },
+  "groveBox": {
+   "mute": {
+    "t": 0,
+    "b": 0,
+    "l": 0,
+    "r": 0
+   },
+   "back": [
+    {
+     "id": "btn-pullback",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-close",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-go",
+     "t": 0,
+     "b": 48,
+     "l": 737,
+     "r": 881
+    }
+   ],
+   "innerH": 360,
+   "innerW": 915
+  },
+  "satchelBox": {
+   "mute": {
+    "t": 0,
+    "b": 0,
+    "l": 0,
+    "r": 0
+   },
+   "back": [
+    {
+     "id": "btn-pullback",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-close",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-go",
+     "t": 0,
+     "b": 48,
+     "l": 737,
+     "r": 881
+    }
+   ],
+   "innerH": 360,
+   "innerW": 915
+  },
+  "campBox": {
+   "mute": {
+    "t": 0,
+    "b": 0,
+    "l": 0,
+    "r": 0
+   },
+   "back": [
+    {
+     "id": "btn-pullback",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-close",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-go",
+     "t": 0,
+     "b": 48,
+     "l": 737,
+     "r": 881
+    }
+   ],
+   "innerH": 360,
+   "innerW": 915
+  },
+  "replantBox": {
+   "mute": {
+    "t": 0,
+    "b": 0,
+    "l": 0,
+    "r": 0
+   },
+   "back": [
+    {
+     "id": "btn-pullback",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-close",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-go",
+     "t": 0,
+     "b": 48,
+     "l": 737,
+     "r": 881
+    }
+   ],
+   "innerH": 360,
+   "innerW": 915
+  }
+ },
+ "l343": {
+  "fonts": {
+   "run": {
+    "texts": 24,
+    "nonHeartwood": [],
+    "under14px": [
+     {
+      "el": "DT",
+      "px": 13.8,
+      "t": "Wave reached"
+     },
+     {
+      "el": "DT",
+      "px": 13.8,
+      "t": "Orcs slain"
+     },
+     {
+      "el": "DT",
+      "px": 13.8,
+      "t": "Minutes held"
+     },
+     {
+      "el": "DT",
+      "px": 13.8,
+      "t": "Starlight / mi"
+     },
+     {
+      "el": "DT",
+      "px": 13.8,
+      "t": "Best wave"
+     },
+     {
+      "el": "fallen-loot",
+      "px": 13.8,
+      "t": "No items found"
+     }
+    ],
+    "missingGlyphs": []
+   },
+   "big": {
+    "texts": 28,
+    "nonHeartwood": [],
+    "under14px": [
+     {
+      "el": "DT",
+      "px": 13.8,
+      "t": "Wave reached"
+     },
+     {
+      "el": "DT",
+      "px": 13.8,
+      "t": "Orcs slain"
+     },
+     {
+      "el": "DT",
+      "px": 13.8,
+      "t": "Minutes held"
+     },
+     {
+      "el": "DT",
+      "px": 13.8,
+      "t": "Starlight / mi"
+     },
+     {
+      "el": "DT",
+      "px": 13.8,
+      "t": "Best wave"
+     },
+     {
+      "el": "fallen-loot",
+      "px": 13.8,
+      "t": "No items found"
+     }
+    ],
+    "missingGlyphs": []
+   },
+   "settings": {
+    "texts": 40,
+    "nonHeartwood": [],
+    "under14px": [
+     {
+      "el": "DT",
+      "px": 13.8,
+      "t": "Wave reached"
+     },
+     {
+      "el": "DT",
+      "px": 13.8,
+      "t": "Orcs slain"
+     },
+     {
+      "el": "DT",
+      "px": 13.8,
+      "t": "Minutes held"
+     },
+     {
+      "el": "DT",
+      "px": 13.8,
+      "t": "Starlight / mi"
+     },
+     {
+      "el": "DT",
+      "px": 13.8,
+      "t": "Best wave"
+     },
+     {
+      "el": "fallen-loot",
+      "px": 13.8,
+      "t": "No items found"
+     }
+    ],
+    "missingGlyphs": []
+   },
+   "grove": {
+    "texts": 13,
+    "nonHeartwood": [],
+    "under14px": [],
+    "missingGlyphs": []
+   },
+   "satchel": {
+    "texts": 10,
+    "nonHeartwood": [],
+    "under14px": [],
+    "missingGlyphs": []
+   },
+   "camp": {
+    "texts": 15,
+    "nonHeartwood": [],
+    "under14px": [],
+    "missingGlyphs": []
+   },
+   "replant": {
+    "texts": 53,
+    "nonHeartwood": [],
+    "under14px": [],
+    "missingGlyphs": []
+   },
+   "fallen": {
+    "texts": 24,
+    "nonHeartwood": [],
+    "under14px": [
+     {
+      "el": "DT",
+      "px": 13.8,
+      "t": "Wave reached"
+     },
+     {
+      "el": "DT",
+      "px": 13.8,
+      "t": "Orcs slain"
+     },
+     {
+      "el": "DT",
+      "px": 13.8,
+      "t": "Minutes held"
+     },
+     {
+      "el": "DT",
+      "px": 13.8,
+      "t": "Starlight / mi"
+     },
+     {
+      "el": "DT",
+      "px": 13.8,
+      "t": "Best wave"
+     },
+     {
+      "el": "fallen-loot",
+      "px": 13.8,
+      "t": "No items found"
+     }
+    ],
+    "missingGlyphs": []
+   }
+  },
+  "geo": {
+   "view": {
+    "k": 0.715,
+    "ox": 59.4,
+    "oy": 0
+   },
+   "box": {
+    "wall": {
+     "l": 34,
+     "t": 4,
+     "r": 226,
+     "b": 28,
+     "w": 192,
+     "h": 24
+    },
+    "wallN": {
+     "l": 232,
+     "t": 8,
+     "r": 283.6,
+     "b": 24,
+     "w": 51.6,
+     "h": 16
+    },
+    "star": {
+     "l": 293.6,
+     "t": 4,
+     "r": 347.1,
+     "b": 28,
+     "w": 53.5,
+     "h": 24
+    },
+    "wave": {
+     "l": 357.1,
+     "t": 4,
+     "r": 434,
+     "b": 28,
+     "w": 76.9,
+     "h": 24
+    },
+    "slain": {
+     "l": 444,
+     "t": 4,
+     "r": 526.4,
+     "b": 28,
+     "w": 82.5,
+     "h": 24
+    },
+    "auto": {
+     "l": 642.6,
+     "t": 4,
+     "r": 710,
+     "b": 28,
+     "w": 67.4,
+     "h": 24
+    },
+    "settings": {
+     "l": 710,
+     "t": 0,
+     "r": 758,
+     "b": 48,
+     "w": 48,
+     "h": 48
+    },
+    "pullback": null,
+    "mute": null,
+    "boss": null
+   },
+   "touch": [
+    {
+     "k": "auto",
+     "w": 67.4,
+     "h": 24,
+     "ok": false
+    },
+    {
+     "k": "settings",
+     "w": 48,
+     "h": 48,
+     "ok": true
+    }
+   ],
+   "overlaps": [],
+   "railTopBottom": [
+    2,
+    30
+   ],
+   "canopy": {
+    "skirtBaseCss": 55.7,
+    "bushTopCss": 23.6,
+    "railBottomVsBushTop": -6.4,
+    "railCoverPctOfBand": 30.5
+   },
+   "elfHeadTopCss": 142.9,
+   "elfHeadGapToRail": 112.9,
+   "orcFeetCss": {
+    "top": 75,
+    "bottom": 280.1
+   },
+   "dockTopCss": null,
+   "feetGapToDock": null,
+   "feetGapToRail": 45,
+   "fs": {
+    "wallN": 16,
+    "wave": 18,
+    "waveK": 16,
+    "kills": 18,
+    "killsK": 16,
+    "star": 20,
+    "auto": 16,
+    "pullback": null,
+    "boss": 16
+   },
+   "wrapped": true
+  },
+  "reach": {
+   "lowestOrcWorldY": 392,
+   "fingerRows": [
+    {
+     "fingerY": 339,
+     "aimY": null
+    },
+    {
+     "fingerY": 327,
+     "aimY": null
+    },
+    {
+     "fingerY": 315,
+     "aimY": null
+    },
+    {
+     "fingerY": 303,
+     "aimY": null
+    },
+    {
+     "fingerY": 291,
+     "aimY": null
+    },
+    {
+     "fingerY": 279,
+     "aimY": null
+    },
+    {
+     "fingerY": 267,
+     "aimY": null
+    },
+    {
+     "fingerY": 255,
+     "aimY": null
+    },
+    {
+     "fingerY": 243,
+     "aimY": null
+    },
+    {
+     "fingerY": 231,
+     "aimY": null
+    },
+    {
+     "fingerY": 219,
+     "aimY": null
+    },
+    {
+     "fingerY": 207,
+     "aimY": null
+    },
+    {
+     "fingerY": 195,
+     "aimY": null
+    }
+   ],
+   "lowestReachedAtFingerY": null,
+   "bottomPxLeftBelowFinger": null
+  },
+  "auto": {
+   "autoFire": true,
+   "noFinger": true,
+   "shown": {
+    "x": 295.8668799999966,
+    "y": 105
+   },
+   "shotsLive": 2,
+   "shotsFired": null
+  },
+  "manualWins": {
+   "aim": null,
+   "shownIsAim": false
+  },
+  "extraGeo": {
+   "view": {
+    "k": 0.715,
+    "ox": 59.4,
+    "oy": 0
+   },
+   "box": {
+    "wall": {
+     "l": 34,
+     "t": 4,
+     "r": 226,
+     "b": 28,
+     "w": 192,
+     "h": 24
+    },
+    "wallN": {
+     "l": 232,
+     "t": 8,
+     "r": 283.6,
+     "b": 24,
+     "w": 51.6,
+     "h": 16
+    },
+    "star": {
+     "l": 293.6,
+     "t": 4,
+     "r": 347.1,
+     "b": 28,
+     "w": 53.5,
+     "h": 24
+    },
+    "wave": {
+     "l": 357.1,
+     "t": 4,
+     "r": 434,
+     "b": 28,
+     "w": 76.9,
+     "h": 24
+    },
+    "slain": {
+     "l": 444,
+     "t": 4,
+     "r": 526.4,
+     "b": 28,
+     "w": 82.5,
+     "h": 24
+    },
+    "auto": {
+     "l": 642.6,
+     "t": 4,
+     "r": 710,
+     "b": 28,
+     "w": 67.4,
+     "h": 24
+    },
+    "settings": {
+     "l": 710,
+     "t": 0,
+     "r": 758,
+     "b": 48,
+     "w": 48,
+     "h": 48
+    },
+    "pullback": null,
+    "mute": null,
+    "boss": null
+   },
+   "touch": [
+    {
+     "k": "auto",
+     "w": 67.4,
+     "h": 24,
+     "ok": false
+    },
+    {
+     "k": "settings",
+     "w": 48,
+     "h": 48,
+     "ok": true
+    }
+   ],
+   "overlaps": [],
+   "railTopBottom": [
+    2,
+    30
+   ],
+   "canopy": {
+    "skirtBaseCss": 55.7,
+    "bushTopCss": 23.6,
+    "railBottomVsBushTop": -6.4,
+    "railCoverPctOfBand": 30.5
+   },
+   "elfHeadTopCss": 142.9,
+   "elfHeadGapToRail": 112.9,
+   "orcFeetCss": {
+    "top": 75,
+    "bottom": 280.1
+   },
+   "dockTopCss": null,
+   "feetGapToDock": null,
+   "feetGapToRail": 45,
+   "fs": {
+    "wallN": 16,
+    "wave": 18,
+    "waveK": 16,
+    "kills": 18,
+    "killsK": 16,
+    "star": 20,
+    "auto": 16,
+    "pullback": null,
+    "boss": 16
+   },
+   "wrapped": true
+  },
+  "bigGeo": {
+   "view": {
+    "k": 0.715,
+    "ox": 59.4,
+    "oy": 0
+   },
+   "box": {
+    "wall": {
+     "l": 34,
+     "t": 4,
+     "r": 226,
+     "b": 28,
+     "w": 192,
+     "h": 24
+    },
+    "wallN": {
+     "l": 232,
+     "t": 8,
+     "r": 310.6,
+     "b": 24,
+     "w": 78.6,
+     "h": 16
+    },
+    "star": {
+     "l": 320.6,
+     "t": 4,
+     "r": 386.3,
+     "b": 28,
+     "w": 65.7,
+     "h": 24
+    },
+    "wave": {
+     "l": 396.3,
+     "t": 4,
+     "r": 572,
+     "b": 28,
+     "w": 175.7,
+     "h": 24
+    },
+    "slain": {
+     "l": 582,
+     "t": 4,
+     "r": 682.6,
+     "b": 28,
+     "w": 100.6,
+     "h": 24
+    },
+    "auto": {
+     "l": 642.6,
+     "t": 4,
+     "r": 710,
+     "b": 28,
+     "w": 67.4,
+     "h": 24
+    },
+    "settings": {
+     "l": 710,
+     "t": 0,
+     "r": 758,
+     "b": 48,
+     "w": 48,
+     "h": 48
+    },
+    "pullback": {
+     "l": 654.8,
+     "t": 4,
+     "r": 728,
+     "b": 28,
+     "w": 73.2,
+     "h": 24
+    },
+    "mute": null,
+    "boss": null
+   },
+   "touch": [
+    {
+     "k": "auto",
+     "w": 67.4,
+     "h": 24,
+     "ok": false
+    },
+    {
+     "k": "settings",
+     "w": 48,
+     "h": 48,
+     "ok": true
+    },
+    {
+     "k": "pullback",
+     "w": 73.2,
+     "h": 24,
+     "ok": false
+    }
+   ],
+   "overlaps": [
+    "slain/auto",
+    "slain/pullback",
+    "auto/pullback",
+    "pullback/settings"
+   ],
+   "railTopBottom": [
+    2,
+    30
+   ],
+   "canopy": {
+    "skirtBaseCss": 55.7,
+    "bushTopCss": 23.6,
+    "railBottomVsBushTop": -6.4,
+    "railCoverPctOfBand": 42.9
+   },
+   "elfHeadTopCss": 142.9,
+   "elfHeadGapToRail": 112.9,
+   "orcFeetCss": {
+    "top": 75,
+    "bottom": 280.1
+   },
+   "dockTopCss": 4,
+   "feetGapToDock": -276.1,
+   "feetGapToRail": 45,
+   "fs": {
+    "wallN": 16,
+    "wave": 18,
+    "waveK": 16,
+    "kills": 18,
+    "killsK": 16,
+    "star": 20,
+    "auto": 16,
+    "pullback": 16,
+    "boss": 16
+   },
+   "wrapped": true
+  },
+  "settingsBox": {
+   "mute": {
+    "t": 568.4,
+    "b": 617.2,
+    "l": 48,
+    "r": 165.2
+   },
+   "back": [
+    {
+     "id": "btn-pullback",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-close",
+     "t": 6,
+     "b": 54,
+     "l": 571.7,
+     "r": 728
+    },
+    {
+     "id": "camp-go",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    }
+   ],
+   "innerH": 343,
+   "innerW": 762
+  },
+  "groveBox": {
+   "mute": {
+    "t": 0,
+    "b": 0,
+    "l": 0,
+    "r": 0
+   },
+   "back": [
+    {
+     "id": "btn-pullback",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-close",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-go",
+     "t": 0,
+     "b": 48,
+     "l": 584,
+     "r": 728
+    }
+   ],
+   "innerH": 343,
+   "innerW": 762
+  },
+  "satchelBox": {
+   "mute": {
+    "t": 0,
+    "b": 0,
+    "l": 0,
+    "r": 0
+   },
+   "back": [
+    {
+     "id": "btn-pullback",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-close",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-go",
+     "t": 0,
+     "b": 48,
+     "l": 584,
+     "r": 728
+    }
+   ],
+   "innerH": 343,
+   "innerW": 762
+  },
+  "campBox": {
+   "mute": {
+    "t": 0,
+    "b": 0,
+    "l": 0,
+    "r": 0
+   },
+   "back": [
+    {
+     "id": "btn-pullback",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-close",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-go",
+     "t": 0,
+     "b": 48,
+     "l": 584,
+     "r": 728
+    }
+   ],
+   "innerH": 343,
+   "innerW": 762
+  },
+  "replantBox": {
+   "mute": {
+    "t": 0,
+    "b": 0,
+    "l": 0,
+    "r": 0
+   },
+   "back": [
+    {
+     "id": "btn-pullback",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-close",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-go",
+     "t": 0,
+     "b": 48,
+     "l": 584,
+     "r": 728
+    }
+   ],
+   "innerH": 343,
+   "innerW": 762
+  }
+ },
+ "notch": {
+  "fonts": {
+   "run": {
+    "texts": 24,
+    "nonHeartwood": [],
+    "under14px": [],
+    "missingGlyphs": []
+   },
+   "big": {
+    "texts": 28,
+    "nonHeartwood": [],
+    "under14px": [],
+    "missingGlyphs": []
+   },
+   "settings": {
+    "texts": 41,
+    "nonHeartwood": [],
+    "under14px": [
+     {
+      "el": "hud-stamp",
+      "px": 12,
+      "t": "Cleared"
+     }
+    ],
+    "missingGlyphs": []
+   },
+   "grove": {
+    "texts": 13,
+    "nonHeartwood": [],
+    "under14px": [],
+    "missingGlyphs": []
+   },
+   "satchel": {
+    "texts": 10,
+    "nonHeartwood": [],
+    "under14px": [],
+    "missingGlyphs": []
+   },
+   "camp": {
+    "texts": 15,
+    "nonHeartwood": [],
+    "under14px": [],
+    "missingGlyphs": []
+   },
+   "replant": {
+    "texts": 53,
+    "nonHeartwood": [],
+    "under14px": [],
+    "missingGlyphs": []
+   },
+   "fallen": {
+    "texts": 24,
+    "nonHeartwood": [],
+    "under14px": [],
+    "missingGlyphs": []
+   }
+  },
+  "geo": {
+   "view": {
+    "k": 0.858,
+    "ox": 71.3,
+    "oy": 0
+   },
+   "box": {
+    "wall": {
+     "l": 48,
+     "t": 4,
+     "r": 240,
+     "b": 28,
+     "w": 192,
+     "h": 24
+    },
+    "wallN": {
+     "l": 246,
+     "t": 8,
+     "r": 297.6,
+     "b": 24,
+     "w": 51.6,
+     "h": 16
+    },
+    "star": {
+     "l": 307.6,
+     "t": 4,
+     "r": 361.1,
+     "b": 28,
+     "w": 53.5,
+     "h": 24
+    },
+    "wave": {
+     "l": 371.1,
+     "t": 4,
+     "r": 448,
+     "b": 28,
+     "w": 76.9,
+     "h": 24
+    },
+    "slain": {
+     "l": 458,
+     "t": 4,
+     "r": 540.4,
+     "b": 28,
+     "w": 82.5,
+     "h": 24
+    },
+    "auto": {
+     "l": 795.6,
+     "t": 4,
+     "r": 863,
+     "b": 28,
+     "w": 67.4,
+     "h": 24
+    },
+    "settings": {
+     "l": 863,
+     "t": 0,
+     "r": 911,
+     "b": 48,
+     "w": 48,
+     "h": 48
+    },
+    "pullback": null,
+    "mute": null,
+    "boss": null
+   },
+   "touch": [
+    {
+     "k": "auto",
+     "w": 67.4,
+     "h": 24,
+     "ok": false
+    },
+    {
+     "k": "settings",
+     "w": 48,
+     "h": 48,
+     "ok": true
+    }
+   ],
+   "overlaps": [],
+   "railTopBottom": [
+    2,
+    30
+   ],
+   "canopy": {
+    "skirtBaseCss": 67,
+    "bushTopCss": 28.3,
+    "railBottomVsBushTop": -1.7,
+    "railCoverPctOfBand": 21.1
+   },
+   "elfHeadTopCss": 171.7,
+   "elfHeadGapToRail": 141.7,
+   "orcFeetCss": {
+    "top": 90.1,
+    "bottom": 336.5
+   },
+   "dockTopCss": null,
+   "feetGapToDock": null,
+   "feetGapToRail": 60.1,
+   "fs": {
+    "wallN": 16,
+    "wave": 18,
+    "waveK": 16,
+    "kills": 18,
+    "killsK": 16,
+    "star": 20,
+    "auto": 16,
+    "pullback": null,
+    "boss": 16
+   },
+   "wrapped": true
+  },
+  "reach": {
+   "lowestOrcWorldY": 392,
+   "fingerRows": [
+    {
+     "fingerY": 408,
+     "aimY": null
+    },
+    {
+     "fingerY": 396,
+     "aimY": null
+    },
+    {
+     "fingerY": 384,
+     "aimY": null
+    },
+    {
+     "fingerY": 372,
+     "aimY": null
+    },
+    {
+     "fingerY": 360,
+     "aimY": null
+    },
+    {
+     "fingerY": 348,
+     "aimY": null
+    },
+    {
+     "fingerY": 336,
+     "aimY": null
+    },
+    {
+     "fingerY": 324,
+     "aimY": null
+    },
+    {
+     "fingerY": 312,
+     "aimY": null
+    },
+    {
+     "fingerY": 300,
+     "aimY": null
+    },
+    {
+     "fingerY": 288,
+     "aimY": null
+    },
+    {
+     "fingerY": 276,
+     "aimY": null
+    },
+    {
+     "fingerY": 264,
+     "aimY": null
+    }
+   ],
+   "lowestReachedAtFingerY": null,
+   "bottomPxLeftBelowFinger": null
+  },
+  "auto": {
+   "autoFire": true,
+   "noFinger": true,
+   "shown": {
+    "x": 289.9686399999965,
+    "y": 105
+   },
+   "shotsLive": 2,
+   "shotsFired": null
+  },
+  "manualWins": {
+   "aim": null,
+   "shownIsAim": false
+  },
+  "extraGeo": {
+   "view": {
+    "k": 0.858,
+    "ox": 71.3,
+    "oy": 0
+   },
+   "box": {
+    "wall": {
+     "l": 48,
+     "t": 4,
+     "r": 240,
+     "b": 28,
+     "w": 192,
+     "h": 24
+    },
+    "wallN": {
+     "l": 246,
+     "t": 8,
+     "r": 297.6,
+     "b": 24,
+     "w": 51.6,
+     "h": 16
+    },
+    "star": {
+     "l": 307.6,
+     "t": 4,
+     "r": 361.1,
+     "b": 28,
+     "w": 53.5,
+     "h": 24
+    },
+    "wave": {
+     "l": 371.1,
+     "t": 4,
+     "r": 448,
+     "b": 28,
+     "w": 76.9,
+     "h": 24
+    },
+    "slain": {
+     "l": 458,
+     "t": 4,
+     "r": 540.4,
+     "b": 28,
+     "w": 82.5,
+     "h": 24
+    },
+    "auto": {
+     "l": 795.6,
+     "t": 4,
+     "r": 863,
+     "b": 28,
+     "w": 67.4,
+     "h": 24
+    },
+    "settings": {
+     "l": 863,
+     "t": 0,
+     "r": 911,
+     "b": 48,
+     "w": 48,
+     "h": 48
+    },
+    "pullback": null,
+    "mute": null,
+    "boss": null
+   },
+   "touch": [
+    {
+     "k": "auto",
+     "w": 67.4,
+     "h": 24,
+     "ok": false
+    },
+    {
+     "k": "settings",
+     "w": 48,
+     "h": 48,
+     "ok": true
+    }
+   ],
+   "overlaps": [],
+   "railTopBottom": [
+    2,
+    30
+   ],
+   "canopy": {
+    "skirtBaseCss": 67,
+    "bushTopCss": 28.3,
+    "railBottomVsBushTop": -1.7,
+    "railCoverPctOfBand": 21.1
+   },
+   "elfHeadTopCss": 171.7,
+   "elfHeadGapToRail": 141.7,
+   "orcFeetCss": {
+    "top": 90.1,
+    "bottom": 336.5
+   },
+   "dockTopCss": null,
+   "feetGapToDock": null,
+   "feetGapToRail": 60.1,
+   "fs": {
+    "wallN": 16,
+    "wave": 18,
+    "waveK": 16,
+    "kills": 18,
+    "killsK": 16,
+    "star": 20,
+    "auto": 16,
+    "pullback": null,
+    "boss": 16
+   },
+   "wrapped": true
+  },
+  "bigGeo": {
+   "view": {
+    "k": 0.858,
+    "ox": 71.3,
+    "oy": 0
+   },
+   "box": {
+    "wall": {
+     "l": 48,
+     "t": 4,
+     "r": 240,
+     "b": 28,
+     "w": 192,
+     "h": 24
+    },
+    "wallN": {
+     "l": 246,
+     "t": 8,
+     "r": 324.6,
+     "b": 24,
+     "w": 78.6,
+     "h": 16
+    },
+    "star": {
+     "l": 334.6,
+     "t": 4,
+     "r": 400.3,
+     "b": 28,
+     "w": 65.7,
+     "h": 24
+    },
+    "wave": {
+     "l": 410.3,
+     "t": 4,
+     "r": 586,
+     "b": 28,
+     "w": 175.7,
+     "h": 24
+    },
+    "slain": {
+     "l": 596,
+     "t": 4,
+     "r": 696.6,
+     "b": 28,
+     "w": 100.6,
+     "h": 24
+    },
+    "auto": {
+     "l": 795.6,
+     "t": 4,
+     "r": 863,
+     "b": 28,
+     "w": 67.4,
+     "h": 24
+    },
+    "settings": {
+     "l": 863,
+     "t": 0,
+     "r": 911,
+     "b": 48,
+     "w": 48,
+     "h": 48
+    },
+    "pullback": {
+     "l": 706.6,
+     "t": 4,
+     "r": 779.8,
+     "b": 28,
+     "w": 73.2,
+     "h": 24
+    },
+    "mute": null,
+    "boss": null
+   },
+   "touch": [
+    {
+     "k": "auto",
+     "w": 67.4,
+     "h": 24,
+     "ok": false
+    },
+    {
+     "k": "settings",
+     "w": 48,
+     "h": 48,
+     "ok": true
+    },
+    {
+     "k": "pullback",
+     "w": 73.2,
+     "h": 24,
+     "ok": false
+    }
+   ],
+   "overlaps": [],
+   "railTopBottom": [
+    2,
+    30
+   ],
+   "canopy": {
+    "skirtBaseCss": 67,
+    "bushTopCss": 28.3,
+    "railBottomVsBushTop": -1.7,
+    "railCoverPctOfBand": 29.8
+   },
+   "elfHeadTopCss": 171.7,
+   "elfHeadGapToRail": 141.7,
+   "orcFeetCss": {
+    "top": 90.1,
+    "bottom": 336.5
+   },
+   "dockTopCss": 4,
+   "feetGapToDock": -332.5,
+   "feetGapToRail": 60.1,
+   "fs": {
+    "wallN": 16,
+    "wave": 18,
+    "waveK": 16,
+    "kills": 18,
+    "killsK": 16,
+    "star": 20,
+    "auto": 16,
+    "pullback": 16,
+    "boss": 16
+   },
+   "wrapped": true
+  },
+  "settingsBox": {
+   "mute": {
+    "t": 568.4,
+    "b": 617.2,
+    "l": 62,
+    "r": 179.2
+   },
+   "back": [
+    {
+     "id": "btn-pullback",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-close",
+     "t": 6,
+     "b": 54,
+     "l": 724.7,
+     "r": 881
+    },
+    {
+     "id": "camp-go",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    }
+   ],
+   "innerH": 412,
+   "innerW": 915
+  },
+  "groveBox": {
+   "mute": {
+    "t": 0,
+    "b": 0,
+    "l": 0,
+    "r": 0
+   },
+   "back": [
+    {
+     "id": "btn-pullback",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-close",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-go",
+     "t": 0,
+     "b": 48,
+     "l": 737,
+     "r": 881
+    }
+   ],
+   "innerH": 412,
+   "innerW": 915
+  },
+  "satchelBox": {
+   "mute": {
+    "t": 0,
+    "b": 0,
+    "l": 0,
+    "r": 0
+   },
+   "back": [
+    {
+     "id": "btn-pullback",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-close",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-go",
+     "t": 0,
+     "b": 48,
+     "l": 737,
+     "r": 881
+    }
+   ],
+   "innerH": 412,
+   "innerW": 915
+  },
+  "campBox": {
+   "mute": {
+    "t": 0,
+    "b": 0,
+    "l": 0,
+    "r": 0
+   },
+   "back": [
+    {
+     "id": "btn-pullback",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-close",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-go",
+     "t": 0,
+     "b": 48,
+     "l": 737,
+     "r": 881
+    }
+   ],
+   "innerH": 412,
+   "innerW": 915
+  },
+  "replantBox": {
+   "mute": {
+    "t": 0,
+    "b": 0,
+    "l": 0,
+    "r": 0
+   },
+   "back": [
+    {
+     "id": "btn-pullback",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-close",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-go",
+     "t": 0,
+     "b": 48,
+     "l": 737,
+     "r": 881
+    }
+   ],
+   "innerH": 412,
+   "innerW": 915
+  }
+ },
+ "p915": {
+  "fonts": {
+   "run": {
+    "texts": 1,
+    "nonHeartwood": [],
+    "under14px": [],
+    "missingGlyphs": []
+   },
+   "settings": {
+    "texts": 1,
+    "nonHeartwood": [],
+    "under14px": [],
+    "missingGlyphs": []
+   },
+   "grove": {
+    "texts": 1,
+    "nonHeartwood": [],
+    "under14px": [],
+    "missingGlyphs": []
+   },
+   "satchel": {
+    "texts": 1,
+    "nonHeartwood": [],
+    "under14px": [],
+    "missingGlyphs": []
+   },
+   "camp": {
+    "texts": 1,
+    "nonHeartwood": [],
+    "under14px": [],
+    "missingGlyphs": []
+   },
+   "replant": {
+    "texts": 1,
+    "nonHeartwood": [],
+    "under14px": [],
+    "missingGlyphs": []
+   },
+   "fallen": {
+    "texts": 1,
+    "nonHeartwood": [],
+    "under14px": [],
+    "missingGlyphs": []
+   }
+  },
+  "geo": {
+   "view": {
+    "k": 1,
+    "ox": 0,
+    "oy": 0
+   },
+   "box": {
+    "wall": null,
+    "wallN": null,
+    "star": null,
+    "wave": null,
+    "slain": null,
+    "auto": null,
+    "settings": null,
+    "pullback": null,
+    "mute": null,
+    "boss": null
+   },
+   "touch": [],
+   "overlaps": [],
+   "railTopBottom": [
+    null,
+    null
+   ],
+   "canopy": {
+    "skirtBaseCss": 78,
+    "bushTopCss": 33,
+    "railBottomVsBushTop": null,
+    "railCoverPctOfBand": 0
+   },
+   "elfHeadTopCss": 200,
+   "elfHeadGapToRail": null,
+   "orcFeetCss": {
+    "top": 30,
+    "bottom": 450
+   },
+   "dockTopCss": null,
+   "feetGapToDock": null,
+   "feetGapToRail": null,
+   "fs": {
+    "wallN": 16,
+    "wave": 28,
+    "waveK": 18,
+    "kills": 28,
+    "killsK": 18,
+    "star": 32,
+    "auto": 16,
+    "pullback": null,
+    "boss": 16
+   },
+   "wrapped": true
+  },
+  "settingsBox": {
+   "mute": {
+    "t": 0,
+    "b": 0,
+    "l": 0,
+    "r": 0
+   },
+   "back": [
+    {
+     "id": "btn-pullback",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-close",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-go",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    }
+   ],
+   "innerH": 915,
+   "innerW": 412
+  },
+  "groveBox": {
+   "mute": {
+    "t": 0,
+    "b": 0,
+    "l": 0,
+    "r": 0
+   },
+   "back": [
+    {
+     "id": "btn-pullback",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-close",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-go",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    }
+   ],
+   "innerH": 915,
+   "innerW": 412
+  },
+  "satchelBox": {
+   "mute": {
+    "t": 0,
+    "b": 0,
+    "l": 0,
+    "r": 0
+   },
+   "back": [
+    {
+     "id": "btn-pullback",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-close",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-go",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    }
+   ],
+   "innerH": 915,
+   "innerW": 412
+  },
+  "campBox": {
+   "mute": {
+    "t": 0,
+    "b": 0,
+    "l": 0,
+    "r": 0
+   },
+   "back": [
+    {
+     "id": "btn-pullback",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-close",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-go",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    }
+   ],
+   "innerH": 915,
+   "innerW": 412
+  },
+  "replantBox": {
+   "mute": {
+    "t": 0,
+    "b": 0,
+    "l": 0,
+    "r": 0
+   },
+   "back": [
+    {
+     "id": "btn-pullback",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-close",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    },
+    {
+     "id": "camp-go",
+     "t": 0,
+     "b": 0,
+     "l": 0,
+     "r": 0
+    }
+   ],
+   "innerH": 915,
+   "innerW": 412
+  }
+ }
+}

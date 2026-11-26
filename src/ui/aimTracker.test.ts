@@ -1,3 +1,4 @@
+import { plainPoint } from '../render/viewMap';
 import { describe, expect, it } from 'vitest';
 import { AimTracker } from './aimTracker';
 import { aimPoint, liftFor, startsAim } from './touchAim';
@@ -34,16 +35,28 @@ describe('AimTracker (TB-218 I1)', () => {
 const R = { left: 0, top: 0, right: 915, bottom: 412 };
 describe('touch aim point (TB-218 I2, I3)', () => {
   it('mid-screen lift is 56 px for a finger, 24 px for a pen', () => {
-    expect(liftFor('touch', 250, R, 16)).toBe(56); expect(liftFor('touch', 328, R, 16)).toBe(56); expect(liftFor('pen', 250, R, 16)).toBe(24);
+    expect(liftFor('touch', 250, R, 16)).toBe(56); expect(liftFor('touch', 280, R, 16)).toBe(56); expect(liftFor('pen', 250, R, 16)).toBe(24);
   });
-  it('the lift fades to 0 at the gesture-bar line, so the lowest visible row is reachable', () => {
-    expect(liftFor('touch', 412, R, 16)).toBe(0); expect(liftFor('touch', 370, R, 16)).toBe(28);
-    expect(aimPoint('touch', 460, 392, R, 16, 20).y).toBe(392);   // a thumb at the line puts the circle on the last row above the inset
-    expect(aimPoint('touch', 460, 412, R, 16, 20).y).toBe(392);   // never inside the bottom inset
+  it('the lift is 0 from reachRem (48 px) above the bottom, so the lowest row is reached by a thumb clear of the gesture band (TB-223)', () => {
+    expect(liftFor('touch', 412, R, 16)).toBe(0); expect(liftFor('touch', 376, R, 16)).toBe(0); expect(liftFor('touch', 334, R, 16)).toBe(20);
+    expect(aimPoint('touch', 460, 376, R, 16).y).toBe(376);   // a thumb 36 px up puts the circle on the finger, not above it
     expect(aimPoint('touch', 460, 412, R, 16).y).toBe(412);
+    expect(aimPoint('touch', 460, 412, R, 16, 20).y).toBe(392);   // never inside the bottom inset
+    expect(aimPoint('touch', 460, 356, R, 16, 20).y).toBe(356);   // inset 20: the lift is 0 from 48 px above the inset line
+  });
+  it('a thumb 40 px above the bottom edge strikes the lowest orc row with room to spare on real phone landscapes (TB-223)', () => {
+    // the real field mapping (plainPoint), not a fixed scale; orcs spawn at y 50..430, the strike catches within radius 20 + orc radius 10
+    for (const [w, h] of [[915, 412], [915, 360], [844, 390], [762, 343]] as const) {
+      const k = h / 480, v = { k, ox: (w - 900 * k) / 2, oy: 0 }, Rh = { left: 0, top: 0, right: w, bottom: h };
+      for (const dx of [0, 1]) {
+        const p = aimPoint('touch', w / 2 + dx, h - 40, Rh, 16), world = plainPoint(p.x, p.y, v, true)!;
+        expect(Math.abs(world.y - 430)).toBeLessThanOrEqual(20);   // 10 world px inside the 30 px strike reach
+      }
+      let prev = -1; for (let fy = 0; fy <= h; fy += 2) { const cy = aimPoint('touch', 460, fy, Rh, 16).y; expect(cy).toBeGreaterThanOrEqual(prev); prev = cy; }   // monotone: no dead zone
+    }
   });
   it('mid-screen the circle is a full 56 px above the finger', () => {
-    expect(300 - aimPoint('touch', 460, 300, R, 16, 20, 60).y).toBe(56);
+    expect(250 - aimPoint('touch', 460, 250, R, 16, 20, 60).y).toBe(56);
   });
   it('the circle never sits behind the HUD plates and stays on the field', () => {
     expect(aimPoint('touch', 460, 20, R, 16, 20, 60).y).toBe(60); expect(aimPoint('touch', 460, 100, R, 16, 20, 60).y).toBe(60);

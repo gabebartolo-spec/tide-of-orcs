@@ -10,6 +10,7 @@ import { campHit } from './ui/camp';
 import { CampScene } from './render/campScene';
 import { AimTracker } from './ui/aimTracker';
 import { aimPoint, startsAim, type Insets } from './ui/touchAim';
+import { AUTO_FIRE_KEY } from './data/touch';
 import { setUiSound } from './data/audio';
 import { wantsCalm } from './ui/juice';
 import { armFullscreen } from './ui/fullscreen';
@@ -40,6 +41,22 @@ const setMuted = (m: boolean): void => { muted = m; try { localStorage.setItem(M
 applyVolume(); syncMute();
 for (const b of [muteSettings, muteCorner]) b.addEventListener('click', () => setMuted(!muted));
 addEventListener('keydown', (e) => { if ((e.key === 'm' || e.key === 'M') && !e.repeat && !e.ctrlKey && !e.metaKey && !e.altKey && !(e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLSelectElement)) setMuted(!muted); });
+// Auto fire (TB-223, director 4 Nov): on a touch screen the elf picks the strike point herself while no finger aims. A Settings toggle, kept in
+// localStorage like Mute (no save schema change); absent = on for a touch screen, off for a mouse (rule 2 stays aim-to-play on desktop).
+const coarsePtr = matchMedia('(pointer: coarse)');
+const storedAuto = (): boolean => { try { const v = localStorage.getItem(AUTO_FIRE_KEY); return v === null ? coarsePtr.matches : v === '1'; } catch { return coarsePtr.matches; } };
+const autoBtn = document.getElementById('btn-auto') as HTMLElement;
+const autoHud = document.getElementById('btn-auto-hud') as HTMLElement;   // the run-view toggle on a phone (style.css), beside Settings
+const syncAuto = (): void => {
+  const label = game.autoFire ? STR.autoOn : STR.autoOff;
+  for (const b of [autoBtn, autoHud]) b.setAttribute('aria-pressed', String(game.autoFire));
+  autoBtn.textContent = label; autoHud.textContent = STR.autoHud; autoHud.setAttribute('aria-label', label);
+};
+game.autoFire = storedAuto(); syncAuto();
+// Phone spawn band (TB-223): orcs keep clear of the HUD strip and the bottom dock on a coarse, short (landscape phone) screen only.
+const phoneMq = matchMedia('(pointer: coarse) and (max-height: 540px)');
+game.phoneBand = phoneMq.matches; phoneMq.addEventListener('change', () => { game.phoneBand = phoneMq.matches; });
+for (const b of [autoBtn, autoHud]) b.addEventListener('click', () => { game.autoFire = !game.autoFire; try { localStorage.setItem(AUTO_FIRE_KEY, game.autoFire ? '1' : '0'); } catch { /* storage blocked: lasts this page only */ } syncAuto(); });
 // Browsers block audio until the first gesture; a touch counts on release (pointerup, touchend) as well as on press.
 for (const t of ['pointerdown', 'pointerup', 'touchend', 'keydown'] as const) addEventListener(t, () => audio.unlock(), { capture: true });
 (window.requestIdleCallback ?? ((f: () => void) => setTimeout(f, 1500)))(() => audio.prepare());
@@ -50,7 +67,7 @@ setUiSound((c) => audio.play(c));
 
 
 // Aiming: the bow follows the pointer while it is over the field. No clicking; the bow looses on its own.
-// Touch (TB-155, TB-218): the elf aims while a finger is held on the plain; the circle sits above the fingertip (lift fades at the
+// Touch (TB-155, TB-218, TB-223): the elf aims while a finger is held on the plain; the circle sits above the fingertip (lift fades at the
 // bottom) and below the HUD. One pointer owns the aim (AimTracker): when it lifts the aim clears.
 // A pen aims only in contact; a mouse follows the cursor and clears on leave.
 const tracker = new AimTracker();
@@ -146,7 +163,7 @@ function frame(now: number): void {
   // the field is hidden (zero-size) on the camp pages, so skip its draw there (TB-136)
   drawDt += dt;
   if (!document.hidden && document.body.dataset.mode !== 'camp' && now - lastDraw >= quality.q.drawGap - 1) {
-    const w0 = performance.now(); field.draw(game.state, drawDt, game.aim); drawDt = 0;
+    const w0 = performance.now(); field.draw(game.state, drawDt, game.shownAim()); drawDt = 0;
     if (lastDraw && quality.frame(now - lastDraw, performance.now() - w0)) field.resize();
     lastDraw = now;
   } else if (document.body.dataset.mode === 'camp') { drawDt = 0; lastDraw = 0; }

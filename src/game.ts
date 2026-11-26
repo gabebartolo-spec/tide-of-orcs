@@ -8,6 +8,8 @@ import { canPullBack, canReplant, choosePath, pullBack, replant } from './sim/pr
 import { PathId } from './data/paths';
 import { SimState, createState, freshMeta, freshRun, recompute } from './sim/state';
 import { Inputs, step } from './sim/step';
+import { autoTarget } from './sim/autoAim';
+import { AUTO_FIRE } from './data/balance';
 import { buy } from './sim/tree';
 import { restartBoss, summonBoss } from './sim/boss';
 import { castFireball } from './sim/combat';
@@ -44,6 +46,13 @@ export class GameController {
   aim: { x: number; y: number } | null = null;
   /** A press-and-release that fits between two frames still counts as aiming for one sim tick (TB-218 I3); no hold-fire timer. */
   private latch: { x: number; y: number } | null = null;
+  /** Touch Auto fire (TB-223): the elf picks the strike point herself while no finger aims. Set from the stored choice by main.ts. */
+  autoFire = false;
+  /** Phone spawn band (TB-223): set by main.ts from the coarse short-screen query; carried onto whichever state is live. */
+  phoneBand = false;
+  /** Where Auto fire will strike next, refreshed a few times a second for the reticle; the sim picks its own point at the shot. */
+  private autoPoint: { x: number; y: number } | null = null;
+  private autoTick = 0;
   /** Loot telemetry (TB-107) waits here and is written with each save, not per drop. */
   private lootLog: LootRecord[] = [];
 
@@ -56,11 +65,16 @@ export class GameController {
   }
 
   tick(dt: number): void {
-    const inputs: Inputs = { aim: this.state.run.fallen ? null : this.aim ?? this.latch };
+    this.state.phoneBand = this.phoneBand;
+    const fallen = this.state.run.fallen, auto = this.autoFire && !fallen;
+    const inputs: Inputs = { aim: fallen ? null : this.aim ?? this.latch, auto };
+    if (auto && !inputs.aim && this.autoTick++ % AUTO_FIRE.reticleEvery === 0) this.autoPoint = autoTarget(this.state);
     this.latch = null;
     step(this.state, dt, inputs, this.events);
   }
 
+  /** The circle to draw: the finger's aim, else Auto fire's pick, else none. */
+  shownAim(): { x: number; y: number } | null { return this.aim ?? (this.autoFire && !this.state.run.fallen ? this.autoPoint : null); }
   setAim(x: number, y: number): void { this.aim = this.latch = { x, y }; }
   /** The finger lifted: aim ends, but a press no tick has seen yet is still honoured once. */
   clearAim(): void { this.aim = null; }

@@ -1069,6 +1069,7 @@ header, #hud, #toast, #campview, .wrap, .play { touch-action: pan-x pan-y; }
 /* ---- TB-224: Heartwood everywhere in the run, and the slim phone HUD ---- */
 /* The run view (HUD, toast, boss button, loot banners, fallen board) is all Heartwood, as is every other screen (TB-226). */
 .hud-wall-n { display: none; }
+#btn-auto-hud { display: none; }
 /* Phone landscape: one slim rail hugging the top edge. No scrim and no continuous bar, so the canopy shows between the carved chips;
    the rail is 1.5 rem of chips on a 0.25 rem inset (24 px of 412). Wall bar + count, starlight, Wave, Slain and a round Settings
    gear; the Heartwood pill is off the run HUD (it is spendable only between runs, Replant shows it). PC layout is untouched. */
@@ -1106,6 +1107,16 @@ header, #hud, #toast, #campview, .wrap, .play { touch-action: pan-x pan-y; }
     box-shadow: inset 0 0.0625rem 0 color-mix(in srgb, var(--timber) 55%, transparent), 0 0.125rem 0 color-mix(in srgb, var(--ink) 75%, transparent); }
   body[data-mode="run"] #btn-settings::after { content: ""; position: absolute; left: 50%; top: calc(max(0.125rem, env(safe-area-inset-top, 0px)) + 0.3125rem); width: 1.125rem; height: 1.125rem; margin-left: -0.5625rem;
     background: var(--text); -webkit-mask: url("/ui/glyph-cog.svg") center / contain no-repeat; mask: url("/ui/glyph-cog.svg") center / contain no-repeat; }
+  /* Auto fire (TB-224): a carved chip left of the gear, same 24 px plank as Wave and Slain. A pip says the state at a glance: lit green
+     ring and fill when on, a hollow cream ring when off. A transparent ::before pads the tap area to 44 px or more. */
+  body[data-mode="run"] #btn-auto-hud { position: fixed; z-index: 5; top: max(0.25rem, env(safe-area-inset-top, 0px)); right: calc(max(0.25rem, env(safe-area-inset-right, 0px)) + max(44px, 3rem));
+    display: flex; align-items: center; gap: 0.375rem; box-sizing: border-box; height: 1.5rem; min-height: 0; min-width: 0; margin: 0; padding: 0 0.75rem 0 0.625rem; font-size: 1rem; line-height: 1; color: var(--hud-gold, var(--text));
+    border: 0.0625rem solid color-mix(in srgb, var(--timber) 60%, var(--ink)); border-image: none; border-radius: 0.3125rem; filter: none; background: linear-gradient(var(--bark), var(--splinter));
+    box-shadow: inset 0 0.0625rem 0 color-mix(in srgb, var(--timber) 55%, transparent), 0 0.125rem 0 color-mix(in srgb, var(--ink) 75%, transparent); text-shadow: none; }
+  body[data-mode="run"] #btn-auto-hud::before { content: ""; position: absolute; inset: -0.625rem -0.25rem; }
+  body[data-mode="run"] #btn-auto-hud::after { content: ""; order: -1; flex: none; box-sizing: border-box; width: 0.625rem; height: 0.625rem; border-radius: 50%; border: 0.125rem solid var(--text); }
+  body[data-mode="run"] #btn-auto-hud[aria-pressed="true"] { box-shadow: inset 0 0 0 0.0625rem var(--grove), 0 0.125rem 0 color-mix(in srgb, var(--ink) 75%, transparent); }
+  body[data-mode="run"] #btn-auto-hud[aria-pressed="true"]::after { background: var(--grove); border-color: var(--grove); }
   /* Replant (pull back) is a carved chip like its neighbours; a transparent ::before pads the tap area to 44 px */
   body[data-mode="run"] #btn-pullback { position: relative; height: 1.5rem; min-height: 0; margin: 0 0 0 0.625rem; padding: 0 0.875rem; font-size: 0.875rem; line-height: 1; align-self: flex-start; flex: none;
     border: 0.0625rem solid color-mix(in srgb, var(--timber) 60%, var(--ink)); border-image: none; border-radius: 0.3125rem; filter: none; color: var(--hud-gold, var(--text));
@@ -1137,3 +1148,24 @@ header, #hud, #toast, #campview, .wrap, .play { touch-action: pan-x pan-y; }
 #dep-boss .n { color: #fff4dc; text-shadow: 0 0.0625rem 0.125rem #2a1a0a, 0 0 0.125rem #2a1a0a; }
 #dep-boss .c { color: #ffd98a; font-size: 0.9375rem; text-shadow: 0 0.0625rem 0.125rem #2a1a0a, 0 0 0.125rem #2a1a0a; }
 .settings textarea { letter-spacing: 0.06em; }
+
+/* ---- TB-224 phone dock: no scrim over the canopy or the bottom orc row; the boss call is a compact carved chip bottom-right, the mute
+   plank stays bottom-left, both 44+ px targets sitting below the lowest orc feet (PHONE_SPAWN.bottom). ---- */
+@media (pointer: coarse) and (max-height: 540px) and (orientation: landscape) {
+  body:not([data-mode="camp"]) .rally { left: auto; right: max(0.5rem, env(safe-area-inset-right)); bottom: max(0.5rem, env(safe-area-inset-bottom)); padding: 0; background: none; }
+  body:not([data-mode="camp"]) .rally:not(:has(> :not([hidden]))) { background: none; }
+  #dep-boss:not([hidden]) { min-height: 2.75rem; min-width: 2.75rem; padding: 0.25rem 0.75rem; border-radius: 0.75rem; font-size: 1rem;
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--cream, #f3e6c8) 30%, transparent), 0 0.125rem 0.375rem var(--ink); }
+  .fallen .tally dt { font-size: 1.125rem; }
+}
+@media (pointer: coarse) and (max-height: 540px) and (orientation: landscape) {
+  body:not([data-mode="camp"]) .hud-wave .stamp { font-size: 0.875rem; }
+  #fallen-loot { font-size: 1.125rem; }
+}
+/* narrow phones (under 800 css px wide, e.g. 762x343): the rail tightens so Wave, Slain, Auto, Replant and the gear fit with five-digit waves and nine-digit kills */
+@media (pointer: coarse) and (max-height: 540px) and (orientation: landscape) and (max-width: 800px) {
+  body:not([data-mode="camp"]) .hud { --s: 0.5; gap: 0.375rem; }
+  body:not([data-mode="camp"]) .hud :is(.stat, .hud-wave) { padding: 0 0.5rem; }
+  body:not([data-mode="camp"]) .hud .stats { gap: 0.375rem; }
+  body:not([data-mode="camp"]) .odo { font-size: 1.125rem; }
+}

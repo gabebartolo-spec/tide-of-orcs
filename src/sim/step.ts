@@ -1,4 +1,4 @@
-import { ARROWS, BARRICADE, FIELD, SIM_MISC, VANGUARD, LOB, ORC_WOB, PLAYER, SOURCES, WAVE_LEN, checkpointFor, waveHP, waveInterval, waveLoot, waveSpeedMult } from '../data/balance';
+import { ARROWS, BARRICADE, FIELD, PHONE_SPAWN, SIM_MISC, VANGUARD, LOB, ORC_WOB, PLAYER, SOURCES, WAVE_LEN, checkpointFor, waveHP, waveInterval, waveLoot, waveSpeedMult } from '../data/balance';
 import { FIREBALL, ORC_FX, ORC_KINDS, ORC_TYPES, OrcKind } from '../data/orcs';
 import { EventBus } from './events';
 import { Orc, Projectile, SimState, Wolf } from './state';
@@ -9,14 +9,21 @@ import { barricadeHit, barricadeRegen } from './barricade';
 import { bossStep } from './boss';
 import { BOSS_WAVE, tierHp, tierLoot } from '../data/bosses';
 import { engagedVanguard, hurtVanguard, vanguardStep } from './vanguard';
+import { autoTarget } from './autoAim';
 import { fireballLands, shamanCast } from './shaman';
 
-/** Player aim: the pointer's position on the field, or null when the player is not aiming. The elf only shoots while aimed. */
-export interface Inputs { aim: { x: number; y: number } | null }
+/** Player aim: the pointer's position on the field, or null when the player is not aiming. The elf only shoots while aimed,
+ *  unless `auto` (touch Auto fire, TB-223) lets her pick the strike point herself; a manual aim always wins over it. */
+export interface Inputs { aim: { x: number; y: number } | null; auto?: boolean }
 export const noInputs: Inputs = { aim: null };
 
 const H = FIELD.h, W = FIELD.w, BAR_X = FIELD.barX, BAR_W = FIELD.barW, ELF_X = FIELD.elfX;
 const dist = (ax: number, ay: number, bx: number, by: number): number => Math.hypot(ax - bx, ay - by);
+
+/** The world y range orcs spawn in: the full field less the pad, or the phone band (TB-223). */
+export function spawnBand(s: SimState): { lo: number; hi: number } {
+  return s.phoneBand ? { lo: PHONE_SPAWN.top, hi: H - PHONE_SPAWN.bottom } : { lo: SIM_MISC.spawnYPad, hi: H - SIM_MISC.spawnYPad };
+}
 
 /** March one orc in from the right edge, at height y (random if omitted). Returns false when the field is full. */
 export function spawnOrc(s: SimState, kind: OrcKind, y?: number, champ = false): Orc | null {
@@ -24,7 +31,8 @@ export function spawnOrc(s: SimState, kind: OrcKind, y?: number, champ = false):
   const o = s.orcs.alloc(); if (!o) { if (champ && s.run.boss) s.run.boss.left--; return null; }
   const T = ORC_TYPES[kind];
   const hp = waveHP(w) * T.hp * F.hp * tierHp(s.run.tier);
-  o.kind = kind; o.x = W + SIM_MISC.spawnXPad; o.y = y ?? SIM_MISC.spawnYPad + s.rng.next() * (H - 2 * SIM_MISC.spawnYPad);
+  o.kind = kind; o.x = W + SIM_MISC.spawnXPad; const band = spawnBand(s);
+  o.y = y === undefined ? band.lo + s.rng.next() * (band.hi - band.lo) : s.phoneBand ? Math.min(band.hi, Math.max(band.lo, y)) : y;
   o.hp = hp; o.maxhp = hp; o.spd = T.speed * waveSpeedMult(w); o.r = T.radius; o.atk = hp * BARRICADE.orcAtkFrac;
   o.loot = waveLoot(w) * T.loot * F.loot * tierLoot(s.run.tier);
   o.dead = false; o.burn = 0; o.bleed = 0; o.slow = 0; o.pin = 0; o.root = 0; o.chill = 0; o.stun = 0; o.poison = 0; o.poisonDps = 0; o.hitT = 0; o.wob = s.rng.next() * SIM_MISC.tau; o.swingT = s.rng.next(); o.champ = champ;
@@ -116,8 +124,9 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
   if (run.thunder > 0) run.thunder = Math.max(0, run.thunder - dt);
   const lobCd = st.lobCd * drawMult(s);
   run.shotT[0] = Math.min(lobCd, (run.shotT[0] ?? 0) + dt);
-  if (run.shotT[0] >= lobCd && inputs.aim && inputs.aim.x > BAR_X + BAR_W) {
-    let { x, y } = inputs.aim;
+  const aim = run.shotT[0] >= lobCd ? inputs.aim ?? (inputs.auto ? autoTarget(s) : null) : null;
+  if (aim && aim.x > BAR_X + BAR_W) {
+    let { x, y } = aim;
     // Each owned enchantment rolls its chance (TB-111). A moon shot's circle settles onto the nearest orc near the aim point.
     // Fang of the Coiled Serpent: every few shots is a venom arrow that splits into three (TB-193a)
     const fang = st.fang > 0 && ++s.fangN % PATH_FX.fangEvery === 0;

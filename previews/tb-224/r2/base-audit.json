@@ -1,0 +1,308 @@
+{
+ "l412": {
+  "fonts": {
+   "texts": 9,
+   "nonHeartwood": [],
+   "missingGlyphs": [],
+   "heartwoodLoaded": 1
+  },
+  "box": {
+   "hud": {
+    "l": 34,
+    "t": 4,
+    "r": 518,
+    "b": 28,
+    "w": 484,
+    "h": 24
+   },
+   "wall": {
+    "l": 34,
+    "t": 4,
+    "r": 226,
+    "b": 28,
+    "w": 192,
+    "h": 24
+   },
+   "wave": {
+    "l": 357,
+    "t": 4,
+    "r": 434,
+    "b": 28,
+    "w": 77,
+    "h": 24
+   },
+   "settings": {
+    "l": 863,
+    "t": 0,
+    "r": 911,
+    "b": 48,
+    "w": 48,
+    "h": 48
+   },
+   "mute": {
+    "l": 34,
+    "t": 352,
+    "r": 82,
+    "b": 400,
+    "w": 48,
+    "h": 48
+   },
+   "canvas": {
+    "l": 0,
+    "t": 0,
+    "r": 915,
+    "b": 412,
+    "w": 915,
+    "h": 412
+   },
+   "fs": {
+    "wall": 22,
+    "wave": 18,
+    "kills": 18,
+    "kk": 16,
+    "star": 20,
+    "set": 16
+   }
+  },
+  "settings": {
+   "texts": 26,
+   "nonHeartwood": [],
+   "missingGlyphs": [],
+   "heartwoodLoaded": 1
+  },
+  "grove": {
+   "texts": 13,
+   "nonHeartwood": [],
+   "missingGlyphs": [],
+   "heartwoodLoaded": 1
+  },
+  "satchel": {
+   "texts": 10,
+   "nonHeartwood": [],
+   "missingGlyphs": [],
+   "heartwoodLoaded": 1
+  },
+  "camp": {
+   "texts": 15,
+   "nonHeartwood": [],
+   "missingGlyphs": [],
+   "heartwoodLoaded": 1
+  },
+  "replant": {
+   "texts": 53,
+   "nonHeartwood": [],
+   "missingGlyphs": [],
+   "heartwoodLoaded": 1
+  },
+  "fallen": {
+   "texts": 24,
+   "nonHeartwood": [],
+   "missingGlyphs": [],
+   "heartwoodLoaded": 1
+  }
+ },
+ "l360": {
+  "fonts": {
+   "texts": 24,
+   "nonHeartwood": [],
+   "missingGlyphs": [],
+   "heartwoodLoaded": 1
+  },
+  "box": {
+   "hud": {
+    "l": 34,
+    "t": 4,
+    "r": 518,
+    "b": 28,
+    "w": 484,
+    "h": 24
+   },
+   "wall": {
+    "l": 34,
+    "t": 4,
+    "r": 226,
+    "b": 28,
+    "w": 192,
+    "h": 24
+   },
+   "wave": {
+    "l": 357,
+    "t": 4,
+    "r": 434,
+    "b": 28,
+    "w": 77,
+    "h": 24
+   },
+   "settings": {
+    "l": 863,
+    "t": 0,
+    "r": 911,
+    "b": 48,
+    "w": 48,
+    "h": 48
+   },
+   "mute": {
+    "l": 0,
+    "t": 0,
+    "r": 0,
+    "b": 0,
+    "w": 0,
+    "h": 0
+   },
+   "canvas": {
+    "l": 0,
+    "t": 0,
+    "r": 915,
+    "b": 360,
+    "w": 915,
+    "h": 360
+   },
+   "fs": {
+    "wall": 22,
+    "wave": 18,
+    "kills": 18,
+    "kk": 16,
+    "star": 20,
+    "set": 16
+   }
+  },
+  "settings": {
+   "texts": 41,
+   "nonHeartwood": [],
+   "missingGlyphs": [],
+   "heartwoodLoaded": 1
+  },
+  "grove": {
+   "texts": 13,
+   "nonHeartwood": [],
+   "missingGlyphs": [],
+   "heartwoodLoaded": 1
+  },
+  "satchel": {
+   "texts": 10,
+   "nonHeartwood": [],
+   "missingGlyphs": [],
+   "heartwoodLoaded": 1
+  },
+  "camp": {
+   "texts": 15,
+   "nonHeartwood": [],
+   "missingGlyphs": [],
+   "heartwoodLoaded": 1
+  },
+  "replant": {
+   "texts": 53,
+   "nonHeartwood": [],
+   "missingGlyphs": [],
+   "heartwoodLoaded": 1
+  },
+  "fallen": {
+   "texts": 24,
+   "nonHeartwood": [],
+   "missingGlyphs": [],
+   "heartwoodLoaded": 1
+  }
+ },
+ "p915": {
+  "fonts": {
+   "texts": 1,
+   "nonHeartwood": [],
+   "missingGlyphs": [],
+   "heartwoodLoaded": 1
+  },
+  "box": {
+   "hud": {
+    "l": 0,
+    "t": 0,
+    "r": 0,
+    "b": 0,
+    "w": 0,
+    "h": 0
+   },
+   "wall": {
+    "l": 0,
+    "t": 0,
+    "r": 0,
+    "b": 0,
+    "w": 0,
+    "h": 0
+   },
+   "wave": {
+    "l": 0,
+    "t": 0,
+    "r": 0,
+    "b": 0,
+    "w": 0,
+    "h": 0
+   },
+   "settings": {
+    "l": 0,
+    "t": 0,
+    "r": 0,
+    "b": 0,
+    "w": 0,
+    "h": 0
+   },
+   "mute": {
+    "l": 0,
+    "t": 0,
+    "r": 0,
+    "b": 0,
+    "w": 0,
+    "h": 0
+   },
+   "canvas": {
+    "l": 0,
+    "t": 0,
+    "r": 0,
+    "b": 0,
+    "w": 0,
+    "h": 0
+   },
+   "fs": {
+    "wall": 16,
+    "wave": 28,
+    "kills": 28,
+    "kk": 18,
+    "star": 32,
+    "set": 16
+   }
+  },
+  "settings": {
+   "texts": 1,
+   "nonHeartwood": [],
+   "missingGlyphs": [],
+   "heartwoodLoaded": 1
+  },
+  "grove": {
+   "texts": 1,
+   "nonHeartwood": [],
+   "missingGlyphs": [],
+   "heartwoodLoaded": 1
+  },
+  "satchel": {
+   "texts": 1,
+   "nonHeartwood": [],
+   "missingGlyphs": [],
+   "heartwoodLoaded": 1
+  },
+  "camp": {
+   "texts": 1,
+   "nonHeartwood": [],
+   "missingGlyphs": [],
+   "heartwoodLoaded": 1
+  },
+  "replant": {
+   "texts": 1,
+   "nonHeartwood": [],
+   "missingGlyphs": [],
+   "heartwoodLoaded": 1
+  },
+  "fallen": {
+   "texts": 1,
+   "nonHeartwood": [],
+   "missingGlyphs": [],
+   "heartwoodLoaded": 1
+  }
+ }
+}
