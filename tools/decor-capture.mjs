@@ -8,7 +8,8 @@ const [,, port = '9371', outDir = 'previews/tb-250-batch2'] = process.argv;
 mkdirSync(outDir, { recursive: true });
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const [W, H, DPR] = (process.env.SIZE ?? '1920x1080x2').split('x').map(Number);
-const ORDER = ['first_boss', 'boss_streak', 'boss_swift', 'boss_tier6', 'boss_roster', 'path_serpent', 'path_fox', 'path_magpie'];
+const ORDER = process.env.ORDER?.split(',') ?? ['first_boss', 'boss_streak', 'boss_swift', 'boss_tier6', 'boss_roster', 'path_serpent', 'path_fox', 'path_magpie'];
+// ZOOMS='name:x0,y0,x1,y1;...' (scene units) replaces the trophy/banner zoom crops
 const chrome = spawn('C:/Program Files/Google/Chrome/Application/chrome.exe', [`--remote-debugging-port=${port}`, `--user-data-dir=${tmpdir()}/tide-decor-${Date.now()}`,
   '--headless=new', '--disable-gpu', '--no-first-run', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', `--window-size=${W},${H}`, 'about:blank'], { stdio: 'ignore' });
 try {
@@ -23,7 +24,7 @@ try {
   await cdp('Page.navigate', { url: process.env.TIDE_URL ?? 'http://localhost:5199/' });
   for (let i = 0; i < 80 && !(await ev('!!(window.__tide && window.__tide.game)').catch(() => false)); i++) await sleep(500);
   await sleep(2000);
-  await ev(`(async () => { const m = window.__tide.game.state.meta; m.ach.earned.length = 0; m.camp.levels = { bowyer: 3, forge: 3, kitchen: 3, training: 3 };
+  await ev(`(async () => { const m = window.__tide.game.state.meta; m.ach.earned.length = 0; m.camp.levels = { bowyer: 3, forge: 3, kitchen: 3, training: 3 }; m.heartwood += 1000;   // the levels are seeded unpaid: fund them so the HUD's spendable Heartwood is not negative
     const b = (t) => [...document.querySelectorAll('button')].find((x) => x.textContent.trim() === t);
     b('To the grove')?.click(); await new Promise((r) => setTimeout(r, 500)); b('Camp').click(); })()`);
   // every decor image loaded before the first shot (the camp loads them lazily on first draw)
@@ -35,7 +36,8 @@ try {
   // scene rect -> css rect: the camp canvas maps scene (x, y) to css (x * k + ox, y * k + oy)
   const css = (x0, y0, x1, y1) => ev(`(() => { const s = window.__tide.campScene, r = s.canvas.getBoundingClientRect();
     const a = [${x0}, ${y0}, ${x1}, ${y1}]; return { x: r.left + s.ox + a[0] * s.k, y: r.top + s.oy + a[1] * s.k, width: (a[2] - a[0]) * s.k, height: (a[3] - a[1]) * s.k }; })()`);
-  await shot('zoom_trophies', await css(810, -125, 1090, -25));
-  await shot('zoom_banners', await css(590, 110, 790, 220));
+  const zooms = process.env.ZOOMS ? process.env.ZOOMS.split(';').map((z) => { const [n, r] = z.split(':'); return [n, r.split(',').map(Number)]; })
+    : [['zoom_trophies', [810, -125, 1090, -25]], ['zoom_banners', [590, 110, 790, 220]]];
+  for (const [n, r] of zooms) await shot(n, await css(...r));
   writeFileSync(`${outDir}/meta.json`, JSON.stringify({ size: [W, H], dpr: DPR, order: ORDER, k: await ev('window.__tide.campScene.k') }, null, 1));
 } finally { chrome.kill(); }
