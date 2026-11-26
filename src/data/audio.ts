@@ -38,7 +38,8 @@ export const AUDIO = {
   musicDuckGain: 0.1,   // music level while a ducking cue plays
   crossfade: 4,         // seconds to swap music beds on Replant
   bossFade: 1.5,        // seconds into / out of the boss track
-  pitchJitter: 0.06,    // ± playbackRate spread so repeats don't machine-gun (a cue's own `jitter` overrides it)
+  pitchJitter: 0.06,
+  gainJitter: 0.2,      // ± level spread per play on cues with several takes (orc voices), so a crowd isn't all at one level    // ± playbackRate spread so repeats don't machine-gun (a cue's own `jitter` overrides it)
   creakFrac: 0.5,       // a hit that leaves the wall below this fraction creaks instead of thuds
 } as const;
 

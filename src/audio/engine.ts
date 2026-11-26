@@ -155,7 +155,8 @@ export class AudioEngine {
     const i = pickTake(takes.length, this.lastTake.get(cue) ?? -1, Math.random()); this.lastTake.set(cue, i);
     const src = ctx.createBufferSource(); src.buffer = takes[i]!;
     src.playbackRate.value = 1 + (Math.random() * 2 - 1) * (def.jitter ?? AUDIO.pitchJitter);
-    const g = ctx.createGain(); g.gain.value = def.gain * AUDIO.sfxGain;
+    const spread = def.vars?.length ? 1 + (Math.random() * 2 - 1) * AUDIO.gainJitter : 1;
+    const g = ctx.createGain(); g.gain.value = def.gain * AUDIO.sfxGain * spread;
     src.connect(g).connect(this.master); src.start();
     if (def.duck) this.duck(now);
   }
