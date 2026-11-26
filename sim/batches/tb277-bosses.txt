@@ -1,0 +1,14 @@
+# TB-277 more bosses: candidate boss schedules, 240 sim min (480 for the plateau check), --hwbuy.
+base | --minutes 240 --hwbuy
+base-fox | --minutes 240 --hwbuy --path fox
+l75e10 | --minutes 240 --hwbuy --tune BOSS_WAVE.lateFrom=75,BOSS_WAVE.lateEvery=10
+l75e10-fox | --minutes 240 --hwbuy --path fox --tune BOSS_WAVE.lateFrom=75,BOSS_WAVE.lateEvery=10
+l75e5 | --minutes 240 --hwbuy --tune BOSS_WAVE.lateFrom=75,BOSS_WAVE.lateEvery=5
+l75e5-fox | --minutes 240 --hwbuy --path fox --tune BOSS_WAVE.lateFrom=75,BOSS_WAVE.lateEvery=5
+l50e10 | --minutes 240 --hwbuy --tune BOSS_WAVE.lateFrom=50,BOSS_WAVE.lateEvery=10
+l50e10-fox | --minutes 240 --hwbuy --path fox --tune BOSS_WAVE.lateFrom=50,BOSS_WAVE.lateEvery=10
+e20 | --minutes 240 --hwbuy --tune BOSS_WAVE.every=20
+e20-fox | --minutes 240 --hwbuy --path fox --tune BOSS_WAVE.every=20
+base-480 | --minutes 480 --hwbuy
+l75e10-480 | --minutes 480 --hwbuy --tune BOSS_WAVE.lateFrom=75,BOSS_WAVE.lateEvery=10
+l75e5-480 | --minutes 480 --hwbuy --tune BOSS_WAVE.lateFrom=75,BOSS_WAVE.lateEvery=5

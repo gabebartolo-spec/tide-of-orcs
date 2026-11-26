@@ -5,7 +5,7 @@ import { NODES, Branch } from '../data/skillTree';
 import { HW_NODES, HW_FX } from '../data/heartwood';
 import { BUILDINGS, BuildingId } from '../data/camp';
 import { ORC_KINDS } from '../data/orcs';
-import { BOSS_ROSTER, BOSS_WAVE, TIERS, bossFor } from '../data/bosses';
+import { BOSS_ROSTER, BOSS_WAVE, TIERS, bossCount, bossFor, bossWaveAt } from '../data/bosses';
 import { MYTHICS, SETS } from '../data/lootTables';
 import { ORC_CAP } from '../data/balance';
 import { SimEvent } from './events';
@@ -176,13 +176,13 @@ export function trackAchievements(s: SimState, events: readonly SimEvent[], pend
         break;
       }
       case 'bossReady':
-        if (Math.floor(s.run.wave / BOSS_WAVE.every) - s.run.bossDone >= ACH_N.bossesWaiting) earn(s, 'secret_hoarder', out);
+        if (bossCount(s.run.wave) - s.run.bossDone >= ACH_N.bossesWaiting) earn(s, 'secret_hoarder', out);
         break;
       case 'bossStart': r.bossHit = false; r.champKills = 0; break;
       case 'bossEnd': {
         if (!e.cleared) { if (r.champKills === 0) earn(s, 'secret_let_march', out); break; }
         r.bosses++; bump(s, 'boss'); sweep = true;
-        const boss = bossFor(s.run.bossDone * BOSS_WAVE.every).id;
+        const boss = bossFor(bossWaveAt(s.run.bossDone)).id;
         if (!a.bosses.includes(boss)) a.bosses.push(boss);
         if (!r.bossHit) earn(s, 'boss_unscathed', out);
         if (BOSS_WAVE.secs - e.secs >= ACH_N.swiftSecsLeft) earn(s, 'boss_swift', out);

@@ -6,7 +6,24 @@ export const BOSS_WAVE = {
   secs: 60,       // the challenge lasts this long
   clearLoot: 40,  // clearing every orc in time pays this × waveLoot(w) starlight
   hwPerTier: 3,   // …and hwPerTier × (wave ÷ every) Heartwood: 3 at wave 25, 6 at 50 (P-142)
+  lateFrom: 0,    // TB-277: past this wave (a multiple of every) boss waves come every lateEvery waves instead; 0 = off
+  lateEvery: 10,
 } as const;
+
+const lateOn = (): boolean => BOSS_WAVE.lateFrom > 0;
+/** Boss waves at or below this wave (TB-277): every `every` waves, then every `lateEvery` past `lateFrom`. */
+export function bossCount(wave: number): number {
+  const { every, lateFrom, lateEvery } = BOSS_WAVE;
+  if (!lateOn() || wave <= lateFrom) return Math.floor(wave / every);
+  return Math.floor(lateFrom / every) + Math.floor((wave - lateFrom) / lateEvery);
+}
+/** The wave of the nth boss wave of a run (1 = the first). */
+export function bossWaveAt(n: number): number {
+  const { every, lateFrom, lateEvery } = BOSS_WAVE, early = Math.floor(lateFrom / every);
+  return lateOn() && n > early ? lateFrom + (n - early) * lateEvery : n * every;
+}
+/** True when reaching this wave unlocks a boss wave. */
+export const isBossWave = (wave: number): boolean => bossCount(wave) > bossCount(wave - 1);
 
 /** Heartwood a cleared boss pays at this wave (P-142). The only source of Heartwood (TB-171). */
 export const bossHw = (wave: number): number => BOSS_WAVE.hwPerTier * Math.max(1, Math.floor(wave / BOSS_WAVE.every));
@@ -53,9 +70,9 @@ export const BOSS_ROSTER = [
 export type BossEntry = (typeof BOSS_ROSTER)[number];
 export type BossId = BossEntry['id'];
 
-/** The roster boss a boss wave at this wave brings: index wave ÷ every − 1 (25 → 0), repeating; below 25 counts as the first. */
+/** The roster boss a boss wave at this wave brings: the nth boss wave brings entry n − 1 (25 → 0), repeating; below the first counts as the first. */
 export function bossFor(wave: number): BossEntry {
-  const n = Math.max(0, Math.floor(wave / BOSS_WAVE.every) - 1);
+  const n = Math.max(0, bossCount(wave) - 1);
   return BOSS_ROSTER[n % BOSS_ROSTER.length]!;
 }
 

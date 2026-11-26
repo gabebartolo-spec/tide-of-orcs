@@ -8,7 +8,7 @@ import { PATH_FX } from '../data/paths';
 import { FX, bounce, damage, drawMult, rootOrc, impact, lob, nearestOrc, rollFx, shoot, starfall, takenMult, unitHit, volley } from './combat';
 import { barricadeHit, barricadeRegen } from './barricade';
 import { bossStep } from './boss';
-import { BOSS_WAVE, tierHp, tierLoot } from '../data/bosses';
+import { isBossWave, tierHp, tierLoot } from '../data/bosses';
 import { engagedVanguard, hurtVanguard, vanguardStep } from './vanguard';
 import { fireballLands, shamanCast } from './shaman';
 
@@ -43,7 +43,7 @@ export function step(s: SimState, dt: number, inputs: Inputs, ev: EventBus): voi
   s.tick++; s.t += dt; run.runTime += dt;
 
   run.waveT += dt;
-  if (run.waveT >= WAVE_LEN) { run.waveT -= WAVE_LEN; run.wave++; s.meta.bestWave = Math.max(s.meta.bestWave, run.wave); s.meta.checkpoint = Math.max(s.meta.checkpoint, checkpointFor(run.wave)); ev.push({ t: 'wave', wave: run.wave }); if (run.wave % BOSS_WAVE.every === 0) ev.push({ t: 'bossReady' }); }
+  if (run.waveT >= WAVE_LEN) { run.waveT -= WAVE_LEN; run.wave++; s.meta.bestWave = Math.max(s.meta.bestWave, run.wave); s.meta.checkpoint = Math.max(s.meta.checkpoint, checkpointFor(run.wave)); ev.push({ t: 'wave', wave: run.wave }); if (isBossWave(run.wave)) ev.push({ t: 'bossReady' }); }
 
   // each kind marches on its own clock from its join wave (TB-158); a boss wave pauses them all and plays its script instead
   bossStep(s, ev, dt);
