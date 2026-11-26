@@ -7,10 +7,12 @@ describe('elf shot loop (TB-202)', () => {
     expect(FR(chargeT(1, DUR))).toBe(31);
     expect(FR(chargeT(0, DUR))).toBe(0);
   });
-  it('after a lob the full draw fades into frame 0 over the release time, then the cycle runs on its own', () => {
-    const mid = elfLayers(0.05, 0.075, 1, DUR, 0.15);
-    expect(mid.map((l) => [l.state, FR(l.t), l.alpha])).toEqual([['attack', 31, 1], ['attack', 1, 0.5]]);
-    const done = elfLayers(0.5, 0.2, 1, DUR, 0.15);
+  it('after a lob the draw scrubs back from full draw to the new charge over the release time, one pose only', () => {
+    const start = elfLayers(0, 0, 1, DUR, 0.25);
+    expect(start.map((l) => [l.state, FR(l.t), l.alpha])).toEqual([['attack', 31, 1]]);
+    const mid = elfLayers(0.05, 0.125, 1, DUR, 0.25);
+    expect(mid).toHaveLength(1); expect(FR(mid[0]!.t)).toBe(16);
+    const done = elfLayers(0.5, 0.3, 1, DUR, 0.25);
     expect(done).toHaveLength(1); expect(FR(done[0]!.t)).toBe(16);
   });
   it('aim start and stop crossfade idle and draw over the aim time', () => {
