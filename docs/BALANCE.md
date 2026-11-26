@@ -157,10 +157,35 @@ Report columns per minute: wave, starlight, kills/min, kills, wall %, vanguard c
 
 ## Proposed
 
+### P-276 · Balance batches B to D and the Fox path (2026-11-26, TB-276) · applied: Foxden 0.10 (director 26 Nov, decision card "Apply Foxden +10%")
+All runs: 90 sim min (240 for the ladder), `--hwbuy`, seeds 1 to 5, main at 7054ef1 plus the sim tools of this PR. Run on GitHub (`npm run batch`, `.github/workflows/balance-batch.yml`); every run's numbers are in `sim/results/<batch>/runs.csv`. **mean20** is the mean of the last 20 fall waves, smoother than best wave (which steps at boss walls).
+
+**Path baseline rerun.** The sim changed since batch A (12 Nov: TB-266 spawn rows, TB-269 to TB-274), so the 61.4 baseline is stale.
+
+| build | best wave | mean20 | play min to wave 70 | 240 min best |
+|---|---|---|---|---|
+| no path | 72.8 | 69.6 | 77.5 (4 of 5 seeds) | 76.4 |
+| Serpent | 79.4 (+9.1%) | 77.5 | 58.6 | 82.8 (+8.4%) |
+| Fox | 80.0 (+9.9%) | 77.8 (+11.8%) | 53.0 | 85.0 (+11.3%) |
+| Magpie | 78.0 (+7.1%) | 76.3 | 62.0 | 83.0 (+8.6%) |
+| **Fox, Foxden 0.10 (proposed)** | 78.6 (+8.0%) | 76.9 | 53.4 | 82.6 (+8.1%) |
+
+The three paths now sit within 2.5% of each other; Fox leads, most clearly in long sessions (+11.3% at 240 min, the only path past 10%) and reaches wave 70 first.
+
+**Fox knock-out** (each number set to 0, best wave vs 80.0): Foxden `denDmg` −5.6, Pack Leader `packCap` −4.0, Cunning `cunningRate` −1.8, Fox Hide `hideHp` −1.6, starting bonus `startFox` −1.4, faster return `returnCut` +1.8 (noise). `foxMult`, `foxGrow`, `packBuff`, `setFoxDmg`, `setReturn` change nothing: the Foxfire Pack set and the Foxfire Tail never drop within 240 min, so those numbers are still untested (same for the other paths' sets and mythics).
+
+**Fox fix candidates:** `denDmg` 0.12: 80.8 / 86.8 at 240 min (no change inside the noise). `denDmg` 0.10: 78.6 / 82.6, level with Serpent and Magpie at both lengths; with a slow human (`--human 3`) 77.2. `startFox` 0.05 with `denDmg` 0.12: 78.2. **Applied: `PATH_FX.denDmg` 0.15 → 0.10** (Foxden +10% vanguard and companion damage per rank, was +15%). Nothing else changes.
+
+**Batch B, build matrix** (path × branch focus, camp, slow human; 32 builds): no build leaves the seed noise (best-wave spread per build is 5 to 25 waves across seeds). Camp upgrades give +1 to +5 best wave on every path, Bow focus +4.8 with no path and nothing with one, Armoury+Grove focus 0 to −4, `--human 3` −1 to −3 and reaches each wave 4 to 6 min later. Nothing to change.
+
+**Batch C, prestige ladder.** 240-min runs gain only +3 to +5 best waves over 90 min. Every run clears the wave-75 boss, then loops: checkpoint 75, falls at 76 to 78 within 0.3 to 1 min, Heartwood stops (next boss is wave 100). Heartwood earned in 240 min buys 3 nodes (Early Dawn, Far Sight, Old Friend); the other eight are never bought. **Late-save test** (each node at full rank from the start, best wave vs 72.8): Far Sight +2.2, Glimmerwork and Heirloom +1.8, Standing Orders +1.6 (and reaches wave 30 five min sooner), Old Friend +0.8, Warlords, Deep Satchel, Fortune and Stout Timber within ±0.8, Warboss Tithe −1.0, Early Dawn −1.6. All eleven at full rank: +5.0 best wave, first boss at 16.7 min instead of 25.5. The Heartwood tree is worth little against the late wall, and past wave 75 nothing more is earned: this is the TB-184 finding ("55+ needs a new late progression source") moved up 20 waves. A design question, not a number change; new row TB-277.
+
+**Batch D, arena stress** (each path's 90-min player, `npm run arena -- --load … --path p --wave w --tide --orcs grunt:0 --seeds 5 --secs 180`): seconds the wall stands at waves 70 / 75 / 80 / 85: no path 31 / 66 / 32 / 44, Serpent 46 / 60 / 37 / 24, Fox 115 / 52 / 53 / 43, Magpie 131 / 52 / 80 / 48. Past wave 75 every path's wall stands under 90 s; no path breaks the late wall.
+
 ### P-193 Specialisation paths (TB-193a): placeholder, untuned
 No sims run (director, 3 Nov). Every number lives in `PATH_FX` (`src/data/paths.ts`); node costs in `src/data/skillTree.ts`.
 - Starting bonus: Serpent crit +0.05; Fox vanguard and companion damage ×1.1; Magpie starlight ×1.1.
-- Nodes per rank: coil crit +0.04; viper crit mult +0.3; venom 0.5 × dmg per s for 3 s; toxin poison ×(1+0.3r); gaze radius ×(1+0.08r); foxden vanguard and companion damage ×(1+0.15r); foxhide vanguard HP ×(1+0.2r); foxrun respawn ×0.88^r; foxpack +1 cap; cunning companion rate ×(1+0.1r); magpie starlight ×(1+0.1r); glitter Item Find +0.05; trinket luck +0.03; haggle reroll ×(1−0.1r); shiny salvage ×(1+0.2r).
+- Nodes per rank: coil crit +0.04; viper crit mult +0.3; venom 0.5 × dmg per s for 3 s; toxin poison ×(1+0.3r); gaze radius ×(1+0.08r); foxden vanguard and companion damage ×(1+0.1r) (P-276, was 0.15); foxhide vanguard HP ×(1+0.2r); foxrun respawn ×0.88^r; foxpack +1 cap; cunning companion rate ×(1+0.1r); magpie starlight ×(1+0.1r); glitter Item Find +0.05; trinket luck +0.03; haggle reroll ×(1−0.1r); shiny salvage ×(1+0.2r).
 - Sets: Serpent's Coil crit +0.05 / venom 0.5 / burst 1 × dmg within 60 px; Foxfire Pack damage ×1.15 / respawn ×0.7 / vanguard damage +0.1 per companion; Magpie's Hoard starlight ×1.15 / shard 10% at 2× / every 5th drop +1 rarity.
 - Mythics: Fang every 5th shot venom (0.5 × dmg per s) +2 split lobs; Foxfire Tail bite 0.5 × dmg × (1 + 0.25 per companion); Talon +1× starlight on arrow kills, 2% extra drop roll.
 

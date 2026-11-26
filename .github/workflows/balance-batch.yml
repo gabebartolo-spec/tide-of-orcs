@@ -1,0 +1,69 @@
+# Balance batches (TB-276): long sim runs go to GitHub (director, 26 Nov). Push a claude/** branch that changes
+# sim/batches/RUN (one line: the jobs file, then optional seeds, e.g. `sim/batches/b-matrix.txt 1-5`); each label in
+# that file runs as its own job over the seeds. Read the summary table at the end of each job's log, or download the
+# batch-<label> artifact (every report plus runs.csv).
+name: Balance batch
+on:
+  push:
+    branches: ['claude/**']
+    paths: ['sim/batches/RUN']
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      labels: ${{ steps.l.outputs.labels }}
+      file: ${{ steps.l.outputs.file }}
+      seeds: ${{ steps.l.outputs.seeds }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+        env: { ELECTRON_SKIP_BINARY_DOWNLOAD: 1 }
+      - id: l
+        run: |
+          read -r file seeds < sim/batches/RUN
+          echo "file=$file" >> "$GITHUB_OUTPUT"
+          echo "seeds=${seeds:-1-5}" >> "$GITHUB_OUTPUT"
+          echo "labels=$(npx tsx sim/batch.ts "$file" --list)" >> "$GITHUB_OUTPUT"
+  run:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        label: ${{ fromJson(needs.plan.outputs.labels) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+        env: { ELECTRON_SKIP_BINARY_DOWNLOAD: 1 }
+      - run: npx tsx sim/batch.ts "${{ needs.plan.outputs.file }}" --only "${{ matrix.label }}" --seeds "${{ needs.plan.outputs.seeds }}" --jobs "$(nproc)" --out "sim/out/batch-${{ matrix.label }}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: 'batch-${{ matrix.label }}', path: 'sim/out/batch-${{ matrix.label }}' }
+      - name: Results
+        if: always()
+        run: cat "sim/out/batch-${{ matrix.label }}/runs.csv" "sim/out/batch-${{ matrix.label }}/summary.md" || true
+  collect:
+    # Commits every job's runs.csv and summary into sim/results/<jobs file>/ on the branch, so results can be read with git.
+    needs: [plan, run]
+    if: always()
+    runs-on: ubuntu-latest
+    permissions: { contents: write }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: { pattern: 'batch-*', path: art }
+      - run: |
+          name=$(basename "${{ needs.plan.outputs.file }}" .txt); d="sim/results/$name"; mkdir -p "$d"
+          first=1; : > "$d/runs.csv"; : > "$d/summary.md"
+          for f in art/*/runs.csv; do if [ $first = 1 ]; then cat "$f" >> "$d/runs.csv"; first=0; else tail -n +2 "$f" >> "$d/runs.csv"; fi; done
+          echo '| label | best | mean20 | min to w30 | w50 | w70 | boss min | hw | best min–max |' >> "$d/summary.md"; echo '|---|---|---|---|---|---|---|---|---|' >> "$d/summary.md"
+          for f in art/*/summary.md; do tail -n +3 "$f" >> "$d/summary.md"; done
+          git config user.name "github-actions[bot]"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$d"; git commit -m "sim: batch results for $name (TB-276)" || exit 0
+          for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done

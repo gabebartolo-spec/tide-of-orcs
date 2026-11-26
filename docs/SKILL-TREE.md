@@ -137,7 +137,7 @@ A path branch hangs off the root of its host branch. Its nodes are buyable, and 
 | venom | Venom | Bow | coil | 1 | 1500 | — | 500 | 40 | serpent | Crits poison for 3 s at 50% of arrow damage per second |
 | toxin | Toxin | Bow | venom | 5 | 1200 | 2.0 | 420 | 30 | serpent | Poison +30% |
 | gaze | Serpent's Gaze | Bow | viper | 3 | 900 | 2.2 | 280 | 60 | serpent | Strike circle +8% |
-| foxden | Den Mother | Vanguard | root | 5 | 400 | 2.0 | 80 | 450 | fox | Vanguard and companions +15% damage |
+| foxden | Den Mother | Vanguard | root | 5 | 400 | 2.0 | 80 | 450 | fox | Vanguard and companions +10% damage (TB-276, was +15%) |
 | foxhide | Fox Hide | Vanguard | foxden | 5 | 500 | 2.0 | 80 | 530 | fox | Vanguard +20% health |
 | foxrun | Swift Return | Vanguard | foxden | 5 | 500 | 2.0 | 150 | 500 | fox | Fallen vanguard return 12% faster (compounding) |
 | foxpack | Pack Tactics | Vanguard | foxhide | 2 | 1500 | 2.6 | 80 | 610 | fox | +1 vanguard may stand at once (needs Muster) |

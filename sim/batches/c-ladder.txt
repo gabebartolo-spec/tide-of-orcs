@@ -1,0 +1,19 @@
+# Batch C, prestige ladder (TB-276): 240-min runs per path (Heartwood income over a long session), then each Heartwood node
+# owned at full rank from the start (the late-save test for nodes the 90-min runs never reach). --hwbuy throughout.
+ladder-none | --minutes 240 --hwbuy
+ladder-serpent | --minutes 240 --hwbuy --path serpent
+ladder-fox | --minutes 240 --hwbuy --path fox
+ladder-magpie | --minutes 240 --hwbuy --path magpie
+hw-none | --minutes 90 --hwbuy
+hw_dawn | --minutes 90 --hwbuy --hw hw_dawn:5
+hw_wolf | --minutes 90 --hwbuy --hw hw_wolf:1
+hw_timber | --minutes 90 --hwbuy --hw hw_timber:3
+hw_orders | --minutes 90 --hwbuy --hw hw_orders:2
+hw_boss | --minutes 90 --hwbuy --hw hw_boss:3
+hw_find | --minutes 90 --hwbuy --hw hw_find:3
+hw_fortune | --minutes 90 --hwbuy --hw hw_fortune:3
+hw_satchel | --minutes 90 --hwbuy --hw hw_satchel:1
+hw_tithe | --minutes 90 --hwbuy --hw hw_tithe:1
+hw_heirloom | --minutes 90 --hwbuy --hw hw_heirloom:1
+hw_glimmer | --minutes 90 --hwbuy --hw hw_glimmer:1
+hw-all | --minutes 90 --hwbuy --hw hw_dawn:5,hw_wolf:1,hw_timber:3,hw_orders:2,hw_boss:3,hw_find:3,hw_fortune:3,hw_satchel:1,hw_tithe:1,hw_heirloom:1,hw_glimmer:1
