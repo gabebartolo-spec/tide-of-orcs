@@ -2,7 +2,7 @@ import { NodeId } from '../data/skillTree';
 import { HW_FX, HwLevels } from '../data/heartwood';
 import { SATCHEL, SPOILS_FX } from '../data/lootTables';
 import { FOE_FX, OrcKind } from '../data/orcs';
-import { ARROWS, BARRICADE, ELF_FX, LOB, NODE_FX, PLAYER, SHOT_FX, SOURCES, STACKING, UNIT_FX, VANGUARD } from '../data/balance';
+import { ARROWS, BARRICADE, ELDER, ELF_FX, LOB, NODE_FX, PLAYER, SHOT_FX, SOURCES, STACKING, UNIT_FX, VANGUARD } from '../data/balance';
 
 export type Levels = Partial<Record<NodeId, number>>;
 
@@ -85,8 +85,9 @@ export function deriveStats(lv: Levels, hw: HwLevels = {}): Stats {
     dmg: fx(UNIT_DMG[u as Unit] ?? UNIT_FX.dmg, L(d)), rate: fx(UNIT_FX.rate, L(r)),
     crit: UNIT_FX.critPerRank * L(c), critMult: UNIT_FX.critMult0 + UNIT_FX.critxPerRank * L(x), spd: m ? fx(UNIT_FX.spd, L(m)) : 1,
   }])) as Record<Unit, UnitFx>;
+  const E = Math.pow(ELDER.dmg, L('elder')), EV = Math.pow(ELDER.vanHp, L('elder'));
   return {
-    dmg: PLAYER.baseDmg * fx(NODE_FX.sharpDmg, L('sharp')),
+    dmg: E * PLAYER.baseDmg * fx(NODE_FX.sharpDmg, L('sharp')),
     fireRate: PLAYER.baseFireRate * fx(NODE_FX.drawRate, L('draw')),
     lobCd: LOB.cd / fx(NODE_FX.drawRate, L('draw')),
     radius: LOB.radius * fx(NODE_FX.wideRadius, L('wide')),
@@ -122,20 +123,20 @@ export function deriveStats(lv: Levels, hw: HwLevels = {}): Stats {
       spawn: Math.pow(FOE_FX.spawn, L(swarm)) * (on === null ? 1 : L(on) ? FOE_FX.summonSpawn : FOE_FX.unsummonedSpawn),
     }])) } as Record<OrcKind, Foe>,
     kin,
-    wolf: L('wolf') ? SOURCES.wolf.base * units.wolf.dmg * kin : 0,
+    wolf: L('wolf') ? SOURCES.wolf.base * units.wolf.dmg * kin * E : 0,
     archers: L('ranger') + L('warden'),
     hawk: L('hawk') > 0,
     treant: L('treant') > 0,
-    knives: L('knives') ? { rate: fx(NODE_FX.knifeRate, L('knifespd')) / SOURCES.knives.cd, dmg: SOURCES.knives.base * fx(SHOT_FX.dmg, L('knifedmg')) * kin } : null,
+    knives: L('knives') ? { rate: fx(NODE_FX.knifeRate, L('knifespd')) / SOURCES.knives.cd, dmg: SOURCES.knives.base * fx(SHOT_FX.dmg, L('knifedmg')) * kin * E } : null,
     storm: L('storm') > 0,
-    ballista: L('ballista') ? SOURCES.ballista.base * fx(NODE_FX.boltDmg, L('bolt')) * kin : 0,
+    ballista: L('ballista') ? SOURCES.ballista.base * fx(NODE_FX.boltDmg, L('bolt')) * kin * E : 0,
     barMax: BARRICADE.baseHp * (1 + HW_FX.timberPerRank * (hw.hw_timber ?? 0)) * fx(BARRICADE.timberMult, L('timber')),
     barRegen: BARRICADE.regenPerRank * L('repair'),
     spikes: BARRICADE.spikesPerRank * L('spikes'),
     bulwark: L('bulwark') > 0,
     muster,
     vanCap: muster ? VANGUARD.baseCap + L('ranks') : 0,
-    vanHp: fx(VANGUARD.hpPerShield, L('shield')),
+    vanHp: EV * fx(VANGUARD.hpPerShield, L('shield')),
     vanDmg: kin,
     vanMend: VANGUARD.mendPerRank * L('mend'),
     vanRespawn: fx(VANGUARD.respawnPerRank, L('swiftmuster')),

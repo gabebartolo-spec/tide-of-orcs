@@ -3,7 +3,7 @@
 export type Branch = 'Bow' | 'Companions' | 'Armoury' | 'Grove' | 'Barricade' | 'Vanguard' | 'Spoils';
 
 export type NodeId =
-  | 'root' | 'sharp' | 'draw' | 'crit' | 'multi' | 'pierce' | 'moon' | 'wide'
+  | 'root' | 'elder' | 'sharp' | 'draw' | 'crit' | 'multi' | 'pierce' | 'moon' | 'wide'
   | 'wolf' | 'fangs' | 'ranger' | 'warden' | 'hawk' | 'treant' | 'bond'
   | 'knives' | 'knifespd' | 'fire' | 'storm' | 'ballista' | 'bolt'
   | 'bounce' | 'starfall' | 'frost' | 'shatter' | 'shock' | 'stun'
@@ -35,6 +35,7 @@ const n = (id: NodeId, name: string, branch: Branch, parent: NodeId | null, max:
 
 export const NODES: readonly SkillNode[] = [
   n('root', 'Waking', 'Grove', null, 1, 0, 1, 700, 890, 'An elf, a bow, a wall of timber, an endless tide. Begin.'),
+  n('elder', 'Elder Strength', 'Grove', 'root', 999, 2000, 1.25, 700, 960, 'All damage and vanguard health +10% per rank. No cap.'),
   n('sharp', 'Sharpened Tips', 'Bow', 'root', 10, 12, 1.55, 610, 530, '+25% arrow damage per rank.'),
   n('draw', 'Quick Draw', 'Bow', 'sharp', 8, 12, 1.7, 500, 490, '+15% draw speed per rank.'),
   n('wide', 'Wide Volley', 'Bow', 'sharp', 5, 40, 1.8, 595, 470, 'Your arrow strikes a circle 20% wider per rank.'),

@@ -26,7 +26,7 @@ import { step } from '../src/sim/step';
 import { buy, canBuy, costOf } from '../src/sim/tree';
 import { canReplant, replant } from '../src/sim/prestige';
 import { NODES, NodeId } from '../src/data/skillTree';
-import { ARROWS, BARRICADE, CHECKPOINT, COST_WAVE, HP_RAMP, LOB, NODE_FX, PLAYER, SHOT_FX, SOURCES, STACKING, STEP, UNIT_FX, VANGUARD, waveHP } from '../src/data/balance';
+import { ARROWS, BARRICADE, CHECKPOINT, COST_WAVE, ELDER, HP_RAMP, LOB, NODE_FX, PLAYER, SHOT_FX, SOURCES, STACKING, STEP, UNIT_FX, VANGUARD, waveHP } from '../src/data/balance';
 import { BOSS_WAVE, TIERS } from '../src/data/bosses';
 import { AFFIX, DROP, MYTHIC_FX, MYTHICS, RARITY } from '../src/data/lootTables';
 import { SLOTS } from '../src/data/loot';
@@ -50,7 +50,7 @@ const lootPolicy = arg('loot', 'greedy') as EquipPolicy; let drops = 0;
 const loaded = arg('load', '') ? JSON.parse(readFileSync(arg('load', ''), 'utf-8')) as { tier: number; levels: SimState['run']['levels']; meta: SimState['meta'] } : null;
 const s = createState(seed, undefined, loaded ? loaded.meta : undefined); const ev = new EventBus(); s.lootPolicy = lootPolicy;
 const bare = args.includes('--bare');
-const TUNE: Record<string, unknown> = { ARROWS, SOURCES, VANGUARD, BOSS_WAVE, TIERS, RARITY, DROP, AFFIX, MYTHIC_FX, PLAYER, LOB, BARRICADE, NODE_FX, COST_WAVE, STACKING, SHOT_FX, UNIT_FX, CHECKPOINT, ORC_TYPES, ORC_FX, FIREBALL, HP_RAMP, FOE_FX };
+const TUNE: Record<string, unknown> = { ARROWS, SOURCES, VANGUARD, BOSS_WAVE, TIERS, RARITY, DROP, AFFIX, MYTHIC_FX, PLAYER, LOB, BARRICADE, NODE_FX, COST_WAVE, STACKING, SHOT_FX, UNIT_FX, CHECKPOINT, ORC_TYPES, ORC_FX, FIREBALL, HP_RAMP, FOE_FX, ELDER };
 for (const kv of arg('tune', '').split(',').filter(Boolean)) {
   const [path, v] = kv.split('='), keys = path!.split('.'), last = keys.pop()!;
   const obj = keys.reduce<Record<string, unknown>>((o, k) => (o === TUNE ? TUNE[k] : o[k]) as Record<string, unknown>, TUNE);
