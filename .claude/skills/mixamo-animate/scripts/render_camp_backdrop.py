@@ -4,6 +4,7 @@
 # rest of the scene held out and the ground a shadow catcher, so the PNG carries the building plus its real contact shadow.
 # post_camp.py crops the PNGs, writes public/decor/camp/*.webp and prints the CAMP_ART rects for src/data/presentation.ts.
 # blender -b --factory-startup --python render_camp_backdrop.py -- <out dir>   env: PX (4), SAMPLES (96), ONLY (plate,forge3,elk,...)
+# Passes trophy_<boss> and banner_<path> (TB-250): camp decor shown once earned; post_decor.py crops them.
 # Pass "elk" (TB-208) renders the elk's graze clip frame by frame to <out>/elk/NNN.png + elk.json; post_elk.py packs them.
 import bpy, bmesh, math, os, random, sys, json
 from mathutils import Vector, Euler
@@ -493,6 +494,101 @@ for bid, (x, foot, frow) in SPOTS.items():
         sc.render.filepath = os.path.join(out, n + ".png"); bpy.ops.render.render(write_still=True)
         rects[n] = [sc.render.border_min_x, sc.render.border_max_x, sc.render.border_min_y, sc.render.border_max_y]
         for o in ms: bpy.data.objects.remove(o)
+# ---- TB-250 camp decor: boss trophies and path banners, one pass each so each shows on its own once earned ------------
+# Trophy: a boss head cut by build_trophy.py (tide-assets/trophies/<boss>.blend) on a shelf in front of a round wooden
+# plaque (Quaternius Fantasy Props MegaKit "Shield_Wooden", CC0) on a post. Banner: a pole with a crossbar and the
+# MegaKit's pointed "Banner_2_Cloth" in the path's deep tint, its sigil (drawSigil, exported to tide-assets/banners) on the
+# cloth. Sizes are in metres at the scene's scale (the elk is 0.45 m nose to tail); everything faces the camera (-X).
+from mathutils import Matrix
+QUAT = r"C:\Users\DANTE\Documents\tide-assets\quaternius\fantasy_props_megakit\x\Exports\glTF"
+TROPHIES = r"C:\Users\DANTE\Documents\tide-assets\trophies"; BANNERS = r"C:\Users\DANTE\Documents\tide-assets\banners"
+DECOR = {   # name: (scene x, scene y, source): trophies between the kitchen and the training ground, clear of the third elk and the materials panel, banners on the open ground above the road
+    "trophy_warboss": (875, -28, "warboss"), "trophy_ogre": (918, -40, "ogre"), "trophy_orc": (961, -32, "orc"),
+    "trophy_raider": (1004, -44, "raider"), "trophy_ogre_creature": (1047, -34, "ogre_creature"),
+    "banner_serpent": (640, 192, "serpent"), "banner_fox": (700, 186, "fox"), "banner_magpie": (760, 192, "magpie"),
+}
+PATH_DEEP = {"serpent": (47, 90, 62), "fox": (122, 63, 30), "magpie": (40, 50, 74)}   # PATH_TINT[path].deep (src/render/palette.ts)
+TROPHY_HEAD_W, PLAQUE_D, POST_H, POST_R = 0.2, 0.26, 0.42, 0.018
+IRON = mat("iron", (64, 62, 60), (84, 80, 76), 40.0, 0.1)
+BANNER_H, BANNER_W, POLE_R = 0.66, 0.17, 0.011
+def flat_props(ms):
+    for mt in {s_.material for o in ms for s_ in o.material_slots if s_.material}:
+        if not mt.node_tree: continue
+        for nd in mt.node_tree.nodes:
+            if nd.type == "BSDF_PRINCIPLED":
+                for l in list(nd.inputs["Roughness"].links) + list(nd.inputs["Metallic"].links): mt.node_tree.links.remove(l)
+                nd.inputs["Roughness"].default_value = 1.0; nd.inputs["Metallic"].default_value = 0.0
+                if "Specular IOR Level" in nd.inputs: nd.inputs["Specular IOR Level"].default_value = 0.0
+def import_baked(path, k, rotz):
+    """Import a glTF, bake its transforms, scale by k and turn it rotz about Z. Returns its meshes (not in ENV)."""
+    before = set(sc.objects); bpy.ops.import_scene.gltf(filepath=path)
+    new = [o for o in sc.objects if o not in before]; ms = [o for o in new if o.type == "MESH"]
+    for o in ms:
+        mw = o.matrix_world.copy(); o.parent = None; o.data.transform(Matrix.Rotation(rotz, 4, "Z") @ Matrix.Scale(k, 4) @ mw); o.matrix_world.identity()
+    for o in new:
+        if o not in ms: bpy.data.objects.remove(o)
+    flat_props(ms); return ms
+def own(o):   # a helper-made part belongs to the decor pass, not the held-out environment
+    ENV.remove(o); return o
+def build_trophy(src):
+    # plaque: the shield's face is -Y; turn it to face -X, its centre at POST_H
+    sh = import_baked(os.path.join(QUAT, "Shield_Wooden.gltf"), PLAQUE_D / 0.614, -math.pi / 2)
+    for o in sh:
+        o.data.transform(Matrix.Translation((0, 0, POST_H)))
+        for sl in o.material_slots:   # its rim's vertex-colour metal reads violet in this light: plain dark iron
+            if sl.material and "Metal" in sl.material.name: sl.material = IRON
+    parts = sh + [own(cyl(Vector((0.03, 0, 0)), POST_R, POST_R * 0.85, POST_H + PLAQUE_D * 0.42, WOOD, 10))]
+    with bpy.data.libraries.load(os.path.join(TROPHIES, src + ".blend")) as (df, dt): dt.objects = list(df.objects)
+    hd = [o for o in dt.objects if o and o.type == "MESH"]
+    P = [v.co.copy() for o in hd for v in o.data.vertices]; s = TROPHY_HEAD_W / (max(p.y for p in P) - min(p.y for p in P))
+    hz = (max(p.z for p in P) - min(p.z for p in P)) * s
+    zb = POST_H - hz * 0.5 - 0.01                     # the head centred on the plaque, a little low
+    xb = -0.035 - max(p.x for p in P) * s             # its back against the plaque's face
+    for o in hd:
+        sc.collection.objects.link(o); o.data.transform(Matrix.Translation((xb, 0, zb)) @ Matrix.Scale(s, 4)); o.matrix_world.identity()
+    xs = [p.x * s + xb for p in P]                    # a shelf under the head's cut neck
+    parts.append(own(box(Vector(((min(xs) + max(xs)) / 2 + 0.005, 0, zb - 0.016)), ((max(xs) - min(xs)) * 0.9, TROPHY_HEAD_W * 0.55, 0.016), WOOD)))
+    return parts + hd
+def build_banner(path):
+    parts = [own(cyl(Vector((0, 0, 0)), POLE_R, POLE_R * 0.8, BANNER_H, WOOD, 10))]
+    parts.append(own(cyl(Vector((0, -BANNER_W * 0.62, BANNER_H - 0.03)), POLE_R * 0.7, POLE_R * 0.7, BANNER_W * 1.24, WOOD, 8, (-math.pi / 2, 0, 0))))
+    parts.append(own(blob(Vector((0, 0, BANNER_H + 0.006)), POLE_R * 1.5, WOOD_END, 1.0, 1, 0.0)))
+    cl = import_baked(os.path.join(QUAT, "Banner_2_Cloth.gltf"), BANNER_W / 0.81, -math.pi / 2)
+    for o in cl: o.data.transform(Matrix.Translation((-POLE_R * 1.2, 0, BANNER_H - 0.035)))
+    cloth = mat("cloth_" + path, PATH_DEEP[path], tuple(min(255, int(c * 1.18)) for c in PATH_DEEP[path]), 30.0, 0.15)
+    for o in cl:
+        for sl in o.material_slots:
+            if sl.material and "Banner" in sl.material.name: sl.material = cloth
+    parts += cl
+    # the sigil on the cloth: a square just in front of its face, upper half
+    P = [v.co for o in cl for v in o.data.vertices]; zt = max(p.z for p in P); zl = min(p.z for p in P)
+    d = BANNER_W * 0.78; zc = zt - (zt - zl) * 0.36
+    yc = (min(p.y for p in P) + max(p.y for p in P)) / 2
+    front = min(p.x for p in P) - 0.002   # the cloth is low-poly and nearly flat (1.2 cm deep at this scale)
+    me = bpy.data.meshes.new("sig"); bm = bmesh.new()
+    vs = [bm.verts.new((front, yc + y_, z_)) for y_, z_ in ((-d / 2, zc - d / 2), (d / 2, zc - d / 2), (d / 2, zc + d / 2), (-d / 2, zc + d / 2))]
+    f = bm.faces.new(vs); uvl = bm.loops.layers.uv.new()
+    for l, uv in zip(f.loops, ((0, 0), (1, 0), (1, 1), (0, 1))): l[uvl].uv = uv
+    bm.to_mesh(me); bm.free(); so = bpy.data.objects.new("sigil", me); sc.collection.objects.link(so)
+    sm = bpy.data.materials.new("sigil_" + path); sm.use_nodes = True; nt = sm.node_tree; b = bsdf(sm)
+    tx = nt.nodes.new("ShaderNodeTexImage"); tx.image = bpy.data.images.load(os.path.join(BANNERS, f"sigil_{path}.png"))
+    nt.links.new(tx.outputs["Color"], b.inputs["Base Color"]); nt.links.new(tx.outputs["Alpha"], b.inputs["Alpha"])
+    so.data.materials.append(sm); parts.append(so)
+    return parts
+for n, (sx, sy, src) in DECOR.items():
+    if not want(n): continue
+    parts = build_trophy(src) if n.startswith("trophy_") else build_banner(src)
+    g = ground(sx, sy)
+    for o in parts: o.location += Vector((g.x, g.y, 0))
+    bpy.context.view_layer.update()
+    V = [w2c(sc, cam, o.matrix_world @ v.co) for o in parts for v in o.data.vertices]
+    u0, u1 = min(v.x for v in V), max(v.x for v in V); v0, v1 = min(v.y for v in V), max(v.y for v in V)
+    sc.render.use_border = True; sc.render.use_crop_to_border = True
+    sc.render.border_min_x, sc.render.border_max_x = max(0, u0 - 0.03), min(1, u1 + 0.01)   # the shadow falls lower left
+    sc.render.border_min_y, sc.render.border_max_y = max(0, v0 - 0.03), min(1, v1 + 0.005)
+    sc.render.filepath = os.path.join(out, n + ".png"); bpy.ops.render.render(write_still=True)
+    rects[n] = [sc.render.border_min_x, sc.render.border_max_x, sc.render.border_min_y, sc.render.border_max_y]
+    for o in parts: bpy.data.objects.remove(o)
 if want("elk"):
     obs, ms, pts = load_elk(); A = bpy.data.actions[ELK_CLIP]; f0, f1 = map(int, A.frame_range)
     frames = list(range(f0, f1, ELK_STEP))   # f1 repeats f0: the clip loops

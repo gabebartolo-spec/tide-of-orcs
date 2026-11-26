@@ -1,6 +1,6 @@
 import { quality, renderScale } from './quality';
 import { BuildingId } from '../data/camp';
-import { CAMP_SCENE, QUALITY } from '../data/presentation';
+import { CAMP_SCENE, CampDecorId, QUALITY } from '../data/presentation';
 import { CampArt } from './camp';
 import { CampBackdrop } from './campBackdrop';
 import { CampFauna } from './campFauna';
@@ -44,13 +44,14 @@ export class CampScene {
     return [(clientX - r.left - this.ox) / this.k, (clientY - r.top - this.oy) / this.k];
   }
 
-  draw(levels: Partial<Record<BuildingId, number>>, t: number): void {
+  /** `decor`: the trophies and path banners earned (campDecor), drawn among the buildings (TB-250). */
+  draw(levels: Partial<Record<BuildingId, number>>, t: number, decor: readonly CampDecorId[] = []): void {
     const g = this.canvas.getContext('2d')!, px = this.k * this.dpr;
     // static forest, meadow and road, cached offscreen (TB-188j)
     this.backdrop.draw(g, this.k, this.ox, this.oy, this.dpr);
     g.setTransform(px, 0, 0, px, this.ox * this.dpr, this.oy * this.dpr);
     this.fauna.draw(g, t);
-    this.art.draw(g, levels, px);
+    this.art.draw(g, levels, px, decor);
     this.life.draw(g, levels, t);
   }
 }

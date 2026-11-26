@@ -9,6 +9,7 @@ import { AudioEngine } from './audio/engine';
 import { STR } from './data/strings';
 import { campHit } from './ui/camp';
 import { CampScene } from './render/campScene';
+import { campDecor } from './render/campDecor';
 import { AimTracker } from './ui/aimTracker';
 import { aimPoint, startsAim, type Insets } from './ui/touchAim';
 import { setUiSound } from './data/audio';
@@ -161,7 +162,7 @@ function step(now: number): void {
   } else if (document.body.dataset.mode === 'camp') { drawDt = 0; lastDraw = 0; }
   // camp and tree follow the same draw cap as the field, so a 120 Hz screen draws them at 60 (TB-218)
   const paced = now - campDraw >= quality.q.drawGap - 1;
-  if (paced && !document.hidden && campView.offsetParent) guard('camp', () => campScene.draw(game.state.meta.camp.levels, now / 1000));
+  if (paced && !document.hidden && campView.offsetParent) guard('camp', () => campScene.draw(game.state.meta.camp.levels, now / 1000, campDecor(game.state.meta.ach.earned)));
   treeWrap.classList.toggle('burning', field.ceremony.burning);
   // the Grove canvas draws once per paced frame at most, and only while it is on screen (TB-218)
   hudT += dt; if (hudT > 0.15) { hudT = 0; treeDue = true; guard('hud', () => panel.update()); }
