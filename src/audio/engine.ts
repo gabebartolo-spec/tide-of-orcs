@@ -1,5 +1,5 @@
 /** Web Audio playback: ambient loop, two music beds crossfaded on Replant, a boss track on boss waves, SFX from sim events, ducking. Missing files are skipped silently. */
-import { AMBIENT, AUDIO, BOSS_BED, Bed, CUES, Cue, MUSIC, cueFor, nextBed } from '../data/audio';
+import { AMBIENT, AUDIO, BOSS_BED, Bed, CUES, Cue, MUSIC, cueFiles, cueFor, nextBed, pickTake, voiceFor } from '../data/audio';
 import type { SimEvent } from '../sim/events';
 import { quality } from '../render/quality';
 
@@ -16,6 +16,9 @@ export class AudioEngine {
   private bossPending = false;
   private bossStreamed = false;
   private bufs = new Map<string, AudioBuffer | null>();
+  /** Every loaded take per cue (TB-280); `lastTake` keeps a cue from playing the same take twice running. */
+  private takes = new Map<Cue, AudioBuffer[]>();
+  private lastTake = new Map<Cue, number>();
   private lastAt = new Map<Cue, number>();
   private volume = 1;
   /** Phone tier (TB-218 P5): music and ambient stream through media elements instead of resident decoded PCM (about 150 MB). */
@@ -57,7 +60,11 @@ export class AudioEngine {
     }
     if (this.streaming) this.stream(AMBIENT, this.amb);
     else { const b = await this.load(AMBIENT); if (b) this.loop(b, this.amb); await gap(); }
-    for (const [c, d] of Object.entries(CUES)) { await this.load(d.file ?? c, c); await gap(); }
+    for (const c of Object.keys(CUES) as Cue[]) {
+      const got: AudioBuffer[] = [];
+      for (const f of cueFiles(c)) { const b = await this.load(f); if (b) got.push(b); await gap(); }
+      this.takes.set(c, got);
+    }
     if (!this.streaming) { const buf = await this.load(BOSS_BED); if (buf && this.bossPending) this.startBoss(); }
   }
 
@@ -89,6 +96,7 @@ export class AudioEngine {
       else if (e.t === 'bossStart') this.startBoss();
       else if (e.t === 'bossEnd' || e.t === 'gameReset') this.endBoss();
       const c = cueFor(e); if (c) this.play(c);
+      const v = voiceFor(e); if (v) this.play(v);
     }
   }
 
@@ -140,12 +148,13 @@ export class AudioEngine {
 
   play(cue: Cue): void {
     const ctx = this.ctx; if (!ctx || ctx.state !== 'running') return;
-    const buf = this.bufs.get(cue); if (!buf) return;
+    const takes = this.takes.get(cue); if (!takes || !takes.length) return;
     const def = CUES[cue], now = ctx.currentTime;
     if (now - (this.lastAt.get(cue) ?? -Infinity) < def.gap) return;
     this.lastAt.set(cue, now);
-    const src = ctx.createBufferSource(); src.buffer = buf;
-    src.playbackRate.value = 1 + (Math.random() * 2 - 1) * AUDIO.pitchJitter;
+    const i = pickTake(takes.length, this.lastTake.get(cue) ?? -1, Math.random()); this.lastTake.set(cue, i);
+    const src = ctx.createBufferSource(); src.buffer = takes[i]!;
+    src.playbackRate.value = 1 + (Math.random() * 2 - 1) * (def.jitter ?? AUDIO.pitchJitter);
     const g = ctx.createGain(); g.gain.value = def.gain * AUDIO.sfxGain;
     src.connect(g).connect(this.master); src.start();
     if (def.duck) this.duck(now);
@@ -161,7 +170,8 @@ export class AudioEngine {
     const src = this.ctx!.createBufferSource(); src.buffer = b; src.loop = true; src.connect(out); src.start();
   }
 
-  private async load(name: string, key: string = name): Promise<AudioBuffer | null> {
+  private async load(name: string): Promise<AudioBuffer | null> {
+    if (this.bufs.has(name)) return this.bufs.get(name)!;   // a file shared by two cues (ui/click) decodes once
     // OGG first where supported, then MP3 (Suno music exports MP3 only).
     const exts = new Audio().canPlayType('audio/ogg; codecs=vorbis') ? ['ogg', 'mp3'] : ['mp3'];
     let buf: AudioBuffer | null = null;
@@ -171,7 +181,7 @@ export class AudioEngine {
         if (r.ok) { buf = await this.ctx!.decodeAudioData(await r.arrayBuffer()); break; }
       } catch { buf = null; }
     }
-    this.bufs.set(key, buf);
+    this.bufs.set(name, buf);
     return buf;
   }
 }
