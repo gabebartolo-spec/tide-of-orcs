@@ -8,7 +8,7 @@ $vars = "WYAW", "RMATCH", "SWING", "MIRR", "H1", "MPH", "HINGE", "FREEZE", "WOFF
   "QUIVER", "QFLOAT", "QPOSE", "QLEN", "QBOB", "ARROWF", "ARROWL", "RESTUP", "BOWALIGN", "GRIPSIDE", "ARROWPATH", "ARROWDBG",  # elf hero (bow + floating quiver)
   "FMATCH", "FINGSRC", "MPROBE", "MALLETAXIS", "MALLETMAX", "MALLETFORE", "MALLETSET",  # bladedancer daggers
   "FINGCOPY", "POSEDUMP", "IDLEPOSE", "BOWALIGNF", "NOCKFING", "STRDRAW", "LIMBBEND", "STRNEAR", "STRTURN", "RETIME", "STABLESH", "HANDSMOOTH", "DRAWRAMP", "RELEASE", "TAIL",  # companion archer (TB-203)
-  "BOWONLY"  # TB-250 bow woods
+  "BOWONLY", "TABARDONLY"  # TB-250 bow woods, fox tabards
 $all = { param($n) (0..($n - 1)) -join "," }  # TB-194: every clip frame (attacks were even frames only, 15 fps)
 $jobs = @(
   @{ key = "orc.grunt"; m = "$a\grunt2\grunt2u.blend"; c = "$mx\Jogging XBot.fbx"; ortho = "2.4"; fr = (0..25 -join ","); env = @{  # TB-255 jog (director 12 Nov): Mixamo Jogging on X Bot, one cycle = frames 0-25 of 77 (3 cycles); was walk_grunt.ps1 v20 Orc Walk
@@ -100,6 +100,13 @@ foreach ($dye in "ember", "frost", "dusk", "starlit", "gold") {
 # RGB: moonsilver 0.780,0.800,0.860  thornwood 0.300,0.320,0.240  heartwood 0.500,0.180,0.130
 foreach ($wood in "moonsilver", "thornwood", "heartwood") {
   foreach ($e in $elfJobs) { $ev = $e.env.Clone(); $ev.BOWONLY = "1"; $jobs += @{ key = $e.key -replace "^elf", "elfbow.$wood"; m = "$a\elf_hero\bows\$wood\hero27_$wood.blend"; c = $e.c; ortho = $e.ortho; fr = $e.fr; env = $ev } }
+}
+# TB-250 fox tabards (shield_fox): the spearman walk + attack jobs again on copies of their blends carrying the fox paint shell (fox_decal.py),
+# rendered TABARDONLY (every other mesh a holdout) as keys vanfox.spear / vanfox.spear.attack: paint-only frames field.ts draws over van.spear.
+#   $env:PLACES = "-x:-0.019,0.324:0.12"; $env:TUNIC = "0.722,0.361,0.165"; $env:RIM = "0.937,0.902,0.824"; hid.ps1 blender -b --factory-startup <blend> --python fox_decal.py -- elf_spearman\fox\<blend>_fox.blend
+foreach ($e in ($jobs | Where-Object { $_.key -in "van.spear", "van.spear.attack" })) {
+  $ev = $e.env.Clone(); $ev.TABARDONLY = "1"
+  $jobs += @{ key = $e.key -replace "^van", "vanfox"; m = "$a\elf_spearman\fox\$([IO.Path]::GetFileNameWithoutExtension($e.m))_fox.blend"; c = $e.c; ortho = $e.ortho; fr = $e.fr; env = $ev }
 }
 # orc.wolfrider.attack is NOT an apply_anim job: the wolf rider is a Tripo "Other" rig driven by Quaternius Wolf "Attack" (no Mixamo skeleton).
 # Its 20 frames + anchor come from wolfrider\render_wr_sheet.py (same field camera, ORTHO 1.4, RES 512, mirrored to face screen-right):
