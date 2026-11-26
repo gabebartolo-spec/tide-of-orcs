@@ -1,0 +1,5 @@
+# Batch A rerun, paths only (sim changed since 12 Nov: TB-266 spawn rows, TB-269..274 fixes)
+base | --minutes 90 --hwbuy
+serpent | --minutes 90 --hwbuy --path serpent
+fox | --minutes 90 --hwbuy --path fox
+magpie | --minutes 90 --hwbuy --path magpie

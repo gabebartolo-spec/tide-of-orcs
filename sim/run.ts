@@ -27,7 +27,7 @@ import { buy, canBuy, costOf } from '../src/sim/tree';
 import { canReplant, choosePath, replant } from '../src/sim/prestige';
 import { upgradeBuilding } from '../src/sim/camp';
 import { BUILDINGS, BuildingId } from '../src/data/camp';
-import { PATH_IDS, PathId } from '../src/data/paths';
+import { PATH_FX, PATH_IDS, PathId } from '../src/data/paths';
 import { NODES, NodeId } from '../src/data/skillTree';
 import { ARROWS, BARRICADE, CHECKPOINT, COST_WAVE, HP_RAMP, LOB, NODE_FX, PLAYER, SHOT_FX, SOURCES, STACKING, STEP, UNIT_FX, VANGUARD, waveHP } from '../src/data/balance';
 import { BOSS_WAVE, TIERS } from '../src/data/bosses';
@@ -65,7 +65,7 @@ const campOrder: BuildingId[] = arg('camp', '') === 'all' ? BUILDINGS.map((b) =>
 const hwFocus = arg('hwfocus', '').split(',').filter(Boolean);
 const setArg = arg('set', '');
 const human = Math.max(1, Number(arg('human', '1')) || 1); // TB-247: slow-player factor (1 = script)
-const TUNE: Record<string, unknown> = { ARROWS, SOURCES, VANGUARD, BOSS_WAVE, TIERS, RARITY, DROP, AFFIX, MYTHIC_FX, PLAYER, LOB, BARRICADE, NODE_FX, COST_WAVE, STACKING, SHOT_FX, UNIT_FX, CHECKPOINT, ORC_TYPES, ORC_FX, FIREBALL, HP_RAMP, FOE_FX };
+const TUNE: Record<string, unknown> = { ARROWS, SOURCES, VANGUARD, BOSS_WAVE, TIERS, RARITY, DROP, AFFIX, MYTHIC_FX, PLAYER, LOB, BARRICADE, NODE_FX, COST_WAVE, STACKING, SHOT_FX, UNIT_FX, CHECKPOINT, ORC_TYPES, ORC_FX, FIREBALL, HP_RAMP, FOE_FX, PATH_FX };
 applyTune(TUNE, arg('tune', ''));
 for (const kv of arg('cost', '').split(',').filter(Boolean)) { const [k, v] = kv.split('='); (NODES.find((x) => x.id === k) as { base: number }).base = Number(v); }
 for (const kv of arg('hw', '').split(',').filter(Boolean)) { const [k, v] = kv.split(':'); s.meta.hwLevels[k as HwId] = Number(v); }

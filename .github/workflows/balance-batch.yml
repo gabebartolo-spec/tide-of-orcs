@@ -1,0 +1,47 @@
+# Balance batches (TB-276): long sim runs go to GitHub (director, 26 Nov). Push a claude/** branch that changes
+# sim/batches/RUN (one line: the jobs file, then optional seeds, e.g. `sim/batches/b-matrix.txt 1-5`); each label in
+# that file runs as its own job over the seeds. Read the summary table at the end of each job's log, or download the
+# batch-<label> artifact (every report plus runs.csv).
+name: Balance batch
+on:
+  push:
+    branches: ['claude/**']
+    paths: ['sim/batches/RUN']
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      labels: ${{ steps.l.outputs.labels }}
+      file: ${{ steps.l.outputs.file }}
+      seeds: ${{ steps.l.outputs.seeds }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+        env: { ELECTRON_SKIP_BINARY_DOWNLOAD: 1 }
+      - id: l
+        run: |
+          read -r file seeds < sim/batches/RUN
+          echo "file=$file" >> "$GITHUB_OUTPUT"
+          echo "seeds=${seeds:-1-5}" >> "$GITHUB_OUTPUT"
+          echo "labels=$(npx tsx sim/batch.ts "$file" --list)" >> "$GITHUB_OUTPUT"
+  run:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        label: ${{ fromJson(needs.plan.outputs.labels) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+        env: { ELECTRON_SKIP_BINARY_DOWNLOAD: 1 }
+      - run: npx tsx sim/batch.ts "${{ needs.plan.outputs.file }}" --only "${{ matrix.label }}" --seeds "${{ needs.plan.outputs.seeds }}" --jobs "$(nproc)" --out "sim/out/batch-${{ matrix.label }}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: 'batch-${{ matrix.label }}', path: 'sim/out/batch-${{ matrix.label }}' }
