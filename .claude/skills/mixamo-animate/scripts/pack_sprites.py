@@ -17,6 +17,7 @@ DYES = ("ember", "frost", "dusk", "starlit", "gold")  # TB-250 cloak dyes: elf.<
 ORCS2 = ("orc.runner", "orc.brute", "orc.wolfrider", "hawk")
 def sheet_of(key):
     if key.startswith("elfbow."): return f"sheet_bow_{key.split('.')[1]}.webp"  # TB-250
+    if key.startswith("vanfox."): return "sheet_vanfox.webp"  # TB-250 fox tabards: loaded only once shield_fox is earned
     if key.startswith("camp."): return SHEETS["camp"]
     if key.startswith("archer"): return SHEETS["archer"]  # TB-203 companion archer: its own sheet (206 frames would push sheet_elf past 2 MB)
     if key.split(".")[0] == "elf" and len(key.split(".")) > 1 and key.split(".")[1] in DYES: return f"sheet_elf_{key.split('.')[1]}.webp"  # TB-250: one sheet per cloak dye, loaded only when worn
@@ -34,6 +35,8 @@ ANIMS = {
     "orc.grunt.attack": (30, True, "orc.grunt", 2.4),
     "van.spear": (30, False, "van.spear", 3.0),
     "van.spear.attack": (30, False, "van.spear", 3.0),
+    "vanfox.spear": (30, False, "van.spear", 3.0),  # TB-250 fox tabards: paint-only overlays, cut with van.spear's own box (BOXOF)
+    "vanfox.spear.attack": (30, False, "van.spear", 3.0),
     "van.blade": (30, False, "van.blade", 3.0),
     "van.blade.attack": (30, False, "van.blade", 3.0),
     "orc.berserker": (30, True, "orc.berserker", 2.4),
@@ -89,6 +92,7 @@ def frames(key):
 
 cuts, body, boxes = {}, {}, {}
 BOXOF = {f"elfbow.{w}{a}": f"elf{a}" for w in WOODS for a in ("", ".attack")}  # TB-250: an overlay takes its body clip's crop box
+BOXOF.update({f"vanfox.spear{a}": f"van.spear{a}" for a in ("", ".attack")})  # TB-250 fox tabards
 for key, (fps, mirror, bk, br) in ANIMS.items():
     fr = frames(key)
     if not fr: print("PACK missing", key); continue
@@ -112,7 +116,7 @@ for key, (fps, mirror, bk, br) in ANIMS.items():
 
 # shelf-pack every frame, one sheet per group (orcs / elf + vanguard)
 anims, sheets = {}, {}
-for name in list(SHEETS.values()) + [f"sheet_elf_{d}.webp" for d in DYES] + [f"sheet_bow_{w}.webp" for w in WOODS]:
+for name in list(SHEETS.values()) + [f"sheet_elf_{d}.webp" for d in DYES] + [f"sheet_bow_{w}.webp" for w in WOODS] + ["sheet_vanfox.webp"]:
     group = {k: c for k, c in cuts.items() if sheet_of(k) == name}
     if not group: continue
     x = y = rowh = 0; place = {}

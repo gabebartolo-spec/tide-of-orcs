@@ -64,6 +64,7 @@ tide-of-orcs/
       camp.ts           encampment building art: Tripo sprites per-building scaled, vector fallback (TB-188c/d/e)
       campDecor.ts      earned camp decor (boss trophies, path banners, Tripo camp props) and the camp's back-to-front draw order (TB-250)
       wallDecor.ts      earned wall banners, lanterns and skulls and where their sprites stand on the drawn wall per tier and damage stage (TB-250)
+      vanPaint.ts       fox tabards: the spearman's paint overlay keys once `shield_fox` is earned (TB-250)
       campScene.ts      Camp tab scene: buildings at house scale, elf for scale, click to scene units (TB-188e)
       sigil.ts          path sigils: flat vector emblems face-on in an ink disc with one path-coloured ring (TB-193c, TB-193i); the Meshy pictures are no longer drawn
       textScale.ts      applyTextScale(), textScale() (TB-191)

@@ -31,6 +31,7 @@ import { WaveStrip } from './waveStrip';
 import { SLOTS } from '../data/loot';
 import { BOSS_ROSTER } from '../data/bosses';
 import { BOW_WOODS, CLOAK_DYES, TRAILS, type TrailStyle } from '../data/achievements';
+import { vanPaint } from './vanPaint';
 import { quality, fitScale } from './quality';
 import { setTiers } from '../sim/gear';
 
@@ -800,7 +801,9 @@ export class FieldRenderer {
     const g = this.g, T = VANGUARD[v.type]; const i = this.interp.off(v), wy = v.y + i.dy; this.at(v.x + i.dx, depthY(wy), v.face < 0, depthScale(wy));
     if (!this.sprites.lit(this.vanKey(v.type).key)) { g.fillStyle = P.shadow; g.beginPath(); g.ellipse(0, 16, 12, 4, 0, 0, 6.28); g.fill(); }
     const vk = this.vanKey(v.type), vst = vanState(s, v), vt = vst === 'attack' ? swingClipT(v.swingT, T.cd, this.sprites.duration(vk.atk), VFX.strike[v.type]) : vst === 'walk' ? strideT(v.walk, (GAIT.strideR[vk.key] ?? 0) * ACTOR_R * depthScale(wy), this.sprites.duration(vk.key)) : this.clock;
-    this.sprites.drawActor(g, vk.key, vst, vt, 0, 16, ACTOR_R, v.hitT > 0);
+    const drew = this.sprites.drawActor(g, vk.key, vst, vt, 0, 16, ACTOR_R, v.hitT > 0);
+    const paint = drew ? vanPaint(v.type, s.meta.ach.earned) : null;   // TB-250 fox tabards: paint-only frames over the spearman's, same clip time (never over the vector stand-in while sheet_van loads)
+    if (paint && this.sprites.want(paint.key) && this.sprites.want(paint.atk)) this.sprites.drawActor(g, paint.key, vst, vt, 0, 16, ACTOR_R, v.hitT > 0);
     this.vanBar(v); this.at(0, 0, false);
   }
 
