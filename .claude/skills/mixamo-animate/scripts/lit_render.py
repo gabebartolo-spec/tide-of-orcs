@@ -16,6 +16,7 @@ def on():
 def eevee_outputs():
     """Blends authored with a separate EEVEE-target and CYCLES-target Material Output (ogre228: textured Principled for EEVEE,
     flat grey Diffuse for CYCLES) render untextured in Cycles. The approved art is the EEVEE output, so it drives every engine."""
+    _look()
     for m in bpy.data.materials:
         if not m.use_nodes or not m.node_tree: continue
         outs = [n for n in m.node_tree.nodes if n.type == "OUTPUT_MATERIAL"]
@@ -24,6 +25,17 @@ def eevee_outputs():
         for n in outs:
             if n.target == "CYCLES": m.node_tree.nodes.remove(n)
         ev[0].target = "ALL"; ev[0].is_active_output = True
+
+
+_LOOKED = []
+
+
+def _look():
+    """TB-278 unified look: once per Blender session, before any render (look.py; LOOK=off skips it)."""
+    if _LOOKED: return
+    _LOOKED.append(1)
+    import importlib, sys
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); importlib.import_module("look").apply()
 
 
 def setup(sc, cam):
