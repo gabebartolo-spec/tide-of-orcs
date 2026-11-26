@@ -10,7 +10,7 @@ export const COSMETICS = {
   bow_moonsilver: 'Moonsilver bow', bow_thornwood: 'Thornwood bow', bow_heartwood: 'Heartwood bow',
   trail_ember: 'Ember trail', trail_star: 'Star trail', trail_leaf: 'Leaf trail', ring_rune: 'Rune ring',
   wall_banner_grove: 'Grove banner', wall_banner_tide: 'Tide banner', wall_lanterns: 'Wall lanterns', wall_skulls: 'Skull posts',
-  shield_fox: 'Fox shields',
+  shield_fox: 'Fox tabards',
   trophy_warboss: 'Warboss trophy', trophy_ogre: 'Ogre trophy', trophy_orc: 'Orc trophy', trophy_raider: 'Raider trophy', trophy_ogre_creature: 'Ogre Creature trophy',
   camp_campfire: 'Campfire', camp_wolf_statue: 'Wolf statue', camp_standing_stone: 'Standing stone', camp_lantern_string: 'Lantern string',
   camp_armour_stand: 'Armour stand', camp_bell: 'Camp bell', camp_sapling: 'Grove sapling',
