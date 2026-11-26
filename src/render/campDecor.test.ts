@@ -7,7 +7,7 @@ const IDS = Object.keys(CAMP_DECOR_ART) as CampDecorId[];
 
 describe('camp decor (TB-250 batch 2)', () => {
   it('the seven Tripo camp pieces are decor', () => {
-    for (const d of ['camp_campfire', 'camp_wolf_statue', 'camp_standing_stone', 'camp_lantern_string', 'camp_armour_stand', 'camp_bell', 'camp_sapling']) expect(IDS).toContain(d);
+    for (const d of ['camp_campfire', 'camp_wolf_statue', 'camp_standing_stone', 'camp_lantern_string', 'camp_bell', 'camp_sapling']) expect(IDS).toContain(d);
   });
   it('every piece is the cosmetic of exactly one achievement and has no wear slot', () => {
     for (const d of IDS) {

@@ -331,7 +331,6 @@ export const CAMP_DECOR_ART = {
   banner_serpent: { x: 607.2, y: 127.5, w: 48.2, h: 80.8, foot: 192 },
   banner_fox: { x: 651.0, y: 121.5, w: 59.8, h: 86.8, foot: 186 },
   banner_magpie: { x: 727.5, y: 127.5, w: 43.2, h: 69.0, foot: 192 },
-  camp_armour_stand: { x: 73.0, y: 52.2, w: 60.0, h: 57.5, foot: 109 },
   camp_bell: { x: 904.0, y: 132.8, w: 61.8, h: 67.8, foot: 198 },
   camp_campfire: { x: 677.2, y: 82.2, w: 57.5, h: 26.8, foot: 109 },
   camp_lantern_string: { x: 631.0, y: -213.2, w: 150.2, h: 91.5, foot: -122 },
