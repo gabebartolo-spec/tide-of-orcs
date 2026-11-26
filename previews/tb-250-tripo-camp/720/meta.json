@@ -1,0 +1,17 @@
+{
+ "size": [
+  1280,
+  720
+ ],
+ "dpr": 1,
+ "order": [
+  "camp_first",
+  "branch_companions",
+  "secret_last_plank",
+  "camp_full",
+  "set_all",
+  "hold_60m",
+  "replant_1"
+ ],
+ "k": 1.0720268006700167
+}
