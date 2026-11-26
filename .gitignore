@@ -6,3 +6,4 @@ sim/out
 release
 tools/typeface/out
 __pycache__
+.dream-loop/
