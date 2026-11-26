@@ -1,0 +1,6 @@
+# TB-277 root cause: a checkpoint past a boss wave forfeits it, so each boss pays Heartwood once (total 9) and the w75 boss
+# (99% HP left at timeout) can never be retried. Test boss waves that repeat every run (no checkpoints) against the f65r110 base.
+base | --minutes 240 --hwbuy --tune BOSS_WAVE.lateFrom=75,BOSS_WAVE.lateEvery=10,HP_RAMP.lateFrom=65,HP_RAMP.lateRate=1.10
+nock | --minutes 240 --hwbuy --tune BOSS_WAVE.lateFrom=75,BOSS_WAVE.lateEvery=10,HP_RAMP.lateFrom=65,HP_RAMP.lateRate=1.10,CHECKPOINT.every=0
+ck25 | --minutes 240 --hwbuy --tune BOSS_WAVE.lateFrom=75,BOSS_WAVE.lateEvery=10,HP_RAMP.lateFrom=65,HP_RAMP.lateRate=1.10,CHECKPOINT.every=25
+nock-480 | --minutes 480 --hwbuy --tune BOSS_WAVE.lateFrom=75,BOSS_WAVE.lateEvery=10,HP_RAMP.lateFrom=65,HP_RAMP.lateRate=1.10,CHECKPOINT.every=0
