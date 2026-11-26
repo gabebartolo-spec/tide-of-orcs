@@ -316,6 +316,7 @@ export class FieldRenderer {
 
     // plain (and the meadow beyond it, wherever the window reaches past the plain)
     const n = dusk(this.clock);
+    this.sprites.night = this.ground.plate() ? n : 0;  // TB-278: characters cool with the night plate
     this.ground.draw(g, k, vis.x0, vis.y0, vis.x1, vis.y1, n);
     if (n > 0.01) { const lg = g.createRadialGradient(ELF_X, this.postY(H / 2), 0, ELF_X, this.postY(H / 2), SKY.lampR); lg.addColorStop(0, P.lamp); lg.addColorStop(1, P.lampClear); g.globalAlpha = n; g.fillStyle = lg; g.fillRect(ELF_X - SKY.lampR, this.postY(H / 2) - SKY.lampR, SKY.lampR * 2, SKY.lampR * 2); g.globalAlpha = 1; }
 

@@ -153,3 +153,15 @@ describe('fox tabard overlays (TB-250)', () => {
     }
   });
 });
+
+describe('night frames (TB-278)', () => {
+  it('bakes one night copy per frame, reuses it, and skips it by day', async () => {
+    const { NIGHT_SPRITE } = await import('../data/presentation');
+    const sp = rig(); let made = 0; const mk = sp.makeCanvas; sp.makeCanvas = () => { made++; return mk(); };
+    const g = { drawImage() {}, globalAlpha: 1, filter: 'none' } as unknown as CanvasRenderingContext2D;
+    sp.draw(g, 'orc.grunt', 0, 0, 0, 10); expect(sp.nightSize).toBe(0);
+    sp.night = 1; sp.draw(g, 'orc.grunt', 0, 0, 0, 10); sp.draw(g, 'orc.grunt', 0, 0, 0, 10);
+    expect(sp.nightSize).toBe(1); expect(made).toBe(1); expect(g.globalAlpha).toBe(1);
+    sp.night = NIGHT_SPRITE.min / 2; sp.draw(g, 'orc.grunt', 0.5, 0, 0, 10); expect(sp.nightSize).toBe(1);
+  });
+});
