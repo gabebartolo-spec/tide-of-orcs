@@ -44,3 +44,24 @@ Everything from v2 kept (Jogging clip, axe-arm pose, skin hue -10.8, ink outline
 - Blend: `grunt_dream_v3.blend` (shield: `_s3`, + strap: `_s4`). CLIP 0, LFIST 0, LFISTSURF 0 on the s4 blend (shield and strap tested).
 - Not done (director's note: skip unless already done): camera-side fill light, spine and neck straightening.
 - Files: `v3_sidebyside.png`, `v3_walk_ingame.gif` (shipped jog | v3 jog), `v3_on_field_zoom.png`.
+
+## v4 (coordinator brief, 27 Nov: shield, planks, brighter and straighter, ink line)
+Everything from v3 kept (Jogging clip, axe-arm pose, hue shift, CAMROT 180 game view, not mirrored).
+- Shield: rebuilt at 0.42 of body height (0.34 x 0.28 m), held out on the left forearm, turned 32 deg away from the camera and
+  rotated -13 deg in its plane so the planks slant down toward the front. Slid 7 cm down the forearm and 2 cm clear of hand and
+  arm. Torso, belt and strap show beside it at frame 0. Plain planks, no emblem.
+- Planks: each plank carries a painted 512 x 128 texture: mid brown (110,86,62) +-8% per plank, 7 wavy darker grain lines (-22%),
+  one knot, lighter long edges (up to +28%) and a light top band; plank ends and sides map to the light band.
+- Body: skin value x1.12 on the base texture (hue kept: rendered skin hue 69.2, median value 0.412 -> 0.471 = +14%, shadow-side
+  20th percentile 0.337 -> 0.369). Spine, Spine1, Spine2 each +5 deg, Neck and Head -10 deg each (less hunch, head level).
+  Light unchanged (AMB 0.65): AMB 0.9 lifted the shadows evenly but pushed skin value to +22%, past the brief.
+- Chest strap: refitted for the straighter spine, ending higher (belt end at x 0.04, z 0.42, 7 mm off the body) so it no longer
+  touches the left thigh.
+- Ink: (1) the 3D inverted hull is 0.8% of height (6.4 mm, was 0.4%) for the inner lines; (2) the outer line is drawn on each
+  frame: the body mask (alpha > 0.9; the cast shadow stays under 0.55) is grown by a disc and filled with ink #2a2a22 under the
+  body, radius = 2 game px in that frame's pixels (6.25 px on the 512 frames, body 192 px -> 61.4 px in game). The close-up still
+  uses 4 px, the dream image's own line weight at that size.
+- Clip test: CLIP 0, LFIST 0, LFISTSURF 0 on all frames (shield, strap, axe) on `grunt_dream_v4_s4.blend`.
+- Blend: `grunt_dream_v4.blend` (shield `_v4_s3`, strap `_v4_s4`).
+- Files: `v4_sidebyside.png`, `v4_walk_ingame.gif` (shipped jog | v4 jog, front-row size), `v4_on_field_zoom.png`,
+  `v4_on_target.png` (walk frame 8 on `target/battlefield_day.png` at 67 px, the measured height of the orcs there: 65, 67, 70 px).
