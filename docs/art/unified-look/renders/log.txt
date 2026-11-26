@@ -1,0 +1,37 @@
+﻿TB-278 unified look test renders, 2026-11-27 04:20, worktree C:\Users\DANTE\tide-of-orcs-look @ e7f42ca (origin/claude/project-thread-y4f9n7)
+Walk frame 8, field game camera, LIT=1 SUN=-0.6,1.6,0.5 AMB=0.65 GAMECAM=20 RES=512, LITFLIP=1 for orcs (not ogre: shipped recipe has none). <key>_off = LOOK=off, <key>_look = no LOOK env.
+
+== LOOK lines (look-on pass) ==
+orc.grunt         LOOK grunt: 2 textures graded, material {'metal_max': 0.3, 'rough_min': 0.7, 'spec': 0.25, 'keep_emission': False}
+orc.berserker     LOOK berserker: 1 textures graded, material {'metal_max': 0.3, 'rough_min': 0.7, 'spec': 0.25, 'keep_emission': False}
+orc.boss          LOOK warboss: 1 textures graded, material {'metal_max': 0.3, 'rough_min': 0.7, 'spec': 0.25, 'keep_emission': False}
+orc.ogreCreature  LOOK ogreCreature: 2 textures graded, material {'metal_max': 0.3, 'rough_min': 0.7, 'spec': 0.25, 'keep_emission': False}
+orc.orcBoss       LOOK orcBoss: 1 textures graded, material {'metal_max': 0.3, 'rough_min': 0.7, 'spec': 0.25, 'keep_emission': False}
+orc.packed        LOOK packed: 1 textures graded, material {'metal_max': 0.3, 'rough_min': 0.7, 'spec': 0.25, 'keep_emission': False}
+orc.ogre          LOOK default: 3 textures graded, material {'metal_max': 0.3, 'rough_min': 0.7, 'spec': 0.25, 'keep_emission': False}
+wolf              LOOK default: 1 textures graded, material {'metal_max': 0.3, 'rough_min': 0.7, 'spec': 0.25, 'keep_emission': False}
+hawk              LOOK default: 1 textures graded, material {'metal_max': 0.3, 'rough_min': 0.7, 'spec': 0.25, 'keep_emission': False}
+(LOOK=off passes print no LOOK line: look.apply returns before printing.)
+
+== Errors / tracebacks ==
+Tracebacks: none. look.py threw nowhere; no fixes made to look.py.
+render_ogre (all passes) FBX importer warning, render unaffected: Error, could not find any file path in  FBXElem(id=b'Texture', props=[2025325376, b'file2\x00\x01Texture', b''], props_type=bytearray(b'LSS'...
+
+== Problem found: profile never matches for imported actors ==
+render_ogre.py, render_wolf.py, render_hawk.py start from read_factory_settings and import FBX/glTF, so bpy.data.filepath is empty and lit_render._look() calls look.apply() with no path:
+the 'match' strings (/troll_ogre/, fwolf, /sketchfab/hawk/) can never hit, and these three got profile 'default' (global grade only). Not fixed (needs a design choice: pass the source path or set LOOK in each recipe).
+Extra renders with the profile forced (LOOK=ogre / wolf / hawk): orc.ogre_lookforced.png, wolf_lookforced.png, hawk_lookforced.png:
+orc.ogre (forced)  LOOK ogre: 3 textures graded, material {'metal_max': 0.3, 'rough_min': 0.7, 'spec': 0.25, 'keep_emission': False}
+wolf (forced)      LOOK wolf: 1 textures graded, material {'metal_max': 0.3, 'rough_min': 0.7, 'spec': 0.25, 'keep_emission': False}
+hawk (forced)      LOOK hawk: 1 textures graded, material {'metal_max': 0.3, 'rough_min': 0.7, 'spec': 0.25, 'keep_emission': False}
+
+== Visual read (off vs look) ==
+grunt, berserker: subtle (slightly lower saturation, lifted shadows). boss (warboss): paler, more yellow-green.
+orcBoss: red-brown skin -> yellow-green. packed: teal -> yellow-green. ogreCreature: dark olive -> much paler/lighter yellow-green (biggest value jump).
+ogre forced: emerald -> yellow-green, glowing chest rune kept. wolf/hawk (default or forced): near identical.
+flat/decimate profiles (warboss, orcBoss, packed, ogreCreature, ogre): no visible faceting in the frames; shading still reads smooth.
+
+== Setup notes ==
+build_sprites.ps1 jobs (grunt, berserker, boss) + ogreCreature ran from a scratch copy of the worktree script: frame forced to 8, -Frames scratch, -NoPack, output tee'd to a log. Nothing written to tide-assets\sprites\frames or public/sprites.
+orcBoss/packed: render_own.py FR=9-9 (clip starts at 1, so walk frame 8). ogre: SPLICE=69~1@0.7 (item 8 of the walk splice 61-110~1@0.7). wolf: full run clip, frame 8 kept. hawk: STEP=8, frame 8 kept.
+The ogre green textures dir in SKILL.md (tide-of-orcs-wt/scratch211/g1/tex) no longer exists; rebuilt it in scratch with ogre/recolour_green.py (output path changed only).
