@@ -1,0 +1,15 @@
+00:09.047  blend            | Read blend: "C:\Users\DANTE\Documents\tide-assets\drummer\drummer_raised.blend"
+OBJ tripo_node_bc4f8eed 9016 scale (0.009999999776482582, 0.009999999776482582, 0.009999999776482582) armscale (0.009999999776482582, 0.009999999776482582, 0.009999999776482582)
+DRUM n 2362 min [-0.096 -0.159  0.334] max [0.286 0.214 0.656] cen [0.094 0.03  0.534]
+MAL Left 184 min [ 0.272 -0.205  0.521] max [0.426 0.013 0.611]
+ bone Hand head (0.379, 0.097, 0.598) tail (0.42, 0.036, 0.605)
+ bone ForeArm head (0.307, 0.166, 0.607) tail (0.379, 0.097, 0.598)
+ bone Arm head (0.166, 0.166, 0.618) tail (0.307, 0.166, 0.607)
+MAL Right 187 min [-0.445 -0.217  0.501] max [-0.305  0.015  0.591]
+ bone Hand head (-0.381, 0.087, 0.608) tail (-0.42, 0.044, 0.607)
+ bone ForeArm head (-0.304, 0.166, 0.603) tail (-0.381, 0.087, 0.608)
+ bone Arm head (-0.166, 0.166, 0.618) tail (-0.304, 0.166, 0.603)
+hips (0.006, 0.071, 0.355)
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:37:04)
+
+Blender quit

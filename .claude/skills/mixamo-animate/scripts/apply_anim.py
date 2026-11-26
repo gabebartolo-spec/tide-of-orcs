@@ -678,6 +678,21 @@ if os.environ.get("SOLID"):  # SOLID=x0,x1,y0,y1,z0,z1 (world, bind pose): the p
     def _sd(bvh, p):
         loc, nrm, idx, dist = bvh.find_nearest(p)
         return dist if (p - loc).dot(nrm) >= 0 else -dist
+if os.environ.get("PROPAIM"):  # PROPAIM=Side:dx,dy,dz;... + PROPIDX=Side:file;... -> where to re-seat a welded prop in the hand so the retargeted clip carries it along world dir d (prop change, the clip is untouched): prints the hand-local unit direction and rotation, the bind tip, and the resulting tip track; PROPOUT=path.json saves {Side: {q, loc}}, then exits
+    import json; _res = {}; _me = next(o for o in bpy.data.objects if o.type == "MESH" and o.find_armature() == tgt); _W = tgt.matrix_world; _sx = _W.to_scale().x
+    for spec in filter(None, os.environ["PROPAIM"].split(";")):
+        s, e = spec.split(":"); d = Vector([float(v) for v in e.split(",")]).normalized(); pb = tgt.pose.bones[f"mixamorig:{s}Hand"]; bb = tgt.data.bones[f"mixamorig:{s}Hand"]
+        ids = [int(x) for x in open(dict(x.split("=") for x in os.environ["PROPIDX"].split(";") if x)[s]).read().split()]
+        inv = bb.matrix_local.inverted(); loc_all = [inv @ (_W.inverted() @ (_me.matrix_world @ _me.data.vertices[i].co)) for i in ids]
+        l0 = max(loc_all, key=lambda v: v.length); L = l0.length; l0n = l0.normalized(); acc = Vector(); Rs = []
+        for f in range(f0, f1 + 1):
+            sc.frame_set(f); bpy.context.view_layer.update(); R = (_W @ pb.matrix).to_3x3().normalized(); Rs.append((R, (_W @ pb.matrix).translation.copy())); acc += R.transposed() @ d
+        l1 = acc.normalized(); q = l0n.rotation_difference(l1); _res[s] = {"q": list(q), "loc": list(l0)}
+        print("PROPAIM", s, "bind tip loc", [round(c, 2) for c in l0], "len", round(L, 2), "new dir", [round(c, 3) for c in l1], "rot deg", round(math.degrees(q.angle), 1))
+        for k, (R, h) in enumerate(Rs):
+            t = h + R @ (l1 * L * _sx); tw = R @ l1; print("PT", s, k, *[round(c, 3) for c in t], "| dir", *[round(c, 2) for c in tw], "| hand", *[round(c, 3) for c in h])
+    if os.environ.get("PROPOUT"): json.dump(_res, open(os.environ["PROPOUT"], "w"))
+    sys.exit(0)
 for spec in filter(None, os.environ.get("MPROBE", "").split(";")):  # Side:x,y,z = a point welded to the hand (hand-bone local, armature units): its world position per frame
     s, e = spec.split(":"); loc = Vector([float(v) for v in e.split(",")]); pb = tgt.pose.bones[f"mixamorig:{s}Hand"]
     for f in range(f0, f1 + 1):
