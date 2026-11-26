@@ -1,0 +1,8 @@
+# TB-277 endless ranks prototype (BALANCE P-277): once the run tree is maxed, starlight buys ranks that each divide orc
+# health by ENDLESS.mult; cost base x growth^rank x costWave(wave). On the f65r110 base.
+m110-b3 | --minutes 240 --hwbuy --tune BOSS_WAVE.lateFrom=75,BOSS_WAVE.lateEvery=10,HP_RAMP.lateFrom=65,HP_RAMP.lateRate=1.10,ENDLESS.mult=1.1,ENDLESS.base=1000
+m110-b5 | --minutes 240 --hwbuy --tune BOSS_WAVE.lateFrom=75,BOSS_WAVE.lateEvery=10,HP_RAMP.lateFrom=65,HP_RAMP.lateRate=1.10,ENDLESS.mult=1.1,ENDLESS.base=100000
+m110-b7 | --minutes 240 --hwbuy --tune BOSS_WAVE.lateFrom=75,BOSS_WAVE.lateEvery=10,HP_RAMP.lateFrom=65,HP_RAMP.lateRate=1.10,ENDLESS.mult=1.1,ENDLESS.base=10000000
+m105-b5 | --minutes 240 --hwbuy --tune BOSS_WAVE.lateFrom=75,BOSS_WAVE.lateEvery=10,HP_RAMP.lateFrom=65,HP_RAMP.lateRate=1.10,ENDLESS.mult=1.05,ENDLESS.base=100000
+m110-b5-480 | --minutes 480 --hwbuy --tune BOSS_WAVE.lateFrom=75,BOSS_WAVE.lateEvery=10,HP_RAMP.lateFrom=65,HP_RAMP.lateRate=1.10,ENDLESS.mult=1.1,ENDLESS.base=100000
+m110-b5-cur | --minutes 240 --hwbuy --tune BOSS_WAVE.lateFrom=75,BOSS_WAVE.lateEvery=10,ENDLESS.mult=1.1,ENDLESS.base=100000
