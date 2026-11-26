@@ -24,7 +24,7 @@ try {
   await cdp('Page.navigate', { url: process.env.TIDE_URL ?? 'http://localhost:5199/' });
   for (let i = 0; i < 80 && !(await ev('!!(window.__tide && window.__tide.game)').catch(() => false)); i++) await sleep(500);
   await sleep(2000);
-  await ev(`(async () => { const m = window.__tide.game.state.meta; m.ach.earned.length = 0; m.camp.levels = { bowyer: 3, forge: 3, kitchen: 3, training: 3 };
+  await ev(`(async () => { const m = window.__tide.game.state.meta; m.ach.earned.length = 0; m.camp.levels = { bowyer: 3, forge: 3, kitchen: 3, training: 3 }; m.heartwood += 1000;   // the levels are seeded unpaid: fund them so the HUD's spendable Heartwood is not negative
     const b = (t) => [...document.querySelectorAll('button')].find((x) => x.textContent.trim() === t);
     b('To the grove')?.click(); await new Promise((r) => setTimeout(r, 500)); b('Camp').click(); })()`);
   // every decor image loaded before the first shot (the camp loads them lazily on first draw)
