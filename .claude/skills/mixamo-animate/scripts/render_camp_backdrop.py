@@ -4,7 +4,7 @@
 # rest of the scene held out and the ground a shadow catcher, so the PNG carries the building plus its real contact shadow.
 # post_camp.py crops the PNGs, writes public/decor/camp/*.webp and prints the CAMP_ART rects for src/data/presentation.ts.
 # blender -b --factory-startup --python render_camp_backdrop.py -- <out dir>   env: PX (4), SAMPLES (96), ONLY (plate,forge3,elk,...)
-# Passes trophy_<boss> and banner_<path> (TB-250): camp decor shown once earned; post_decor.py crops them.
+# Passes trophy_<boss>, banner_<path> and camp_<piece> (TB-250): camp decor shown once earned; post_decor.py crops them.
 # Pass "elk" (TB-208) renders the elk's graze clip frame by frame to <out>/elk/NNN.png + elk.json; post_elk.py packs them.
 import bpy, bmesh, math, os, random, sys, json
 from mathutils import Vector, Euler
@@ -402,14 +402,14 @@ def fence_faces(bm_, lo, H):
     return out_
 SAND_H = float(os.environ.get("SAND_H", "0.05"))
 GREEN_MUTE = (0.58, 0.78, 0.22)   # olive: luminance x this, matches the level 1-3 island greens
-TRIM = {"bowyer0": (float(os.environ.get("TRIM_Z", "0.2")), float(os.environ.get("TRIM_R", "0.27")))}
-def load_building(n, foot):
-    before = set(sc.objects); bpy.ops.import_scene.gltf(filepath=os.path.join(CAMP, n + ".glb"))
+TRIM = {"bowyer0": (float(os.environ.get("TRIM_Z", "0.2")), float(os.environ.get("TRIM_R", "0.27"))), "camp_wolf_statue": (0.3, 0.3)}   # wolf: two loose soil patches beside the plinth
+def load_building(n, foot, path=None, yaw=None, grass=0.15):
+    before = set(sc.objects); bpy.ops.import_scene.gltf(filepath=path or os.path.join(CAMP, n + ".glb"))
     ms = [o for o in sc.objects if o not in before and o.type == "MESH"]
     root = bpy.data.objects.new("root", None); sc.collection.objects.link(root)
     for o in sc.objects:
         if o not in before and o is not root and o.parent is None: o.parent = root
-    root.rotation_euler.z = math.radians(float(yaws[n])); bpy.context.view_layer.update()
+    root.rotation_euler.z = math.radians(float(yaws[n] if yaw is None else yaw)); bpy.context.view_layer.update()
     for mt in {s.material for o in ms for s in o.material_slots if s.material}:
         for nd in mt.node_tree.nodes:
             if nd.type == "BSDF_PRINCIPLED":
@@ -428,7 +428,7 @@ def load_building(n, foot):
             if p.normal.z > 0.85 and p.center.z < lo + 0.3 * H: bins[min(59, int((p.center.z - lo) / H * 60))] += p.area
     top = lo + (max(range(60), key=lambda i: bins[i]) + 1) / 60 * H
     # leftover island grass: faces near the top that sample green from the base colour texture
-    img = next((nd.image for o in ms for sl in o.material_slots if sl.material for nd in sl.material.node_tree.nodes if nd.type == "TEX_IMAGE" and nd.image and "basecolor" in nd.image.name), None)   # this model's own texture (the session holds every model loaded so far)
+    img = next((nd.image for o in ms for sl in o.material_slots if sl.material for nd in sl.material.node_tree.nodes if nd.type == "TEX_IMAGE" and nd.image and ("basecolor" in nd.image.name or nd.image.name.startswith("tripo_image_"))), None)   # this model's own texture (the session holds every model loaded so far)
     sm = None
     if img and n.endswith("0"):   # level 0 (Tripo, 11 Nov): pull saturated island greens toward the meadow tone so the plots match levels 1-3
         import numpy as np
@@ -444,7 +444,7 @@ def load_building(n, foot):
         for f in bm_.faces:
             zs_ = [v.co.z for v in f.verts]
             if max(zs_) <= top + 0.002 * H: kill.append(f); continue
-            if sm and uvl and min(zs_) < top + 0.15 * H:   # ground cover only: banners and straw hang higher
+            if sm and uvl and (min(zs_) if grass >= 0.15 else max(zs_)) < top + grass * H:   # ground cover only: banners and straw hang higher
                 u = sum(l[uvl].uv.x for l in f.loops) / len(f.loops); v_ = sum(l[uvl].uv.y for l in f.loops) / len(f.loops)
                 k = (int((v_ % 1) * (W_ - 1)) * W_ + int((u % 1) * (W_ - 1))) * 4
                 r_, g_, b_ = px_[k], px_[k + 1], px_[k + 2]
@@ -589,6 +589,32 @@ for n, (sx, sy, src) in DECOR.items():
     sc.render.filepath = os.path.join(out, n + ".png"); bpy.ops.render.render(write_still=True)
     rects[n] = [sc.render.border_min_x, sc.render.border_max_x, sc.render.border_min_y, sc.render.border_max_y]
     for o in parts: bpy.data.objects.remove(o)
+# ---- TB-250 camp cosmetics: seven Tripo Smart Mesh props (tide-assets/cosmetics/<id>.glb, fronts in its yaws.json), each planted
+# like a building (its grass island cut, scaled by footprint) at its own spot, one pass each so each shows once earned.
+COSM = r"C:\Users\DANTE\Documents\tide-assets\cosmetics"
+PIECES = {   # name: (scene x, scene y of the front edge, footprint width in scene units): open meadow clear of the buildings, elk and panels
+    "camp_campfire": (706, 109, 56), "camp_wolf_statue": (226, 133, 24), "camp_standing_stone": (285, 192, 34),
+    "camp_lantern_string": (706, -122, 100), "camp_armour_stand": (103, 109, 40), "camp_bell": (940, 198, 48),
+    "camp_sapling": (413, -68, 48),
+}
+if any(want(n) for n in PIECES):
+    cyaws = json.load(open(os.path.join(COSM, "yaws.json")))
+    for n, (x, frow, foot) in PIECES.items():
+        if not want(n): continue
+        ms, P = load_building(n, foot, os.path.join(COSM, n + ".glb"), cyaws[n], 0.05)   # props: cut only flat grass at the foot (green legs, moss stay)
+        fx, fy = min(p.x for p in P), (min(p.y for p in P) + max(p.y for p in P)) / 2
+        tgt = ground(x, frow); off = Vector((tgt.x - fx, tgt.y - fy, 0))
+        for o in ms: o.location = off
+        bpy.context.view_layer.update()
+        V = [w2c(sc, cam, p + off) for p in P]
+        u0, u1 = min(v.x for v in V), max(v.x for v in V); v0, v1 = min(v.y for v in V), max(v.y for v in V)
+        mu, mv = (u1 - u0) * 0.25, (v1 - v0) * 0.15
+        sc.render.use_border = True; sc.render.use_crop_to_border = True
+        sc.render.border_min_x, sc.render.border_max_x = max(0, u0 - mu), min(1, u1 + mu)
+        sc.render.border_min_y, sc.render.border_max_y = max(0, v0 - mv), min(1, v1 + mv * 0.3)
+        sc.render.filepath = os.path.join(out, n + ".png"); bpy.ops.render.render(write_still=True)
+        rects[n] = [sc.render.border_min_x, sc.render.border_max_x, sc.render.border_min_y, sc.render.border_max_y]
+        for o in ms: bpy.data.objects.remove(o)
 if want("elk"):
     obs, ms, pts = load_elk(); A = bpy.data.actions[ELK_CLIP]; f0, f1 = map(int, A.frame_range)
     frames = list(range(f0, f1, ELK_STEP))   # f1 repeats f0: the clip loops
