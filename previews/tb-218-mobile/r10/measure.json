@@ -1,0 +1,4916 @@
+{
+ "915x412": {
+  "fresh": {
+   "fallen": false,
+   "wave": 1,
+   "barHp": 150
+  },
+  "run": {
+   "inner": [
+    915,
+    412
+   ],
+   "clipReal": [],
+   "clipRealN": 0,
+   "clipReachable": 0,
+   "tapGaps": 0,
+   "tapGapSample": [],
+   "tapOverlap": 0,
+   "dpr": 2.625,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [
+    {
+     "id": "game",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 412,
+     "ar": 2.221,
+     "bw": 1144,
+     "bh": 515,
+     "bar": 2.221
+    }
+   ],
+   "canvText": {},
+   "treeLabels": null,
+   "plate": null
+  },
+  "runLive": {
+   "inner": [
+    915,
+    412
+   ],
+   "clipReal": [],
+   "clipRealN": 0,
+   "clipReachable": 0,
+   "tapGaps": 0,
+   "tapGapSample": [],
+   "tapOverlap": 0,
+   "dpr": 2.625,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [
+    {
+     "id": "game",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 412,
+     "ar": 2.221,
+     "bw": 915,
+     "bh": 412,
+     "bar": 2.221
+    },
+    {
+     "id": "juice-overlay",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 412,
+     "ar": 2.221,
+     "bw": 0,
+     "bh": 0,
+     "bar": null
+    }
+   ],
+   "canvText": {},
+   "treeLabels": null,
+   "plate": null,
+   "scene": {
+    "orcs": 35,
+    "vans": 3,
+    "wave": 25,
+    "bossShown": true,
+    "boss": {
+     "l": 616,
+     "t": 306,
+     "r": 853,
+     "b": 372
+    },
+    "hudBottom": 78,
+    "tone": "mid",
+    "crack": "2",
+    "innerH": 412
+   }
+  },
+  "lowWall": {
+   "tone": "low",
+   "crack": "3",
+   "text": "BARRICADE 18 / 150",
+   "wall": {
+    "l": 34,
+    "t": 16,
+    "r": 242,
+    "b": 42
+   },
+   "wave": {
+    "l": 359,
+    "t": 12,
+    "r": 479,
+    "b": 70
+   }
+  },
+  "camp": {
+   "inner": [
+    915,
+    412
+   ],
+   "clipReal": [],
+   "clipRealN": 0,
+   "clipReachable": 0,
+   "tapGaps": 4,
+   "tapGapSample": [
+    {
+     "a": "#tab-grove",
+     "b": "#tab-satchel",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-satchel",
+     "b": "#tab-camp",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-camp",
+     "b": "#tab-prestige",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-prestige",
+     "b": "#tab-settings",
+     "gap": 0,
+     "ov": false
+    }
+   ],
+   "tapOverlap": 0,
+   "dpr": 2.625,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [
+    {
+     "id": "campview",
+     "l": 34,
+     "t": 48,
+     "w": 847,
+     "h": 344,
+     "ar": 2.462,
+     "bw": 1271,
+     "bh": 516,
+     "bar": 2.463
+    },
+    {
+     "id": "juice-overlay",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 412,
+     "ar": 2.221,
+     "bw": 0,
+     "bh": 0,
+     "bar": null
+    }
+   ],
+   "canvText": {},
+   "treeLabels": null,
+   "plate": null,
+   "tags": {
+    "tags": [
+     {
+      "t": "Bowyer 2/3",
+      "l": 151,
+      "tp": 271,
+      "r": 263,
+      "b": 319
+     },
+     {
+      "t": "Forge 1/3",
+      "l": 325,
+      "tp": 340,
+      "r": 424,
+      "b": 388
+     },
+     {
+      "t": "Kitchen 3/3",
+      "l": 508,
+      "tp": 251,
+      "r": 621,
+      "b": 299
+     },
+     {
+      "t": "Training Area · Build",
+      "l": 637,
+      "tp": 325,
+      "r": 816,
+      "b": 373
+     }
+    ],
+    "minTagGap": 26
+   },
+   "campwrap": {
+    "l": 34,
+    "t": 48,
+    "r": 881,
+    "b": 392,
+    "w": 847,
+    "h": 344,
+    "sh": 344,
+    "ch": 344
+   }
+  },
+  "grove": {
+   "inner": [
+    915,
+    412
+   ],
+   "clipReal": [],
+   "clipRealN": 0,
+   "clipReachable": 0,
+   "tapGaps": 4,
+   "tapGapSample": [
+    {
+     "a": "#tab-grove",
+     "b": "#tab-satchel",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-satchel",
+     "b": "#tab-camp",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-camp",
+     "b": "#tab-prestige",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-prestige",
+     "b": "#tab-settings",
+     "gap": 0,
+     "ov": false
+    }
+   ],
+   "tapOverlap": 0,
+   "dpr": 2.625,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [
+    {
+     "id": "tree",
+     "l": 34,
+     "t": 48,
+     "w": 607,
+     "h": 344,
+     "ar": 1.765,
+     "bw": 911,
+     "bh": 516,
+     "bar": 1.766
+    },
+    {
+     "id": "juice-overlay",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 412,
+     "ar": 2.221,
+     "bw": 0,
+     "bh": 0,
+     "bar": null
+    }
+   ],
+   "canvText": {
+    "tree": {
+     "min": 13.99231613611416,
+     "text": "Waking",
+     "n": 364
+    }
+   },
+   "treeLabels": {
+    "n": 364,
+    "minPx": 14,
+    "outside": 0,
+    "worstMargin": 14.3,
+    "bad": []
+   },
+   "plate": null,
+   "tree": {
+    "l": 34,
+    "t": 48,
+    "r": 641,
+    "b": 392,
+    "w": 607,
+    "h": 344,
+    "sh": 344,
+    "ch": 344
+   },
+   "detail": {
+    "l": 641,
+    "t": 48,
+    "r": 881,
+    "b": 392,
+    "w": 240,
+    "h": 344,
+    "sh": 344,
+    "ch": 344
+   },
+   "tabs": {
+    "l": 34,
+    "t": 0,
+    "r": 723.7,
+    "b": 48,
+    "w": 689.7,
+    "h": 48,
+    "sh": 48,
+    "ch": 48
+   },
+   "nodes": {
+    "z": 1,
+    "ui": 1,
+    "discCssDiameter": 48,
+    "visible": 15,
+    "nodesUnderLegend": 3,
+    "nodesCutByEdge": 2,
+    "probe": {
+     "id": "horde",
+     "hit": [
+      true,
+      true,
+      true,
+      true
+     ]
+    }
+   }
+  },
+  "tree-zoomed": {
+   "inner": [
+    915,
+    412
+   ],
+   "clipReal": [],
+   "clipRealN": 0,
+   "clipReachable": 0,
+   "tapGaps": 4,
+   "tapGapSample": [
+    {
+     "a": "#tab-grove",
+     "b": "#tab-satchel",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-satchel",
+     "b": "#tab-camp",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-camp",
+     "b": "#tab-prestige",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-prestige",
+     "b": "#tab-settings",
+     "gap": 0,
+     "ov": false
+    }
+   ],
+   "tapOverlap": 0,
+   "dpr": 2.625,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [
+    {
+     "id": "tree",
+     "l": 34,
+     "t": 0,
+     "w": 559,
+     "h": 392,
+     "ar": 1.426,
+     "bw": 839,
+     "bh": 588,
+     "bar": 1.427
+    },
+    {
+     "id": "juice-overlay",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 412,
+     "ar": 2.221,
+     "bw": 1373,
+     "bh": 618,
+     "bar": 2.222
+    }
+   ],
+   "canvText": {
+    "tree": {
+     "min": 13.99165673420739,
+     "text": "Waking",
+     "n": 372
+    }
+   },
+   "treeLabels": {
+    "n": 372,
+    "minPx": 14,
+    "outside": 0,
+    "worstMargin": 11.5,
+    "bad": []
+   },
+   "plate": null
+  },
+  "satchel": {
+   "inner": [
+    915,
+    412
+   ],
+   "clipReal": [],
+   "clipRealN": 0,
+   "clipReachable": 0,
+   "tapGaps": 75,
+   "tapGapSample": [
+    {
+     "a": "#camp-go",
+     "b": "#sat-filter",
+     "gap": 4,
+     "ov": false
+    },
+    {
+     "a": "#tab-grove",
+     "b": "#tab-satchel",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-satchel",
+     "b": "#tab-camp",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-camp",
+     "b": "#tab-prestige",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-prestige",
+     "b": "#tab-settings",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-settings",
+     "b": "#sat-filter",
+     "gap": 4,
+     "ov": false
+    },
+    {
+     "a": ".item",
+     "b": ".item",
+     "gap": 6,
+     "ov": false
+    },
+    {
+     "a": ".item",
+     "b": ".item",
+     "gap": 6,
+     "ov": false
+    }
+   ],
+   "tapOverlap": 0,
+   "dpr": 2.625,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [
+    {
+     "id": "juice-overlay",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 412,
+     "ar": 2.221,
+     "bw": 0,
+     "bh": 0,
+     "bar": null
+    }
+   ],
+   "canvText": {},
+   "treeLabels": null,
+   "plate": null,
+   "pane": {
+    "l": 34,
+    "t": 48,
+    "r": 881,
+    "b": 392,
+    "w": 847,
+    "h": 344,
+    "sh": 344,
+    "ch": 344
+   },
+   "grid": {
+    "l": 418.7,
+    "t": 104,
+    "r": 867,
+    "b": 388,
+    "w": 448.3,
+    "h": 284,
+    "sh": 284,
+    "ch": 284
+   },
+   "detail": {
+    "l": 0,
+    "t": 0,
+    "r": 0,
+    "b": 0,
+    "w": 0,
+    "h": 0,
+    "sh": 0,
+    "ch": 0
+   },
+   "worn": {
+    "l": 48,
+    "t": 104,
+    "r": 348,
+    "b": 340,
+    "w": 300,
+    "h": 236,
+    "sh": 236,
+    "ch": 236
+   },
+   "cells": 24,
+   "cols": 8,
+   "gap": "4px",
+   "wornPad": {
+    "top": 10,
+    "bottom": 10,
+    "left": 10,
+    "right": 10
+   },
+   "gridScroll": {
+    "sh": 284,
+    "ch": 284
+   }
+  },
+  "satchel-picked": {
+   "inner": [
+    915,
+    412
+   ],
+   "clipReal": [],
+   "clipRealN": 0,
+   "clipReachable": 0,
+   "tapGaps": 8,
+   "tapGapSample": [
+    {
+     "a": "#tab-grove",
+     "b": "#tab-satchel",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-satchel",
+     "b": "#tab-camp",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-camp",
+     "b": "#tab-prestige",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-prestige",
+     "b": "#tab-settings",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": ".item",
+     "b": ".item",
+     "gap": 6,
+     "ov": false
+    },
+    {
+     "a": ".item",
+     "b": ".item",
+     "gap": 6,
+     "ov": false
+    },
+    {
+     "a": ".item",
+     "b": ".item",
+     "gap": 6,
+     "ov": false
+    },
+    {
+     "a": ".item",
+     "b": ".item",
+     "gap": 6,
+     "ov": false
+    }
+   ],
+   "tapOverlap": 0,
+   "dpr": 2.625,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [
+    {
+     "id": "juice-overlay",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 412,
+     "ar": 2.221,
+     "bw": 0,
+     "bh": 0,
+     "bar": null
+    }
+   ],
+   "canvText": {},
+   "treeLabels": null,
+   "plate": null,
+   "acts": [
+    {
+     "a": "close",
+     "l": 423,
+     "r": 551,
+     "t": 56,
+     "b": 104
+    },
+    {
+     "a": "equip",
+     "l": 423,
+     "r": 564,
+     "t": 179,
+     "b": 227
+    },
+    {
+     "a": "lock",
+     "l": 572,
+     "r": 714,
+     "t": 179,
+     "b": 227
+    },
+    {
+     "a": "salvage",
+     "l": 722,
+     "r": 863,
+     "t": 179,
+     "b": 227
+    }
+   ],
+   "detail": {
+    "l": 418.7,
+    "t": 52,
+    "r": 867,
+    "b": 227.4,
+    "w": 448.3,
+    "h": 175.4,
+    "sh": 175,
+    "ch": 175
+   },
+   "pane": {
+    "l": 34,
+    "t": 48,
+    "r": 881,
+    "b": 392,
+    "w": 847,
+    "h": 344,
+    "sh": 344,
+    "ch": 344
+   },
+   "worn": {
+    "l": 48,
+    "t": 76.8,
+    "r": 348,
+    "b": 312.8,
+    "w": 300,
+    "h": 236,
+    "sh": 236,
+    "ch": 236
+   },
+   "wornShift": -27.2
+  },
+  "replant": {
+   "inner": [
+    915,
+    412
+   ],
+   "clipReal": [],
+   "clipRealN": 0,
+   "clipReachable": 30,
+   "tapGaps": 4,
+   "tapGapSample": [
+    {
+     "a": "#tab-grove",
+     "b": "#tab-satchel",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-satchel",
+     "b": "#tab-camp",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-camp",
+     "b": "#tab-prestige",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-prestige",
+     "b": "#tab-settings",
+     "gap": 0,
+     "ov": false
+    }
+   ],
+   "tapOverlap": 0,
+   "dpr": 2.625,
+   "small": [],
+   "smallT": [],
+   "off": [
+    {
+     "n": ".buy",
+     "r": 437,
+     "b": 454
+    },
+    {
+     "n": ".buy",
+     "r": 841,
+     "b": 454
+    }
+   ],
+   "text": [],
+   "clip": [
+    {
+     "n": "#pane-prestige",
+     "sh": 590,
+     "ch": 344,
+     "oy": "auto"
+    }
+   ],
+   "canv": [
+    {
+     "id": "",
+     "l": 61,
+     "t": 101,
+     "w": 56,
+     "h": 56,
+     "ar": 1,
+     "bw": 192,
+     "bh": 192,
+     "bar": 1
+    },
+    {
+     "id": "",
+     "l": 331,
+     "t": 101,
+     "w": 56,
+     "h": 56,
+     "ar": 1,
+     "bw": 192,
+     "bh": 192,
+     "bar": 1
+    },
+    {
+     "id": "",
+     "l": 602,
+     "t": 101,
+     "w": 56,
+     "h": 56,
+     "ar": 1,
+     "bw": 192,
+     "bh": 192,
+     "bar": 1
+    },
+    {
+     "id": "juice-overlay",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 412,
+     "ar": 2.221,
+     "bw": 0,
+     "bh": 0,
+     "bar": null
+    }
+   ],
+   "canvText": {},
+   "treeLabels": null,
+   "plate": null,
+   "pane": {
+    "l": 34,
+    "t": 48,
+    "r": 881,
+    "b": 392,
+    "w": 847,
+    "h": 344,
+    "sh": 590,
+    "ch": 344
+   },
+   "scroll": {
+    "sh": 590,
+    "ch": 344,
+    "oy": "auto"
+   }
+  },
+  "replant-end": {
+   "inner": [
+    915,
+    412
+   ],
+   "clipReal": [],
+   "clipRealN": 0,
+   "clipReachable": 32,
+   "tapGaps": 12,
+   "tapGapSample": [
+    {
+     "a": "#camp-go",
+     "b": ".buy",
+     "gap": -22,
+     "ov": true
+    },
+    {
+     "a": "#camp-go",
+     "b": ".buy",
+     "gap": -12,
+     "ov": true
+    },
+    {
+     "a": "#tab-grove",
+     "b": "#tab-satchel",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-satchel",
+     "b": "#tab-camp",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-satchel",
+     "b": ".buy",
+     "gap": 2.2,
+     "ov": false
+    },
+    {
+     "a": "#tab-satchel",
+     "b": ".buy",
+     "gap": 2.2,
+     "ov": false
+    },
+    {
+     "a": "#tab-camp",
+     "b": "#tab-prestige",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-camp",
+     "b": ".buy",
+     "gap": -22,
+     "ov": true
+    }
+   ],
+   "tapOverlap": 6,
+   "dpr": 2.625,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [
+    {
+     "n": "#pane-prestige",
+     "sh": 590,
+     "ch": 344,
+     "oy": "auto"
+    }
+   ],
+   "canv": [
+    {
+     "id": "",
+     "l": 61,
+     "t": -145,
+     "w": 56,
+     "h": 56,
+     "ar": 1,
+     "bw": 192,
+     "bh": 192,
+     "bar": 1
+    },
+    {
+     "id": "",
+     "l": 331,
+     "t": -145,
+     "w": 56,
+     "h": 56,
+     "ar": 1,
+     "bw": 192,
+     "bh": 192,
+     "bar": 1
+    },
+    {
+     "id": "",
+     "l": 602,
+     "t": -145,
+     "w": 56,
+     "h": 56,
+     "ar": 1,
+     "bw": 192,
+     "bh": 192,
+     "bar": 1
+    },
+    {
+     "id": "juice-overlay",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 412,
+     "ar": 2.221,
+     "bw": 0,
+     "bh": 0,
+     "bar": null
+    }
+   ],
+   "canvText": {},
+   "treeLabels": null,
+   "plate": null,
+   "atEnd": {
+    "lastBottom": 346,
+    "paneBottom": 392,
+    "inner": 412,
+    "top": 246
+   }
+  },
+  "settings": {
+   "inner": [
+    915,
+    412
+   ],
+   "clipReal": [],
+   "clipRealN": 0,
+   "clipReachable": 6,
+   "tapGaps": 4,
+   "tapGapSample": [
+    {
+     "a": "#tab-grove",
+     "b": "#tab-satchel",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-satchel",
+     "b": "#tab-camp",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-camp",
+     "b": "#tab-prestige",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-prestige",
+     "b": "#tab-settings",
+     "gap": 0,
+     "ov": false
+    }
+   ],
+   "tapOverlap": 0,
+   "dpr": 2.625,
+   "small": [],
+   "smallT": [],
+   "off": [
+    {
+     "n": "#btn-telemetry",
+     "r": 239,
+     "b": 429
+    }
+   ],
+   "text": [],
+   "clip": [
+    {
+     "n": "#pane-settings",
+     "sh": 582,
+     "ch": 344,
+     "oy": "auto"
+    }
+   ],
+   "canv": [
+    {
+     "id": "juice-overlay",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 412,
+     "ar": 2.221,
+     "bw": 0,
+     "bh": 0,
+     "bar": null
+    }
+   ],
+   "canvText": {},
+   "treeLabels": null,
+   "plate": null,
+   "pane": {
+    "l": 34,
+    "t": 48,
+    "r": 881,
+    "b": 392,
+    "w": 847,
+    "h": 344,
+    "sh": 582,
+    "ch": 344
+   },
+   "thumb": {
+    "l": 194,
+    "t": 56,
+    "r": 367.5,
+    "b": 104,
+    "w": 173.5,
+    "h": 48,
+    "sh": 48,
+    "ch": 48
+   },
+   "scroll": {
+    "sh": 582,
+    "ch": 344,
+    "oy": "auto"
+   }
+  },
+  "settings-end": {
+   "inner": [
+    915,
+    412
+   ],
+   "clipReal": [],
+   "clipRealN": 0,
+   "clipReachable": 24,
+   "tapGaps": 9,
+   "tapGapSample": [
+    {
+     "a": "#tab-grove",
+     "b": "#tab-satchel",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-satchel",
+     "b": "#tab-camp",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-satchel",
+     "b": "#set-text",
+     "gap": -38,
+     "ov": true
+    },
+    {
+     "a": "#tab-satchel",
+     "b": "#set-num",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-camp",
+     "b": "#tab-prestige",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-camp",
+     "b": "#set-text",
+     "gap": -38,
+     "ov": true
+    },
+    {
+     "a": "#tab-camp",
+     "b": "#set-num",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-prestige",
+     "b": "#tab-settings",
+     "gap": 0,
+     "ov": false
+    }
+   ],
+   "tapOverlap": 3,
+   "dpr": 2.625,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [
+    {
+     "n": "#pane-settings",
+     "sh": 582,
+     "ch": 344,
+     "oy": "auto"
+    }
+   ],
+   "canv": [
+    {
+     "id": "juice-overlay",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 412,
+     "ar": 2.221,
+     "bw": 0,
+     "bh": 0,
+     "bar": null
+    }
+   ],
+   "canvText": {},
+   "treeLabels": null,
+   "plate": null,
+   "atEnd": {
+    "lastBottom": 35,
+    "paneBottom": 392,
+    "inner": 412,
+    "top": 238
+   }
+  },
+  "settingsOverlay": {
+   "inner": [
+    915,
+    412
+   ],
+   "clipReal": [],
+   "clipRealN": 0,
+   "clipReachable": 10,
+   "tapGaps": 0,
+   "tapGapSample": [],
+   "tapOverlap": 0,
+   "dpr": 2.625,
+   "small": [],
+   "smallT": [],
+   "off": [
+    {
+     "n": "#btn-telemetry",
+     "r": 239,
+     "b": 435
+    }
+   ],
+   "text": [],
+   "clip": [
+    {
+     "n": "#pane-settings",
+     "sh": 582,
+     "ch": 318,
+     "oy": "auto"
+    }
+   ],
+   "canv": [
+    {
+     "id": "game",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 412,
+     "ar": 2.221,
+     "bw": 915,
+     "bh": 412,
+     "bar": 2.221
+    },
+    {
+     "id": "juice-overlay",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 412,
+     "ar": 2.221,
+     "bw": 0,
+     "bh": 0,
+     "bar": null
+    }
+   ],
+   "canvText": {
+    "game": {
+     "min": 12.875000238418579,
+     "text": "+2",
+     "n": 7
+    }
+   },
+   "treeLabels": null,
+   "plate": null,
+   "panel": {
+    "l": 34,
+    "t": 6,
+    "r": 881,
+    "b": 392,
+    "w": 847,
+    "h": 386,
+    "sh": 386,
+    "ch": 386
+   },
+   "pane": {
+    "l": 34,
+    "t": 54,
+    "r": 881,
+    "b": 372,
+    "w": 847,
+    "h": 318,
+    "sh": 582,
+    "ch": 318
+   },
+   "back": {
+    "l": 703,
+    "t": 6,
+    "r": 881,
+    "b": 54,
+    "w": 178,
+    "h": 48,
+    "sh": 32,
+    "ch": 32
+   }
+  },
+  "fallen": {
+   "inner": [
+    915,
+    412
+   ],
+   "clipReal": [],
+   "clipRealN": 0,
+   "clipReachable": 0,
+   "tapGaps": 0,
+   "tapGapSample": [],
+   "tapOverlap": 0,
+   "dpr": 2.625,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [
+    {
+     "id": "game",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 412,
+     "ar": 2.221,
+     "bw": 915,
+     "bh": 412,
+     "bar": 2.221
+    },
+    {
+     "id": "juice-overlay",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 412,
+     "ar": 2.221,
+     "bw": 0,
+     "bh": 0,
+     "bar": null
+    }
+   ],
+   "canvText": {},
+   "treeLabels": null,
+   "plate": null,
+   "real": {
+    "fallen": true,
+    "barHp": 0,
+    "wallTxt": "BARRICADE 0 / 150",
+    "tone": "low",
+    "boardShown": true
+   },
+   "board": {
+    "l": 242,
+    "t": 105,
+    "r": 673,
+    "b": 359,
+    "w": 431,
+    "h": 254.1,
+    "sh": 174,
+    "ch": 174
+   },
+   "btn": {
+    "l": 705,
+    "t": 336,
+    "r": 881,
+    "b": 392,
+    "w": 176,
+    "h": 56,
+    "sh": 56,
+    "ch": 56
+   },
+   "hud": {
+    "l": 0,
+    "t": 0,
+    "r": 915,
+    "b": 78,
+    "w": 915,
+    "h": 78,
+    "sh": 78,
+    "ch": 78
+   },
+   "btnText": {
+    "leftSpace": 68,
+    "rightSpace": 10,
+    "bottom": 392,
+    "inner": 412
+   }
+  }
+ },
+ "915x360": {
+  "fresh": {
+   "fallen": false,
+   "wave": 1,
+   "barHp": 150
+  },
+  "run": {
+   "inner": [
+    915,
+    360
+   ],
+   "clipReal": [],
+   "clipRealN": 0,
+   "clipReachable": 0,
+   "tapGaps": 0,
+   "tapGapSample": [],
+   "tapOverlap": 0,
+   "dpr": 2.625,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [
+    {
+     "id": "game",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 360,
+     "ar": 2.542,
+     "bw": 915,
+     "bh": 360,
+     "bar": 2.542
+    }
+   ],
+   "canvText": {},
+   "treeLabels": null,
+   "plate": null
+  },
+  "runLive": {
+   "inner": [
+    915,
+    360
+   ],
+   "clipReal": [],
+   "clipRealN": 0,
+   "clipReachable": 0,
+   "tapGaps": 0,
+   "tapGapSample": [],
+   "tapOverlap": 0,
+   "dpr": 2.625,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [
+    {
+     "id": "game",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 360,
+     "ar": 2.542,
+     "bw": 915,
+     "bh": 360,
+     "bar": 2.542
+    },
+    {
+     "id": "juice-overlay",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 360,
+     "ar": 2.542,
+     "bw": 0,
+     "bh": 0,
+     "bar": null
+    }
+   ],
+   "canvText": {},
+   "treeLabels": null,
+   "plate": null,
+   "scene": {
+    "orcs": 36,
+    "vans": 3,
+    "wave": 25,
+    "bossShown": true,
+    "boss": {
+     "l": 616,
+     "t": 254,
+     "r": 853,
+     "b": 320
+    },
+    "hudBottom": 78,
+    "tone": "mid",
+    "crack": "2",
+    "innerH": 360
+   }
+  },
+  "lowWall": {
+   "tone": "low",
+   "crack": "3",
+   "text": "BARRICADE 18 / 150",
+   "wall": {
+    "l": 34,
+    "t": 16,
+    "r": 242,
+    "b": 42
+   },
+   "wave": {
+    "l": 359,
+    "t": 12,
+    "r": 479,
+    "b": 70
+   }
+  },
+  "camp": {
+   "inner": [
+    915,
+    360
+   ],
+   "clipReal": [],
+   "clipRealN": 0,
+   "clipReachable": 0,
+   "tapGaps": 4,
+   "tapGapSample": [
+    {
+     "a": "#tab-grove",
+     "b": "#tab-satchel",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-satchel",
+     "b": "#tab-camp",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-camp",
+     "b": "#tab-prestige",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-prestige",
+     "b": "#tab-settings",
+     "gap": 0,
+     "ov": false
+    }
+   ],
+   "tapOverlap": 0,
+   "dpr": 2.625,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [
+    {
+     "id": "campview",
+     "l": 34,
+     "t": 48,
+     "w": 847,
+     "h": 292,
+     "ar": 2.901,
+     "bw": 1271,
+     "bh": 438,
+     "bar": 2.902
+    },
+    {
+     "id": "juice-overlay",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 360,
+     "ar": 2.542,
+     "bw": 1373,
+     "bh": 540,
+     "bar": 2.543
+    }
+   ],
+   "canvText": {},
+   "treeLabels": null,
+   "plate": null,
+   "tags": {
+    "tags": [
+     {
+      "t": "Bowyer 2/3",
+      "l": 189,
+      "tp": 236,
+      "r": 301,
+      "b": 284
+     },
+     {
+      "t": "Forge 1/3",
+      "l": 338,
+      "tp": 288,
+      "r": 437,
+      "b": 336
+     },
+     {
+      "t": "Kitchen 3/3",
+      "l": 492,
+      "tp": 219,
+      "r": 605,
+      "b": 267
+     },
+     {
+      "t": "Training Area · Build",
+      "l": 597,
+      "tp": 282,
+      "r": 775,
+      "b": 330
+     }
+    ],
+    "minTagGap": 15
+   },
+   "campwrap": {
+    "l": 34,
+    "t": 48,
+    "r": 881,
+    "b": 340,
+    "w": 847,
+    "h": 292,
+    "sh": 292,
+    "ch": 292
+   }
+  },
+  "grove": {
+   "inner": [
+    915,
+    360
+   ],
+   "clipReal": [],
+   "clipRealN": 0,
+   "clipReachable": 0,
+   "tapGaps": 4,
+   "tapGapSample": [
+    {
+     "a": "#tab-grove",
+     "b": "#tab-satchel",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-satchel",
+     "b": "#tab-camp",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-camp",
+     "b": "#tab-prestige",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-prestige",
+     "b": "#tab-settings",
+     "gap": 0,
+     "ov": false
+    }
+   ],
+   "tapOverlap": 0,
+   "dpr": 2.625,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [
+    {
+     "id": "tree",
+     "l": 34,
+     "t": 48,
+     "w": 607,
+     "h": 292,
+     "ar": 2.079,
+     "bw": 911,
+     "bh": 438,
+     "bar": 2.08
+    },
+    {
+     "id": "juice-overlay",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 360,
+     "ar": 2.542,
+     "bw": 0,
+     "bh": 0,
+     "bar": null
+    }
+   ],
+   "canvText": {
+    "tree": {
+     "min": 13.99231613611416,
+     "text": "Waking",
+     "n": 336
+    }
+   },
+   "treeLabels": {
+    "n": 336,
+    "minPx": 14,
+    "outside": 0,
+    "worstMargin": 12.7,
+    "bad": []
+   },
+   "plate": null,
+   "tree": {
+    "l": 34,
+    "t": 48,
+    "r": 641,
+    "b": 340,
+    "w": 607,
+    "h": 292,
+    "sh": 292,
+    "ch": 292
+   },
+   "detail": {
+    "l": 641,
+    "t": 48,
+    "r": 881,
+    "b": 340,
+    "w": 240,
+    "h": 292,
+    "sh": 292,
+    "ch": 292
+   },
+   "tabs": {
+    "l": 34,
+    "t": 0,
+    "r": 723.7,
+    "b": 48,
+    "w": 689.7,
+    "h": 48,
+    "sh": 48,
+    "ch": 48
+   },
+   "nodes": {
+    "z": 1,
+    "ui": 1,
+    "discCssDiameter": 48,
+    "visible": 13,
+    "nodesUnderLegend": 2,
+    "nodesCutByEdge": 1,
+    "probe": {
+     "id": "horde",
+     "hit": [
+      true,
+      true,
+      true,
+      true
+     ]
+    }
+   }
+  },
+  "tree-zoomed": {
+   "inner": [
+    915,
+    360
+   ],
+   "clipReal": [],
+   "clipRealN": 0,
+   "clipReachable": 0,
+   "tapGaps": 4,
+   "tapGapSample": [
+    {
+     "a": "#tab-grove",
+     "b": "#tab-satchel",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-satchel",
+     "b": "#tab-camp",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-camp",
+     "b": "#tab-prestige",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-prestige",
+     "b": "#tab-settings",
+     "gap": 0,
+     "ov": false
+    }
+   ],
+   "tapOverlap": 0,
+   "dpr": 2.625,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [
+    {
+     "id": "tree",
+     "l": 34,
+     "t": 0,
+     "w": 559,
+     "h": 340,
+     "ar": 1.644,
+     "bw": 839,
+     "bh": 510,
+     "bar": 1.645
+    },
+    {
+     "id": "juice-overlay",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 360,
+     "ar": 2.542,
+     "bw": 0,
+     "bh": 0,
+     "bar": null
+    }
+   ],
+   "canvText": {
+    "tree": {
+     "min": 13.99165673420739,
+     "text": "Waking",
+     "n": 350
+    }
+   },
+   "treeLabels": {
+    "n": 350,
+    "minPx": 14,
+    "outside": 0,
+    "worstMargin": 6.7,
+    "bad": []
+   },
+   "plate": null
+  },
+  "satchel": {
+   "inner": [
+    915,
+    360
+   ],
+   "clipReal": [],
+   "clipRealN": 0,
+   "clipReachable": 3,
+   "tapGaps": 27,
+   "tapGapSample": [
+    {
+     "a": "#camp-go",
+     "b": "#sat-filter",
+     "gap": 4,
+     "ov": false
+    },
+    {
+     "a": "#tab-grove",
+     "b": "#tab-satchel",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-satchel",
+     "b": "#tab-camp",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-camp",
+     "b": "#tab-prestige",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-prestige",
+     "b": "#tab-settings",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-settings",
+     "b": "#sat-filter",
+     "gap": 4,
+     "ov": false
+    },
+    {
+     "a": ".item",
+     "b": ".item",
+     "gap": 2,
+     "ov": false
+    },
+    {
+     "a": ".item",
+     "b": ".item",
+     "gap": 2,
+     "ov": false
+    }
+   ],
+   "tapOverlap": 0,
+   "dpr": 2.625,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [
+    {
+     "n": "#sat-grid",
+     "sh": 242,
+     "ch": 232,
+     "oy": "auto"
+    }
+   ],
+   "canv": [
+    {
+     "id": "juice-overlay",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 360,
+     "ar": 2.542,
+     "bw": 0,
+     "bh": 0,
+     "bar": null
+    }
+   ],
+   "canvText": {},
+   "treeLabels": null,
+   "plate": null,
+   "pane": {
+    "l": 34,
+    "t": 48,
+    "r": 881,
+    "b": 340,
+    "w": 847,
+    "h": 292,
+    "sh": 292,
+    "ch": 292
+   },
+   "grid": {
+    "l": 418.7,
+    "t": 104,
+    "r": 867,
+    "b": 336,
+    "w": 448.3,
+    "h": 232,
+    "sh": 242,
+    "ch": 232
+   },
+   "detail": {
+    "l": 0,
+    "t": 0,
+    "r": 0,
+    "b": 0,
+    "w": 0,
+    "h": 0,
+    "sh": 0,
+    "ch": 0
+   },
+   "worn": {
+    "l": 48,
+    "t": 104,
+    "r": 406.7,
+    "b": 258,
+    "w": 358.7,
+    "h": 154,
+    "sh": 154,
+    "ch": 154
+   },
+   "cells": 24,
+   "cols": 7,
+   "gap": "6px",
+   "wornPad": {
+    "top": 3,
+    "bottom": 3,
+    "left": 83.3,
+    "right": 83.3
+   },
+   "gridScroll": {
+    "sh": 242,
+    "ch": 232
+   }
+  },
+  "satchel-picked": {
+   "inner": [
+    915,
+    360
+   ],
+   "clipReal": [],
+   "clipRealN": 0,
+   "clipReachable": 0,
+   "tapGaps": 8,
+   "tapGapSample": [
+    {
+     "a": "#tab-grove",
+     "b": "#tab-satchel",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-satchel",
+     "b": "#tab-camp",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-camp",
+     "b": "#tab-prestige",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-prestige",
+     "b": "#tab-settings",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": ".item",
+     "b": ".item",
+     "gap": 2,
+     "ov": false
+    },
+    {
+     "a": ".item",
+     "b": ".item",
+     "gap": 2,
+     "ov": false
+    },
+    {
+     "a": ".item",
+     "b": ".item",
+     "gap": 2,
+     "ov": false
+    },
+    {
+     "a": ".item",
+     "b": ".item",
+     "gap": 2,
+     "ov": false
+    }
+   ],
+   "tapOverlap": 0,
+   "dpr": 2.625,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [
+    {
+     "id": "juice-overlay",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 360,
+     "ar": 2.542,
+     "bw": 0,
+     "bh": 0,
+     "bar": null
+    }
+   ],
+   "canvText": {},
+   "treeLabels": null,
+   "plate": null,
+   "acts": [
+    {
+     "a": "close",
+     "l": 423,
+     "r": 551,
+     "t": 56,
+     "b": 104
+    },
+    {
+     "a": "equip",
+     "l": 423,
+     "r": 564,
+     "t": 179,
+     "b": 227
+    },
+    {
+     "a": "lock",
+     "l": 572,
+     "r": 714,
+     "t": 179,
+     "b": 227
+    },
+    {
+     "a": "salvage",
+     "l": 722,
+     "r": 863,
+     "t": 179,
+     "b": 227
+    }
+   ],
+   "detail": {
+    "l": 418.7,
+    "t": 52,
+    "r": 867,
+    "b": 227.4,
+    "w": 448.3,
+    "h": 175.4,
+    "sh": 175,
+    "ch": 175
+   },
+   "pane": {
+    "l": 34,
+    "t": 48,
+    "r": 881,
+    "b": 340,
+    "w": 847,
+    "h": 292,
+    "sh": 292,
+    "ch": 292
+   },
+   "worn": {
+    "l": 48,
+    "t": 76.8,
+    "r": 406.7,
+    "b": 230.8,
+    "w": 358.7,
+    "h": 154,
+    "sh": 154,
+    "ch": 154
+   },
+   "wornShift": -27.2
+  },
+  "replant": {
+   "inner": [
+    915,
+    360
+   ],
+   "clipReal": [],
+   "clipRealN": 0,
+   "clipReachable": 42,
+   "tapGaps": 4,
+   "tapGapSample": [
+    {
+     "a": "#tab-grove",
+     "b": "#tab-satchel",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-satchel",
+     "b": "#tab-camp",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-camp",
+     "b": "#tab-prestige",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-prestige",
+     "b": "#tab-settings",
+     "gap": 0,
+     "ov": false
+    }
+   ],
+   "tapOverlap": 0,
+   "dpr": 2.625,
+   "small": [],
+   "smallT": [],
+   "off": [
+    {
+     "n": ".buy",
+     "r": 437,
+     "b": 392
+    },
+    {
+     "n": ".buy",
+     "r": 841,
+     "b": 392
+    }
+   ],
+   "text": [],
+   "clip": [
+    {
+     "n": "#pane-prestige",
+     "sh": 590,
+     "ch": 292,
+     "oy": "auto"
+    }
+   ],
+   "canv": [
+    {
+     "id": "",
+     "l": 61,
+     "t": 101,
+     "w": 56,
+     "h": 56,
+     "ar": 1,
+     "bw": 192,
+     "bh": 192,
+     "bar": 1
+    },
+    {
+     "id": "",
+     "l": 331,
+     "t": 101,
+     "w": 56,
+     "h": 56,
+     "ar": 1,
+     "bw": 192,
+     "bh": 192,
+     "bar": 1
+    },
+    {
+     "id": "",
+     "l": 602,
+     "t": 101,
+     "w": 56,
+     "h": 56,
+     "ar": 1,
+     "bw": 192,
+     "bh": 192,
+     "bar": 1
+    },
+    {
+     "id": "juice-overlay",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 360,
+     "ar": 2.542,
+     "bw": 0,
+     "bh": 0,
+     "bar": null
+    }
+   ],
+   "canvText": {},
+   "treeLabels": null,
+   "plate": null,
+   "pane": {
+    "l": 34,
+    "t": 48,
+    "r": 881,
+    "b": 340,
+    "w": 847,
+    "h": 292,
+    "sh": 590,
+    "ch": 292
+   },
+   "scroll": {
+    "sh": 590,
+    "ch": 292,
+    "oy": "auto"
+   }
+  },
+  "replant-end": {
+   "inner": [
+    915,
+    360
+   ],
+   "clipReal": [],
+   "clipRealN": 0,
+   "clipReachable": 40,
+   "tapGaps": 12,
+   "tapGapSample": [
+    {
+     "a": "#camp-go",
+     "b": ".buy",
+     "gap": -32,
+     "ov": true
+    },
+    {
+     "a": "#camp-go",
+     "b": ".buy",
+     "gap": -2,
+     "ov": true
+    },
+    {
+     "a": "#tab-grove",
+     "b": "#tab-satchel",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-satchel",
+     "b": "#tab-camp",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-satchel",
+     "b": ".buy",
+     "gap": 2.2,
+     "ov": false
+    },
+    {
+     "a": "#tab-satchel",
+     "b": ".buy",
+     "gap": 2.2,
+     "ov": false
+    },
+    {
+     "a": "#tab-camp",
+     "b": "#tab-prestige",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-camp",
+     "b": ".buy",
+     "gap": -32,
+     "ov": true
+    }
+   ],
+   "tapOverlap": 6,
+   "dpr": 2.625,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [
+    {
+     "n": "#pane-prestige",
+     "sh": 590,
+     "ch": 292,
+     "oy": "auto"
+    }
+   ],
+   "canv": [
+    {
+     "id": "",
+     "l": 61,
+     "t": -197,
+     "w": 56,
+     "h": 56,
+     "ar": 1,
+     "bw": 192,
+     "bh": 192,
+     "bar": 1
+    },
+    {
+     "id": "",
+     "l": 331,
+     "t": -197,
+     "w": 56,
+     "h": 56,
+     "ar": 1,
+     "bw": 192,
+     "bh": 192,
+     "bar": 1
+    },
+    {
+     "id": "",
+     "l": 602,
+     "t": -197,
+     "w": 56,
+     "h": 56,
+     "ar": 1,
+     "bw": 192,
+     "bh": 192,
+     "bar": 1
+    },
+    {
+     "id": "juice-overlay",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 360,
+     "ar": 2.542,
+     "bw": 0,
+     "bh": 0,
+     "bar": null
+    }
+   ],
+   "canvText": {},
+   "treeLabels": null,
+   "plate": null,
+   "atEnd": {
+    "lastBottom": 294,
+    "paneBottom": 340,
+    "inner": 360,
+    "top": 298
+   }
+  },
+  "settings": {
+   "inner": [
+    915,
+    360
+   ],
+   "clipReal": [],
+   "clipRealN": 0,
+   "clipReachable": 8,
+   "tapGaps": 4,
+   "tapGapSample": [
+    {
+     "a": "#tab-grove",
+     "b": "#tab-satchel",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-satchel",
+     "b": "#tab-camp",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-camp",
+     "b": "#tab-prestige",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-prestige",
+     "b": "#tab-settings",
+     "gap": 0,
+     "ov": false
+    }
+   ],
+   "tapOverlap": 0,
+   "dpr": 2.625,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [
+    {
+     "n": "#pane-settings",
+     "sh": 582,
+     "ch": 292,
+     "oy": "auto"
+    }
+   ],
+   "canv": [
+    {
+     "id": "juice-overlay",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 360,
+     "ar": 2.542,
+     "bw": 0,
+     "bh": 0,
+     "bar": null
+    }
+   ],
+   "canvText": {},
+   "treeLabels": null,
+   "plate": null,
+   "pane": {
+    "l": 34,
+    "t": 48,
+    "r": 881,
+    "b": 340,
+    "w": 847,
+    "h": 292,
+    "sh": 582,
+    "ch": 292
+   },
+   "thumb": {
+    "l": 194,
+    "t": 56,
+    "r": 367.5,
+    "b": 104,
+    "w": 173.5,
+    "h": 48,
+    "sh": 48,
+    "ch": 48
+   },
+   "scroll": {
+    "sh": 582,
+    "ch": 292,
+    "oy": "auto"
+   }
+  },
+  "settings-end": {
+   "inner": [
+    915,
+    360
+   ],
+   "clipReal": [],
+   "clipRealN": 0,
+   "clipReachable": 28,
+   "tapGaps": 6,
+   "tapGapSample": [
+    {
+     "a": "#tab-grove",
+     "b": "#tab-satchel",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-satchel",
+     "b": "#tab-camp",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-satchel",
+     "b": "#set-num",
+     "gap": -44,
+     "ov": true
+    },
+    {
+     "a": "#tab-camp",
+     "b": "#tab-prestige",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-camp",
+     "b": "#set-num",
+     "gap": -44,
+     "ov": true
+    },
+    {
+     "a": "#tab-prestige",
+     "b": "#tab-settings",
+     "gap": 0,
+     "ov": false
+    }
+   ],
+   "tapOverlap": 2,
+   "dpr": 2.625,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [
+    {
+     "n": "#pane-settings",
+     "sh": 582,
+     "ch": 292,
+     "oy": "auto"
+    }
+   ],
+   "canv": [
+    {
+     "id": "juice-overlay",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 360,
+     "ar": 2.542,
+     "bw": 0,
+     "bh": 0,
+     "bar": null
+    }
+   ],
+   "canvText": {},
+   "treeLabels": null,
+   "plate": null,
+   "atEnd": {
+    "lastBottom": -17,
+    "paneBottom": 340,
+    "inner": 360,
+    "top": 290
+   }
+  },
+  "settingsOverlay": {
+   "inner": [
+    915,
+    360
+   ],
+   "clipReal": [],
+   "clipRealN": 0,
+   "clipReachable": 14,
+   "tapGaps": 0,
+   "tapGapSample": [],
+   "tapOverlap": 0,
+   "dpr": 2.625,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [
+    {
+     "n": "#pane-settings",
+     "sh": 582,
+     "ch": 266,
+     "oy": "auto"
+    }
+   ],
+   "canv": [
+    {
+     "id": "game",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 360,
+     "ar": 2.542,
+     "bw": 915,
+     "bh": 360,
+     "bar": 2.542
+    },
+    {
+     "id": "juice-overlay",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 360,
+     "ar": 2.542,
+     "bw": 0,
+     "bh": 0,
+     "bar": null
+    }
+   ],
+   "canvText": {
+    "game": {
+     "min": 11.25,
+     "text": "+2",
+     "n": 10
+    }
+   },
+   "treeLabels": null,
+   "plate": null,
+   "panel": {
+    "l": 34,
+    "t": 6,
+    "r": 881,
+    "b": 340,
+    "w": 847,
+    "h": 334,
+    "sh": 334,
+    "ch": 334
+   },
+   "pane": {
+    "l": 34,
+    "t": 54,
+    "r": 881,
+    "b": 320,
+    "w": 847,
+    "h": 266,
+    "sh": 582,
+    "ch": 266
+   },
+   "back": {
+    "l": 703,
+    "t": 6,
+    "r": 881,
+    "b": 54,
+    "w": 178,
+    "h": 48,
+    "sh": 32,
+    "ch": 32
+   }
+  },
+  "fallen": {
+   "inner": [
+    915,
+    360
+   ],
+   "clipReal": [],
+   "clipRealN": 0,
+   "clipReachable": 0,
+   "tapGaps": 0,
+   "tapGapSample": [],
+   "tapOverlap": 0,
+   "dpr": 2.625,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [
+    {
+     "id": "game",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 360,
+     "ar": 2.542,
+     "bw": 915,
+     "bh": 360,
+     "bar": 2.542
+    },
+    {
+     "id": "juice-overlay",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 360,
+     "ar": 2.542,
+     "bw": 0,
+     "bh": 0,
+     "bar": null
+    }
+   ],
+   "canvText": {},
+   "treeLabels": null,
+   "plate": null,
+   "real": {
+    "fallen": true,
+    "barHp": 0,
+    "wallTxt": "BARRICADE 0 / 150",
+    "tone": "low",
+    "boardShown": true
+   },
+   "board": {
+    "l": 242,
+    "t": 79,
+    "r": 673,
+    "b": 333,
+    "w": 431,
+    "h": 254.1,
+    "sh": 174,
+    "ch": 174
+   },
+   "btn": {
+    "l": 705,
+    "t": 284,
+    "r": 881,
+    "b": 340,
+    "w": 176,
+    "h": 56,
+    "sh": 56,
+    "ch": 56
+   },
+   "hud": {
+    "l": 0,
+    "t": 0,
+    "r": 915,
+    "b": 78,
+    "w": 915,
+    "h": 78,
+    "sh": 78,
+    "ch": 78
+   },
+   "btnText": {
+    "leftSpace": 68,
+    "rightSpace": 10,
+    "bottom": 340,
+    "inner": 360
+   }
+  },
+  "opp": {
+   "run": {
+    "inner": [
+     915,
+     360
+    ],
+    "clipReal": [],
+    "clipRealN": 0,
+    "clipReachable": 0,
+    "tapGaps": 0,
+    "tapGapSample": [],
+    "tapOverlap": 0,
+    "dpr": 2.625,
+    "small": [],
+    "smallT": [],
+    "off": [],
+    "text": [],
+    "clip": [],
+    "canv": [
+     {
+      "id": "game",
+      "l": 0,
+      "t": 0,
+      "w": 915,
+      "h": 360,
+      "ar": 2.542,
+      "bw": 1144,
+      "bh": 450,
+      "bar": 2.542
+     }
+    ],
+    "canvText": {},
+    "treeLabels": null,
+    "plate": null
+   },
+   "grove": {
+    "inner": [
+     915,
+     360
+    ],
+    "clipReal": [],
+    "clipRealN": 0,
+    "clipReachable": 0,
+    "tapGaps": 4,
+    "tapGapSample": [
+     {
+      "a": "#tab-grove",
+      "b": "#tab-satchel",
+      "gap": 0,
+      "ov": false
+     },
+     {
+      "a": "#tab-satchel",
+      "b": "#tab-camp",
+      "gap": 0,
+      "ov": false
+     },
+     {
+      "a": "#tab-camp",
+      "b": "#tab-prestige",
+      "gap": 0,
+      "ov": false
+     },
+     {
+      "a": "#tab-prestige",
+      "b": "#tab-settings",
+      "gap": 0,
+      "ov": false
+     }
+    ],
+    "tapOverlap": 0,
+    "dpr": 2.625,
+    "small": [],
+    "smallT": [],
+    "off": [],
+    "text": [],
+    "clip": [],
+    "canv": [
+     {
+      "id": "tree",
+      "l": 34,
+      "t": 48,
+      "w": 607,
+      "h": 292,
+      "ar": 2.079,
+      "bw": 911,
+      "bh": 438,
+      "bar": 2.08
+     }
+    ],
+    "canvText": {
+     "tree": {
+      "min": 13.99231613611416,
+      "text": "Waking",
+      "n": 360
+     }
+    },
+    "treeLabels": {
+     "n": 360,
+     "minPx": 14,
+     "outside": 0,
+     "worstMargin": 12.7,
+     "bad": []
+    },
+    "plate": null
+   },
+   "satchel": {
+    "inner": [
+     915,
+     360
+    ],
+    "clipReal": [],
+    "clipRealN": 0,
+    "clipReachable": 3,
+    "tapGaps": 27,
+    "tapGapSample": [
+     {
+      "a": "#camp-go",
+      "b": "#sat-filter",
+      "gap": 4,
+      "ov": false
+     },
+     {
+      "a": "#tab-grove",
+      "b": "#tab-satchel",
+      "gap": 0,
+      "ov": false
+     },
+     {
+      "a": "#tab-satchel",
+      "b": "#tab-camp",
+      "gap": 0,
+      "ov": false
+     },
+     {
+      "a": "#tab-camp",
+      "b": "#tab-prestige",
+      "gap": 0,
+      "ov": false
+     },
+     {
+      "a": "#tab-prestige",
+      "b": "#tab-settings",
+      "gap": 0,
+      "ov": false
+     },
+     {
+      "a": "#tab-settings",
+      "b": "#sat-filter",
+      "gap": 4,
+      "ov": false
+     },
+     {
+      "a": ".item",
+      "b": ".item",
+      "gap": 2,
+      "ov": false
+     },
+     {
+      "a": ".item",
+      "b": ".item",
+      "gap": 2,
+      "ov": false
+     }
+    ],
+    "tapOverlap": 0,
+    "dpr": 2.625,
+    "small": [],
+    "smallT": [],
+    "off": [],
+    "text": [],
+    "clip": [
+     {
+      "n": "#sat-grid",
+      "sh": 242,
+      "ch": 232,
+      "oy": "auto"
+     }
+    ],
+    "canv": [],
+    "canvText": {},
+    "treeLabels": null,
+    "plate": null
+   },
+   "camp": {
+    "inner": [
+     915,
+     360
+    ],
+    "clipReal": [],
+    "clipRealN": 0,
+    "clipReachable": 0,
+    "tapGaps": 4,
+    "tapGapSample": [
+     {
+      "a": "#tab-grove",
+      "b": "#tab-satchel",
+      "gap": 0,
+      "ov": false
+     },
+     {
+      "a": "#tab-satchel",
+      "b": "#tab-camp",
+      "gap": 0,
+      "ov": false
+     },
+     {
+      "a": "#tab-camp",
+      "b": "#tab-prestige",
+      "gap": 0,
+      "ov": false
+     },
+     {
+      "a": "#tab-prestige",
+      "b": "#tab-settings",
+      "gap": 0,
+      "ov": false
+     }
+    ],
+    "tapOverlap": 0,
+    "dpr": 2.625,
+    "small": [],
+    "smallT": [],
+    "off": [],
+    "text": [],
+    "clip": [],
+    "canv": [
+     {
+      "id": "campview",
+      "l": 34,
+      "t": 48,
+      "w": 847,
+      "h": 292,
+      "ar": 2.901,
+      "bw": 1271,
+      "bh": 438,
+      "bar": 2.902
+     }
+    ],
+    "canvText": {},
+    "treeLabels": null,
+    "plate": null
+   }
+  }
+ },
+ "915x320": {
+  "fresh": {
+   "fallen": false,
+   "wave": 1,
+   "barHp": 150
+  },
+  "run": {
+   "inner": [
+    915,
+    320
+   ],
+   "clipReal": [],
+   "clipRealN": 0,
+   "clipReachable": 0,
+   "tapGaps": 0,
+   "tapGapSample": [],
+   "tapOverlap": 0,
+   "dpr": 2.625,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [
+    {
+     "id": "game",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 320,
+     "ar": 2.859,
+     "bw": 1144,
+     "bh": 400,
+     "bar": 2.86
+    }
+   ],
+   "canvText": {},
+   "treeLabels": null,
+   "plate": null
+  },
+  "runLive": {
+   "inner": [
+    915,
+    320
+   ],
+   "clipReal": [],
+   "clipRealN": 0,
+   "clipReachable": 0,
+   "tapGaps": 0,
+   "tapGapSample": [],
+   "tapOverlap": 0,
+   "dpr": 2.625,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [
+    {
+     "id": "game",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 320,
+     "ar": 2.859,
+     "bw": 915,
+     "bh": 320,
+     "bar": 2.859
+    },
+    {
+     "id": "juice-overlay",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 320,
+     "ar": 2.859,
+     "bw": 0,
+     "bh": 0,
+     "bar": null
+    }
+   ],
+   "canvText": {},
+   "treeLabels": null,
+   "plate": null,
+   "scene": {
+    "orcs": 36,
+    "vans": 3,
+    "wave": 25,
+    "bossShown": true,
+    "boss": {
+     "l": 616,
+     "t": 214,
+     "r": 853,
+     "b": 280
+    },
+    "hudBottom": 64,
+    "tone": "mid",
+    "crack": "2",
+    "innerH": 320
+   }
+  },
+  "lowWall": {
+   "tone": "low",
+   "crack": "3",
+   "text": "BARRICADE 18 / 150",
+   "wall": {
+    "l": 34,
+    "t": 6,
+    "r": 242,
+    "b": 32
+   },
+   "wave": {
+    "l": 357,
+    "t": 9,
+    "r": 477,
+    "b": 53
+   }
+  },
+  "camp": {
+   "inner": [
+    915,
+    320
+   ],
+   "clipReal": [],
+   "clipRealN": 0,
+   "clipReachable": 0,
+   "tapGaps": 5,
+   "tapGapSample": [
+    {
+     "a": "#tab-grove",
+     "b": "#tab-satchel",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-satchel",
+     "b": "#tab-camp",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-camp",
+     "b": "#tab-prestige",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-prestige",
+     "b": "#tab-settings",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": ".camptag",
+     "b": ".camptag",
+     "gap": 5.7,
+     "ov": false
+    }
+   ],
+   "tapOverlap": 0,
+   "dpr": 2.625,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [
+    {
+     "id": "campview",
+     "l": 34,
+     "t": 48,
+     "w": 847,
+     "h": 252,
+     "ar": 3.361,
+     "bw": 1271,
+     "bh": 378,
+     "bar": 3.362
+    },
+    {
+     "id": "juice-overlay",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 320,
+     "ar": 2.859,
+     "bw": 0,
+     "bh": 0,
+     "bar": null
+    }
+   ],
+   "canvText": {},
+   "treeLabels": null,
+   "plate": null,
+   "tags": {
+    "tags": [
+     {
+      "t": "Bowyer 2/3",
+      "l": 218,
+      "tp": 208,
+      "r": 330,
+      "b": 256
+     },
+     {
+      "t": "Forge 1/3",
+      "l": 347,
+      "tp": 248,
+      "r": 446,
+      "b": 296
+     },
+     {
+      "t": "Kitchen 3/3",
+      "l": 479,
+      "tp": 194,
+      "r": 592,
+      "b": 242
+     },
+     {
+      "t": "Training Area · Build",
+      "l": 565,
+      "tp": 248,
+      "r": 744,
+      "b": 296
+     }
+    ],
+    "minTagGap": 6
+   },
+   "campwrap": {
+    "l": 34,
+    "t": 48,
+    "r": 881,
+    "b": 300,
+    "w": 847,
+    "h": 252,
+    "sh": 252,
+    "ch": 252
+   }
+  },
+  "grove": {
+   "inner": [
+    915,
+    320
+   ],
+   "clipReal": [],
+   "clipRealN": 0,
+   "clipReachable": 0,
+   "tapGaps": 4,
+   "tapGapSample": [
+    {
+     "a": "#tab-grove",
+     "b": "#tab-satchel",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-satchel",
+     "b": "#tab-camp",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-camp",
+     "b": "#tab-prestige",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-prestige",
+     "b": "#tab-settings",
+     "gap": 0,
+     "ov": false
+    }
+   ],
+   "tapOverlap": 0,
+   "dpr": 2.625,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [
+    {
+     "id": "tree",
+     "l": 34,
+     "t": 48,
+     "w": 607,
+     "h": 252,
+     "ar": 2.409,
+     "bw": 911,
+     "bh": 378,
+     "bar": 2.41
+    },
+    {
+     "id": "juice-overlay",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 320,
+     "ar": 2.859,
+     "bw": 0,
+     "bh": 0,
+     "bar": null
+    }
+   ],
+   "canvText": {
+    "tree": {
+     "min": 13.99231613611416,
+     "text": "Waking",
+     "n": 273
+    }
+   },
+   "treeLabels": {
+    "n": 273,
+    "minPx": 14,
+    "outside": 0,
+    "worstMargin": 12.6,
+    "bad": []
+   },
+   "plate": null,
+   "tree": {
+    "l": 34,
+    "t": 48,
+    "r": 641,
+    "b": 300,
+    "w": 607,
+    "h": 252,
+    "sh": 252,
+    "ch": 252
+   },
+   "detail": {
+    "l": 641,
+    "t": 48,
+    "r": 881,
+    "b": 300,
+    "w": 240,
+    "h": 252,
+    "sh": 252,
+    "ch": 252
+   },
+   "tabs": {
+    "l": 34,
+    "t": 0,
+    "r": 723.7,
+    "b": 48,
+    "w": 689.7,
+    "h": 48,
+    "sh": 48,
+    "ch": 48
+   },
+   "nodes": {
+    "z": 1,
+    "ui": 1,
+    "discCssDiameter": 48,
+    "visible": 11,
+    "nodesUnderLegend": 2,
+    "nodesCutByEdge": 1,
+    "probe": {
+     "id": "horde",
+     "hit": [
+      true,
+      true,
+      true,
+      true
+     ]
+    }
+   }
+  },
+  "tree-zoomed": {
+   "inner": [
+    915,
+    320
+   ],
+   "clipReal": [],
+   "clipRealN": 0,
+   "clipReachable": 0,
+   "tapGaps": 4,
+   "tapGapSample": [
+    {
+     "a": "#tab-grove",
+     "b": "#tab-satchel",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-satchel",
+     "b": "#tab-camp",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-camp",
+     "b": "#tab-prestige",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-prestige",
+     "b": "#tab-settings",
+     "gap": 0,
+     "ov": false
+    }
+   ],
+   "tapOverlap": 0,
+   "dpr": 2.625,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [
+    {
+     "id": "tree",
+     "l": 34,
+     "t": 0,
+     "w": 559,
+     "h": 300,
+     "ar": 1.863,
+     "bw": 839,
+     "bh": 450,
+     "bar": 1.864
+    },
+    {
+     "id": "juice-overlay",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 320,
+     "ar": 2.859,
+     "bw": 1373,
+     "bh": 480,
+     "bar": 2.86
+    }
+   ],
+   "canvText": {
+    "tree": {
+     "min": 13.99165673420739,
+     "text": "Waking",
+     "n": 230
+    }
+   },
+   "treeLabels": {
+    "n": 230,
+    "minPx": 14,
+    "outside": 0,
+    "worstMargin": 13,
+    "bad": []
+   },
+   "plate": null
+  },
+  "satchel": {
+   "inner": [
+    915,
+    320
+   ],
+   "clipReal": [],
+   "clipRealN": 0,
+   "clipReachable": 12,
+   "tapGaps": 27,
+   "tapGapSample": [
+    {
+     "a": "#camp-go",
+     "b": "#sat-filter",
+     "gap": 4,
+     "ov": false
+    },
+    {
+     "a": "#tab-grove",
+     "b": "#tab-satchel",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-satchel",
+     "b": "#tab-camp",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-camp",
+     "b": "#tab-prestige",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-prestige",
+     "b": "#tab-settings",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-settings",
+     "b": "#sat-filter",
+     "gap": 4,
+     "ov": false
+    },
+    {
+     "a": ".item",
+     "b": ".item",
+     "gap": 2,
+     "ov": false
+    },
+    {
+     "a": ".item",
+     "b": ".item",
+     "gap": 2,
+     "ov": false
+    }
+   ],
+   "tapOverlap": 0,
+   "dpr": 2.625,
+   "small": [],
+   "smallT": [],
+   "off": [
+    {
+     "n": ".item",
+     "r": 481,
+     "b": 338
+    },
+    {
+     "n": ".item",
+     "r": 541,
+     "b": 338
+    },
+    {
+     "n": ".item",
+     "r": 601,
+     "b": 338
+    }
+   ],
+   "text": [],
+   "clip": [
+    {
+     "n": "#sat-grid",
+     "sh": 242,
+     "ch": 192,
+     "oy": "auto"
+    }
+   ],
+   "canv": [
+    {
+     "id": "juice-overlay",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 320,
+     "ar": 2.859,
+     "bw": 0,
+     "bh": 0,
+     "bar": null
+    }
+   ],
+   "canvText": {},
+   "treeLabels": null,
+   "plate": null,
+   "pane": {
+    "l": 34,
+    "t": 48,
+    "r": 881,
+    "b": 300,
+    "w": 847,
+    "h": 252,
+    "sh": 252,
+    "ch": 252
+   },
+   "grid": {
+    "l": 418.7,
+    "t": 104,
+    "r": 867,
+    "b": 296,
+    "w": 448.3,
+    "h": 192,
+    "sh": 242,
+    "ch": 192
+   },
+   "detail": {
+    "l": 0,
+    "t": 0,
+    "r": 0,
+    "b": 0,
+    "w": 0,
+    "h": 0,
+    "sh": 0,
+    "ch": 0
+   },
+   "worn": {
+    "l": 48,
+    "t": 104,
+    "r": 406.7,
+    "b": 258,
+    "w": 358.7,
+    "h": 154,
+    "sh": 154,
+    "ch": 154
+   },
+   "cells": 24,
+   "cols": 7,
+   "gap": "6px",
+   "wornPad": {
+    "top": 3,
+    "bottom": 3,
+    "left": 83.3,
+    "right": 83.3
+   },
+   "gridScroll": {
+    "sh": 242,
+    "ch": 192
+   }
+  },
+  "satchel-picked": {
+   "inner": [
+    915,
+    320
+   ],
+   "clipReal": [],
+   "clipRealN": 0,
+   "clipReachable": 0,
+   "tapGaps": 8,
+   "tapGapSample": [
+    {
+     "a": "#tab-grove",
+     "b": "#tab-satchel",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-satchel",
+     "b": "#tab-camp",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-camp",
+     "b": "#tab-prestige",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-prestige",
+     "b": "#tab-settings",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": ".item",
+     "b": ".item",
+     "gap": 2,
+     "ov": false
+    },
+    {
+     "a": ".item",
+     "b": ".item",
+     "gap": 2,
+     "ov": false
+    },
+    {
+     "a": ".item",
+     "b": ".item",
+     "gap": 2,
+     "ov": false
+    },
+    {
+     "a": ".item",
+     "b": ".item",
+     "gap": 2,
+     "ov": false
+    }
+   ],
+   "tapOverlap": 0,
+   "dpr": 2.625,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [
+    {
+     "id": "juice-overlay",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 320,
+     "ar": 2.859,
+     "bw": 0,
+     "bh": 0,
+     "bar": null
+    }
+   ],
+   "canvText": {},
+   "treeLabels": null,
+   "plate": null,
+   "acts": [
+    {
+     "a": "close",
+     "l": 423,
+     "r": 551,
+     "t": 56,
+     "b": 104
+    },
+    {
+     "a": "equip",
+     "l": 423,
+     "r": 564,
+     "t": 179,
+     "b": 227
+    },
+    {
+     "a": "lock",
+     "l": 572,
+     "r": 714,
+     "t": 179,
+     "b": 227
+    },
+    {
+     "a": "salvage",
+     "l": 722,
+     "r": 863,
+     "t": 179,
+     "b": 227
+    }
+   ],
+   "detail": {
+    "l": 418.7,
+    "t": 52,
+    "r": 867,
+    "b": 227.4,
+    "w": 448.3,
+    "h": 175.4,
+    "sh": 175,
+    "ch": 175
+   },
+   "pane": {
+    "l": 34,
+    "t": 48,
+    "r": 881,
+    "b": 300,
+    "w": 847,
+    "h": 252,
+    "sh": 252,
+    "ch": 252
+   },
+   "worn": {
+    "l": 48,
+    "t": 76.8,
+    "r": 406.7,
+    "b": 230.8,
+    "w": 358.7,
+    "h": 154,
+    "sh": 154,
+    "ch": 154
+   },
+   "wornShift": -27.2
+  },
+  "replant": {
+   "inner": [
+    915,
+    320
+   ],
+   "clipReal": [],
+   "clipRealN": 0,
+   "clipReachable": 52,
+   "tapGaps": 4,
+   "tapGapSample": [
+    {
+     "a": "#tab-grove",
+     "b": "#tab-satchel",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-satchel",
+     "b": "#tab-camp",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-camp",
+     "b": "#tab-prestige",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-prestige",
+     "b": "#tab-settings",
+     "gap": 0,
+     "ov": false
+    }
+   ],
+   "tapOverlap": 0,
+   "dpr": 2.625,
+   "small": [],
+   "smallT": [],
+   "off": [
+    {
+     "n": ".buy",
+     "r": 437,
+     "b": 330
+    },
+    {
+     "n": ".buy",
+     "r": 841,
+     "b": 330
+    }
+   ],
+   "text": [],
+   "clip": [
+    {
+     "n": "#pane-prestige",
+     "sh": 590,
+     "ch": 252,
+     "oy": "auto"
+    }
+   ],
+   "canv": [
+    {
+     "id": "",
+     "l": 61,
+     "t": 101,
+     "w": 56,
+     "h": 56,
+     "ar": 1,
+     "bw": 192,
+     "bh": 192,
+     "bar": 1
+    },
+    {
+     "id": "",
+     "l": 331,
+     "t": 101,
+     "w": 56,
+     "h": 56,
+     "ar": 1,
+     "bw": 192,
+     "bh": 192,
+     "bar": 1
+    },
+    {
+     "id": "",
+     "l": 602,
+     "t": 101,
+     "w": 56,
+     "h": 56,
+     "ar": 1,
+     "bw": 192,
+     "bh": 192,
+     "bar": 1
+    },
+    {
+     "id": "juice-overlay",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 320,
+     "ar": 2.859,
+     "bw": 0,
+     "bh": 0,
+     "bar": null
+    }
+   ],
+   "canvText": {},
+   "treeLabels": null,
+   "plate": null,
+   "pane": {
+    "l": 34,
+    "t": 48,
+    "r": 881,
+    "b": 300,
+    "w": 847,
+    "h": 252,
+    "sh": 590,
+    "ch": 252
+   },
+   "scroll": {
+    "sh": 590,
+    "ch": 252,
+    "oy": "auto"
+   }
+  },
+  "replant-end": {
+   "inner": [
+    915,
+    320
+   ],
+   "clipReal": [],
+   "clipRealN": 0,
+   "clipReachable": 46,
+   "tapGaps": 8,
+   "tapGapSample": [
+    {
+     "a": "#camp-go",
+     "b": ".buy",
+     "gap": -42,
+     "ov": true
+    },
+    {
+     "a": "#tab-grove",
+     "b": "#tab-satchel",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-satchel",
+     "b": "#tab-camp",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-satchel",
+     "b": ".buy",
+     "gap": 2.2,
+     "ov": false
+    },
+    {
+     "a": "#tab-camp",
+     "b": "#tab-prestige",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-camp",
+     "b": ".buy",
+     "gap": -42,
+     "ov": true
+    },
+    {
+     "a": "#tab-prestige",
+     "b": "#tab-settings",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-settings",
+     "b": ".buy",
+     "gap": -10.3,
+     "ov": true
+    }
+   ],
+   "tapOverlap": 3,
+   "dpr": 2.625,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [
+    {
+     "n": "#pane-prestige",
+     "sh": 590,
+     "ch": 252,
+     "oy": "auto"
+    }
+   ],
+   "canv": [
+    {
+     "id": "",
+     "l": 61,
+     "t": -237,
+     "w": 56,
+     "h": 56,
+     "ar": 1,
+     "bw": 192,
+     "bh": 192,
+     "bar": 1
+    },
+    {
+     "id": "",
+     "l": 331,
+     "t": -237,
+     "w": 56,
+     "h": 56,
+     "ar": 1,
+     "bw": 192,
+     "bh": 192,
+     "bar": 1
+    },
+    {
+     "id": "",
+     "l": 602,
+     "t": -237,
+     "w": 56,
+     "h": 56,
+     "ar": 1,
+     "bw": 192,
+     "bh": 192,
+     "bar": 1
+    },
+    {
+     "id": "juice-overlay",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 320,
+     "ar": 2.859,
+     "bw": 0,
+     "bh": 0,
+     "bar": null
+    }
+   ],
+   "canvText": {},
+   "treeLabels": null,
+   "plate": null,
+   "atEnd": {
+    "lastBottom": 254,
+    "paneBottom": 300,
+    "inner": 320,
+    "top": 338
+   }
+  },
+  "settings": {
+   "inner": [
+    915,
+    320
+   ],
+   "clipReal": [],
+   "clipRealN": 0,
+   "clipReachable": 12,
+   "tapGaps": 4,
+   "tapGapSample": [
+    {
+     "a": "#tab-grove",
+     "b": "#tab-satchel",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-satchel",
+     "b": "#tab-camp",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-camp",
+     "b": "#tab-prestige",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-prestige",
+     "b": "#tab-settings",
+     "gap": 0,
+     "ov": false
+    }
+   ],
+   "tapOverlap": 0,
+   "dpr": 2.625,
+   "small": [],
+   "smallT": [],
+   "off": [
+    {
+     "n": "#set-num",
+     "r": 362,
+     "b": 334
+    }
+   ],
+   "text": [],
+   "clip": [
+    {
+     "n": "#pane-settings",
+     "sh": 582,
+     "ch": 252,
+     "oy": "auto"
+    }
+   ],
+   "canv": [
+    {
+     "id": "juice-overlay",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 320,
+     "ar": 2.859,
+     "bw": 0,
+     "bh": 0,
+     "bar": null
+    }
+   ],
+   "canvText": {},
+   "treeLabels": null,
+   "plate": null,
+   "pane": {
+    "l": 34,
+    "t": 48,
+    "r": 881,
+    "b": 300,
+    "w": 847,
+    "h": 252,
+    "sh": 582,
+    "ch": 252
+   },
+   "thumb": {
+    "l": 194,
+    "t": 56,
+    "r": 367.5,
+    "b": 104,
+    "w": 173.5,
+    "h": 48,
+    "sh": 48,
+    "ch": 48
+   },
+   "scroll": {
+    "sh": 582,
+    "ch": 252,
+    "oy": "auto"
+   }
+  },
+  "settings-end": {
+   "inner": [
+    915,
+    320
+   ],
+   "clipReal": [],
+   "clipRealN": 0,
+   "clipReachable": 29,
+   "tapGaps": 8,
+   "tapGapSample": [
+    {
+     "a": "#tab-grove",
+     "b": "#tab-satchel",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-grove",
+     "b": "#btn-telemetry",
+     "gap": 2,
+     "ov": false
+    },
+    {
+     "a": "#tab-satchel",
+     "b": "#tab-camp",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-satchel",
+     "b": "#set-num",
+     "gap": -4,
+     "ov": true
+    },
+    {
+     "a": "#tab-satchel",
+     "b": "#btn-telemetry",
+     "gap": 2,
+     "ov": false
+    },
+    {
+     "a": "#tab-camp",
+     "b": "#tab-prestige",
+     "gap": 0,
+     "ov": false
+    },
+    {
+     "a": "#tab-camp",
+     "b": "#set-num",
+     "gap": -4,
+     "ov": true
+    },
+    {
+     "a": "#tab-prestige",
+     "b": "#tab-settings",
+     "gap": 0,
+     "ov": false
+    }
+   ],
+   "tapOverlap": 2,
+   "dpr": 2.625,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [
+    {
+     "n": "#pane-settings",
+     "sh": 582,
+     "ch": 252,
+     "oy": "auto"
+    }
+   ],
+   "canv": [
+    {
+     "id": "juice-overlay",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 320,
+     "ar": 2.859,
+     "bw": 0,
+     "bh": 0,
+     "bar": null
+    }
+   ],
+   "canvText": {},
+   "treeLabels": null,
+   "plate": null,
+   "atEnd": {
+    "lastBottom": -57,
+    "paneBottom": 300,
+    "inner": 320,
+    "top": 330
+   }
+  },
+  "settingsOverlay": {
+   "inner": [
+    915,
+    320
+   ],
+   "clipReal": [],
+   "clipRealN": 0,
+   "clipReachable": 20,
+   "tapGaps": 0,
+   "tapGapSample": [],
+   "tapOverlap": 0,
+   "dpr": 2.625,
+   "small": [],
+   "smallT": [],
+   "off": [
+    {
+     "n": "#set-num",
+     "r": 362,
+     "b": 340
+    }
+   ],
+   "text": [],
+   "clip": [
+    {
+     "n": "#pane-settings",
+     "sh": 582,
+     "ch": 226,
+     "oy": "auto"
+    }
+   ],
+   "canv": [
+    {
+     "id": "game",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 320,
+     "ar": 2.859,
+     "bw": 915,
+     "bh": 320,
+     "bar": 2.859
+    },
+    {
+     "id": "juice-overlay",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 320,
+     "ar": 2.859,
+     "bw": 0,
+     "bh": 0,
+     "bar": null
+    }
+   ],
+   "canvText": {
+    "game": {
+     "min": 10.000000298023224,
+     "text": "+2",
+     "n": 12
+    }
+   },
+   "treeLabels": null,
+   "plate": null,
+   "panel": {
+    "l": 34,
+    "t": 6,
+    "r": 881,
+    "b": 300,
+    "w": 847,
+    "h": 294,
+    "sh": 294,
+    "ch": 294
+   },
+   "pane": {
+    "l": 34,
+    "t": 54,
+    "r": 881,
+    "b": 280,
+    "w": 847,
+    "h": 226,
+    "sh": 582,
+    "ch": 226
+   },
+   "back": {
+    "l": 703,
+    "t": 6,
+    "r": 881,
+    "b": 54,
+    "w": 178,
+    "h": 48,
+    "sh": 32,
+    "ch": 32
+   }
+  },
+  "fallen": {
+   "inner": [
+    915,
+    320
+   ],
+   "clipReal": [],
+   "clipRealN": 0,
+   "clipReachable": 0,
+   "tapGaps": 0,
+   "tapGapSample": [],
+   "tapOverlap": 0,
+   "dpr": 2.625,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [
+    {
+     "id": "game",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 320,
+     "ar": 2.859,
+     "bw": 915,
+     "bh": 320,
+     "bar": 2.859
+    },
+    {
+     "id": "juice-overlay",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 320,
+     "ar": 2.859,
+     "bw": 0,
+     "bh": 0,
+     "bar": null
+    }
+   ],
+   "canvText": {},
+   "treeLabels": null,
+   "plate": null,
+   "real": {
+    "fallen": true,
+    "barHp": 0,
+    "wallTxt": "BARRICADE 0 / 150",
+    "tone": "low",
+    "boardShown": true
+   },
+   "board": {
+    "l": 242,
+    "t": 83.4,
+    "r": 673,
+    "b": 284.6,
+    "w": 431,
+    "h": 201.2,
+    "sh": 145,
+    "ch": 145
+   },
+   "btn": {
+    "l": 689,
+    "t": 244,
+    "r": 881,
+    "b": 300,
+    "w": 192,
+    "h": 56,
+    "sh": 56,
+    "ch": 56
+   },
+   "hud": {
+    "l": 0,
+    "t": 0,
+    "r": 915,
+    "b": 64,
+    "w": 915,
+    "h": 64,
+    "sh": 64,
+    "ch": 64
+   },
+   "btnText": {
+    "leftSpace": 56,
+    "rightSpace": 56,
+    "bottom": 300,
+    "inner": 320
+   }
+  },
+  "opp": {
+   "run": {
+    "inner": [
+     915,
+     320
+    ],
+    "clipReal": [],
+    "clipRealN": 0,
+    "clipReachable": 0,
+    "tapGaps": 0,
+    "tapGapSample": [],
+    "tapOverlap": 0,
+    "dpr": 2.625,
+    "small": [],
+    "smallT": [],
+    "off": [],
+    "text": [],
+    "clip": [],
+    "canv": [
+     {
+      "id": "game",
+      "l": 0,
+      "t": 0,
+      "w": 915,
+      "h": 320,
+      "ar": 2.859,
+      "bw": 1144,
+      "bh": 400,
+      "bar": 2.86
+     }
+    ],
+    "canvText": {},
+    "treeLabels": null,
+    "plate": null
+   },
+   "grove": {
+    "inner": [
+     915,
+     320
+    ],
+    "clipReal": [],
+    "clipRealN": 0,
+    "clipReachable": 0,
+    "tapGaps": 4,
+    "tapGapSample": [
+     {
+      "a": "#tab-grove",
+      "b": "#tab-satchel",
+      "gap": 0,
+      "ov": false
+     },
+     {
+      "a": "#tab-satchel",
+      "b": "#tab-camp",
+      "gap": 0,
+      "ov": false
+     },
+     {
+      "a": "#tab-camp",
+      "b": "#tab-prestige",
+      "gap": 0,
+      "ov": false
+     },
+     {
+      "a": "#tab-prestige",
+      "b": "#tab-settings",
+      "gap": 0,
+      "ov": false
+     }
+    ],
+    "tapOverlap": 0,
+    "dpr": 2.625,
+    "small": [],
+    "smallT": [],
+    "off": [],
+    "text": [],
+    "clip": [],
+    "canv": [
+     {
+      "id": "tree",
+      "l": 34,
+      "t": 48,
+      "w": 607,
+      "h": 252,
+      "ar": 2.409,
+      "bw": 911,
+      "bh": 378,
+      "bar": 2.41
+     }
+    ],
+    "canvText": {
+     "tree": {
+      "min": 13.99231613611416,
+      "text": "Waking",
+      "n": 357
+     }
+    },
+    "treeLabels": {
+     "n": 357,
+     "minPx": 14,
+     "outside": 0,
+     "worstMargin": 12.6,
+     "bad": []
+    },
+    "plate": null
+   },
+   "satchel": {
+    "inner": [
+     915,
+     320
+    ],
+    "clipReal": [],
+    "clipRealN": 0,
+    "clipReachable": 12,
+    "tapGaps": 27,
+    "tapGapSample": [
+     {
+      "a": "#camp-go",
+      "b": "#sat-filter",
+      "gap": 4,
+      "ov": false
+     },
+     {
+      "a": "#tab-grove",
+      "b": "#tab-satchel",
+      "gap": 0,
+      "ov": false
+     },
+     {
+      "a": "#tab-satchel",
+      "b": "#tab-camp",
+      "gap": 0,
+      "ov": false
+     },
+     {
+      "a": "#tab-camp",
+      "b": "#tab-prestige",
+      "gap": 0,
+      "ov": false
+     },
+     {
+      "a": "#tab-prestige",
+      "b": "#tab-settings",
+      "gap": 0,
+      "ov": false
+     },
+     {
+      "a": "#tab-settings",
+      "b": "#sat-filter",
+      "gap": 4,
+      "ov": false
+     },
+     {
+      "a": ".item",
+      "b": ".item",
+      "gap": 2,
+      "ov": false
+     },
+     {
+      "a": ".item",
+      "b": ".item",
+      "gap": 2,
+      "ov": false
+     }
+    ],
+    "tapOverlap": 0,
+    "dpr": 2.625,
+    "small": [],
+    "smallT": [],
+    "off": [
+     {
+      "n": ".item",
+      "r": 481,
+      "b": 338
+     },
+     {
+      "n": ".item",
+      "r": 541,
+      "b": 338
+     },
+     {
+      "n": ".item",
+      "r": 601,
+      "b": 338
+     }
+    ],
+    "text": [],
+    "clip": [
+     {
+      "n": "#sat-grid",
+      "sh": 242,
+      "ch": 192,
+      "oy": "auto"
+     }
+    ],
+    "canv": [],
+    "canvText": {},
+    "treeLabels": null,
+    "plate": null
+   },
+   "camp": {
+    "inner": [
+     915,
+     320
+    ],
+    "clipReal": [],
+    "clipRealN": 0,
+    "clipReachable": 0,
+    "tapGaps": 5,
+    "tapGapSample": [
+     {
+      "a": "#tab-grove",
+      "b": "#tab-satchel",
+      "gap": 0,
+      "ov": false
+     },
+     {
+      "a": "#tab-satchel",
+      "b": "#tab-camp",
+      "gap": 0,
+      "ov": false
+     },
+     {
+      "a": "#tab-camp",
+      "b": "#tab-prestige",
+      "gap": 0,
+      "ov": false
+     },
+     {
+      "a": "#tab-prestige",
+      "b": "#tab-settings",
+      "gap": 0,
+      "ov": false
+     },
+     {
+      "a": ".camptag",
+      "b": ".camptag",
+      "gap": 5.7,
+      "ov": false
+     }
+    ],
+    "tapOverlap": 0,
+    "dpr": 2.625,
+    "small": [],
+    "smallT": [],
+    "off": [],
+    "text": [],
+    "clip": [],
+    "canv": [
+     {
+      "id": "campview",
+      "l": 34,
+      "t": 48,
+      "w": 847,
+      "h": 252,
+      "ar": 3.361,
+      "bw": 1271,
+      "bh": 378,
+      "bar": 3.362
+     }
+    ],
+    "canvText": {},
+    "treeLabels": null,
+    "plate": null
+   }
+  }
+ },
+ "412x915": {
+  "prompt0": {
+   "shown": true,
+   "box": [
+    412,
+    915
+   ],
+   "msg": {
+    "l": 100,
+    "r": 312,
+    "t": 369,
+    "b": 546
+   },
+   "msgLines": 3,
+   "msgPx": 24,
+   "inView": true,
+   "padL": "32px",
+   "padT": "32px",
+   "inner": [
+    412,
+    915
+   ],
+   "runTime": 10.72,
+   "wave": 1,
+   "fallen": false,
+   "barHp": 150,
+   "orcs": 0
+  },
+  "prompt1": {
+   "shown": true,
+   "box": [
+    412,
+    915
+   ],
+   "msg": {
+    "l": 100,
+    "r": 312,
+    "t": 369,
+    "b": 546
+   },
+   "msgLines": 3,
+   "msgPx": 24,
+   "inView": true,
+   "padL": "32px",
+   "padT": "32px",
+   "inner": [
+    412,
+    915
+   ],
+   "runTime": 10.72,
+   "wave": 1,
+   "fallen": false,
+   "barHp": 150,
+   "orcs": 0
+  },
+  "landscape1": {
+   "shown": false,
+   "box": [
+    0,
+    0
+   ],
+   "msg": {
+    "l": 0,
+    "r": 0,
+    "t": 0,
+    "b": 0
+   },
+   "msgLines": 0,
+   "msgPx": 16,
+   "inView": true,
+   "padL": "0px",
+   "padT": "0px",
+   "inner": [
+    915,
+    412
+   ],
+   "runTime": 12.88,
+   "wave": 1,
+   "fallen": false,
+   "barHp": 157.7760000000003,
+   "orcs": 1
+  },
+  "landscape2": {
+   "shown": false,
+   "box": [
+    0,
+    0
+   ],
+   "msg": {
+    "l": 0,
+    "r": 0,
+    "t": 0,
+    "b": 0
+   },
+   "msgLines": 0,
+   "msgPx": 16,
+   "inView": true,
+   "padL": "0px",
+   "padT": "0px",
+   "inner": [
+    915,
+    412
+   ],
+   "runTime": 15.96,
+   "wave": 1,
+   "fallen": false,
+   "barHp": 168.86400000000071,
+   "orcs": 2
+  },
+  "backPortrait0": {
+   "shown": true,
+   "box": [
+    412,
+    915
+   ],
+   "msg": {
+    "l": 100,
+    "r": 312,
+    "t": 369,
+    "b": 546
+   },
+   "msgLines": 3,
+   "msgPx": 24,
+   "inView": true,
+   "padL": "32px",
+   "padT": "32px",
+   "inner": [
+    412,
+    915
+   ],
+   "runTime": 16.42,
+   "wave": 1,
+   "fallen": false,
+   "barHp": 170.52000000000078,
+   "orcs": 3
+  },
+  "backPortrait1": {
+   "shown": true,
+   "box": [
+    412,
+    915
+   ],
+   "msg": {
+    "l": 100,
+    "r": 312,
+    "t": 369,
+    "b": 546
+   },
+   "msgLines": 3,
+   "msgPx": 24,
+   "inView": true,
+   "padL": "32px",
+   "padT": "32px",
+   "inner": [
+    412,
+    915
+   ],
+   "runTime": 16.42,
+   "wave": 1,
+   "fallen": false,
+   "barHp": 170.52000000000078,
+   "orcs": 3
+  },
+  "resumed": {
+   "shown": false,
+   "box": [
+    0,
+    0
+   ],
+   "msg": {
+    "l": 0,
+    "r": 0,
+    "t": 0,
+    "b": 0
+   },
+   "msgLines": 0,
+   "msgPx": 16,
+   "inView": true,
+   "padL": "0px",
+   "padT": "0px",
+   "inner": [
+    915,
+    412
+   ],
+   "runTime": 18.8,
+   "wave": 1,
+   "fallen": false,
+   "barHp": 179.0880000000011,
+   "orcs": 4
+  },
+  "resumed2": {
+   "shown": false,
+   "box": [
+    0,
+    0
+   ],
+   "msg": {
+    "l": 0,
+    "r": 0,
+    "t": 0,
+    "b": 0
+   },
+   "msgLines": 0,
+   "msgPx": 16,
+   "inView": true,
+   "padL": "0px",
+   "padT": "0px",
+   "inner": [
+    915,
+    412
+   ],
+   "runTime": 21.32,
+   "wave": 1,
+   "fallen": false,
+   "barHp": 180,
+   "orcs": 5
+  },
+  "verdict": {
+   "frozenInPortrait": true,
+   "advancedInLandscape": true,
+   "notFallen": true,
+   "wavesNotLost": true
+  }
+ },
+ "360x800": {
+  "prompt0": {
+   "shown": true,
+   "box": [
+    360,
+    800
+   ],
+   "msg": {
+    "l": 74,
+    "r": 286,
+    "t": 312,
+    "b": 488
+   },
+   "msgLines": 3,
+   "msgPx": 24,
+   "inView": true,
+   "padL": "32px",
+   "padT": "32px",
+   "inner": [
+    360,
+    800
+   ],
+   "runTime": 21.86,
+   "wave": 1,
+   "fallen": false,
+   "barHp": 180,
+   "orcs": 0
+  },
+  "prompt1": {
+   "shown": true,
+   "box": [
+    360,
+    800
+   ],
+   "msg": {
+    "l": 74,
+    "r": 286,
+    "t": 312,
+    "b": 488
+   },
+   "msgLines": 3,
+   "msgPx": 24,
+   "inView": true,
+   "padL": "32px",
+   "padT": "32px",
+   "inner": [
+    360,
+    800
+   ],
+   "runTime": 21.86,
+   "wave": 1,
+   "fallen": false,
+   "barHp": 180,
+   "orcs": 0
+  }
+ },
+ "320x700": {
+  "prompt0": {
+   "shown": true,
+   "box": [
+    320,
+    700
+   ],
+   "msg": {
+    "l": 54,
+    "r": 266,
+    "t": 262,
+    "b": 438
+   },
+   "msgLines": 3,
+   "msgPx": 24,
+   "inView": true,
+   "padL": "32px",
+   "padT": "32px",
+   "inner": [
+    320,
+    700
+   ],
+   "runTime": 0,
+   "wave": 1,
+   "fallen": false,
+   "barHp": 150,
+   "orcs": 0
+  },
+  "prompt1": {
+   "shown": true,
+   "box": [
+    320,
+    700
+   ],
+   "msg": {
+    "l": 54,
+    "r": 266,
+    "t": 262,
+    "b": 438
+   },
+   "msgLines": 3,
+   "msgPx": 24,
+   "inView": true,
+   "padL": "32px",
+   "padT": "32px",
+   "inner": [
+    320,
+    700
+   ],
+   "runTime": 0,
+   "wave": 1,
+   "fallen": false,
+   "barHp": 150,
+   "orcs": 0
+  }
+ }
+}

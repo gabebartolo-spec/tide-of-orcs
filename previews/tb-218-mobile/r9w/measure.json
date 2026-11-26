@@ -1,0 +1,3493 @@
+{
+ "915x412": {
+  "fresh": {
+   "fallen": false,
+   "wave": 1,
+   "barHp": 150,
+   "saved": 1
+  },
+  "runFirst": {
+   "distinctColours": 61
+  },
+  "run": {
+   "inner": [
+    915,
+    412
+   ],
+   "clipReal": [],
+   "clipScroll": 0,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [
+    {
+     "id": "game",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 412,
+     "ar": 2.221,
+     "bw": 1144,
+     "bh": 515,
+     "bar": 2.221
+    }
+   ],
+   "canvText": {
+    "tree": {
+     "min": 0.05000000027939677,
+     "text": "Waking",
+     "n": 678
+    }
+   },
+   "plate": null
+  },
+  "runSettled": {
+   "wave": 1,
+   "orcs": null,
+   "fallen": false,
+   "hudH": 78,
+   "hudBottom": 70,
+   "wallX": null,
+   "hud": [
+    {
+     "n": "hud-wall",
+     "l": 34,
+     "r": 242,
+     "w": 208,
+     "h": 26
+    },
+    {
+     "n": "hud-wave",
+     "l": 359,
+     "r": 463,
+     "w": 104,
+     "h": 58
+    },
+    {
+     "n": "stat",
+     "l": 467,
+     "r": 603,
+     "w": 136,
+     "h": 58
+    },
+    {
+     "n": "stat",
+     "l": 607,
+     "r": 743,
+     "w": 136,
+     "h": 58
+    },
+    {
+     "n": "btn-settings",
+     "l": 768,
+     "r": 881,
+     "w": 113,
+     "h": 49
+    }
+   ],
+   "mute": {
+    "l": 34,
+    "b": 380
+   }
+  },
+  "camp": {
+   "inner": [
+    915,
+    412
+   ],
+   "clipReal": [],
+   "clipScroll": 0,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [
+    {
+     "id": "campview",
+     "l": 34,
+     "t": 48,
+     "w": 847,
+     "h": 344,
+     "ar": 2.462,
+     "bw": 1271,
+     "bh": 516,
+     "bar": 2.463
+    }
+   ],
+   "canvText": {
+    "tree": {
+     "min": 0.05000000027939677,
+     "text": "Waking",
+     "n": 1582
+    }
+   },
+   "plate": null,
+   "tags": [
+    {
+     "t": "Bowyer 2/3",
+     "l": 151,
+     "tp": 271,
+     "w": 112,
+     "h": 48
+    },
+    {
+     "t": "Forge 1/3",
+     "l": 325,
+     "tp": 340,
+     "w": 99,
+     "h": 48
+    },
+    {
+     "t": "Kitchen 3/3",
+     "l": 508,
+     "tp": 251,
+     "w": 113,
+     "h": 48
+    },
+    {
+     "t": "Training Area · Build",
+     "l": 637,
+     "tp": 325,
+     "w": 179,
+     "h": 48
+    }
+   ],
+   "mats": {
+    "l": 459.5,
+    "t": 56,
+    "r": 873,
+    "b": 91,
+    "w": 413.5,
+    "h": 35,
+    "sh": 33,
+    "ch": 33
+   },
+   "campwrap": {
+    "l": 34,
+    "t": 48,
+    "r": 881,
+    "b": 392,
+    "w": 847,
+    "h": 344,
+    "sh": 344,
+    "ch": 344
+   }
+  },
+  "grove": {
+   "inner": [
+    915,
+    412
+   ],
+   "clipReal": [],
+   "clipScroll": 0,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [
+    {
+     "id": "tree",
+     "l": 34,
+     "t": 48,
+     "w": 607,
+     "h": 344,
+     "ar": 1.765,
+     "bw": 911,
+     "bh": 516,
+     "bar": 1.766
+    }
+   ],
+   "canvText": {
+    "tree": {
+     "min": 0.05000000027939677,
+     "text": "Waking",
+     "n": 8588
+    }
+   },
+   "plate": null,
+   "tree": {
+    "l": 34,
+    "t": 48,
+    "r": 641,
+    "b": 392,
+    "w": 607,
+    "h": 344,
+    "sh": 344,
+    "ch": 344
+   },
+   "detail": {
+    "l": 641,
+    "t": 48,
+    "r": 881,
+    "b": 392,
+    "w": 240,
+    "h": 344,
+    "sh": 344,
+    "ch": 344
+   },
+   "tabs": {
+    "l": 34,
+    "t": 0,
+    "r": 723.7,
+    "b": 48,
+    "w": 689.7,
+    "h": 48,
+    "sh": 48,
+    "ch": 48
+   }
+  },
+  "tree-zoomed": {
+   "inner": [
+    915,
+    412
+   ],
+   "clipReal": [],
+   "clipScroll": 0,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [
+    {
+     "id": "tree",
+     "l": 34,
+     "t": 0,
+     "w": 559,
+     "h": 392,
+     "ar": 1.426,
+     "bw": 839,
+     "bh": 588,
+     "bar": 1.427
+    }
+   ],
+   "canvText": {
+    "tree": {
+     "min": 0.05000000027939677,
+     "text": "Waking",
+     "n": 31866
+    }
+   },
+   "plate": null
+  },
+  "treeEdges": {
+   "pads": {
+    "l": 6,
+    "r": 6,
+    "b": 7
+   },
+   "edges": [
+    {
+     "corner": [
+      0,
+      0
+     ],
+     "z": 1,
+     "worstLabelMargin": 64,
+     "labelsBelow": 5
+    },
+    {
+     "corner": [
+      1,
+      0
+     ],
+     "z": 1,
+     "worstLabelMargin": 328,
+     "labelsBelow": 5
+    },
+    {
+     "corner": [
+      0,
+      1
+     ],
+     "z": 1,
+     "worstLabelMargin": 74,
+     "labelsBelow": 0
+    },
+    {
+     "corner": [
+      1,
+      1
+     ],
+     "z": 1,
+     "worstLabelMargin": 40,
+     "labelsBelow": 0
+    }
+   ]
+  },
+  "satchel": {
+   "inner": [
+    915,
+    412
+   ],
+   "clipReal": [],
+   "clipScroll": 0,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [],
+   "canvText": {
+    "tree": {
+     "min": 0.05000000027939677,
+     "text": "Waking",
+     "n": 53110
+    }
+   },
+   "plate": null,
+   "pane": {
+    "l": 34,
+    "t": 48,
+    "r": 881,
+    "b": 392,
+    "w": 847,
+    "h": 344,
+    "sh": 344,
+    "ch": 344
+   },
+   "grid": {
+    "l": 418.7,
+    "t": 104,
+    "r": 867,
+    "b": 388,
+    "w": 448.3,
+    "h": 284,
+    "sh": 284,
+    "ch": 284
+   },
+   "detail": {
+    "l": 0,
+    "t": 0,
+    "r": 0,
+    "b": 0,
+    "w": 0,
+    "h": 0,
+    "sh": 0,
+    "ch": 0
+   },
+   "worn": {
+    "l": 48,
+    "t": 104,
+    "r": 348,
+    "b": 340,
+    "w": 300,
+    "h": 236,
+    "sh": 236,
+    "ch": 236
+   },
+   "cells": 18,
+   "wornKids": {
+    "lastItem": [
+     262,
+     68
+    ],
+    "glyph": [
+     274,
+     45
+    ],
+    "svg": [
+     274,
+     52
+    ],
+    "itemCS": [
+     "0px",
+     "grid"
+    ],
+    "glCS": [
+     "0px",
+     "none"
+    ],
+    "deep": [
+     [
+      "DIV.item empty",
+      -10
+     ],
+     [
+      "DIV.item empty",
+      -10
+     ],
+     [
+      "svg.[object SVGAnimatedString]",
+      -14
+     ]
+    ],
+    "wb": 340,
+    "sh": 236,
+    "ch": 236,
+    "pad": "10px",
+    "gap": "6px 4px",
+    "rows": "68px 68px 68px",
+    "rem": "16px",
+    "kids": [
+     [
+      "item empty",
+      114,
+      68
+     ],
+     [
+      "item empty",
+      114,
+      68
+     ],
+     [
+      "item empty",
+      188,
+      68
+     ],
+     [
+      "item empty",
+      188,
+      68
+     ],
+     [
+      "item empty",
+      262,
+      68
+     ],
+     [
+      "item empty",
+      262,
+      68
+     ]
+    ]
+   }
+  },
+  "satchel-picked": {
+   "inner": [
+    915,
+    412
+   ],
+   "clipReal": [],
+   "clipScroll": 0,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [],
+   "canvText": {
+    "tree": {
+     "min": 0.05000000027939677,
+     "text": "Waking",
+     "n": 53110
+    }
+   },
+   "plate": null,
+   "acts": [
+    {
+     "a": "close",
+     "l": 423,
+     "r": 551,
+     "t": 56,
+     "b": 104,
+     "w": 129,
+     "h": 48
+    },
+    {
+     "a": "equip",
+     "l": 423,
+     "r": 564,
+     "t": 179,
+     "b": 227,
+     "w": 141,
+     "h": 48
+    },
+    {
+     "a": "lock",
+     "l": 572,
+     "r": 714,
+     "t": 179,
+     "b": 227,
+     "w": 141,
+     "h": 48
+    },
+    {
+     "a": "salvage",
+     "l": 722,
+     "r": 863,
+     "t": 179,
+     "b": 227,
+     "w": 141,
+     "h": 48
+    }
+   ],
+   "detail": {
+    "l": 418.7,
+    "t": 52,
+    "r": 867,
+    "b": 227.4,
+    "w": 448.3,
+    "h": 175.4,
+    "sh": 175,
+    "ch": 175
+   },
+   "pane": {
+    "l": 34,
+    "t": 48,
+    "r": 881,
+    "b": 392,
+    "w": 847,
+    "h": 344,
+    "sh": 344,
+    "ch": 344
+   }
+  },
+  "replant": {
+   "inner": [
+    915,
+    412
+   ],
+   "clipReal": [
+    {
+     "n": ".name",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 18,
+     "dx": -58
+    },
+    {
+     "n": ".desc",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 39,
+     "dx": -58
+    },
+    {
+     "n": ".buy",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 42,
+     "dx": -314
+    },
+    {
+     "n": ".name",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 18,
+     "dx": -329
+    },
+    {
+     "n": ".desc",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 39,
+     "dx": -329
+    },
+    {
+     "n": ".buy",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 42,
+     "dx": -74
+    },
+    {
+     "n": ".name",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 77,
+     "dx": -58
+    },
+    {
+     "n": ".desc",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 118,
+     "dx": -58
+    },
+    {
+     "n": ".buy",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 111,
+     "dx": -305
+    },
+    {
+     "n": ".name",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 87,
+     "dx": -274
+    },
+    {
+     "n": ".desc",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 108,
+     "dx": -274
+    },
+    {
+     "n": ".buy",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 111,
+     "dx": -74
+    },
+    {
+     "n": ".name",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 156,
+     "dx": -58
+    },
+    {
+     "n": ".desc",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 177,
+     "dx": -58
+    },
+    {
+     "n": ".buy",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 180,
+     "dx": -314
+    }
+   ],
+   "clipScroll": 15,
+   "small": [],
+   "smallT": [],
+   "off": [
+    {
+     "n": ".buy",
+     "r": 437,
+     "b": 454
+    },
+    {
+     "n": ".buy",
+     "r": 841,
+     "b": 454
+    }
+   ],
+   "text": [],
+   "clip": [
+    {
+     "n": "#pane-prestige",
+     "sh": 590,
+     "ch": 344,
+     "oy": "auto"
+    }
+   ],
+   "canv": [
+    {
+     "id": "",
+     "l": 61,
+     "t": 101,
+     "w": 56,
+     "h": 56,
+     "ar": 1,
+     "bw": 192,
+     "bh": 192,
+     "bar": 1
+    },
+    {
+     "id": "",
+     "l": 331,
+     "t": 101,
+     "w": 56,
+     "h": 56,
+     "ar": 1,
+     "bw": 192,
+     "bh": 192,
+     "bar": 1
+    },
+    {
+     "id": "",
+     "l": 602,
+     "t": 101,
+     "w": 56,
+     "h": 56,
+     "ar": 1,
+     "bw": 192,
+     "bh": 192,
+     "bar": 1
+    }
+   ],
+   "canvText": {
+    "tree": {
+     "min": 0.05000000027939677,
+     "text": "Waking",
+     "n": 53336
+    }
+   },
+   "plate": null,
+   "pane": {
+    "l": 34,
+    "t": 48,
+    "r": 881,
+    "b": 392,
+    "w": 847,
+    "h": 344,
+    "sh": 590,
+    "ch": 344
+   }
+  },
+  "settings": {
+   "inner": [
+    915,
+    412
+   ],
+   "clipReal": [
+    {
+     "n": "#btn-telemetry",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 17,
+     "dx": -48
+    },
+    {
+     "n": "#btn-fs",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 78,
+     "dx": -48
+    },
+    {
+     "n": "#btn-mute",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 138,
+     "dx": -48
+    }
+   ],
+   "clipScroll": 3,
+   "small": [],
+   "smallT": [],
+   "off": [
+    {
+     "n": "#btn-telemetry",
+     "r": 239,
+     "b": 429
+    }
+   ],
+   "text": [],
+   "clip": [
+    {
+     "n": "#pane-settings",
+     "sh": 582,
+     "ch": 344,
+     "oy": "auto"
+    }
+   ],
+   "canv": [],
+   "canvText": {
+    "tree": {
+     "min": 0.05000000027939677,
+     "text": "Waking",
+     "n": 53562
+    }
+   },
+   "plate": null,
+   "pane": {
+    "l": 34,
+    "t": 48,
+    "r": 881,
+    "b": 392,
+    "w": 847,
+    "h": 344,
+    "sh": 582,
+    "ch": 344
+   },
+   "thumb": {
+    "l": 194,
+    "t": 56,
+    "r": 367.5,
+    "b": 104,
+    "w": 173.5,
+    "h": 48,
+    "sh": 48,
+    "ch": 48
+   }
+  },
+  "settingsOverlay": {
+   "inner": [
+    915,
+    412
+   ],
+   "clipReal": [
+    {
+     "n": "#btn-telemetry",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 23,
+     "dx": -48
+    },
+    {
+     "n": "#btn-fs",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 84,
+     "dx": -48
+    },
+    {
+     "n": "#btn-mute",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 144,
+     "dx": -48
+    }
+   ],
+   "clipScroll": 7,
+   "small": [],
+   "smallT": [],
+   "off": [
+    {
+     "n": "#btn-telemetry",
+     "r": 239,
+     "b": 435
+    }
+   ],
+   "text": [],
+   "clip": [
+    {
+     "n": "#pane-settings",
+     "sh": 582,
+     "ch": 318,
+     "oy": "auto"
+    }
+   ],
+   "canv": [
+    {
+     "id": "game",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 412,
+     "ar": 2.221,
+     "bw": 915,
+     "bh": 412,
+     "bar": 2.221
+    }
+   ],
+   "canvText": {
+    "tree": {
+     "min": 0.05000000027939677,
+     "text": "Waking",
+     "n": 54692
+    }
+   },
+   "plate": null,
+   "panel": {
+    "l": 34,
+    "t": 6,
+    "r": 881,
+    "b": 392,
+    "w": 847,
+    "h": 386,
+    "sh": 386,
+    "ch": 386
+   },
+   "pane": {
+    "l": 34,
+    "t": 54,
+    "r": 881,
+    "b": 372,
+    "w": 847,
+    "h": 318,
+    "sh": 582,
+    "ch": 318
+   },
+   "back": {
+    "l": 703,
+    "t": 6,
+    "r": 881,
+    "b": 54,
+    "w": 178,
+    "h": 48,
+    "sh": 32,
+    "ch": 32
+   },
+   "blob": "none"
+  },
+  "fallen": {
+   "inner": [
+    915,
+    412
+   ],
+   "clipReal": [],
+   "clipScroll": 0,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [
+    {
+     "id": "game",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 412,
+     "ar": 2.221,
+     "bw": 915,
+     "bh": 412,
+     "bar": 2.221
+    }
+   ],
+   "canvText": {
+    "tree": {
+     "min": 0.05000000027939677,
+     "text": "Waking",
+     "n": 55144
+    }
+   },
+   "plate": null,
+   "board": {
+    "l": 242,
+    "t": 105,
+    "r": 673,
+    "b": 359,
+    "w": 431,
+    "h": 254.1,
+    "sh": 174,
+    "ch": 174
+   },
+   "h2": {
+    "l": 294,
+    "t": 145,
+    "r": 621,
+    "b": 177.8,
+    "w": 327,
+    "h": 32.8,
+    "sh": 33,
+    "ch": 33
+   },
+   "btn": {
+    "l": 705,
+    "t": 336,
+    "r": 881,
+    "b": 392,
+    "w": 176,
+    "h": 56,
+    "sh": 56,
+    "ch": 56
+   },
+   "hud": {
+    "l": 0,
+    "t": 0,
+    "r": 915,
+    "b": 78,
+    "w": 915,
+    "h": 78,
+    "sh": 78,
+    "ch": 78
+   },
+   "rows": [
+    {
+     "fs": 14,
+     "h": 27
+    },
+    {
+     "fs": 14,
+     "h": 27
+    },
+    {
+     "fs": 14,
+     "h": 27
+    },
+    {
+     "fs": 14,
+     "h": 27
+    },
+    {
+     "fs": 14,
+     "h": 27
+    },
+    {
+     "fs": 14,
+     "h": 18
+    },
+    {
+     "fs": 14,
+     "h": 31
+    }
+   ]
+  }
+ },
+ "915x360": {
+  "fresh": {
+   "fallen": false,
+   "wave": 1,
+   "barHp": 150,
+   "saved": 1
+  },
+  "runFirst": {
+   "distinctColours": 58
+  },
+  "run": {
+   "inner": [
+    915,
+    360
+   ],
+   "clipReal": [],
+   "clipScroll": 0,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [
+    {
+     "id": "game",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 360,
+     "ar": 2.542,
+     "bw": 1144,
+     "bh": 450,
+     "bar": 2.542
+    }
+   ],
+   "canvText": {
+    "tree": {
+     "min": 0.05000000027939677,
+     "text": "Waking",
+     "n": 904
+    }
+   },
+   "plate": null
+  },
+  "runSettled": {
+   "wave": 1,
+   "orcs": null,
+   "fallen": false,
+   "hudH": 78,
+   "hudBottom": 70,
+   "wallX": null,
+   "hud": [
+    {
+     "n": "hud-wall",
+     "l": 34,
+     "r": 242,
+     "w": 208,
+     "h": 26
+    },
+    {
+     "n": "hud-wave",
+     "l": 359,
+     "r": 463,
+     "w": 104,
+     "h": 58
+    },
+    {
+     "n": "stat",
+     "l": 467,
+     "r": 603,
+     "w": 136,
+     "h": 58
+    },
+    {
+     "n": "stat",
+     "l": 607,
+     "r": 743,
+     "w": 136,
+     "h": 58
+    },
+    {
+     "n": "btn-settings",
+     "l": 768,
+     "r": 881,
+     "w": 113,
+     "h": 49
+    }
+   ],
+   "mute": {
+    "l": 34,
+    "b": 328
+   }
+  },
+  "camp": {
+   "inner": [
+    915,
+    360
+   ],
+   "clipReal": [],
+   "clipScroll": 0,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [
+    {
+     "id": "campview",
+     "l": 34,
+     "t": 48,
+     "w": 847,
+     "h": 292,
+     "ar": 2.901,
+     "bw": 1271,
+     "bh": 438,
+     "bar": 2.902
+    }
+   ],
+   "canvText": {
+    "tree": {
+     "min": 0.05000000027939677,
+     "text": "Waking",
+     "n": 8362
+    }
+   },
+   "plate": null,
+   "tags": [
+    {
+     "t": "Bowyer 2/3",
+     "l": 189,
+     "tp": 236,
+     "w": 112,
+     "h": 48
+    },
+    {
+     "t": "Forge 1/3",
+     "l": 338,
+     "tp": 288,
+     "w": 99,
+     "h": 48
+    },
+    {
+     "t": "Kitchen 3/3",
+     "l": 492,
+     "tp": 219,
+     "w": 113,
+     "h": 48
+    },
+    {
+     "t": "Training Area · Build",
+     "l": 597,
+     "tp": 282,
+     "w": 179,
+     "h": 48
+    }
+   ],
+   "mats": {
+    "l": 459.5,
+    "t": 56,
+    "r": 873,
+    "b": 91,
+    "w": 413.5,
+    "h": 35,
+    "sh": 33,
+    "ch": 33
+   },
+   "campwrap": {
+    "l": 34,
+    "t": 48,
+    "r": 881,
+    "b": 340,
+    "w": 847,
+    "h": 292,
+    "sh": 292,
+    "ch": 292
+   }
+  },
+  "grove": {
+   "inner": [
+    915,
+    360
+   ],
+   "clipReal": [],
+   "clipScroll": 0,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [
+    {
+     "id": "tree",
+     "l": 34,
+     "t": 48,
+     "w": 607,
+     "h": 292,
+     "ar": 2.079,
+     "bw": 911,
+     "bh": 438,
+     "bar": 2.08
+    }
+   ],
+   "canvText": {
+    "tree": {
+     "min": 0.05000000027939677,
+     "text": "Waking",
+     "n": 20114
+    }
+   },
+   "plate": null,
+   "tree": {
+    "l": 34,
+    "t": 48,
+    "r": 641,
+    "b": 340,
+    "w": 607,
+    "h": 292,
+    "sh": 292,
+    "ch": 292
+   },
+   "detail": {
+    "l": 641,
+    "t": 48,
+    "r": 881,
+    "b": 340,
+    "w": 240,
+    "h": 292,
+    "sh": 292,
+    "ch": 292
+   },
+   "tabs": {
+    "l": 34,
+    "t": 0,
+    "r": 723.7,
+    "b": 48,
+    "w": 689.7,
+    "h": 48,
+    "sh": 48,
+    "ch": 48
+   }
+  },
+  "tree-zoomed": {
+   "inner": [
+    915,
+    360
+   ],
+   "clipReal": [],
+   "clipScroll": 0,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [
+    {
+     "id": "tree",
+     "l": 34,
+     "t": 0,
+     "w": 559,
+     "h": 340,
+     "ar": 1.644,
+     "bw": 839,
+     "bh": 510,
+     "bar": 1.645
+    }
+   ],
+   "canvText": {
+    "tree": {
+     "min": 0.05000000027939677,
+     "text": "Waking",
+     "n": 61698
+    }
+   },
+   "plate": null
+  },
+  "treeEdges": {
+   "pads": {
+    "l": 6,
+    "r": 6,
+    "b": 7
+   },
+   "edges": [
+    {
+     "corner": [
+      0,
+      0
+     ],
+     "z": 1,
+     "worstLabelMargin": 64,
+     "labelsBelow": 4
+    },
+    {
+     "corner": [
+      1,
+      0
+     ],
+     "z": 1,
+     "worstLabelMargin": 328,
+     "labelsBelow": 4
+    },
+    {
+     "corner": [
+      0,
+      1
+     ],
+     "z": 1,
+     "worstLabelMargin": 74,
+     "labelsBelow": 0
+    },
+    {
+     "corner": [
+      1,
+      1
+     ],
+     "z": 1,
+     "worstLabelMargin": 40,
+     "labelsBelow": 0
+    }
+   ]
+  },
+  "satchel": {
+   "inner": [
+    915,
+    360
+   ],
+   "clipReal": [],
+   "clipScroll": 0,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [],
+   "canvText": {
+    "tree": {
+     "min": 0.05000000027939677,
+     "text": "Waking",
+     "n": 80682
+    }
+   },
+   "plate": null,
+   "pane": {
+    "l": 34,
+    "t": 48,
+    "r": 881,
+    "b": 340,
+    "w": 847,
+    "h": 292,
+    "sh": 292,
+    "ch": 292
+   },
+   "grid": {
+    "l": 418.7,
+    "t": 104,
+    "r": 867,
+    "b": 336,
+    "w": 448.3,
+    "h": 232,
+    "sh": 232,
+    "ch": 232
+   },
+   "detail": {
+    "l": 0,
+    "t": 0,
+    "r": 0,
+    "b": 0,
+    "w": 0,
+    "h": 0,
+    "sh": 0,
+    "ch": 0
+   },
+   "worn": {
+    "l": 48,
+    "t": 104,
+    "r": 406.7,
+    "b": 258,
+    "w": 358.7,
+    "h": 154,
+    "sh": 163,
+    "ch": 154
+   },
+   "cells": 13,
+   "wornKids": {
+    "lastItem": [
+     207,
+     48
+    ],
+    "glyph": [
+     215,
+     32
+    ],
+    "svg": [
+     215,
+     52
+    ],
+    "itemCS": [
+     "0px",
+     "grid"
+    ],
+    "glCS": [
+     "0px",
+     "none"
+    ],
+    "deep": [
+     [
+      "svg.[object SVGAnimatedString]",
+      9
+     ],
+     [
+      "svg.[object SVGAnimatedString]",
+      9
+     ],
+     [
+      "path.[object SVGAnimatedString]",
+      3
+     ]
+    ],
+    "wb": 258,
+    "sh": 163,
+    "ch": 154,
+    "pad": "3px 6px",
+    "gap": "2px 4px",
+    "rows": "48px 48px 48px",
+    "rem": "16px",
+    "kids": [
+     [
+      "item empty",
+      107,
+      48
+     ],
+     [
+      "item empty",
+      107,
+      48
+     ],
+     [
+      "item empty",
+      157,
+      48
+     ],
+     [
+      "item empty",
+      157,
+      48
+     ],
+     [
+      "item empty",
+      207,
+      48
+     ],
+     [
+      "item empty",
+      207,
+      48
+     ]
+    ]
+   }
+  },
+  "satchel-picked": {
+   "inner": [
+    915,
+    360
+   ],
+   "clipReal": [],
+   "clipScroll": 0,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [],
+   "canvText": {
+    "tree": {
+     "min": 0.05000000027939677,
+     "text": "Waking",
+     "n": 80682
+    }
+   },
+   "plate": null,
+   "acts": [
+    {
+     "a": "close",
+     "l": 423,
+     "r": 551,
+     "t": 56,
+     "b": 104,
+     "w": 129,
+     "h": 48
+    },
+    {
+     "a": "equip",
+     "l": 423,
+     "r": 564,
+     "t": 179,
+     "b": 227,
+     "w": 141,
+     "h": 48
+    },
+    {
+     "a": "lock",
+     "l": 572,
+     "r": 714,
+     "t": 179,
+     "b": 227,
+     "w": 141,
+     "h": 48
+    },
+    {
+     "a": "salvage",
+     "l": 722,
+     "r": 863,
+     "t": 179,
+     "b": 227,
+     "w": 141,
+     "h": 48
+    }
+   ],
+   "detail": {
+    "l": 418.7,
+    "t": 52,
+    "r": 867,
+    "b": 227.4,
+    "w": 448.3,
+    "h": 175.4,
+    "sh": 175,
+    "ch": 175
+   },
+   "pane": {
+    "l": 34,
+    "t": 48,
+    "r": 881,
+    "b": 340,
+    "w": 847,
+    "h": 292,
+    "sh": 292,
+    "ch": 292
+   }
+  },
+  "replant": {
+   "inner": [
+    915,
+    360
+   ],
+   "clipReal": [
+    {
+     "n": ".name",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 8,
+     "dx": -58
+    },
+    {
+     "n": ".desc",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 29,
+     "dx": -58
+    },
+    {
+     "n": ".buy",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 32,
+     "dx": -314
+    },
+    {
+     "n": ".name",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 8,
+     "dx": -293
+    },
+    {
+     "n": ".desc",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 29,
+     "dx": -293
+    },
+    {
+     "n": ".buy",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 32,
+     "dx": -74
+    },
+    {
+     "n": ".name",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 70,
+     "dx": -58
+    },
+    {
+     "n": ".desc",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 91,
+     "dx": -58
+    },
+    {
+     "n": ".buy",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 94,
+     "dx": -314
+    },
+    {
+     "n": ".name",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 70,
+     "dx": -329
+    },
+    {
+     "n": ".desc",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 91,
+     "dx": -329
+    },
+    {
+     "n": ".buy",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 94,
+     "dx": -74
+    },
+    {
+     "n": ".name",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 129,
+     "dx": -58
+    },
+    {
+     "n": ".desc",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 170,
+     "dx": -58
+    },
+    {
+     "n": ".buy",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 163,
+     "dx": -305
+    },
+    {
+     "n": ".name",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 139,
+     "dx": -274
+    },
+    {
+     "n": ".desc",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 160,
+     "dx": -274
+    },
+    {
+     "n": ".buy",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 163,
+     "dx": -74
+    },
+    {
+     "n": ".name",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 208,
+     "dx": -58
+    },
+    {
+     "n": ".desc",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 229,
+     "dx": -58
+    },
+    {
+     "n": ".buy",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 232,
+     "dx": -314
+    }
+   ],
+   "clipScroll": 21,
+   "small": [],
+   "smallT": [],
+   "off": [
+    {
+     "n": ".buy",
+     "r": 437,
+     "b": 392
+    },
+    {
+     "n": ".buy",
+     "r": 841,
+     "b": 392
+    }
+   ],
+   "text": [],
+   "clip": [
+    {
+     "n": "#pane-prestige",
+     "sh": 590,
+     "ch": 292,
+     "oy": "auto"
+    }
+   ],
+   "canv": [
+    {
+     "id": "",
+     "l": 61,
+     "t": 101,
+     "w": 56,
+     "h": 56,
+     "ar": 1,
+     "bw": 192,
+     "bh": 192,
+     "bar": 1
+    },
+    {
+     "id": "",
+     "l": 331,
+     "t": 101,
+     "w": 56,
+     "h": 56,
+     "ar": 1,
+     "bw": 192,
+     "bh": 192,
+     "bar": 1
+    },
+    {
+     "id": "",
+     "l": 602,
+     "t": 101,
+     "w": 56,
+     "h": 56,
+     "ar": 1,
+     "bw": 192,
+     "bh": 192,
+     "bar": 1
+    }
+   ],
+   "canvText": {
+    "tree": {
+     "min": 0.05000000027939677,
+     "text": "Waking",
+     "n": 80908
+    }
+   },
+   "plate": null,
+   "pane": {
+    "l": 34,
+    "t": 48,
+    "r": 881,
+    "b": 340,
+    "w": 847,
+    "h": 292,
+    "sh": 590,
+    "ch": 292
+   }
+  },
+  "settings": {
+   "inner": [
+    915,
+    360
+   ],
+   "clipReal": [
+    {
+     "n": "#set-tel-k",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 8,
+     "dx": -48
+    },
+    {
+     "n": "#btn-telemetry",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 69,
+     "dx": -48
+    },
+    {
+     "n": "#btn-fs",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 130,
+     "dx": -48
+    },
+    {
+     "n": "#btn-mute",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 190,
+     "dx": -48
+    }
+   ],
+   "clipScroll": 4,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [
+    {
+     "n": "#pane-settings",
+     "sh": 582,
+     "ch": 292,
+     "oy": "auto"
+    }
+   ],
+   "canv": [],
+   "canvText": {
+    "tree": {
+     "min": 0.05000000027939677,
+     "text": "Waking",
+     "n": 81134
+    }
+   },
+   "plate": null,
+   "pane": {
+    "l": 34,
+    "t": 48,
+    "r": 881,
+    "b": 340,
+    "w": 847,
+    "h": 292,
+    "sh": 582,
+    "ch": 292
+   },
+   "thumb": {
+    "l": 194,
+    "t": 56,
+    "r": 367.5,
+    "b": 104,
+    "w": 173.5,
+    "h": 48,
+    "sh": 48,
+    "ch": 48
+   }
+  },
+  "settingsOverlay": {
+   "inner": [
+    915,
+    360
+   ],
+   "clipReal": [
+    {
+     "n": "#set-tel-k",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 14,
+     "dx": -48
+    },
+    {
+     "n": "#btn-telemetry",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 75,
+     "dx": -48
+    },
+    {
+     "n": "#btn-fs",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 136,
+     "dx": -48
+    },
+    {
+     "n": "#btn-mute",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 196,
+     "dx": -48
+    }
+   ],
+   "clipScroll": 10,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [
+    {
+     "n": "#pane-settings",
+     "sh": 582,
+     "ch": 266,
+     "oy": "auto"
+    }
+   ],
+   "canv": [
+    {
+     "id": "game",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 360,
+     "ar": 2.542,
+     "bw": 915,
+     "bh": 360,
+     "bar": 2.542
+    }
+   ],
+   "canvText": {
+    "tree": {
+     "min": 0.05000000027939677,
+     "text": "Waking",
+     "n": 82264
+    }
+   },
+   "plate": null,
+   "panel": {
+    "l": 34,
+    "t": 6,
+    "r": 881,
+    "b": 340,
+    "w": 847,
+    "h": 334,
+    "sh": 334,
+    "ch": 334
+   },
+   "pane": {
+    "l": 34,
+    "t": 54,
+    "r": 881,
+    "b": 320,
+    "w": 847,
+    "h": 266,
+    "sh": 582,
+    "ch": 266
+   },
+   "back": {
+    "l": 703,
+    "t": 6,
+    "r": 881,
+    "b": 54,
+    "w": 178,
+    "h": 48,
+    "sh": 32,
+    "ch": 32
+   },
+   "blob": "none"
+  },
+  "fallen": {
+   "inner": [
+    915,
+    360
+   ],
+   "clipReal": [],
+   "clipScroll": 0,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [
+    {
+     "id": "game",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 360,
+     "ar": 2.542,
+     "bw": 915,
+     "bh": 360,
+     "bar": 2.542
+    }
+   ],
+   "canvText": {
+    "tree": {
+     "min": 0.05000000027939677,
+     "text": "Waking",
+     "n": 82716
+    }
+   },
+   "plate": null,
+   "board": {
+    "l": 242,
+    "t": 79,
+    "r": 673,
+    "b": 333,
+    "w": 431,
+    "h": 254.1,
+    "sh": 174,
+    "ch": 174
+   },
+   "h2": {
+    "l": 294,
+    "t": 119,
+    "r": 621,
+    "b": 151.8,
+    "w": 327,
+    "h": 32.8,
+    "sh": 33,
+    "ch": 33
+   },
+   "btn": {
+    "l": 705,
+    "t": 284,
+    "r": 881,
+    "b": 340,
+    "w": 176,
+    "h": 56,
+    "sh": 56,
+    "ch": 56
+   },
+   "hud": {
+    "l": 0,
+    "t": 0,
+    "r": 915,
+    "b": 78,
+    "w": 915,
+    "h": 78,
+    "sh": 78,
+    "ch": 78
+   },
+   "rows": [
+    {
+     "fs": 14,
+     "h": 27
+    },
+    {
+     "fs": 14,
+     "h": 27
+    },
+    {
+     "fs": 14,
+     "h": 27
+    },
+    {
+     "fs": 14,
+     "h": 27
+    },
+    {
+     "fs": 14,
+     "h": 27
+    },
+    {
+     "fs": 14,
+     "h": 18
+    },
+    {
+     "fs": 14,
+     "h": 31
+    }
+   ]
+  }
+ },
+ "915x320": {
+  "fresh": {
+   "fallen": false,
+   "wave": 1,
+   "barHp": 150,
+   "saved": 2
+  },
+  "runFirst": {
+   "distinctColours": 37
+  },
+  "run": {
+   "inner": [
+    915,
+    320
+   ],
+   "clipReal": [],
+   "clipScroll": 0,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [
+    {
+     "id": "game",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 320,
+     "ar": 2.859,
+     "bw": 915,
+     "bh": 320,
+     "bar": 2.859
+    }
+   ],
+   "canvText": {
+    "tree": {
+     "min": 0.05000000027939677,
+     "text": "Waking",
+     "n": 678
+    }
+   },
+   "plate": null
+  },
+  "runSettled": {
+   "wave": 1,
+   "orcs": null,
+   "fallen": false,
+   "hudH": 64,
+   "hudBottom": 60,
+   "wallX": null,
+   "hud": [
+    {
+     "n": "hud-wall",
+     "l": 34,
+     "r": 242,
+     "w": 208,
+     "h": 26
+    },
+    {
+     "n": "hud-wave",
+     "l": 357,
+     "r": 461,
+     "w": 104,
+     "h": 44
+    },
+    {
+     "n": "stat",
+     "l": 465,
+     "r": 601,
+     "w": 136,
+     "h": 44
+    },
+    {
+     "n": "stat",
+     "l": 605,
+     "r": 741,
+     "w": 136,
+     "h": 44
+    },
+    {
+     "n": "btn-settings",
+     "l": 768,
+     "r": 881,
+     "w": 113,
+     "h": 49
+    }
+   ],
+   "mute": {
+    "l": 34,
+    "b": 288
+   }
+  },
+  "camp": {
+   "inner": [
+    915,
+    320
+   ],
+   "clipReal": [],
+   "clipScroll": 0,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [
+    {
+     "id": "campview",
+     "l": 34,
+     "t": 48,
+     "w": 847,
+     "h": 252,
+     "ar": 3.361,
+     "bw": 1271,
+     "bh": 378,
+     "bar": 3.362
+    }
+   ],
+   "canvText": {
+    "tree": {
+     "min": 0.05000000027939677,
+     "text": "Waking",
+     "n": 2486
+    }
+   },
+   "plate": null,
+   "tags": [
+    {
+     "t": "Bowyer 2/3",
+     "l": 218,
+     "tp": 208,
+     "w": 112,
+     "h": 48
+    },
+    {
+     "t": "Forge 1/3",
+     "l": 347,
+     "tp": 248,
+     "w": 99,
+     "h": 48
+    },
+    {
+     "t": "Kitchen 3/3",
+     "l": 479,
+     "tp": 194,
+     "w": 113,
+     "h": 48
+    },
+    {
+     "t": "Training Area · Build",
+     "l": 565,
+     "tp": 248,
+     "w": 179,
+     "h": 48
+    }
+   ],
+   "mats": {
+    "l": 459.5,
+    "t": 56,
+    "r": 873,
+    "b": 91,
+    "w": 413.5,
+    "h": 35,
+    "sh": 33,
+    "ch": 33
+   },
+   "campwrap": {
+    "l": 34,
+    "t": 48,
+    "r": 881,
+    "b": 300,
+    "w": 847,
+    "h": 252,
+    "sh": 252,
+    "ch": 252
+   }
+  },
+  "grove": {
+   "inner": [
+    915,
+    320
+   ],
+   "clipReal": [],
+   "clipScroll": 0,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [
+    {
+     "id": "tree",
+     "l": 34,
+     "t": 48,
+     "w": 607,
+     "h": 252,
+     "ar": 2.409,
+     "bw": 911,
+     "bh": 378,
+     "bar": 2.41
+    }
+   ],
+   "canvText": {
+    "tree": {
+     "min": 0.05000000027939677,
+     "text": "Waking",
+     "n": 10622
+    }
+   },
+   "plate": null,
+   "tree": {
+    "l": 34,
+    "t": 48,
+    "r": 641,
+    "b": 300,
+    "w": 607,
+    "h": 252,
+    "sh": 252,
+    "ch": 252
+   },
+   "detail": {
+    "l": 641,
+    "t": 48,
+    "r": 881,
+    "b": 300,
+    "w": 240,
+    "h": 252,
+    "sh": 252,
+    "ch": 252
+   },
+   "tabs": {
+    "l": 34,
+    "t": 0,
+    "r": 723.7,
+    "b": 48,
+    "w": 689.7,
+    "h": 48,
+    "sh": 48,
+    "ch": 48
+   }
+  },
+  "tree-zoomed": {
+   "inner": [
+    915,
+    320
+   ],
+   "clipReal": [],
+   "clipScroll": 0,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [
+    {
+     "id": "tree",
+     "l": 34,
+     "t": 0,
+     "w": 559,
+     "h": 300,
+     "ar": 1.863,
+     "bw": 839,
+     "bh": 450,
+     "bar": 1.864
+    }
+   ],
+   "canvText": {
+    "tree": {
+     "min": 0.05000000027939677,
+     "text": "Waking",
+     "n": 33674
+    }
+   },
+   "plate": null
+  },
+  "treeEdges": {
+   "pads": {
+    "l": 6,
+    "r": 6,
+    "b": 7
+   },
+   "edges": [
+    {
+     "corner": [
+      0,
+      0
+     ],
+     "z": 1,
+     "worstLabelMargin": 249,
+     "labelsBelow": 2
+    },
+    {
+     "corner": [
+      1,
+      0
+     ],
+     "z": 1,
+     "worstLabelMargin": 469,
+     "labelsBelow": 2
+    },
+    {
+     "corner": [
+      0,
+      1
+     ],
+     "z": 1,
+     "worstLabelMargin": 74,
+     "labelsBelow": 0
+    },
+    {
+     "corner": [
+      1,
+      1
+     ],
+     "z": 1,
+     "worstLabelMargin": 40,
+     "labelsBelow": 0
+    }
+   ]
+  },
+  "satchel": {
+   "inner": [
+    915,
+    320
+   ],
+   "clipReal": [],
+   "clipScroll": 0,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [],
+   "canvText": {
+    "tree": {
+     "min": 0.05000000027939677,
+     "text": "Waking",
+     "n": 44748
+    }
+   },
+   "plate": null,
+   "pane": {
+    "l": 34,
+    "t": 48,
+    "r": 881,
+    "b": 300,
+    "w": 847,
+    "h": 252,
+    "sh": 252,
+    "ch": 252
+   },
+   "grid": {
+    "l": 418.7,
+    "t": 104,
+    "r": 867,
+    "b": 296,
+    "w": 448.3,
+    "h": 192,
+    "sh": 192,
+    "ch": 192
+   },
+   "detail": {
+    "l": 0,
+    "t": 0,
+    "r": 0,
+    "b": 0,
+    "w": 0,
+    "h": 0,
+    "sh": 0,
+    "ch": 0
+   },
+   "worn": {
+    "l": 48,
+    "t": 104,
+    "r": 406.7,
+    "b": 258,
+    "w": 358.7,
+    "h": 154,
+    "sh": 163,
+    "ch": 154
+   },
+   "cells": 21,
+   "wornKids": {
+    "lastItem": [
+     207,
+     48
+    ],
+    "glyph": [
+     215,
+     32
+    ],
+    "svg": [
+     215,
+     52
+    ],
+    "itemCS": [
+     "0px",
+     "grid"
+    ],
+    "glCS": [
+     "0px",
+     "none"
+    ],
+    "deep": [
+     [
+      "svg.[object SVGAnimatedString]",
+      9
+     ],
+     [
+      "svg.[object SVGAnimatedString]",
+      9
+     ],
+     [
+      "path.[object SVGAnimatedString]",
+      3
+     ]
+    ],
+    "wb": 258,
+    "sh": 163,
+    "ch": 154,
+    "pad": "3px 6px",
+    "gap": "2px 4px",
+    "rows": "48px 48px 48px",
+    "rem": "16px",
+    "kids": [
+     [
+      "item empty",
+      107,
+      48
+     ],
+     [
+      "item empty",
+      107,
+      48
+     ],
+     [
+      "item empty",
+      157,
+      48
+     ],
+     [
+      "item empty",
+      157,
+      48
+     ],
+     [
+      "item empty",
+      207,
+      48
+     ],
+     [
+      "item empty",
+      207,
+      48
+     ]
+    ]
+   }
+  },
+  "satchel-picked": {
+   "inner": [
+    915,
+    320
+   ],
+   "clipReal": [],
+   "clipScroll": 0,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [],
+   "canvText": {
+    "tree": {
+     "min": 0.05000000027939677,
+     "text": "Waking",
+     "n": 44748
+    }
+   },
+   "plate": null,
+   "acts": [
+    {
+     "a": "close",
+     "l": 423,
+     "r": 551,
+     "t": 56,
+     "b": 104,
+     "w": 129,
+     "h": 48
+    },
+    {
+     "a": "equip",
+     "l": 423,
+     "r": 564,
+     "t": 179,
+     "b": 227,
+     "w": 141,
+     "h": 48
+    },
+    {
+     "a": "lock",
+     "l": 572,
+     "r": 714,
+     "t": 179,
+     "b": 227,
+     "w": 141,
+     "h": 48
+    },
+    {
+     "a": "salvage",
+     "l": 722,
+     "r": 863,
+     "t": 179,
+     "b": 227,
+     "w": 141,
+     "h": 48
+    }
+   ],
+   "detail": {
+    "l": 418.7,
+    "t": 52,
+    "r": 867,
+    "b": 227.4,
+    "w": 448.3,
+    "h": 175.4,
+    "sh": 175,
+    "ch": 175
+   },
+   "pane": {
+    "l": 34,
+    "t": 48,
+    "r": 881,
+    "b": 300,
+    "w": 847,
+    "h": 252,
+    "sh": 252,
+    "ch": 252
+   }
+  },
+  "replant": {
+   "inner": [
+    915,
+    320
+   ],
+   "clipReal": [
+    {
+     "n": ".desc",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 7,
+     "dx": -58
+    },
+    {
+     "n": ".buy",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 10,
+     "dx": -314
+    },
+    {
+     "n": ".desc",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 7,
+     "dx": -266
+    },
+    {
+     "n": ".buy",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 10,
+     "dx": -74
+    },
+    {
+     "n": ".name",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 48,
+     "dx": -58
+    },
+    {
+     "n": ".desc",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 69,
+     "dx": -58
+    },
+    {
+     "n": ".buy",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 72,
+     "dx": -314
+    },
+    {
+     "n": ".name",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 48,
+     "dx": -293
+    },
+    {
+     "n": ".desc",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 69,
+     "dx": -293
+    },
+    {
+     "n": ".buy",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 72,
+     "dx": -74
+    },
+    {
+     "n": ".name",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 110,
+     "dx": -58
+    },
+    {
+     "n": ".desc",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 131,
+     "dx": -58
+    },
+    {
+     "n": ".buy",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 134,
+     "dx": -314
+    },
+    {
+     "n": ".name",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 110,
+     "dx": -329
+    },
+    {
+     "n": ".desc",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 131,
+     "dx": -329
+    },
+    {
+     "n": ".buy",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 134,
+     "dx": -74
+    },
+    {
+     "n": ".name",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 169,
+     "dx": -58
+    },
+    {
+     "n": ".desc",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 210,
+     "dx": -58
+    },
+    {
+     "n": ".buy",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 203,
+     "dx": -305
+    },
+    {
+     "n": ".name",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 179,
+     "dx": -274
+    },
+    {
+     "n": ".desc",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 200,
+     "dx": -274
+    },
+    {
+     "n": ".buy",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 203,
+     "dx": -74
+    },
+    {
+     "n": ".name",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 248,
+     "dx": -58
+    },
+    {
+     "n": ".desc",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 269,
+     "dx": -58
+    },
+    {
+     "n": ".buy",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 272,
+     "dx": -314
+    }
+   ],
+   "clipScroll": 27,
+   "small": [],
+   "smallT": [],
+   "off": [
+    {
+     "n": ".buy",
+     "r": 437,
+     "b": 330
+    },
+    {
+     "n": ".buy",
+     "r": 841,
+     "b": 330
+    }
+   ],
+   "text": [],
+   "clip": [
+    {
+     "n": "#pane-prestige",
+     "sh": 590,
+     "ch": 252,
+     "oy": "auto"
+    }
+   ],
+   "canv": [
+    {
+     "id": "",
+     "l": 61,
+     "t": 101,
+     "w": 56,
+     "h": 56,
+     "ar": 1,
+     "bw": 192,
+     "bh": 192,
+     "bar": 1
+    },
+    {
+     "id": "",
+     "l": 331,
+     "t": 101,
+     "w": 56,
+     "h": 56,
+     "ar": 1,
+     "bw": 192,
+     "bh": 192,
+     "bar": 1
+    },
+    {
+     "id": "",
+     "l": 602,
+     "t": 101,
+     "w": 56,
+     "h": 56,
+     "ar": 1,
+     "bw": 192,
+     "bh": 192,
+     "bar": 1
+    }
+   ],
+   "canvText": {
+    "tree": {
+     "min": 0.05000000027939677,
+     "text": "Waking",
+     "n": 44974
+    }
+   },
+   "plate": null,
+   "pane": {
+    "l": 34,
+    "t": 48,
+    "r": 881,
+    "b": 300,
+    "w": 847,
+    "h": 252,
+    "sh": 590,
+    "ch": 252
+   }
+  },
+  "settings": {
+   "inner": [
+    915,
+    320
+   ],
+   "clipReal": [
+    {
+     "n": ".set",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 14,
+     "dx": -48
+    },
+    {
+     "n": "#set-num",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 14,
+     "dx": -192
+    },
+    {
+     "n": "#set-tel-k",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 48,
+     "dx": -48
+    },
+    {
+     "n": "#btn-telemetry",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 109,
+     "dx": -48
+    },
+    {
+     "n": "#btn-fs",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 170,
+     "dx": -48
+    },
+    {
+     "n": "#btn-mute",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 230,
+     "dx": -48
+    }
+   ],
+   "clipScroll": 6,
+   "small": [],
+   "smallT": [],
+   "off": [
+    {
+     "n": "#set-num",
+     "r": 362,
+     "b": 334
+    }
+   ],
+   "text": [],
+   "clip": [
+    {
+     "n": "#pane-settings",
+     "sh": 582,
+     "ch": 252,
+     "oy": "auto"
+    }
+   ],
+   "canv": [],
+   "canvText": {
+    "tree": {
+     "min": 0.05000000027939677,
+     "text": "Waking",
+     "n": 45200
+    }
+   },
+   "plate": null,
+   "pane": {
+    "l": 34,
+    "t": 48,
+    "r": 881,
+    "b": 300,
+    "w": 847,
+    "h": 252,
+    "sh": 582,
+    "ch": 252
+   },
+   "thumb": {
+    "l": 194,
+    "t": 56,
+    "r": 367.5,
+    "b": 104,
+    "w": 173.5,
+    "h": 48,
+    "sh": 48,
+    "ch": 48
+   }
+  },
+  "settingsOverlay": {
+   "inner": [
+    915,
+    320
+   ],
+   "clipReal": [
+    {
+     "n": ".set",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 20,
+     "dx": -48
+    },
+    {
+     "n": "#set-num",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 20,
+     "dx": -192
+    },
+    {
+     "n": "#set-tel-k",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 54,
+     "dx": -48
+    },
+    {
+     "n": "#btn-telemetry",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 115,
+     "dx": -48
+    },
+    {
+     "n": "#btn-fs",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 176,
+     "dx": -48
+    },
+    {
+     "n": "#btn-mute",
+     "by": ".wrap",
+     "scroll": false,
+     "dy": 236,
+     "dx": -48
+    }
+   ],
+   "clipScroll": 14,
+   "small": [],
+   "smallT": [],
+   "off": [
+    {
+     "n": "#set-num",
+     "r": 362,
+     "b": 340
+    }
+   ],
+   "text": [],
+   "clip": [
+    {
+     "n": "#pane-settings",
+     "sh": 582,
+     "ch": 226,
+     "oy": "auto"
+    }
+   ],
+   "canv": [
+    {
+     "id": "game",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 320,
+     "ar": 2.859,
+     "bw": 915,
+     "bh": 320,
+     "bar": 2.859
+    }
+   ],
+   "canvText": {
+    "tree": {
+     "min": 0.05000000027939677,
+     "text": "Waking",
+     "n": 46330
+    }
+   },
+   "plate": null,
+   "panel": {
+    "l": 34,
+    "t": 6,
+    "r": 881,
+    "b": 300,
+    "w": 847,
+    "h": 294,
+    "sh": 294,
+    "ch": 294
+   },
+   "pane": {
+    "l": 34,
+    "t": 54,
+    "r": 881,
+    "b": 280,
+    "w": 847,
+    "h": 226,
+    "sh": 582,
+    "ch": 226
+   },
+   "back": {
+    "l": 703,
+    "t": 6,
+    "r": 881,
+    "b": 54,
+    "w": 178,
+    "h": 48,
+    "sh": 32,
+    "ch": 32
+   },
+   "blob": "none"
+  },
+  "fallen": {
+   "inner": [
+    915,
+    320
+   ],
+   "clipReal": [],
+   "clipScroll": 0,
+   "small": [],
+   "smallT": [],
+   "off": [],
+   "text": [],
+   "clip": [],
+   "canv": [
+    {
+     "id": "game",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 320,
+     "ar": 2.859,
+     "bw": 915,
+     "bh": 320,
+     "bar": 2.859
+    }
+   ],
+   "canvText": {
+    "tree": {
+     "min": 0.05000000027939677,
+     "text": "Waking",
+     "n": 46782
+    }
+   },
+   "plate": null,
+   "board": {
+    "l": 242,
+    "t": 83.4,
+    "r": 673,
+    "b": 284.6,
+    "w": 431,
+    "h": 201.2,
+    "sh": 145,
+    "ch": 145
+   },
+   "h2": {
+    "l": 282,
+    "t": 111.4,
+    "r": 633,
+    "b": 138.7,
+    "w": 351,
+    "h": 27.3,
+    "sh": 27,
+    "ch": 27
+   },
+   "btn": {
+    "l": 689,
+    "t": 244,
+    "r": 881,
+    "b": 300,
+    "w": 192,
+    "h": 56,
+    "sh": 56,
+    "ch": 56
+   },
+   "hud": {
+    "l": 0,
+    "t": 0,
+    "r": 915,
+    "b": 64,
+    "w": 915,
+    "h": 64,
+    "sh": 64,
+    "ch": 64
+   },
+   "rows": [
+    {
+     "fs": 14,
+     "h": 24
+    },
+    {
+     "fs": 14,
+     "h": 24
+    },
+    {
+     "fs": 14,
+     "h": 24
+    },
+    {
+     "fs": 14,
+     "h": 24
+    },
+    {
+     "fs": 14,
+     "h": 24
+    },
+    {
+     "fs": 14,
+     "h": 18
+    },
+    {
+     "fs": 14,
+     "h": 25
+    }
+   ]
+  }
+ },
+ "412x915": {
+  "prompt0": {
+   "rotateOverlay": {
+    "shown": true,
+    "w": 412,
+    "h": 915
+   },
+   "msgW": 212,
+   "msgH": 177,
+   "msgLines": 5,
+   "msgInView": true,
+   "runTime": 27.2,
+   "wave": 2,
+   "fallen": false,
+   "barHp": 0,
+   "kills": 0,
+   "orcs": null,
+   "wall": {
+    "l": 0,
+    "r": 0,
+    "shown": false
+   },
+   "mute": {
+    "l": 0,
+    "r": 0,
+    "shown": false
+   },
+   "settings": {
+    "l": 0,
+    "r": 0,
+    "shown": false
+   },
+   "muteAria": "false"
+  },
+  "prompt1": {
+   "rotateOverlay": {
+    "shown": true,
+    "w": 412,
+    "h": 915
+   },
+   "msgW": 212,
+   "msgH": 177,
+   "msgLines": 5,
+   "msgInView": true,
+   "runTime": 27.2,
+   "wave": 2,
+   "fallen": false,
+   "barHp": 0,
+   "kills": 0,
+   "orcs": null,
+   "wall": {
+    "l": 0,
+    "r": 0,
+    "shown": false
+   },
+   "mute": {
+    "l": 0,
+    "r": 0,
+    "shown": false
+   },
+   "settings": {
+    "l": 0,
+    "r": 0,
+    "shown": false
+   },
+   "muteAria": "false"
+  },
+  "rotate300ms": {
+   "rotateOverlay": {
+    "shown": false,
+    "w": 0,
+    "h": 0
+   },
+   "msgW": 0,
+   "msgH": 0,
+   "msgLines": null,
+   "msgInView": true,
+   "runTime": 27.46,
+   "wave": 2,
+   "fallen": false,
+   "barHp": 0.9360000000000004,
+   "kills": 0,
+   "orcs": null,
+   "wall": {
+    "l": 34,
+    "r": 242,
+    "shown": true
+   },
+   "mute": {
+    "l": 34,
+    "r": 82,
+    "shown": true
+   },
+   "settings": {
+    "l": 768,
+    "r": 881,
+    "shown": true
+   },
+   "muteAria": "false"
+  },
+  "landscape1": {
+   "rotateOverlay": {
+    "shown": false,
+    "w": 0,
+    "h": 0
+   },
+   "msgW": 0,
+   "msgH": 0,
+   "msgLines": null,
+   "msgInView": true,
+   "runTime": 29.5,
+   "wave": 2,
+   "fallen": false,
+   "barHp": 8.280000000000003,
+   "kills": 0,
+   "orcs": null,
+   "wall": {
+    "l": 34,
+    "r": 242,
+    "shown": true
+   },
+   "mute": {
+    "l": 34,
+    "r": 82,
+    "shown": true
+   },
+   "settings": {
+    "l": 768,
+    "r": 881,
+    "shown": true
+   },
+   "muteAria": "false"
+  },
+  "landscape2": {
+   "rotateOverlay": {
+    "shown": false,
+    "w": 0,
+    "h": 0
+   },
+   "msgW": 0,
+   "msgH": 0,
+   "msgLines": null,
+   "msgInView": true,
+   "runTime": 32.92,
+   "wave": 2,
+   "fallen": false,
+   "barHp": 20.591999999999864,
+   "kills": 0,
+   "orcs": null,
+   "wall": {
+    "l": 34,
+    "r": 242,
+    "shown": true
+   },
+   "mute": {
+    "l": 34,
+    "r": 82,
+    "shown": true
+   },
+   "settings": {
+    "l": 768,
+    "r": 881,
+    "shown": true
+   },
+   "muteAria": "false"
+  },
+  "backPortrait0": {
+   "rotateOverlay": {
+    "shown": true,
+    "w": 412,
+    "h": 915
+   },
+   "msgW": 212,
+   "msgH": 177,
+   "msgLines": 5,
+   "msgInView": true,
+   "runTime": 33.6,
+   "wave": 2,
+   "fallen": false,
+   "barHp": 23.039999999999836,
+   "kills": 0,
+   "orcs": null,
+   "wall": {
+    "l": 0,
+    "r": 0,
+    "shown": false
+   },
+   "mute": {
+    "l": 0,
+    "r": 0,
+    "shown": false
+   },
+   "settings": {
+    "l": 0,
+    "r": 0,
+    "shown": false
+   },
+   "muteAria": "false"
+  },
+  "backPortrait1": {
+   "rotateOverlay": {
+    "shown": true,
+    "w": 412,
+    "h": 915
+   },
+   "msgW": 212,
+   "msgH": 177,
+   "msgLines": 5,
+   "msgInView": true,
+   "runTime": 33.6,
+   "wave": 2,
+   "fallen": false,
+   "barHp": 23.039999999999836,
+   "kills": 0,
+   "orcs": null,
+   "wall": {
+    "l": 0,
+    "r": 0,
+    "shown": false
+   },
+   "mute": {
+    "l": 0,
+    "r": 0,
+    "shown": false
+   },
+   "settings": {
+    "l": 0,
+    "r": 0,
+    "shown": false
+   },
+   "muteAria": "false"
+  },
+  "resumed": {
+   "rotateOverlay": {
+    "shown": false,
+    "w": 0,
+    "h": 0
+   },
+   "msgW": 0,
+   "msgH": 0,
+   "msgLines": null,
+   "msgInView": true,
+   "runTime": 36.44,
+   "wave": 2,
+   "fallen": false,
+   "barHp": 33.26399999999978,
+   "kills": 0,
+   "orcs": null,
+   "wall": {
+    "l": 34,
+    "r": 242,
+    "shown": true
+   },
+   "mute": {
+    "l": 34,
+    "r": 82,
+    "shown": true
+   },
+   "settings": {
+    "l": 768,
+    "r": 881,
+    "shown": true
+   },
+   "muteAria": "false"
+  },
+  "resumed2": {
+   "rotateOverlay": {
+    "shown": false,
+    "w": 0,
+    "h": 0
+   },
+   "msgW": 0,
+   "msgH": 0,
+   "msgLines": null,
+   "msgInView": true,
+   "runTime": 39.3,
+   "wave": 2,
+   "fallen": false,
+   "barHp": 43.56000000000017,
+   "kills": 0,
+   "orcs": null,
+   "wall": {
+    "l": 34,
+    "r": 242,
+    "shown": true
+   },
+   "mute": {
+    "l": 34,
+    "r": 82,
+    "shown": true
+   },
+   "settings": {
+    "l": 768,
+    "r": 881,
+    "shown": true
+   },
+   "muteAria": "false"
+  },
+  "verdict": {
+   "frozenInPortrait": true,
+   "advancedInLandscape": true,
+   "notFallen": true,
+   "wavesNotLost": true
+  }
+ }
+}

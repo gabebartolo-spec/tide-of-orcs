@@ -1,0 +1,375 @@
+{
+ "915x412": {
+  "run": {
+   "inner": [
+    915,
+    412
+   ],
+   "small": [],
+   "smallT": [],
+   "clip": [],
+   "minText": 14,
+   "canv": [
+    {
+     "id": "game",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 412,
+     "ar": 2.221,
+     "bw": 915,
+     "bh": 412,
+     "bar": 2.221
+    }
+   ],
+   "safeL": ""
+  },
+  "runState": {
+   "wall": null,
+   "wave": 1,
+   "fallen": false
+  },
+  "fallen": {
+   "inner": [
+    915,
+    412
+   ],
+   "small": [],
+   "smallT": [],
+   "clip": [],
+   "minText": 14,
+   "canv": [
+    {
+     "id": "game",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 412,
+     "ar": 2.221,
+     "bw": 915,
+     "bh": 412,
+     "bar": 2.221
+    }
+   ],
+   "safeL": ""
+  },
+  "satchel": {
+   "inner": [
+    915,
+    412
+   ],
+   "small": [],
+   "smallT": [],
+   "clip": [],
+   "minText": 16,
+   "canv": [],
+   "safeL": ""
+  },
+  "grove": {
+   "inner": [
+    915,
+    412
+   ],
+   "small": [],
+   "smallT": [],
+   "clip": [],
+   "minText": 16,
+   "canv": [],
+   "safeL": ""
+  },
+  "camp": {
+   "inner": [
+    915,
+    412
+   ],
+   "small": [],
+   "smallT": [],
+   "clip": [],
+   "minText": 16,
+   "canv": [
+    {
+     "id": "campview",
+     "l": 34,
+     "t": 47,
+     "w": 847,
+     "h": 360,
+     "ar": 2.353,
+     "bw": 1271,
+     "bh": 540,
+     "bar": 2.354
+    }
+   ],
+   "safeL": ""
+  }
+ },
+ "915x360": {
+  "run": {
+   "inner": [
+    915,
+    360
+   ],
+   "small": [],
+   "smallT": [],
+   "clip": [],
+   "minText": 14,
+   "canv": [
+    {
+     "id": "game",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 360,
+     "ar": 2.542,
+     "bw": 915,
+     "bh": 360,
+     "bar": 2.542
+    }
+   ],
+   "safeL": ""
+  },
+  "runState": {
+   "wall": null,
+   "wave": 1,
+   "fallen": false
+  },
+  "fallen": {
+   "inner": [
+    915,
+    360
+   ],
+   "small": [],
+   "smallT": [],
+   "clip": [],
+   "minText": 14,
+   "canv": [
+    {
+     "id": "game",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 360,
+     "ar": 2.542,
+     "bw": 915,
+     "bh": 360,
+     "bar": 2.542
+    }
+   ],
+   "safeL": ""
+  },
+  "satchel": {
+   "inner": [
+    915,
+    360
+   ],
+   "small": [],
+   "smallT": [],
+   "clip": [],
+   "minText": 16,
+   "canv": [],
+   "safeL": ""
+  },
+  "grove": {
+   "inner": [
+    915,
+    360
+   ],
+   "small": [],
+   "smallT": [],
+   "clip": [],
+   "minText": 14,
+   "canv": [
+    {
+     "id": "tree",
+     "l": 34,
+     "t": 48,
+     "w": 607,
+     "h": 308,
+     "ar": 1.971,
+     "bw": 911,
+     "bh": 462,
+     "bar": 1.972
+    }
+   ],
+   "safeL": ""
+  },
+  "camp": {
+   "inner": [
+    915,
+    360
+   ],
+   "small": [],
+   "smallT": [],
+   "clip": [],
+   "minText": 16,
+   "canv": [
+    {
+     "id": "campview",
+     "l": 34,
+     "t": 48,
+     "w": 847,
+     "h": 308,
+     "ar": 2.75,
+     "bw": 1271,
+     "bh": 462,
+     "bar": 2.751
+    }
+   ],
+   "safeL": ""
+  }
+ },
+ "915x320": {
+  "run": {
+   "inner": [
+    915,
+    320
+   ],
+   "small": [],
+   "smallT": [],
+   "clip": [
+    {
+     "n": "strip",
+     "fs": 32,
+     "t": "0\n1\n2\n3\n4\n5\n6\n",
+     "l": 286,
+     "r": 301,
+     "t0": 27,
+     "b": 347
+    }
+   ],
+   "minText": 14,
+   "canv": [
+    {
+     "id": "game",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 320,
+     "ar": 2.859,
+     "bw": 915,
+     "bh": 320,
+     "bar": 2.859
+    }
+   ],
+   "safeL": ""
+  },
+  "runState": {
+   "wall": null,
+   "wave": 1,
+   "fallen": false
+  },
+  "fallen": {
+   "inner": [
+    915,
+    320
+   ],
+   "small": [],
+   "smallT": [],
+   "clip": [
+    {
+     "n": "strip",
+     "fs": 32,
+     "t": "0\n1\n2\n3\n4\n5\n6\n",
+     "l": 286,
+     "r": 301,
+     "t0": 27,
+     "b": 347
+    }
+   ],
+   "minText": 14,
+   "canv": [
+    {
+     "id": "game",
+     "l": 0,
+     "t": 0,
+     "w": 915,
+     "h": 320,
+     "ar": 2.859,
+     "bw": 915,
+     "bh": 320,
+     "bar": 2.859
+    }
+   ],
+   "safeL": ""
+  },
+  "satchel": {
+   "inner": [
+    915,
+    320
+   ],
+   "small": [],
+   "smallT": [],
+   "clip": [],
+   "minText": 16,
+   "canv": [],
+   "safeL": ""
+  },
+  "grove": {
+   "inner": [
+    915,
+    320
+   ],
+   "small": [],
+   "smallT": [],
+   "clip": [],
+   "minText": 14,
+   "canv": [
+    {
+     "id": "tree",
+     "l": 34,
+     "t": 48,
+     "w": 607,
+     "h": 268,
+     "ar": 2.265,
+     "bw": 911,
+     "bh": 402,
+     "bar": 2.266
+    }
+   ],
+   "safeL": ""
+  },
+  "camp": {
+   "inner": [
+    915,
+    320
+   ],
+   "small": [],
+   "smallT": [],
+   "clip": [],
+   "minText": 16,
+   "canv": [
+    {
+     "id": "campview",
+     "l": 34,
+     "t": 48,
+     "w": 847,
+     "h": 268,
+     "ar": 3.16,
+     "bw": 1271,
+     "bh": 402,
+     "bar": 3.162
+    }
+   ],
+   "safeL": ""
+  }
+ },
+ "412x915": {
+  "run": {
+   "inner": [
+    412,
+    915
+   ],
+   "small": [],
+   "smallT": [],
+   "clip": [],
+   "minText": 24,
+   "canv": [],
+   "safeL": ""
+  },
+  "runState": {
+   "wall": null,
+   "wave": 1,
+   "fallen": false
+  },
+  "rotateOverlay": null
+ }
+}
