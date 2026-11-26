@@ -32,18 +32,21 @@ export const AUDIO = {
   crossfade: 4,         // seconds to swap music beds on Replant
   bossFade: 1.5,        // seconds into / out of the boss track
   pitchJitter: 0.06,    // ± playbackRate spread so repeats don't machine-gun
+  gainJitter: 0.2,      // ± gain spread (about ±2 dB) on cues with variants, so a crowd of orcs isn't one voice at one level
   creakFrac: 0.5,       // a hit that leaves the wall below this fraction creaks instead of thuds
 } as const;
 
-/** Per-cue gain, minimum seconds between plays (throttle) and an optional `file` stem under public/audio/ (default: the cue name). */
-export const CUES: Record<Cue, { gain: number; gap: number; duck?: boolean; file?: string }> = {
+/** Per-cue gain, minimum seconds between plays (throttle), an optional `file` stem under public/audio/ (default: the cue name) and
+ *  `variants`: how many takes the cue has (`<stem>`, `<stem>-2` … `<stem>-N`); a play picks one at random, never the last one again. */
+export const CUES: Record<Cue, { gain: number; gap: number; duck?: boolean; file?: string; variants?: number }> = {
   loose: { gain: 0.5, gap: 0.08 },
   arrowHit: { gain: 0.45, gap: 0.05 },
   knife: { gain: 0.5, gap: 0.08 },
   ignite: { gain: 0.5, gap: 0.2 },
-  orcHit: { gain: 0.6, gap: 0.12 },
-  orcDeath: { gain: 0.6, gap: 0.1 },
-  bruteDeath: { gain: 0.8, gap: 0.25 },
+  // orc voices (TB-280): six takes each, five of them pitched and coloured from the original so the tide sounds like many orcs
+  orcHit: { gain: 0.6, gap: 0.12, variants: 6 },
+  orcDeath: { gain: 0.6, gap: 0.1, variants: 6 },
+  bruteDeath: { gain: 0.8, gap: 0.25, variants: 4 },
   bossRoar: { gain: 1, gap: 2, duck: true },
   wallThud: { gain: 0.7, gap: 0.15 },
   wallCreak: { gain: 0.7, gap: 1.2 },
@@ -96,6 +99,16 @@ export function uiSound(c: Cue): void { try { uiSink(c); } catch { /* silent unt
 
 /** Drop chime per rarity; a common one is the quiet tick. */
 export const LOOT_CUE: Record<string, Cue> = { common: 'lootDrop', rare: 'lootRare', epic: 'lootEpic', legendary: 'lootLegendary', mythic: 'lootMythic' };
+
+/** Variant to play next (0 = the plain file): uniform over the takes, never `last` again when there are two or more. `r` in [0, 1). */
+export function pickVariant(n: number, last: number, r: number): number {
+  if (n <= 1) return 0;
+  if (last < 0 || last >= n) return Math.floor(r * n);
+  const i = Math.floor(r * (n - 1)); return i >= last ? i + 1 : i;
+}
+
+/** File stem of take `i` of a cue's file. */
+export const variantFile = (stem: string, i: number): string => (i === 0 ? stem : `${stem}-${i + 1}`);
 
 /** Pure mapping from one sim event to the cue it plays, or null. */
 export function cueFor(e: SimEvent): Cue | null {

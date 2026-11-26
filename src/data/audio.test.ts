@@ -1,6 +1,6 @@
 import { existsSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { AUDIO, BOSS_BED, CUES, MUSIC, cueFor, nextBed } from './audio';
+import { AUDIO, BOSS_BED, CUES, MUSIC, cueFor, nextBed, pickVariant, variantFile } from './audio';
 
 describe('audio cue map', () => {
   it('maps kills by orc kind', () => {
@@ -54,5 +54,17 @@ describe('audio cue map', () => {
   it('keeps the boss track apart from the alternating beds and fades in faster than Replant', () => {
     expect(MUSIC).not.toContain(BOSS_BED);
     expect(AUDIO.bossFade).toBeLessThan(AUDIO.crossfade);
+  });
+  it('orc voices pick a take at random and never the same one twice running (TB-280)', () => {
+    for (let last = -1; last < 6; last++) for (let r = 0; r < 1; r += 0.01) {
+      const v = pickVariant(6, last, r); expect(v).toBeGreaterThanOrEqual(0); expect(v).toBeLessThan(6); expect(v).not.toBe(last);
+    }
+    expect(new Set(Array.from({ length: 50 }, (_, i) => pickVariant(6, -1, i / 50))).size).toBe(6);
+    expect(pickVariant(1, 0, 0.7)).toBe(0);
+    expect(variantFile('orcHit', 0)).toBe('orcHit'); expect(variantFile('orcHit', 3)).toBe('orcHit-4');
+  });
+  it('every take of a cue with variants is on disk as ogg and mp3 (TB-280)', () => {
+    for (const [c, d] of Object.entries(CUES)) for (let i = 1; i < (d.variants ?? 1); i++)
+      for (const ext of ['ogg', 'mp3']) expect(existsSync(`public/audio/${variantFile(d.file ?? c, i)}.${ext}`), `${c} take ${i + 1} ${ext}`).toBe(true);
   });
 });

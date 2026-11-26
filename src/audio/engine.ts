@@ -1,5 +1,5 @@
 /** Web Audio playback: ambient loop, two music beds crossfaded on Replant, a boss track on boss waves, SFX from sim events, ducking. Missing files are skipped silently. */
-import { AMBIENT, AUDIO, BOSS_BED, Bed, CUES, Cue, MUSIC, cueFor, nextBed } from '../data/audio';
+import { AMBIENT, AUDIO, BOSS_BED, Bed, CUES, Cue, MUSIC, cueFor, nextBed, pickVariant, variantFile } from '../data/audio';
 import type { SimEvent } from '../sim/events';
 import { quality } from '../render/quality';
 
@@ -17,6 +17,7 @@ export class AudioEngine {
   private bossStreamed = false;
   private bufs = new Map<string, AudioBuffer | null>();
   private lastAt = new Map<Cue, number>();
+  private lastTake = new Map<Cue, number>();
   private volume = 1;
   /** Phone tier (TB-218 P5): music and ambient stream through media elements instead of resident decoded PCM (about 150 MB). */
   private streams = new Map<string, HTMLAudioElement>();
@@ -57,7 +58,10 @@ export class AudioEngine {
     }
     if (this.streaming) this.stream(AMBIENT, this.amb);
     else { const b = await this.load(AMBIENT); if (b) this.loop(b, this.amb); await gap(); }
-    for (const [c, d] of Object.entries(CUES)) { await this.load(d.file ?? c, c); await gap(); }
+    for (const [c, d] of Object.entries(CUES)) {
+      await this.load(d.file ?? c, c); await gap();
+      for (let i = 1; i < (d.variants ?? 1); i++) { await this.load(variantFile(d.file ?? c, i), variantFile(c, i)); await gap(); }
+    }
     if (!this.streaming) { const buf = await this.load(BOSS_BED); if (buf && this.bossPending) this.startBoss(); }
   }
 
@@ -140,13 +144,16 @@ export class AudioEngine {
 
   play(cue: Cue): void {
     const ctx = this.ctx; if (!ctx || ctx.state !== 'running') return;
-    const buf = this.bufs.get(cue); if (!buf) return;
     const def = CUES[cue], now = ctx.currentTime;
+    if (!this.bufs.get(cue)) return;
     if (now - (this.lastAt.get(cue) ?? -Infinity) < def.gap) return;
-    this.lastAt.set(cue, now);
+    const n = def.variants ?? 1, v = pickVariant(n, this.lastTake.get(cue) ?? -1, Math.random());
+    const buf = this.bufs.get(variantFile(cue, v)) ?? this.bufs.get(cue)!;   // a take still loading falls back to the first
+    this.lastAt.set(cue, now); this.lastTake.set(cue, v);
     const src = ctx.createBufferSource(); src.buffer = buf;
     src.playbackRate.value = 1 + (Math.random() * 2 - 1) * AUDIO.pitchJitter;
-    const g = ctx.createGain(); g.gain.value = def.gain * AUDIO.sfxGain;
+    const jit = n > 1 ? 1 + (Math.random() * 2 - 1) * AUDIO.gainJitter : 1;
+    const g = ctx.createGain(); g.gain.value = def.gain * AUDIO.sfxGain * jit;
     src.connect(g).connect(this.master); src.start();
     if (def.duck) this.duck(now);
   }
