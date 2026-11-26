@@ -78,6 +78,22 @@ def grade(rgb, g, prof):
     return _hsv_to_rgb(np.stack([h, s, v], -1))
 
 
+def kuwahara(rgb, r):
+    """Classic 4-quadrant Kuwahara on an (H,W,3) array: flattens photo fur and feathers into painted strokes while keeping edges
+    (the photoreal Sketchfab wolf and hawk next to the toy-board orcs, TB-278). Box means via summed-area tables, so it is fast."""
+    H, W, _ = rgb.shape; p = np.pad(rgb, ((r, r), (r, r), (0, 0)), mode="edge")
+    def sat(x): s = np.zeros((x.shape[0] + 1, x.shape[1] + 1) + x.shape[2:], np.float64); s[1:, 1:] = x.cumsum(0).cumsum(1); return s
+    S, S2 = sat(p), sat((p ** 2).sum(-1)); n = (r + 1) ** 2
+    best_m = np.zeros_like(rgb); best_v = np.full((H, W), np.inf)
+    for dy in (0, r):
+        for dx in (0, r):
+            y0, x0 = np.arange(H)[:, None] + dy, np.arange(W)[None, :] + dx
+            box = lambda T: T[y0 + r + 1, x0 + r + 1] - T[y0, x0 + r + 1] - T[y0 + r + 1, x0] + T[y0, x0]
+            m = box(S) / n; v = box(S2) / n - (m ** 2).sum(-1)
+            k = v < best_v; best_v = np.where(k, v, best_v); best_m = np.where(k[..., None], m, best_m)
+    return best_m.astype(np.float32)
+
+
 def _grade_image(img, g, prof):
     key = (img.name, json.dumps(prof, sort_keys=True))
     if key in _DONE or img.size[0] == 0: return img
@@ -87,6 +103,9 @@ def _grade_image(img, g, prof):
     rgb = px[:, :3]
     if lin: rgb = np.where(rgb <= 0.0031308, rgb * 12.92, 1.055 * np.power(np.clip(rgb, 0, None), 1 / 2.4) - 0.055)
     out = grade(np.clip(rgb, 0, 1), g, prof)
+    if prof.get("paint"):  # texture-space Kuwahara, radius in texels at 1024 px (scaled with the texture)
+        H, W = img.size[1], img.size[0]; r = max(1, round(prof["paint"] * W / 1024))
+        out = kuwahara(out.reshape(H, W, 3), r).reshape(-1, 3)
     if lin: out = np.where(out <= 0.04045, out / 12.92, np.power((out + 0.055) / 1.055, 2.4))
     px[:, :3] = out
     new = bpy.data.images.new(img.name + "_look", img.size[0], img.size[1], alpha=img.channels == 4, float_buffer=img.is_float)

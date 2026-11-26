@@ -209,7 +209,8 @@
    "sat": 0.85,
    "value": 1.05,
    "flat": true,
-   "decimate": 0.25
+   "decimate": 0.25,
+   "paint": 3
   },
   "hawk": {
    "match": [
@@ -218,7 +219,8 @@
    "sat": 0.85,
    "value": 1.05,
    "flat": true,
-   "decimate": 0.3
+   "decimate": 0.3,
+   "paint": 3
   },
   "lateboss": {
    "match": [
