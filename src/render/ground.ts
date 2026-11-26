@@ -1,5 +1,5 @@
 import { FIELD } from '../data/balance';
-import { GROUND } from '../data/presentation';
+import { GROUND, WALL_DECOR_ART, WallDecorId } from '../data/presentation';
 import { createRng, Rng } from '../sim/rng';
 import { P } from './palette';
 
@@ -82,8 +82,8 @@ function blobs(g: CanvasRenderingContext2D, list: Blob[], fill: string): void {
 
 /** Decor sprites (public/decor). Loaded once; `null` until ready, so callers fall back to vector art. */
 type WallIndex = 0 | 1 | 2 | 3;
-export type DecorKey = `wall${WallIndex}_${WallIndex}`;
-const DECOR = ([0, 1, 2, 3] as const).flatMap((t) => ([0, 1, 2, 3] as const).map((d): DecorKey => `wall${t}_${d}`));
+export type DecorKey = `wall${WallIndex}_${WallIndex}` | WallDecorId;
+const DECOR: DecorKey[] = [...([0, 1, 2, 3] as const).flatMap((t) => ([0, 1, 2, 3] as const).map((d): DecorKey => `wall${t}_${d}`)), ...(Object.keys(WALL_DECOR_ART) as WallDecorId[])];
 const imgs = new Map<string, HTMLImageElement>();
 let started = false;
 function loadDecor(): void {
