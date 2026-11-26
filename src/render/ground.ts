@@ -149,10 +149,8 @@ function flowers(g: CanvasRenderingContext2D, list: Flower[]): void {
 /** TB-278: the backdrop plate over the view rect, mirrored past its sides, its top sky row stretched up above it. */
 function paintPlate(g: CanvasRenderingContext2D, im: HTMLImageElement, x0: number, y0: number, x1: number): void {
   const B = BACKDROP, w = B.x1 - B.x0, h = B.y1 - B.y0;
-  if (y0 < B.y0) for (let tx = Math.floor((x0 - B.x0) / w); B.x0 + tx * w < x1; tx++) {
-    const flip = tx % 2 !== 0, x = B.x0 + tx * w;
-    g.save(); if (flip) { g.translate(x + w, 0); g.scale(-1, 1); g.drawImage(im, 0, 0, im.width, 1, 0, y0, w, B.y0 - y0 + 1); } else g.drawImage(im, 0, 0, im.width, 1, x, y0, w, B.y0 - y0 + 1); g.restore();
-  }
+  // above the plate: one clear-sky pixel (left of the clouds) stretched flat, so no cloud streaks up the view
+  if (y0 < B.y0) g.drawImage(im, Math.round(im.width * B.skyU), B.skyV, 1, 1, x0, y0, x1 - x0, B.y0 - y0 + 1);
   for (let tx = Math.floor((x0 - B.x0) / w); B.x0 + tx * w < x1; tx++) {
     const flip = tx % 2 !== 0, x = B.x0 + tx * w;
     g.save(); if (flip) { g.translate(x + w, 0); g.scale(-1, 1); g.drawImage(im, 0, B.y0, w, h); } else g.drawImage(im, x, B.y0, w, h); g.restore();

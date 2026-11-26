@@ -125,9 +125,9 @@ export const VFX = {
 
 /** TB-278 unified look: the battlefield backdrop plate, painted to the director's day and night targets (docs/art/unified-look/target/).
  *  public/decor/plate_day.webp (and plate_night.webp, the dark end of the day cycle) hold the sky, mountain, forest and meadow in one image,
- *  laid over this world rect (units): the 1920x1080 view's field. Past its sides the plate repeats mirrored; above its top the sky row stretches up.
+ *  laid over this world rect (units): the 1920x1080 view's field. Past its sides the plate repeats mirrored; above its top one clear-sky texel fills the view.
  *  While the day plate is loaded it replaces the vector sky, the tree rows, the ground bake and its tufts, rocks and flowers, and the aerial haze. */
-export const BACKDROP = { x0: 0, y0: -26.25, x1: 900, y1: 480 } as const;
+export const BACKDROP = { x0: 0, y0: -26.25, x1: 900, y1: 480, /** clear-sky texel (plate u, pixel row) used above the plate */ skyU: 0.3, skyV: 4 } as const;
 
 /** Field ground (TB-098, ART-STYLE §Ground). Seeded layout painted once to an offscreen canvas; field units. Ranges are [min, max]. */
 export const GROUND = {
