@@ -137,3 +137,19 @@ describe('bow wood overlays (TB-250)', () => {
     }
   });
 });
+
+describe('fox tabard overlays (TB-250)', () => {
+  it('load on demand and lie exactly over the spearman: same count, size, anchor, height and rate', async () => {
+    const { onDemandSheet } = await import('./sprites');
+    const { readFileSync } = await import('node:fs');
+    expect(onDemandSheet('sheet_vanfox.webp')).toBe(true);
+    expect(onDemandSheet('sheet_van.webp')).toBe(false);
+    const atlas = parseAtlas(JSON.parse(readFileSync('public/sprites/atlas.json', 'utf8')))!;
+    for (const clip of ['', '.attack']) {
+      const van = atlas.anims[`van.spear${clip}`]!, fox = atlas.anims[`vanfox.spear${clip}`]!;
+      expect(fox.image).toBe('sheet_vanfox.webp');
+      expect([fox.frames.length, fox.ax, fox.ay, fox.hPerR, fox.fps, fox.lit]).toEqual([van.frames.length, van.ax, van.ay, van.hPerR, van.fps, van.lit]);
+      fox.frames.forEach((f, i) => expect([f[2], f[3]]).toEqual([van.frames[i]![2], van.frames[i]![3]]));
+    }
+  });
+});
