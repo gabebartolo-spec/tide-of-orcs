@@ -23,8 +23,7 @@ import { SimState, createState } from '../src/sim/state';
 import { EventBus } from '../src/sim/events';
 import { step } from '../src/sim/step';
 
-import { buy, canBuy, costOf, rankOf, unlocked } from '../src/sim/tree';
-import { ENDLESS, endlessCost } from '../src/data/balance';
+import { buy, canBuy, costOf } from '../src/sim/tree';
 import { canReplant, choosePath, replant } from '../src/sim/prestige';
 import { upgradeBuilding } from '../src/sim/camp';
 import { BUILDINGS, BuildingId } from '../src/data/camp';
@@ -66,7 +65,7 @@ const campOrder: BuildingId[] = arg('camp', '') === 'all' ? BUILDINGS.map((b) =>
 const hwFocus = arg('hwfocus', '').split(',').filter(Boolean);
 const setArg = arg('set', '');
 const human = Math.max(1, Number(arg('human', '1')) || 1); // TB-247: slow-player factor (1 = script)
-const TUNE: Record<string, unknown> = { ARROWS, SOURCES, VANGUARD, BOSS_WAVE, TIERS, RARITY, DROP, AFFIX, MYTHIC_FX, PLAYER, LOB, BARRICADE, NODE_FX, COST_WAVE, STACKING, SHOT_FX, UNIT_FX, CHECKPOINT, ORC_TYPES, ORC_FX, FIREBALL, HP_RAMP, ENDLESS, FOE_FX, PATH_FX };
+const TUNE: Record<string, unknown> = { ARROWS, SOURCES, VANGUARD, BOSS_WAVE, TIERS, RARITY, DROP, AFFIX, MYTHIC_FX, PLAYER, LOB, BARRICADE, NODE_FX, COST_WAVE, STACKING, SHOT_FX, UNIT_FX, CHECKPOINT, ORC_TYPES, ORC_FX, FIREBALL, HP_RAMP, FOE_FX, PATH_FX };
 applyTune(TUNE, arg('tune', ''));
 for (const kv of arg('cost', '').split(',').filter(Boolean)) { const [k, v] = kv.split('='); (NODES.find((x) => x.id === k) as { base: number }).base = Number(v); }
 for (const kv of arg('hw', '').split(',').filter(Boolean)) { const [k, v] = kv.split(':'); s.meta.hwLevels[k as HwId] = Number(v); }
@@ -166,11 +165,8 @@ function shop(): void {
   const weight = (b: string) => (policy === 'wall' && (b === 'Barricade' || b === 'Vanguard') ? 0.5 : 1) * (focusBranches.includes(b) ? 0.5 : 1);
   for (;;) {
     const opts = NODES.filter((n) => canBuy(s, n)).sort((a, b) => costOf(s, a) * weight(a.branch) - costOf(s, b) * weight(b.branch));
-    if (!opts[0] || !buy(s, ev, opts[0].id)) break;
+    if (!opts[0] || !buy(s, ev, opts[0].id)) return;
   }
-  // TB-277 prototype: with nothing in the tree left to buy, spend on endless ranks (off while ENDLESS.mult is 1)
-  if (ENDLESS.mult === 1 || NODES.some((n) => rankOf(s, n.id) < n.max && unlocked(s, n))) return;
-  for (let c = endlessCost(s.run.endless ?? 0, s.run.wave); s.run.starlight >= c; c = endlessCost(s.run.endless ?? 0, s.run.wave)) { s.run.starlight -= c; s.run.endless = (s.run.endless ?? 0) + 1; }
 }
 
 /** TB-146 milestones: "run r, run min m, play min p". */
@@ -243,7 +239,7 @@ for (let i = 0; i < total; i++) {
 
 const header = `# Balance run · policy=${policy} loot=${lootPolicy} seed=${seed} minutes=${minutes}\n\n| min | wave | starlight | kills/min | kills | wall | vanguard | nodes | HW | falls | drops | satchel | gear |\n|---|---|---|---|---|---|---|---|---|---|---|---|---|\n`;
 const summary = `
-First fall at wave ${fallWave}. Falls (wave@run minutes): ${fallWaves.length ? fallWaves.map((w, i) => `${w}@${fallMins[i]}${fallTiers[i]! > 1 ? '/t' + fallTiers[i] : ''}`).join(', ') : '-'}. Replants: ${falls}. First wall damage (wave, per run): ${firstHits.join(', ') || '-'}. Heartwood: ${s.meta.heartwood}. Best wave: ${s.meta.bestWave}. Endless ranks: ${s.run.endless ?? 0}.
+First fall at wave ${fallWave}. Falls (wave@run minutes): ${fallWaves.length ? fallWaves.map((w, i) => `${w}@${fallMins[i]}${fallTiers[i]! > 1 ? '/t' + fallTiers[i] : ''}`).join(', ') : '-'}. Replants: ${falls}. First wall damage (wave, per run): ${firstHits.join(', ') || '-'}. Heartwood: ${s.meta.heartwood}. Best wave: ${s.meta.bestWave}.
 Late orcs (TB-087): ${LATE.map((k) => `${k} ${kinds[k]!.kills} slain / ${kinds[k]!.swings} swings (first wave ${firstSeen[k] ?? '-'})`).join('; ')}. Fireballs ${fireballs} cast, ${fireHits} struck; rider leaps ${leaps}; vanguard fallen ${vanFell}; drummed share of live orcs ${drumSamples ? Math.round((1000 * drummed) / drumSamples) / 10 : 0}%.
 Build (TB-246): human ${human}, path ${pathArg}, focus ${focusBranches.join('+') || '-'}, camp upgrades ${campBought} (levels ${JSON.stringify(s.meta.camp.levels)}), set ${setArg || '-'}, mythic ${forced?.id ?? '-'}, hw order ${hwFocus.join('+') || 'cheapest'}, hw ranks ${JSON.stringify(s.meta.hwLevels)}.
 Milestones (TB-146): first Heartwood purchase affordable: ${ms.hwAfford}. First bought${doHwBuy ? '' : ' (no --hwbuy)'}: ${ms.hwBuy}. Heartwood nodes bought: ${hwBought}. First boss reached: ${ms.bossReady}. First boss cleared: ${ms.bossClear}.

@@ -74,8 +74,6 @@ export interface RunState {
   /** Once-per-run gear state, saved so a reload cannot reset it (v8, TB-110): Thunder's Memory's stored charges, whether Heartwood Splinter stood the wall again, whether Rootwarden's free rally was spent. */
   thunder: number; freeRallyUsed: boolean;
   /** Boss waves summoned this run, and the one running now (t: seconds in, next: script index, left: its orcs not yet slain). */
-  /** TB-277 sweep prototype: endless ranks bought (sim only, not saved). */
-  endless?: number;
   bossDone: number; boss: { t: number; next: number; left: number } | null;
   foeT: Partial<Record<OrcKind, number>>; stormT: number; shotT: number[]; knifeT: number; hawkT: number; treantT: number; ballT: number;
   /** Unused since TB-111 (Starfall rolls per shot); older saves may still carry it. */

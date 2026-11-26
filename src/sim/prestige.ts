@@ -39,8 +39,8 @@ export function replant(s: SimState, ev: EventBus, tier = s.meta.tier, path: Pat
   s.meta.heartwood += hw; s.meta.prestiges++; s.meta.bestWave = Math.max(s.meta.bestWave, s.run.wave);
   if (hwRank(s.meta, 'hw_heirloom')) growHeirloom(s.meta.loot, HW_FX.heirloomIlvl);
   // The Grove tree and banked starlight carry into the next run (TB-136): the tree is bought only between runs
-  const levels = s.run.levels, starlight = s.run.starlight, endless = s.run.endless;
-  s.run = freshRun(); s.run.levels = levels; s.run.starlight = starlight; if (endless) s.run.endless = endless; s.run.path = isPath(path) ? path : null;
+  const levels = s.run.levels, starlight = s.run.starlight;
+  s.run = freshRun(); s.run.levels = levels; s.run.starlight = starlight; s.run.path = isPath(path) ? path : null;
   s.run.tier = Math.max(1, Math.min(s.meta.tier, Math.floor(tier)));
   s.orcs.clear(); s.shots.clear(); s.vans.clear(); s.zones.clear();
   // run-only set and mythic state starts over with the run

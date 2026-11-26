@@ -1,5 +1,5 @@
 import { wallX } from './wallLine';
-import { ARROWS, BARRICADE, FIELD, SIM_MISC, VANGUARD, LOB, ORC_WOB, PLAYER, SOURCES, WAVE_LEN, ENDLESS, checkpointFor, waveHP, waveInterval, waveLoot, waveSpeedMult } from '../data/balance';
+import { ARROWS, BARRICADE, FIELD, SIM_MISC, VANGUARD, LOB, ORC_WOB, PLAYER, SOURCES, WAVE_LEN, checkpointFor, waveHP, waveInterval, waveLoot, waveSpeedMult } from '../data/balance';
 import { FIREBALL, ORC_FX, ORC_KINDS, ORC_TYPES, OrcKind } from '../data/orcs';
 import { EventBus } from './events';
 import { Orc, Projectile, SimState, Wolf } from './state';
@@ -37,8 +37,7 @@ export function spawnOrc(s: SimState, kind: OrcKind, y?: number, champ = false):
   const T = ORC_TYPES[kind];
   const hp = waveHP(w) * T.hp * F.hp * tierHp(s.run.tier);
   o.kind = kind; o.x = W + SIM_MISC.spawnXPad; o.y = y ?? spawnRow(s.rng.next());
-  const life = hp / Math.pow(ENDLESS.mult, s.run.endless ?? 0); // TB-277 prototype: endless ranks thin orc health only
-  o.hp = life; o.maxhp = life; o.spd = T.speed * waveSpeedMult(w); o.r = T.radius; o.atk = hp * BARRICADE.orcAtkFrac;
+  o.hp = hp; o.maxhp = hp; o.spd = T.speed * waveSpeedMult(w); o.r = T.radius; o.atk = hp * BARRICADE.orcAtkFrac;
   o.loot = waveLoot(w) * T.loot * F.loot * tierLoot(s.run.tier);
   o.dead = false; o.burn = 0; o.bleed = 0; o.slow = 0; o.pin = 0; o.root = 0; o.chill = 0; o.stun = 0; o.poison = 0; o.poisonDps = 0; o.hitT = 0; o.wob = s.rng.next() * SIM_MISC.tau; o.walk = o.wob * o.r; o.swingT = s.rng.next(); o.champ = champ;
   o.gen++; o.leapt = false; o.castT = s.rng.next() * FIREBALL.every; o.drum = false; o.bossId = ''; o.beats = 0;

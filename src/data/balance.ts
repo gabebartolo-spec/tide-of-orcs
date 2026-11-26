@@ -130,10 +130,6 @@ export const waveSpeedMult = (w: number): number => 1 + 0.008 * w;
 
 export const COST_WAVE = { from: 10, rate: 1.1 } as const;
 /** Multiplier on every node price, by the wave at purchase (P-001). */
-/** TB-277 sweep prototype (BALANCE P-277), off at mult 1: once the run tree is maxed, starlight buys endless ranks; each rank
- *  divides orc health by mult (compounding, = +(mult-1) damage), cost base × growth^rank × costWave(wave). Sim only, not in the UI. */
-export const ENDLESS = { mult: 1, base: 1e5, growth: 1.25 } as const;
-export const endlessCost = (rank: number, w: number): number => ENDLESS.base * Math.pow(ENDLESS.growth, rank) * costWave(w);
 export const costWave = (w: number): number => Math.pow(COST_WAVE.rate, Math.max(0, w - COST_WAVE.from));
 
 export const nodeCost = (base: number, growth: number, rank: number): number =>
