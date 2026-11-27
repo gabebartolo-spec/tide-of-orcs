@@ -1,4 +1,4 @@
-import { BOSS_WAVE, bossFor, bossScript, TIERS, bossHw, tierHw, tierLoot } from '../data/bosses';
+import { BOSS_WAVE, bossCount, bossFor, bossWaveAt, bossScript, TIERS, bossHw, tierHw, tierLoot } from '../data/bosses';
 import { HW_FX } from '../data/heartwood';
 import { hwRank } from './heartwood';
 import { waveLoot } from '../data/balance';
@@ -7,7 +7,7 @@ import { SimState } from './state';
 import { spawnOrc, spawnRow } from './step';
 
 /** Boss waves unlocked so far this run and not yet summoned (one per BOSS_WAVE.every waves reached). */
-export const bossesReady = (s: SimState): number => Math.floor(s.run.wave / BOSS_WAVE.every) - s.run.bossDone;
+export const bossesReady = (s: SimState): number => bossCount(s.run.wave) - s.run.bossDone;
 
 export const canSummonBoss = (s: SimState): boolean => !s.run.fallen && !s.run.boss && bossesReady(s) > 0;
 
@@ -36,8 +36,8 @@ export function bossStep(s: SimState, ev: EventBus, dt: number): void {
     const m = script[b.next++]!;
     for (const y of m.ys) {
       const o = spawnOrc(s, m.kind, spawnRow(y), true);
-      // the wave being played is the bossDone-th boss wave (summonBoss counted it), i.e. wave bossDone × every (TB-230)
-      if (o && m.kind === 'boss') o.bossId = bossFor(s.run.bossDone * BOSS_WAVE.every).id;
+      // the wave being played is the bossDone-th boss wave (summonBoss counted it) (TB-230, TB-277)
+      if (o && m.kind === 'boss') o.bossId = bossFor(bossWaveAt(s.run.bossDone)).id;
     }
   }
   const cleared = b.left <= 0;

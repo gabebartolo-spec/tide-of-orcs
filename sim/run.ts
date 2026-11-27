@@ -67,6 +67,9 @@ const setArg = arg('set', '');
 const human = Math.max(1, Number(arg('human', '1')) || 1); // TB-247: slow-player factor (1 = script)
 const TUNE: Record<string, unknown> = { ARROWS, SOURCES, VANGUARD, BOSS_WAVE, TIERS, RARITY, DROP, AFFIX, MYTHIC_FX, PLAYER, LOB, BARRICADE, NODE_FX, COST_WAVE, STACKING, SHOT_FX, UNIT_FX, CHECKPOINT, ORC_TYPES, ORC_FX, FIREBALL, HP_RAMP, FOE_FX, PATH_FX };
 applyTune(TUNE, arg('tune', ''));
+/** --rankmult 2 [--ranknodes sharp,bond]: sweep for pacing the tree to the waves (TB-277): those nodes' max ranks × k (never written back). */
+const rankMult = Number(arg('rankmult', '1'));
+if (rankMult !== 1) for (const id of arg('ranknodes', 'sharp,fangs,bond,knifedmg,bolt,timber,shield,drill,rebdmg,moondmg,stardmg,kindle').split(',')) { const nd = NODES.find((x) => x.id === id); if (nd) (nd as { max: number }).max = Math.round(nd.max * rankMult); }
 for (const kv of arg('cost', '').split(',').filter(Boolean)) { const [k, v] = kv.split('='); (NODES.find((x) => x.id === k) as { base: number }).base = Number(v); }
 for (const kv of arg('hw', '').split(',').filter(Boolean)) { const [k, v] = kv.split(':'); s.meta.hwLevels[k as HwId] = Number(v); }
 /** --mythic: a forced mythic, kept worn and locked so the equip policy never swaps it out. */

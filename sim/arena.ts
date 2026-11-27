@@ -49,7 +49,7 @@ const orders: Order[] = arg('orcs', 'grunt:20').split(',').map((x) => {
   return { kind: k as OrcKind, n: Number(n), every: Number(every ?? 0) };
 });
 // Without --tide only the ordered orcs march: no kind joins on its own and no boss wave unlocks.
-if (!tide) { for (const k of ORC_KINDS) (ORC_TYPES[k] as { from: number }).from = 0; (BOSS_WAVE as { every: number }).every = 1e9; }
+if (!tide) { for (const k of ORC_KINDS) (ORC_TYPES[k] as { from: number }).from = 0; (BOSS_WAVE as { every: number }).every = 1e9; (BOSS_WAVE as { lateFrom: number }).lateFrom = 0; }
 
 interface Tally { stood: number; wall: number; kills: Record<string, number>; swings: Record<string, number>; fireballs: number; fireHits: number; leaps: number; vanFell: number; drummed: number }
 

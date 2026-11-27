@@ -46,7 +46,7 @@ function runOne(r: (typeof runs)[number]): Promise<Row> {
 if (args.includes('--list')) { console.log(JSON.stringify(jobs.map((j) => j.label))); process.exit(0); }
 mkdirSync(out, { recursive: true });
 const rows: Row[] = []; let next = 0;
-const cols: (keyof Row)[] = ['label', 'seed', 'best', 'mean20', 'w30', 'w50', 'w70', 'boss', 'hw'];
+const cols: (keyof Row)[] = ['label', 'seed', 'best', 'mean20', 'w30', 'w50', 'w70', 'boss', 'hw', 'hwLeft', 'tiers'];
 async function worker(): Promise<void> {
   while (next < runs.length) {
     const r = runs[next++]!, row = await runOne(r); rows.push(row);
@@ -57,10 +57,10 @@ async function worker(): Promise<void> {
 {
   await Promise.all(Array.from({ length: par }, worker));
   const avg = (xs: number[]) => { const v = xs.filter((x) => x >= 0); return v.length ? (v.reduce((a, b) => a + b, 0) / v.length).toFixed(1) + (v.length < xs.length ? `(${v.length})` : '') : '-'; };
-  const lines = ['| label | best | mean20 | min to w30 | w50 | w70 | boss min | hw | best min–max |', '|---|---|---|---|---|---|---|---|---|'];
+  const lines = ['| label | best | mean20 | min to w30 | w50 | w70 | boss min | hw | hw left | tiers | best min–max |', '|---|---|---|---|---|---|---|---|---|---|---|'];
   for (const j of jobs) {
     const g = rows.filter((x) => x.label === j.label), b = g.map((x) => x.best);
-    lines.push(`| ${j.label} | ${avg(b)} | ${avg(g.map((x) => x.mean20))} | ${avg(g.map((x) => x.w30))} | ${avg(g.map((x) => x.w50))} | ${avg(g.map((x) => x.w70))} | ${avg(g.map((x) => x.boss))} | ${avg(g.map((x) => x.hw))} | ${Math.min(...b)}–${Math.max(...b)} |`);
+    lines.push(`| ${j.label} | ${avg(b)} | ${avg(g.map((x) => x.mean20))} | ${avg(g.map((x) => x.w30))} | ${avg(g.map((x) => x.w50))} | ${avg(g.map((x) => x.w70))} | ${avg(g.map((x) => x.boss))} | ${avg(g.map((x) => x.hw))} | ${avg(g.map((x) => x.hwLeft))} | ${avg(g.map((x) => x.tiers))} | ${Math.min(...b)}–${Math.max(...b)} |`);
   }
   writeFileSync(`${out}/summary.md`, lines.join('\n') + '\n'); console.log(lines.join('\n'));
 }

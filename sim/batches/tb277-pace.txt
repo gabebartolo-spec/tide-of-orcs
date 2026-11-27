@@ -1,0 +1,6 @@
+# TB-277 pace the tree to the waves (director 26 Nov): the run tree maxes by play min ~120 at wave ~70, so the scaling
+# nodes get more ranks (--rankmult k: max ranks x k for sharp, fangs, bond, knifedmg, bolt, timber, shield, drill, rebdmg, moondmg, stardmg, kindle).
+r2 | --minutes 240 --hwbuy --rankmult 2 --tune BOSS_WAVE.lateFrom=75,BOSS_WAVE.lateEvery=10
+r3 | --minutes 240 --hwbuy --rankmult 3 --tune BOSS_WAVE.lateFrom=75,BOSS_WAVE.lateEvery=10
+r2-hp | --minutes 240 --hwbuy --rankmult 2 --tune BOSS_WAVE.lateFrom=75,BOSS_WAVE.lateEvery=10,HP_RAMP.lateFrom=65,HP_RAMP.lateRate=1.10
+r3-hp | --minutes 240 --hwbuy --rankmult 3 --tune BOSS_WAVE.lateFrom=75,BOSS_WAVE.lateEvery=10,HP_RAMP.lateFrom=65,HP_RAMP.lateRate=1.10
