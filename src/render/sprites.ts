@@ -2,7 +2,8 @@
  * Sprite sheets (TB-060, ART-STYLE §Asset pipeline). Loads public/sprites/atlas.json lazily; while it is missing or
  * an animation key is absent, draw() returns false and the caller keeps its vector draw. Shadows stay in-engine.
  */
-import { SPRITE_BAKE, SPRITE_BAKE_PHONE } from '../data/presentation';
+import { NIGHT_SPRITE, SPRITE_BAKE, SPRITE_BAKE_PHONE } from '../data/presentation';
+import { P as PAL } from './palette';
 import { quality } from './quality';
 
 /** One animation: its sheet image, frame rects on it, playback rate, foot anchor (0..1 of frame), drawn height per unit of actor radius. */
@@ -69,6 +70,11 @@ export class Sprites {
   private imgs = new Map<string, HTMLImageElement>();
   /** Scratch canvas for tinting one frame without touching the sheet. */
   private tmp: HTMLCanvasElement | null = null;
+  /** TB-278: 0 by day to 1 at full night; the field sets it each frame while the backdrop plate is up. */
+  night = 0;
+  private nightBakes = new Map<Anim, (HTMLCanvasElement | undefined)[]>();
+  /** Night frames held now (bounded by NIGHT_SPRITE.cap). */
+  nightSize = 0;
   /** True from load() until it settles: callers hide vector stand-ins so the old body never flashes before the sheet (TB-155). */
   loading = false;
 
@@ -199,11 +205,35 @@ export class Sprites {
       } else if (tint) {
         const b = this.baked(img, a, fi, tint, '', 0, 0, 0, 0);
         g.drawImage(b.c, 0, 0, b.c.width, b.c.height, dx, dy, w, h);
-      } else g.drawImage(img, fx, fy, fw, fh, dx, dy, w, h);
+      } else {
+        g.drawImage(img, fx, fy, fw, fh, dx, dy, w, h);
+        if (this.night > NIGHT_SPRITE.min && !flash) {
+          const nb = this.nightFrame(img, a, fi), ga = g.globalAlpha;
+          g.globalAlpha = ga * Math.min(1, this.night); g.drawImage(nb, 0, 0, nb.width, nb.height, dx, dy, w, h); g.globalAlpha = ga;
+        }
+      }
     }
     if (twice) g.globalCompositeOperation = 'source-over';
     if (flash && !twice) g.filter = 'none';
     return true;
+  }
+
+  /** The night copy of one frame (TB-278): desaturated, multiplied by the night colour, alpha kept. Baked once and reused. */
+  private nightFrame(img: CanvasImageSource, a: Anim, fi: number): HTMLCanvasElement {
+    let list = this.nightBakes.get(a);
+    const hit = list?.[fi];
+    if (hit) return hit;
+    if (this.nightSize >= NIGHT_SPRITE.cap) { this.nightBakes.clear(); this.nightSize = 0; list = undefined; }
+    if (!list) { list = []; this.nightBakes.set(a, list); }
+    const [fx, fy, fw, fh] = a.frames[fi]!;
+    const c = this.makeCanvas(); c.width = fw; c.height = fh;
+    const cg = c.getContext('2d')!;
+    cg.filter = `saturate(${NIGHT_SPRITE.sat})`; cg.drawImage(img, fx, fy, fw, fh, 0, 0, fw, fh); cg.filter = 'none';
+    cg.globalCompositeOperation = 'multiply'; cg.fillStyle = PAL.nightSprite; cg.fillRect(0, 0, fw, fh);
+    cg.globalCompositeOperation = 'destination-in'; cg.drawImage(img, fx, fy, fw, fh, 0, 0, fw, fh);
+    cg.globalCompositeOperation = 'source-over';
+    list[fi] = c; this.nightSize++;
+    return c;
   }
 
   /** Makes the bake canvases; swappable so tests run without a DOM. */
@@ -217,7 +247,7 @@ export class Sprites {
   bakeSize = 0;
 
   /** Drop every baked frame (sheet reload, tier change, or the cache is full). */
-  clearBakes(): void { this.bakes.clear(); this.bakeSize = 0; this.bakeBytes = 0; }
+  clearBakes(): void { this.bakes.clear(); this.bakeSize = 0; this.bakeBytes = 0; this.nightBakes.clear(); this.nightSize = 0; }
 
   private baked(img: CanvasImageSource, a: Anim, fi: number, tint: string, glow: string, blur: number, hb: number, ox: number, oy: number): Baked {
     const byTint = getOr(this.bakes, tint, newMap), byGlow = getOr(byTint, glow, newMap);

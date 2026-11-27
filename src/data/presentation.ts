@@ -123,6 +123,12 @@ export const VFX = {
   treantShake: 0.2, impactLife: 0.3, stormLife: 0.35, zoneFade: 0.6, zoneSquash: 0.45, textLife: 0.9, textRise: 28,
 } as const;
 
+/** TB-278 unified look: the battlefield backdrop plate, painted to the director's day and night targets (docs/art/unified-look/target/).
+ *  public/decor/plate_day.webp (and plate_night.webp, the dark end of the day cycle) hold the sky, mountain, forest and meadow in one image,
+ *  laid over this world rect (units): the 1920x1080 view's field. Past its sides the plate repeats mirrored; above its top one clear-sky texel fills the view.
+ *  While the day plate is loaded it replaces the vector sky, the tree rows, the ground bake and its tufts, rocks and flowers, and the aerial haze. */
+export const BACKDROP = { x0: 0, y0: -26.25, x1: 900, y1: 480, /** clear-sky texel (plate u, pixel row) used above the plate */ skyU: 0.3, skyV: 4 } as const;
+
 /** Field ground (TB-098, ART-STYLE §Ground). Seeded layout painted once to an offscreen canvas; field units. Ranges are [min, max]. */
 export const GROUND = {
   seed: 0x6a7e31,
@@ -458,6 +464,10 @@ export const PHONE_QUERY = '(pointer: coarse) and (max-height: 540px)';
 /** Baked burning/chilled sprite frames (TB-216d). A glowing frame bakes whole at its drawn device height snapped to
  *  `quantum` px, with its sub-pixel offset snapped to 1/`sub` px, and is blitted 1:1 on whole pixels (TB-216f); `steps` is the per-doubling bucket of heightBucket(); past `cap` baked
  *  frames the whole cache is dropped and rebuilt on demand. */
+/** TB-278 night on the backdrop plate: each sprite frame gets a night copy (desaturated by `sat`, multiplied by P.nightSprite),
+ *  baked once per frame and drawn over the day frame at the dusk weight, so characters cool and darken with the director's
+ *  night target. Skipped below `min`; at most `cap` night frames are held (the cache drops whole past it). */
+export const NIGHT_SPRITE = { sat: 0.7, min: 0.02, cap: 1024 } as const;
 export const SPRITE_BAKE = { steps: 4, cap: 2048, quantum: 0.5, sub: 4 } as const;
 /** Phone-tier bakes (TB-218 P1): the rim bake snaps its height to a coarser `quantum` and its offset to whole device px (`sub` 1),
  *  flash bakes too (no live brightness filter), and the cache is held under `maxBytes` of pixels (dropped whole past it). */

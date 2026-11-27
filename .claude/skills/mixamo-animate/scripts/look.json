@@ -1,0 +1,241 @@
+{
+ "_doc": "Unified look (TB-278). Read by look.py. Source hue/sat/value per profile were measured on the shipped sheets (lit, 26 Nov); targets come from the locked dream target (docs/art/unified-look/target). ART-STYLE.md \u00a7Unified look explains each field.",
+ "global": {
+  "skin": {
+   "hue": 66,
+   "s": 0.44,
+   "v": 0.46,
+   "s_max": 0.55,
+   "hue_keep": 0.25,
+   "hue_spread": 8
+  },
+  "sat": 1.0,
+  "sat_max": 0.62,
+  "v_floor": 0.04,
+  "material": {
+   "metal_max": 0.3,
+   "rough_min": 0.7,
+   "spec": 0.25,
+   "keep_emission": false
+  }
+ },
+ "profiles": {
+  "grunt": {
+   "match": [
+    "/grunt2/"
+   ],
+   "skin": {
+    "hue": [
+     42,
+     100
+    ],
+    "centre": 65,
+    "s": 0.494,
+    "v": 0.47
+   }
+  },
+  "runner": {
+   "match": [
+    "/runner/"
+   ],
+   "skin": {
+    "hue": [
+     42,
+     100
+    ],
+    "centre": 70,
+    "s": 0.373,
+    "v": 0.45
+   }
+  },
+  "brute": {
+   "match": [
+    "/brute/"
+   ],
+   "skin": {
+    "hue": [
+     42,
+     100
+    ],
+    "centre": 60,
+    "s": 0.466,
+    "v": 0.32,
+    "sat_min": 0.2
+   }
+  },
+  "berserker": {
+   "match": [
+    "/berserker/"
+   ],
+   "skin": {
+    "hue": [
+     42,
+     100
+    ],
+    "centre": 72,
+    "s": 0.411,
+    "v": 0.479
+   }
+  },
+  "wolfrider": {
+   "match": [
+    "/wolf_rider/",
+    "/wolfrider"
+   ],
+   "skin": {
+    "hue": [
+     45,
+     100
+    ],
+    "centre": 62,
+    "s": 0.532,
+    "v": 0.4
+   }
+  },
+  "shaman": {
+   "match": [
+    "/shaman/"
+   ],
+   "skin": {
+    "hue": [
+     45,
+     95
+    ],
+    "centre": 58,
+    "s": 0.504,
+    "v": 0.44
+   }
+  },
+  "drummer": {
+   "match": [
+    "/drummer/"
+   ],
+   "skin": {
+    "hue": [
+     45,
+     105
+    ],
+    "centre": 76,
+    "s": 0.327,
+    "v": 0.51
+   }
+  },
+  "warboss": {
+   "match": [
+    "/fantasy_orc/"
+   ],
+   "skin": {
+    "hue": [
+     55,
+     125
+    ],
+    "centre": 84,
+    "s": 0.211,
+    "v": 0.365,
+    "sat_min": 0.08
+   },
+   "flat": true
+  },
+  "ogre": {
+   "match": [
+    "/troll_ogre/",
+    "scratch211"
+   ],
+   "skin": {
+    "hue": [
+     70,
+     135
+    ],
+    "centre": 97,
+    "s": 0.296,
+    "v": 0.34
+   },
+   "flat": true
+  },
+  "orcBoss": {
+   "match": [
+    "/orc_boss_dartuchiwa/"
+   ],
+   "skin": {
+    "hue": [
+     350,
+     32
+    ],
+    "centre": 14,
+    "s": 0.35,
+    "v": 0.327,
+    "sat_min": 0.28
+   },
+   "flat": true,
+   "decimate": 0.25
+  },
+  "packed": {
+   "match": [
+    "/orc_boss_3de/"
+   ],
+   "skin": {
+    "hue": [
+     140,
+     200
+    ],
+    "centre": 164,
+    "s": 0.254,
+    "v": 0.268
+   },
+   "flat": true,
+   "decimate": 0.25
+  },
+  "ogreCreature": {
+   "match": [
+    "/ogre_creature/"
+   ],
+   "skin": {
+    "hue": [
+     40,
+     100
+    ],
+    "centre": 70,
+    "s": 0.347,
+    "v": 0.288
+   },
+   "flat": true,
+   "decimate": 0.2
+  },
+  "wolf": {
+   "match": [
+    "/wolf_c071",
+    "fwolf"
+   ],
+   "sat": 0.85,
+   "value": 1.05,
+   "flat": true,
+   "decimate": 0.25,
+   "paint": 3
+  },
+  "hawk": {
+   "match": [
+    "/sketchfab/hawk/"
+   ],
+   "sat": 0.85,
+   "value": 1.05,
+   "flat": true,
+   "decimate": 0.3,
+   "paint": 3
+  },
+  "lateboss": {
+   "match": [
+    "/bosses/"
+   ],
+   "skin": {
+    "hue": [
+     42,
+     100
+    ],
+    "centre": 65,
+    "s": 0.42,
+    "v": 0.45
+   }
+  },
+  "default": {}
+ }
+}
