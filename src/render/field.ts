@@ -32,6 +32,7 @@ import { SLOTS } from '../data/loot';
 import { BOSS_ROSTER } from '../data/bosses';
 import { BOW_WOODS, CLOAK_DYES, TRAILS, type TrailStyle } from '../data/achievements';
 import { vanPaint } from './vanPaint';
+import { shotTint } from './shotTint';
 import { quality, fitScale } from './quality';
 import { setTiers } from '../sim/gear';
 
@@ -78,7 +79,6 @@ export class FieldRenderer {
   /** Fire and frost ground patches left by an enchanted strike (TB-089). */
   private patches: { x: number; y: number; r: number; life: number; c: string; fire: boolean }[] = [];
   /** Colour of the elf's lob this frame: its first enchantment, or '' for plain cream. */
-  private tint = '';
   reducedMotion = false;
   readonly ceremony = new Ceremony();
   readonly sprites = new Sprites();
@@ -354,8 +354,7 @@ export class FieldRenderer {
     if (s.stats.ballista) { this.postAt(ELF_X, H / 2); g.fillStyle = P.bark; g.fillRect(ELF_X - 10, H / 2 - 48, 30, 10); g.fillStyle = P.cream; g.fillRect(ELF_X + 10, H / 2 - 45, 22, 3); this.at(0, 0, false); }
     if (s.stats.wolf) { this.wolf(s, s.wolf); for (let i = 0; i < s.stats.extraWolves && i < s.pack.length; i++) this.wolf(s, s.pack[i]!); }
 
-    const A = VFX.arrows, ss = s.stats;
-    this.tint = ss.fire ? P.fire : ss.slow ? P.frost : ss.shock || ss.stun ? P.spark : ss.bounce ? P.arcane : '';
+    const A = VFX.arrows;
     for (let i = this.patches.length - 1; i >= 0; i--) {
       const pt = this.patches[i]!; pt.life -= dt; if (pt.life <= 0) { this.patches.splice(i, 1); continue; }
       g.globalAlpha = Math.min(1, pt.life / (A.patchLife * 0.4)); g.fillStyle = pt.c; g.beginPath(); g.ellipse(pt.x, pt.y, pt.r, pt.r * 0.45, 0, 0, 6.28); g.fill(); g.globalAlpha = 1;
@@ -551,10 +550,11 @@ export class FieldRenderer {
   private lob(a: Projectile, dt: number): void {
     const g = this.g, u = Math.min(1, a.t / LOB.flight);
     if (u >= 1) return;
+    const tint = shotTint(this.sim?.stats ?? null, a.fx);  // only the enchantment this shot rolled, as impact() applies it
     const dx = a.tx - a.sx, dy = a.ty - a.sy - LOB.arc * 4 * (1 - 2 * u), n = Math.hypot(dx, dy) || 1, ay = a.y - a.h;
     g.fillStyle = P.shadow; g.beginPath(); g.ellipse(a.x, a.y, 4, 1.5, 0, 0, 6.28); g.fill();
-    g.strokeStyle = this.tint || P.cream; g.lineWidth = this.tint ? VFX.arrows.lobW : 1.5;
-    if (this.tint) { g.fillStyle = this.tint; g.beginPath(); g.arc(a.x, ay, VFX.arrows.headR, 0, 6.28); g.fill(); }
+    g.strokeStyle = tint || P.cream; g.lineWidth = tint ? VFX.arrows.lobW : 1.5;
+    if (tint) { g.fillStyle = tint; g.beginPath(); g.arc(a.x, ay, VFX.arrows.headR, 0, 6.28); g.fill(); }
     const worn = this.sim?.meta.ach.worn.trail, style = worn ? TRAILS[worn as keyof typeof TRAILS] : undefined;
     if (!this.reducedMotion && style) this.cosmeticTrail(a, style, ay, dt);
     else if (!this.reducedMotion) {
@@ -565,7 +565,7 @@ export class FieldRenderer {
       }
       g.globalAlpha = 1;
     }
-    g.strokeStyle = this.tint || P.cream; g.lineWidth = this.tint ? VFX.arrows.lobW : 1.5;
+    g.strokeStyle = tint || P.cream; g.lineWidth = tint ? VFX.arrows.lobW : 1.5;
     g.beginPath(); g.moveTo(a.x, ay); g.lineTo(a.x - (dx / n) * 14, ay - (dy / n) * 14); g.stroke();
   }
 
