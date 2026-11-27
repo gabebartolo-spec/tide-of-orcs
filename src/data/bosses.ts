@@ -6,7 +6,7 @@ export const BOSS_WAVE = {
   secs: 60,       // the challenge lasts this long
   clearLoot: 40,  // clearing every orc in time pays this × waveLoot(w) starlight
   hwPerTier: 3,   // …and hwPerTier × (wave ÷ every) Heartwood: 3 at wave 25, 6 at 50 (P-142)
-  lateFrom: 0,    // TB-277: past this wave (a multiple of every) boss waves come every lateEvery waves instead; 0 = off
+  lateFrom: 75,   // TB-277: past this wave (a multiple of every) boss waves come every lateEvery waves instead; 0 = off
   lateEvery: 10,
 } as const;
 

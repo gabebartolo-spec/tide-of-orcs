@@ -12,10 +12,10 @@ Two sections. `## Current` is what ships and is human-owned. `## Proposed` is wh
 
 ### Orc scaling (w = wave)
 ```
-hp(w)       = 10 × 1.17^(min(w,15)−1) × 1.20^max(0, w−15)   ramp from wave 15 (P-001; ×1.30 until director 3 Nov)
+hp(w)       = 10 × 1.17^(min(w,15)−1) × 1.20^(max(0, w−15) − late) × 1.10^late, late = max(0, w−65)   ramp from wave 15 (P-001; ×1.30 until director 3 Nov), eased past 65 (P-277)
 loot(w)     = 2  × 1.13^(w−1)
 interval(w) = max(0.3, 2.0 × 0.93^(w−1))   seconds between grunt spawns; kind k every interval × every_k / 1.2^swarm_k; paused during a boss wave
-boss wave: unlocks every 25 waves, 60 s script, clear bonus = 40 × waveLoot(w) × starMult × (1 + 0.5 × hw_boss rank) starlight and bossHw(w) = 3 × floor(w / 25) Heartwood (P-142)
+boss wave: unlocks every 25 waves to wave 75, then every 10 (85, 95 …; P-277), 60 s script, clear bonus = 40 × waveLoot(w) × starMult × (1 + 0.5 × hw_boss rank) starlight and bossHw(w) = 3 × floor(w / 25) Heartwood (P-142)
 speed       = base × (1 + 0.008 w)
 atk         = 0.025 × maxhp                  per second vs vanguard; one swing every 35/15 s (`orcSwing`, TB-161) hits for atk × orcSwing
 wall hit    = min(25 × atk, 0.25 × barMax)    per second vs the barricade (`wallMult`, TB-154; cap P-125, TB-125)
@@ -57,7 +57,7 @@ Rangers and Wardens keep straight volleys at `fireRate = 1.2 × 1.15^draw` per s
 | `SOURCES.knives.speed`, `ballista.speed` | 640, 760 px/s | balance.ts |
 | `VANGUARD.walkSpeed`, `engageRange` | 60 px/s; orcs within r + 18 px engage a vanguard | balance.ts |
 | `ORC_TYPES` | hp/speed/loot/radius/spawn multiples per kind (GDD §4) | orcs.ts |
-| `BOSS_WAVE`, `BOSS_SCRIPT` | every 25 waves, 60 s, clear loot 40 × waveLoot, clear Heartwood 3 per 25 waves (`hwPerTier`); 8 mini-waves, 28 orcs; the Warboss slot's boss rotates through `BOSS_ROSTER` by boss wave (`bossFor`, TB-230: 25 Warboss, 50 Ogre, 75 Orc, 100 Orc Raider, 125 Ogre Creature, repeat; same stats) | bosses.ts |
+| `BOSS_WAVE`, `BOSS_SCRIPT` | every 25 waves to 75, then every 10 (`lateFrom`, `lateEvery`, P-277), 60 s, clear loot 40 × waveLoot, clear Heartwood 3 per 25 waves (`hwPerTier`); 8 mini-waves, 28 orcs; the Warboss slot's boss rotates through `BOSS_ROSTER` by boss wave (`bossFor`, TB-230: 25 Warboss, 50 Ogre, 75 Orc, 85 Orc Raider, 95 Ogre Creature, then the late four with traits: 105 Hound-Master, 115 Fire-Witch, 125 War-Chief, 135 Unbroken, repeat) | bosses.ts |
 | `TIERS` | max 6, hp 2, loot 1.5, hw 1: at tier t orc HP × 2^(t−1), starlight per kill and boss clear × 1.5^(t−1), boss Heartwood × t; a boss cleared at your highest tier unlocks the next (P-148 set F, director 2026-11-02) | bosses.ts |
 | `HW_FX` | Early Dawn +2 waves/rank, Stout Timber +0.25/rank, Warlords +0.5/rank | heartwood.ts |
 | `SKY` (render only) | 600 s day cycle, dusk alpha 0.85, two hill bands, lamp radius 150 | presentation.ts |
@@ -157,7 +157,7 @@ Report columns per minute: wave, starlight, kills/min, kills, wall %, vanguard c
 
 ## Proposed
 
-### P-277 · Late bosses and the wave-85 wall (2026-11-26, TB-277) · open: schedule and HP ease proposed, late progression needs a design call
+### P-277 · Late bosses and the late wall (2026-11-26, TB-277) · applied 27 Nov (director: "pace the upgrades to match the levels", "just push"): bosses every 10 past 75, HP ease from 65 at ×1.10, twelve scaling nodes at double max ranks
 All runs `--hwbuy`, seeds 1 to 5, on GitHub (`sim/results/tb277-bosses`, `tb277-wall`, `tb277-wall2`, `tb277-hw`). Base = `BOSS_WAVE.lateFrom` 75, `lateEvery` 10 (bosses at 25, 50, 75, 85, 95 …).
 
 | set | 240 min best / mean20 | 480 min best | total Heartwood |
@@ -173,7 +173,8 @@ What it says:
 - The schedule alone changes nothing: no run clears a boss past wave 50. At the wave-75 boss (seed 1, debug) the boss still has 99% HP when the 60 s run out, with 126 orcs on the field.
 - Easing orc HP from wave 65 (×1.10 a wave instead of ×1.2) moves the wall from ~76 to ~85, and a 480-min session gains nothing over 240: the run tree is maxed (~420 nodes) by play minute 120 and starlight piles up unspent.
 - Heartwood stops at 9 (bosses 25 and 50, once each): a checkpoint past a boss wave forfeits it (GDD §checkpoints), so a boss is never retried. Without checkpoints bosses repeat and Heartwood flows (552 in 480 min), but the higher tiers this unlocks stall runs at 46, and P-276 found the whole Heartwood tree at full rank worth only +5 waves.
-- So no number change gives late progression: everything the player can buy is finite while wave HP grows without end. Needs a design call (an open-ended power source); `## Current` is unchanged.
+- The run tree ran out by about wave 70. **Pacing** (`sim/results/tb277-pace`, `--rankmult`): doubling max ranks of the twelve scaling nodes (sharp 20, timber 20, fangs, bond, knifedmg, bolt, shield, drill, rebdmg, moondmg, stardmg, kindle 10) gives best / mean20 at 240 min 94.4 / 92.0 alone and **117.0 / 115.1 with the HP ease** (seeds 114–119), against 85.4 / 83.3. Triple ranks gives the same (117.8): the ranks past double are never afforded. **Applied: double ranks + HP ease + boss schedule.**
+- Still open: total Heartwood stays 9, so the sim bot clears no boss past wave 50 (it summons each boss the moment it unlocks; a checkpoint past a boss wave forfeits it).
 
 ### P-276 · Balance batches B to D and the Fox path (2026-11-26, TB-276) · applied: Foxden 0.10 (director 26 Nov, decision card "Apply Foxden +10%")
 All runs: 90 sim min (240 for the ladder), `--hwbuy`, seeds 1 to 5, main at 7054ef1 plus the sim tools of this PR. Run on GitHub (`npm run batch`, `.github/workflows/balance-batch.yml`); every run's numbers are in `sim/results/<batch>/runs.csv`. **mean20** is the mean of the last 20 fall waves, smoother than best wave (which steps at boss walls).

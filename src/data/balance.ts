@@ -119,7 +119,7 @@ export const NODE_FX = {
 export const PRESTIGE = { voluntaryWave: 12, fallGain: 0 } as const;
 
 /** TB-277: past lateFrom (0 = off) orc HP grows by lateRate per wave instead of rate (sweep knob; BALANCE P-277). */
-export const HP_RAMP = { from: 15, rate: 1.2, lateFrom: 0, lateRate: 1.2 } as const;
+export const HP_RAMP = { from: 15, rate: 1.2, lateFrom: 65, lateRate: 1.1 } as const;
 export const waveHP = (w: number): number => {
   const late = HP_RAMP.lateFrom > 0 ? Math.max(0, w - HP_RAMP.lateFrom) : 0;
   return 10 * Math.pow(1.17, Math.min(w, HP_RAMP.from) - 1) * Math.pow(HP_RAMP.rate, Math.max(0, w - HP_RAMP.from) - late) * Math.pow(HP_RAMP.lateRate, late);
