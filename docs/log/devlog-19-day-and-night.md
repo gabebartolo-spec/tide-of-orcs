@@ -1,6 +1,6 @@
 # Devlog 19 — A new look by day and night, a wall that holds to wave 117, and camp trophies
 
-*Build: `html5-dev` from `main` (6e15782), 27 Nov 2026 (itch run 45951303744). Covers: everything since devlog 18 (359199d). Posted: not yet (needs the VeniceIsSinking sign-in)*
+*Build: `html5-dev` from `main` (6e15782), 27 Nov 2026 (itch run 45951303744). Covers: everything since devlog 18 (359199d). Posted: https://veniceissinking.itch.io/elves-vs-orcs/devlog/1810384*
 
 A big build: the battlefield has a new look, the late game no longer stalls, and achievements now pay out in things you can see.
 
