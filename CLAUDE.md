@@ -1,11 +1,12 @@
 # Let's Hunt Some Orc! — Claude Code guide
 
-Let's Hunt Some Orc! is a relaxing incremental tower-defence game. A lone elf archer holds a timber barricade against an endless orc tide, rallies melee vanguard with starlight, grows a branching skill tree of weapons, companions, wall and economy, and replants the grove (prestige) for permanent Heartwood bonuses when the wall falls. Read `docs/00-DEVELOPMENT-PLAN.md` first, then the document that covers the area you are working in.
+Let's Hunt Some Orc! is a relaxing incremental tower-defence game. A lone elf archer holds a timber barricade against an endless orc tide, rallies melee vanguard with starlight, grows a branching skill tree of weapons, companions, wall and economy, and replants the grove (prestige) for permanent Heartwood bonuses when the wall falls. **New session or new account? Read `docs/HANDOFF.md` first** (current state, next steps and the director's standing rules). Then read `docs/00-DEVELOPMENT-PLAN.md`, then the document that covers the area you are working in.
 
 ## Documents (source of truth, in priority order)
 
 | File | Owns |
 |---|---|
+| `docs/HANDOFF.md` | Current state, what's in flight, next steps in order, and the director's standing rules (27 Nov handoff) |
 | `docs/00-DEVELOPMENT-PLAN.md` | Milestones, scope per phase, definition of done |
 | `docs/GDD.md` | Game design: core loop, the barricade and fail state, vanguard, waves, companions, prestige, UX |
 | `docs/SKILL-TREE.md` | Every node: id, branch, parent, ranks, cost, effect. Data, not prose |
