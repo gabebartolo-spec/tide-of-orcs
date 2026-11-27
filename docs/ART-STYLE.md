@@ -151,7 +151,7 @@ Each enchanted arrow must be told apart at a glance, by colour and by shape, and
 | Rebound | `arcane` #9b6bd6, core `arcaneCore` #ece8ff | Plum arrow | A plum orb with a pale core and halo hops orc to orc, a ring at each hit | — |
 | Starfall | `starGold` #ffd36b | — | Gold streaks fall straight down onto orcs on the plain | — |
 
-Burning and chilled orcs are tinted on their own body, never with a shape laid over them: sprites tint only the frame's own pixels (`Sprites.draw` tint, `source-atop` on a scratch canvas) plus a `drop-shadow` rim of `rimBlur` 6; vector orcs fill their body shape again in the tint. Shading stays visible under the colour. The lob takes the colour of the first enchantment owned (fire, frost, shock, Rebound, in that order).
+Burning and chilled orcs are tinted on their own body, never with a shape laid over them: sprites tint only the frame's own pixels (`Sprites.draw` tint, `source-atop` on a scratch canvas) plus a `drop-shadow` rim of `rimBlur` 6; vector orcs fill their body shape again in the tint. Shading stays visible under the colour. The lob takes the colour of the first enchantment that shot rolled (fire, frost, shock, Rebound, in that order; TB-282, was the first owned, so every arrow looked alight once Fire Arrows was bought); a shot that rolled none is a plain cream arrow.
 
 ## Shaman fireball VFX (TB-127)
 The shaman's ranged attack is a lobbed fireball, not an arrow: round, glowing, trailing. Sizes in `VFX.fireball`, flight in `FIREBALL` (orcs.ts). Damage is TB-087.
