@@ -45,7 +45,7 @@ These came from Baggins over many sessions. Breaking them has cost trust and usa
 - Pace the existing upgrades (ranks, costs, effects) to the waves. **No new systems or bandaids** (endless ranks etc. were rejected). Keep sim batches small.
 - Order of work is in CLAUDE.md; balance proposals go in `docs/BALANCE.md ## Proposed` until approved.
 
-## 2. Current state of `main` (4d0dcc4, 27 Nov)
+## 2. Current state of `main` (27 Nov)
 
 Merged on 27 Nov:
 - **PR #351, trailer tools** (`tools/trailer/`): frame-stepped capture rig with a virtual camera (`rig2.mjs`), scripted shots (`scenes2.mjs`, `scenes_dom.mjs`), beat-grid edit and mix (`edit2.py`, `audio2.py`, `captions2.mjs`), review tools (`review2.py`). Game code untouched.
@@ -57,7 +57,7 @@ Earlier the same week (all merged): TB-250 cosmetics done (31 pieces), TB-276 ba
 
 ## 3. In flight
 
-- **PR #358, fire arrow flames only on shots that roll fire (TB-282)**: Fire Arrows burns 1 shot in 4, but every arrow looked alight because the tint came from owned enchantments. The lob now takes its colour from what that shot rolled (`src/render/shotTint.ts`). Status when this was written: **open, not merged**; lint and tests passed locally. Check its CI, then merge it if it is green (the repo has no auto-merge; sessions merge their own PRs by hand).
+- Nothing. **PR #358, fire arrow flames only on shots that roll fire (TB-282)**, merged at 6ea528c on 27 Nov: Fire Arrows burns 1 shot in 4, and the lob now takes its colour from what that shot rolled (`src/render/shotTint.ts`) instead of from owned enchantments.
 
 ## 4. Next steps, in order
 
@@ -82,6 +82,6 @@ Baggins's order of work (27 Nov): **unified look → late bosses through that lo
 ## 6. Where to read more
 
 - Daily logs with decisions and lessons: `docs/log/2026-11-25.md`, `2026-11-26.md`, `2026-11-27.md`.
-- Backlog: `docs/BACKLOG.md` rows TB-075, TB-277, TB-278, TB-281, TB-282.
+- Backlog: `docs/BACKLOG.md` rows TB-075, TB-277, TB-278, TB-281.
 - Balance evidence: `docs/BALANCE.md` P-276, P-277.
 - Look: `docs/art/unified-look/` (targets, grunt test renders and README).
