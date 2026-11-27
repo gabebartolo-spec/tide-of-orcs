@@ -9,6 +9,8 @@ export const P = {
   // meadow flowers (TB-166): petals and hearts
   daisy: '#f6f2e4', violet: '#9b7fd0', buttercup: '#f2c64c', blossom: '#e9a0bb', flowerHeart: '#e8b84a', flowerHeartPale: '#f6e7a8',
   // ambience (TB-166): fairy motes
+  /** TB-278: the night multiply for sprites (day colour times this at full night), matched to the night target. */
+  nightSprite: '#99ccf2',
   mote: '#d6efff', moteGlow: 'rgba(150,205,255,.28)',
   tuft: '#5e7858', tuftLight: '#a3b993', rock: '#8f9597', rockLight: '#b7bbb6',
   timber: '#8a6a46', timberDark: '#7a5c3c', timberSplinter: '#4e3a28', timberBand: '#5a4634', sand: '#c9b78a',

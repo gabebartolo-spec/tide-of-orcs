@@ -1,6 +1,6 @@
 import { existsSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { AUDIO, BOSS_BED, CUES, MUSIC, cueFor, nextBed, pickVariant, variantFile } from './audio';
+import { AUDIO, BOSS_BED, CUES, MUSIC, cueFiles, cueFor, nextBed, pickTake, voiceFor } from './audio';
 
 describe('audio cue map', () => {
   it('maps kills by orc kind', () => {
@@ -55,16 +55,28 @@ describe('audio cue map', () => {
     expect(MUSIC).not.toContain(BOSS_BED);
     expect(AUDIO.bossFade).toBeLessThan(AUDIO.crossfade);
   });
-  it('orc voices pick a take at random and never the same one twice running (TB-280)', () => {
-    for (let last = -1; last < 6; last++) for (let r = 0; r < 1; r += 0.01) {
-      const v = pickVariant(6, last, r); expect(v).toBeGreaterThanOrEqual(0); expect(v).toBeLessThan(6); expect(v).not.toBe(last);
-    }
-    expect(new Set(Array.from({ length: 50 }, (_, i) => pickVariant(6, -1, i / 50))).size).toBe(6);
-    expect(pickVariant(1, 0, 0.7)).toBe(0);
-    expect(variantFile('orcHit', 0)).toBe('orcHit'); expect(variantFile('orcHit', 3)).toBe('orcHit-4');
+});
+
+describe('orc voice takes (TB-280)', () => {
+  it('layers a pain grunt on hits and a bark on wall and vanguard strikes', () => {
+    expect(voiceFor({ t: 'hit', x: 0, y: 0, crit: false, src: 'lob' })).toBe('orcPain');
+    expect(voiceFor({ t: 'barricadeHit', y: 0, amount: 1, frac: 0.9 })).toBe('orcBark');
+    expect(voiceFor({ t: 'vanguardHit', x: 0, y: 0 })).toBe('orcBark');
+    expect(voiceFor({ t: 'loose' })).toBeNull();
   });
-  it('every take of a cue with variants is on disk as ogg and mp3 (TB-280)', () => {
-    for (const [c, d] of Object.entries(CUES)) for (let i = 1; i < (d.variants ?? 1); i++)
-      for (const ext of ['ogg', 'mp3']) expect(existsSync(`public/audio/${variantFile(d.file ?? c, i)}.${ext}`), `${c} take ${i + 1} ${ext}`).toBe(true);
+  it('never picks the same take twice running and reaches every other take', () => {
+    for (const n of [2, 3, 5]) for (let last = 0; last < n; last++) {
+      const seen = new Set<number>();
+      for (let k = 0; k < 100; k++) { const i = pickTake(n, last, k / 100); expect(i).not.toBe(last); expect(i).toBeGreaterThanOrEqual(0); expect(i).toBeLessThan(n); seen.add(i); }
+      expect(seen.size).toBe(n - 1);
+    }
+    expect(pickTake(1, 0, 0.7)).toBe(0);
+    expect(pickTake(4, -1, 0.99)).toBe(3);
+  });
+  it('every orc voice take is on disk as ogg and mp3', () => {
+    for (const c of ['orcDeath', 'bruteDeath', 'orcPain', 'orcBark'] as const) {
+      for (const f of cueFiles(c)) for (const ext of ['ogg', 'mp3']) expect(existsSync(`public/audio/${f}.${ext}`), `${f}.${ext}`).toBe(true);
+      expect(CUES[c].jitter ?? AUDIO.pitchJitter).toBeLessThanOrEqual(0.12);
+    }
   });
 });

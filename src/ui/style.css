@@ -1130,3 +1130,17 @@ ul.deeds { list-style: none; margin: 0; padding: 0; display: grid; grid-template
 .deed .rule, .deed .rw { grid-column: 1; font-size: 0.875rem; color: var(--text-dim); }
 .deed .ghost, .deed .worn { grid-column: 2; grid-row: 1 / span 3; align-self: center; } .deed .worn { font-size: 0.875rem; color: var(--grove); }
 .deed.sealed .nm { font-style: italic; letter-spacing: .1em; }
+
+/* TB-278 unified look (director's battlefield targets, docs/art/unified-look/target/): the run HUD is flat inked cartoon like the field.
+   Wave, Slain and Heartwood hang as cream swallowtail banners with brass rivets; the wall label is a cream tag; Replant is a red
+   hex plank and Settings a slate-blue one; type is dark ink with no glow. Art: src/ui/look/*.svg. */
+html body:not([data-mode="camp"]) :is(header .stat, .hud-wave) {
+  border-image: url("./look/plaque.svg") 0 40 fill / 0 2.4rem stretch; filter: drop-shadow(0 0.125rem 0.125rem rgb(40 28 18 / .35)); text-shadow: none; }
+html body:not([data-mode="camp"]) :is(header .stat .k, header .stat .v, .hud-wave .k, .hud-wave .v) { color: #3d2a1c; text-shadow: none; -webkit-text-stroke: 0; }
+html body:not([data-mode="camp"]) header .stat .v.heart { color: #3d2a1c; }
+html body:not([data-mode="camp"]) :is(.hud-wall .lbl, .hud-van) { border-image: url("./look/label.svg") 0 12 fill / 0 0.75rem stretch; background: none; color: #3d2a1c;
+  text-shadow: none; -webkit-text-stroke: 0; filter: drop-shadow(0 0.125rem 0.125rem rgb(40 28 18 / .35)); }
+html body:not([data-mode="camp"]) .odo { color: #3d2a1c; }
+html body:not([data-mode="camp"]) header :is(#btn-settings, #btn-pullback) {
+  border-image: url("./look/btn_slate.svg") 0 24 fill / 0 1.25rem stretch; color: #eef2f2; text-shadow: 0 0.0625rem 0 #26313a; filter: drop-shadow(0 0.125rem 0.125rem rgb(30 30 30 / .3)); }
+html body:not([data-mode="camp"]) header #btn-pullback { border-image-source: url("./look/btn_red.svg"); color: #fff3e4; text-shadow: 0 0.0625rem 0 #3a2418; }

@@ -7,7 +7,7 @@ export type Cue =
   | 'fireArrow' | 'bounce' | 'shock' | 'stun' | 'frost' | 'shatter' | 'starfall'
   | 'fireballCast' | 'fireballHit'
   | 'lootDrop' | 'lootRare' | 'lootEpic' | 'lootLegendary' | 'lootMythic' | 'equip' | 'salvage' | 'reroll' | 'setRise'
-  | 'warDrum'
+  | 'warDrum' | 'orcPain' | 'orcBark'
   | 'uiPress' | 'uiPop' | 'uiHover' | 'uiPanel' | 'uiCount' | 'uiStamp' | 'uiRarity' | 'uiPath';
 
 export const AMBIENT = 'ambient';
@@ -22,6 +22,13 @@ export const BOSS_BED = 'music-boss';
 /** Bed that follows `bed` on Replant. */
 export function nextBed(bed: Bed): Bed { return bed === 'music-a' ? 'music-b' : 'music-a'; }
 
+/** Extra orc voice takes (TB-280), file stems under public/audio/. The cue's own file is always take 1. */
+export const ORC_DEATH_VARS: readonly string[] = ['orcDeath2', 'orcDeath3'];
+export const BRUTE_DEATH_VARS: readonly string[] = ['bruteDeath2', 'bruteDeath3'];
+/** orcPain and orcBark have no file of their own: their first var stands in for it. */
+export const ORC_PAIN_VARS: readonly string[] = ['orcPain1', 'orcPain2'];
+export const ORC_BARK_VARS: readonly string[] = ['orcBark1', 'orcBark2'];
+
 export const AUDIO = {
   sfxGain: 0.8,
   ambientGain: 0.35,
@@ -31,22 +38,25 @@ export const AUDIO = {
   musicDuckGain: 0.1,   // music level while a ducking cue plays
   crossfade: 4,         // seconds to swap music beds on Replant
   bossFade: 1.5,        // seconds into / out of the boss track
-  pitchJitter: 0.06,    // ± playbackRate spread so repeats don't machine-gun
-  gainJitter: 0.2,      // ± gain spread (about ±2 dB) on cues with variants, so a crowd of orcs isn't one voice at one level
+  pitchJitter: 0.06,
+  gainJitter: 0.2,      // ± level spread per play on cues with several takes (orc voices), so a crowd isn't all at one level    // ± playbackRate spread so repeats don't machine-gun (a cue's own `jitter` overrides it)
   creakFrac: 0.5,       // a hit that leaves the wall below this fraction creaks instead of thuds
 } as const;
 
-/** Per-cue gain, minimum seconds between plays (throttle), an optional `file` stem under public/audio/ (default: the cue name) and
- *  `variants`: how many takes the cue has (`<stem>`, `<stem>-2` … `<stem>-N`); a play picks one at random, never the last one again. */
-export const CUES: Record<Cue, { gain: number; gap: number; duck?: boolean; file?: string; variants?: number }> = {
+/** Per-cue gain, minimum seconds between plays (throttle), an optional `file` stem under public/audio/ (default: the cue name),
+ *  optional `vars` (more takes, one picked at random per play, never the same twice running) and `jitter` (± playbackRate, default AUDIO.pitchJitter). */
+export type CueDef = { gain: number; gap: number; duck?: boolean; file?: string; vars?: readonly string[]; jitter?: number };
+export const CUES: Record<Cue, CueDef> = {
   loose: { gain: 0.5, gap: 0.08 },
   arrowHit: { gain: 0.45, gap: 0.05 },
   knife: { gain: 0.5, gap: 0.08 },
   ignite: { gain: 0.5, gap: 0.2 },
-  // orc voices (TB-280): six takes each, five of them pitched and coloured from the original so the tide sounds like many orcs
-  orcHit: { gain: 0.6, gap: 0.12, variants: 6 },
-  orcDeath: { gain: 0.6, gap: 0.1, variants: 6 },
-  bruteDeath: { gain: 0.8, gap: 0.25, variants: 4 },
+  orcHit: { gain: 0.6, gap: 0.12 },
+  // Orc voices (TB-280, ElevenLabs): several voices per cue, picked at random with a wider pitch spread so the tide sounds like many orcs
+  orcDeath: { gain: 0.6, gap: 0.1, vars: ORC_DEATH_VARS, jitter: 0.1 },
+  bruteDeath: { gain: 0.8, gap: 0.25, vars: BRUTE_DEATH_VARS, jitter: 0.08 },
+  orcPain: { gain: 0.45, gap: 0.35, vars: ORC_PAIN_VARS, jitter: 0.1 },
+  orcBark: { gain: 0.5, gap: 0.7, vars: ORC_BARK_VARS, jitter: 0.1 },
   bossRoar: { gain: 1, gap: 2, duck: true },
   wallThud: { gain: 0.7, gap: 0.15 },
   wallCreak: { gain: 0.7, gap: 1.2 },
@@ -100,15 +110,30 @@ export function uiSound(c: Cue): void { try { uiSink(c); } catch { /* silent unt
 /** Drop chime per rarity; a common one is the quiet tick. */
 export const LOOT_CUE: Record<string, Cue> = { common: 'lootDrop', rare: 'lootRare', epic: 'lootEpic', legendary: 'lootLegendary', mythic: 'lootMythic' };
 
-/** Variant to play next (0 = the plain file): uniform over the takes, never `last` again when there are two or more. `r` in [0, 1). */
-export function pickVariant(n: number, last: number, r: number): number {
+/** Every file stem a cue can play: its own file (unless it has none, when vars stand in) then its vars. */
+export function cueFiles(c: Cue): string[] {
+  const d = CUES[c];
+  if (VOICE_ONLY.has(c)) return [...(d.vars ?? [])];
+  return [d.file ?? c, ...(d.vars ?? [])];
+}
+const VOICE_ONLY = new Set<Cue>(['orcPain', 'orcBark']);
+
+/** Pick a take index from `n` with a uniform `r` in [0,1), never repeating `last` when there is a choice. */
+export function pickTake(n: number, last: number, r: number): number {
   if (n <= 1) return 0;
-  if (last < 0 || last >= n) return Math.floor(r * n);
-  const i = Math.floor(r * (n - 1)); return i >= last ? i + 1 : i;
+  if (last < 0 || last >= n) return Math.min(n - 1, Math.floor(r * n));
+  const i = Math.min(n - 2, Math.floor(r * (n - 1)));
+  return i >= last ? i + 1 : i;
 }
 
-/** File stem of take `i` of a cue's file. */
-export const variantFile = (stem: string, i: number): string => (i === 0 ? stem : `${stem}-${i + 1}`);
+/** Orc voice layered on an event (TB-280): a pain grunt when an orc takes a hit, an attack bark when one strikes the wall or a vanguard. */
+export function voiceFor(e: SimEvent): Cue | null {
+  switch (e.t) {
+    case 'hit': return 'orcPain';
+    case 'barricadeHit': case 'vanguardHit': return 'orcBark';
+    default: return null;
+  }
+}
 
 /** Pure mapping from one sim event to the cue it plays, or null. */
 export function cueFor(e: SimEvent): Cue | null {

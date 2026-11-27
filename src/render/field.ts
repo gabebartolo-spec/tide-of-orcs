@@ -315,8 +315,9 @@ export class FieldRenderer {
     this.wallDamage.update(dt, barFrac(s), this.wall, this.fx, this.reducedMotion);
 
     // plain (and the meadow beyond it, wherever the window reaches past the plain)
-    this.ground.draw(g, k, vis.x0, vis.y0, vis.x1, vis.y1);
     const n = dusk(this.clock);
+    this.sprites.night = this.ground.plate() ? n : 0;  // TB-278: characters cool with the night plate
+    this.ground.draw(g, k, vis.x0, vis.y0, vis.x1, vis.y1, n);
     if (n > 0.01) { const lg = g.createRadialGradient(ELF_X, this.postY(H / 2), 0, ELF_X, this.postY(H / 2), SKY.lampR); lg.addColorStop(0, P.lamp); lg.addColorStop(1, P.lampClear); g.globalAlpha = n; g.fillStyle = lg; g.fillRect(ELF_X - SKY.lampR, this.postY(H / 2) - SKY.lampR, SKY.lampR * 2, SKY.lampR * 2); g.globalAlpha = 1; }
 
     // the forest edge stands behind the barricade, so the palisade is drawn over it and shows its own capped top. Orcs still inside the
@@ -329,11 +330,11 @@ export class FieldRenderer {
     const top = Math.max(vis.y0, this.wall.y); this.wallTop = Math.max(vis.y0, this.wall.foot - TREELINE.cap.up);
     // earned wall banners (TB-250): a wall1-3 post and its standard stand behind the wall, wall0's standards on its post caps over it
     this.wallStandards = wallDecorSprites(wallCosmetics(s.meta.ach.earned), this.wall, s.stats.wallTier, this.wallDamage.stage);
-    this.wallSprites(true);
-    this.fencePanels(top, H);
-    this.wallSprites(false);
+    // TB-278: the director's wall and watchtowers (with their stakes) from the backdrop plate's frame, else the tiered wall sprites
+    const plateWall = this.ground.wall(g, n);
+    if (!plateWall) { this.wallSprites(true); this.fencePanels(top, H); this.wallSprites(false); }
     // Thornwall spikes (TB-274): along the drawn wall's face, from its far end on the meadow to the near edge; the sim's wall line ran past the art into the sky
-    if (s.stats.spikes) { g.fillStyle = P.cream; const y0 = Math.max(top, this.wall.foot); for (let y = y0 + ((SPIKES.gap - (y0 % SPIKES.gap)) % SPIKES.gap); y < H; y += SPIKES.gap) { const wx = wallFaceX(y); g.beginPath(); g.moveTo(wx, y); g.lineTo(wx + SPIKES.len, y + SPIKES.half); g.lineTo(wx, y + 2 * SPIKES.half); g.closePath(); g.fill(); } }
+    if (s.stats.spikes && !plateWall) { g.fillStyle = P.cream; const y0 = Math.max(top, this.wall.foot); for (let y = y0 + ((SPIKES.gap - (y0 % SPIKES.gap)) % SPIKES.gap); y < H; y += SPIKES.gap) { const wx = wallFaceX(y); g.beginPath(); g.moveTo(wx, y); g.lineTo(wx + SPIKES.len, y + SPIKES.half); g.lineTo(wx, y + 2 * SPIKES.half); g.closePath(); g.fill(); } }
 
     this.fx.drawGround(g);
     s.zones.forEach((z) => {
@@ -342,7 +343,7 @@ export class FieldRenderer {
       g.beginPath(); g.ellipse(z.x, depthY(z.y), z.r, z.r * VFX.zoneSquash, 0, 0, 6.28); g.fill(); g.stroke(); g.globalAlpha = 1;
     });
 
-    if (s.stats.treant) { this.depthAt(wallX(H / 2) + 33, H / 2 + 44); g.fillStyle = P.treantTrunk; g.fillRect(wallX(H / 2) + 26, H / 2 + 10, 14, 34); g.fillStyle = P.treantLeaf; g.beginPath(); g.arc(wallX(H / 2) + 33, H / 2 + 2, 22, 0, 6.28); g.fill(); g.fillStyle = P.treantLeaf2; g.beginPath(); g.arc(wallX(H / 2) + 26, H / 2 - 6, 14, 0, 6.28); g.fill(); this.at(0, 0, false); }
+    if (s.stats.treant && !this.ground.plate()) { this.depthAt(wallX(H / 2) + 33, H / 2 + 44); g.fillStyle = P.treantTrunk; g.fillRect(wallX(H / 2) + 26, H / 2 + 10, 14, 34); g.fillStyle = P.treantLeaf; g.beginPath(); g.arc(wallX(H / 2) + 33, H / 2 + 2, 22, 0, 6.28); g.fill(); g.fillStyle = P.treantLeaf2; g.beginPath(); g.arc(wallX(H / 2) + 26, H / 2 - 6, 14, 0, 6.28); g.fill(); this.at(0, 0, false); }
 
     this.lobCd = s.stats.lobCd;
     const drawn = Math.min(1, (s.run.shotT[0] ?? 0) / s.stats.lobCd), aiming = aim !== null && aim.x > wallX(aim.y) && !s.run.fallen;
@@ -372,7 +373,7 @@ export class FieldRenderer {
     this.treeline.end(g);
     // aerial haze over the wood and the back rows, on top of every actor there, so a far orc is as soft as the trees behind it (TB-232)
     // the barricade takes the same haze as the trees and orcs at its far end (TB-268): it is drawn in perspective, not as the nearest prop
-    this.sky.haze(g, vis.x0, this.skyLine, vis.x1);
+    if (!this.ground.plate()) this.sky.haze(g, vis.x0, this.skyLine, vis.x1);  // TB-278: the backdrop plate carries its own depth
 
     // effects never rise into the sky band over the HUD: the world effects are clipped to the field below the crown line
     g.save(); g.beginPath(); g.rect(vis.x0 - 50, this.skyBand, vis.x1 - vis.x0 + 100, H - this.skyBand + 50); g.clip();
@@ -485,8 +486,11 @@ export class FieldRenderer {
     const edge = tl.skirtEdge(y0), wood = band + (hud + TREELINE.first - band) * SKY.wood;
     // the sky runs behind the rows down to the skirt, deepening into the wood's shade under the crowns: no pale strip between trunks
     this.sky.tone(dusk(this.clock));  // TB-261: the sky, clouds and far haze follow the day
-    this.sky.draw(g, this.clock, x0, y0, x1, hud, band, wood, edge - SKY.fade, tl.skirtBase(y0) + SKY.fade, this.reducedMotion);
-    tl.treesUpTo(g, y0, x0, x1, Infinity); tl.skirtUpTo(g, y0, x0, x1, Infinity);  // the bush skirt stands behind the barricade's far end (TB-268)
+    // TB-278: the backdrop plate already holds the sky and the forest
+    if (!this.ground.plate()) {
+      this.sky.draw(g, this.clock, x0, y0, x1, hud, band, wood, edge - SKY.fade, tl.skirtBase(y0) + SKY.fade, this.reducedMotion);
+      tl.treesUpTo(g, y0, x0, x1, Infinity); tl.skirtUpTo(g, y0, x0, x1, Infinity);  // the bush skirt stands behind the barricade's far end (TB-268)
+    }
     tl.orcsStart();
     // orcs never show among the trees (director, 5 Nov): an orc is not drawn at all until its feet clear the bush skirt, then fades in
     // over its first `SKY.emerge` units of meadow, so it appears out on the field, never in front of a trunk or crown

@@ -1,0 +1,8 @@
+# TB-277 the wall again: runs stall at 71-74 with the run tree maxed (~420 nodes by play min 120), so ease orc HP from earlier.
+f60r115 | --minutes 240 --hwbuy --tune BOSS_WAVE.lateFrom=75,BOSS_WAVE.lateEvery=10,HP_RAMP.lateFrom=60,HP_RAMP.lateRate=1.15
+f60r113 | --minutes 240 --hwbuy --tune BOSS_WAVE.lateFrom=75,BOSS_WAVE.lateEvery=10,HP_RAMP.lateFrom=60,HP_RAMP.lateRate=1.13
+f65r113 | --minutes 240 --hwbuy --tune BOSS_WAVE.lateFrom=75,BOSS_WAVE.lateEvery=10,HP_RAMP.lateFrom=65,HP_RAMP.lateRate=1.13
+f65r110 | --minutes 240 --hwbuy --tune BOSS_WAVE.lateFrom=75,BOSS_WAVE.lateEvery=10,HP_RAMP.lateFrom=65,HP_RAMP.lateRate=1.10
+f60r113-fox | --minutes 240 --hwbuy --path fox --tune BOSS_WAVE.lateFrom=75,BOSS_WAVE.lateEvery=10,HP_RAMP.lateFrom=60,HP_RAMP.lateRate=1.13
+f60r113-480 | --minutes 480 --hwbuy --tune BOSS_WAVE.lateFrom=75,BOSS_WAVE.lateEvery=10,HP_RAMP.lateFrom=60,HP_RAMP.lateRate=1.13
+f65r110-480 | --minutes 480 --hwbuy --tune BOSS_WAVE.lateFrom=75,BOSS_WAVE.lateEvery=10,HP_RAMP.lateFrom=65,HP_RAMP.lateRate=1.10

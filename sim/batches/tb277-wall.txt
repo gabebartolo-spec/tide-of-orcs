@@ -1,0 +1,8 @@
+# TB-277 the wave 76-80 wall: late boss schedule (every 10 from 75) plus a gentler orc HP climb past wave 75. 240 sim min, --hwbuy.
+l75e10 | --minutes 240 --hwbuy --tune BOSS_WAVE.lateFrom=75,BOSS_WAVE.lateEvery=10
+hp115 | --minutes 240 --hwbuy --tune BOSS_WAVE.lateFrom=75,BOSS_WAVE.lateEvery=10,HP_RAMP.lateFrom=75,HP_RAMP.lateRate=1.15
+hp113 | --minutes 240 --hwbuy --tune BOSS_WAVE.lateFrom=75,BOSS_WAVE.lateEvery=10,HP_RAMP.lateFrom=75,HP_RAMP.lateRate=1.13
+hp110 | --minutes 240 --hwbuy --tune BOSS_WAVE.lateFrom=75,BOSS_WAVE.lateEvery=10,HP_RAMP.lateFrom=75,HP_RAMP.lateRate=1.10
+hp113-fox | --minutes 240 --hwbuy --path fox --tune BOSS_WAVE.lateFrom=75,BOSS_WAVE.lateEvery=10,HP_RAMP.lateFrom=75,HP_RAMP.lateRate=1.13
+hp113-480 | --minutes 480 --hwbuy --tune BOSS_WAVE.lateFrom=75,BOSS_WAVE.lateEvery=10,HP_RAMP.lateFrom=75,HP_RAMP.lateRate=1.13
+hp110-480 | --minutes 480 --hwbuy --tune BOSS_WAVE.lateFrom=75,BOSS_WAVE.lateEvery=10,HP_RAMP.lateFrom=75,HP_RAMP.lateRate=1.10

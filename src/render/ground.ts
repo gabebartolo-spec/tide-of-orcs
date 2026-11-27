@@ -1,5 +1,5 @@
 import { FIELD } from '../data/balance';
-import { GROUND, WALL_DECOR_ART, WallDecorId } from '../data/presentation';
+import { BACKDROP, GROUND, WALL_DECOR_ART, WallDecorId } from '../data/presentation';
 import { createRng, Rng } from '../sim/rng';
 import { P } from './palette';
 
@@ -90,6 +90,7 @@ function loadDecor(): void {
   if (started || typeof Image === 'undefined') return;
   started = true;
   const bake = new Image(); bake.onload = (): void => { imgs.set('ground', bake); }; bake.src = `${import.meta.env.BASE_URL}decor/ground.webp`;
+  for (const k of ['plate_day', 'plate_night', 'wallplate_day', 'wallplate_night']) { const im = new Image(); im.onload = (): void => { imgs.set(k, im); }; im.src = `${import.meta.env.BASE_URL}decor/${k}.webp`; }
   for (const k of DECOR) { const im = new Image(); im.onload = (): void => { imgs.set(k, im); }; im.src = `${import.meta.env.BASE_URL}decor/${k}.webp`; }
 }
 export const decorImg = (k: DecorKey): HTMLImageElement | null => imgs.get(k) ?? null;
@@ -145,19 +146,45 @@ function flowers(g: CanvasRenderingContext2D, list: Flower[]): void {
   }
 }
 
+/** TB-278: the backdrop plate over the view rect, mirrored past its sides, its top sky row stretched up above it. */
+function paintPlate(g: CanvasRenderingContext2D, im: HTMLImageElement, x0: number, y0: number, x1: number): void {
+  const B = BACKDROP, w = B.x1 - B.x0, h = B.y1 - B.y0;
+  // above the plate: one clear-sky pixel (left of the clouds) stretched flat, so no cloud streaks up the view
+  if (y0 < B.y0) g.drawImage(im, Math.round(im.width * B.skyU), B.skyV, 1, 1, x0, y0, x1 - x0, B.y0 - y0 + 1);
+  for (let tx = Math.floor((x0 - B.x0) / w); B.x0 + tx * w < x1; tx++) {
+    const flip = tx % 2 !== 0, x = B.x0 + tx * w;
+    g.save(); if (flip) { g.translate(x + w, 0); g.scale(-1, 1); g.drawImage(im, 0, B.y0, w, h); } else g.drawImage(im, x, B.y0, w, h); g.restore();
+  }
+}
+
 /** The plain, pre-rendered once per canvas size (field rect plus shake padding), then blitted each frame. */
 export class Ground {
   private off: HTMLCanvasElement | null = null;
   private layout = layoutGround();
   private above = layoutGround(GROUND.seed + 1, true);
   private painted = -1; private key = '';
+  private night: HTMLCanvasElement | null = null;
 
   constructor() { loadDecor(); }
+
+  /** TB-278: the director's wall and watchtowers, cut from the day target in the backdrop plate's frame, with the night cut fading in
+   *  toward the dark end of the day cycle `n`. False (nothing drawn) until the day cut is loaded. */
+  wall(g: CanvasRenderingContext2D, n: number): boolean {
+    const day = imgs.get('wallplate_day'), nite = imgs.get('wallplate_night'), B = BACKDROP;
+    if (!day) return false;
+    const a = g.globalAlpha;
+    g.drawImage(day, B.x0, B.y0, B.x1 - B.x0, B.y1 - B.y0);
+    if (nite && n > 0.005) { g.globalAlpha = a * Math.min(1, n); g.drawImage(nite, B.x0, B.y0, B.x1 - B.x0, B.y1 - B.y0); }
+    g.globalAlpha = a; return true;
+  }
+
+  /** TB-278: true once the day backdrop plate is loaded; it then stands in for the vector sky, tree rows, bake and haze. */
+  plate(): boolean { return imgs.has('plate_day'); }
 
   /** Paint the meadow over the visible world rect (x0, y0)-(x1, y1) at k device px per world unit. The field fills the
    *  whole window (TB-207), so the view can reach past the 900x480 plain: more meadow continues above (a second seed)
    *  and to the sides (the plain again), never a flat colour. */
-  draw(g: CanvasRenderingContext2D, k: number, x0: number, y0: number, x1: number, y1: number): void {
+  draw(g: CanvasRenderingContext2D, k: number, x0: number, y0: number, x1: number, y1: number, n = 0): void {
     const ow = Math.ceil((x1 - x0 + PAD * 2) * k), oh = Math.ceil((y1 - y0 + PAD * 2) * k);
     if (ow <= 0 || oh <= 0 || !(k > 0)) return;  // a hidden canvas has no size: drawImage of a 0x0 buffer throws and stops the frame loop
     const key = `${ow}x${oh}:${x0.toFixed(1)},${y0.toFixed(1)}`;
@@ -175,11 +202,24 @@ export class Ground {
           fn(ty < 0 ? this.above : this.layout);
         }
       };
-      tiles((L) => paintBase(og, L));
-      const bake = imgs.get('ground'), B = GROUND.bake;  // TB-259: the painted plain, lit by the actors' sun; edges feather into the drifts
-      if (bake) { og.setTransform(k, 0, 0, k, (PAD - x0) * k, (PAD - y0) * k); og.drawImage(bake, B.x0, B.y0, B.x1 - B.x0, B.y1 - B.y0); }
-      tiles((L) => paintDetail(og, L));
+      const day = imgs.get('plate_day'), nite = imgs.get('plate_night');
+      if (day) {
+        og.setTransform(k, 0, 0, k, (PAD - x0) * k, (PAD - y0) * k); og.imageSmoothingQuality = 'high'; paintPlate(og, day, x0 - PAD, y0 - PAD, x1 + PAD);
+        if (nite) {
+          this.night = this.night ?? document.createElement('canvas');
+          if (this.night.width !== this.off.width || this.night.height !== this.off.height) { this.night.width = this.off.width; this.night.height = this.off.height; }
+          const ng = this.night.getContext('2d')!; ng.setTransform(1, 0, 0, 1, 0, 0); ng.clearRect(0, 0, this.night.width, this.night.height);
+          ng.setTransform(k, 0, 0, k, (PAD - x0) * k, (PAD - y0) * k); ng.imageSmoothingQuality = 'high'; paintPlate(ng, nite, x0 - PAD, y0 - PAD, x1 + PAD);
+        } else this.night = null;
+      } else {
+        tiles((L) => paintBase(og, L));
+        const bake = imgs.get('ground'), B = GROUND.bake;  // TB-259: the painted plain, lit by the actors' sun; edges feather into the drifts
+        if (bake) { og.setTransform(k, 0, 0, k, (PAD - x0) * k, (PAD - y0) * k); og.drawImage(bake, B.x0, B.y0, B.x1 - B.x0, B.y1 - B.y0); }
+        tiles((L) => paintDetail(og, L));
+      }
     }
     g.drawImage(this.off, 0, 0, ow, oh, x0 - PAD, y0 - PAD, x1 - x0 + PAD * 2, y1 - y0 + PAD * 2);
+    // TB-278: the night plate fades in toward the dark end of the day cycle
+    if (this.night && n > 0.005) { const a = g.globalAlpha; g.globalAlpha = a * Math.min(1, n); g.drawImage(this.night, 0, 0, ow, oh, x0 - PAD, y0 - PAD, x1 - x0 + PAD * 2, y1 - y0 + PAD * 2); g.globalAlpha = a; }
   }
 }

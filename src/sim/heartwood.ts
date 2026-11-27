@@ -1,5 +1,5 @@
 import { HW_FX, HW_NODE, HW_NODES, HwId } from '../data/heartwood';
-import { BOSS_WAVE } from '../data/bosses';
+import { bossCount } from '../data/bosses';
 import { PRESTIGE } from '../data/balance';
 import { EventBus } from './events';
 import { campSpent } from './camp';
@@ -35,7 +35,7 @@ export function buyHw(s: SimState, ev: EventBus, id: HwId): boolean {
 export function startRun(s: SimState): void {
   const m = s.meta;
   s.run.wave = Math.max(m.checkpoint, 1 + HW_FX.dawnWaves * hwRank(m, 'hw_dawn'));
-  s.run.bossDone = Math.floor(s.run.wave / BOSS_WAVE.every);
+  s.run.bossDone = bossCount(s.run.wave);
   if (hwRank(m, 'hw_wolf')) s.run.levels.wolf = 1;
   recompute(s); s.run.barHp = s.stats.barMax;
   placeStandingOrders(s);
