@@ -94,7 +94,7 @@ export const VFX = {
   /** Elf: string pull (px) at full draw. */
   bow: { pull: 5 },
   /** Elf shot loop (TB-202): seconds to crossfade full draw back to draw frame 0 after each lob (director 3 Nov), and idle <-> draw when aim starts or stops. */
-  elfShot: { release: 0.15, aim: 0.15 },
+  elfShot: { release: 0.25, aim: 0.15 },
   /** Worn cosmetics on the field (TB-250). Trails: ghosts behind the lobbed arrow (count, spacing in s), size, sparks per second
    *  (ember, with a halo glow × r) or twinkle rate (star) or spin (leaf, rad/s; autumn colours so they read on the green meadow). Rune ring: glyph count, gap outside the strike circle, glyph size, spin (rad/s). */
   cosmetic: {
